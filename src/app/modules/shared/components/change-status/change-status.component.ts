@@ -142,136 +142,158 @@ export class ChangeStatusComponent implements OnInit {
     // const fyList = this.utilsService.getStoredFyList();
     // console.log('fyList:', fyList);
     // const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    if (this.changeStatus.valid) {
-      this.loading = true;
-      if (this.data.mode === 'Update Status') {
-        let param = '/itr-status';
-        let sType = this.data.serviceType;
-        if (
-          this.data.serviceType === '-' ||
-          this.data.serviceType === null ||
-          this.data.serviceType === undefined
-        ) {
-          sType = 'ITR';
-        }
-        let param2 = {
-          statusId: this.changeStatus.controls['selectStatus'].value,
-          userId: this.data.userId,
-          assessmentYear: this.data.userInfo.assessmentYear,
-          completed: true,
-          serviceType: sType,
-        };
-        console.log('param2: ', param2);
-        this.userService.postMethod(param, param2).subscribe(
-          (res) => {
-            console.log('Status update response: ', res);
-            this.loading = false;
-            this._toastMessageService.alert(
-              'success',
-              'Status update successfully.'
+    this.utilsService.getUserCurrentStatus( this.data.userInfo.userId).subscribe((res: any) => {
+      console.log(res);
+      if(res.error){
+        this.utilsService.showSnackBar(res.error);
+        return
+      }else{
+        if (this.changeStatus.valid) {
+          this.loading = true;
+          if (this.data.mode === 'Update Status') {
+            let param = '/itr-status';
+            let sType = this.data.serviceType;
+            if (
+              this.data.serviceType === '-' ||
+              this.data.serviceType === null ||
+              this.data.serviceType === undefined
+            ) {
+              sType = 'ITR';
+            }
+            let param2 = {
+              statusId: this.changeStatus.controls['selectStatus'].value,
+              userId: this.data.userId,
+              assessmentYear: this.data.userInfo.assessmentYear,
+              completed: true,
+              serviceType: sType,
+            };
+            console.log('param2: ', param2);
+            this.userService.postMethod(param, param2).subscribe(
+              (res) => {
+                console.log('Status update response: ', res);
+                this.loading = false;
+                this._toastMessageService.alert(
+                  'success',
+                  'Status update successfully.'
+                );
+                let fromStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.data?.userInfo?.statusId)
+                let toStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.changeStatus.controls['selectStatus'].value)
+                we_track('Update status', {
+                  'User Name': this.data?.userInfo?.name,
+                  'User Number': this.data?.userInfo?.mobileNumber,
+                  'From status': fromStatusObj.length ? fromStatusObj[0].statusName : '',
+                  'To status': toStatusObj.length ? toStatusObj[0].statusName : '',
+                });
+                setTimeout(() => {
+                  this.dialogRef.close({
+                    event: 'close',
+                    data: 'statusChanged',
+                    responce: res,
+                  });
+                }, 4000);
+              },
+              (error) => {
+                this.loading = false;
+                this._toastMessageService.alert(
+                  'error',
+                  'There is some issue to Update Status information.'
+                );
+              }
             );
-            let fromStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.data?.userInfo?.statusId)
-            let toStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.changeStatus.controls['selectStatus'].value)
-            we_track('Update status', {
-              'User Name': this.data?.userInfo?.name,
-              'User Number': this.data?.userInfo?.mobileNumber,
-              'From status': fromStatusObj.length ? fromStatusObj[0].statusName : '',
-              'To status': toStatusObj.length ? toStatusObj[0].statusName : '',
-            });
-            setTimeout(() => {
-              this.dialogRef.close({
-                event: 'close',
-                data: 'statusChanged',
-                responce: res,
-              });
-            }, 4000);
-          },
-          (error) => {
-            this.loading = false;
-            this._toastMessageService.alert(
-              'error',
-              'There is some issue to Update Status information.'
+          } else if (this.data.mode === 'Update Caller') {
+            let param = `/call-management/customers`;
+            let reqBody = Object.assign(
+              this.data.userInfo,
+              this.changeStatus.getRawValue()
             );
-          }
-        );
-      } else if (this.data.mode === 'Update Caller') {
-        let param = `/call-management/customers`;
-        let reqBody = Object.assign(
-          this.data.userInfo,
-          this.changeStatus.getRawValue()
-        );
-        console.log('reqBody: ', reqBody);
-        this.userService.putMethod(param, reqBody).subscribe(
-          (res) => {
-            console.log('Status update response: ', res);
+            console.log('reqBody: ', reqBody);
+            this.userService.putMethod(param, reqBody).subscribe(
+              (res) => {
+                console.log('Status update response: ', res);
 
-            this.loading = false;
-            this._toastMessageService.alert(
-              'success',
-              'Caller Agent update successfully.'
-            );
-            setTimeout(() => {
-              this.dialogRef.close({
-                event: 'close',
-                data: 'statusChanged',
-                responce: res,
-              });
-            }, 4000);
-          },
-          (error) => {
-            this.loading = false;
-            this._toastMessageService.alert(
-              'error',
-              'There is some issue to Update Caller Agent.'
+                this.loading = false;
+                this._toastMessageService.alert(
+                  'success',
+                  'Caller Agent update successfully.'
+                );
+                setTimeout(() => {
+                  this.dialogRef.close({
+                    event: 'close',
+                    data: 'statusChanged',
+                    responce: res,
+                  });
+                }, 4000);
+              },
+              (error) => {
+                this.loading = false;
+                this._toastMessageService.alert(
+                  'error',
+                  'There is some issue to Update Caller Agent.'
+                );
+              }
             );
           }
-        );
+        }
       }
-    }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+    });
+
   }
 
   undoStatus(){
     // 'https://uat-api.taxbuddy.com/user/previous-status' \
-    this.loading = true;
-    let param = '/previous-status';
-    let reqBody={
-      userId:this.data.userInfo.userId,
-      serviceType:this.data.userInfo.serviceType,
-      assessmentYear:this.data.userInfo.assessmentYear
-    }
-    this.userService.postMethod(param,reqBody).subscribe(
-      (response:any) => {
-        console.log('undo Status response: ', response);
-        this.loading = false;
-        if(response.success){
-          this._toastMessageService.alert(
-            'success',response.message
-          );
-        }else{
-          this._toastMessageService.alert(
-            'error',
-            'There is some issue to Update Status information.'
+    this.utilsService
+      .getUserCurrentStatus(this.data.userInfo.userId)
+      .subscribe((res: any) => {
+        console.log(res);
+        if (res.error) {
+          this._toastMessageService.alert('error', res.error);
+          return;
+        } else {
+          this.loading = true;
+          let param = '/previous-status';
+          let reqBody = {
+            userId: this.data.userInfo.userId,
+            serviceType: this.data.userInfo.serviceType,
+            assessmentYear: this.data.userInfo.assessmentYear,
+          };
+          this.userService.postMethod(param, reqBody).subscribe(
+            (response: any) => {
+              console.log('undo Status response: ', response);
+              this.loading = false;
+              if (response.success) {
+                this._toastMessageService.alert('success', response.message);
+              } else {
+                this._toastMessageService.alert(
+                  'error',
+                  'There is some issue to Update Status information.'
+                );
+              }
+
+              setTimeout(() => {
+                this.dialogRef.close({
+                  event: 'close',
+                  data: 'statusChanged',
+                  responce: response,
+                });
+              }, 3000);
+            },
+            (error) => {
+              this.loading = false;
+              this._toastMessageService.alert(
+                'error',
+                'There is some issue to Update Status information.'
+              );
+            }
           );
         }
-
-        setTimeout(() => {
-          this.dialogRef.close({
-            event: 'close',
-            data: 'statusChanged',
-            responce: response,
-          });
-        }, 3000);
-
-      },(error) => {
+      },error => {
         this.loading = false;
-        this._toastMessageService.alert(
-          'error',
-          'There is some issue to Update Status information.'
-        );
-      })
-
+        this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      });
   }
-
 }
 
 export interface ConfirmModel {
