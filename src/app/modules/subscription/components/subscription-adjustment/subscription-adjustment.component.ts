@@ -283,7 +283,8 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         leaderName: subscriptionData[i].leaderName,
         createdDate: subscriptionData[i].createdDate,
         paymentStatus: paymentStatuses.toString(),
-        couponCodeClaimedServiceType:subscriptionData[i].couponCodeClaimedServiceType
+        couponCodeClaimedServiceType:subscriptionData[i].couponCodeClaimedServiceType,
+        isCouponCodeAvailable:subscriptionData[i].isCouponCodeAvailable,
       });
     }
     return newData;
@@ -461,10 +462,15 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to revert Subscription Adjustment Coupon" data-action-type="revert-Coupon"
+          if(params.data.isCouponCodeAvailable){
+            return `<button type="button" class="action_icon add_button" title="Click to revert Subscription Adjustment Coupon" data-action-type="revert-Coupon"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc; ">
             <i class="fa fa-undo fa-xs" aria-hidden="true" data-action-type="revert-Coupon"> Restore </i>
              </button>`;
+          }else{
+            return'-';
+          }
+
         },
       },
     ];
