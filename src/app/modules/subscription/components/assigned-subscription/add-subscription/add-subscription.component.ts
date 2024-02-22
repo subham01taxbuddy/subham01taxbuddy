@@ -240,27 +240,57 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   updateSubscription() {
-    this.loading = true;
-    let param = '/subscription/recalculate';
-    let reqBody = {
-      userId: this.data.userId,
-      planId: this.selectedPlanInfo.planId,
-      selectedBy: "SME",
-      smeUserId: this?.loggedInSme[0]?.userId
-    }
-    this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
-      this.loading = false;
-      we_track('Create Subscription', {
-        'User Number': this.data.mobileNo,
-        'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
-      });
-      this.dialogRef.close({ event: 'close', data: res });
-      this.toastMessage.alert("success", "Subscription created successfully.")
-      let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
-    }, error => {
-      this.loading = false
-      this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
-    })
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          this.loading = true;
+          let param = '/subscription/recalculate';
+          let reqBody = {
+            userId: this.data.userId,
+            planId: this.selectedPlanInfo.planId,
+            selectedBy: 'SME',
+            smeUserId: this?.loggedInSme[0]?.userId,
+          };
+          this.itrService.postMethod(param, reqBody).subscribe(
+            (res: any) => {
+              this.loading = false;
+              we_track('Create Subscription', {
+                'User Number': this.data.mobileNo,
+                Service:
+                  this.selectedPlanInfo?.servicesType +
+                  ' : ' +
+                  this.selectedPlanInfo?.name,
+              });
+              this.dialogRef.close({ event: 'close', data: res });
+              this.toastMessage.alert(
+                'success',
+                'Subscription created successfully.'
+              );
+              let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
+            },
+            (error) => {
+              this.loading = false;
+              this.toastMessage.alert(
+                'error',
+                this.utilService.showErrorMsg(error.error.status)
+              );
+            }
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
+      }
+    );
+
   }
 
   removeCancelSubscription() {

@@ -1153,34 +1153,51 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   openAddSubscriptionDialog() {
-    let disposable = this.dialog.open(AddSubscriptionComponent, {
-      width: '80%',
-      height: 'auto',
-      data: {
-        userId: this.userId,
-        mobileNo: this.mobileNumber,
-        filerId: this.assignedFilerId,
-      },
-    });
-    console.log('send data', data);
-    disposable.afterClosed().subscribe((result) => {
-      if (result && result.data) {
-        let subData = {
-          type: 'create',
-          data: result.data,
-        };
-        sessionStorage.setItem(
-          'createSubscriptionObject',
-          JSON.stringify(subData)
+    this.utilsService.getUserCurrentStatus(this.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let disposable = this.dialog.open(AddSubscriptionComponent, {
+            width: '80%',
+            height: 'auto',
+            data: {
+              userId: this.userId,
+              mobileNo: this.mobileNumber,
+              filerId: this.assignedFilerId,
+            },
+          });
+          console.log('send data', data);
+          disposable.afterClosed().subscribe((result) => {
+            if (result && result.data) {
+              let subData = {
+                type: 'create',
+                data: result.data,
+              };
+              sessionStorage.setItem(
+                'createSubscriptionObject',
+                JSON.stringify(subData)
+              );
+              // let subID=result.data['subscriptionId'];
+              console.log('Afetr dialog close -> ', subData);
+              this.router.navigate(['/subscription/create-subscription'], {
+                queryParams: { assignedFilerId: this.assignedFilerId },
+              });
+              // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
+            }
+          });
+        }
+      },(error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'error in api of user-reassignment-status'
         );
-        // let subID=result.data['subscriptionId'];
-        console.log('Afetr dialog close -> ', subData);
-        this.router.navigate(['/subscription/create-subscription'], {
-          queryParams: { assignedFilerId: this.assignedFilerId },
-        });
-        // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
       }
-    });
+    );
+
   }
 
   getFilerList() {
