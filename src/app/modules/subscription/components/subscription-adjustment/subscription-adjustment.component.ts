@@ -285,6 +285,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         paymentStatus: paymentStatuses.toString(),
         couponCodeClaimedServiceType:subscriptionData[i].couponCodeClaimedServiceType,
         isCouponCodeAvailable:subscriptionData[i].isCouponCodeAvailable,
+        couponCodeCreatedDate:subscriptionData[i].couponCodeCreatedDate,
       });
     }
     return newData;
@@ -370,6 +371,21 @@ export class SubscriptionAdjustmentComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'Coupon Created Date',
+        field: 'couponCodeCreatedDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
+        },
+
       },
       {
         headerName: 'Created Date',
