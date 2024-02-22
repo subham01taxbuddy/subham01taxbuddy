@@ -496,13 +496,20 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
+  isColumnExpanded: boolean = false;
+
+  toggleColumnExpansion(): void {
+    this.isColumnExpanded = !this.isColumnExpanded;
+    this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+  }
+
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
 
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
-    return [
+    let columnDefs = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
@@ -575,36 +582,6 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
         },
       },
-      // {
-      //   headerName: 'Status',
-      //   field: 'statusId',
-      //   width: 90,
-      //   suppressMovable: true,
-      //   sortable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     // console.log('params === ', params, params.data.statusId);
-      //     // console.log('itrStatus array === ', itrStatus);
-      //     if (itrStatus.length !== 0) {
-      //       const nameArray = itrStatus.filter(
-      //         (item: any) => item.statusId === params.data.statusId
-      //       );
-      //       if (nameArray.length !== 0) {
-      //         statusSequence = nameArray[0].sequence;
-      //         return nameArray[0].statusName;
-      //       } else {
-      //         return '-';
-      //       }
-      //     } else {
-      //       return params.data.statusId;
-      //     }
-      //   },
-      // },
       {
         headerName: 'leader Name',
         field: 'leaderName',
@@ -737,191 +714,25 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      // {
-      //   headerName: 'Action With',
-      //   field: 'conversationWithFiler',
-      //   width: 110,
-      //   suppressMovable: true,
-      //   hide: !showOwnerCols,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     {
-      //       if (params.data.conversationWithFiler === true) {
-      //         return params.data.filerName;
-      //       } else {
-      //         return params.data.leaderName;
-      //       }
-      //     }
-      //   }
-      // },
-
-
-
-
-      // {
-      //   headerName: 'Agent Name',
-      //   field: 'callerAgentName',
-      //   width: 180,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
       {
-        headerName: 'ITR Form Base Status',
-        editable: false,
+        headerName: 'Other Options',
+        headerClass: 'single-column-header',
         suppressMenu: true,
-        sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
-            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
-             </button>`;
-          } else {
-            return '-'
-          }
-        },
-        width: 120,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Call',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-phone" data-action-type="call"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Update Status',
-        // field: 'statusName',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          const statusName = params.data.statusName;
-          const statusColors = {
-            'Open': { background: '#D3FBDA', color: '#43A352' },
-            'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
-            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Follow Up': { background: '#DCDCDC', color: '#808080' },
-            'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
-            'Interested': { background: '#D3FBDA', color: '#43A352' },
-            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
-            'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
-            'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
-            'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
-            'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
-            'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
-            'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
-            'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
-            'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
-            'Pay Later': { background: '#DCDCDC', color: '#808080' },
-          };
-          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
-
-          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
-          cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
-          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+        cellRenderer: (params: any) => {
+          return `<button type="button" class="action_icon add_button" title="More Options"
+            style="border: none; background: transparent; font-size: 12px; cursor:pointer;" data-action-type="others"
+            (click)="toggleColumnExpansion()">
+            <i class="fas ${this.isColumnExpanded ? 'fa-chevron-right' : 'fa-chevron-left'}" aria-hidden="true" data-action-type="others"></i>
           </button>`;
-
-          // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-          // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-          // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-          //  </button>`;
         },
-
-        width: 220,
+        width: 85,
         pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'left',
-            display: 'flex',
-            'align-items': 'left',
-            'justify-content': 'left',
-          };
-        },
-      },
-      {
-        headerName: 'Chat',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
-              <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
-             </button>`;
-        },
-        width: 65,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Notes',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-          <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
-           </button>`;
-        },
-        width: 70,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
+        cellStyle: {
+          textAlign: 'center',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
         },
       },
       {
@@ -971,7 +782,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'More',
         editable: false,
         suppressMenu: true,
-        sortable: true,
+        sortable: false,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
@@ -984,13 +795,167 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
           };
         },
-      },
+      }
     ];
+
+    let additionalColumns = [];
+    if (this.isColumnExpanded) {
+      additionalColumns = [
+        {
+          headerName: 'ITR Form Base Status',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            if (params.data.serviceType === 'ITR') {
+              return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+              style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+              <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+               </button>`;
+            } else {
+              return '-'
+            }
+          },
+          width: 120,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Call',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Call to user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa-solid fa-phone" data-action-type="call"></i>
+             </button>`;
+          },
+          width: 60,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Update Status',
+          // field: 'statusName',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            const statusName = params.data.statusName;
+            const statusColors = {
+              'Open': { background: '#D3FBDA', color: '#43A352' },
+              'Not Interested': { background: '#DCDCDC', color: '#808080' },
+              'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+              'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              'Follow Up': { background: '#DCDCDC', color: '#808080' },
+              'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
+              'Interested': { background: '#D3FBDA', color: '#43A352' },
+              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
+              'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
+              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
+              'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
+              'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
+              'Pay Later': { background: '#DCDCDC', color: '#808080' },
+            };
+            const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
+
+            return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
+            cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
+            <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+            </button>`;
+
+            // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+            // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+            // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
+            //  </button>`;
+          },
+
+          width: 180,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'left',
+              display: 'flex',
+              'align-items': 'left',
+              'justify-content': 'left',
+            };
+          },
+        },
+        {
+          headerName: 'Chat',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Open Chat"
+              style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
+                <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+               </button>`;
+          },
+          width: 65,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Notes',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+            style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
+            <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
+             </button>`;
+          },
+          width: 70,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+      ];
+    }
+    columnDefs.splice(columnDefs.length - 2, 0, ...additionalColumns);
+    return columnDefs;
   }
 
   reassignmentForLeader() {
@@ -1178,6 +1143,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
         case 'getItrStatus': {
           this.getItrStatus(params.data);
+          break;
+        }
+        case 'others': {
+          this.toggleColumnExpansion();
           break;
         }
       }
