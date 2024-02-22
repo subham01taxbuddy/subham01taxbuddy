@@ -1076,6 +1076,9 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
         });
       }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
     });
   }
 

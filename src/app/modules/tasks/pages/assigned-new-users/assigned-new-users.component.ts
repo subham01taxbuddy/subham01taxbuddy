@@ -853,8 +853,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             }
           });
         }
-      },
-      (error) => {
+      },(error) => {
         this.loading = false;
         this._toastMessageService.alert(
           'error',

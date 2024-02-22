@@ -466,25 +466,42 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   reAssignUser() {
-    let disposable = this.dialog.open(ReAssignDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: this.data.userId,
-        clientName: this.data.name,
-        serviceType: this.data.serviceType,
-        ownerName: this.data.ownerName,
-        filerName: this.data.filerName,
-        filerUserId: this.data.filerUserId,
-        userInfo: this.data
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        return this.dialogRef.close({ event: 'close', data: 'success' });
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let disposable = this.dialog.open(ReAssignDialogComponent, {
+            width: '50%',
+            height: 'auto',
+            data: {
+              userId: this.data.userId,
+              clientName: this.data.name,
+              serviceType: this.data.serviceType,
+              ownerName: this.data.ownerName,
+              filerName: this.data.filerName,
+              filerUserId: this.data.filerUserId,
+              userInfo: this.data
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              return this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          });
+        }
+      },(error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-    });
+    );
+
   }
 
   createRowData(data) {
