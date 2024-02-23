@@ -1188,10 +1188,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         return;
       } else {
         this.loading = true;
-        if (this.service === 'ITRU') {
+        if (this.service === 'ITRU' || this.service === 'ITR') {
           if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined' || this.assessmentYear.value === 'undefined' ) {
             this.loading = false;
-            this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
+            this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
             return;
           }
         }
