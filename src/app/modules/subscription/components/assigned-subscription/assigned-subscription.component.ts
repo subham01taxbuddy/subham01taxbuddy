@@ -960,39 +960,55 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           });
           this.dialogRef.afterClosed().subscribe((result) => {
             if (result === 'YES') {
-              this.loading = true;
-              let param = `/itr/subscription`;
-              let reqBody = {
-                subscriptionId: subscription.subscriptionId,
-                cancellationStatus: 'PENDING',
-              };
-              this.userMsService.spamPutMethod(param, reqBody).subscribe(
+              this.utilsService.getUserCurrentStatus(subscription.userId).subscribe(
                 (res: any) => {
-                  this.loading = false;
-                  // we_track('Cancel Subscription  ', {
-                  //   'User number ': subscription.mobileNumber,
-                  // });
-                  this._toastMessageService.alert(
-                    'success',
-                    'Subscription will be Canceled/Deleted onces your Leader Approves it.'
-                  );
-                  this.getAssignedSubscription(this.config.currentPage);
-                },
-                (error) => {
-                  this.loading = false;
-                  if (error.error.error === 'BAD_REQUEST') {
-                    this._toastMessageService.alert(
-                      'error',
-                      error.error.message
-                    );
+                  console.log(res);
+                  if (res.error) {
+                    this.utilsService.showSnackBar(res.error);
+                    return;
                   } else {
-                    this._toastMessageService.alert(
-                      'error',
-                      'failed to update.'
+                    this.loading = true;
+                    let param = `/itr/subscription`;
+                    let reqBody = {
+                      subscriptionId: subscription.subscriptionId,
+                      cancellationStatus: 'PENDING',
+                    };
+                    this.userMsService.spamPutMethod(param, reqBody).subscribe(
+                      (res: any) => {
+                        this.loading = false;
+                        // we_track('Cancel Subscription  ', {
+                        //   'User number ': subscription.mobileNumber,
+                        // });
+                        this._toastMessageService.alert(
+                          'success',
+                          'Subscription will be Canceled/Deleted onces your Leader Approves it.'
+                        );
+                        this.getAssignedSubscription(this.config.currentPage);
+                      },
+                      (error) => {
+                        this.loading = false;
+                        if (error.error.error === 'BAD_REQUEST') {
+                          this._toastMessageService.alert(
+                            'error',
+                            error.error.message
+                          );
+                        } else {
+                          this._toastMessageService.alert(
+                            'error',
+                            'failed to update.'
+                          );
+                        }
+                      }
                     );
                   }
+                },(error) => {
+                  this.loading = false;
+                  this.utilsService.showSnackBar(
+                    'Error while Activate User, Please try again.'
+                  );
                 }
               );
+
             }
           });
         }

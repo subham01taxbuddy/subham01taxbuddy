@@ -823,23 +823,37 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         });
         this.dialogRef.afterClosed().subscribe(result => {
           if (result === 'YES') {
-            this.loading = true;
-            let id = data.id
-            let param = `/refund-request?id=${id}`;
-            this.itrService.deleteMethod(param).subscribe((response: any) => {
-              if (response.success) {
-                this.loading = false;
-                console.log('response', response);
-                this.utilsService.showSnackBar(response.message);
-                this.resetFilters();
+            this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+              console.log(res);
+              if (res.error) {
+                this.utilService.showSnackBar(res.error);
+                return;
               } else {
-                this.utilsService.showSnackBar(response.message);
-                this.loading = false;
+                this.loading = true;
+                let id = data.id
+                let param = `/refund-request?id=${id}`;
+                this.itrService.deleteMethod(param).subscribe((response: any) => {
+                  if (response.success) {
+                    this.loading = false;
+                    console.log('response', response);
+                    this.utilsService.showSnackBar(response.message);
+                    this.resetFilters();
+                  } else {
+                    this.utilsService.showSnackBar(response.message);
+                    this.loading = false;
+                  }
+                },(error) => {
+                  this.loading = false;
+                  this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+                });
               }
             },(error) => {
               this.loading = false;
-              this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
-            });
+              this.utilService.showSnackBar(
+                'Error while Activate User, Please try again.'
+              );
+          });
+
           }
         })
       }
@@ -867,9 +881,14 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         });
         this.dialogRef.afterClosed().subscribe(result => {
           if (result === 'YES') {
-            this.loading = true;
+            this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+              console.log(res);
+              if (res.error) {
+                this.utilService.showSnackBar(res.error);
+                return;
+              } else {
+                this.loading = true;
             let param = `payment/razorpay/refund`;
-
             const request = {
               id: data.id,
               // invoiceNo:data.invoiceNo
@@ -890,6 +909,14 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
                 this.utilsService.showSnackBar('Error in API of Initiate Refund ');
               }
             );
+              }
+            },(error) => {
+              this.loading = false;
+              this.utilService.showSnackBar(
+                'Error while Activate User, Please try again.'
+              );
+            });
+
           }
         }
         );
