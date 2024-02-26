@@ -18,6 +18,7 @@ declare function we_track(key: string, value: any);
 export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
   service = '';
+  disableItrSubPlan: boolean = false;
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -173,6 +174,9 @@ export class AddSubscriptionComponent implements OnInit {
           this.service = itrPlanDetails[0]?.servicesType;
           this.serviceDetails = itrPlanDetails[0]?.name;
         }
+
+        this.disableItrSubPlan = !this.allSubscriptions.some(sub => (sub?.smeSelectedPlan?.servicesType === 'ITR' || sub?.userSelectedPlan?.servicesType === 'ITR') && sub?.item?.financialYear !== '2023-2024')
+        
       }
     })
   }
