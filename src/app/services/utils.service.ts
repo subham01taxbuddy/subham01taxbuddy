@@ -686,7 +686,7 @@ export class UtilsService {
       acknowledgementDate91: null,
       portugeseCC5AFlag: 'N',
       schedule5a: undefined,
-      isITRU :false,
+      isITRU : this.getIsITRU(),
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
       liableSection44AAflag: 'Y',
@@ -732,6 +732,10 @@ export class UtilsService {
     };
 
     return ITR_JSON;
+  }
+
+  getIsITRU(){
+    return new Date().getTime() <= new Date("2024-03-31").getTime();
   }
 
   setUploadedJson(data: any) {
