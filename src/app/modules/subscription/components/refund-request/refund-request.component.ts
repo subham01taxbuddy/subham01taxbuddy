@@ -788,6 +788,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       this.loading=false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }
@@ -857,6 +858,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
               this.loading=false;
               if (error.error && error.error.error) {
                 this.utilService.showSnackBar(error.error.error);
+                this.getRefundRequestList(0);
               } else {
                 this.utilService.showSnackBar("An unexpected error occurred.");
               }
@@ -869,6 +871,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       this.loading=false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }
@@ -926,6 +929,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
               this.loading=false;
               if (error.error && error.error.error) {
                 this.utilService.showSnackBar(error.error.error);
+                this.getRefundRequestList(0);
               } else {
                 this.utilService.showSnackBar("An unexpected error occurred.");
               }
@@ -939,6 +943,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       this.loading=false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }

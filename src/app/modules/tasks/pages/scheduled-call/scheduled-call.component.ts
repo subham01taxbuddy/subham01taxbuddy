@@ -705,6 +705,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.loading=false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
+          this.search();
         } else {
           this.toastMsgService.alert("error", "An unexpected error occurred.");
         }
@@ -763,6 +764,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.loading=false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
+          this.search();
         } else {
           this.toastMsgService.alert("error", "An unexpected error occurred.");
         }
@@ -823,6 +825,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
+          this.search();
         } else {
           this.toastMsgService.alert("error", "An unexpected error occurred.");
         }
@@ -910,6 +913,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
+          this.search();
         } else {
           this.toastMsgService.alert("error", "An unexpected error occurred.");
         }

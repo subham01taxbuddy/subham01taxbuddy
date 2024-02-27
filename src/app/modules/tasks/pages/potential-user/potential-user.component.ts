@@ -763,6 +763,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
+          this.search();
         } else {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }
@@ -813,6 +814,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       this.loading=false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
+          this.search();
         } else {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }
@@ -862,6 +864,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
+          this.search();
         } else {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }

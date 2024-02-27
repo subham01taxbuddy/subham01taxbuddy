@@ -207,6 +207,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar( error.error.error);
+          this.dialogRef.close(true);
         } else {
           this.utilsService.showSnackBar( "An unexpected error occurred.");
         }

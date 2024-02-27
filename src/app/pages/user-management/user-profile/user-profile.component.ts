@@ -752,7 +752,7 @@ export class UserProfileComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
-          this.getUserInfo(this.userId)
+          this.getUserInfo(this.userId);
           return;
         } else {
           console.log(
@@ -817,6 +817,7 @@ export class UserProfileComponent implements OnInit {
         this.loading=false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
+          this.getUserInfo(this.userId);
         } else {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }

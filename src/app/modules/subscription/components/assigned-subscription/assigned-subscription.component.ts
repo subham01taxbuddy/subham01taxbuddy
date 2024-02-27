@@ -1007,6 +1007,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                   this.loading=false;
                   if (error.error && error.error.error) {
                     this.utilsService.showSnackBar(error.error.error);
+                    this.getAssignedSubscription(this.config.currentPage);
                   } else {
                     this.utilsService.showSnackBar("An unexpected error occurred.");
                   }
@@ -1021,6 +1022,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
+          this.getAssignedSubscription(this.config.currentPage);
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }
@@ -1084,6 +1086,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
+          this.getAssignedSubscription(this.config.currentPage);
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }
@@ -1115,6 +1118,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
+          this.getAssignedSubscription(this.config.currentPage);
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }
@@ -1222,6 +1226,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
+          this.getAssignedSubscription(this.config.currentPage);
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }

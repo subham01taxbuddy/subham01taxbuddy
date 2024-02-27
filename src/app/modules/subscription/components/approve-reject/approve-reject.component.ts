@@ -67,6 +67,7 @@ export class ApproveRejectComponent implements OnInit {
         this.loading=false;
         if (error.error && error.error.error) {
           this.utilService.showSnackBar(error.error.error);
+          this.dialogRef.close(true);
         } else {
           this.utilService.showSnackBar("An unexpected error occurred.");
         }

@@ -1108,6 +1108,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.loading=false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
+        this.getInvoice();
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }
@@ -1141,6 +1142,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       this.loading=false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
+        this.getInvoice();
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }

@@ -970,6 +970,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       this.loading=false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
+        this.getInvoice();
       } else {
         this.utilsService.showSnackBar("An unexpected error occurred.");
       }

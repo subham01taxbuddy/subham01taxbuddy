@@ -98,6 +98,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     },error => {
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar( error.error.error);
+          this.dialogRef.close();
         } else {
           this.utilsService.showSnackBar( "An unexpected error occurred.");
         }
