@@ -581,6 +581,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getCancelSubscriptionList(0);
         return;
       } else {
         let disposable = this.dialog.open(ApproveRejectComponent, {
@@ -617,6 +618,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getCancelSubscriptionList(0);
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {

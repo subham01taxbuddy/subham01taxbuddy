@@ -752,6 +752,7 @@ export class UserProfileComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.getUserInfo(this.userId)
           return;
         } else {
           console.log(

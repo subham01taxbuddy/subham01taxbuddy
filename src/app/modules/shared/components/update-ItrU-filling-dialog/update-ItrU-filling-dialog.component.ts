@@ -125,6 +125,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close(true);
           return;
         } else {
           const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(

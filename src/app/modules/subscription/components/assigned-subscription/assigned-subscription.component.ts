@@ -910,6 +910,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.getAssignedSubscription(this.config.currentPage);
           return;
         } else {
           this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -925,6 +926,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                   console.log(res);
                   if (res.error) {
                     this.utilsService.showSnackBar(res.error);
+                    this.getAssignedSubscription(this.config.currentPage);
                     return;
                   } else {
                     this.loading = true;
@@ -992,6 +994,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.getAssignedSubscription(this.config.currentPage);
           return;
         } else {
           let subscriptionData = {
@@ -1080,6 +1083,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.getAssignedSubscription(this.config.currentPage);
           return;
         } else {
           let disposable = this.dialog.open(AddSubscriptionComponent, {

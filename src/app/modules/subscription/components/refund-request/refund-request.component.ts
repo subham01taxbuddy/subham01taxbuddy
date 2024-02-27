@@ -766,6 +766,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {
@@ -780,6 +781,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         })
 
         disposable.afterClosed().subscribe(result => {
+          this.getRefundRequestList(0);
         });
       }
     },(error) => {
@@ -815,6 +817,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
         return;
       } else {
         this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -829,6 +832,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
               console.log(res);
               if (res.error) {
                 this.utilService.showSnackBar(res.error);
+                this.getRefundRequestList(0);
                 return;
               } else {
                 this.loading = true;
@@ -877,6 +881,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
         return;
       } else {
         this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -891,6 +896,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
               console.log(res);
               if (res.error) {
                 this.utilService.showSnackBar(res.error);
+                this.getRefundRequestList(0);
                 return;
               } else {
                 this.loading = true;

@@ -1013,6 +1013,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -1061,6 +1062,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -1213,6 +1215,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         // this.start(data);
@@ -1304,6 +1307,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         console.log('Data for revise return ', data);
@@ -1397,6 +1401,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let agent_number;
@@ -1456,6 +1461,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(ChangeStatusComponent, {
@@ -1495,6 +1501,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {
@@ -1509,6 +1516,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         })
 
         disposable.afterClosed().subscribe(result => {
+          this.search();
         });
       }
     },error => {

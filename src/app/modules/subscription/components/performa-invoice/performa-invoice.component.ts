@@ -1059,6 +1059,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilService.showSnackBar(res.error);
+          this.getInvoice();
           return;
         } else {
           console.log('user: ', user);
@@ -1119,6 +1120,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getInvoice();
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {

@@ -37,6 +37,7 @@ export class ApproveRejectComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilService.showSnackBar(res.error);
+          this.dialogRef.close(true);
           return;
         } else {
           this.loading = true;

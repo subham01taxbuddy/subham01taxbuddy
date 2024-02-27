@@ -686,6 +686,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
@@ -742,6 +743,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {
@@ -774,6 +776,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           const agentNumber = await this.utilsService.getMyCallingNumber();
@@ -857,6 +860,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           console.log('callInfo: ', callInfo);

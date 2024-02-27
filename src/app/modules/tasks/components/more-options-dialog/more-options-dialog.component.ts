@@ -127,6 +127,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
         return;
       } else {
         const param =
@@ -261,6 +262,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
         return;
       } else {
         if (this.utilsService.isNonEmpty(this.selectedService)) {
@@ -305,6 +307,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
         return;
       } else {
         this.loading = true;
@@ -412,6 +415,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
         return;
       } else {
         let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
@@ -487,6 +491,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
           return;
         } else {
           let disposable = this.dialog.open(ReAssignDialogComponent, {
@@ -649,6 +654,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
         return;
       } else {
         const userId = this.data.userId;
