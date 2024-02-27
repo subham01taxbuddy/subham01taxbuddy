@@ -98,6 +98,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   isBankDetailsFormChange: boolean;
   roundRobinData: any = {};
   isReadOnly:boolean =false;
+  activeCaseMaxCapacity = new FormControl('')
 
   constructor(
     private fb: FormBuilder,
@@ -110,6 +111,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private reportService: ReportService
   ) {
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
+    this.activeCaseMaxCapacity.setValue(this.smeObj?.activeCaseMaxCapacity || '');
+
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
       this.languageForm.addControl(lang, new FormControl(false));
@@ -869,6 +872,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be zero');
         return;
       }
+      const value = this.activeCaseMaxCapacity.value;
+      if (value && value > 0){
+        this.smeObj['activeCaseMaxCapacity']= this.activeCaseMaxCapacity.value
+      }else{
+        this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be empty or zero');
+        return;
+      }
 
       if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
         this.utilsService.showSnackBar('Please select at least one ITR type');
@@ -1067,4 +1077,5 @@ export interface SmeObj {
   serviceEligibility_TPA:any
   serviceEligibility_NOTICE:any
   serviceEligibility_GST:any
+  activeCaseMaxCapacity:any;
 }
