@@ -788,6 +788,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       console.log(res);
       if(res.error){
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return
       }else{
         let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -841,6 +842,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -1136,6 +1138,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let agent_number
@@ -1190,6 +1193,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let disposable = this.dialog.open(ChangeStatusComponent, {
@@ -1231,6 +1235,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let disposable = this.dialog.open(UserNotesComponent, {

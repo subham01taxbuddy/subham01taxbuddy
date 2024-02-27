@@ -722,6 +722,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
        console.log(res);
        if (res.error) {
          this.utilsService.showSnackBar(res.error);
+         this.search();
          return;
        } else {
         this.loading = true;
@@ -791,6 +792,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search();
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {
@@ -826,6 +828,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           console.log('data to active user', data);

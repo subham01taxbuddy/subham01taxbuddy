@@ -90,6 +90,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       console.log(res);
       if(res.error){
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close();
         return
       }else{
         this.note()

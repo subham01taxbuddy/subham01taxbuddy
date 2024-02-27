@@ -164,6 +164,7 @@ export class ReAssignDialogComponent implements OnInit {
     console.log(res);
     if (res.error) {
       this.utilsService.showSnackBar(res.error);
+      this.dialogRef.close({ event: 'close', data: 'success' });
       return;
     } else {
       if (this.leaderId || this.filerId) {

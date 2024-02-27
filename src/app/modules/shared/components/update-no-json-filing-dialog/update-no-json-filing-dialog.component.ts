@@ -2,7 +2,7 @@ import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -46,7 +46,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     private userMsService: UserMsService,
     public location: Location,
     public utilsService: UtilsService,
-    private router: Router) {
+    private router: Router,
+    private dialogRef: MatDialogRef<UpdateNoJsonFilingDialogComponent>) {
   }
 
   ngOnInit() {
@@ -163,6 +164,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close(true);
           return;
         } else {
           let req = {

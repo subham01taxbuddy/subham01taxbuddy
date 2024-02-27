@@ -514,6 +514,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.search(this.config.currentPage);
         return;
       } else {
         this.dialogRef = this.dialog.open(ConfirmDialogComponent, {

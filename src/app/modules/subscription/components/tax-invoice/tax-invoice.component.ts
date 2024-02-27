@@ -948,6 +948,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res.error) {
         this.utilService.showSnackBar(res.error);
+        this.getInvoice();
         return;
       } else {
         let disposable = this.dialog.open(UserNotesComponent, {
@@ -962,6 +963,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
         disposable.afterClosed().subscribe((result) => {
           console.log('The dialog was closed');
+          this.getInvoice();
         });
       }
     },(error) => {

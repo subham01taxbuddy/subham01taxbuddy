@@ -155,6 +155,7 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close();
         return;
       } else {
         this.loading=true;

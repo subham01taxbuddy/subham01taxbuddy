@@ -146,6 +146,8 @@ export class ChangeStatusComponent implements OnInit {
       console.log(res);
       if(res.error){
         this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({event: 'close',data: 'statusChanged',
+        });
         return
       }else{
         if (this.changeStatus.valid) {

@@ -1090,6 +1090,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           var workingItr = this.itrDataList.filter(
@@ -1180,6 +1181,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           console.log('Data for revise return ', data);
@@ -1230,6 +1232,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           we_track('Actions', {
@@ -1282,6 +1285,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           we_track('E-verify ', {
@@ -1483,6 +1487,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           const agentNumber = await this.utilsService.getMyCallingNumber();
@@ -1565,6 +1570,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           let disposable = this.dialog.open(UserNotesComponent, {
@@ -1649,6 +1655,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
+          this.search();
           return;
         } else {
           we_track('E-verify ', {
