@@ -157,6 +157,12 @@ export class AddSubscriptionComponent implements OnInit {
     }
 
     this.loading = true;
+    this.reportService.getMethod('/bo/future-year-subscription-exists?mobileNumber='+number).subscribe((response: any) => {
+      this.disableItrSubPlan = response.data.itrSubscriptionExists;
+      this.loading = false;
+    });
+
+    this.loading = true;
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -174,16 +180,6 @@ export class AddSubscriptionComponent implements OnInit {
           this.service = itrPlanDetails[0]?.servicesType;
           this.serviceDetails = itrPlanDetails[0]?.name;
         }
-
-        this.disableItrSubPlan = this.allSubscriptions.some(sub => {
-          const isItr = (sub?.smeSelectedPlan?.servicesType === 'ITR' || sub?.userSelectedPlan?.servicesType === 'ITR');
-          if(isItr)
-            return sub?.item?.financialYear === '2023-2024';
-          else
-            return false;
-
-        });
-
       }
     })
   }
