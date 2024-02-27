@@ -175,7 +175,14 @@ export class AddSubscriptionComponent implements OnInit {
           this.serviceDetails = itrPlanDetails[0]?.name;
         }
 
-        this.disableItrSubPlan = !this.allSubscriptions.some(sub => (sub?.smeSelectedPlan?.servicesType === 'ITR' || sub?.userSelectedPlan?.servicesType === 'ITR') && sub?.item?.financialYear !== '2023-2024')
+        this.disableItrSubPlan = this.allSubscriptions.some(sub => {
+          const isItr = (sub?.smeSelectedPlan?.servicesType === 'ITR' || sub?.userSelectedPlan?.servicesType === 'ITR');
+          if(isItr)
+            return sub?.item?.financialYear === '2023-2024';
+          else 
+            return false;
+          
+        });
         
       }
     })
