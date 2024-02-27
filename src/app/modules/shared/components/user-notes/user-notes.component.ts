@@ -95,7 +95,11 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
         this.note()
       }
     },error => {
-      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar( error.error.error);
+        } else {
+          this.utilsService.showSnackBar( "An unexpected error occurred.");
+        }
     });
 
   }

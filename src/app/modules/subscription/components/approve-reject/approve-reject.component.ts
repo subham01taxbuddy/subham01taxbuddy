@@ -62,7 +62,14 @@ export class ApproveRejectComponent implements OnInit {
             }
           );
         }
-      })
+      },error => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilService.showSnackBar(error.error.error);
+        } else {
+          this.utilService.showSnackBar("An unexpected error occurred.");
+        }
+      });
   }
 }
 

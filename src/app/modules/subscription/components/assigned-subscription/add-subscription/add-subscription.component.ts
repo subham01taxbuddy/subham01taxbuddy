@@ -179,11 +179,11 @@ export class AddSubscriptionComponent implements OnInit {
           const isItr = (sub?.smeSelectedPlan?.servicesType === 'ITR' || sub?.userSelectedPlan?.servicesType === 'ITR');
           if(isItr)
             return sub?.item?.financialYear === '2023-2024';
-          else 
+          else
             return false;
-          
+
         });
-        
+
       }
     })
   }
@@ -294,11 +294,12 @@ export class AddSubscriptionComponent implements OnInit {
         }
       },
       (error) => {
-        this.loading = false;
-        this._toastMessageService.alert(
-          'error',
-          'error in api of user-reassignment-status'
-        );
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+        } else {
+          this.utilsService.showSnackBar("An unexpected error occurred.");
+        }
       }
     );
 

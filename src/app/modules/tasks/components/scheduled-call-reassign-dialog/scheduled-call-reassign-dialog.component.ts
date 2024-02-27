@@ -176,8 +176,12 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
         });
       }
     },error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
     });
   }
 

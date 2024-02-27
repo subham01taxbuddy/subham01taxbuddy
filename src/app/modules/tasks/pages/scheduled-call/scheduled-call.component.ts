@@ -701,8 +701,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         });
       }
     },error => {
-      this.loading = false;
-      this.toastMsgService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
     });
 
   }
@@ -754,8 +758,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         });
       }
     },error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
     });
   }
 
@@ -809,11 +817,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading = false;
-        this.toastMsgService.alert(
-          'error',
-          'error in api of user-reassignment-status'
-        );
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
       }
     );
   }
@@ -894,11 +903,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading = false;
-        this.toastMsgService.alert(
-          'error',
-          'error in api of user-reassignment-status'
-        );
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
       }
     );
 
