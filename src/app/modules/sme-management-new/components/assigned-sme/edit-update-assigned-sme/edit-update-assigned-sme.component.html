@@ -541,7 +541,7 @@
               </div>
             </div>
             <div class="col-sm-5">
-              <div class="card" style="margin-top: 10px;">
+              <div class="card" style="margin-top: 10px;" *ngIf="false">
                 <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
                 <div class="row">
                   <section class="example-section">
@@ -556,6 +556,16 @@
                   </section>
                 </div>
               </div>
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="number" min="1" class="form-control" [formControl]="activeCaseMaxCapacity" required>
+                        <div *ngIf="activeCaseMaxCapacity.invalid && (activeCaseMaxCapacity.value === null || activeCaseMaxCapacity.value === '')" class="text-danger">This field is required.</div>
+                        <div *ngIf="activeCaseMaxCapacity.value === 0" class="text-danger">Please enter a value greater than zero.</div>
+                    </div>
+                </div>
+            </div>
             </div>
           </div>
 
