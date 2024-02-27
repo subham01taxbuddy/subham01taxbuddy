@@ -1032,11 +1032,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
       },
       (error) => {
-        this.loading = false;
-        this._toastMessageService.alert(
-          'error',
-          'error in api of user-reassignment-status'
-        );
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
       }
     );
 
@@ -1077,8 +1078,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         });
       }
     },error => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
   }
 
@@ -1239,8 +1244,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         });
       }
     },error => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
   }
 
@@ -1324,8 +1333,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
       }
     },error => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
 
   }
@@ -1429,8 +1442,12 @@ export class ItrAssignedUsersComponent implements OnInit {
           );
         }
       },error => {
-        this.loading = false;
-        this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
       });
   }
 
@@ -1464,8 +1481,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         });
       }
     },error => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
     });
 
   }
@@ -1491,8 +1512,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         });
       }
     },error => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
     });
 
   }

@@ -1157,8 +1157,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         }
       }
     },(error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+        } else {
+          this.utilsService.showSnackBar("An unexpected error occurred.");
+        }
     });
   }
 

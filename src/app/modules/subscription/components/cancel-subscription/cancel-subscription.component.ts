@@ -601,8 +601,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
         });
       }
     },(error) => {
-      this.loading = false;
-      this.utilService.showSnackBar('Error while Activate User, Please try again.');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
     });
 
   }
@@ -630,8 +634,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
         });
       }
     },(error) => {
-      this.loading = false;
-      this.utilService.showSnackBar('Error while Activate User, Please try again.');
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
     });
 
   }

@@ -197,6 +197,12 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         this.utilsService.showSnackBar(
           'error in api of user-reassignment-status'
         );
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar( error.error.error);
+        } else {
+          this.utilsService.showSnackBar( "An unexpected error occurred.");
+        }
       }
     );
   }
