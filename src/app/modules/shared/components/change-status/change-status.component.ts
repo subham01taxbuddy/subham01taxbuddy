@@ -241,6 +241,8 @@ export class ChangeStatusComponent implements OnInit {
       this.loading=false;
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
+        this.dialogRef.close({event: 'close',data: 'statusChanged',
+      });
       } else {
         this._toastMessageService.alert("error", "An unexpected error occurred.");
       }
@@ -256,6 +258,8 @@ export class ChangeStatusComponent implements OnInit {
         console.log(res);
         if (res.error) {
           this._toastMessageService.alert('error', res.error);
+          this.dialogRef.close({event: 'close',data: 'statusChanged',
+        });
           return;
         } else {
           this.loading = true;
@@ -300,6 +304,8 @@ export class ChangeStatusComponent implements OnInit {
         this.loading=false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
+          this.dialogRef.close({event: 'close',data: 'statusChanged',
+        });
         } else {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }
