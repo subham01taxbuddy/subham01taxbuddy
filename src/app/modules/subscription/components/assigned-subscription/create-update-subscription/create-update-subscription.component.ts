@@ -1182,12 +1182,17 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   updateSubscription() {
     this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
+
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
         return;
       } else {
-        this.loading = true;
+        if(this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
+          this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
+          return;
+        }
+
         if (this.service === 'ITRU' || this.service === 'ITR') {
           if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined' || this.assessmentYear.value === 'undefined' ) {
             this.loading = false;
