@@ -18,6 +18,7 @@ declare function we_track(key: string, value: any);
 export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
   service = '';
+  disableItrSubPlan: boolean = false;
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -154,6 +155,12 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
     }
+    
+    this.loading = true;
+    this.reportService.getMethod('/bo/future-year-subscription-exists?mobileNumber='+number).subscribe((response: any) => {
+      this.disableItrSubPlan = response.data.itrSubscriptionExists;
+      this.loading = false;
+    });
 
     this.loading = true;
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
