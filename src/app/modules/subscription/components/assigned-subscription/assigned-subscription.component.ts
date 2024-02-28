@@ -1219,6 +1219,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 queryParams: { assignedFilerId: this.assignedFilerId },
               });
               // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
+            }else{
+              this.getAssignedSubscription(this.config.currentPage);
             }
           });
         }
