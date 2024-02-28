@@ -1273,10 +1273,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
+          this.refreshPage();
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }
     });
+  }
+
+  refreshPage(){
+    this.ngOnInit();
   }
 
   ngOnDestroy() {
