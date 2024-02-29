@@ -40,7 +40,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   createSubscriptionObj: userInfo;
   smeSelectedPlanId: any;
   couponCodeAmount = 0;
-  selectedCouponCodeSubscriptionId: number;
+  selectedCouponCodeSubscriptionId: number = 0;
   removeCouponCodeFlag: boolean = false;
   loggedInSme: any;
   allPlans: any;
@@ -192,11 +192,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = '/subscription/coupon-code?userId='+this.subscriptionObj.userId+'&isCouponCodeAvailable=true';
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      console.log(response.data, "response.data");
-      console.log(response.data.length, "response.data.length");
-
       if (response.success && response.data.length > 0)
-            this.availableCouponCodes.push(response.data);
+            this.availableCouponCodes = response.data;
+
+      console.log(this.availableCouponCodes, "this.availableCouponCodes")
+
     });
   }
 
