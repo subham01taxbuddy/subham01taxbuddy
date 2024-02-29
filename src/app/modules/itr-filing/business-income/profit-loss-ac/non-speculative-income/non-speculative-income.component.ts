@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { BusinessDescription, ITR_JSON, NewExpenses, NewIncome, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -75,6 +76,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   totalOtherIncomes: any;
   natOfBusinessDtlForm: FormGroup;
   natOfBusinessDtlsArray: FormArray;
+  activeIndex: number;
+  gridOptions: GridOptions;
+  selectedFormGroup: FormGroup;
 
   constructor(
     public matDialog: MatDialog,
@@ -86,6 +90,29 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // setting grids data
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {
+        params.api?.setRowData(
+          this.nonspecIncomeFormArray.controls
+        );
+      },
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.controls['hasEdit'].setValue(true);
+        });
+        if (event.api.getSelectedRows().length === 0) {
+          this.nonspecIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+            formGroup.controls['hasEdit'].setValue(false);
+          });
+        }
+      },
+      sortable: true,
+    };
   }
 
   ngOnInit(): void {
@@ -95,6 +122,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     };
     this.initForm();
     this.nonspecIncomeFormArray = new FormArray([]);
+    let srn = this.nonspecIncomeFormArray.controls.length > 0 ? this.nonspecIncomeFormArray.controls.length : 0;
+    this.selectedFormGroup = this.createNonSpecIncomeForm(srn);
+    this.activeIndex = -1;
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -147,9 +178,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
           this.addIncomeForm();
         }
       } else {
-        let form = this.createNonSpecIncomeForm(0, null);
-        form.enable();
-        this.nonspecIncomeFormArray.push(form);
+        // let form = this.createNonSpecIncomeForm(0, null);
+        // form.enable();
+        // this.nonspecIncomeFormArray.push(form);
       }
     } else {
       this.addExpenseForm();
@@ -161,10 +192,13 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.nonspecIncomeForm = this.formBuilder.group({
       nonspecIncomesArray: this.nonspecIncomeFormArray,
     });
+    this.gridOptions.api?.setRowData(
+      this.nonspecIncomeFormArray.controls
+    );
     (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls.forEach((element, index) => {
-      this.calculateIncome(index);
+      this.calculateNonSpeculativeIncome(index);
     });
 
     this.natOfBusinessDtlForm = this.fb.group({
@@ -225,7 +259,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  createNonSpecIncomeForm(index, income: ProfitLossIncomes) {
+  createNonSpecIncomeForm(index, income?: ProfitLossIncomes) {
     return this.formBuilder.group({
       index: [index],
       hasEdit: [false],
@@ -318,8 +352,27 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.changeIncomes();
   }
 
-  calculateIncome(index) {
+  calculateIncome() {
     let totalExpenses = 0;
+    // let specIncome = (
+    //   this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
+    // ).controls[index] as FormGroup;
+    this.selectedFormGroup.controls['totalCredit'].setValue(
+      Number(this.selectedFormGroup.controls['turnOver'].value) +
+      Number(this.selectedFormGroup.controls['finishedGoodsClosingStock'].value)
+    );
+    this.selectedFormGroup.controls['grossProfit'].setValue(
+      Number(this.selectedFormGroup.controls['totalCredit'].value) - Number(this.selectedFormGroup.controls['finishedGoodsOpeningStock'].value)
+      - Number(this.selectedFormGroup.controls['purchase'].value)
+    );
+    this.selectedFormGroup.controls['netIncome'].setValue(
+      Number(this.selectedFormGroup.controls['grossProfit'].value) -
+      Number(this.selectedFormGroup.controls['expenditure'].value)
+    );
+    this.calculateNetProfit();
+  }
+
+  calculateNonSpeculativeIncome(index) {
     let specIncome = (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls[index] as FormGroup;
@@ -339,9 +392,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   calculateNetProfit() {
-    let specIncomeArray = this.nonspecIncomeForm.get(
-      'nonspecIncomesArray'
-    ) as FormArray;
+    let specIncomeArray = this.nonspecIncomeForm.get('nonspecIncomesArray') as FormArray;
 
     let grossProfit = 0;
     let netIncome = 0;
@@ -412,7 +463,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         netProfitfromNonSpeculativeIncome: row.netProfit,
         incomes: this.nonspecIncomeFormArray.getRawValue(),
         expenses: row.expenses,
-        otherIncomes:row.incomes,
+        otherIncomes: row.incomes,
       });
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {
@@ -480,7 +531,233 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   deleteNonSpecArray() {
-    const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
-    nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    // const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    // nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    array.controls = array.controls.filter(
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
+    this.selectedFormGroup.reset();
+    this.gridOptions?.api?.setRowData(this.nonspecIncomeFormArray.controls);
+    this.calculateIncome();
+    this.activeIndex = -1;
+  }
+
+
+  clearForm() {
+    this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['brokerName'].setValue('Manual');
+  }
+
+  saveManualEntry() {
+    if (this.selectedFormGroup.invalid) {
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      return;
+    }
+
+    let result = this.selectedFormGroup.getRawValue();
+
+    // result.costOfImprovement = result.indexCostOfImprovement;
+
+    if (this.activeIndex === -1) {
+      let srn = (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).length;
+      let form = this.createNonSpecIncomeForm(srn);
+      form.patchValue(this.selectedFormGroup.getRawValue());
+      (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).push(form);
+    } else {
+      (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+    }
+    this.gridOptions.api?.setRowData(this.nonspecIncomeFormArray.controls);
+    this.calculateIncome();
+    this.activeIndex = -1;
+    this.clearForm();
+    this.utilsService.showSnackBar("Record saved successfully.");
+  }
+
+  editForm(event) {
+    let i = event.rowIndex;
+    this.selectedFormGroup.patchValue(
+      ((this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+    this.calculateIncome();
+    this.activeIndex = i;
+  }
+
+  columnDef() {
+    let self = this;
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Broker Name',
+        field: 'brokerName',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['brokerName'].value;
+        },
+        valueFormatter: function (params) {
+          const brokerName = params.data.controls['brokerName'].value;
+          return brokerName;
+        }
+      },
+      {
+        headerName: 'Turnover',
+        field: 'turnOver',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['turnOver'].value;
+        },
+        valueFormatter: function (params) {
+          const turnOver = params.data.controls['turnOver'].value;
+          return `₹ ${turnOver}`;
+        }
+      },
+      {
+        headerName: 'Closing stocks of finished goods',
+        field: 'finishedGoodsClosingStock',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['finishedGoodsClosingStock'].value;
+        },
+        valueFormatter: function (params) {
+          const finishedGoodsClosingStock = params.data.controls['finishedGoodsClosingStock'].value;
+          return `₹ ${finishedGoodsClosingStock}`;
+        }
+      },
+      {
+        headerName: 'Total credit to trading account',
+        field: 'totalCredit',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          let totalCredit = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value)
+          return totalCredit;
+        },
+        valueFormatter: function (params) {
+          let totalCredit = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value)
+          return `₹ ${totalCredit}`;
+        }
+      },
+      {
+        headerName: 'Opening stocks of finished goods',
+        field: 'finishedGoodsOpeningStock',
+        width: 180,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          const finishedGoodsOpeningStock = Number(params.data.controls['finishedGoodsOpeningStock'].value)
+          return finishedGoodsOpeningStock;
+        },
+        valueFormatter: function (params) {
+          const finishedGoodsOpeningStock = Number(params.data.controls['finishedGoodsOpeningStock'].value)
+          return `₹ ${finishedGoodsOpeningStock}`;
+        }
+      },
+      {
+        headerName: 'Purchase',
+        field: 'purchase',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['purchase'].value;
+        },
+        valueFormatter: function (params) {
+          const purchase = params.data.controls['purchase'].value;
+          return `₹ ${purchase}`;
+        }
+      },
+      {
+        headerName: 'Trading Expense',
+        field: 'expenditure',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['expenditure'].value;
+        },
+        valueFormatter: function (params) {
+          const expenditure = params.data.controls['expenditure'].value;
+          return `₹ ${expenditure}`;
+        }
+      },
+      {
+        headerName: 'Gross profit from trading account',
+        field: 'netIncome',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let netIncome = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value) -
+            Number(params.data.controls['finishedGoodsOpeningStock'].value) - Number(params.data.controls['purchase'].value) - Number(params.data.controls['expenditure'].value);
+          return netIncome;
+        },
+        valueFormatter: function (params) {
+          let netIncome = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value) -
+            Number(params.data.controls['finishedGoodsOpeningStock'].value) - Number(params.data.controls['purchase'].value) - Number(params.data.controls['expenditure'].value);
+          return `₹ ${netIncome}`;
+        }
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
   }
 }
