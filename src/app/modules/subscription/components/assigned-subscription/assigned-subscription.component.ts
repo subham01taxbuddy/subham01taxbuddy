@@ -21,6 +21,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { Location, formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -102,6 +103,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public location: Location,
+    private httpClient:HttpClient,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
@@ -144,6 +146,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
+      if(params['fromEdit']){
+        const apiUrl = sessionStorage.getItem('apiURL');
+        console.log('apiurl : ', apiUrl);
+        if(apiUrl){
+          const queryParams = this.splitQueryParameters(apiUrl);
+          this.getAssignedSubscription('','','','',queryParams)
+        }
+      }
       if (
         this.utilsService.isNonEmpty(params['userId']) ||
         params['userMobNo'] !== '-'
@@ -167,6 +177,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
 
     // this.getFilerList();
+  }
+
+  splitQueryParameters(apiUrl: string): string {
+    const queryString = apiUrl.split('?')[1];
+    return queryString;
   }
 
   fromServiceType(event) {
@@ -222,7 +237,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?) {
+  getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?) {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -297,6 +312,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     // }
 
     this.loading = true;
+
+    if(queryParams){
+       param = `/bo/subscription-dashboard-new?${queryParams}`;
+    }else{
+      param;
+    }
+    let apiURL = this.reportService.baseUrl + param;
+    sessionStorage.setItem('apiURL', apiURL);
     this.reportService.getMethod(param).subscribe(
       (response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
