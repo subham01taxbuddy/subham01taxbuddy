@@ -1184,6 +1184,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   updateSubscription() {
+    this.loading =true;
     this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
 
       console.log(res);
@@ -1191,6 +1192,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.utilsService.showSnackBar(res.error);
         return;
       } else {
+        this.loading =true;
         if(this.selectedCouponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
           this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
           return;
