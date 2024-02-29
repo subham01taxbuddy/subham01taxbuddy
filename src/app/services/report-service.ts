@@ -10,6 +10,7 @@ export class ReportService {
   headers: any;
   userObj: any;
   TOKEN: any;
+  baseUrl: string ='https://uat-api.taxbuddy.com/report'
   microService: string = '/report';
   constructor(private httpClient: HttpClient, private http: HttpClient) { }
 

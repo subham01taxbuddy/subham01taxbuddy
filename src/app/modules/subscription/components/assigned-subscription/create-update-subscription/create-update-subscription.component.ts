@@ -15,7 +15,7 @@ import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -102,7 +102,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     public location: Location,
     private dialog: MatDialog,
     private reportService: ReportService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router:Router
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -1268,15 +1269,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.loading=false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
-          this.refreshPage();
+          this.router.navigate(['/subscription/assigned-subscription'], {
+            queryParams: { fromEdit: true  },
+          })
         } else {
           this.utilsService.showSnackBar("An unexpected error occurred.");
         }
     });
-  }
-
-  refreshPage(){
-    this.ngOnInit();
   }
 
   ngOnDestroy() {
