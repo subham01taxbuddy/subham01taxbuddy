@@ -40,11 +40,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   createSubscriptionObj: userInfo;
   smeSelectedPlanId: any;
   couponCodeAmount = 0;
-  subscriptionCouponCodeDetail = {
-    name: '',
-    couponCodeSubscriptionId: 0,
-    amount: 0
-  };
+  selectedCouponCodeSubscriptionId: number;
   loggedInSme: any;
   allPlans: any;
   availableCouponCodes: any[] = [];
@@ -187,7 +183,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   printValue(){
-    console.log(this.subscriptionCouponCodeDetail, "subscriptionCouponCode")
+    console.log(this.selectedCouponCodeSubscriptionId, "subscriptionCouponCode")
   }
 
   setAvailableCouponCodes(){
@@ -195,7 +191,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success)
-            this.availableCouponCodes = response.data;
+            this.availableCouponCodes.push(response.data);
     });
   }
 
@@ -204,20 +200,20 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     const couponCodeDetail = this.userSubscription?.concessionsApplied?.find(item => item.title === 'Coupon Code');
     console.log(couponCodeDetail, "ccc");
     if(couponCodeDetail){
-      this.subscriptionCouponCodeDetail = {
-        name: couponCodeDetail?.planName,
-        amount:  couponCodeDetail?.amount,
-        couponCodeSubscriptionId: couponCodeDetail?.subscriptionId
-      };
+      if(!this.availableCouponCodes.some(cd=>cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId || cd.couponCodeSubscriptionId === this.selectedCouponCodeSubscriptionId)){
+        this.availableCouponCodes.push({
+          couponCodeSubscriptionId: couponCodeDetail?.subscriptionId,
+          amount: couponCodeDetail.amount,
+          name: couponCodeDetail.planName
+        });
+      }
+      this.selectedCouponCodeSubscriptionId = couponCodeDetail?.subscriptionId;
+      this.couponCodeAmount = couponCodeDetail.amount;
     } else {
-      this.subscriptionCouponCodeDetail = {
-        name: '',
-        amount: 0,
-        couponCodeSubscriptionId: 0
-      };
+      this.selectedCouponCodeSubscriptionId = 0;
+      this.couponCodeAmount = 0;
     }
-    this.couponCodeAmount = this.subscriptionCouponCodeDetail.amount;
-    console.log(couponCodeDetail, "ccc");
+    console.log(couponCodeDetail, "cccd");
   }
 
   applyCouponCode(selectedPlan) {
@@ -230,7 +226,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
-      couponCodeSubscriptionId: this.subscriptionCouponCodeDetail.couponCodeSubscriptionId
+      couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
@@ -497,7 +493,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
       removePromoCode: false,
-      couponCodeSubscriptionId:this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId
+      couponCodeSubscriptionId:this.selectedCouponCodeSubscriptionId
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
@@ -527,7 +523,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
       removePromoCode: true,
-      couponCodeSubscriptionId:this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId
+      couponCodeSubscriptionId:this.selectedCouponCodeSubscriptionId
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
@@ -1188,7 +1184,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.utilsService.showSnackBar(res.error);
         return;
       } else {
-        if(this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
+        if(this.selectedCouponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
           this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
           return;
         }
@@ -1232,7 +1228,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             subscriptionId: this.subscriptionObj.subscriptionId,
             removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
             promoCode: this.selectedPromoCode,
-            couponCodeSubscriptionId: this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId
+            couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
           };
           console.log('Req Body: ', reqBody);
           let requestData = JSON.parse(JSON.stringify(reqBody));
