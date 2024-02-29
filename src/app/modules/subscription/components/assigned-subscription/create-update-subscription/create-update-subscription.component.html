@@ -363,20 +363,20 @@
                       </div>
                       <div class="col-sm-5">
                         <mat-form-field appearance="outline" class="select-bg-color">
-                          <mat-select (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="subscriptionCouponCodeDetail" (ngModelChange)="onNgModelChange()">
-                            <mat-option *ngFor="let couponCode of availableCouponCodes" [value]="couponCode" [disabled]="!availableCouponCodes">
+                          <mat-select (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionId" (ngModelChange)="onNgModelChange()">
+                            <mat-option *ngFor="let couponCode of availableCouponCodes" [value]="couponCode.couponCodeSubscriptionId" [disabled]="!availableCouponCodes">
                               {{ couponCode?.name }}
                             </mat-option>
                           </mat-select>
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">
-                        <button class="save-user-info" [disabled]="subscriptionCouponCodeDetail.couponCodeSubscriptionId === 0" (click)="applyCouponCode(smeSelectedPlanId)">
+                        <button class="save-user-info" [disabled]="selectedCouponCodeSubscriptionId === 0" (click)="applyCouponCode(smeSelectedPlanId)">
                           Apply Coupon Code
                         </button>
                       </div>
                       <div class="col-sm-1">
-                        <button [disabled]="subscriptionCouponCodeDetail.couponCodeSubscriptionId === 0" class="delete-icon-btn"
+                        <button [disabled]="selectedCouponCodeSubscriptionId === 0" class="delete-icon-btn"
                         (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
                         <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
                         </button>
