@@ -175,10 +175,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.setFormValues(this.selectedUserInfo);
 
     this.isButtonDisable = true;
-    if(this.service === 'ITR')
-      this.filteredFinancialYears = this.financialYear.slice(0, 1);
-    else 
-      this.filteredFinancialYears = this.financialYear;
+    if(this.serviceType === 'ITR')
+      this.defaultFinancialYear = this.financialYear[0].financialYear;
   }
 
   addPromoMaxValidation(event) {
