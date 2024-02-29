@@ -1178,6 +1178,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   updateSubscription() {
+    this.loading =true;
     this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
 
       console.log(res);
