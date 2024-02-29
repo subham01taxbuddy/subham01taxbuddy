@@ -889,6 +889,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
                   'User Number': callInfo.userMobile,
                 });
               } else if (statusId === 18) {
+                this.markAsScheduleCallDone(callInfo);
                 we_track('Call Status - Done', {
                   'User Number': callInfo.userMobile,
                 });
