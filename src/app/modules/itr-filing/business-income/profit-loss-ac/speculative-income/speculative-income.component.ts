@@ -133,11 +133,9 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   addSpeculativeFormValidation(index) {
-    debugger
     let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
     if (specIncome) {
       if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
-        debugger
         specIncome.controls['grossProfit'].setValidators(Validators.required);
         specIncome.controls['grossProfit'].updateValueAndValidity();
         specIncome.controls['turnOver'].setValidators(Validators.required);
@@ -186,7 +184,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     }
     if (this.selectedFormGroup) {
       if (this.selectedFormGroup.controls['expenditure'].value && (!this.selectedFormGroup.controls['turnOver'].value || !this.selectedFormGroup.controls['grossProfit'].value)) {
-        debugger
         this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(this.selectedFormGroup.controls['turnOver'].value)]);
         this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
         this.selectedFormGroup.controls['turnOver'].setValidators([Validators.required]);
