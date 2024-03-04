@@ -1,6 +1,6 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, Jurisdictions} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
@@ -474,6 +474,11 @@ export class CustomerProfileComponent implements OnInit {
 
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
 
+      if(this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT'){
+        this.ITR_JSON.jurisdictions = this.jurisdictions;
+        this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
+      }
+
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -910,6 +915,9 @@ export class CustomerProfileComponent implements OnInit {
     );
   }
 
+  jurisdictions: Jurisdictions[];
+  conditionsResStatus: any;
+
   onSelectResidential(status) {
     if (status === 'RESIDENT') {
       this.customerProfileForm.controls['contactNumber'].setValidators([
@@ -937,8 +945,8 @@ export class CustomerProfileComponent implements OnInit {
         console.info('Dialog Close result', result);
         if (result.success) {
           console.log('JUR:', result);
-          this.ITR_JSON.jurisdictions = result.data.jurisdictions;
-          this.ITR_JSON.conditionsResStatus = result.data.conditionsResStatus;
+          this.jurisdictions = result.data.jurisdictions;
+          this.conditionsResStatus = result.data.conditionsResStatus;
         } else {
           this.customerProfileForm.controls['residentialStatus'].setValue(
             this.ITR_JSON.residentialStatus
@@ -946,8 +954,8 @@ export class CustomerProfileComponent implements OnInit {
         }
       });
     } else {
-      this.ITR_JSON.jurisdictions = [];
-      this.ITR_JSON.conditionsResStatus = null;
+      this.jurisdictions = [];
+      this.conditionsResStatus = null;
     }
 
     //once user residential status changes, update the same in cg object
