@@ -8,6 +8,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'app-speculative-income',
@@ -37,6 +38,9 @@ export class SpeculativeIncomeComponent implements OnInit {
   };
 
   config: any;
+  gridOptions: GridOptions;
+  selectedFormGroup: FormGroup;
+  activeIndex: number;
 
   constructor(
     public utilsService: UtilsService,
@@ -46,6 +50,30 @@ export class SpeculativeIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    // setting grids data
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {
+        params.api?.setRowData(
+          this.specIncomeFormArray.controls
+        );
+      },
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.controls['hasEdit'].setValue(true);
+        });
+        if (event.api.getSelectedRows().length === 0) {
+          this.specIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+            formGroup.controls['hasEdit'].setValue(false);
+          });
+        }
+      },
+      sortable: true,
+    };
   }
 
   ngOnInit(): void {
@@ -56,6 +84,10 @@ export class SpeculativeIncomeComponent implements OnInit {
 
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
     this.specIncomeFormArray = new FormArray([]);
+    let srn = this.specIncomeFormArray.controls.length > 0 ? this.specIncomeFormArray.controls.length : 0;
+    this.selectedFormGroup = this.createSpecIncomeForm(srn);
+    this.activeIndex = -1;
+
     if (specBusiness?.incomes.length) {
       let index = 0;
       for (let income of specBusiness.incomes) {
@@ -64,20 +96,23 @@ export class SpeculativeIncomeComponent implements OnInit {
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
     } else {
-      let form = this.createSpecIncomeForm(0, null);
-      this.specIncomeFormArray.push(form);
+      // let form = this.createSpecIncomeForm(0, null);
+      // this.specIncomeFormArray.push(form);
     }
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
     });
-    this.calculateNetIncome(0);
+    this.gridOptions.api?.setRowData(
+      this.specIncomeFormArray.controls
+    );
+    this.calculateNetIncome();
   }
 
   get getIncomeArray() {
     return (this.specIncomeForm.get('specIncomesArray') as FormArray).controls;
   }
 
-  createSpecIncomeForm(index, income: ProfitLossIncomes) {
+  createSpecIncomeForm(index?, income?: ProfitLossIncomes) {
     return this.fb.group({
       index: [index],
       hasEdit: [false],
@@ -98,11 +133,9 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   addSpeculativeFormValidation(index) {
-    debugger
     let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
     if (specIncome) {
       if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
-        debugger
         specIncome.controls['grossProfit'].setValidators(Validators.required);
         specIncome.controls['grossProfit'].updateValueAndValidity();
         specIncome.controls['turnOver'].setValidators(Validators.required);
@@ -112,62 +145,61 @@ export class SpeculativeIncomeComponent implements OnInit {
     }
   }
 
-  calculateNetIncome(index) {
-    let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
+  calculateNetIncome() {
+    // let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
 
     // inputs
-    let turnover = specIncome?.controls['turnOver'];
-    let netIncome = specIncome?.controls['netIncome'];
-    let grossProfit = specIncome?.controls['grossProfit'];
+    let turnover = this.selectedFormGroup.controls['turnOver'].value;
+    let netIncome = this.selectedFormGroup.controls['netIncome'].value;
+    let grossProfit = this.selectedFormGroup.controls['grossProfit'].value;
 
     // values
-    let turnoverValue = parseFloat(specIncome?.controls['turnOver']?.value ?
-      specIncome?.controls['turnOver']?.value : null);
-    let grossProfitValue = parseFloat(specIncome?.controls['grossProfit']?.value
-      ? specIncome?.controls['grossProfit']?.value : 0);
-    let expenditureValue = parseFloat(specIncome?.controls['expenditure']?.value
-      ? specIncome?.controls['expenditure']?.value : 0);
-    let netIncomeValue = parseFloat(specIncome?.controls['netIncome']?.value
-      ? specIncome?.controls['netIncome']?.value : 0
+    let turnoverValue = parseFloat(this.selectedFormGroup?.controls['turnOver']?.value ?
+      this.selectedFormGroup?.controls['turnOver']?.value : null);
+    let grossProfitValue = parseFloat(this.selectedFormGroup?.controls['grossProfit']?.value
+      ? this.selectedFormGroup?.controls['grossProfit']?.value : 0);
+    let expenditureValue = parseFloat(this.selectedFormGroup?.controls['expenditure']?.value
+      ? this.selectedFormGroup?.controls['expenditure']?.value : 0);
+    let netIncomeValue = parseFloat(this.selectedFormGroup?.controls['netIncome']?.value
+      ? this.selectedFormGroup?.controls['netIncome']?.value : 0
     );
 
     // if turnover is not 0 calculate net income else set all to 0
     // if (turnover && grossProfitValue) {
-    netIncome?.setValue(grossProfitValue - expenditureValue);
-    netIncome?.updateValueAndValidity();
-    netIncomeValue = netIncome?.value;
+    this.selectedFormGroup.controls['netIncome'].setValue(grossProfitValue - expenditureValue);
+    this.selectedFormGroup.controls['netIncome'].updateValueAndValidity();
+    netIncomeValue = this.selectedFormGroup.controls['netIncome'].value;
     // } else 
     if (turnover && turnover.value == 0) {
       // grossProfit?.setValue(0);
       // grossProfit?.updateValueAndValidity();
       // grossProfitValue = grossProfit?.value;
-      specIncome.controls['grossProfit'].setValidators([Validators.required, Validators.max(turnover.value)]);
-      specIncome.controls['turnOver'].setValidators([Validators.required]);
-      specIncome.controls['expenditure'].setValue(0);
-      specIncome.controls['grossProfit'].setValue(0);
-      netIncome?.setValue(0);
-      netIncome?.updateValueAndValidity();
+      this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(turnover.value)]);
+      this.selectedFormGroup.controls['turnOver'].setValidators([Validators.required]);
+      this.selectedFormGroup.controls['expenditure'].setValue(0);
+      this.selectedFormGroup.controls['grossProfit'].setValue(0);
+      this.selectedFormGroup.controls['netIncome'].setValue(0);
+      this.selectedFormGroup.controls['netIncome'].updateValueAndValidity();
       netIncomeValue = netIncome?.value;
     }
-    if (specIncome) {
-      if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
-        debugger
-        specIncome.controls['grossProfit'].setValidators([Validators.required, Validators.max(specIncome.controls['turnOver'].value)]);
-        specIncome.controls['grossProfit'].updateValueAndValidity();
-        specIncome.controls['turnOver'].setValidators([Validators.required]);
-        specIncome.controls['turnOver'].updateValueAndValidity();
-        specIncome.controls['turnOver'].markAllAsTouched();
-        specIncome.controls['grossProfit'].markAllAsTouched();
+    if (this.selectedFormGroup) {
+      if (this.selectedFormGroup.controls['expenditure'].value && (!this.selectedFormGroup.controls['turnOver'].value || !this.selectedFormGroup.controls['grossProfit'].value)) {
+        this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(this.selectedFormGroup.controls['turnOver'].value)]);
+        this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
+        this.selectedFormGroup.controls['turnOver'].setValidators([Validators.required]);
+        this.selectedFormGroup.controls['turnOver'].updateValueAndValidity();
+        this.selectedFormGroup.controls['turnOver'].markAllAsTouched();
+        this.selectedFormGroup.controls['grossProfit'].markAllAsTouched();
         // specIncome.controls['grossProfit'].markAsDirty();
       }
     }
     // set validator for gp if gp greater than turnover
     if (grossProfitValue > turnoverValue) {
-      grossProfit?.setValidators([Validators.required, Validators.max(specIncome.controls['turnOver'].value)]);
-      grossProfit?.updateValueAndValidity();
+      this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(this.selectedFormGroup.controls['turnOver'].value)]);
+      this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
     } else if (grossProfitValue <= turnoverValue) {
-      grossProfit?.setValidators([Validators.required]);
-      grossProfit?.updateValueAndValidity();
+      this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required]);
+      this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
 
     }
     //else {
@@ -185,7 +217,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   onContinue() {
-    this.calculateNetIncome(0);
+    this.calculateNetIncome();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
@@ -270,7 +302,185 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const specIncomesArray = <FormArray>this.specIncomeForm.get('specIncomesArray');
-    specIncomesArray.controls = specIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <FormArray>this.specIncomeForm.get('specIncomesArray');
+    array.controls = array.controls.filter(
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
+    this.selectedFormGroup.reset();
+    this.gridOptions?.api?.setRowData(this.specIncomeFormArray.controls);
+    this.activeIndex = -1;
+  }
+
+  clearForm() {
+    this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['brokerName'].setValue('Manual');
+  }
+
+  saveManualEntry() {
+    if (this.selectedFormGroup.invalid) {
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      return;
+    }
+
+    let result = this.selectedFormGroup.getRawValue();
+
+    // result.costOfImprovement = result.indexCostOfImprovement;
+
+    if (this.activeIndex === -1) {
+      let srn = (this.specIncomeForm.controls['specIncomesArray'] as FormArray).length;
+      let form = this.createSpecIncomeForm(srn);
+      form.patchValue(this.selectedFormGroup.getRawValue());
+      (this.specIncomeForm.controls['specIncomesArray'] as FormArray).push(form);
+    } else {
+      (this.specIncomeForm.controls['specIncomesArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+    }
+    this.gridOptions.api?.setRowData(this.specIncomeFormArray.controls);
+    this.activeIndex = -1;
+    this.clearForm();
+    this.utilsService.showSnackBar("Record saved successfully.");
+  }
+
+  editForm(event) {
+    let i = event.rowIndex;
+    this.selectedFormGroup.patchValue(
+      ((this.specIncomeForm.controls['specIncomesArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+    this.calculateNetIncome();
+    this.activeIndex = i;
+  }
+
+  columnDef() {
+    let self = this;
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Broker Name',
+        field: 'brokerName',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['brokerName'].value;
+        },
+        valueFormatter: function (params) {
+          const brokerName = params.data.controls['brokerName'].value;
+          return brokerName;
+        }
+      },
+      {
+        headerName: 'Turnover',
+        field: 'turnOver',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['turnOver'].value;
+        },
+        valueFormatter: function (params) {
+          const turnOver = params.data.controls['turnOver'].value;
+          return `₹ ${turnOver}`;
+        }
+      },
+      {
+        headerName: 'Gross Profit',
+        field: 'grossProfit',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['grossProfit'].value;
+        },
+        valueFormatter: function (params) {
+          const grossProfit = params.data.controls['grossProfit'].value;
+          return `₹ ${grossProfit}`;
+        }
+      },
+      {
+        headerName: 'Expenditure',
+        field: 'expenditure',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['expenditure'].value;
+        },
+        valueFormatter: function (params) {
+          const expenditure = params.data.controls['expenditure'].value;
+          return `₹ ${expenditure}`;
+        }
+      },
+      {
+        headerName: 'Net Income',
+        field: 'netIncome',
+        width: 180,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          const netIncome = Number(params.data.controls['grossProfit'].value) - Number(params.data.controls['expenditure'].value)
+          return netIncome;
+        },
+        valueFormatter: function (params) {
+          const netIncome = Number(params.data.controls['grossProfit'].value) - Number(params.data.controls['expenditure'].value)
+          return `₹ ${netIncome}`;
+        }
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
   }
 }

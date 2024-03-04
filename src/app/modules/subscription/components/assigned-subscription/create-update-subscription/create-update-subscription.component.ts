@@ -40,7 +40,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   createSubscriptionObj: userInfo;
   smeSelectedPlanId: any;
   couponCodeAmount = 0;
-  selectedCouponCodeSubscriptionId: number;
+  selectedCouponCodeSubscriptionId: number = 0;
+  removeCouponCodeFlag: boolean = false;
   loggedInSme: any;
   allPlans: any;
   availableCouponCodes: any[] = [];
@@ -191,8 +192,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = '/subscription/coupon-code?userId='+this.subscriptionObj.userId+'&isCouponCodeAvailable=true';
     this.itrService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.success)
-            this.availableCouponCodes.push(response.data);
+      if (response.success && response.data.length > 0)
+            this.availableCouponCodes = response.data;
+
+      console.log(this.availableCouponCodes, "this.availableCouponCodes")
+
     });
   }
 
@@ -200,7 +204,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     console.log(this.userSubscription?.concessionsApplied, "this.userSubscription?.concessionsApplied?");
     const couponCodeDetail = this.userSubscription?.concessionsApplied?.find(item => item.title === 'Coupon Code');
     console.log(couponCodeDetail, "ccc");
-    if(couponCodeDetail){
+    if(couponCodeDetail) {
       if(!this.availableCouponCodes.some(cd=>cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId || cd.couponCodeSubscriptionId === this.selectedCouponCodeSubscriptionId)){
         this.availableCouponCodes.push({
           couponCodeSubscriptionId: couponCodeDetail?.subscriptionId,
@@ -219,6 +223,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   applyCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
+    this.removeCouponCodeFlag = false;
     const param = `/subscription/recalculate`;
     const request = {
       userId: this.userSubscription.userId,
@@ -227,6 +232,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
+      removePromoCode: this.isPromoRemoved,
       couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
@@ -247,6 +253,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   removeCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
+    this.removeCouponCodeFlag = true;
     const param = `/subscription/recalculate`;
     const request = {
       userId: this.userSubscription.userId,
@@ -254,9 +261,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
+      removePromoCode: this.isPromoRemoved,
       promoCode: this.selectedPromoCode,
       removeCouponCode: true,
-      couponCodeSubscriptionId: 0
+      couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
     };
 
     this.itrService.postMethod(param, request).subscribe((res: any) => {
@@ -1186,9 +1194,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.utilsService.showSnackBar(res.error);
         return;
       } else {
-        this.loading =true;
+        this.loading = true;
         if(this.selectedCouponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
           this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
+          this.loading = false;
           return;
         }
 
@@ -1229,9 +1238,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             reminderEmail: this.reminderEmail.value,
             reminderMobileNumber: this.reminderMobileNumber.value,
             subscriptionId: this.subscriptionObj.subscriptionId,
-            removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
+            removePromoCode: this.isPromoRemoved,
             promoCode: this.selectedPromoCode,
-            couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
+            couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId,
+            removeCouponCode: this.removeCouponCodeFlag
           };
           console.log('Req Body: ', reqBody);
           let requestData = JSON.parse(JSON.stringify(reqBody));

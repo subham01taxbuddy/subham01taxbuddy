@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import {
   ITR_JSON,
   professionalIncome,
@@ -11,6 +11,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 
 const professionalData: professionalIncome[] = [
   {
@@ -26,7 +27,6 @@ const professionalData: professionalIncome[] = [
   styleUrls: ['./presumptive-professional-income.component.scss'],
 })
 export class PresumptiveProfessionalIncomeComponent implements OnInit {
-  public professionalGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   profIncomeForm: FormGroup;
@@ -43,8 +43,11 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   amountFifty: number = 0;
   amountFiftyMax: number = 0;
   submitted = false;
+  activeIndex: number;
+  gridOptions: GridOptions;
+  selectedFormGroup: FormGroup;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
-  percentage: any[] = [];
+  percentage = 0;
   minGrossIncome = (50 / 100) * 50;
 
   constructor(
@@ -55,6 +58,42 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // setting grids data
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {
+        params.api?.setRowData(
+          this.profIncomeFormArray.controls
+        );
+      },
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.controls['hasEdit'].setValue(true);
+        });
+        if (event.api.getSelectedRows().length === 0) {
+          this.profIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+            formGroup.controls['hasEdit'].setValue(false);
+          });
+        }
+      },
+      sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
+    };
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   ngOnInit(): void {
@@ -69,21 +108,25 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     );
 
     this.profIncomeFormArray = new FormArray([]);
+    let srn = this.profIncomeFormArray.controls.length > 0 ? this.profIncomeFormArray.controls.length : 0;
+    this.selectedFormGroup = this.createProfIncomeForm(srn);
+    this.activeIndex = -1;
+
     if (profBusiness && profBusiness.length > 0) {
       profBusiness.forEach((element, index) => {
         let form = this.createProfIncomeForm(index, element);
         this.profIncomeFormArray.push(form);
       });
     } else {
-      let form = this.createProfIncomeForm(0, null);
-      this.profIncomeFormArray.push(form);
+      // let form = this.createProfIncomeForm(0, null);
+      // this.profIncomeFormArray.push(form);
     }
     this.profIncomeForm = this.fb.group({
       profIncomeFormArray: this.profIncomeFormArray,
     });
 
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive();
+      // this.calculatePresumptive();
     });
   }
 
@@ -91,7 +134,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     return <FormArray>this.profIncomeForm.get('profIncomeFormArray');
   }
 
-  createProfIncomeForm(index, income) {
+  createProfIncomeForm(index, income?) {
     console.log(income?.incomes[index]?.receipts);
     console.log(income?.incomes[index]?.presumptiveIncome);
 
@@ -99,23 +142,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       id: null,
       index: [index],
       hasEdit: [false],
-      natureOfBusiness: [
-        income?.natureOfBusiness || null,
-        [Validators.required],
-      ],
+      natureOfBusiness: [income?.natureOfBusiness || null, [Validators.required]],
       tradeName: [income?.tradeName || null, [Validators.required]],
       description: [income?.description || null],
-      receipts: [
-        income?.incomes[0]?.receipts || 0,
-        [Validators.required, Validators.max(5000000)],
-      ],
-      presumptiveIncome: [
-        income?.incomes[0]?.presumptiveIncome || 0,
-        [Validators.required, Validators.min(this.amountFifty)],
-      ],
-      minimumPresumptiveIncome: [
-        income?.incomes[0]?.minimumPresumptiveIncome || 0,
-      ],
+      receipts: [income?.incomes[0]?.receipts || 0, [Validators.required, Validators.max(5000000)],],
+      presumptiveIncome: [income?.incomes[0]?.presumptiveIncome || 0, [Validators.required, Validators.min(this.amountFifty)]],
+      minimumPresumptiveIncome: [income?.incomes[0]?.minimumPresumptiveIncome || 0],
     });
     return form;
   }
@@ -128,16 +160,16 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  addProfIncomeForm() {
-    if (this.profIncomeForm.valid) {
-      this.submitted = false;
-      let form = this.createProfIncomeForm(0, null);
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(0, form);
-      this.percentage.unshift({ "natOfBusiness": "", "percentage": 0 });
-    } else {
-      this.submitted = true;
-    }
-  }
+  // addProfIncomeForm() {
+  //   if (this.profIncomeForm.valid) {
+  //     this.submitted = false;
+  //     let form = this.createProfIncomeForm(0, null);
+  //     (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(0, form);
+  //     this.percentage.unshift({ "natOfBusiness": "", "percentage": 0 });
+  //   } else {
+  //     this.submitted = true;
+  //   }
+  // }
 
   profSelected() {
     const profIncomeFormArray = <FormArray>(
@@ -151,81 +183,63 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const profIncomeFormArray = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
-    profIncomeFormArray.controls = profIncomeFormArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
-
+    // const profIncomeFormArray = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
+    // profIncomeFormArray.controls = profIncomeFormArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
+    array.controls = array.controls.filter(
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
+    this.selectedFormGroup.reset();
+    this.gridOptions?.api?.setRowData(this.profIncomeFormArray.controls);
+    this.activeIndex = -1;
   }
 
   calculatePresumptive() {
-    this.percentage = [];
-    const profIncomeFormArray = <FormArray>(
-      this.profIncomeForm.get('profIncomeFormArray')
-    );
+    this.percentage = 0;
+    // const profIncomeFormArray = <FormArray>(
+    //   this.profIncomeForm.get('profIncomeFormArray')
+    // );
 
-    for (let i = 0; i < profIncomeFormArray.length; i++) {
-      const receipt = (profIncomeFormArray.at(i) as FormGroup).get('receipts');
-      const minimumPresumptiveIncome = (
-        profIncomeFormArray.at(i) as FormGroup
-      ).get('minimumPresumptiveIncome');
-      const presumptiveIncome = (profIncomeFormArray.at(i) as FormGroup).get(
-        'presumptiveIncome'
-      );
-      const natOfBusiness = (profIncomeFormArray.at(i) as FormGroup).get(
-        'natureOfBusiness'
-      ).value;
+    // for (let i = 0; i < profIncomeFormArray.length; i++) {
+    const receipt = this.selectedFormGroup.controls['receipts'].value;
+    const minimumPresumptiveIncome = this.selectedFormGroup.controls['minimumPresumptiveIncome'].value;
+    const presumptiveIncome = this.selectedFormGroup.controls['presumptiveIncome'].value;
+    const natOfBusiness = this.selectedFormGroup.controls['natureOfBusiness'].value;
 
-      this.amountFifty = 0;
-      this.amountFiftyMax = 0;
-      this.amountFifty = receipt?.value;
-      this.amountFiftyMax = receipt?.value;
-      this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
+    this.amountFifty = 0;
+    this.amountFiftyMax = 0;
+    this.amountFifty = this.selectedFormGroup.controls['receipts'].value;
+    this.amountFiftyMax = this.selectedFormGroup.controls['receipts'].value;
+    this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
 
-      minimumPresumptiveIncome?.setValue(this.amountFifty);
+    this.selectedFormGroup.controls['minimumPresumptiveIncome'].setValue(this.amountFifty);
 
-      let PresumptiveIncome =
-        presumptiveIncome.value !== ''
-          ? parseFloat(presumptiveIncome.value)
-          : 0;
+    // let PresumptiveIncome =
+    //   presumptiveIncome.value !== ''
+    //     ? parseFloat(presumptiveIncome.value)
+    //     : 0;
 
-      if (PresumptiveIncome || PresumptiveIncome === 0) {
-        presumptiveIncome?.setValidators([
-          Validators.required,
-          Validators.min(this.amountFifty),
-          Validators.max(this.amountFiftyMax),
-        ]);
-        presumptiveIncome.updateValueAndValidity();
-      } else {
-        presumptiveIncome.clearValidators();
-        presumptiveIncome.updateValueAndValidity();
-      }
-
-      const percentage = Math.ceil(
-        (parseFloat(presumptiveIncome.value) * 100) / parseFloat(receipt.value)
-      );
-      this.percentage.push({ natOfBusiness, percentage });
-      console.log(
-        this.percentage[0] === natOfBusiness ? this.percentage[1] : 0
-      );
+    if (this.selectedFormGroup.controls['presumptiveIncome'].value >= 0) {
+      this.selectedFormGroup.controls['presumptiveIncome'].setValidators([
+        Validators.required, Validators.min(this.amountFifty), Validators.max(this.amountFiftyMax)]);
+      this.selectedFormGroup.controls['presumptiveIncome'].updateValueAndValidity();
+    } else {
+      this.selectedFormGroup.controls['presumptiveIncome'].clearValidators();
+      this.selectedFormGroup.controls['presumptiveIncome'].updateValueAndValidity();
     }
+
+    const percentage = Math.ceil(
+      (parseFloat(this.selectedFormGroup.controls['presumptiveIncome'].value) * 100) / parseFloat(this.selectedFormGroup.controls['receipts'].value)
+    );
+    this.percentage = percentage;
+    // console.log(
+    //   this.percentage[0] === natOfBusiness ? this.percentage[1] : 0
+    // );
+    // }
 
     console.log(this.percentage);
   }
 
-  ////// OLD CODE
-  // getBusinessName(data) {
-  //   let business = this.natureOfBusinessList?.filter(
-  //     (item: any) => item.code === data.natureOfBusiness
-  //   );
-  //   return business && business[0] ? (business[0] as any).label : null;
-  // }
-
-  displayedColumns: string[] = [
-    'select',
-    'natureOfBusiness',
-    'tradeName',
-    'receipts',
-    'presumptiveIncome',
-  ];
   dataSource = new MatTableDataSource<professionalIncome>();
   selection = new SelectionModel<professionalIncome>(true, []);
 
@@ -279,25 +293,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     );
   }
 
-  getProfessionalTableData(rowsData) {
-    this.professionalGridOptions = <GridOptions>{
-      rowData: rowsData,
-      columnDefs: this.createProfessionalColumnDef(
-        this.natureOfBusinessList,
-        rowsData
-      ),
-      onGridReady: () => {
-        this.professionalGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true,
-        editable: false,
-      },
-      suppressRowTransform: true,
-    };
-  }
 
   createProfessionalColumnDef(natureOfBusinessList, rowsData) {
     return [
@@ -378,12 +373,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     ];
   }
 
-  deleteProfession(index) {
-    this.professionalGridOptions.rowData.splice(index, 1);
-    this.professionalGridOptions.api.setRowData(
-      this.professionalGridOptions.rowData
-    );
-  }
 
   addProfessionalRow(mode, data: any, index?) {
     if (mode === 'ADD') {
@@ -480,7 +469,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
               receipts: element.receipts,
               presumptiveIncome: element.presumptiveIncome,
               periodOfHolding: null,
-              minimumPresumptiveIncome: null,
+              minimumPresumptiveIncome: element.minimumPresumptiveIncome,
               registrationNo: null,
               ownership: null,
               tonnageCapacity: null,
@@ -506,7 +495,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
                 receipts: element.receipts,
                 presumptiveIncome: element.presumptiveIncome,
                 periodOfHolding: null,
-                minimumPresumptiveIncome: null,
+                minimumPresumptiveIncome: element.minimumPresumptiveIncome,
                 registrationNo: null,
                 ownership: null,
                 tonnageCapacity: null,
@@ -595,11 +584,201 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     }
   }
 
-  businessClicked(event, index) {
-    //this.profIncomeForm.controls['profIncomeFormArray'].controls[0].controls['natureOfBusiness'].value
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['natureOfBusiness'].setValue(event);
+  businessClicked(event) {
+    // (
+    //   (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+    //     .controls[index] as FormGroup
+    // ).controls['natureOfBusiness'].setValue(event);
+    this.selectedFormGroup.controls['natureOfBusiness'].setValue(event);
+  }
+
+
+  clearForm() {
+    this.selectedFormGroup.reset();
+    this.calculatePresumptive();
+  }
+
+  saveManualEntry() {
+    if (this.selectedFormGroup.invalid) {
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      return;
+    }
+
+    let result = this.selectedFormGroup.getRawValue();
+
+    if (this.activeIndex === -1) {
+      let srn = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).length;
+      let form = this.createProfIncomeForm(srn);
+      form.patchValue(this.selectedFormGroup.getRawValue());
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).push(form);
+    } else {
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+    }
+    this.gridOptions.api?.setRowData(this.profIncomeFormArray.controls);
+    this.activeIndex = -1;
+    this.clearForm();
+    this.percentage = 0;
+    this.utilsService.showSnackBar("Record saved successfully.");
+  }
+
+  editForm(event) {
+    let i = event.rowIndex;
+    this.selectedFormGroup.patchValue(
+      ((this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+    this.calculatePresumptive();
+    this.activeIndex = i;
+  }
+
+  columnDef() {
+    let self = this;
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Nature Of Business',
+        field: 'natureOfBusiness',
+        width: 250,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+          let natureOfBusinessName;
+          natureOfBusiness.forEach(element => {
+            if (element.code === params.data.controls['natureOfBusiness'].value)
+              natureOfBusinessName = element.label;
+          });
+          return natureOfBusinessName;
+        },
+        valueFormatter: function (params) {
+          let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+          let natureOfBusinessName;
+          natureOfBusiness.forEach(element => {
+            if (element.code === params.data.controls['natureOfBusiness'].value)
+              natureOfBusinessName = element.label;
+          });
+          return natureOfBusinessName;
+        }
+      },
+      {
+        headerName: 'Trade Name',
+        field: 'tradeName',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['tradeName'].value;
+        },
+        valueFormatter: function (params) {
+          const tradeName = params.data.controls['tradeName'].value;
+          return `${tradeName}`;
+        }
+      },
+      {
+        headerName: 'Description',
+        field: 'description',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['description'].value;
+        },
+        valueFormatter: function (params) {
+          const description = params.data.controls['description'].value;
+          return `${description}`;
+        }
+      },
+      {
+        headerName: 'Gross Receipts',
+        field: 'receipts',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          let receipts = params.data.controls['receipts'].value;
+          return receipts;
+        },
+        valueFormatter: function (params) {
+          let receipts = params.data.controls['receipts'].value;
+          return `₹ ${receipts}`;
+        }
+      },
+      {
+        headerName: 'Minimum Presumptive Income',
+        field: 'minimumPresumptiveIncome',
+        width: 180,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          const minimumPresumptiveIncome = Number(params.data.controls['minimumPresumptiveIncome'].value)
+          return minimumPresumptiveIncome;
+        },
+        valueFormatter: function (params) {
+          const minimumPresumptiveIncome = Number(params.data.controls['minimumPresumptiveIncome'].value)
+          return `₹ ${minimumPresumptiveIncome}`;
+        }
+      },
+      {
+        headerName: 'Presumptive income',
+        field: 'presumptiveIncome',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['presumptiveIncome'].value;
+        },
+        valueFormatter: function (params) {
+          const presumptiveIncome = params.data.controls['presumptiveIncome'].value;
+          return `₹ ${presumptiveIncome}`;
+        }
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
   }
 }

@@ -1,11 +1,16 @@
 .simple-table {
-  width: 100%; /* Set the table width to 100% of the container */
-  border-collapse: collapse; /* Collapse the borders between cells */
+  width: 100%;
+  /* Set the table width to 100% of the container */
+  border-collapse: collapse;
+  /* Collapse the borders between cells */
 }
 
-.simple-table th, .simple-table td {
-  border: 1px solid #ddd; /* Add a 1px solid border to th and td elements */
-  padding: 8px; /* Add padding to th and td elements for better spacing */
+.simple-table th,
+.simple-table td {
+  border: 1px solid #ddd;
+  /* Add a 1px solid border to th and td elements */
+  padding: 8px;
+  /* Add padding to th and td elements for better spacing */
 }
 
 .arrow-icon {
@@ -26,15 +31,15 @@
 }
 
 .mat-expansion-panel-header {
-  width: 100%!important;
+  width: 100% !important;
 }
 
 .mat-content {
-  display:none!important;
+  display: none !important;
 }
 
 .table :where(th, td) {
-   white-space: normal!important;
+  white-space: normal !important;
 }
 
 
@@ -173,7 +178,7 @@ table {
 }
 
 .mat-icon {
-  margin-right: 13px!important;
+  margin-right: 13px !important;
 }
 
 
@@ -207,12 +212,15 @@ table {
 }
 
 .counter-item {
-  counter-reset: myCounter; /* Initialize the counter to 0 */
+  counter-reset: myCounter;
+  /* Initialize the counter to 0 */
 }
 
 .counter::before {
-  counter-increment: myCounter; /* Increment the counter on each occurrence */
-  content: counter(myCounter) "."; /* Display the counter value before the content of element with ID "heading2" */
+  counter-increment: myCounter;
+  /* Increment the counter on each occurrence */
+  content: counter(myCounter) ".";
+  /* Display the counter value before the content of element with ID "heading2" */
 }
 
 .icRup {
@@ -639,3 +647,10 @@ table {
 }
 
 /*Rizwan 15 May 2019*/
+.checkbox-group {
+  text-align: center;
+}
+
+.ft-18 {
+  font-weight: 800;
+}
