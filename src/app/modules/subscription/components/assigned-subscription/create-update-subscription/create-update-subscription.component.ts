@@ -232,6 +232,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
+      removePromoCode: this.isPromoRemoved,
       couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
@@ -260,6 +261,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
+      removePromoCode: this.isPromoRemoved,
       promoCode: this.selectedPromoCode,
       removeCouponCode: true,
       couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId
@@ -1192,9 +1194,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.utilsService.showSnackBar(res.error);
         return;
       } else {
-        this.loading =true;
+        this.loading = true;
         if(this.selectedCouponCodeSubscriptionId > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice=> invoice.paymentStatus === 'Paid'))){
           this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
+          this.loading = false;
           return;
         }
 
@@ -1235,7 +1238,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             reminderEmail: this.reminderEmail.value,
             reminderMobileNumber: this.reminderMobileNumber.value,
             subscriptionId: this.subscriptionObj.subscriptionId,
-            removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
+            removePromoCode: this.isPromoRemoved,
             promoCode: this.selectedPromoCode,
             couponCodeSubscriptionId: this.selectedCouponCodeSubscriptionId,
             removeCouponCode: this.removeCouponCodeFlag
