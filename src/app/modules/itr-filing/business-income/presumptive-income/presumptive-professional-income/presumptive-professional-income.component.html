@@ -11,14 +11,43 @@
                 <div class="accordion" id="myAccordion">
 
                   <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo">Professional Income</button>
+                    <!-- start grid table -->
+                    <h2 class="accordion-header" id="heading3">
+                      <button class="accordion-button" data-bs-target="#collapse2" data-bs-toggle="collapse"
+                        type="button">
+                        Professional Income</button>
                     </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="card-body">
-                        <form [formGroup]="profIncomeForm">
-                          <div class="pre-box1">
+                    <div class="accordion-collapse collapse show" id="collapse2">
+                      <div class="accordion__item-body">
+                        <div class="table-responsive" style="overflow-x: scroll;">
+                          <div>
+                            <div class="col-sm-12">
+                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                                class="newAG ag-theme-balham topSps">
+                              </ag-grid-angular>
+                            </div>
+                            <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button (click)="deleteArray()" [disabled]="!profSelected()" class=" delete-btn"
+                                  type="submit">
+                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //end table -->
+                    <div class="accordion-item mt-3">
+                      <h2 class="accordion-header" id="headingTwo">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapseTwo">Add / Edit Professional Income</button>
+                      </h2>
+                      <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                        <div class="card-body p-15">
+                          <form [formGroup]="selectedFormGroup">
+                            <!-- <div class="pre-box1">
 
                             <div class="hdByr-L">
                               Professional Income 44ADA
@@ -39,49 +68,35 @@
                               </div>
 
                             </div>
-                          </div>
-                          <div class="land-box-buyr" formArrayName="profIncomeFormArray">
-                            <div class="PreBoxOut" *ngFor="
-                            let income of profIncomeFormArray.controls | paginate : config;
-                            let i = index
-                          " [formGroupName]="fieldGlobalIndex(i)">
-                              <div class="PreBxUp">
-                                <div class="col-sm-1" style="padding: 0px">
-                                  <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                                  </mat-checkbox>
-                                </div>
+                          </div> -->
+                            <div class="land-box-buyr">
+                              <!-- <div class="PreBoxOut" *ngFor="let income of profIncomeFormArray.controls | paginate : config;
+                                  let i = index" [formGroupName]="fieldGlobalIndex(i)"> -->
+                              <div class="PreBxUp mb-2">
+                                <!-- <div class="col-sm-1" style="padding: 0px">
+                                    <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
+                                    </mat-checkbox>
+                                  </div> -->
                                 <div class="field">
-                                  <app-business-input-autocomplete [businessType]="'44ADA'" [selectedInput]="
-                      profIncomeFormArray.controls[fieldGlobalIndex(i)].get(
-                        'natureOfBusiness'
-                      ).value
-                    " (businessSelected)="businessClicked($event, i)">
+                                  <app-business-input-autocomplete [businessType]="'44ADA'"
+                                    [selectedInput]="selectedFormGroup.controls['natureOfBusiness'].value"
+                                    (businessSelected)="businessClicked($event)">
                                   </app-business-input-autocomplete>
-                                  <mat-error *ngIf="
-                      (profIncomeFormArray.controls[i].get('natureOfBusiness')
-                        .touched ||
-                        submitted) &&
-                      profIncomeFormArray.controls[i]
-                        .get('natureOfBusiness')
-                        .hasError('required')
-                    ">Please select</mat-error>
+                                  <mat-error *ngIf="(selectedFormGroup.controls['natureOfBusiness'].touched || submitted) && 
+                                    selectedFormGroup.controls['natureOfBusiness'].hasError('required')">Please
+                                    select</mat-error>
                                 </div>
                                 <div class="field">
                                   <div class="field-label">
                                     <span class="span">Trade Name</span> <span class="redAst">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input formControlName="tradeName" matInput name="tradeName[i]" class="input-field"
+                                    <input formControlName="tradeName" matInput name="tradeName" class="input-field"
                                       required />
                                   </mat-form-field>
-                                  <mat-error *ngIf="
-                                      (profIncomeFormArray.controls[i].get('tradeName')
-                                        .touched ||
-                                        submitted) &&
-                                      profIncomeFormArray.controls[i]
-                                        .get('tradeName')
-                                        .hasError('required')
-                                    ">Please enter the amount</mat-error>
+                                  <mat-error *ngIf="(selectedFormGroup.controls['tradeName'].touched ||submitted) &&
+                                  selectedFormGroup.controls['tradeName'].hasError('required')">Please
+                                    enter the amount</mat-error>
                                 </div>
 
                                 <div class="field">
@@ -90,7 +105,7 @@
                                   </div>
                                   <mat-form-field appearance="outline">
                                     <input matInput class="input-field" formControlName="description"
-                                      name="description[i]" />
+                                      name="description" />
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -100,25 +115,16 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="receipts" maxlength="7" placeholder="₹ Enter Amount"
-                                        matInput name="receipts[i]" class="input-field" required digitsOnly
+                                        matInput name="receipts" class="input-field" required digitsOnly
                                         (change)="calculatePresumptive()" />
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                          (profIncomeFormArray.controls[i].get('receipts')
-                                            .touched ||
-                                            submitted) &&
-                                          profIncomeFormArray.controls[i]
-                                            .get('receipts')
-                                            .hasError('required')
-                                        ">Please enter the amount</mat-error>
-                                    <mat-error *ngIf="
-                                          (profIncomeFormArray.controls[i].get('receipts')
-                                            .touched ||
-                                            submitted) &&
-                                          profIncomeFormArray.controls[i]
-                                            .get('receipts')
-                                            .hasError('max')
-                                        ">Gross receipts amount cannot be more than 50,00,000
+                                    <mat-error *ngIf="(selectedFormGroup.controls['receipts'].touched ||submitted) &&
+                                            selectedFormGroup.controls['receipts'].hasError('required')">Please enter
+                                      the amount
+                                    </mat-error>
+                                    <mat-error *ngIf="(selectedFormGroup.controls['receipts'].touched ||submitted) &&
+                                          selectedFormGroup.controls['receipts'].hasError('max')">Gross receipts amount
+                                      cannot be more than 50,00,000
                                     </mat-error>
                                   </div>
                                 </div>
@@ -127,7 +133,7 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="minimumPresumptiveIncome" matInput
-                                        name="minimumPresumptiveIncome[i]" class="input-field" required digitsOnly
+                                        name="minimumPresumptiveIncome" class="input-field" required digitsOnly
                                         readonly />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
@@ -137,15 +143,11 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                          (profIncomeFormArray.controls[i].get(
-                                            'minimumPresumptiveIncome'
-                                          ).touched ||
-                                            submitted) &&
-                                          profIncomeFormArray.controls[i]
-                                            .get('minimumPresumptiveIncome')
-                                            .hasError('required')
-                                        ">Please enter the amount</mat-error>
+                                    <mat-error
+                                      *ngIf="
+                                          (selectedFormGroup.controls['minimumPresumptiveIncome'].touched || submitted) &&
+                                          selectedFormGroup.controls['minimumPresumptiveIncome'].hasError('required')">Please
+                                      enter the amount</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
@@ -162,46 +164,52 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="presumptiveIncome" placeholder="₹ Enter Amount" matInput
-                                        name="presumptiveIncome[i]" class="input-field"
-                                        maxlength="{{profIncomeFormArray.controls[i].get('receipts').value.length}}"
-                                        required digitsOnly
-                                        (change)="calculatePresumptive()" />
-                                      <div class="percentage-head" style="width: 50px;"
-                                        *ngFor="let percentage of percentage; let id = index">
-                                        <span class="percentage" *ngIf="id === fieldGlobalIndex(i)">
-                                                           {{ percentage?.natOfBusiness === profIncomeFormArray?.controls[fieldGlobalIndex(i)]?.get(
-                                          "natureOfBusiness" )?.value ? percentage?.percentage ? percentage?.percentage
-                                          : 0 : 0 }}% </span>
-                                        <div class="bar" *ngIf="id === fieldGlobalIndex(i)" [ngStyle]="{'width':  (50/100)* (percentage?.natOfBusiness === profIncomeFormArray?.controls[fieldGlobalIndex(i)]?.
-                                        get('natureOfBusiness')?.value ? percentage?.percentage ?
-                                          percentage?.percentage : 0 : 0)  +'px','background-color': '#2D8EF9','z-index':'1' }">
+                                        name="presumptiveIncome" class="input-field"
+                                        maxlength="{{selectedFormGroup.controls['receipts'].value?.length}}" required
+                                        digitsOnly (change)="calculatePresumptive()" />
+                                      <div class="percentage-head" style="width: 50px;">
+                                        <span class="percentage">
+                                          {{ percentage}}% </span>
+                                        <div class="bar"
+                                          [ngStyle]="{'width':  (50/100)* (percentage)  +'px','background-color': '#2D8EF9','z-index':'1' }">
                                         </div>
                                       </div>
                                     </mat-form-field>
                                     <mat-error
-                                      *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) &&profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('min')">Amount
-                                      should be greater than {{
-                                      profIncomeFormArray.controls[i].get('minimumPresumptiveIncome').value }}
+                                      *ngIf="(selectedFormGroup.controls['presumptiveIncome'].touched ||submitted) && selectedFormGroup.controls['presumptiveIncome'].hasError('min')">Amount
+                                      should be greater than
+                                      {{selectedFormGroup.controls['minimumPresumptiveIncome'].value }}
                                     </mat-error>
-                                    <mat-error *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) &&
-                                    profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('max')">Amount
+                                    <mat-error *ngIf="(selectedFormGroup.controls['presumptiveIncome'].touched ||submitted) &&
+                                    selectedFormGroup.controls['presumptiveIncome'].hasError('max')">Amount
                                       cannot be greater than {{ amountFiftyMax }}
                                     </mat-error>
                                   </div>
                                 </div>
                               </div>
+                              <!-- </div> -->
+                            </div>
+                          </form>
+                          <div class="out-box p-15">
+                            <div class="box-left">
+                              <button (click)="clearForm()" class="lgtBtn">Cancel</button>
+                            </div>
+                            <div class="box-right">
+                              <button (click)="saveManualEntry()" class="saveBtnIn">Save
+                                Details
+                              </button>
                             </div>
                           </div>
-                        </form>
 
-                        <div class="row spsTp bdrTp" style="margin: 0px 20px">
-                          <div class="col-sm-6 txt-center">
-                            <table>
-                              <tr *ngFor="let item of getProfIncomeArray.controls | paginate : config"></tr>
-                            </table>
-                            <pagination-controls id="professionConfig"
-                              (pageChange)="pageChanged($event)"></pagination-controls>
-                          </div>
+                          <!-- <div class="row spsTp bdrTp" style="margin: 0px 20px">
+                            <div class="col-sm-6 txt-center">
+                              <table>
+                                <tr *ngFor="let item of getProfIncomeArray.controls | paginate : config"></tr>
+                              </table>
+                              <pagination-controls id="professionConfig"
+                                (pageChange)="pageChanged($event)"></pagination-controls>
+                            </div>
+                          </div> -->
                         </div>
                       </div>
                     </div>
