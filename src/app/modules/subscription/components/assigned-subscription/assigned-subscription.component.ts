@@ -849,7 +849,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           //   <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
           //   </button>`;
           // }
-          if (params.data?.paymentStatus === 'Paid' && !params.data?.invoiceDetail?.some(invoice => invoice?.invoiceRefundDetails?.some(refund => refund?.refundStatus === 'IN_PROGRESS'))) {
+          if (params.data?.invoiceDetail?.some(invoice => invoice?.paymentStatus === 'Paid') && !params.data?.invoiceDetail?.some(invoice => invoice?.invoiceRefundDetails?.some(refund => refund?.refundStatus === 'IN_PROGRESS'))) {
             return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
               style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
               <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
