@@ -60,70 +60,70 @@ export class BifurcationComponent implements OnInit, OnChanges {
     },
     {
       key: 'DA',
-      value: 'Dearness Allowance (DA)'
+      value: 'Dearness Allowance (DA)',
     },
     {
       key: 'CONVEYANCE',
-      value: 'Conveyance Allowance'
+      value: 'Conveyance Allowance',
     },
     {
       key: 'HOUSE_RENT',
-      value: 'House Rent Allowance (HRA)'
+      value: 'House Rent Allowance (HRA)',
     },
     {
       key: 'LTA',
-      value: 'Leave Travel Allowance (LTA)'
+      value: 'Leave Travel Allowance (LTA)',
     },
     {
       key: 'CHILDREN_EDUCATION',
-      value: 'Children Education Allowance (CEA)'
+      value: 'Children Education Allowance (CEA)',
     },
     {
       key: 'OTHER_ALLOWANCE',
-      value: 'Other Allowance'
+      value: 'Other Allowance',
     },
     {
       key: 'CONTRI_80CCD',
       value: 'The contribution made by the employer towards the pension scheme\n' +
-          '              as referred under section 80CCD'
+        '              as referred under section 80CCD',
     },
     {
       key: 'RULE_6_PART_A_4TH_SCHEDULE',
       value: 'The amount deemed to be income under rule 6 of part A of the\n' +
-          '              fourth schedule'
+        '              fourth schedule',
     },
     {
       key: 'RULE_11_4_PART_A_4TH_SCHEDULE',
       value: 'The amount deemed to be income under rule 11(4) of Part-A of the\n' +
-          '              Fourth Schedule'
+        '              Fourth Schedule',
     },
     {
       key: 'PENSION',
-      value: 'Annuity or Pension'
+      value: 'Annuity or Pension',
     },
     {
       key: 'COMMUTED_PENSION',
-      value: 'Commuted Pension'
+      value: 'Commuted Pension',
     },
     {
       key: 'GRATUITY',
-      value: 'Gratuity'
+      value: 'Gratuity',
     },
     {
       key: 'COMMISSION',
-      value: 'Fees/Commission'
+      value: 'Fees/Commission',
     },
     {
       key: 'ADVANCE_SALARY',
-      value: 'Advance Salary'
+      value: 'Advance Salary',
     },
     {
       key: 'LEAVE_ENCASHMENT',
-      value: 'Leave Encashment'
+      value: 'Leave Encashment',
     },
     {
       key: 'OTHER',
-      value: 'Others'
+      value: 'Others',
     },
   ];
   perquisiteNames = [
@@ -190,28 +190,28 @@ export class BifurcationComponent implements OnInit, OnChanges {
     {
       key: 'SECTION_80_IAC_TAX_TO_BE_DEFERED',
       value: 'Stock option allotted or transferred by the employer being an\n' +
-          '              eligible start-up referred to in section 80-IAC-tax to be deferred'
+        '              eligible start-up referred to in section 80-IAC-tax to be deferred'
     },
     {
       key: 'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
       value: 'Stock option allotted or transferred by the employer being an' +
-          'eligible start-up referred to in section 80-IAC-tax not to be deferred'
+        'eligible start-up referred to in section 80-IAC-tax not to be deferred'
     },
     {
       key: 'STOCK_OPTIONS_OTHER_THAN_ESOP',
       value: 'Stock options(non-qualified options) other than ESOP in col 16\n' +
-          '              above'
+        '              above'
     },
     {
       key: 'SCHEME_TAXABLE_US_17_2_VII',
       value: 'Contribution by employer to fund and scheme taxable under sec\n' +
-          '              17(2)(vii)'
+        '              17(2)(vii)'
     },
     {
       key: 'SCHEME_TAXABLE_US_17_2_VIIA',
       value: 'Annual accretion by way of interest, dividend etc. to the balance\n' +
-          '              at the credit of the fund and scheme referred to in section\n' +
-          '              17(2)(vii) and taxable under section 17(2)(viia)'
+        '              at the credit of the fund and scheme referred to in section\n' +
+        '              17(2)(vii) and taxable under section 17(2)(viia)'
     },
     {
       key: 'OTH_BENEFITS_AMENITIES',
@@ -222,20 +222,20 @@ export class BifurcationComponent implements OnInit, OnChanges {
     {
       key: 'COMPENSATION_ON_VRS',
       value: 'Any compensation is due or received by an assessee from an\n' +
-          '              employer or former employer in connection with the termination of\n' +
-          '              his employment or modification thereto.'
+        '              employer or former employer in connection with the termination of\n' +
+        '              his employment or modification thereto.'
     },
     {
       key: 'AMOUNT_DUE',
       value: 'Any amount due or received by an assessee from any person before\n' +
-          '              joining any employment with that person, or after cessation of his\n' +
-          '              employment with that person'
+        '              joining any employment with that person, or after cessation of his\n' +
+        '              employment with that person'
     },
     {
       key: 'PAYMENT_DUE',
       value: 'Any Payment due or received by an assessee from an employer, or\n' +
-          '              from provident or other funds, sum received under keyman insurance\n' +
-          '              policy, including bonus on such policy.'
+        '              from provident or other funds, sum received under keyman insurance\n' +
+        '              policy, including bonus on such policy.'
     },
     {
       key: 'ANY_OTHER',
@@ -249,17 +249,17 @@ export class BifurcationComponent implements OnInit, OnChanges {
     private itrMsService: ItrMsService,
     private elementRef: ElementRef,
     private utilsService: UtilsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
 
     const salaryForm = this.getControls as FormGroup;
-    if(this.typeIndex === 0) {
+    if (this.typeIndex === 0) {
       // Salary
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
-          (item) => item?.salaryType !== 'SEC17_1'
+        (item) => item?.salaryType !== 'SEC17_1'
       );
 
       if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
@@ -271,9 +271,9 @@ export class BifurcationComponent implements OnInit, OnChanges {
       }
     }
 
-    if(this.typeIndex === 1) {
+    if (this.typeIndex === 1) {
       let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-          (item) => item?.perquisiteType !== 'SEC17_2'
+        (item) => item?.perquisiteType !== 'SEC17_2'
       );
 
       if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
@@ -285,12 +285,12 @@ export class BifurcationComponent implements OnInit, OnChanges {
       }
     }
 
-    if(this.typeIndex === 2) {
+    if (this.typeIndex === 2) {
       // profits in lieu
       let profitsInLieuDataToPatch =
-          this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-              (item) => item?.salaryType !== 'SEC17_3'
-          );
+        this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+          (item) => item?.salaryType !== 'SEC17_3'
+        );
 
       if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
         profitsInLieuDataToPatch?.forEach((item) => {
@@ -303,25 +303,28 @@ export class BifurcationComponent implements OnInit, OnChanges {
       }
     }
 
-      this.utilsService.getData().subscribe((data) => {
-        this.handleData(data);
-      });
+    this.utilsService.getData().subscribe((data) => {
+      this.handleData(data);
+    });
     // }
 
     const values = this.bifurcationFormGroup.getRawValue();
     this.utilsService.setSalaryValues(values);
+    // this.changeSectionOne(this.localEmployer);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     console.log('Hurray!!');
-    if(!this.bifurcationFormGroup){
+    if (!this.bifurcationFormGroup) {
       this.bifurcationFormGroup = this.createBifurcationForm();
     }
+    this.bifurcationFormGroup = this.createBifurcationForm();
+
     const salaryForm = this.getControls as FormGroup;
-    if(this.typeIndex === 0) {
+    if (this.typeIndex === 0) {
       // Salary
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
-          (item) => item?.salaryType !== 'SEC17_1'
+        (item) => item?.salaryType !== 'SEC17_1'
       );
 
       if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
@@ -333,9 +336,9 @@ export class BifurcationComponent implements OnInit, OnChanges {
       }
     }
 
-    if(this.typeIndex === 1) {
+    if (this.typeIndex === 1) {
       let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-          (item) => item?.perquisiteType !== 'SEC17_2'
+        (item) => item?.perquisiteType !== 'SEC17_2'
       );
 
       if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
@@ -347,12 +350,12 @@ export class BifurcationComponent implements OnInit, OnChanges {
       }
     }
 
-    if(this.typeIndex === 2) {
+    if (this.typeIndex === 2) {
       // profits in lieu
       let profitsInLieuDataToPatch =
-          this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-              (item) => item?.salaryType !== 'SEC17_3'
-          );
+        this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+          (item) => item?.salaryType !== 'SEC17_3'
+        );
 
       if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
         profitsInLieuDataToPatch?.forEach((item) => {
@@ -364,6 +367,16 @@ export class BifurcationComponent implements OnInit, OnChanges {
         });
       }
     }
+
+    this.utilsService.getData().subscribe((data) => {
+      this.handleData(data);
+    });
+    // }
+
+    const values = this.bifurcationFormGroup.getRawValue();
+    this.utilsService.setSalaryValues(values);
+    // this.changeSectionOne(changes['localEmployer'].currentValue);
+
   }
 
   createBifurcationForm() {
@@ -372,21 +385,21 @@ export class BifurcationComponent implements OnInit, OnChanges {
         this.fb.group({
         }),
       perquisites: this.fb.group({
-        }),
+      }),
       profitsInLieu:
         this.fb.group({
         }),
     });
   }
 
-  formValuesChanged(prevKey, index, event?){
-    if(event) {
+  formValuesChanged(prevKey, index, event?) {
+    if (event) {
       let type = 'salary';
       if (this.typeIndex === 0) {
         type = 'salary';
-      } else if(this.typeIndex === 1) {
+      } else if (this.typeIndex === 1) {
         type = 'perquisites';
-      } else if(this.typeIndex === 2){
+      } else if (this.typeIndex === 2) {
         type = 'profitsInLieu';
       }
       let value = (this.bifurcationFormGroup.controls[type] as FormGroup).controls[prevKey].value;
@@ -396,37 +409,37 @@ export class BifurcationComponent implements OnInit, OnChanges {
       let entries = Object.entries((this.bifurcationFormGroup.controls[type] as FormGroup).value);
       let salaryForm = this.getControls as FormGroup;
       salaryForm = this.fb.group({});
-      for(let i=0; i<index; i++){
+      for (let i = 0; i < index; i++) {
         let ctrl = this.fb.control('');
         ctrl.setValue(entries[0][1]);
         salaryForm.addControl(entries[i][0], ctrl);
       }
       // (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(prevKey);
       salaryForm.addControl(event.value, control);
-      for(let i=index+1; i<index; entries.length){
+      for (let i = index + 1; i < index; entries.length) {
         let ctrl = this.fb.control('');
         ctrl.setValue(entries[0][1]);
         salaryForm.addControl(entries[i][0], ctrl);
       }
     }
 
-    if(this.valid()) {
+    if (this.valid()) {
       this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
     }
   }
 
-  valid(){
+  valid() {
     let type = 'salary';
     if (this.typeIndex === 0) {
       type = 'salary';
-    } else if(this.typeIndex === 1) {
+    } else if (this.typeIndex === 1) {
       type = 'perquisites';
-    } else if(this.typeIndex === 2){
+    } else if (this.typeIndex === 2) {
       type = 'profitsInLieu';
     }
     let keys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
     keys.every(key => {
-      if(keys.filter(v => v === key).length > 1){
+      if (keys.filter(v => v === key).length > 1) {
         console.log('key repeated', key);
         return false;
       }
@@ -613,13 +626,13 @@ export class BifurcationComponent implements OnInit, OnChanges {
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }
 
-  deleteItem(key){
+  deleteItem(key) {
     let type = 'salary';
     if (this.typeIndex === 0) {
       type = 'salary';
-    } else if(this.typeIndex === 1) {
+    } else if (this.typeIndex === 1) {
       type = 'perquisites';
-    } else if(this.typeIndex === 2){
+    } else if (this.typeIndex === 2) {
       type = 'profitsInLieu';
     }
     (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(key);
@@ -627,21 +640,22 @@ export class BifurcationComponent implements OnInit, OnChanges {
     this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
   }
 
-  addItem(){
+  addItem() {
     let type = 'salary';
     let salaryType = 'SEC17_1';
     if (this.typeIndex === 0) {
       type = 'salary';
       let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.salaryNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
-    } else if(this.typeIndex === 1) {
+      salaryType = this.salaryNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
+      // this.changeSectionOne(this.localEmployer);
+    } else if (this.typeIndex === 1) {
       type = 'perquisites';
       let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.perquisiteNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
-    } else if(this.typeIndex === 2){
+      salaryType = this.perquisiteNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
+    } else if (this.typeIndex === 2) {
       type = 'profitsInLieu';
       let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.profitInLieuNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
+      salaryType = this.profitInLieuNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
     }
     let control = this.fb.control('');
     (this.bifurcationFormGroup.controls[type] as FormGroup).addControl(salaryType, control);
@@ -697,9 +711,9 @@ export class BifurcationComponent implements OnInit, OnChanges {
   // get functions
   get getControls() {
     // console.log('typeIndex', this.typeIndex);
-    if(this.typeIndex === 2){
+    if (this.typeIndex === 2) {
       return this.bifurcationFormGroup.get('profitsInLieu') as FormGroup;
-    } else if(this.typeIndex === 1){
+    } else if (this.typeIndex === 1) {
       return this.bifurcationFormGroup.get('perquisites') as FormGroup;
     } else {
       return this.bifurcationFormGroup.get('salary') as FormGroup;
@@ -709,12 +723,25 @@ export class BifurcationComponent implements OnInit, OnChanges {
   unsorted(a: any, b: any): number { return 0; }
 
   getTitle() {
-    if(this.typeIndex === 2){
+    if (this.typeIndex === 2) {
       return 'Profit in lieu of salary as per section 17(3)';
-    } else if(this.typeIndex === 1){
+    } else if (this.typeIndex === 1) {
       return 'Perquisites as per section 17(2)';
     } else {
       return 'Salary as per section 17(1)';
     }
+  }
+
+  changeSectionOne(localEmployer) {
+    debugger
+    // const incomes = this.localEmployer.salary;
+    this.salaryNames.forEach((type) => {
+      type['disabled'] = false;
+      localEmployer.salary.forEach((element) => {
+        if (element['salaryType'] == type.key) {
+          type['disabled'] = true;
+        }
+      });
+    });
   }
 }
