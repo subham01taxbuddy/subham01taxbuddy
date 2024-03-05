@@ -21,7 +21,7 @@
             </mat-icon>
             <!-- </a> -->
         </div>
-        <div class="col-lg-5 col-md-5 col-sm-6">
+        <div class="col-lg-4 col-md-4 col-sm-5">
             <a class="header__logo" (click)="navigateToHome()">
                 <span class="header__logo-img1"></span>
             </a>
@@ -37,6 +37,12 @@
         <div class="col-lg-2 col-md-2 col-sm-1">
             <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
             </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1">
+          <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right" >
+            <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()">Copy Interview Link <i class="fa fa-copy" aria-hidden="true"></i></button>
+          </div>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-5">

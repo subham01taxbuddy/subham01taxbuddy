@@ -11,6 +11,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ActivatedRoute } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReportService } from 'src/app/services/report-service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 export interface User {
   name: string;
@@ -54,42 +55,42 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   ];
   boPartnersInfo: any;
+  additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
+  languageForm: FormGroup;
+  irtTypeCapability = [];
+  itrTypeForm: FormGroup;
+  itrPlanList: any;
+  smeDetails: any;
+  signedInRole:any;
 
   constructor(
     private fb: FormBuilder,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
-    private activatedRoute: ActivatedRoute,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private itrMsService: ItrMsService,
+
     private reportService:ReportService
-  ) { }
+  ) {
+    this.languageForm = this.fb.group({});
+    this.langList.forEach((lang) => {
+      this.languageForm.addControl(lang, new FormControl(false));
+    })
+    this.itrTypeForm = this.fb.group({});
+    this.getPlanDetails();
+  }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
-    this.getOwner();
-    this.getLeader();
+    this.signedInRole = this.utilsService.getUserRoles();
+
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj); // all
-    // this.setFormValues(this.smeObj);
+    this.setFormValues(this.smeObj);
     console.log('sme obj', this.smeObj);
     const userId = this.smeObj.userId;
     this.getPartnerDetails();
 
-    this.filteredOptions = this.searchOwner.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
-      })
-    );
-    this.filteredOptions1 = this.searchLeader.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter1(name as string) : this.options1.slice();
-      })
-    );
   }
 
   getPartnerDetails() {
@@ -118,51 +119,237 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     );
   }
 
-  displayFn(user: User): string {
-    return user && user.name ? user.name : '';
-  }
-  displayFn1(user: User): string {
-    return user && user.name ? user.name : '';
+  leaderId: number;
+  agentId: number;
+  leaderName:any;
+  fromSme1(event) {
+    console.log('sme-drop-down', event);
+    if (event) {
+      this.leaderId = event ? event.userId : null;
+      this.leaderName = event ?event.name : null;
+     }
+    if (this.leaderId) {
+      this.agentId = this.leaderId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
   }
 
-  private _filter(name: string): User[] {
-    const filterValue = name.toLowerCase();
+  openDocument(documentType: string) {
+    let url = null;
+    if (documentType === 'gstIn') {
+      url = this.urls['gstin'];
+    } else {
+      url = this.urls[`${documentType}Url`];
+    }
 
-    return this.options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+     this._toastMessageService.alert('error',`${documentType} URL not found`);
+    }
   }
 
-  private _filter1(name: string): User[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options1.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
+  onLanguageCheckboxChange(language: string) {
+    const langControl = this.getLanguageControl(language);
+    if (!this.smeObj['languages']) {
+      this.smeObj['languages'] = ['English'];
+    }
+    if (langControl.value) {
+      this.smeObj['languages'].push(language);
+    } else {
+      let index = this.smeObj['languages'].indexOf(language);
+      this.smeObj['languages'].splice(index, 1);
+    }
   }
+
+  getLanguageControl(lang: string): FormControl {
+    return this.languageForm.get(lang) as FormControl;
+  }
+
+  getItrTypeControl(itrType: string): FormControl {
+    return this.itrTypeForm.get(itrType) as FormControl;
+  }
+
+  onItrTypeCheckboxChange(itrType: string) {
+    const itrTypeControl = this.getItrTypeControl(itrType);
+    if (!this.smeObj['skillSetPlanIdList']) {
+      this.smeObj['skillSetPlanIdList'] = [];
+    }
+    let planId = this.smeObj['skillSetPlanIdList'];
+
+    if (itrTypeControl.value) {
+      this.itrPlanList.forEach(element => {
+        if (element.name === itrType) {
+          planId.push(element.planId);
+        }
+      });
+      this.smeObj['skillSetPlanIdList'] = planId;
+    } else {
+      this.itrPlanList.forEach(element => {
+        if (element.name === itrType) {
+          let index = this.smeObj['skillSetPlanIdList'].indexOf(element.planId);
+          this.smeObj['skillSetPlanIdList'].splice(index, 1);
+        }
+      });
+    }
+  }
+
+  getPlanDetails() {
+    this.loading = true;
+    let param = '/plans-master?serviceType=ITR&isActive=true';
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      this.itrPlanList = response;
+      if (this.itrPlanList.length) {
+        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+        if (this.smeObj?.['partnerType'] === 'CHILD') {
+          this.getPrincipalDetails(this.itrPlanList);
+        } else {
+          this.itrPlanList.forEach(element => {
+            this.irtTypeCapability.push(element.name);
+            this.irtTypeCapability.forEach((itrType) => {
+              this.itrTypeForm.addControl(itrType, new FormControl(false));
+            })
+            this.setPlanDetails();
+          });
+        }
+      }
+    },
+      error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to get selected plan details');
+      });
+
+  }
+  getPrincipalDetails(itrPlanList) {
+    let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        itrPlanList.forEach(element => {
+          this.smeDetails?.skillSetPlanIdList.forEach(item => {
+            if (element.planId === item) {
+              this.irtTypeCapability.push(element.name);
+              this.irtTypeCapability.forEach((itrType) => {
+                this.itrTypeForm.addControl(itrType, new FormControl(false));
+              })
+            }
+          });
+          this.setPlanDetails();
+        });
+      }
+    })
+  }
+
+  setPlanDetails() {
+    if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
+      this.itrPlanList.forEach(item => {
+        this.smeObj?.['skillSetPlanIdList'].forEach(element => {
+          if (item.planId === element) {
+            const name = item.name;
+            this.itrTypeForm.setControl(name, new FormControl(true));
+          }
+        })
+      })
+    }
+  }
+
 
   setFormValues(data) {
     this.mobileNumber.setValue(data.mobileNumber);
-    this.itrTypes.setValue(data.itrTypes);
-    this.itrTypesData = this.itrTypes.value;
+    // this.itrTypes.setValue(data.itrTypes);
+    // this.itrTypesData = this.itrTypes.value;
+    this.pinCode.setValue(data.pincode);
+    this.internal.setValue(data.internal)
+    if(data?.partnerDetails?.interviewedBy){
+      let allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
+      let filer = allFilerList.filter((item) => {
+        return item.userId === data?.partnerDetails?.interviewedBy;
+      }).map((item) => {
+        return item.name;
+      });
+
+      this.interviewedBy.setValue(filer)
+
+   }
   }
+  urls:any;
 
   setPartnerDetails(boPartnersInfo) {
+    if (!boPartnersInfo) {
+      return;
+    }
+
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.mobileNumber);
     if (!this.name.value) this.name.setValue(boPartnersInfo?.name);
     if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo?.emailAddress);
-    if(typeof(boPartnersInfo?.languageProficiency) === 'string'){
-      console.log('hurray', [boPartnersInfo?.languageProficiency]);
-      this.languages.setValue([boPartnersInfo?.languageProficiency]);
-    } else {
-      if (!this.languages.value) this.languages.setValue(boPartnersInfo?.languageProficiency);
+
+    if (typeof boPartnersInfo?.languageProficiency === 'string') {
+      const languageProficiencies = boPartnersInfo.languageProficiency.split(',');
+      this.setLanguageCheckboxes(languageProficiencies);
+    } else if (Array.isArray(boPartnersInfo?.languageProficiency)) {
+      this.setLanguageCheckboxes(boPartnersInfo.languageProficiency);
     }
+
     if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo?.referredBy);
     if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo?.incomeTaxBasic);
     if (!this.qualification.value) this.qualification.setValue(boPartnersInfo?.qualification);
     if (!this.state.value) this.state.setValue(boPartnersInfo?.state);
+    if (!this.city.value) this.city.setValue(boPartnersInfo?.city);
     if (!this.special.value) this.special.setValue(boPartnersInfo?.incomeTaxSpecial);
+
+    if (boPartnersInfo?.roles?.includes('ROLE_FILER')) {
+      if (boPartnersInfo?.partnerType === "INDIVIDUAL") {
+        this.filerIndividual.setValue(true);
+        this.filerPrinciple.setValue(false);
+      } else if (boPartnersInfo?.partnerType === "PRINCIPLE") {
+        this.filerIndividual.setValue(false);
+        this.filerPrinciple.setValue(true);
+      }
+    }
+
+    if (boPartnersInfo?.bankDetails) {
+      this.accountNumber.setValue(boPartnersInfo?.bankDetails?.accountNumber);
+      this.ifsCode.setValue(boPartnersInfo?.bankDetails?.ifsCode);
+      this.accountType.setValue(boPartnersInfo?.bankDetails?.accountType);
+    }
+
+    if (boPartnersInfo?.interviewedBy) {
+      const allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+      const filer = allFilerList.filter(item => item.userId === boPartnersInfo?.interviewedBy)
+                                .map(item => item.name);
+      this.interviewedBy.setValue(filer);
+    }
+
+    this.urls = {
+      "signedNDAUrl": boPartnersInfo?.signedNDAUrl,
+      "certificateOfPracticeUrl": boPartnersInfo?.certificateOfPracticeUrl,
+      "aadhaarUrl": boPartnersInfo?.aadhaarUrl,
+      "panUrl": boPartnersInfo?.panUrl,
+      "passbookOrCancelledChequeUrl": boPartnersInfo?.passbookOrCancelledChequeUrl,
+      "cvUrl": boPartnersInfo?.cvUrl,
+      "gstin": boPartnersInfo?.gstin
+    };
+
+    this.languageForm.controls['English'].enable();
+    this.languageForm.controls['English'].setValue(true);
   }
+
+  setLanguageCheckboxes(languageProficiencies: string[]) {
+    for (const langProficiency of languageProficiencies) {
+      const lang = langProficiency.trim();
+      if (this.langList.includes(lang)) {
+        const langControl = this.getLanguageControl(lang);
+        if (langControl) {
+          langControl.setValue(true);
+        }
+      }
+    }
+  }
+
 
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
@@ -170,14 +357,40 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
+    callingNumber:new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
+    pinCode:new FormControl(''),
+    city:new FormControl(''),
     state: new FormControl(''),
     searchOwner: new FormControl('', [Validators.required]),
     searchLeader: new FormControl('', [Validators.required]),
     special: new FormControl(''),
+    accountNumber: new FormControl(''),
+    ifsCode: new FormControl(''),
+    accountType: new FormControl(''),
+    additionalIdsCount: new FormControl(''),
+    interviewedBy: new FormControl(''),
+    additionalIdsRequired:new FormControl(''),
   });
-
+  get additionalIdsRequired() {
+    return this.smeFormGroup.controls['interviewedBy'] as FormControl;
+  }
+  get interviewedBy() {
+    return this.smeFormGroup.controls['interviewedBy'] as FormControl;
+  }
+  get additionalIdsCount() {
+    return this.smeFormGroup.controls['additionalIdsCount'] as FormControl;
+  }
+  get accountNumber() {
+    return this.smeFormGroup.controls['accountNumber'] as FormControl;
+  }
+  get ifsCode() {
+    return this.smeFormGroup.controls['ifsCode'] as FormControl;
+  }
+  get accountType() {
+    return this.smeFormGroup.controls['accountType'] as FormControl;
+  }
   get mobileNumber() {
     return this.smeFormGroup.controls['mobileNumber'] as FormControl;
   }
@@ -212,189 +425,129 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   get special() {
     return this.smeFormGroup.controls['special'] as FormControl;
   }
+  get callingNumber() {
+    return this.smeFormGroup.controls['callingNumber'] as FormControl;
+  }
+  get pinCode(){
+    return this.smeFormGroup.controls['pinCode'] as FormControl;
+  }
+  get city(){
+    return this.smeFormGroup.controls['city'] as FormControl;
+  }
 
   roles: FormGroup = this.fb.group({
-    admin: new FormControl(''),
-    leader: new FormControl(''),
-    owner: new FormControl(''),
-    filer: new FormControl(''),
-    leadEngagement: new FormControl(''),
+    filerIndividual: new FormControl(''),
+    filerPrinciple: new FormControl(''),
+    internal: new FormControl(''),
+    external: new FormControl(''),
+
   });
 
-  get admin() {
-    return this.roles.controls['admin'] as FormControl
+  get filerPrinciple() {
+    return this.roles.controls['filerPrinciple'] as FormControl
   }
-  get leader() {
-    return this.roles.controls['leader'] as FormControl
+  get filerIndividual() {
+    return this.roles.controls['filerIndividual'] as FormControl
   }
-  get owner() {
-    return this.roles.controls['owner'] as FormControl
+  get internal() {
+    return this.roles.controls['internal'] as FormControl
   }
-  get filer() {
-    return this.roles.controls['filer'] as FormControl
+  get external() {
+    return this.roles.controls['external'] as FormControl
   }
-  get leadEngagement() {
-    return this.roles.controls['leadEngagement'] as FormControl
-  }
-
-  getOwner() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('owner list result -> ', result);
-      this.ownerList = result.data;
-      console.log("ownerlist", this.ownerList)
-      this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options = this.ownerNames;
-      console.log(' ownerName -> ', this.ownerNames);
-    });
-  }
-
-  ownerDetails: any;
-  getownerNameId(option) {
-    this.ownerDetails = option
-    console.log(option)
-  }
-
-  getLeader() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-    let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
-
-      this.leaderList = result.data;
-      console.log('leader list result -> ', result);
-      this.leaderNames = this.leaderList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options1 = this.leaderNames;
-      console.log('leader name list ', this.leaderNames)
-    })
-
-  }
-
-  leaderDetails: any;
-  getLeaderNameId(option1) {
-    this.leaderDetails = option1
-    console.log(option1)
-  }
-
 
   onCheckboxChange(checkboxNumber: number) {
     if (checkboxNumber === 1) {
-      this.leader.setValue(false);
-      this.owner.setValue(false);
-      this.filer.setValue(false);
+      this.filerPrinciple.setValue(false);
     }
     if (checkboxNumber === 2) {
-      this.admin.setValue(false);
-      this.owner.setValue(false);
-      this.filer.setValue(false);
+      this.filerIndividual.setValue(false);
     }
     if (checkboxNumber === 3) {
-      this.leader.setValue(false);
-      this.admin.setValue(false);
-      this.filer.setValue(false);
+      this.external.setValue(false);
     }
     if (checkboxNumber === 4) {
-      this.leader.setValue(false);
-      this.owner.setValue(false);
-      this.owner.setValue(false);
+      this.internal.setValue(false);
     }
+
   }
 
-  // setParentNameId(){
-  //   if (this.filer.value==='true'){
-  //     parentId: this.ownerDetails?.userId;
-  //     parentName: this.ownerDetails?.name,
-  //   }
-  //   else if (this.owner.value==='true'){
-  //     parentId: this.leaderDetails?.userId;
-  //     parentName: this.leaderDetails?.name,
-  //   }
-  // }
+  getSelectedLanguages(): string[] {
+    return this.langList.filter(lang => this.getLanguageControl(lang).value);
+  }
 
   updateSmeDetails() {
+    //https://uat-api.taxbuddy.com/user/v2/assigned-sme-details
+
     let parentId: any
     let parentName: any
-    if (this.filer.value === true) {
-      parentId = this.ownerDetails?.userId;
-      parentName = this.ownerDetails?.name;
-    }
-    if (this.owner.value === true) {
-      parentId = this.leaderDetails?.userId;
-      parentName = this.leaderDetails?.name;
+    if (this.signedInRole.includes('ROLE_ADMIN') && this.leaderId) {
+      parentId = this.leaderId;
+      parentName = this.leaderName;
+    }else{
+      parentId = this.smeObj.parentId;
+      parentName = this.smeObj.parentName;
     }
 
-    // if( this.smeObj.roles=null){
-    //   this.smeObj.roles=[];
-    // }
-    if (this.owner.value === true) {
-      this.smeObj.roles = [];
-      this.smeObj.roles.push('ROLE_OWNER')
+    if( this.smeObj.roles=null){
+      this.smeObj.roles=[];
     }
-    if (this.filer.value === true) {
+
+    if (this.filerIndividual.value === true || this.filerPrinciple.value === true) {
       this.smeObj.roles = [];
       this.smeObj.roles.push('ROLE_FILER');
 
     }
-    if (this.leader.value === true) {
-      this.smeObj.roles = [];
-      this.smeObj.roles.push('ROLE_LEADER')
-    }
-    if (this.admin.value === true) {
-      this.smeObj.roles = [];
-      this.smeObj.roles.push('ROLE_ADMIN')
+
+    if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
+      this.utilsService.showSnackBar('Please select at least one ITR type');
+      return;
     }
 
+      const param = `/v2/assigned-sme-details`;
 
-    if (this.leader.value || this.utilsService.isNonEmpty(this.searchLeader.value) || (this.utilsService.isNonEmpty(this.searchOwner.value))) {
-      const userId = this.smeObj.userId;
-      console.log(userId);
-      const param = `/sme-details-new/${userId}`;
-      // if (this.smeFormGroup.valid) {
       this.loading = true;
 
-      let finalReq: any = {};
-      // if(this.smeRecords[0]) {
-      //   finalReq = this.smeRecords[0];
-      // }else {
-      //   finalReq = this.smeRoles;
-      // }
+      let finalReq: any = {
+        userId : this.smeObj.userId,
+        name: this.name.value,
+        smeOriginalEmail: this.smeOriginalEmail.value,
+        mobileNumber: this.mobileNumber.value,
+        callingNumber: this.smeObj.callingNumber,
+        serviceType: this.smeObj.serviceType,
+        roles: this.smeObj.roles,
+        languages: this.getSelectedLanguages(),
+        qualification: this.qualification?.value,
+        referredBy: this.referredBy.value,
+        pinCode:this.pinCode.value,
+        state: this.state.value,
+        botId: this.smeObj.botId,
+        displayName: this.smeObj.displayName,
+        active: this.smeObj.active,
+        joiningDate: this.smeObj.joiningDate,
+        internal: this.internal.value ? true : this.external.value ? false:null,
+        assignmentStart: this.smeObj.assignmentStart,
+        itrTypes: this.itrTypes.value,
+        roundRobinCount: this.smeObj.roundRobinCount,
+        assessmentYears: this.smeObj.assessmentYears,
+        parentId: parentId ,
+        parentName: parentName,
+        roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
+        isLeader: this.smeObj.isLeader,
+        isAdmin: this.smeObj.isAdmin,
+        isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
+        partnerType :this.smeObj.partnerType,
+        skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
+        partnerDetails: this.smeObj.partnerDetails
+      };
 
-      finalReq.userId = this.smeObj.userId;
-      finalReq.name = this.name.value;
-      finalReq.smeOriginalEmail = this.smeOriginalEmail.value;
-      finalReq.mobileNumber = this.mobileNumber.value;
-      finalReq.callingNumber = this.smeObj.callingNumber;
-      finalReq.serviceType = this.smeObj.serviceType;
-      finalReq.roles = this.smeObj.roles;
-      finalReq.languages = this.languages.value;
-      finalReq.qualification = this.qualification?.value;
-      finalReq.referredBy = this.referredBy.value;
-      finalReq.state = this.state.value;
-      finalReq.botId = this.smeObj.botId;
-      finalReq.displayName = this.smeObj.displayName;
-      finalReq.active = this.smeObj.active;
-      finalReq.joiningDate = this.smeObj.joiningDate;
-      finalReq.internal = this.smeObj.internal;
-      finalReq.assignmentStart = this.smeObj.assignmentStart;
-      finalReq.itrTypes = this.itrTypes.value;
-      finalReq.roundRobinCount = this.smeObj.roundRobinCount;
-      finalReq.assessmentYears = this.smeObj.assessmentYears;
-      finalReq.parentId = parentId;
-      finalReq.parentName = parentName;
-      finalReq.roundRobinOwnerCount = this.smeObj.roundRobinOwnerCount;
-      finalReq.owner = this.owner.value;
-      finalReq.leader = this.leader.value;
-      finalReq.admin = this.admin.value;
-      finalReq.filer = this.filer.value;
-      finalReq.coOwnerUserId = this.smeObj.coOwnerUserId;
+      finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
+      finalReq.partnerDetails['additionalIdsCount'] = this.additionalIdsCount.value;
+
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
       // console.log('requestData', requestData);
-      this.userMsService.putMethod(param, finalReq).subscribe(
+      this.userMsService.postMethod(param, finalReq).subscribe(
         (res: any) => {
           console.log('SME assignment updated', res);
           this.loading = false;
@@ -415,15 +568,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.loading = false;
         }
       );
-    } else {
-      if (this.owner.value && !this.utilsService.isNonEmpty(this.searchLeader.value)) {
-        this._toastMessageService.alert('error', 'Please select leader name.');
-        this.loading = false;
-      } else if (this.filer.value && !this.utilsService.isNonEmpty(this.searchOwner.value)) {
-        this._toastMessageService.alert('error', 'Please select owner name.');
-        this.loading = false;
-      }
-    }
   }
 }
 
