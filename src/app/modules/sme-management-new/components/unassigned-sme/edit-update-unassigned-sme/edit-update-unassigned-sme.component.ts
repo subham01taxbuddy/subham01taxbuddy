@@ -44,9 +44,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   itrTypesData = [];
   ownerUserId: any;
   loggedInSme: any;
-  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
-    'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
-    'Santali', 'Sindhi', 'Urdu']
+  langList = ['English', 'Hindi', 'Marathi', 'Tamil', 'Telugu', 'Oriya', 'Gujarati', 'Kannada', 'Malayalam', 'Bangla', 'Assamese',]
   itrTypeList = [
     { value: 1, display: 'ITR 1' },
     { value: 2, display: 'ITR 2' },
