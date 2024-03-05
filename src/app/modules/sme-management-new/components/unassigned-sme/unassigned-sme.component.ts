@@ -508,21 +508,21 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           };
         },
       },
-      {
-        headerName: 'Reject/Backed Out',
-        field: '',
-        width: 120,
-        pinned: 'right',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      // {
+      //   headerName: 'Reject/Backed Out',
+      //   field: '',
+      //   width: 120,
+      //   pinned: 'right',
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to reject/Backed out " data-action-type="reject"
-          style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
-          <i class="fas fa-times-circle" style="color: red;" data-action-type="reject"> </i>
-           </button>`;
-        },
-      },
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Click to reject/Backed out " data-action-type="reject"
+      //     style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
+      //     <i class="fas fa-times-circle" style="color: red;" data-action-type="reject"> </i>
+      //      </button>`;
+      //   },
+      // },
     ];
   }
   public rowSelection: 'single';
