@@ -328,6 +328,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
+      this.hasBifurcation();
+      this.bifurcation();
     } else {
       this.markActive(-1);
     }
