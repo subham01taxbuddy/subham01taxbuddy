@@ -108,6 +108,9 @@ export class SourceOfIncomesComponent implements OnInit {
     } else {
       this.sourcesList = incomeSources;
     }
+    if(this.ITR_JSON.residentialStatus === 'NON_RESIDENT'){
+      this.sourcesList = this.sourcesList.filter(item=>item.schedule !== this.schedules.FOREIGN_INCOME);
+    }
     this.sourcesList.forEach((source) => {
       if (source.selected) {
         let event = {

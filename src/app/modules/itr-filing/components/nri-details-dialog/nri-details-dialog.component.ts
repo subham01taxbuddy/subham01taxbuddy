@@ -7,6 +7,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants'
 
 import { UtilsService } from 'src/app/services/utils.service'
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
+import {forEach} from "lodash";
 
 
 @Component({
@@ -268,21 +270,29 @@ export class NriDetailsDialogComponent implements OnInit {
   { value: '9999', label: 'OTHERS' },
   { value: '9998', label: 'Not Applicable(Not Resident in any Country)' },]
 
+  ITR_JSON: ITR_JSON;
 
   constructor(public dialogRef: MatDialogRef<NriDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    public utilsService: UtilsService) { }
+    public utilsService: UtilsService) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
 
   ngOnInit() {
     console.info('Data:', this.data)
     this.nriDetailsForm = this.fb.group({
-      conditionsResStatus: [null],
+      conditionsResStatus: [this.ITR_JSON.conditionsResStatus],
       jurisdictions: this.fb.array([]),
-    })
+    });
 
-    this.addMore()
-
+    if(this.ITR_JSON.jurisdictions){
+      this.ITR_JSON.jurisdictions.forEach(jur => {
+        this.addMore(jur);
+      });
+    } else {
+      this.addMore()
+    }
   }
   createJurisdictionsForm(obj: { jurisdictionResidence?: string, tin?: string } = {}): FormGroup {
     return this.fb.group({
@@ -297,11 +307,11 @@ export class NriDetailsDialogComponent implements OnInit {
 
   }
 
-  addMore() {
+  addMore(jur?) {
     const jurisdictions = <FormArray>this.nriDetailsForm.get('jurisdictions')
 
     if (jurisdictions.valid) {
-      jurisdictions.push(this.createJurisdictionsForm())
+      jurisdictions.push(this.createJurisdictionsForm(jur))
 
     } else {
       console.log('add above details first')
