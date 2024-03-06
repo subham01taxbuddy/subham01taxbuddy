@@ -224,7 +224,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <button (click)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
+            <button *ngIf="customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT'" (click)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
               class="resident-btn">
               <i class="fa-solid fa-globe"></i>
             </button>
