@@ -530,7 +530,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
           paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
           leaderName: userInvoices[i].leaderName,
-          couponCodeClaimedServiceType:userInvoices[i].couponCodeClaimedServiceType
+          couponCodeClaimedServiceType:userInvoices[i].couponCodeClaimedServiceType,
+          markedDoneByName:userInvoices[i].markedDoneByName
         })
       invoices.push(updateInvoice)
     }
@@ -840,7 +841,27 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         }
 
       },
+      {
+        headerName: 'Call Done By',
+        field: 'markedDoneByName',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let name = params.data.markedDoneByName
+          if(name){
+            return name
+          }else{
+            return '-'
+          }
+        }
 
+      },
       {
         headerName: 'Subscription Adjusted',
         field: 'couponCodeClaimedServiceType',

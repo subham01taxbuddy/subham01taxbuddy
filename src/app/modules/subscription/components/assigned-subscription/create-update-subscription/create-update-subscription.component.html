@@ -363,7 +363,7 @@
                       </div>
                       <div class="col-sm-5">
                         <mat-form-field appearance="outline" class="select-bg-color">
-                          <mat-select (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionId" (ngModelChange)="onNgModelChange()">
+                          <mat-select multiple (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionIds" (ngModelChange)="onNgModelChange()">
                             <mat-option *ngFor="let couponCode of availableCouponCodes" [value]="couponCode.couponCodeSubscriptionId" [disabled]="!availableCouponCodes">
                               {{ couponCode?.name }}
                             </mat-option>
@@ -371,12 +371,12 @@
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">
-                        <button class="save-user-info" [disabled]="selectedCouponCodeSubscriptionId === 0" (click)="applyCouponCode(smeSelectedPlanId)">
+                        <button class="save-user-info" (click)="applyCouponCode(smeSelectedPlanId)">
                           Apply Coupon Code
                         </button>
                       </div>
                       <div class="col-sm-1">
-                        <button [disabled]="selectedCouponCodeSubscriptionId === 0" class="delete-icon-btn"
+                        <button class="delete-icon-btn"
                         (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
                         <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
                         </button>
@@ -537,6 +537,16 @@
                   <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
                     <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">
                       {{ year.financialYear }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 mt-3" *ngIf="showScheduledFields">
+                <mat-label>Select Service Type For Scheduled Call </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select    [formControl]="scheduleCallService" >
+                    <mat-option *ngFor="let service of scheduledCallServiceTypes" [value]="service.value">
+                      {{service.label}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
