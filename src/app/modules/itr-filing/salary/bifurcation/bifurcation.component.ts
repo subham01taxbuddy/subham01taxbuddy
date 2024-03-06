@@ -1,23 +1,12 @@
-import {
-  Component,
-  OnInit,
-  Inject,
-  ElementRef,
-  ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter,
-} from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {
-  Employer,
-  ITR_JSON,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { Component, OnInit, Inject, ElementRef, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Employer, ITR_JSON, salarySevOne, salarySevThree, salarySevTwo, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BreakUpComponent } from '../break-up/break-up.component';
-import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { Overlay } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
-import { SalaryComponent } from '../salary.component';
 
 @Component({
   selector: 'app-bifurcation',
@@ -246,7 +235,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private overlay: Overlay,
-    private itrMsService: ItrMsService,
     private elementRef: ElementRef,
     private utilsService: UtilsService
   ) { }
@@ -259,28 +247,28 @@ export class BifurcationComponent implements OnInit, OnChanges {
     if (this.typeIndex === 0) {
       // Salary
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
-        (item) => item?.salaryType !== 'SEC17_1'
-      );
+        (item) => item?.salaryType !== 'SEC17_1');
 
       if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
         salaryDataToPatch?.forEach((item) => {
-          let control = this.fb.control('');
-          control?.setValue(item?.taxableAmount);
-          salaryForm.addControl(item?.salaryType, control);
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.salaryType, control);
+          this.addItem(item);
         });
       }
     }
 
     if (this.typeIndex === 1) {
       let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-        (item) => item?.perquisiteType !== 'SEC17_2'
-      );
+        (item) => item?.perquisiteType !== 'SEC17_2');
 
       if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
         perquisitesDataToPatch?.forEach((item) => {
-          let control = this.fb.control('');
-          control?.setValue(item?.taxableAmount);
-          salaryForm.addControl(item?.perquisiteType, control);
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.perquisiteType, control);
+          this.addItem(item);
         });
       }
     }
@@ -289,16 +277,14 @@ export class BifurcationComponent implements OnInit, OnChanges {
       // profits in lieu
       let profitsInLieuDataToPatch =
         this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-          (item) => item?.salaryType !== 'SEC17_3'
-        );
+          (item) => item?.salaryType !== 'SEC17_3');
 
       if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
         profitsInLieuDataToPatch?.forEach((item) => {
-          profitsInLieuDataToPatch?.forEach((item) => {
-            let control = this.fb.control('');
-            control?.setValue(item?.taxableAmount);
-            salaryForm.addControl(item?.salaryType, control);
-          });
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.salaryType, control);
+          this.addItem(item);
         });
       }
     }
@@ -306,124 +292,167 @@ export class BifurcationComponent implements OnInit, OnChanges {
     this.utilsService.getData().subscribe((data) => {
       this.handleData(data);
     });
-    // }
+    let values = this.utilsService.getSalaryValues();
+    if (!values) {
+      values = {
+        salary: [],
+        perquisites: [],
+        profitsInLieu: []
+      }
+    }
 
-    const values = this.bifurcationFormGroup.getRawValue();
+    if (this.typeIndex === 0) {
+      values.salary = this.bifurcationFormGroup.getRawValue().salary;
+    }
+    if (this.typeIndex === 1) {
+      values.perquisites = this.bifurcationFormGroup.getRawValue().perquisites;
+    }
+    if (this.typeIndex === 2) {
+      values.profitsInLieu = this.bifurcationFormGroup.getRawValue().profitsInLieu;
+    }
     this.utilsService.setSalaryValues(values);
-    // this.changeSectionOne(this.localEmployer);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('Hurray!!');
     if (!this.bifurcationFormGroup) {
       this.bifurcationFormGroup = this.createBifurcationForm();
     }
     this.bifurcationFormGroup = this.createBifurcationForm();
 
-    const salaryForm = this.getControls as FormGroup;
+    let values = this.utilsService.getSalaryValues();
+    if (!values) {
+      values = {
+        salary: [],
+        perquisites: [],
+        profitsInLieu: []
+      }
+    }
     if (this.typeIndex === 0) {
       // Salary
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
-        (item) => item?.salaryType !== 'SEC17_1'
-      );
+        (item) => item?.salaryType !== 'SEC17_1');
 
       if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
         salaryDataToPatch?.forEach((item) => {
-          let control = this.fb.control('');
-          control?.setValue(item?.taxableAmount);
-          salaryForm.addControl(item?.salaryType, control);
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.salaryType, control);
+          this.addItem(item);
         });
       }
+      values.salary = this.bifurcationFormGroup.getRawValue().salary;
+
     }
 
     if (this.typeIndex === 1) {
       let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-        (item) => item?.perquisiteType !== 'SEC17_2'
-      );
+        (item) => item?.perquisiteType !== 'SEC17_2');
 
       if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
         perquisitesDataToPatch?.forEach((item) => {
-          let control = this.fb.control('');
-          control?.setValue(item?.taxableAmount);
-          salaryForm.addControl(item?.perquisiteType, control);
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.perquisiteType, control);
+          this.addItem(item);
         });
       }
+      values.perquisites = this.bifurcationFormGroup.getRawValue().perquisites;
     }
 
     if (this.typeIndex === 2) {
       // profits in lieu
       let profitsInLieuDataToPatch =
         this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-          (item) => item?.salaryType !== 'SEC17_3'
-        );
+          (item) => item?.salaryType !== 'SEC17_3');
 
       if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
         profitsInLieuDataToPatch?.forEach((item) => {
-          profitsInLieuDataToPatch?.forEach((item) => {
-            let control = this.fb.control('');
-            control?.setValue(item?.taxableAmount);
-            salaryForm.addControl(item?.salaryType, control);
-          });
+          // let control = this.fb.control('');
+          // control?.setValue(item?.taxableAmount);
+          // salaryForm.addControl(item?.salaryType, control);
+          this.addItem(item);
         });
       }
+      values.profitsInLieu = this.bifurcationFormGroup.getRawValue().profitsInLieu;
     }
 
     this.utilsService.getData().subscribe((data) => {
       this.handleData(data);
     });
-    // }
-
-    const values = this.bifurcationFormGroup.getRawValue();
     this.utilsService.setSalaryValues(values);
-    // this.changeSectionOne(changes['localEmployer'].currentValue);
-
   }
 
   createBifurcationForm() {
     return this.fb.group({
-      salary:
-        this.fb.group({
-        }),
-      perquisites: this.fb.group({
-      }),
-      profitsInLieu:
-        this.fb.group({
-        }),
+      salary: this.fb.array([]),
+      perquisites: this.fb.array([]),
+      profitsInLieu: this.fb.array([]),
     });
   }
 
-  formValuesChanged(prevKey, index, event?) {
-    if (event) {
-      let type = 'salary';
+  get salary() {
+    return <FormArray>this.bifurcationFormGroup.get('salary');
+  }
+  get perquisites() {
+    return <FormArray>this.bifurcationFormGroup.get('perquisites');
+  }
+  get profitsInLieu() {
+    return <FormArray>this.bifurcationFormGroup.get('profitsInLieu');
+  }
+
+  createSevOneForm(obj?: salarySevOne): FormGroup {
+    return this.fb.group({
+      id: [obj?.id ? obj?.id : null],
+      salaryType: [obj?.salaryType || null, Validators.required],
+      taxableAmount: [obj?.taxableAmount || 0, Validators.required],
+      exemptAmount: [obj?.exemptAmount || null],
+      description: [obj?.description || null],
+    })
+  }
+
+  createSevTwoForm(obj: salarySevTwo): FormGroup {
+    return this.fb.group({
+      id: [obj?.id ? obj?.id : null],
+      perquisiteType: [obj?.perquisiteType || null, Validators.required],
+      taxableAmount: [obj?.taxableAmount || 0, Validators.required],
+      exemptAmount: [obj?.exemptAmount || null],
+      description: [obj?.description || null],
+    })
+  }
+
+  createSevThreeForm(obj: salarySevThree): FormGroup {
+    return this.fb.group({
+      id: [obj?.id ? obj?.id : null],
+      salaryType: [obj?.salaryType || null, Validators.required],
+      taxableAmount: [obj?.taxableAmount || 0, Validators.required],
+      exemptAmount: [obj?.exemptAmount || null],
+      description: [obj?.description || null],
+    })
+  }
+
+  formValuesChanged() {
+    debugger
+    if (this.bifurcationFormGroup.valid) {
+      let values = this.utilsService.getSalaryValues();
+      if (!values) {
+        values = {
+          salary: [],
+          perquisites: [],
+          profitsInLieu: []
+        }
+      }
+
       if (this.typeIndex === 0) {
-        type = 'salary';
-      } else if (this.typeIndex === 1) {
-        type = 'perquisites';
-      } else if (this.typeIndex === 2) {
-        type = 'profitsInLieu';
+        values.salary = this.bifurcationFormGroup.getRawValue().salary;
       }
-      let value = (this.bifurcationFormGroup.controls[type] as FormGroup).controls[prevKey].value;
-      let control = this.fb.control('');
-      control.setValue(value);
-
-      let entries = Object.entries((this.bifurcationFormGroup.controls[type] as FormGroup).value);
-      let salaryForm = this.getControls as FormGroup;
-      salaryForm = this.fb.group({});
-      for (let i = 0; i < index; i++) {
-        let ctrl = this.fb.control('');
-        ctrl.setValue(entries[0][1]);
-        salaryForm.addControl(entries[i][0], ctrl);
+      if (this.typeIndex === 1) {
+        values.perquisites = this.bifurcationFormGroup.getRawValue().perquisites;
       }
-      // (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(prevKey);
-      salaryForm.addControl(event.value, control);
-      for (let i = index + 1; i < index; entries.length) {
-        let ctrl = this.fb.control('');
-        ctrl.setValue(entries[0][1]);
-        salaryForm.addControl(entries[i][0], ctrl);
+      if (this.typeIndex === 2) {
+        values.profitsInLieu = this.bifurcationFormGroup.getRawValue().profitsInLieu;
       }
-    }
-
-    if (this.valid()) {
+      this.utilsService.setSalaryValues(values);
+      debugger
       this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
     }
   }
@@ -484,7 +513,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
       this.Copy_ITR_JSON.employers.push(this.localEmployer);
     }
 
-    console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     let result;
 
     if (this.typeIndex === 0) {
@@ -569,13 +597,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
 
     if (this.typeIndex === 2) {
       const profitsInLieuArray = this.getControls.value;
-      const profitsInLieuKeysToSum = [
-        'COMPENSATION_ON_VRS',
-        'AMOUNT_DUE',
-        'PAYMENT_DUE',
-        'ANY_OTHER',
-      ];
-
       let profitsInLieuTotal = 0;
       for (let obj of Object.values(profitsInLieuArray)) {
         profitsInLieuTotal += obj as number;
@@ -621,44 +642,62 @@ export class BifurcationComponent implements OnInit, OnChanges {
     }
 
     this.utilsService.setChange(false);
-    const values = this.bifurcationFormGroup.getRawValue();
+    let values = this.utilsService.getSalaryValues();
+    if (!values) {
+      values = {
+        salary: [],
+        perquisites: [],
+        profitsInLieu: []
+      }
+    }
+
+    if (this.typeIndex === 0) {
+      values.salary = this.bifurcationFormGroup.getRawValue().salary;
+    }
+    if (this.typeIndex === 1) {
+      values.perquisites = this.bifurcationFormGroup.getRawValue().perquisites;
+    }
+    if (this.typeIndex === 2) {
+      values.profitsInLieu = this.bifurcationFormGroup.getRawValue().profitsInLieu;
+    }
     this.utilsService.setSalaryValues(values);
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }
 
-  deleteItem(key) {
-    let type = 'salary';
-    if (this.typeIndex === 0) {
-      type = 'salary';
-    } else if (this.typeIndex === 1) {
-      type = 'perquisites';
-    } else if (this.typeIndex === 2) {
-      type = 'profitsInLieu';
+  deleteItem(type, index) {
+    if (type === 'salary') {
+      this.salary.removeAt(index);
+      this.changeSectionOne('salary');
+    } else if (type === 'perquisites') {
+      this.perquisites.removeAt(index);
+      this.changeSectionOne('perquisites');
+    } else if (type === 'profitsInLieu') {
+      this.profitsInLieu.removeAt(index);
+      this.changeSectionOne('profitsInLieu');
     }
-    (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(key);
-    this.bifurcationFormGroup.updateValueAndValidity();
+    debugger
     this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
   }
 
-  addItem() {
+  addItem(item?) {
     let type = 'salary';
     let salaryType = 'SEC17_1';
     if (this.typeIndex === 0) {
       type = 'salary';
-      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.salaryNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
-      // this.changeSectionOne(this.localEmployer);
+      const salary = this.salary;
+      salary.push(this.createSevOneForm(item));
+      this.changeSectionOne('salary');
     } else if (this.typeIndex === 1) {
       type = 'perquisites';
-      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.perquisiteNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
+      const perquisites = this.perquisites;
+      perquisites.push(this.createSevTwoForm(item));
+      this.changeSectionOne('perquisites');
     } else if (this.typeIndex === 2) {
       type = 'profitsInLieu';
-      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
-      salaryType = this.profitInLieuNames.filter(element => !existingKeys.includes(element.key))[0]?.key;
+      const profitsInLieu = this.profitsInLieu;
+      profitsInLieu.push(this.createSevThreeForm(item));
+      this.changeSectionOne('profitsInLieu');
     }
-    let control = this.fb.control('');
-    (this.bifurcationFormGroup.controls[type] as FormGroup).addControl(salaryType, control);
   }
 
   //  BREAKUP MONTHLY WISE
@@ -732,16 +771,39 @@ export class BifurcationComponent implements OnInit, OnChanges {
     }
   }
 
-  changeSectionOne(localEmployer) {
-    debugger
-    // const incomes = this.localEmployer.salary;
-    this.salaryNames.forEach((type) => {
-      type['disabled'] = false;
-      localEmployer.salary.forEach((element) => {
-        if (element['salaryType'] == type.key) {
-          type['disabled'] = true;
-        }
+  changeSectionOne(type) {
+    if (type === 'salary') {
+      const salary = this.salary;
+      this.salaryNames.forEach((type) => {
+        type['disabled'] = false;
+        salary.controls.forEach((element: FormGroup) => {
+          if (element.controls['salaryType'].value == type.key) {
+            type['disabled'] = true;
+          }
+        });
       });
-    });
+    } else if (type === 'perquisites') {
+      const perquisites = this.perquisites;
+      this.perquisiteNames.forEach((type) => {
+        type['disabled'] = false;
+        perquisites.controls.forEach((element: FormGroup) => {
+          if (element.controls['perquisiteType'].value == type.key) {
+            type['disabled'] = true;
+          }
+        });
+      });
+    } else if (type === 'profitsInLieu') {
+      const profitsInLieu = this.profitsInLieu;
+      this.profitInLieuNames.forEach((type) => {
+        type['disabled'] = false;
+        profitsInLieu.controls.forEach((element: FormGroup) => {
+          if (element.controls['salaryType'].value == type.key) {
+            type['disabled'] = true;
+          }
+        });
+      });
+    }
   }
+
+
 }

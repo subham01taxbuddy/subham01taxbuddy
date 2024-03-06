@@ -94,3 +94,26 @@
   position: relative;
   flex: 0 0 auto;
 }
+
+.new-form-field {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  flex: 1;
+  flex-grow: 1;
+  align-self: stretch;
+  margin-top: -1px;
+  font-family: $font-body;
+  font-weight: 400;
+  color: $color-body;
+  font-size: $body-font-size;
+  letter-spacing: 0;
+  line-height: 20px;
+  padding: 8px 0;
+}
+
+.resident-btn {
+  height: 100%;
+}
