@@ -89,6 +89,25 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   refundInvoiceDetails: any;
   selectedITRUFy: any =[];
   partnerType:any;
+  scheduledCallServiceTypes =[
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    {
+      label: 'GST',
+      value: 'GST',
+    },
+    {
+      label: 'NOTICE',
+      value: 'NOTICE',
+    },
+    {
+      label: 'TPA',
+      value: 'TPA',
+    },
+  ]
+  showScheduledFields:boolean =false;
 
   constructor(
     private fb: FormBuilder,
@@ -183,6 +202,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.isButtonDisable = true;
     if(this.serviceType === 'ITR')
       this.defaultFinancialYear = this.financialYear[0].financialYear;
+
+    if(this.smeSelectedPlanId === 120){
+      this.showScheduledFields =true;
+    }
   }
 
   printValue(){
@@ -472,6 +495,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   otherInfoForm: FormGroup = this.fb.group({
     sacNumber: new FormControl('998232'),
     description: new FormControl(''),
+    scheduleCallService:new FormControl(''),
   });
 
   get description() {
@@ -479,6 +503,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
   get sacNumber() {
     return this.otherInfoForm.controls['sacNumber'] as FormControl;
+  }
+  get scheduleCallService() {
+    return this.otherInfoForm.controls['scheduleCallService'] as FormControl;
   }
 
   getAllPromoCode() {
@@ -646,6 +673,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.assessmentYear.setValue(subscription.item.financialYear);
         this.filerName.setValue(subscription.assigneeName);
         this.leaderName.setValue(subscription.leaderName);
+        if (this.utilsService.isNonEmpty(this.userSubscription)) {
+          const smePlanId = this.userSubscription?.smeSelectedPlan?.planId;
+          const userPlanId = this.userSubscription?.userSelectedPlan?.planId;
+
+          const hasSmePlan120 = smePlanId === 120;
+          const hasUserPlan120 = userPlanId === 120;
+
+          const shouldShowScheduledFields = hasSmePlan120 || hasUserPlan120;
+
+          this.showScheduledFields = shouldShowScheduledFields;
+          if (shouldShowScheduledFields) {
+            this.scheduleCallService.setValue(this.userSubscription.serviceType);
+          }
+        } else {
+          this.showScheduledFields = false;
+        }
+
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
         if (
@@ -1222,13 +1266,18 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             return;
           }
         }
+        if(this.showScheduledFields === true && (this.scheduleCallService.value ==='' || typeof this.scheduleCallService.value === 'undefined' || this.scheduleCallService.value === 'undefined' ) ){
+          this.loading = false;
+            this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call ');
+            return;
+        }
         if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
           console.log(
             'selectedPlanInfo -> ',
             this.userSubscription.smeSelectedPlan.planId
           );
           let param = '/subscription';
-          let reqBody = {
+          let reqBody : any = {
             userId: this.userSubscription.userId,
             planId: this.userSubscription.smeSelectedPlan.planId,
             selectedBy: 'SME',
@@ -1257,6 +1306,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
             removeCouponCode: this.removeCouponCodeFlag
           };
+
+          if(this.scheduleCallService.value){
+            reqBody.serviceType = this.scheduleCallService.value
+          }
           console.log('Req Body: ', reqBody);
           let requestData = JSON.parse(JSON.stringify(reqBody));
           this.itrService.postMethod(param, requestData).subscribe(
