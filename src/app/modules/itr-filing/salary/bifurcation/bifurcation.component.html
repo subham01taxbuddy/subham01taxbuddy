@@ -1,65 +1,127 @@
 <form [formGroup]="bifurcationFormGroup">
   <div class="scroll">
-    <div formGroupName="{{typeIndex === 0 ? 'salary' : typeIndex === 1 ? 'perquisites' : 'profitsInLieu'}}">
-      <div>
-        <div class="greyBox">
-          <div class="row">
-            <div class="col-6"
-              style="flex: 1 1 0; color: #242426; font-size: 14px; font-family: DM Sans; font-weight: 400; line-height: 20px; word-wrap: break-word">
-              {{getTitle()}}</div>
-          </div>
-          <div
-            style="align-self: stretch; flex: 1 1 0; justify-content: flex-start; align-items: flex-start; gap: 32px;">
-            <div *ngFor="let salary of getControls.controls | keyvalue: unsorted; let n=index"
-              style="flex: 1 1 0; justify-content: flex-start; align-items: center; gap: 8px; display: flex">
-              <div class="col-6" style="justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
+    <!-- <div formGroupName="{{typeIndex === 0 ? 'salary' : typeIndex === 1 ? 'perquisites' : 'profitsInLieu'}}"> -->
+    <div>
+      <div class="greyBox">
+        <div class="row">
+          <div class="col-6 section-title"> {{getTitle()}}</div>
+        </div>
+        <!-- <div style="align-self: stretch; flex: 1 1 0; justify-content: flex-start; align-items: flex-start; gap: 32px;">
+          <div *ngFor="let salary of getControls.controls | keyvalue: unsorted; let n=index"
+        style="flex: 1 1 0; justify-content: flex-start; align-items: center; gap: 8px; display: flex"> -->
+        <div class="row">
+          <div formArrayName="salary">
+            <div *ngFor="let item of salary['controls']; let i = index" [formGroupName]="i" class="row mb-2">
+              <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 0">
-                  <mat-select [value]="salary.key" (selectionChange)="formValuesChanged(salary.key, n, $event)">
-                    <mat-option *ngFor="let name of salaryNames; let k = index" [value]="name.key">{{ name.value
+                  <mat-select name="salaryType[i]" formControlName="salaryType"
+                    (selectionChange)="changeSectionOne('salary');formValuesChanged()">
+                    <mat-option *ngFor="let name of salaryNames; let k = index" [value]="name.key"
+                      [disabled]="name['disabled']">{{ name.value
                       }}</mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+              <div class="col-4 input-filed">
+                <mat-form-field appearance="outline">
+                  <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
+                    (change)="formValuesChanged()" />
+                </mat-form-field>
+              </div>
+              <div class="col-3 addDeleteBtn">
+                <div class="deleteBtn">
+                  <button type="button" (click)="deleteItem('salary',i)"> <i class="fa fa-trash-o delbt"></i> </button>
+                </div>
+                <div *ngIf="(salary['controls'].length-1) ===i">
+                  <button type="button" class="addBtn" (click)="addItem()" [disabled]="salary.invalid"> + Add
+                    Another</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div formArrayName="perquisites">
+            <div *ngFor="let item of perquisites['controls']; let i = index" [formGroupName]="i" class="row mb-2">
+              <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 1">
-                  <mat-select [value]="salary.key" (selectionChange)="formValuesChanged(salary.key, n, $event)">
-                    <mat-option *ngFor="let name of perquisiteNames; let k = index" [value]="name.key">{{ name.value
+                  <mat-select name="perquisiteType[i]" formControlName="perquisiteType"
+                    (selectionChange)="changeSectionOne('perquisites');formValuesChanged()">
+                    <mat-option *ngFor="let name of perquisiteNames; let k = index" [value]="name.key"
+                      [disabled]="name['disabled']">{{ name.value
                       }}</mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+              <div class="col-4 input-filed">
+                <mat-form-field appearance="outline">
+                  <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
+                    (change)="formValuesChanged()" />
+                </mat-form-field>
+              </div>
+              <div class="col-3 addDeleteBtn">
+                <div class="deleteBtn">
+                  <button type="button" (click)="deleteItem('perquisites',i)"> <i class="fa fa-trash-o delbt"></i>
+                  </button>
+                </div>
+                <div *ngIf="(perquisites['controls'].length - 1)===i">
+                  <button type="button" class="addBtn" (click)="addItem()" [disabled]="perquisites.invalid"> + Add
+                    Another</button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div formArrayName="profitsInLieu">
+            <div *ngFor="let item of profitsInLieu['controls']; let i = index" [formGroupName]="i" class="row mb-2">
+              <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 2">
-                  <mat-select [value]="salary.key" (selectionChange)="formValuesChanged(salary.key, n, $event)">
-                    <mat-option *ngFor="let name of profitInLieuNames; let k = index" [value]="name.key">{{ name.value
+                  <mat-select name="salaryType[i]" formControlName="salaryType"
+                    (selectionChange)="changeSectionOne('profitsInLieu');formValuesChanged()">
+                    <mat-option *ngFor="let name of profitInLieuNames; let k = index" [value]="name.key"
+                      [disabled]="name['disabled']">{{
+                      name.value
                       }}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <!--  input field            -->
-              <div class="col=4"
-                style="flex: 1 1 0; border-radius: 4px; border: 0.50px #D3D3D3 solid; justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-                <div
-                  style="flex: 1 1 0; color: #858595; font-size: 14px; font-family: DM Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">
-                  <mat-form-field appearance="outline">
-                    <input digitsOnly matInput formControlName="{{salary.key}}"
-                      (change)="formValuesChanged(salary.key, n)" />
-                  </mat-form-field>
-                </div>
+              <div class="col-4 input-filed">
+                <mat-form-field appearance="outline">
+                  <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
+                    (change)="formValuesChanged()" />
+                </mat-form-field>
               </div>
-              <!-- add button-->
-              <div class="col-2"
-                style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px;  justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-                <div>
-                  <button type="button" (click)="deleteItem(salary.key)"> <i class="fa fa-trash-o delbt"></i> </button>
+              <div class="col-3 addDeleteBtn">
+                <div class="deleteBtn">
+                  <button type="button" (click)="deleteItem('profitsInLieu',i)"> <i class="fa fa-trash-o delbt"></i>
+                  </button>
                 </div>
-                <div *ngIf="n === (getControls.controls | keyvalue).length - 1"
-                  style="color: #157999; font-size: 12px; font-family: DM Sans; font-weight: 500; line-height: 28px; border-radius: 4px; border: 1.50px #157999 solid; word-wrap: break-word"
-                  (click)="addItem()">+ Add Another</div>
+                <div *ngIf="(profitsInLieu['controls'].length - 1)===i">
+                  <button type="button" class="addBtn" (click)="addItem()" [disabled]="profitsInLieu.invalid"> + Add
+                    Another</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <!--  input field            -->
+        <!-- <div class="col=4"
+              style="flex: 1 1 0; border-radius: 4px; border: 0.50px #D3D3D3 solid; justify-content: flex-start; align-items: center; gap: 16px; display: flex">
+              <div
+                style="flex: 1 1 0; color: #858595; font-size: 14px; font-family: DM Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">
+                <mat-form-field appearance="outline">
+                  <input digitsOnly matInput formControlName="{{salary.key}}"
+                    (change)="formValuesChanged(salary.key, n)" />
+                </mat-form-field>
+              </div>
+            </div> -->
+        <!-- add button-->
 
+        <!-- </div>
+        </div> -->
       </div>
 
     </div>
+
+    <!-- </div> -->
 
   </div>
 </form>
