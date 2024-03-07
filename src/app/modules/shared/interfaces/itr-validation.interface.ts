@@ -265,17 +265,17 @@ export const ErrorMsgsSchedule = {
   },
   TDS_ON_BP_NOT_ALLOWED: {
     code: 'TDS_ON_BP_NOT_ALLOWED',
-    message: 'In Schedule TDS from salary, “Total tax deducted" cannot be more than "Income chargeable under the head Business',
+    message: 'In Schedule TDS on income other than salary, “Total tax deducted" cannot be more than "Income chargeable under the head Business',
     relatedSchedule: 'businessIncome',
   },
   TDS_ON_CG_NOT_ALLOWED: {
     code: 'TDS_ON_CG_NOT_ALLOWED',
-    message: 'In Schedule TDS from salary, “Total tax deducted" cannot be more than "Income chargeable under the head Capital Gain',
+    message: 'In Schedule TDS on income other than salary, “Total tax deducted" cannot be more than "Income chargeable under the head Capital Gain',
     relatedSchedule: 'capitalGain',
   },
   TDS_ON_OS_NOT_ALLOWED: {
     code: 'TDS_ON_OS_NOT_ALLOWED',
-    message: 'In Schedule TDS from salary, “Total tax deducted" cannot be more than "Income chargeable under the head Other Source',
+    message: 'In Schedule TDS on income other than salary, “Total tax deducted" cannot be more than "Income chargeable under the head Other Source',
     relatedSchedule: 'otherSources',
   },
   TDS_ON_EI_NOT_ALLOWED: {
@@ -285,12 +285,12 @@ export const ErrorMsgsSchedule = {
   },
   EI_SEC_10_26AAA_NOT_AVAILABLE: {
     code: 'EI_SEC_10_26AAA_NOT_AVAILABLE',
-    message: 'Sec 10(26AAA)-Any income as referred to in section 10(26AAA) drop-down cannot be selected more than one time under Exempt Income. (Message to be shown to the taxpayers while preparing the return that this deduction is available only for certain Sikkimese assessees)',
+    message: 'The taxpayers while preparing the return that this deduction is available only for certain Sikkimese assessees',
     relatedSchedule: 'exemptIncome',
   },
   EI_SEC_10_26_NOT_AVAILABLE: {
     code: 'EI_SEC_10_26_NOT_AVAILABLE',
-    message: 'Sec 10(26)-Any income as referred to in section 10(26) drop-down cannot be selected more than one time under Exempt Income. (Message to be shown to the taxpayers while preparing the return that this deduction is available only for certain category of assesses of NE Region and Ladakh)(If you are a member of a Scheduled Tribe in Tripura, Nagaland, Mizoram, Manipur, and Arunachal Pradesh, you are eligible for tax exemptions under Section 10 (26) Of the Income Tax Act)',
+    message: 'The taxpayers while preparing the return that this deduction is available only for certain category of assesses of NE Region and Ladakh)(If you are a member of a Scheduled Tribe in Tripura, Nagaland, Mizoram, Manipur, and Arunachal Pradesh, you are eligible for tax exemptions under Section 10 (26) Of the Income Tax Act)',
     relatedSchedule: 'exemptIncome',
   },
   BUSINESS_INCOME_CLAIM_NRI: {
@@ -325,7 +325,7 @@ export const ErrorMsgsSchedule = {
   },
   MAX_44AD_RECIEPT_LIMIT_EXCEED: {
     code: 'MAX_44AD_RECIEPT_LIMIT_EXCEED',
-    message: '4(79) In the return of income, if the taxpayer has filed ITR-4 then the gross receipt/income U/S 44AD cannot be more than Rs. 2 crores',
+    message: 'if the taxpayer has filed ITR-4 then the gross receipt/income U/S 44AD cannot be more than Rs. 2 crores',
     relatedSchedule: 'otherSources',
   },
   CG_GOLD_EXPENSE_CLAIM_INCORRECT: {
@@ -435,27 +435,27 @@ export const ErrorMsgsSchedule = {
   },
   PT_EXCEED_MAX_LIMIT: {
     code: 'PT_EXCEED_MAX_LIMIT',
-    message: ' 2(269) In Schedule Salary, Professional tax u/s 16(iii) will be allowed only to the extent of Rs.5000/-',
+    message: 'Professional tax u/s 16(iii) will be allowed only to the extent of Rs.5000/-',
     relatedSchedule: 'salary',
   },
   ENTERTAINMENT_EXCEED_MAX_LIMIT: {
     code: 'ENTERTAINMENT_EXCEED_MAX_LIMIT',
-    message: '1(42) 4(36), 4(37), 3(143) 1) Entertainment allowance u/s 16(ii) will be allowed only to Central Govt, State Govt, PSU employees and will be allowed to the extent of Rs 5000 or 1/5th of Salary whichever is lower.',
+    message: 'Entertainment allowance u/s 16(ii) will be allowed only to Central Govt, State Govt, PSU employees and will be allowed to the extent of Rs 5000 or 1/5th of Salary whichever is lower.',
     relatedSchedule: 'salary',
   },
   ENTERTAINMENT_CLAIM_INCORRECT: {
     code: 'ENTERTAINMENT_CLAIM_INCORRECT',
-    message: ' 1(43), 2(267), 3(142) Entertainment allowance u/s 16(ii) will be allowed to employees of only Central Government, State Government and PSU.',
+    message: 'Entertainment allowance u/s 16(ii) will be allowed to employees of only Central Government, State Government and PSU.',
     relatedSchedule: 'salary',
   },
   ALLOWANCE_EXCEED_GROSS_SALARY: {
     code: 'ALLOWANCE_EXCEED_GROSS_SALARY',
-    message: '1(48), 4(38) “Total of all allowances to the extent exempt u/s 10 cannot be more than Gross Salary',
+    message: 'Total of all allowances to the extent exempt u/s 10 cannot be more than Gross Salary',
     relatedSchedule: 'salary',
   },
   ALLOWANCE_EXCEED_MAX_LIMIT: {
     code: 'ALLOWANCE_EXCEED_MAX_LIMIT',
-    message: ' 3(138) In Schedule Salary, Total of exempt allowances excluding HRA shall not exceed total of (1a+1b+1c) as reduced by HRA',
+    message: 'Total of exempt allowances excluding HRA shall not exceed total of (1a+1b+1c) as reduced by HRA',
     relatedSchedule: 'salary',
   },
   ALLOWANCE_EXCEED_OTHER: {
@@ -465,12 +465,12 @@ export const ErrorMsgsSchedule = {
   },
   PROVISO_CLAIM_INCORRECT: {
     code: 'PROVISO_CLAIM_INCORRECT',
-    message: ' 1(81), 4(41), 4(62) 2(395), 3(155) Exempt allowance u/s 10(10B)-First proviso, 10(10B)-Second Proviso and 10(10C) 1(52) In exempt allowances only Sec 10(10B) (i) OR Sec 10(10B) (ii) OR Sec 10(10C) can be selected.',
+    message: 'First proviso, 10(10B)-Second Proviso and 10(10C) 1(52) In exempt allowances only Sec 10(10B) (i) OR Sec 10(10B) (ii) OR Sec 10(10C) can be selected.',
     relatedSchedule: 'salary',
   },
   VRS_MAX_LIMIT_EXCEED: {
     code: 'VRS_MAX_LIMIT_EXCEED',
-    message: '1(51)(50), 4(40), 2(394), 3(154) Exempt Allowance u/s 10(10C)-Amount received/receivable on voluntary retirement or termination of service cannot exceed Rs. 5,00,000',
+    message: 'Amount received/receivable on voluntary retirement or termination of service cannot exceed Rs. 5,00,000',
     relatedSchedule: 'salary',
   },
   RETIREMENT_CLAIM_DUPLICATE: {
@@ -485,22 +485,22 @@ export const ErrorMsgsSchedule = {
   },
   PENSION_DUPLICATE: {
     code: 'PENSION_DUPLICATE',
-    message: '2(271), 3(145) In Schedule Salary, at Sl. No. 1a- Commuted pension shall not be allowed against more than one Employer.',
+    message: 'Commuted pension shall not be allowed against more than one Employer.',
     relatedSchedule: 'salary',
   },
   GRATUITY_DUPLICATE: {
     code: 'GRATUITY_DUPLICATE',
-    message: ' 2(270), 3(145) In Schedule Salary, at Sl. No. 1a- Gratuity shall not be allowed against more than one Employer.',
+    message: 'Gratuity shall not be allowed against more than one Employer.',
     relatedSchedule: 'salary',
   },
   LEAVES_ENCASH_MAX_LIMIT_EXCEED: {
     code: 'LEAVES_ENCASH_MAX_LIMIT_EXCEED',
-    message: '1(190), 4(216) Exempt allowance u/s. 10(10AA) can be claimed only up to Rs. 3 Lakh for employer category other than "Central Government and State Government, CG- Pensioners, SGPensioner 2(405) Assessee claiming deduction u/s 10(10AA) more than the maximum limit of Rs 300000/- for employer category other than "Central and State Government 2(393), 3(152) Sec 10(10AA)-Earned leave encashment cannot be more than Salary as per section 17(1)',
+    message: 'Earned leave encashment cannot be more than Salary as per section 17(1)',
     relatedSchedule: 'salary',
   },
   GRATUITY_MAX_LIMIT_EXCEED: {
     code: 'GRATUITY_MAX_LIMIT_EXCEED',
-    message: '1(49),4(39), 2(260) 3(136), 3(150) Exempt allowance u/s 10(10)-Death-cum-retirement gratuity received cannot be more than Rs. 20,00,000',
+    message: 'Death-cum-retirement gratuity received cannot be more than Rs. 20,00,000',
     relatedSchedule: 'salary',
   },
   TOTAL_ALLOWANCE_EXCEED_SALARY: {
@@ -570,12 +570,12 @@ export const ErrorMsgsSchedule = {
   },
   UNLISTED_SHARE_DTLS_NOT_FOUND: {
     code: 'UNLISTED_SHARE_DTLS_NOT_FOUND',
-    message: '2(6), 3(5) If "Whether you have held unlisted equity shares at any time during the previous year?" is selected as Yes, then the details should be filled.',
+    message: '"Whether you have held unlisted equity shares at any time during the previous year?" is selected as Yes, then the details should be filled.',
     relatedSchedule: 'personalInfo',
   },
   DIRECTOR_DTLS_NOT_FOUND: {
     code: 'DIRECTOR_DTLS_NOT_FOUND',
-    message: '2(11) , 3(12) "Whether you were Director in a company at any time during the previous year?" is selected as Yes then the respective details should be filled',
+    message: '"Whether you were Director in a company at any time during the previous year?" is selected as Yes then the respective details should be filled',
     relatedSchedule: 'personalInfo',
   },
   SCH_5A_DTLS_NO_FLAG_FOUND: {
@@ -585,17 +585,17 @@ export const ErrorMsgsSchedule = {
   },
   SCH_5A_SPOUSE_PAN_NOT_FOUND: {
     code: 'SCH_5A_SPOUSE_PAN_NOT_FOUND',
-    message: ' 2(16) The assessee is governed by Portuguese Code, then "PAN of Spouse" should be provided',
+    message: 'The assessee is governed by Portuguese Code, then "PAN of Spouse" should be provided',
     relatedSchedule: 'personalInfo',
   },
   SEVEN_PROVISO_TRAVEL_NOT_FOUND: {
     code: 'SEVEN_PROVISO_TRAVEL_NOT_FOUND',
-    message: '2(10)/ 2(471) In Part A General, Are you filing return of income under the Seventh proviso to Section 139(1) is selected as Yes then the respective details should be filled',
+    message: 'Are you filing return of income under the Seventh proviso to Section 139(1) is selected as Yes then the respective details should be filled',
     relatedSchedule: 'personalInfo',
   },
   SEVEN_PROVISO_DEPOSIT_NOT_FOUND: {
     code: 'SEVEN_PROVISO_DEPOSIT_NOT_FOUND',
-    message: '2(10)/ 2(471) In Part A General, Are you filing return of income under the Seventh proviso to Section 139(1) is selected as Yes then the respective details should be filled',
+    message: 'Are you filing return of income under the Seventh proviso to Section 139(1) is selected as Yes then the respective details should be filled',
     relatedSchedule: 'personalInfo',
   },
   SEVEN_PROVISO_ELE_NOT_FOUND: {
