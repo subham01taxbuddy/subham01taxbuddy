@@ -280,8 +280,8 @@ export const ErrorMsgsSchedule = {
   },
   TDS_ON_EI_NOT_ALLOWED: {
     code: 'TDS_ON_EI_NOT_ALLOWED',
-    message: 'In Schedule TDS from salary, “Total tax deducted" cannot be more than "Income chargeable under the head Exempt Income',
-    relatedSchedule: 'otherSources',
+    message: 'In Schedule TDS on income other than salary, “Total tax deducted" cannot be more than "Income chargeable under the head Exempt Income',
+    relatedSchedule: 'exemptIncome',
   },
   EI_SEC_10_26AAA_NOT_AVAILABLE: {
     code: 'EI_SEC_10_26AAA_NOT_AVAILABLE',
@@ -293,10 +293,10 @@ export const ErrorMsgsSchedule = {
     message: 'Sec 10(26)-Any income as referred to in section 10(26) drop-down cannot be selected more than one time under Exempt Income. (Message to be shown to the taxpayers while preparing the return that this deduction is available only for certain category of assesses of NE Region and Ladakh)(If you are a member of a Scheduled Tribe in Tripura, Nagaland, Mizoram, Manipur, and Arunachal Pradesh, you are eligible for tax exemptions under Section 10 (26) Of the Income Tax Act)',
     relatedSchedule: 'exemptIncome',
   },
-  NRI_CLAIM_BUSINESS_INCORRECT: {
-    code: 'NRI_CLAIM_BUSINESS_INCORRECT',
-    message: 'NRI CLAIM BUSINESS INCORRECT',
-    relatedSchedule: 'otherSources',
+  BUSINESS_INCOME_CLAIM_NRI: {
+    code: 'BUSINESS_INCOME_CLAIM_NRI',
+    message: 'NRI CAN NOT DECLARE BUSINESS INCOME UNDER PRESEMTIVE TAXATION',
+    relatedSchedule: 'businessIncome',
   },
   FAMILY_PENSION_CLAIM_INCORRECT: {
     code: 'FAMILY_PENSION_CLAIM_INCORRECT',
@@ -536,11 +536,6 @@ export const ErrorMsgsSchedule = {
   BUSINESS_INCOME_CLAIM_HUF: {
     code: 'BUSINESS_INCOME_CLAIM_HUF',
     message: 'BUSINESS INCOME CLAIM HUF',
-    relatedSchedule: 'businessIncome',
-  },
-  BUSINESS_INCOME_CLAIM_NRI: {
-    code: 'BUSINESS_INCOME_CLAIM_NRI',
-    message: 'BUSINESS INCOME CLAIM NRI',
     relatedSchedule: 'businessIncome',
   },
   BUSINESS_INCOME_MIN_INCORRECT: {
