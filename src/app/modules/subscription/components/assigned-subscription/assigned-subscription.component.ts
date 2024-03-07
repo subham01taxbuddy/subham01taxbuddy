@@ -108,9 +108,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     console.log('new Filer List ', this.allFilerList);
+    let roles = this.utilsService.getUserRoles();
+    let show: boolean;
+    if (roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')) {
+      show = true;
+    }
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.subscriptionCreateColumnDef(this.allFilerList),
+      columnDefs: show ? this.subscriptionCreateColumnDef(this.allFilerList , 'admin') : this.subscriptionCreateColumnDef(this.allFilerList,'regular'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {},
@@ -601,7 +606,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscriptionCreateColumnDef(List) {
+  subscriptionCreateColumnDef(List , view) {
     return [
       // {
       //   field: 'selection',
@@ -835,6 +840,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
+        hide: view === 'admin' ? false : true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {

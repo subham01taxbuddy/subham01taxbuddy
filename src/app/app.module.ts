@@ -32,6 +32,7 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { SpeedTestModule } from 'ng-speed-test';
 import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import {SummaryConversionService} from "./services/summary-conversion.service";
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     ToastMessageService,
     AuthGuard,
     UtilsService,
-    ItrValidationService,    
+    ItrValidationService,
+    SummaryConversionService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

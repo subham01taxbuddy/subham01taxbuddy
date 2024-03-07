@@ -29,6 +29,7 @@ import { MoreInformationComponent } from './pages/more-information/more-informat
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NavbarService} from "../../../services/navbar.service";
 import {SidebarService} from "../../../services/sidebar.service";
+import {SummaryConversionService} from "../../../services/summary-conversion.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -64,7 +65,7 @@ export class ItrWizardComponent implements OnInit {
     public schedules: Schedules,
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
-    private sidebarService: SidebarService
+    private summaryConversionService: SummaryConversionService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -115,6 +116,8 @@ export class ItrWizardComponent implements OnInit {
     }
     this.getCustomerName();
     // this.sidebarService.hide();
+
+    this.summaryConversionService.getPreviousItrs(this.ITR_JSON.userId, '2023-24', '2022-23');
   }
 
   getCustomerName() {
