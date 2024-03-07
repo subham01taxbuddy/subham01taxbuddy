@@ -212,26 +212,26 @@
                     </h2>
                     <div id="collapseTwo1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="card-body" formArrayName="allowances">
-                        <div class="div-8A" *ngFor="let income of getAllowanceArray.controls; let i = index"
+                        <div class="row div-8A" *ngFor="let income of getAllowanceArray.controls; let i = index"
                           [formGroupName]="i">
 
-                          <div class="item1">
+                          <div class="item1 col-2">
                             <div class="field-label-3">Type of Allowance</div>
                           </div>
 
-                          <div class="item2">
-                            <div class="contents-10">
-                              <mat-form-field appearance="outline">
-                                <mat-select name="allowType[i]" formControlName="allowType"
-                                  (selectionChange)="validateExemptIncomes($event)">
-                                  <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
-                                    [value]="exempt.value">{{ exempt.label }}</mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
+                          <!-- <div class="item2"> -->
+                          <div class="col-3">
+                            <mat-form-field appearance="outline">
+                              <mat-select name="allowType[i]" formControlName="allowType"
+                                (selectionChange)="validateExemptIncomes($event)">
+                                <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
+                                  [value]="exempt.value" [disabled]="exempt['disabled']">{{ exempt.label }}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
                           </div>
+                          <!-- </div> -->
 
-                          <div class="item3">
+                          <div class="item3 col-3">
                             <div class="mb-3" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
 
                               <mat-form-field appearance="outline">
@@ -356,22 +356,31 @@
                             </div>
                           </div>
 
-                          <div class="hp4-4 extra-pad">
+                          <div class="hp4-4 extra-pad col-3">
                             <div class="Bx4">
                               <div class="Bx4L">
                                 <button type="button" (click)="deleteExemptIncome(i)"> <i
                                     class="fa fa-trash-o delbt"></i> </button>
                               </div>
                               <div class="Bx4R">
-                                <button type="button" class="addAno" (click)="addExemptIncome()"> + Add Another
+                                <button type="button" class="addAno"
+                                  *ngIf="(getAllowanceArray['controls'].length - 1)===i" (click)="addExemptIncome()"> +
+                                  Add Another
                                 </button>
                               </div>
                             </div>
                           </div>
-
-
+                          <div class="offset-3 col-5 mb-3" *ngIf="income.value.allowType === 'ANY_OTHER'">
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="description" name="description[i]"
+                                formControlName="description" maxlength="200" [required]="
+                                income.value.allowType === 'ANY_OTHER' && income.value.allowValue > 0" />
+                            </mat-form-field>
+                            <mat-error *ngIf="income['controls']['description'].hasError('required')">
+                              Please enter the description
+                            </mat-error>
+                          </div>
                         </div>
-
                       </div>
                     </div>
                   </div>

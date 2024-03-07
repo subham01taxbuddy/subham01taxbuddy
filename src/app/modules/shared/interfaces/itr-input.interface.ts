@@ -697,6 +697,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
+  description?:any
 }
 export interface Perquisites {
   perquisiteType: string;

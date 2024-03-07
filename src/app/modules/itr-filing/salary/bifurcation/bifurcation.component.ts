@@ -431,7 +431,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
   }
 
   formValuesChanged() {
-    debugger
     if (this.bifurcationFormGroup.valid) {
       let values = this.utilsService.getSalaryValues();
       if (!values) {
@@ -452,7 +451,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
         values.profitsInLieu = this.bifurcationFormGroup.getRawValue().profitsInLieu;
       }
       this.utilsService.setSalaryValues(values);
-      debugger
       this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
     }
   }
@@ -675,7 +673,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
       this.profitsInLieu.removeAt(index);
       this.changeSectionOne('profitsInLieu');
     }
-    debugger
     this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
   }
 
