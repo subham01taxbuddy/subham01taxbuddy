@@ -208,6 +208,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   prescPersonalExpError: boolean = false;
   prescProfExpError: boolean = false;
   eicProfExpError: boolean = false;
+  bifurcationFormGroup: boolean = false;
 
   constructor(
     private router: Router,
@@ -215,10 +216,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private location: Location,
-    // private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
-    private matDialog: MatDialog,
-    private overlay: Overlay,
-    private elementRef: ElementRef,
     private dialog: MatDialog
   ) {
     super();
@@ -1223,24 +1220,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
                   this.localEmployer?.perquisites?.push(element);
                 }
               })
-              // const bifurcationValues = this.bifurcationResult?.SEC17_2?.value
-              //   ? this.bifurcationResult?.SEC17_2?.value
-              //   : perquisitesValues?.[0];
-
-              // for (const key in bifurcationValues) {
-              //   if (bifurcationValues.hasOwnProperty(key)) {
-              //     const element = parseFloat(bifurcationValues[key]);
-              //     console.log(element);
-              //     if (element && element !== 0) {
-              //       this.localEmployer?.perquisites?.push({
-              //         perquisiteType: key,
-              //         taxableAmount: element,
-              //         exemptAmount: 0,
-              //       });
-              //     }
-              //   }
-              // }
-
               console.log(this.localEmployer);
             } else if (this.ITR_JSON?.employers[this.currentIndex]?.perquisites?.length > 1 && this.valueChanged === false) {
               this.localEmployer.perquisites = this.ITR_JSON?.employers[this.currentIndex]?.perquisites;
@@ -1266,23 +1245,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
                   this.localEmployer?.profitsInLieuOfSalaryType?.push(element);
                 }
               })
-              // const bifurcationValues = this.bifurcationResult?.SEC17_3?.value
-              //   ? this.bifurcationResult?.SEC17_3?.value
-              //   : profitsInLieuValues?.[0];
-
-              // for (const key in bifurcationValues) {
-              //   if (bifurcationValues.hasOwnProperty(key)) {
-              //     const element = parseFloat(bifurcationValues[key]);
-              //     console.log(element);
-              //     if (element && element !== 0) {
-              //       this.localEmployer?.profitsInLieuOfSalaryType?.push({
-              //         salaryType: key,
-              //         taxableAmount: element,
-              //         exemptAmount: 0,
-              //       });
-              //     }
-              //   }
-              // }
               console.log(this.localEmployer);
             } else if (this.ITR_JSON?.employers[this.currentIndex]?.profitsInLieuOfSalaryType?.length > 1 && this.valueChanged === false) {
               this.localEmployer.profitsInLieuOfSalaryType =
@@ -1291,6 +1253,28 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           }
         }
       }
+      // debugger
+      // let otherSalary = this.localEmployer.salary.filter(item => item.salaryType === 'OTHER')
+      // if (otherSalary.length) {
+      //   if (otherSalary[0].salaryType === 'OTHER' && otherSalary[0].taxableAmount > 0 && !otherSalary[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
+      // let otherPerquisites = this.localEmployer.perquisites.filter(item => item.perquisiteType === 'OTH_BENEFITS_AMENITIES')
+      // if (otherPerquisites.length) {
+      //   if (otherPerquisites[0].perquisiteType === 'OTH_BENEFITS_AMENITIES' && otherPerquisites[0].taxableAmount > 0 && !otherPerquisites[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
+      // let otherProfitsInLieuOfSalaryType = this.localEmployer.profitsInLieuOfSalaryType.filter(item => item.salaryType === 'ANY_OTHER')
+      // if (otherProfitsInLieuOfSalaryType.length) {
+      //   if (otherProfitsInLieuOfSalaryType[0].salaryType === 'ANY_OTHER' && otherProfitsInLieuOfSalaryType[0].taxableAmount > 0 && !otherProfitsInLieuOfSalaryType[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
 
       if (
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
@@ -1305,13 +1289,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
       let othTotalAllowExempt = 0;
-      for (
-        let i = 0;
-        i <
-        (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls
-          .length;
-        i++
-      ) {
+      for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
         let allowance = (
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
@@ -1982,6 +1960,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     Object.keys(this.bifurcationResult.SEC17_3.value).length > 0;
     // }
     // }
+  }
+
+  isFormGroupValid(event) {
+    if (event) {
+      this.bifurcationFormGroup = true;
+    } else {
+      this.bifurcationFormGroup = false;
+    }
   }
 
   onBifurcationUpdated(result) {
