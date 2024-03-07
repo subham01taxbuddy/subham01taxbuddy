@@ -963,6 +963,21 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.loading = false;
         console.log('SME Selected plan:', response);
         this.userSubscription = response;
+        if (this.utilsService.isNonEmpty(this.userSubscription)) {
+          const smePlanId = this.userSubscription?.smeSelectedPlan?.planId;
+          const userPlanId = this.userSubscription?.userSelectedPlan?.planId;
+
+          const hasSmePlan120 = smePlanId === 120;
+          const hasUserPlan120 = userPlanId === 120;
+
+          const shouldShowScheduledFields = hasSmePlan120 || hasUserPlan120;
+
+          this.showScheduledFields = shouldShowScheduledFields;
+
+        } else {
+          this.showScheduledFields = false;
+        }
+
         this.getRefundProcessedInvoices();
         this.loading = false;
         if (
