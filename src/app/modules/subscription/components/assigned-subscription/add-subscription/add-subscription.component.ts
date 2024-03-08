@@ -342,6 +342,7 @@ export class AddSubscriptionComponent implements OnInit {
                 'error',
                 this.utilService.showErrorMsg(error.error.status)
               );
+              this.dialogRef.close({ event: 'close', data: res });
             }
           );
         }

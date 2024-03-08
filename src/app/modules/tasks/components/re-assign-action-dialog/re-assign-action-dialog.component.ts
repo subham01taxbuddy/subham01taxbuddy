@@ -153,11 +153,13 @@ export class ReAssignActionDialogComponent implements OnInit {
               } else {
                 this.loading = false;
                 this.utilsService.showSnackBar(result.error);
+                this.dialogRef.close({ event: 'close', data: 'success' });
               }
             },
             (error) => {
               this.loading = false;
               this.utilsService.showSnackBar(error.error.error);
+              this.dialogRef.close({ event: 'close', data: 'success' });
             }
           );
         } else {
@@ -228,6 +230,7 @@ export class ReAssignActionDialogComponent implements OnInit {
               } else {
                 this.loading = false;
                 this.utilsService.showSnackBar(result.error);
+                this.dialogRef.close({ event: 'close', data: 'success' });
               }
             },
             (error) => {

@@ -149,6 +149,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         (error) => {
           // this.isDisable = false;
           this.utilsService.showSnackBar(error.message);
+          this.dialogRef.close({ event: 'close', data: 'success' });
         }
       );
       }
@@ -287,6 +288,7 @@ export class MoreOptionsDialogComponent implements OnInit {
             },
             () => {
               this.loading = false;
+              this.dialogRef.close({ event: 'close', data: 'success' });
             }
           );
         }
@@ -686,6 +688,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar('There is some problem while linking user to Finbingo')
+      this.dialogRef.close({ event: 'close', data: 'success' });
     })
       }
     },error => {

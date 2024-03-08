@@ -1033,6 +1033,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                             'failed to update.'
                           );
                         }
+                        this.getAssignedSubscription(this.config.currentPage);
                       }
                     );
                   }
@@ -1109,6 +1110,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                       'failed to update.'
                     );
                   }
+                  this.getAssignedSubscription(this.config.currentPage);
                 }
               );
             }

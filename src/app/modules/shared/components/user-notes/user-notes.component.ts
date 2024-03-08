@@ -147,6 +147,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
           this.utilsService.showSnackBar(
             'Error while adding note, please try again.'
           );
+          this.dialogRef.close();
         }
       );
     } else {

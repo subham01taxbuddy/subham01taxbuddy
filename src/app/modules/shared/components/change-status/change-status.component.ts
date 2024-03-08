@@ -200,6 +200,12 @@ export class ChangeStatusComponent implements OnInit {
                   'error',
                   'There is some issue to Update Status information.'
                 );
+                this.dialogRef.close({
+                  event: 'close',
+                  data: 'statusChanged',
+                  responce: res,
+                });
+
               }
             );
           } else if (this.data.mode === 'Update Caller') {
@@ -232,6 +238,11 @@ export class ChangeStatusComponent implements OnInit {
                   'error',
                   'There is some issue to Update Caller Agent.'
                 );
+                this.dialogRef.close({
+                  event: 'close',
+                  data: 'statusChanged',
+                  responce: res,
+                });
               }
             );
           }
@@ -294,6 +305,7 @@ export class ChangeStatusComponent implements OnInit {
               this.loading=false;
               if (error.error && error.error.error) {
                 this._toastMessageService.alert("error", error.error.error);
+                this.dialogRef.close({event: 'close',data: 'statusChanged',});
               } else {
               this._toastMessageService.alert("error", "An unexpected error occurred.");
               }

@@ -169,11 +169,13 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
           }else{
             this.loading=false;
             this.utilsService.showSnackBar(response.message);
+            this.dialogRef.close();
           }
         },
         error => {
           this.loading=false;
           this.utilsService.showSnackBar('Failed to Reassign Call ');
+          this.dialogRef.close();
         });
       }
     },error => {
