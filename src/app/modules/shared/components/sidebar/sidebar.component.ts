@@ -128,6 +128,7 @@ export class SidebarComponent {
       submenu: [
         { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Deleted Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Subscription Adjustment', url: '/subscription/subscription-adjustment', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {

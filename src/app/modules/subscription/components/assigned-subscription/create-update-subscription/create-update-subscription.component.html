@@ -253,6 +253,7 @@
               </div>
             </div>
           </div>
+
           <div class="row  mt-3">
             <div class="col-sm-12 TxHd-12">
               <span class="header-text-1">Price Plan Breakup</span>
@@ -285,7 +286,7 @@
                           ) | currency : "INR"
                           }}</td>
                       </tr>
-                      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+                      <tr *ngFor="let item of concessionsApplied">
                         <td class="spcTd">Less: {{ item.title }}</td>
                         <td class="spcTd"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
                       </tr>
@@ -294,10 +295,20 @@
                         <td class="spcTd">{{ totalCon | currency : "INR" }}</td>
                       </tr>
                       <tr>
-                        <td class="bdrBtm2">Promo Code:</td>
-                        <td class="bdrBtm2"><span class="head" *ngIf="
-                          this?.userSubscription && this?.userSubscription?.promoCode
-                        "><b> {{ getExactPromoDiscount() | currency : "INR" }} </b><br /></span><br /></td>
+                        <td class="spcTd">Promo Code:</td>
+                        <td class="spcTd"><span class="head" *ngIf="
+                          this?.userSubscription && this?.userSubscription?.promoCode">
+                          <b> {{ getExactPromoDiscount() | currency : "INR" }} </b>
+                        </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="bdrBtm2">Coupon Code:</td>
+                        <td class="bdrBtm2">
+                          <span class="head" *ngIf="couponCodeAmount > 0">
+                          <b> {{ couponCodeAmount | currency : "INR" }} </b>
+                          </span>
+                        </td>
                       </tr>
                       <!-- <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
                         <td class="bdrBtm2">Promo Code:</td>
@@ -313,7 +324,7 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="row">
-                      <div class="col-sm-4">
+                      <div class="col-sm-3">
                         <label for="promoCodeInput">Search & Select Promo Code</label>
                       </div>
                       <div class="col-sm-5">
@@ -332,19 +343,47 @@
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">
-                        <div class="buttons">
                           <button class="save-all" (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
                             Apply Code
                           </button>
-                          &nbsp;&nbsp;
-                          <button [disabled]="!selectedPromoCode" class="delete-icon-btn"
+                      </div>
+                      <div class="col-sm-1">
+                      <button [disabled]="!selectedPromoCode" class="delete-icon-btn"
                             (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
                             <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
-                          </button>
-                        </div>
+                      </button>
                       </div>
                     </div>
                   </div>
+
+                  <div class="col-sm-12" *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <label for="promoCodeInput">Select Coupon Code</label>
+                      </div>
+                      <div class="col-sm-5">
+                        <mat-form-field appearance="outline" class="select-bg-color">
+                          <mat-select multiple (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionIds" (ngModelChange)="onNgModelChange()">
+                            <mat-option *ngFor="let couponCode of availableCouponCodes" [value]="couponCode.couponCodeSubscriptionId" [disabled]="!availableCouponCodes">
+                              {{ couponCode?.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-3">
+                        <button class="save-user-info" (click)="applyCouponCode(smeSelectedPlanId)">
+                          Apply Coupon Code
+                        </button>
+                      </div>
+                      <div class="col-sm-1">
+                        <button class="delete-icon-btn"
+                        (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
+                        <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -395,6 +434,18 @@
 
                     </tbody>
                   </table>
+                  <div *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
+                    <div class="mt-1" *ngIf="this?.availableCouponCodes">
+                      <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                        <span>Note: &bull; Available Coupons :-</span>
+                        <ul style="display: inline; padding-left: 10px; margin: 0;">
+                          <li *ngFor="let coupon of this?.availableCouponCodes" style="display: inline;">
+                            {{ coupon.name }} - {{ coupon.amount | currency : "INR" }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
 
                   <!-- start refund details -->
                   <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
@@ -481,11 +532,21 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-6" *ngIf="service !== 'TPA'">
-                <mat-label> Financial Year</mat-label> 
+                <mat-label> Financial Year</mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
                     <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">
                       {{ year.financialYear }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 mt-3" *ngIf="showScheduledFields">
+                <mat-label>Select Service Type For Scheduled Call </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select    [formControl]="scheduleCallService" >
+                    <mat-option *ngFor="let service of scheduledCallServiceTypes" [value]="service.value">
+                      {{service.label}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

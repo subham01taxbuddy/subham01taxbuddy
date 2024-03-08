@@ -1,0 +1,96 @@
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]="!dataOnLoad">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter -Subscription Adjustment:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="filter-box">
+                <div class="row">
+                  <div class="col-sm-12 bckClr">
+                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                      (sendPrincipleIndividual)="fromSme($event,false, true)"
+                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <label class="input__label" for="attr">F.Y Year </label>
+                        <mat-form-field appearance="outline" class="custom-bg-new">
+                          <input type="text" matInput [formControl]="assessmentYear" readonly>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-3">
+                        <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                          [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                      </div>
+                      <div class="col-sm-7">
+                        <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                          (onChange)="searchByObject($event)"></app-generic-user-filter>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Table Togle Inside Filter starts -->
+                  <div class="row">
+                    <div class="col-sm-6 spcTp">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                  </div>
+                  <!-- Table Togle Inside Filter ends -->
+                  <div class="button-container">
+                    <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                    </button>
+                    <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                      <i class="fa fa-download" aria-hidden="true"></i> Download File
+                    </button>
+                    <button class="clrLnk-1" (click)="resetFilters()">
+                      Clear form
+                    </button>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 mt-3 ">
+                      <span class="new-note1 note">
+                        Note : Please select required filters above and click on search to get information
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div>
+      <div class="row">
+        <div class="col-sm-12 row">
+          <div class="table-info-text col-sm-4 spctp">
+            Subscription Adjustment Details:
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <tr *ngFor="let item of userInfo   | paginate:config"></tr>
+      </table>
+
+      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="adjustmentListGridOptions"
+        (rowClicked)="onSubscriptionRowClicked($event)">
+
+      </ag-grid-angular>
+
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+
+</div>

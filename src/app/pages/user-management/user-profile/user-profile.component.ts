@@ -806,6 +806,7 @@ export class UserProfileComponent implements OnInit {
                   'merchant detail - ' + errorMessage
                 );
                 this.loading = false;
+                this.getUserInfo(this.userId);
               }
             );
           } else {

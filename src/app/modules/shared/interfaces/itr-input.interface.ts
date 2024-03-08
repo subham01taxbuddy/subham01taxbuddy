@@ -697,6 +697,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
+  description?:any
 }
 export interface Perquisites {
   perquisiteType: string;
@@ -1072,7 +1073,7 @@ export interface ProfitLossACIncomes {
   totalgrossProfitFromNonSpeculativeIncome?: number;
   netProfitfromNonSpeculativeIncome?: number;
   incomes: ProfitLossIncomes[];
-  otherIncomes?:NewIncome[];
+  otherIncomes?: NewIncome[];
   expenses?: NewExpenses[];
   totalgrossProfitFromSpeculativeIncome?: Number;
   netProfitfromSpeculativeIncome?: number;
@@ -1209,4 +1210,28 @@ export interface TotalLossCarriedForwardedToFutureYears {
   totalLoss: number;
   speculativeBusinessLoss: number;
   broughtForwordBusinessLoss: number;
+}
+
+export interface salarySevOne {
+  id: number;
+  salaryType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
+}
+
+export interface salarySevTwo {
+  id: number;
+  perquisiteType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
+}
+
+export interface salarySevThree {
+  id: number;
+  salaryType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
 }

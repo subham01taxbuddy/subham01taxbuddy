@@ -89,6 +89,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   partnerType: any;
   selectedSearchUserId: any;
   assignedFilerId: number;
+  searchedEmail:any;
 
   constructor(
     private fb: FormBuilder,
@@ -108,9 +109,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     console.log('new Filer List ', this.allFilerList);
+    let roles = this.utilsService.getUserRoles();
+    let show: boolean;
+    if (roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')) {
+      show = true;
+    }
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.subscriptionCreateColumnDef(this.allFilerList),
+      columnDefs: show ? this.subscriptionCreateColumnDef(this.allFilerList , 'admin') : this.subscriptionCreateColumnDef(this.allFilerList,'regular'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {},
@@ -239,6 +245,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   allSubscriptions = [];
   getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?) {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
+
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache');
@@ -262,6 +269,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     ) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = false;
+    }else if(this.roles.includes('ROLE_FILER') && this.agentId === loggedInSmeUserId ){
+      this.filerId = loggedInSmeUserId;
     }
 
     let userIdFilter = '';
@@ -278,6 +287,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     let emailFilter = '';
     if (this.searchBy?.email) {
+      if(this.roles.includes("ROLE_FILER")){
+        this.isAllowed = true;
+      }
       emailFilter = '&email=' + this.searchBy?.email;
     }
 
@@ -370,7 +382,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           if (response?.data?.error === 'User not found') {
             this._toastMessageService.alert(
               'error',
-              'No user with this mobile number found. ' +
+              'No user with this Mobile Number/Email found. ' +
                 'Please create user before creating subscription.'
             );
             this.isAllowed = false;
@@ -601,7 +613,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscriptionCreateColumnDef(List) {
+  subscriptionCreateColumnDef(List , view) {
     return [
       // {
       //   field: 'selection',
@@ -808,7 +820,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       {
         headerName: 'Update/Revise Subscription',
         field: '',
-        width: 130,
+        width: 120,
         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
@@ -828,6 +840,38 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           }
         },
       },
+      {
+        headerName: 'Create Coupon Code',
+        field: '',
+        width: 120,
+        pinned: 'right',
+        lockPosition: true,
+        suppressMovable: false,
+        hide: view === 'admin' ? false : true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        // filter: 'agTextColumnFilter',
+        cellRenderer: function (params: any) {
+          // if (params.data.cancellationStatus === 'PENDING' || params.data?.invoiceDetail?.paymentStatus ==='Paid') {
+          //   return `<button type="button" disabled class="action_icon add_button"
+          // style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
+          // <i class="fa-sharp fa-solid fa-ticket fa-xs"> Coupon</i>
+          //  </button>`;
+          // } else {
+          //   return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
+          //   style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
+          //   <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
+          //   </button>`;
+          // }
+          if (params.data?.invoiceDetail?.some(invoice => invoice?.paymentStatus === 'Paid') && !params.data?.invoiceDetail?.some(invoice => invoice?.invoiceRefundDetails?.some(refund => refund?.refundStatus === 'IN_PROGRESS'))) {
+            return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
+              style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
+              <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
+              </button>`;
+          } else {
+            return '-';
+          }
+        },
+      },
     ];
   }
   public rowSelection: 'single';
@@ -843,8 +887,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     for (let i = 0; i < subscriptionData.length; i++) {
       // var invoiceNumber = '';
       const invoiceNumber = [];
+      const paymentStatuses = [];
       for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
         invoiceNumber.push(subscriptionData[i].invoiceDetail[x].invoiceNo);
+        paymentStatuses.push(
+          subscriptionData[i].invoiceDetail[x].paymentStatus
+        );
         // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
       }
       newData.push({
@@ -902,9 +950,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus,
-        // invoiceDetails: invoiceDetails,
+        invoiceDetail: subscriptionData[i].invoiceDetail,
         leaderName: subscriptionData[i].leaderName,
-        createdDate:subscriptionData[i].createdDate,
+        createdDate: subscriptionData[i].createdDate,
+        paymentStatus: paymentStatuses.toString(),
       });
     }
     return newData;
@@ -920,6 +969,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         }
         case 'remove': {
           this.deleteSubscription(params.data);
+          break;
+        }
+        case 'coupon': {
+          this.createSubscriptionCouponCode(params.data);
           break;
         }
       }
@@ -983,6 +1036,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                             'failed to update.'
                           );
                         }
+                        this.getAssignedSubscription(this.config.currentPage);
                       }
                     );
                   }
@@ -997,6 +1051,71 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 }
               );
 
+            }
+          });
+        }
+      },
+      (error) => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.getAssignedSubscription(this.config.currentPage);
+        } else {
+          this.utilsService.showSnackBar("An unexpected error occurred.");
+        }
+      }
+    );
+  }
+
+  createSubscriptionCouponCode(subscription) {
+    this.utilsService.getUserCurrentStatus(subscription.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.getAssignedSubscription(this.config.currentPage);
+          return;
+        } else {
+          this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+              title: 'Create Coupon Code!',
+              message: 'Are you sure?',
+            },
+          });
+
+          this.dialogRef.afterClosed().subscribe((result) => {
+            if (result === 'YES') {
+              this.loading = true;
+              let param = `/itr/subscription`;
+              let reqBody = {
+                subscriptionId: subscription.subscriptionId,
+                isCouponCode: true,
+              };
+              this.userMsService.spamPutMethod(param, reqBody).subscribe(
+                (res: any) => {
+                  this.loading = false;
+                  this._toastMessageService.alert(
+                    'success',
+                    'Coupon Code Generated Successfully'
+                  );
+                  this.getAssignedSubscription(this.config.currentPage);
+                },
+                (error) => {
+                  this.loading = false;
+                  if (error.error.error === 'BAD_REQUEST') {
+                    this._toastMessageService.alert(
+                      'error',
+                      error.error.message
+                    );
+                  } else {
+                    this._toastMessageService.alert(
+                      'error',
+                      'failed to update.'
+                    );
+                  }
+                  this.getAssignedSubscription(this.config.currentPage);
+                }
+              );
             }
           });
         }
@@ -1051,15 +1170,18 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         if (key === 'mobileNumber') {
           this.mobileNumber = this.searchBy[key];
         }
+        if (key === 'email') {
+          this.searchedEmail = this.searchBy[key];
+        }
       });
     } else {
       this.mobileNumber = this.searchVal;
     }
 
     //integrate new api to check active user
-    this.utilsService
-      .getActiveUsers(this.mobileNumber)
-      .subscribe((res: any) => {
+
+    if(this.roles.includes('ROLE_FILER') && this.searchedEmail){
+      this.utilsService.getActiveUsers('',this.searchedEmail).subscribe((res:any) => {
         console.log(res);
         if (res.data) {
           if (res.data.content[0].active === false) {
@@ -1070,12 +1192,66 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             return;
           }
         } else {
-          const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-          if (this.roles.includes('ROLE_FILER')) {
+          this.createSubMiddle()
+        }
+      })
+    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+      this.createSubMiddle()
+    }else{
+      this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
+        console.log(res);
+        if (res.data) {
+          if (res.data.content[0].active === false) {
+            this._toastMessageService.alert(
+              'error',
+              'This customer is currently inactive, please activate customer first and then create subscription'
+            );
+            return;
+          }
+        } else {
+          this.createSubMiddle()
+        }
+      });
+    }
+
+
+  }
+
+  createSubMiddle(){
+    if (this.roles.includes('ROLE_FILER') && this.searchedEmail) {
+      this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
+        console.log(res);
+          if (res.data) {
+            this.userId = res?.data?.content[0].userId;
+            this.assignedFilerId = this?.loggedInSme[0]?.userId;
+            this.openAddSubscriptionDialog();
+          }else {
+            this.utilsService.getFilerIdByMobile('', 'ITR',this.searchedEmail).subscribe((res: any) => {
+              console.log(res);
+              if (res.data) {
+                this.userId = res?.data?.content[0].userId;
+                this.assignedFilerId = this?.loggedInSme[0]?.userId;
+                this.openAddSubscriptionDialog();
+              } else {
+                this._toastMessageService.alert('error', res.message);
+              }
+            })
+          }
+      });
+    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+      this.userId = this.selectedSearchUserId;
+      this.assignedFilerId = this?.loggedInSme[0]?.userId;
+      this.openAddSubscriptionDialog();
+    } else {
+      this.utilsService.getFilerIdByMobile(this.mobileNumber)
+        .subscribe((res: any) => {
+          console.log(res);
+          if (res.data) {
+            this.assignedFilerId = res?.data?.content[0].filerUserId;
+            this.userId = res?.data?.content[0].userId;
             this.openAddSubscriptionDialog();
           } else {
-            this.utilsService
-              .getFilerIdByMobile(this.mobileNumber)
+            this.utilsService.getFilerIdByMobile(this.mobileNumber, 'ITR')
               .subscribe((res: any) => {
                 console.log(res);
                 if (res.data) {
@@ -1083,24 +1259,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                   this.userId = res?.data?.content[0].userId;
                   this.openAddSubscriptionDialog();
                 } else {
-                  this.utilsService
-                    .getFilerIdByMobile(this.mobileNumber, 'ITR')
-                    .subscribe((res: any) => {
-                      console.log(res);
-                      if (res.data) {
-                        this.assignedFilerId =
-                          res?.data?.content[0].filerUserId;
-                        this.userId = res?.data?.content[0].userId;
-                        this.openAddSubscriptionDialog();
-                      } else {
-                        this._toastMessageService.alert('error', res.message);
-                      }
-                    });
+                  this._toastMessageService.alert('error', res.message);
                 }
               });
           }
-        }
-      });
+        });
+    }
   }
 
   openAddSubscriptionDialog() {

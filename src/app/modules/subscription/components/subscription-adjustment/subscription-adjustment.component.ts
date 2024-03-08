@@ -283,7 +283,9 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         leaderName: subscriptionData[i].leaderName,
         createdDate: subscriptionData[i].createdDate,
         paymentStatus: paymentStatuses.toString(),
-        couponCodeClaimedServiceType:subscriptionData[i].couponCodeClaimedServiceType
+        couponCodeClaimedServiceType:subscriptionData[i].couponCodeClaimedServiceType,
+        isCouponCodeAvailable:subscriptionData[i].isCouponCodeAvailable,
+        couponCodeCreatedDate:subscriptionData[i].couponCodeCreatedDate,
       });
     }
     return newData;
@@ -369,6 +371,21 @@ export class SubscriptionAdjustmentComponent implements OnInit {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'Coupon Created Date',
+        field: 'couponCodeCreatedDate',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
+        },
+
       },
       {
         headerName: 'Created Date',
@@ -461,10 +478,14 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to revert Subscription Adjustment Coupon" data-action-type="revert-Coupon"
+          if(params.data.isCouponCodeAvailable){
+            return `<button type="button" class="action_icon add_button" title="Click to revert Subscription Adjustment Coupon" data-action-type="revert-Coupon"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc; ">
             <i class="fa fa-undo fa-xs" aria-hidden="true" data-action-type="revert-Coupon"> Restore </i>
              </button>`;
+          }else{
+            return'-';
+          }
         },
       },
     ];
@@ -523,6 +544,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
                 } else {
                   this._toastMessageService.alert('error', 'failed to update.');
                 }
+                this.search(this.config.currentPage);
               }
             );
           }

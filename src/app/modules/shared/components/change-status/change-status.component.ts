@@ -213,6 +213,25 @@ export class ChangeStatusComponent implements OnInit {
               (res) => {
                 console.log('Status update response: ', res);
 
+                this.dialogRef.close({
+                  event: 'close',
+                  data: 'statusChanged',
+                  responce: res,
+                });
+
+              }
+            );
+          } else if (this.data.mode === 'Update Caller') {
+            let param = `/call-management/customers`;
+            let reqBody = Object.assign(
+              this.data.userInfo,
+              this.changeStatus.getRawValue()
+            );
+            console.log('reqBody: ', reqBody);
+            this.userService.putMethod(param, reqBody).subscribe(
+              (res) => {
+                console.log('Status update response: ', res);
+
                 this.loading = false;
                 this._toastMessageService.alert(
                   'success',
@@ -232,6 +251,11 @@ export class ChangeStatusComponent implements OnInit {
                   'error',
                   'There is some issue to Update Caller Agent.'
                 );
+                this.dialogRef.close({
+                  event: 'close',
+                  data: 'statusChanged',
+                  responce: res,
+                });
               }
             );
           }
@@ -294,6 +318,7 @@ export class ChangeStatusComponent implements OnInit {
               this.loading=false;
               if (error.error && error.error.error) {
                 this._toastMessageService.alert("error", error.error.error);
+                this.dialogRef.close({event: 'close',data: 'statusChanged',});
               } else {
               this._toastMessageService.alert("error", "An unexpected error occurred.");
               }
