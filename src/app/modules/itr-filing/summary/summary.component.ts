@@ -15,13 +15,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
 import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { FormControl } from '@angular/forms';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css'],
 })
 export class SummaryComponent implements OnInit {
-  detailsRequired = new FormControl(false);
   loading: boolean = false;
   disposable: any;
   summaryDetail: any;
@@ -862,6 +862,7 @@ export class SummaryComponent implements OnInit {
   natureOfBusiness: any = [];
   business44adDetails: any = [];
   countryCodeList: any;
+  dialogRef: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -6883,7 +6884,32 @@ export class SummaryComponent implements OnInit {
   }
 
   downloadPDF() {
-    console.log('this.detailsRequired.value', this.detailsRequired.value)
+    let detailsRequired = false;
+    let finalCalculations = this.finalCalculations;
+    let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+    let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+    if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmation',
+          message: 'Do you want detailed listed securities data ?',
+        },
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          detailsRequired = true;
+          this.downloadSummaryPdf(detailsRequired);
+        } else {
+          detailsRequired = false;
+          this.downloadSummaryPdf(detailsRequired);
+        }
+      });
+    } else {
+      this.downloadSummaryPdf(detailsRequired);
+    }
+  }
+
+  downloadSummaryPdf(detailsRequired) {
     // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
     // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
     this.loading = true;
@@ -6918,7 +6944,7 @@ export class SummaryComponent implements OnInit {
           '&itrId=' +
           this.ITR_JSON.itrId +
           '&assessmentYear=' +
-          this.ITR_JSON.assessmentYear + '&detailsRequired=' + this.detailsRequired.value;
+          this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
         this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
           (result) => {
             console.log('PDF Result', result);
@@ -6949,7 +6975,7 @@ export class SummaryComponent implements OnInit {
         '&itrId=' +
         this.ITR_JSON.itrId +
         '&assessmentYear=' +
-        this.ITR_JSON.assessmentYear + '&detailsRequired=' + this.detailsRequired.value;
+        this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
       this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
         (result) => {
           console.log('PDF Result', result);
