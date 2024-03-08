@@ -1,21 +1,17 @@
 <form [formGroup]="bifurcationFormGroup">
   <div class="scroll">
-    <!-- <div formGroupName="{{typeIndex === 0 ? 'salary' : typeIndex === 1 ? 'perquisites' : 'profitsInLieu'}}"> -->
     <div>
       <div class="greyBox">
         <div class="row">
           <div class="col-6 section-title"> {{getTitle()}}</div>
         </div>
-        <!-- <div style="align-self: stretch; flex: 1 1 0; justify-content: flex-start; align-items: flex-start; gap: 32px;">
-          <div *ngFor="let salary of getControls.controls | keyvalue: unsorted; let n=index"
-        style="flex: 1 1 0; justify-content: flex-start; align-items: center; gap: 8px; display: flex"> -->
         <div class="row">
           <div formArrayName="salary">
             <div *ngFor="let item of salary['controls']; let i = index" [formGroupName]="i" class="row mb-2">
               <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 0">
                   <mat-select name="salaryType[i]" formControlName="salaryType"
-                    (selectionChange)="changeSectionOne('salary');formValuesChanged()">
+                    (selectionChange)="changeSectionOne('salary');formValuesChanged();setDescriptionValidation('salary',item)">
                     <mat-option *ngFor="let name of salaryNames; let k = index" [value]="name.key"
                       [disabled]="name['disabled']">{{ name.value
                       }}</mat-option>
@@ -25,7 +21,7 @@
               <div class="col-4 input-filed">
                 <mat-form-field appearance="outline">
                   <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
-                    (change)="formValuesChanged()" />
+                    (change)="formValuesChanged();setDescriptionValidation('salary',item)" />
                 </mat-form-field>
               </div>
               <div class="col-3 addDeleteBtn">
@@ -37,6 +33,15 @@
                     Another</button>
                 </div>
               </div>
+              <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
+                <mat-form-field appearance="outline">
+                  <input matInput name="description[i]" formControlName="description"
+                    (change)="formValuesChanged();setDescriptionValidation('salary',item)"
+                    [required]="item.value.salaryType==='OTHER' && item.value.taxableAmount > 0" />
+                </mat-form-field>
+                <mat-error *ngIf="item['controls']['description'].hasError('required')">Please enter the
+                  description</mat-error>
+              </div>
             </div>
           </div>
           <div formArrayName="perquisites">
@@ -44,7 +49,7 @@
               <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 1">
                   <mat-select name="perquisiteType[i]" formControlName="perquisiteType"
-                    (selectionChange)="changeSectionOne('perquisites');formValuesChanged()">
+                    (selectionChange)="changeSectionOne('perquisites');formValuesChanged();setDescriptionValidation('perquisites',item)">
                     <mat-option *ngFor="let name of perquisiteNames; let k = index" [value]="name.key"
                       [disabled]="name['disabled']">{{ name.value
                       }}</mat-option>
@@ -54,7 +59,7 @@
               <div class="col-4 input-filed">
                 <mat-form-field appearance="outline">
                   <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
-                    (change)="formValuesChanged()" />
+                    (change)="formValuesChanged();setDescriptionValidation('perquisites',item)" />
                 </mat-form-field>
               </div>
               <div class="col-3 addDeleteBtn">
@@ -68,6 +73,15 @@
 
                 </div>
               </div>
+              <div class="col-5 mt-2 input-filed" *ngIf="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'">
+                <mat-form-field appearance="outline">
+                  <input matInput name="description[i]" formControlName="description"
+                    (change)="formValuesChanged();setDescriptionValidation('perquisites',item)"
+                    [required]="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES' && item.value.taxableAmount > 0" />
+                </mat-form-field>
+                <mat-error *ngIf="item['controls']['description'].hasError('required')">Please enter the
+                  description</mat-error>
+              </div>
             </div>
           </div>
           <div formArrayName="profitsInLieu">
@@ -75,7 +89,7 @@
               <div class="col-5">
                 <mat-form-field appearance="outline" *ngIf="typeIndex === 2">
                   <mat-select name="salaryType[i]" formControlName="salaryType"
-                    (selectionChange)="changeSectionOne('profitsInLieu');formValuesChanged()">
+                    (selectionChange)="changeSectionOne('profitsInLieu');formValuesChanged();setDescriptionValidation('profitsInLieu',item)">
                     <mat-option *ngFor="let name of profitInLieuNames; let k = index" [value]="name.key"
                       [disabled]="name['disabled']">{{
                       name.value
@@ -86,7 +100,7 @@
               <div class="col-4 input-filed">
                 <mat-form-field appearance="outline">
                   <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
-                    (change)="formValuesChanged()" />
+                    (change)="formValuesChanged();setDescriptionValidation('profitsInLieu',item)" />
                 </mat-form-field>
               </div>
               <div class="col-3 addDeleteBtn">
@@ -99,29 +113,19 @@
                     Another</button>
                 </div>
               </div>
+              <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='ANY_OTHER'">
+                <mat-form-field appearance="outline">
+                  <input matInput name="description[i]" formControlName="description"
+                    (change)="formValuesChanged();setDescriptionValidation('profitsInLieu',item)"
+                    [required]="item.value.salaryType==='ANY_OTHER' && item.value.taxableAmount > 0" />
+                </mat-form-field>
+                <mat-error *ngIf="item['controls']['description'].hasError('required')">Please enter the
+                  description</mat-error>
+              </div>
             </div>
           </div>
         </div>
-        <!--  input field            -->
-        <!-- <div class="col=4"
-              style="flex: 1 1 0; border-radius: 4px; border: 0.50px #D3D3D3 solid; justify-content: flex-start; align-items: center; gap: 16px; display: flex">
-              <div
-                style="flex: 1 1 0; color: #858595; font-size: 14px; font-family: DM Sans; font-weight: 400; line-height: 28px; word-wrap: break-word">
-                <mat-form-field appearance="outline">
-                  <input digitsOnly matInput formControlName="{{salary.key}}"
-                    (change)="formValuesChanged(salary.key, n)" />
-                </mat-form-field>
-              </div>
-            </div> -->
-        <!-- add button-->
-
-        <!-- </div>
-        </div> -->
       </div>
-
     </div>
-
-    <!-- </div> -->
-
   </div>
 </form>
