@@ -849,6 +849,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
                 this.utilsService.showSnackBar(
                   'Error while Activate User, Please try again.'
                 );
+                this.search();
               }
             },
             (error) => {
@@ -856,6 +857,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               this.utilsService.showSnackBar(
                 'Error while Activate User, Please try again.'
               );
+              this.search();
             }
           );
         }

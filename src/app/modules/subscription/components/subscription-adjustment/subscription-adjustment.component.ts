@@ -545,6 +545,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
                 } else {
                   this._toastMessageService.alert('error', 'failed to update.');
                 }
+                this.search(this.config.currentPage);
               }
             );
           }

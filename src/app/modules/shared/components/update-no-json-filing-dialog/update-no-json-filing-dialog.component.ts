@@ -197,10 +197,12 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               this.location.back();
             } else {
               this.utilsService.showSnackBar(res.message);
+              this.dialogRef.close(true);
             }
           }, error => {
             this.utilsService.showSnackBar('Failed to update Manual Filing Details')
             this.loading = false;
+            this.dialogRef.close(true);
           })
         }
       },error => {

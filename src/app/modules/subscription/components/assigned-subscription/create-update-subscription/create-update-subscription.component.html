@@ -356,7 +356,7 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12">
+                  <div class="col-sm-12" *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
                     <div class="row">
                       <div class="col-sm-3">
                         <label for="promoCodeInput">Select Coupon Code</label>
@@ -434,18 +434,18 @@
 
                     </tbody>
                   </table>
-
-                  <div class="mt-1" *ngIf="this?.availableCouponCodes">
-                    <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
-                      <span>Note: &bull; Available Coupons :-</span>
-                      <ul style="display: inline; padding-left: 10px; margin: 0;">
-                        <li *ngFor="let coupon of this?.availableCouponCodes" style="display: inline;">
-                          {{ coupon.name }} - {{ coupon.amount | currency : "INR" }}
-                        </li>
-                      </ul>
+                  <div *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
+                    <div class="mt-1" *ngIf="this?.availableCouponCodes">
+                      <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                        <span>Note: &bull; Available Coupons :-</span>
+                        <ul style="display: inline; padding-left: 10px; margin: 0;">
+                          <li *ngFor="let coupon of this?.availableCouponCodes" style="display: inline;">
+                            {{ coupon.name }} - {{ coupon.amount | currency : "INR" }}
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
-
 
                   <!-- start refund details -->
                   <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">

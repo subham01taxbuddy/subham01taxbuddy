@@ -42,6 +42,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   couponCodeAmount = 0;
   selectedCouponCodeSubscriptionIds: number[] = [];
   removeCouponCodeFlag: boolean = false;
+  couponCodeAppliedFlag: boolean = false;
   loggedInSme: any;
   allPlans: any;
   availableCouponCodes: any[] = [];
@@ -225,11 +226,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   setExistingCouponCode(){
-    console.log(this.userSubscription?.concessionsApplied, "this.userSubscription?.concessionsApplied?");
     const couponCodeDetails = this.userSubscription?.concessionsApplied?.filter(item => item.title === 'Coupon Code');
-    console.log(couponCodeDetails, "ccc");
     if(couponCodeDetails?.length > 0) {
-      console.log(couponCodeDetails, "innnn");
       couponCodeDetails.forEach(couponCodeDetail => {
         if(!this.availableCouponCodes.some(cd => cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId)){
           this.availableCouponCodes.push({
@@ -240,12 +238,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         }
       });
       this.selectedCouponCodeSubscriptionIds = couponCodeDetails?.map(item=>item.subscriptionId);
+      this.couponCodeAppliedFlag = true;
       this.couponCodeAmount = couponCodeDetails?.reduce((total, element)=>total+element.amount, 0);
     } else {
       this.selectedCouponCodeSubscriptionIds = [];
+      this.couponCodeAppliedFlag = false;
       this.couponCodeAmount = 0;
     }
-    console.log(this.selectedCouponCodeSubscriptionIds, "cccd");
   }
 
   applyCouponCode(selectedPlan) {
@@ -253,6 +252,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.removeCouponCodeFlag = false;
     if(this.selectedCouponCodeSubscriptionIds?.length === 0)
       this.removeCouponCodeFlag = true;
+
+    this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
     const request = {
@@ -285,6 +286,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   removeCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = true;
+    this.couponCodeAppliedFlag = false;
     const param = `/subscription/recalculate`;
     const request = {
       userId: this.userSubscription.userId,
@@ -528,7 +530,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applyPromo(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     if(this.selectedCouponCodeSubscriptionIds.length === 0)
-      this.removeCouponCodeFlag = true;
+      this.couponCodeAppliedFlag = true;
+
+    if(this.couponCodeAppliedFlag)
+      this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
     const request = {
@@ -1299,6 +1304,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             'selectedPlanInfo -> ',
             this.userSubscription.smeSelectedPlan.planId
           );
+
+          if(!this.couponCodeAppliedFlag)
+            this.selectedCouponCodeSubscriptionIds = [];
+
           let param = '/subscription';
           let reqBody : any = {
             userId: this.userSubscription.userId,
@@ -1361,6 +1370,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               } else {
                 this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
               }
+              this.router.navigate(['/subscription/assigned-subscription'], {
+                queryParams: { fromEdit: true  },
+              })
             }
           );
         } else {

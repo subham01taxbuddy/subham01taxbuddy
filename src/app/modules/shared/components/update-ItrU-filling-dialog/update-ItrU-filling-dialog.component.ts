@@ -177,12 +177,14 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
                   // this.location.back();
                 } else {
                   this.utilsService.showSnackBar(res.message);
+                  this.dialogRef.close(true);
                 }
               },
               (error) => {
                 this.utilsService.showSnackBar(
                   'Failed to update ITR-U Filing Details'
                 );
+                this.dialogRef.close(true);
                 this.loading = false;
               }
             );
