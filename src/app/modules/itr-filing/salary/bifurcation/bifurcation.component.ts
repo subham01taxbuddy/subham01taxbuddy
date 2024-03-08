@@ -40,6 +40,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
   };
 
   @Output() valueChanged: EventEmitter<any> = new EventEmitter<any>();
+  @Output() isValid: EventEmitter<any> = new EventEmitter<any>();
 
   salaryNames = [
     {
@@ -800,6 +801,42 @@ export class BifurcationComponent implements OnInit, OnChanges {
         });
       });
     }
+  }
+
+  setDescriptionValidation(type, item) {
+    if (type === 'salary') {
+      if (item.controls['salaryType'].value === 'OTHER' && item.controls['taxableAmount'].value > 0) {
+        item.controls['description'].setValidators([Validators.required]);
+        item.controls['description'].markAsTouched();
+        item.controls['description'].markAsDirty();
+        item.controls['description'].updateValueAndValidity();
+      } else {
+        item.controls['description'].setValidators(null);
+        item.controls['description'].updateValueAndValidity();
+      }
+    } else if (type === 'perquisites') {
+      if (item.controls['perquisiteType'].value === 'OTH_BENEFITS_AMENITIES' && item.controls['taxableAmount'].value > 0) {
+        item.controls['description'].setValidators([Validators.required]);
+        item.controls['description'].markAsTouched();
+        item.controls['description'].markAsDirty();
+        item.controls['description'].updateValueAndValidity();
+      } else {
+        item.controls['description'].setValidators(null);
+        item.controls['description'].updateValueAndValidity();
+
+      }
+    } else if (type === 'profitsInLieu') {
+      if (item.controls['salaryType'].value === 'ANY_OTHER' && item.controls['taxableAmount'].value > 0) {
+        item.controls['description'].setValidators([Validators.required]);
+        item.controls['description'].markAsTouched();
+        item.controls['description'].markAsDirty();
+        item.controls['description'].updateValueAndValidity();
+      } else {
+        item.controls['description'].setValidators(null);
+        item.controls['description'].updateValueAndValidity();
+      }
+    }
+    this.isValid.emit(this.bifurcationFormGroup.invalid);
   }
 
 

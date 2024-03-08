@@ -42,6 +42,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   couponCodeAmount = 0;
   selectedCouponCodeSubscriptionIds: number[] = [];
   removeCouponCodeFlag: boolean = false;
+  couponCodeAppliedFlag: boolean = false;
   loggedInSme: any;
   allPlans: any;
   availableCouponCodes: any[] = [];
@@ -225,11 +226,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   setExistingCouponCode(){
-    console.log(this.userSubscription?.concessionsApplied, "this.userSubscription?.concessionsApplied?");
     const couponCodeDetails = this.userSubscription?.concessionsApplied?.filter(item => item.title === 'Coupon Code');
-    console.log(couponCodeDetails, "ccc");
     if(couponCodeDetails?.length > 0) {
-      console.log(couponCodeDetails, "innnn");
       couponCodeDetails.forEach(couponCodeDetail => {
         if(!this.availableCouponCodes.some(cd => cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId)){
           this.availableCouponCodes.push({
@@ -240,12 +238,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         }
       });
       this.selectedCouponCodeSubscriptionIds = couponCodeDetails?.map(item=>item.subscriptionId);
+      this.couponCodeAppliedFlag = true;
       this.couponCodeAmount = couponCodeDetails?.reduce((total, element)=>total+element.amount, 0);
     } else {
       this.selectedCouponCodeSubscriptionIds = [];
+      this.couponCodeAppliedFlag = false;
       this.couponCodeAmount = 0;
     }
-    console.log(this.selectedCouponCodeSubscriptionIds, "cccd");
   }
 
   applyCouponCode(selectedPlan) {
@@ -253,6 +252,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.removeCouponCodeFlag = false;
     if(this.selectedCouponCodeSubscriptionIds?.length === 0)
       this.removeCouponCodeFlag = true;
+
+    this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
     const request = {
@@ -285,6 +286,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   removeCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = true;
+    this.couponCodeAppliedFlag = false;
     const param = `/subscription/recalculate`;
     const request = {
       userId: this.userSubscription.userId,
@@ -388,7 +390,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   maskMobileNumber(originalMobileNumber: string): string {
-    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+    if (originalMobileNumber && originalMobileNumber.length) {
       let maskedNo = 'X'.repeat(originalMobileNumber.length);
       return maskedNo
     }
@@ -528,7 +530,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applyPromo(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     if(this.selectedCouponCodeSubscriptionIds.length === 0)
-      this.removeCouponCodeFlag = true;
+      this.couponCodeAppliedFlag = true;
+
+    if(this.couponCodeAppliedFlag)
+      this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
     const request = {
@@ -800,7 +805,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           this.setFormValues(this.selectedUserInfo);
           if(this.serviceType === 'ITRU'){
-            this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber)
+            if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+              this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber);
+            } else {
+              this.mobileNumber.setValue(this.maskMobileNumber(this.selectedUserInfo.mobileNumber));
+            }
             this.checkPreviousITRuSub();
           }
           this.updateIgstFlag();
@@ -947,6 +956,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applySmeSelectedPlan(selectedPlan) {
     this.loading = true;
     this.smeSelectedPlanId = selectedPlan;
+    if(this.selectedCouponCodeSubscriptionIds.length === 0)
+      this.removeCouponCodeFlag = true;
     const param = '/subscription/recalculate';
     const request = {
       userId: this.userSubscription.userId,
@@ -955,7 +966,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
-      removePromoCode: false
+      removePromoCode: false,
+      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
+      removeCouponCode: this.removeCouponCodeFlag
     };
 
     this.itrService.postMethod(param, request).subscribe(
@@ -1033,7 +1046,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
      // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
      const loggedInSmeUserId = this?.loggedInSme[0]?.userId
      let filter = '';
-    filter = '&mobileNumber=' + this.mobileNumber.value
+    filter = '&mobileNumber=' + this.unMaskedMobileNo
 
      let userFilter = ''
      if (this.roles.includes('ROLE_LEADER')) {
@@ -1060,7 +1073,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   filteredFinancialYears: any[] = this.financialYear;
 
   isYearDisabled(year: string): boolean {
-    return this.service === 'ITRU' && this.selectedITRUFy.includes(year);
+    return this.service === 'ITRU' && this.selectedITRUFy?.includes(year);
   }
 
   changeService() {
@@ -1291,6 +1304,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             'selectedPlanInfo -> ',
             this.userSubscription.smeSelectedPlan.planId
           );
+
+          if(!this.couponCodeAppliedFlag)
+            this.selectedCouponCodeSubscriptionIds = [];
+
           let param = '/subscription';
           let reqBody : any = {
             userId: this.userSubscription.userId,

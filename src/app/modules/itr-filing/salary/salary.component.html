@@ -192,7 +192,7 @@
                           </div>
                           <!--Bifurcation component-->
                           <app-bifurcation #bifurcation [typeIndex]="i" [localEmployer]="localEmployer"
-                            [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)"></app-bifurcation>
+                            [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)" (isValid)="isFormGroupValid($event)"></app-bifurcation>
                         </div>
                         <img class="line" src="img/line-2-2.svg" />
                         <!-- 4 Box -->
@@ -481,7 +481,7 @@
                 <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
-                <div class="rght-btn" (click)="saveEmployerDetails(true)">Save & View Summary</div>
+                <button class="rght-btn" (click)="saveEmployerDetails(true)" [disabled]="bifurcationFormGroup">Save & View Summary</button>
               </div>
             </div>
 
