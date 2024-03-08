@@ -245,6 +245,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   allSubscriptions = [];
   getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?) {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
+
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache');
@@ -268,6 +269,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     ) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = false;
+    }else if(this.roles.includes('ROLE_FILER') && this.agentId === loggedInSmeUserId ){
+      this.filerId = loggedInSmeUserId;
     }
 
     let userIdFilter = '';
