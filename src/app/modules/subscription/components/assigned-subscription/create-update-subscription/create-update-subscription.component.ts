@@ -388,7 +388,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   maskMobileNumber(originalMobileNumber: string): string {
-    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+    if (originalMobileNumber && originalMobileNumber.length) {
       let maskedNo = 'X'.repeat(originalMobileNumber.length);
       return maskedNo
     }
@@ -800,7 +800,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           this.setFormValues(this.selectedUserInfo);
           if(this.serviceType === 'ITRU'){
-            this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber)
+            if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+              this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber);
+            } else {
+              this.mobileNumber.setValue(this.maskMobileNumber(this.selectedUserInfo.mobileNumber));
+            }
             this.checkPreviousITRuSub();
           }
           this.updateIgstFlag();
@@ -1037,7 +1041,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
      // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
      const loggedInSmeUserId = this?.loggedInSme[0]?.userId
      let filter = '';
-    filter = '&mobileNumber=' + this.mobileNumber.value
+    filter = '&mobileNumber=' + this.unMaskedMobileNo
 
      let userFilter = ''
      if (this.roles.includes('ROLE_LEADER')) {
@@ -1064,7 +1068,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   filteredFinancialYears: any[] = this.financialYear;
 
   isYearDisabled(year: string): boolean {
-    return this.service === 'ITRU' && this.selectedITRUFy.includes(year);
+    return this.service === 'ITRU' && this.selectedITRUFy?.includes(year);
   }
 
   changeService() {
