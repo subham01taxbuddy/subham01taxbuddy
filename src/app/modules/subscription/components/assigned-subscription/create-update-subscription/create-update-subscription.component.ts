@@ -947,6 +947,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applySmeSelectedPlan(selectedPlan) {
     this.loading = true;
     this.smeSelectedPlanId = selectedPlan;
+    if(this.selectedCouponCodeSubscriptionIds.length === 0)
+      this.removeCouponCodeFlag = true;
     const param = '/subscription/recalculate';
     const request = {
       userId: this.userSubscription.userId,
@@ -955,7 +957,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       smeUserId: this?.loggedInSme[0]?.userId,
       subscriptionId: this.userSubscription.subscriptionId,
       promoCode: this.selectedPromoCode,
-      removePromoCode: false
+      removePromoCode: false,
+      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
+      removeCouponCode: this.removeCouponCodeFlag
     };
 
     this.itrService.postMethod(param, request).subscribe(
