@@ -185,6 +185,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.cacheManager.clearCache();
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
@@ -461,6 +468,20 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+         // code to masking mobile no
+         cellRenderer: (params) => {
+          const mobileNumber = params.value;
+          if (mobileNumber) {
+            if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            } else {
+              return mobileNumber;
+            }
+          } else {
+            return '-'
+          }
         },
       },
       {

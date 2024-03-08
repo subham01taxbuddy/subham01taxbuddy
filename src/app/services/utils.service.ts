@@ -1353,29 +1353,60 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
-  getFilerIdByMobile(mobile,ITR?){
+  getFilerIdByMobile(mobile,ITR?,email?){
     //user list api to get filerId for create subscription
     //https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&serviceType=ITR&mobileNumber=3263636364
     let param ='';
     let role = this.getUserRoles();
     let loggedInSmeId = this.getLoggedInUserID();
+    let partnerType =this.getPartnerType();
     let userFilter = '';
     if(role.includes('ROLE_LEADER')){
       userFilter='&leaderUserId='+ loggedInSmeId ;
     }
-    if(ITR){
-      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
-    }else{
-      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
+    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+      userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
+    if(ITR && mobile){
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
+    }else if(ITR && email){
+      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}`
+    }else if(!ITR && mobile ){
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
+    }else if(!ITR && email){
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&emailId=${email}${userFilter}`
+
+    }
     return this.userMsService.getMethodNew(param);
   }
 
-  getActiveUsers(mobile){
+  getActiveUsers(mobile?,email?){
    //api to check weather user is active
   // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
-    const param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}&active=false`
+  let param
+  let role = this.getUserRoles();
+  let loggedInSmeId = this.getLoggedInUserID();
+  let partnerType =this.getPartnerType();
+
+  let userFilter = '';
+    if(role.includes('ROLE_LEADER')){
+      userFilter='&leaderUserId='+ loggedInSmeId ;
+    }
+    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+      userFilter += `&filerUserId=${loggedInSmeId}`;
+    }
+
+
+  if(mobile){
+       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
+  }else if(email){
+      param = `/bo/user-list-new?page=0&pageSize=20&email=${email}${userFilter}&active=false`
+  }
     return this.userMsService.getMethodNew(param);
   }
 

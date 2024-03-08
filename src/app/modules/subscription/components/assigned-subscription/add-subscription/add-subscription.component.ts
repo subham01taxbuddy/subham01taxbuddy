@@ -158,7 +158,13 @@ export class AddSubscriptionComponent implements OnInit {
     }
 
     this.loading = true;
-    this.reportService.getMethod('/bo/future-year-subscription-exists?mobileNumber='+number).subscribe((response: any) => {
+    let futureParam
+    if (this.roles.includes('ROLE_FILER')) {
+      futureParam = `/bo/future-year-subscription-exists?userId=${userId}`
+    }else{
+      futureParam = `/bo/future-year-subscription-exists?mobileNumber=${number}`
+    }
+    this.reportService.getMethod(futureParam).subscribe((response: any) => {
       this.disableItrSubPlan = response.data.itrSubscriptionExists;
       this.loading = false;
     });
@@ -194,7 +200,13 @@ export class AddSubscriptionComponent implements OnInit {
 
   createSubscription() {
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
-      let param1 = '/bo/subscription/coupon-code-exists?mobileNumber='+this.data.mobileNo+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
+      let param1
+      if (this.roles.includes('ROLE_FILER')) {
+        param1 = '/bo/subscription/coupon-code-exists?userId='+this.data.userId+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
+      }else{
+        param1 = '/bo/subscription/coupon-code-exists?mobileNumber='+this.data.mobileNo+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
+      }
+
       this.loading = true;
       this.reportService.getMethod(param1).subscribe(
         (response: any) => {
@@ -209,7 +221,7 @@ export class AddSubscriptionComponent implements OnInit {
                     buttonValue: 'OK',
                     buttonName: 'Ok'
                   },
-                }); 
+                });
                 dialogRef.afterClosed().subscribe(() => {
                     this.dialogRef.close();
                     this.router.navigate(['subscription/assigned-subscription']);
@@ -217,8 +229,27 @@ export class AddSubscriptionComponent implements OnInit {
             } else {
               if (this.selectedPlanInfo.servicesType === 'ITR') {
                 // https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5&mobileNumber=1348972580
-                let param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}`
-          
+                const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+                let userFilter = ''
+                if (this.roles.includes('ROLE_LEADER')) {
+                  userFilter += `&leaderUserId=${loggedInSmeUserId}`;
+
+                }
+                if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
+                  userFilter += `&filerUserId=${loggedInSmeUserId}`;
+                }
+
+                if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
+                  userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
+                }
+
+                let param
+                if (this.roles.includes('ROLE_FILER')){
+                  param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&userId=${this.data.userId}${userFilter}`
+                }else{
+                  param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}${userFilter}`
+                }
+
                 this.loading = true;
                 this.reportService.getMethod(param).subscribe(
                   (response: any) => {
@@ -258,7 +289,7 @@ export class AddSubscriptionComponent implements OnInit {
                     this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
                   }
                 );
-          
+
               } else {
                 this.updateSubscription();
               }

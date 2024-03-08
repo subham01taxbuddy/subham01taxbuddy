@@ -89,6 +89,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   partnerType: any;
   selectedSearchUserId: any;
   assignedFilerId: number;
+  searchedEmail:any;
 
   constructor(
     private fb: FormBuilder,
@@ -283,6 +284,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     let emailFilter = '';
     if (this.searchBy?.email) {
+      if(this.roles.includes("ROLE_FILER")){
+        this.isAllowed = true;
+      }
       emailFilter = '&email=' + this.searchBy?.email;
     }
 
@@ -375,7 +379,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           if (response?.data?.error === 'User not found') {
             this._toastMessageService.alert(
               'error',
-              'No user with this mobile number found. ' +
+              'No user with this Mobile Number/Email found. ' +
                 'Please create user before creating subscription.'
             );
             this.isAllowed = false;
@@ -1156,10 +1160,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
+
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach((key) => {
         if (key === 'mobileNumber') {
           this.mobileNumber = this.searchBy[key];
+        }
+        if (key === 'email') {
+          this.searchedEmail = this.searchBy[key];
         }
       });
     } else {
@@ -1167,9 +1175,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
 
     //integrate new api to check active user
-    this.utilsService
-      .getActiveUsers(this.mobileNumber)
-      .subscribe((res: any) => {
+
+    if(this.roles.includes('ROLE_FILER')){
+      this.utilsService.getActiveUsers('',this.searchedEmail).subscribe((res:any) => {
         console.log(res);
         if (res.data) {
           if (res.data.content[0].active === false) {
@@ -1180,12 +1188,60 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             return;
           }
         } else {
-          const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-          if (this.roles.includes('ROLE_FILER')) {
+          this.createSubMiddle()
+        }
+      })
+    }else{
+      this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
+        console.log(res);
+        if (res.data) {
+          if (res.data.content[0].active === false) {
+            this._toastMessageService.alert(
+              'error',
+              'This customer is currently inactive, please activate customer first and then create subscription'
+            );
+            return;
+          }
+        } else {
+          this.createSubMiddle()
+        }
+      });
+    }
+
+
+  }
+
+  createSubMiddle(){
+    if (this.roles.includes('ROLE_FILER')) {
+      this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
+        console.log(res);
+          if (res.data) {
+            this.userId = res?.data?.content[0].userId;
+            this.assignedFilerId = this?.loggedInSme[0]?.userId;
+            this.openAddSubscriptionDialog();
+          }else {
+            this.utilsService.getFilerIdByMobile('', 'ITR',this.searchedEmail).subscribe((res: any) => {
+              console.log(res);
+              if (res.data) {
+                this.userId = res?.data?.content[0].userId;
+                this.assignedFilerId = this?.loggedInSme[0]?.userId;
+                this.openAddSubscriptionDialog();
+              } else {
+                this._toastMessageService.alert('error', res.message);
+              }
+            })
+          }
+      });
+    } else {
+      this.utilsService.getFilerIdByMobile(this.mobileNumber)
+        .subscribe((res: any) => {
+          console.log(res);
+          if (res.data) {
+            this.assignedFilerId = res?.data?.content[0].filerUserId;
+            this.userId = res?.data?.content[0].userId;
             this.openAddSubscriptionDialog();
           } else {
-            this.utilsService
-              .getFilerIdByMobile(this.mobileNumber)
+            this.utilsService.getFilerIdByMobile(this.mobileNumber, 'ITR')
               .subscribe((res: any) => {
                 console.log(res);
                 if (res.data) {
@@ -1193,24 +1249,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                   this.userId = res?.data?.content[0].userId;
                   this.openAddSubscriptionDialog();
                 } else {
-                  this.utilsService
-                    .getFilerIdByMobile(this.mobileNumber, 'ITR')
-                    .subscribe((res: any) => {
-                      console.log(res);
-                      if (res.data) {
-                        this.assignedFilerId =
-                          res?.data?.content[0].filerUserId;
-                        this.userId = res?.data?.content[0].userId;
-                        this.openAddSubscriptionDialog();
-                      } else {
-                        this._toastMessageService.alert('error', res.message);
-                      }
-                    });
+                  this._toastMessageService.alert('error', res.message);
                 }
               });
           }
-        }
-      });
+        });
+    }
   }
 
   openAddSubscriptionDialog() {
