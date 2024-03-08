@@ -922,6 +922,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
               (error) => {
                 this.loading = false;
                 this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+                this.getRefundRequestList(0);
               }
             );
               }

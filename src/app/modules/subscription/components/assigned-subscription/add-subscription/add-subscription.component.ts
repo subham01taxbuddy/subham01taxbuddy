@@ -209,7 +209,7 @@ export class AddSubscriptionComponent implements OnInit {
                     buttonValue: 'OK',
                     buttonName: 'Ok'
                   },
-                }); 
+                });
                 dialogRef.afterClosed().subscribe(() => {
                     this.dialogRef.close();
                     this.router.navigate(['subscription/assigned-subscription']);
@@ -218,7 +218,7 @@ export class AddSubscriptionComponent implements OnInit {
               if (this.selectedPlanInfo.servicesType === 'ITR') {
                 // https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5&mobileNumber=1348972580
                 let param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}`
-          
+
                 this.loading = true;
                 this.reportService.getMethod(param).subscribe(
                   (response: any) => {
@@ -258,7 +258,7 @@ export class AddSubscriptionComponent implements OnInit {
                     this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
                   }
                 );
-          
+
               } else {
                 this.updateSubscription();
               }
@@ -311,6 +311,7 @@ export class AddSubscriptionComponent implements OnInit {
                 'error',
                 this.utilService.showErrorMsg(error.error.status)
               );
+              this.dialogRef.close({ event: 'close', data: res });
             }
           );
         }

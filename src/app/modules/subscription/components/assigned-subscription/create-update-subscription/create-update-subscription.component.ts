@@ -1353,6 +1353,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               } else {
                 this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
               }
+              this.router.navigate(['/subscription/assigned-subscription'], {
+                queryParams: { fromEdit: true  },
+              })
             }
           );
         } else {
