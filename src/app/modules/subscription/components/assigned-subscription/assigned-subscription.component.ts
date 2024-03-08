@@ -1160,7 +1160,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
-
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach((key) => {
         if (key === 'mobileNumber') {
@@ -1176,7 +1175,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
     //integrate new api to check active user
 
-    if(this.roles.includes('ROLE_FILER')){
+    if(this.roles.includes('ROLE_FILER') && this.searchedEmail){
       this.utilsService.getActiveUsers('',this.searchedEmail).subscribe((res:any) => {
         console.log(res);
         if (res.data) {
@@ -1191,6 +1190,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.createSubMiddle()
         }
       })
+    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+      this.createSubMiddle()
     }else{
       this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
         console.log(res);
@@ -1212,7 +1213,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSubMiddle(){
-    if (this.roles.includes('ROLE_FILER')) {
+    if (this.roles.includes('ROLE_FILER') && this.searchedEmail) {
       this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
         console.log(res);
           if (res.data) {
@@ -1232,6 +1233,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             })
           }
       });
+    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+      this.userId = this.selectedSearchUserId;
+      this.assignedFilerId = this?.loggedInSme[0]?.userId;
+      this.openAddSubscriptionDialog();
     } else {
       this.utilsService.getFilerIdByMobile(this.mobileNumber)
         .subscribe((res: any) => {
