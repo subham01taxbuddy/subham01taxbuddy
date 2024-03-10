@@ -76,6 +76,7 @@ export interface ITR_JSON {
   exemptIncomes?: any[];
   jurisdictions?: Jurisdictions[];
   conditionsResStatus?: any;
+  conditionsNorStatus?: any;
   movableAsset?: MovableAsset[];
   immovableAsset?: Immovable[];
   bondsDeduction?: Deduction[];

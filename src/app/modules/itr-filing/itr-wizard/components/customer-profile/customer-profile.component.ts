@@ -39,6 +39,7 @@ import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 import { RequestManager } from '../../../../shared/services/request-manager';
+import {NorDetailsDialogComponent} from "../../../components/nor-details-dialog/nor-details-dialog.component";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -477,6 +478,7 @@ export class CustomerProfileComponent implements OnInit {
       if(this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT'){
         this.ITR_JSON.jurisdictions = this.jurisdictions;
         this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
+        this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
       }
 
       this.ITR_JSON.family = [
@@ -917,6 +919,7 @@ export class CustomerProfileComponent implements OnInit {
 
   jurisdictions: Jurisdictions[];
   conditionsResStatus: any;
+  conditionsNorStatus: any;
 
   onSelectResidential(status) {
     if (status === 'RESIDENT') {
@@ -947,15 +950,38 @@ export class CustomerProfileComponent implements OnInit {
           console.log('JUR:', result);
           this.jurisdictions = result.data.jurisdictions;
           this.conditionsResStatus = result.data.conditionsResStatus;
+          this.conditionsNorStatus = null;
         } else {
           this.customerProfileForm.controls['residentialStatus'].setValue(
             this.ITR_JSON.residentialStatus
           );
         }
       });
+    } else if (status === 'NON_ORDINARY') {
+      let disposable = this.matDialog.open(NorDetailsDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        disableClose: true,
+        // data: { residentialStatus: this.ITR_JSON.residentialStatus }
+      });
+
+      disposable.afterClosed().subscribe((result) => {
+        console.info('Dialog Close result', result);
+        if (result.success) {
+          console.log('JUR:', result);
+          this.jurisdictions = [];
+          this.conditionsResStatus = null;
+          this.conditionsNorStatus = result.data.conditionsNorStatus;
+        } else {
+          this.customerProfileForm.controls['residentialStatus'].setValue(
+              this.ITR_JSON.residentialStatus
+          );
+        }
+      });
     } else {
       this.jurisdictions = [];
       this.conditionsResStatus = null;
+      this.conditionsNorStatus = null;
     }
 
     //once user residential status changes, update the same in cg object
