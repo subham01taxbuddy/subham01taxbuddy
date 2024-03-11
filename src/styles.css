@@ -2986,6 +2986,26 @@ main {
   transform: rotate(-90deg);
 }
 
+.open-pre-button {
+  border-radius: 4px;
+  background: #BDD5F0 !important;
+  color: white;
+  padding: 5px 0px 5px 0px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 134px;
+  right: -65px;
+  width: 150px;
+  height: 55px;
+  text-orientation: sideways-right;
+  color: #124A5B;
+  font-weight: 700;
+  transform: rotate(-90deg);
+}
+
+
 .icoSum {
   width: 15px;
   transform: rotate(-90deg);
@@ -3004,6 +3024,13 @@ main {
   top: -30px;
   left: 10px;
 }
+
+
+/* .txPrevAln {
+  position: relative;
+  top: -30px;
+  left: 10px;
+} */
 
 /* Right Side Summary Popup ends */
 
