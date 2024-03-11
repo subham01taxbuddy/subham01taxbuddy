@@ -243,7 +243,7 @@ export class NavbarComponent implements DoCheck {
     const smeEmailId = loggedInSmeInfo[0].email;
     const leaderId = loggedInSmeInfo[0].userId;
     const leaderName = loggedInSmeInfo[0].name;
-    const link = `https://uat-itr.taxbuddy.com/partner-onboarding?interviewedBy=${leaderId}&name=${leaderName}`;
+    const link = `https://uat-itr.taxbuddy.com/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;
 
     const textarea = document.createElement('textarea');
     textarea.value = link;
