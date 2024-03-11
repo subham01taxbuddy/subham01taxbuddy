@@ -332,19 +332,19 @@
               <div class="row col-8">
                 <section class="example-section add-id">
                   <mat-radio-group [formControl]="additionalIdsRequired ">
-                    <mat-radio-button value="yes">Yes</mat-radio-button>
-                    <mat-radio-button value="no">No</mat-radio-button>
+                    <mat-radio-button [value]="true">Yes</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
                 </section>
               </div>
             </div>
 
           </div>
-          <div class="col-sm-6" *ngIf="additionalIdsRequired.value === 'yes'">
+          <div class="col-sm-6" *ngIf="additionalIdsRequired.value">
             <mat-label> No of additional Id's required </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
-                class="input-field" maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
+                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true" readonly />
             </mat-form-field>
           </div>
         </div>

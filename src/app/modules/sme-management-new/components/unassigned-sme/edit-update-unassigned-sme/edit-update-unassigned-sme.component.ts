@@ -85,9 +85,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj); // all
     this.setFormValues(this.smeObj);
+    this.setPartnerDetails(this.smeObj);
     console.log('sme obj', this.smeObj);
     const userId = this.smeObj.userId;
-    this.getPartnerDetails();
+    // this.getPartnerDetails();
 
   }
 
@@ -281,6 +282,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
+    this.additionalIdsRequired.setValue(boPartnersInfo?.additionalIdsRequired);
+    this.additionalIdsCount.setValue(boPartnersInfo?.additionalIdsCount || 0);
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.mobileNumber);
     if (!this.name.value) this.name.setValue(boPartnersInfo?.name);
     if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo?.emailAddress);
@@ -290,6 +293,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.setLanguageCheckboxes(languageProficiencies);
     } else if (Array.isArray(boPartnersInfo?.languageProficiency)) {
       this.setLanguageCheckboxes(boPartnersInfo.languageProficiency);
+    }else{
+      this.setLanguageCheckboxes(boPartnersInfo.languages);
     }
 
     if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo?.referredBy);
