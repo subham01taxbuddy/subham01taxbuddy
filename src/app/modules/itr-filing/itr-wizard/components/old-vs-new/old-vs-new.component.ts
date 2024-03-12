@@ -1592,25 +1592,25 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Income from Salary',
                 old: this.oldSummaryIncome?.taxSummary.salary,
                 new: this.newSummaryIncome?.taxSummary.salary,
-                py: this.pySummary?.taxSummary.salary,
+                py: this.pySummary ? this.pySummary.taxSummary.salary : 0,
               },
               {
                 label: 'Income from House Property',
                 old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
                 new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
-                py: this.pySummary?.taxSummary.housePropertyIncome,
+                py: this.pySummary ? this.pySummary.taxSummary.housePropertyIncome : 0,
               },
               {
                 label: 'Income from Business and Profession',
                 old: this.getCrypto(this.oldSummaryIncome, 'business'),
                 new: this.getCrypto(this.newSummaryIncome, 'business'),
-                py: this.getCrypto(this.pySummary, 'business'),
+                py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
               },
               {
                 label: 'Income from Capital Gains',
                 old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
                 new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
-                py: this.getCrypto(this.pySummary, 'capitalGains'),
+                py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
               },
               // {
               //   label: 'Income from Crypto',
@@ -1623,14 +1623,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
-                py: this.pySummary?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
               },
               {
                 label: 'Total Headwise Income',
                 old: this.oldSummaryIncome?.taxSummary.totalIncome,
                 new: this.newSummaryIncome?.taxSummary.totalIncome,
-                py: this.pySummary?.taxSummary.totalIncome,
+                py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
               },
               {
                 label: 'CYLA',
@@ -1640,9 +1640,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 new:
                   this.newSummaryIncome?.taxSummary.currentYearLossIFHP +
                   this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-                py:
+                py: this.pySummary ?
                   this.pySummary?.taxSummary.currentYearLossIFHP +
-                  this.pySummary?.taxSummary.currentYearIFBFSetOff,
+                  this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
               },
               {
                 label: 'BFLA',
@@ -1652,15 +1652,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 new: Math.abs(
                   this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
                 ),
-                py: Math.abs(
-                  this.pySummary?.taxSummary.totalBroughtForwordSetOff
-                ),
+                py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
               },
               {
                 label: 'Gross Total Income',
                 old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
                 new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-                py: this.pySummary?.taxSummary.grossTotalIncome,
+                py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
               },
               {
                 label: 'Taxable Special Rate Income',
@@ -1672,7 +1670,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Deduction',
                 old: this.oldSummaryIncome?.taxSummary.totalDeduction,
                 new: this.newSummaryIncome?.taxSummary.totalDeduction,
-                py: this.pySummary?.taxSummary.totalDeduction,
+                py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
               },
               {
                 label: 'Total Income',
@@ -1680,8 +1678,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   .totalIncomeAfterDeductionIncludeSR,
                 new: this.newSummaryIncome?.taxSummary
                   .totalIncomeAfterDeductionIncludeSR,
-                py: this.pySummary?.taxSummary
-                  .totalIncomeAfterDeductionIncludeSR,
+                py: this.pySummary ? this.pySummary?.taxSummary
+                  .totalIncomeAfterDeductionIncludeSR : 0,
               },
               {
                 label: 'CFL',
@@ -1691,33 +1689,31 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 new: getCFL(
                   this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
                 ),
-                py: getCFL(
-                  this.pySummary?.totalLossCarriedForwardedToFutureYears
-                ),
+                py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
               },
               {
                 label: 'Gross Tax Liability',
                 old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
                 new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-                py: this.pySummary?.taxSummary.grossTaxLiability,
+                py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
               },
               {
                 label: 'Interest and Fees - 234 A/B/C/F',
                 old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
                 new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-                py: this.pySummary?.taxSummary.interestAndFeesPayable,
+                py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
               },
               {
                 label: 'Aggregate Liability',
                 old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
                 new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-                py: this.pySummary?.taxSummary.agrigateLiability,
+                py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
               },
               {
                 label: 'Tax Paid',
                 old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
                 new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-                py: this.pySummary?.taxSummary.totalTaxesPaid,
+                py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
               },
               {
                 label: 'Tax Payable / (Refund)',
@@ -1729,10 +1725,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   this.newSummaryIncome?.taxSummary?.taxpayable !== 0
                     ? this.newSummaryIncome?.taxSummary?.taxpayable
                     : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
-                py:
-                  this.pySummary?.taxSummary?.taxpayable !== 0
-                    ? this.pySummary?.taxSummary?.taxpayable
-                    : '(' + this.pySummary?.taxSummary?.taxRefund + ')',
+                py: this.pySummary ?
+                  (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
+                    : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
               },
             ];
 
@@ -1770,25 +1765,25 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Salary',
               old: this.oldSummaryIncome?.taxSummary.salary,
               new: this.newSummaryIncome?.taxSummary.salary,
-              py: this.pySummary?.taxSummary.salary,
+              py: this.pySummary ? this.pySummary?.taxSummary.salary : 0,
             },
             {
               label: 'Income from House Property',
               old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
               new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
-              py: this.pySummary?.taxSummary.housePropertyIncome,
+              py: this.pySummary ? this.pySummary?.taxSummary.housePropertyIncome : 0,
             },
             {
               label: 'Income from Business and Profession',
               old: this.getCrypto(this.oldSummaryIncome, 'business'),
               new: this.getCrypto(this.newSummaryIncome, 'business'),
-              py: this.getCrypto(this.pySummary, 'business'),
+              py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
             },
             {
               label: 'Income from Capital Gains',
               old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
               new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
-              py: this.getCrypto(this.pySummary, 'capitalGains'),
+              py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
             },
             //  {
             //   label: 'Income from Crypto',
@@ -1801,14 +1796,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
               new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
                 .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
-              py: this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+              py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
             },
             {
               label: 'Total Headwise Income',
               old: this.oldSummaryIncome?.taxSummary.totalIncome,
               new: this.newSummaryIncome?.taxSummary.totalIncome,
-              py: this.pySummary?.taxSummary.totalIncome,
+              py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
             },
             {
               label: 'CYLA',
@@ -1818,9 +1813,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               new:
                 this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
                 this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-              py:
+              py: this.pySummary ?
                 this.pySummary?.taxSummary.currentYearLossIFHP +
-                this.pySummary?.taxSummary.currentYearIFBFSetOff,
+                this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
             },
             {
               label: 'BFLA',
@@ -1830,81 +1825,67 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               new: Math.abs(
                 this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
               ),
-              py: Math.abs(
-                this.pySummary?.taxSummary.totalBroughtForwordSetOff
-              ),
+              py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
             },
             {
               label: 'Gross Total Income',
               old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
               new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-              py: this.pySummary?.taxSummary.grossTotalIncome,
+              py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
             },
             {
               label: 'Deduction',
               old: this.oldSummaryIncome?.taxSummary.totalDeduction,
               new: this.newSummaryIncome?.taxSummary.totalDeduction,
-              py: this.pySummary?.taxSummary.totalDeduction,
+              py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
             },
             {
               label: 'Total Income',
-              old: this.oldSummaryIncome?.taxSummary
-                .totalIncomeAfterDeductionIncludeSR,
-              new: this.newSummaryIncome?.taxSummary
-                .totalIncomeAfterDeductionIncludeSR,
-              py: this.pySummary?.taxSummary
-                .totalIncomeAfterDeductionIncludeSR,
+              old: this.oldSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+              new: this.newSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+              py: this.pySummary ? this.pySummary?.taxSummary.totalIncomeAfterDeductionIncludeSR : 0,
             },
             {
               label: 'CFL',
-              old: getCFL(
-                this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears
-              ),
-              new: getCFL(
-                this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
-              ),
-              py: getCFL(
-                this.pySummary?.totalLossCarriedForwardedToFutureYears
-              ),
+              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+              py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
             },
             {
               label: 'Gross Tax Liability',
               old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
               new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-              py: this.pySummary?.taxSummary.grossTaxLiability,
+              py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
             },
             {
               label: 'Interest and Fees - 234 A/B/C/F',
               old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
               new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-              py: this.pySummary?.taxSummary.interestAndFeesPayable,
+              py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
             },
             {
               label: 'Aggregate Liability',
               old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
               new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-              py: this.pySummary?.taxSummary.agrigateLiability,
+              py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
             },
             {
               label: 'Tax Paid',
               old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
               new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-              py: this.pySummary?.taxSummary.totalTaxesPaid,
+              py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
             },
             {
               label: 'Tax Payable / (Refund)',
               old:
-                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0
-                  ? this.oldSummaryIncome?.taxSummary.taxpayable
+                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
                   : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
               new:
-                this.newSummaryIncome?.taxSummary?.taxpayable !== 0
-                  ? this.newSummaryIncome?.taxSummary?.taxpayable
+                this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
                   : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
-              py:
-                this.pySummary?.taxSummary?.taxpayable !== 0
-                  ? this.pySummary?.taxSummary?.taxpayable
-                  : '(' + this.pySummary?.taxSummary?.taxRefund + ')',
+              py: this.pySummary ?
+                (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
+                  : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
             },
           ];
 

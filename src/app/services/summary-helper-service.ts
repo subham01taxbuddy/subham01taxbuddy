@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ItrMsService } from "./itr-ms.service";
 import { AppConstants } from "../modules/shared/constants";
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SummaryHelperService {
+    isSummaryOpen = new Subject<boolean>();
 
     summary: any;
     pySummary: any;
@@ -45,4 +47,10 @@ export class SummaryHelperService {
             });
         });
     }
+
+
+    open() {
+        this.isSummaryOpen.next(true);
+    }
+
 }
