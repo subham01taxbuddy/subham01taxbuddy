@@ -387,6 +387,17 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function (params: any) {
+          if (params?.data?.partnerType) {
+            let referredBy = params.data?.partnerType;
+            return referredBy;
+          } else if( params.data?.partnerDetails?.partnerType) {
+            let referredBy = params.data?.partnerDetails?.partnerType;
+            return referredBy;
+          }else{
+            return'-';
+          }
+        },
       },
       {
         headerName: 'Referred Person',

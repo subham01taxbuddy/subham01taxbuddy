@@ -258,6 +258,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
 
   setFormValues(data) {
+    debugger
     this.mobileNumber.setValue(data.mobileNumber);
     // this.itrTypes.setValue(data.itrTypes);
     // this.itrTypesData = this.itrTypes.value;
@@ -271,7 +272,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         return item.name;
       });
 
-      this.interviewedBy.setValue(filer)
+      this.interviewedBy.setValue(filer[0])
 
    }
   }
@@ -282,27 +283,27 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
-    this.additionalIdsRequired.setValue(boPartnersInfo?.additionalIdsRequired);
-    this.additionalIdsCount.setValue(boPartnersInfo?.additionalIdsCount || 0);
-    if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.mobileNumber);
-    if (!this.name.value) this.name.setValue(boPartnersInfo?.name);
-    if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo?.emailAddress);
+    this.additionalIdsRequired.setValue(boPartnersInfo?.partnerDetails?.additionalIdsRequired);
+    this.additionalIdsCount.setValue(boPartnersInfo?.partnerDetails?.additionalIdsCount || 0);
+    if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.partnerDetails?.mobileNumber);
+    if (!this.name.value) this.name.setValue(boPartnersInfo?.partnerDetails?.name);
+    if (!this.smeOriginalEmail.value) this.smeOriginalEmail.setValue(boPartnersInfo?.partnerDetails?.emailAddress);
 
     if (typeof boPartnersInfo?.languageProficiency === 'string') {
-      const languageProficiencies = boPartnersInfo.languageProficiency.split(',');
+      const languageProficiencies = boPartnersInfo.partnerDetails?.languageProficiency.split(',');
       this.setLanguageCheckboxes(languageProficiencies);
-    } else if (Array.isArray(boPartnersInfo?.languageProficiency)) {
-      this.setLanguageCheckboxes(boPartnersInfo.languageProficiency);
+    } else if (Array.isArray(boPartnersInfo?.partnerDetails?.languageProficiency)) {
+      this.setLanguageCheckboxes(boPartnersInfo.partnerDetails?.languageProficiency);
     }else{
       this.setLanguageCheckboxes(boPartnersInfo.languages);
     }
 
-    if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo?.referredBy);
-    if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo?.incomeTaxBasic);
-    if (!this.qualification.value) this.qualification.setValue(boPartnersInfo?.qualification);
-    if (!this.state.value) this.state.setValue(boPartnersInfo?.state);
-    if (!this.city.value) this.city.setValue(boPartnersInfo?.city);
-    if (!this.special.value) this.special.setValue(boPartnersInfo?.incomeTaxSpecial);
+    if (!this.referredBy.value) this.referredBy.setValue(boPartnersInfo?.partnerDetails?.referredBy);
+    if (!this.itrTypes.value) this.itrTypes.setValue(boPartnersInfo?.partnerDetails?.incomeTaxBasic);
+    if (!this.qualification.value) this.qualification.setValue(boPartnersInfo?.partnerDetails?.qualification);
+    if (!this.state.value) this.state.setValue(boPartnersInfo?.partnerDetails?.state);
+    if (!this.city.value) this.city.setValue(boPartnersInfo?.partnerDetails?.city);
+    if (!this.special.value) this.special.setValue(boPartnersInfo?.partnerDetails?.incomeTaxSpecial);
 
     if (boPartnersInfo?.roles?.includes('ROLE_FILER')) {
       if (boPartnersInfo?.partnerType === "INDIVIDUAL") {
@@ -314,27 +315,27 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       }
     }
 
-    if (boPartnersInfo?.bankDetails) {
-      this.accountNumber.setValue(boPartnersInfo?.bankDetails?.accountNumber);
-      this.ifsCode.setValue(boPartnersInfo?.bankDetails?.ifsCode);
-      this.accountType.setValue(boPartnersInfo?.bankDetails?.accountType);
+    if (boPartnersInfo?.partnerDetails?.bankDetails) {
+      this.accountNumber.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.accountNumber);
+      this.ifsCode.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.ifsCode);
+      this.accountType.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.accountType);
     }
 
-    if (boPartnersInfo?.interviewedBy) {
-      const allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-      const filer = allFilerList.filter(item => item.userId === boPartnersInfo?.interviewedBy)
-                                .map(item => item.name);
-      this.interviewedBy.setValue(filer);
-    }
+    // if (boPartnersInfo?.interviewedBy) {
+    //   const allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    //   const filer = allFilerList.filter(item => item.userId === boPartnersInfo?.interviewedBy)
+    //                             .map(item => item.name);
+    //   this.interviewedBy.setValue(filer);
+    // }
 
     this.urls = {
-      "signedNDAUrl": boPartnersInfo?.signedNDAUrl,
-      "certificateOfPracticeUrl": boPartnersInfo?.certificateOfPracticeUrl,
-      "aadhaarUrl": boPartnersInfo?.aadhaarUrl,
-      "panUrl": boPartnersInfo?.panUrl,
-      "passbookOrCancelledChequeUrl": boPartnersInfo?.passbookOrCancelledChequeUrl,
-      "cvUrl": boPartnersInfo?.cvUrl,
-      "gstin": boPartnersInfo?.gstin
+      "signedNDAUrl": boPartnersInfo?.partnerDetails?.signedNDAUrl,
+      "certificateOfPracticeUrl": boPartnersInfo?.partnerDetails?.certificateOfPracticeUrl,
+      "aadhaarUrl": boPartnersInfo?.partnerDetails?.aadhaarUrl,
+      "panUrl": boPartnersInfo?.partnerDetails?.panUrl,
+      "passbookOrCancelledChequeUrl": boPartnersInfo?.partnerDetails?.passbookOrCancelledChequeUrl,
+      "cvUrl": boPartnersInfo?.partnerDetails?.cvUrl,
+      "gstin": boPartnersInfo?.partnerDetails?.gstin
     };
 
     this.languageForm.controls['English'].enable();
@@ -377,7 +378,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     additionalIdsRequired:new FormControl(''),
   });
   get additionalIdsRequired() {
-    return this.smeFormGroup.controls['interviewedBy'] as FormControl;
+    return this.smeFormGroup.controls['additionalIdsRequired'] as FormControl;
   }
   get interviewedBy() {
     return this.smeFormGroup.controls['interviewedBy'] as FormControl;
