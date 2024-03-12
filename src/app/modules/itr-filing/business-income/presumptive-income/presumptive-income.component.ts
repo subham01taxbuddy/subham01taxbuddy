@@ -13,8 +13,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 })
 export class PresumptiveIncomeComponent
   extends WizardNavigation
-  implements OnInit
-{
+  implements OnInit {
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
@@ -61,13 +60,8 @@ export class PresumptiveIncomeComponent
   subscription: Subscription;
 
   subscribeToEmitter(componentRef) {
-    //this may not be needed for us
-    // if (!(componentRef instanceof ExemptIncomeComponent)){
-    //   return;
-    // }
     const child: WizardNavigation = componentRef;
     child.saveAndNext.subscribe(() => {
-      //this.gotoSources();
     });
   }
 

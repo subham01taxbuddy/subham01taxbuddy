@@ -8,7 +8,6 @@
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
                 <div class="accordion-item">
-                  <!-- start grid table -->
                   <h2 class="accordion-header" id="heading3">
                     <button class="accordion-button" data-bs-target="#collapse13" data-bs-toggle="collapse"
                       type="button">
@@ -35,8 +34,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- //end table -->
-
                   <div class="accordion-item mt-3">
                     <h2 class="accordion-header" id="heading4">
                       <button id="accordBtn" type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -45,31 +42,7 @@
                     <div id="collapse14" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body">
                         <form [formGroup]="selectedFormGroup">
-                          <!-- <div class="pre-box1">
-                            <div class="hdByr-L">
-                              &nbsp; </div>
-                            <div class="hdByr-R">
-                              <div class="Bx4">
-                                <div class="Bx4L">
-                                  <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
-                                    <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                  </button>
-                                </div>
-                                <div class="Bx4R">
-                                  <button type="button" class="addAno" (click)="addSpecIncomeForm()"> + Add Another
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div> -->
-                          <!-- <div class="gray_container" formArrayName="specIncomesArray"> -->
-                          <!-- <div *ngFor="let income of getIncomeArray | paginate : config;let i = index"
-                              [formGroupName]="fieldGlobalIndex(i)"> -->
                           <div class="div-6 mb-20">
-                            <!-- <div class="form-field">
-                                  <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-                                  </mat-checkbox>
-                                </div> -->
                             <div class="form-field">
                               <div><span class="normal_text">Broker Name</span>
                               </div>
@@ -144,7 +117,6 @@
                               </mat-form-field>
                             </div>
                           </div>
-                          <!-- </div> -->
                           <div class="out-box">
                             <div class="box-left">
                               <button (click)="clearForm()" class="btn btn__white">Cancel</button>
@@ -155,23 +127,11 @@
                               </button>
                             </div>
                           </div>
-                          <!-- </div> -->
                         </form>
-                        <!-- <div class="row spsTp bdrTp">
-                          <div class="col-sm-6 txt-center">
-                            <table>
-                              <tr *ngFor="let item of getIncomeArray | paginate : config"></tr>
-                            </table>
-                            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-                          </div>
-                        </div> -->
-
                       </div>
                     </div>
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>

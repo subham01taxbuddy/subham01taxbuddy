@@ -23,10 +23,6 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
 
   ngOnInit(): void { }
 
-  reloadData() {
-    //to be done
-  }
-
   saveAll() {
     let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
     let specSaved = this.SpeculativeIncomeComponent.onContinue();
@@ -62,13 +58,8 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   subscription: Subscription;
 
   subscribeToEmitter(componentRef) {
-    //this may not be needed for us
-    // if (!(componentRef instanceof ExemptIncomeComponent)){
-    //   return;
-    // }
     const child: WizardNavigation = componentRef;
     child.saveAndNext.subscribe(() => {
-      //this.gotoSources();
     });
   }
 

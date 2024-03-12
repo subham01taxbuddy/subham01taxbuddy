@@ -1,24 +1,24 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="page-wrapper">
-<main>
-<div class="spc-blw ">
-  <mat-accordion class="headers-align">
-    <app-presumptive-business-income #PresumptiveBusinessIncomeComponentRef
-      (presBusinessSaved)="onPresBusinessSaved($event)"></app-presumptive-business-income>
-    <app-presumptive-professional-income #PresumptiveProfessinalIncomeComponentRef
-      (presProfessionalSaved)="onPresProfessionalSaved($event)"></app-presumptive-professional-income>
-  </mat-accordion>
+  <main>
+    <div class="spc-blw ">
+      <mat-accordion class="headers-align">
+        <app-presumptive-business-income #PresumptiveBusinessIncomeComponentRef
+          (presBusinessSaved)="onPresBusinessSaved($event)"></app-presumptive-business-income>
+        <app-presumptive-professional-income #PresumptiveProfessinalIncomeComponentRef
+          (presProfessionalSaved)="onPresProfessionalSaved($event)"></app-presumptive-professional-income>
+      </mat-accordion>
 
-  <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn" (click)="goBack()">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold">&nbsp;Back to Source Page</span>
-    </button>
-    <button class="saveBtnIn" (click)="saveAll()">
-      <span class="font-semibold">Save All</span>
-    </button>
-  </div>
-</div>
-</main>
-<app-side-summary-panel type="presumptiveIncome"></app-side-summary-panel>
+      <div class="flex justify-between p-[30px] back-foot">
+        <button class="lgtBtn" (click)="goBack()">
+          <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+          <span class="font-semibold">&nbsp;Back to Source Page</span>
+        </button>
+        <button class="saveBtnIn" (click)="saveAll()">
+          <span class="font-semibold">Save All</span>
+        </button>
+      </div>
+    </div>
+  </main>
+  <app-side-summary-panel type="presumptiveIncome"></app-side-summary-panel>
 </div>
