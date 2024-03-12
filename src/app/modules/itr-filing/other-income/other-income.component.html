@@ -20,7 +20,7 @@
                     </button>
 
                   </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseTwo" class="accordion-collapse collapse show">
                     <div class="accordion__item-body" formArrayName="otherIncomes">
                       <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
                         [formGroupName]="i">
@@ -64,14 +64,14 @@
                 </div>
 
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
+                  <h2 class="accordion-header" id="headingOne">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree">Dividend Income
+                      data-bs-target="#collapseOne">Dividend Income
                       <input type="number" disabled class="form-control inpClr2" [value]="getTotal()" id="exampleInputEmail1"
                         aria-describedby="emailHelp" placeholder="₹0">
                     </button>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseOne" class="accordion-collapse collapse show">
                     <div class="accordion__item-body" formGroupName="dividendIncomes">
                       <div class="div-6">
                         <div class="form-field">
@@ -116,15 +116,15 @@
                   </div>
                 </div>
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
+                  <h2 class="accordion-header" id="headingTwo">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree">Income from Gift
+                      data-bs-target="#collapseTwo">Income from Gift
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalGiftIncome()}}">
                     </button>
                     <div class="note2">Note for Gift- Gift received from Relative will be excluded from the total as it's not part
                       of taxable income.</div>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseTwo" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <table class="table table-bordered" style="width: 100%">
                         <thead style="background: #eaeaea">
@@ -226,13 +226,135 @@
                 </div>
 
                 <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading4">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse4">Winning from lotteries, crossword puzzles etc. chargeable u/s 115BB
+                      <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBTotal}}">
+                    </button>
+                  </h2>
+                <div id="collapse4" class="accordion-collapse collapse show">
+                <div class="accordion__item-body" formGroupName="winningsUS115BB">
+                    <div class="container px-4">
+                    <div class="row">
+                      <div class="col p-2">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">Upto 15 June
+                            </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    type="number"
+                                    matInput
+                                    placeholder="Upto 15 June 2022"
+                                    name="quarter1"
+                                    formControlName="quarter1"
+                                    maxlength="125"
+                                    (mousedown)="onClickRemoveZero('quarter1')"
+                                    (blur)="onBlurAddZero('quarter1')"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col p-2">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">16th June- 15th Sep
+                            </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    type="number"
+                                    matInput
+                                    placeholder="16th June 2022 - 15th Sep 2022"
+                                    name="quarter2[i]"
+                                    formControlName="quarter2"
+                                    maxlength="125"
+                                    (mousedown)="onClickRemoveZero('quarter2')"
+                                    (blur)="onBlurAddZero('quarter2')"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col p-2">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">
+                              16th Sep- 15th Dec
+                            </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    type="number"
+                                    matInput
+                                    placeholder="16th Sep 2022 - 15th Dec 2022"
+                                    name="quarter3[i]"
+                                    formControlName="quarter3"
+                                    maxlength="125"
+                                    (mousedown)="onClickRemoveZero('quarter3')"
+                                    (blur)="onBlurAddZero('quarter3')"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      </div>
+                      <div class="row">
+                      <div class="col p-2">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">16th Dec- 15th Mar
+                            </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    type="number"
+                                    matInput
+                                    placeholder="16th Dec 2022 - 15th Mar 2023"
+                                    name="quarter4[i]"
+                                    formControlName="quarter4"
+                                    maxlength="125"
+                                    (mousedown)="onClickRemoveZero('quarter4')"
+                                    (blur)="onBlurAddZero('quarter4')"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col p-2">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">16th Mar- 31th Mar
+                            </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    type="number"
+                                    matInput
+                                    placeholder="16th Mar 2023- 31th Mar 2023"
+                                    name="quarter5[i]"
+                                    formControlName="quarter5"
+                                    maxlength="125"
+                                    (mousedown)="onClickRemoveZero('quarter5')"
+                                    (blur)="onBlurAddZero('quarter5')"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              </div>
+                <div class="accordion-item">
                   <h2 class="accordion-header" id="headingThree">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
                       data-bs-target="#collapseThree">Any Other Income
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalAnyOtherIncome()}}">
                     </button>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseThree" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <div class="" formArrayName="anyOtherIncomes">
                         <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"
@@ -278,12 +400,9 @@
                           </div>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
-
-              </div>
             </form>
 
             <div class="out-box">

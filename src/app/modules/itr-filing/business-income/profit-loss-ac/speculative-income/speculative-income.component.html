@@ -8,115 +8,170 @@
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="heading4">
-                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse4">Speculative Income</button>
+                  <!-- start grid table -->
+                  <h2 class="accordion-header" id="heading3">
+                    <button class="accordion-button" data-bs-target="#collapse13" data-bs-toggle="collapse"
+                      type="button">
+                      Speculative Income</button>
                   </h2>
-                  <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div class="accordion-collapse collapse show" id="collapse13">
                     <div class="accordion__item-body">
-                      <form [formGroup]="specIncomeForm">
-                        <div class="pre-box1">
-                          <div class="hdByr-L">
-                            &nbsp; </div>
-                          <div class="hdByr-R">
-                            <div class="Bx4">
-                              <div class="Bx4L">
-                                <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
-                                  <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                </button>
-                              </div>
-                              <div class="Bx4R">
-                                <button type="button" class="addAno" (click)="addSpecIncomeForm()"> + Add Another
-                                </button>
-                              </div>
+                      <div class="table-responsive" style="overflow-x: scroll;">
+                        <div>
+                          <div class="col-sm-12">
+                            <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                              class="newAG ag-theme-balham topSps">
+                            </ag-grid-angular>
+                          </div>
+                          <div class="row col-sm-12">
+                            <div class="col-sm-6">
+                              <button (click)="deleteArray()" [disabled]="!specSelected()" class="delete-btn"
+                                type="submit">
+                                <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                              </button>
                             </div>
                           </div>
-                        </div>
-                        <div class="gray_container" formArrayName="specIncomesArray">
-                          <div *ngFor="let income of getIncomeArray | paginate : config;let i = index"
-                            [formGroupName]="fieldGlobalIndex(i)">
-                            <div class="col-sm-1 spsTp">
-                              <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                              </mat-checkbox>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Turnover from Speculative activity</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline">
-                                  <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput
-                                    name="turnOver[i]" digitsOnly class="input-field" trim
-                                    (change)="calculateNetIncome(fieldGlobalIndex(i))" />
-                                </mat-form-field>
-                                <mat-error
-                                  *ngIf="income.get('expenditure').value>0 && income.get('turnOver').hasError('required')">
-                                  Please enter the amount
-                                </mat-error>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Gross Profit</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline">
-                                  <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
-                                    name="grossProfit[i]" class="input-field" type="number" trim
-                                    (change)="calculateNetIncome(fieldGlobalIndex(i))" />
-                                </mat-form-field>
-                                <mat-error
-                                  *ngIf="(income.get('expenditure').value>0 && income.get('grossProfit').hasError('required'))">
-                                  Please enter the amount
-                                </mat-error>
-                                <mat-error *ngIf="income.get('grossProfit').hasError('max')">
-                                  Gross Profit should not be greater than turnover.
-                                </mat-error>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Expenditure</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline">
-                                  <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
-                                    name="expenditure[i]" class="input-field" required trim
-                                    (change)="calculateNetIncome(fieldGlobalIndex(i))" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Net Income from Speculative activity</span>
-                                </div>
-                                <div><span class="normal_text">Gross Profit - Expenditure</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline">
-                                  <input formControlName="netIncome" matInput readonly name="netIncome[i]" required
-                                    class="input-field" maxlength="14" digitsOnly />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                      <div class="row spsTp bdrTp">
-                        <div class="col-sm-6 txt-center">
-                          <table>
-                            <tr *ngFor="let item of getIncomeArray | paginate : config"></tr>
-                          </table>
-                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <!-- //end table -->
+
+                  <div class="accordion-item mt-3">
+                    <h2 class="accordion-header" id="heading4">
+                      <button id="accordBtn" type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse14">Add / Edit Speculative Income Details</button>
+                    </h2>
+                    <div id="collapse14" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="accordion__item-body">
+                        <form [formGroup]="selectedFormGroup">
+                          <!-- <div class="pre-box1">
+                            <div class="hdByr-L">
+                              &nbsp; </div>
+                            <div class="hdByr-R">
+                              <div class="Bx4">
+                                <div class="Bx4L">
+                                  <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
+                                    <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+                                <div class="Bx4R">
+                                  <button type="button" class="addAno" (click)="addSpecIncomeForm()"> + Add Another
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                          <!-- <div class="gray_container" formArrayName="specIncomesArray"> -->
+                          <!-- <div *ngFor="let income of getIncomeArray | paginate : config;let i = index"
+                              [formGroupName]="fieldGlobalIndex(i)"> -->
+                          <div class="div-6 mb-20">
+                            <!-- <div class="form-field">
+                                  <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                                  </mat-checkbox>
+                                </div> -->
+                            <div class="form-field">
+                              <div><span class="normal_text">Broker Name</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input formControlName="brokerName" matInput [disabled]="true" name="brokerName[i]"
+                                  class="col-sm-1" />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6 mb-20">
+                            <div class="form-field">
+                              <div><span class="normal_text">Turnover from Speculative activity</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput name="turnOver"
+                                  digitsOnly class="input-field" trim (change)="calculateNetIncome()" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="selectedFormGroup.controls['expenditure'].value>0 && selectedFormGroup.controls['turnOver'].hasError('required')">
+                                Please enter the amount
+                              </mat-error>
+                            </div>
+                          </div>
+                          <div class="div-6 mb-20">
+                            <div class="form-field">
+                              <div><span class="normal_text">Gross Profit</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
+                                  name="grossProfit" class="input-field" type="number" trim
+                                  (change)="calculateNetIncome()" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="(selectedFormGroup.controls['expenditure'].value>0 && selectedFormGroup.controls['grossProfit'].hasError('required'))">
+                                Please enter the amount
+                              </mat-error>
+                              <mat-error *ngIf="selectedFormGroup.controls['grossProfit'].hasError('max')">
+                                Gross Profit should not be greater than turnover.
+                              </mat-error>
+                            </div>
+                          </div>
+                          <div class="div-6 mb-20">
+                            <div class="form-field">
+                              <div><span class="normal_text">Expenditure</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
+                                  name="expenditure" class="input-field" required trim
+                                  (change)="calculateNetIncome()" />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6 mb-20">
+                            <div class="form-field">
+                              <div><span class="normal_text">Net Income from Speculative activity</span>
+                              </div>
+                              <div><span class="normal_text">Gross Profit - Expenditure</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input formControlName="netIncome" matInput readonly name="netIncome[i]" required
+                                  class="input-field" maxlength="14" digitsOnly />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <!-- </div> -->
+                          <div class="out-box">
+                            <div class="box-left">
+                              <button (click)="clearForm()" class="btn btn__white">Cancel</button>
+                            </div>
+                            <div class="box-right">
+                              <button (click)="saveManualEntry()" class="btn btn__primary">Save
+                                Details
+                              </button>
+                            </div>
+                          </div>
+                          <!-- </div> -->
+                        </form>
+                        <!-- <div class="row spsTp bdrTp">
+                          <div class="col-sm-6 txt-center">
+                            <table>
+                              <tr *ngFor="let item of getIncomeArray | paginate : config"></tr>
+                            </table>
+                            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                          </div>
+                        </div> -->
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+
               </div>
             </div>
           </div>

@@ -17,6 +17,8 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   @Output() sendOwner = new EventEmitter<any>();
   @Input() disabled: any;
   @Input() showOwnerList =false;
+  @Input() fromSme =false;
+  @Input() fromEditSme =false;
   @Input() forGstServiceType: boolean =false;
 
   smeList: any[] = [];

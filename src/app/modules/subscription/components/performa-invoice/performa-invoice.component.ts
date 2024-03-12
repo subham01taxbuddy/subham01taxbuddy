@@ -23,8 +23,9 @@ import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
-import { RemoteConfigService } from 'src/app/services/remote-config-service';
+import { saveAs } from "file-saver/dist/FileSaver";
 import * as moment from 'moment';
+import { HttpClient } from '@angular/common/http';
 declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
@@ -117,8 +118,8 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   ];
   sortBy: any = {};
   sortMenus = [
-    { value: 'invoiceDate', name: 'Invoice Date'},
-    { value: 'txbdyInvoiceId', name: 'Invoice number'},
+    { value: 'invoiceDate', name: 'Invoice Date' },
+    { value: 'txbdyInvoiceId', name: 'Invoice number' },
     // { value: 'billTo', name: 'Name' },
     // { value: 'txbdyInvoiceId', name: 'Invoice number'},
   ];
@@ -145,6 +146,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private mobileEncryptDecryptService: MobileEncryptDecryptService,
+    private httpClient: HttpClient,
   ) {
     // this.getAgentList();
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -550,7 +552,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response:any) => {
+      this.reportService.invoiceDownload(param).subscribe((response: any) => {
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1034,60 +1036,119 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     we_track('Proforma Invoice Download', {
       'User number': data.phone,
     });
-    location.href =
-      environment.url +
-      `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    this.loading = true;
+    this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
+      pdf => {
+        this.loading = false;
+        const blob = new Blob([pdf], { type: "application/pdf" });
+        saveAs(blob, 'proforma_invoice');
+      },
+      err => {
+        this.loading = false;
+        this.utilService.showSnackBar('Failed to download document');
+      }
+    );
   }
 
   async placeCall(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    console.log('user: ', user);
-    // const param = `/prod/call-support/call`;
-    const param = `tts/outbound-call`;
-    const agentNumber = await this.utilService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
-    this.loading = true;
-    const reqBody = {
-      agent_number: agentNumber,
-      userId: user.userId,
-    };
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success == false) {
-        this.loading = false;
-        this.utilService.showSnackBar('Error while making call, Please try again.');
+    this.utilService.getUserCurrentStatus(user.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilService.showSnackBar(res.error);
+          this.getInvoice();
+          return;
+        } else {
+          console.log('user: ', user);
+          // const param = `/prod/call-support/call`;
+          const param = `tts/outbound-call`;
+          const agentNumber = await this.utilService.getMyCallingNumber();
+          console.log('agent number', agentNumber);
+          if (!agentNumber) {
+            this._toastMessageService.alert(
+              'error',
+              "You don't have calling role."
+            );
+            return;
+          }
+          this.loading = true;
+          const reqBody = {
+            agent_number: agentNumber,
+            userId: user.userId,
+          };
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success == false) {
+                this.loading = false;
+                this.utilService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+              if (result.success == true) {
+                we_track('Call', {
+                  'User Name': user?.billTo,
+                  'User Phone number ': agentNumber,
+                });
+                this._toastMessageService.alert('success', result.message);
+              }
+            },
+            (error) => {
+              this.utilService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },(error) => {
+        this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getInvoice();
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
       }
-      if (result.success == true) {
-        we_track('Call', {
-          'User Name': user?.billTo,
-          'User Phone number ': agentNumber,
-        });
-        this._toastMessageService.alert("success", result.message)
       }
-    }, error => {
-      this.utilService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.billTo,
-        clientMobileNumber: client.phone
-      },
-    });
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getInvoice();
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.billTo,
+            clientMobileNumber: client.phone
+          },
+        });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('The dialog was closed');
+        });
+      }
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getInvoice();
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
+      }
+    );
+
   }
 
   setDates() {

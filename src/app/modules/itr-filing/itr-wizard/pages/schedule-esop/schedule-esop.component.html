@@ -1,0 +1,297 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="page-wrapper">
+    <main>
+        <div class="frameC">
+            <h1 class="heading__title">Schedule Tax deferred on ESOP
+            </h1>
+            <div class="space">
+                <div class="frame-wrapper-2A">
+                <form *ngIf="showForm" [formGroup]="selectedFormGroup">
+                    <div class="gray_box">
+                        <div class="container">
+                            <div class="row mb-2">
+                                <div class="col-md-4">
+                                <span class="span">
+                                    Assessment Year
+                                </span>
+                                </div>
+                                <div class="col-md-5">
+                                <span class="span">
+                                    Amount of Tax deferred brought forward from earlier AY
+                                </span>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-select placeholder="Select" ame="assessmentYear" formControlName="assessmentYear"
+                                            (selectionChange)="selectionChangeAssessmentYears()">
+                                            <mat-option *ngFor="let year of years;" [disabled]="year.disabled"
+                                                [value]="year.assessmentYear">{{ year.assessmentYear
+                                                }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="selectedFormGroup?.get('assessmentYear')?.hasError('required') &&
+                                    selectedFormGroup?.get('assessmentYear')?.touched">
+                                          Select Assessment Year
+                                    </mat-error>
+                                </div>
+                                <div class="col-md-8">
+                                    <mat-form-field appearance="outline">
+                                        <input digitsOnly type="number" trim matInput name="taxDeferredBFEarlierAY"
+                                            formControlName="taxDeferredBFEarlierAY" maxlength="50" placeholder="Amount" (blur)="onBlurTaxDeferredBFEarlierAY()"/>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('required') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
+                                      Please enter the amount
+                                    </mat-error>
+                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('partly_sold_sum_cant_be_greater_than_tax_deferred') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
+                                        In case of partly sold sum of Amount of Tax Attributed out of the sale cann't be greater than Amount of Tax deferred brought forward from earlier AY.
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <span id="small-note">Has any of the following events occurred during the previous year
+                                relevant to current assessment year</span>
+                            <hr class="mt-3 mb-3">
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <span class="span me-2">
+                                        Such specified security or sweat equity shares were sold
+                                    </span>
+                                    <mat-form-field appearance="outline">
+                                        <mat-select placeholder="Select" name="securityType" formControlName="securityType" (selectionChange)="selectionChangeSecurityType(true)">
+                                            <mat-option *ngFor="let securityType of securityTypes;"
+                                                [value]="securityType.type">{{ securityType.label}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="
+                                    selectedFormGroup.get('securityType').hasError('required') && selectedFormGroup?.get('securityType')?.touched">
+                                     Please select the dropdown.
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <span class="span">
+                                        Sr. No.
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="span">
+                                        Date of Sale
+                                    </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="span">
+                                        Amount of Tax Attributed out of the sale
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                   
+                                </div>
+                            </div>
+                            <div formArrayName="scheduleESOPEventDetails">
+                            <div class="row mb-3"
+                                *ngFor="
+                                let scheduleESOPEventDetail of scheduleESOPEventDetailsFormArray.controls; let i = index"
+                                [formGroupName]="i">
+                                <div class="col-md-2">
+                                    <span class="span">
+                                        {{i+1}}
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance="outline">
+                                        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                                            class="input-field" placeholder="Choose a date" name="dateOfSale[i]"
+                                            [formControl]="
+                                        scheduleESOPEventDetail.get('dateOfSale') | formControlType" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+
+                                        <mat-error *ngIf="
+                                        scheduleESOPEventDetail.get('dateOfSale').hasError('required')">
+                                          Select date of sale
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <input digitsOnly type="number" trim matInput name="taxAttributedAmount[i]"
+                                            formControlName="taxAttributedAmount" maxlength="50" placeholder="Amount"
+                                            (blur)="setBalanceCF()"/>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="p-0" [disabled]="disableDeleteScheduleESOPEventDetailButton"
+                                                (click)="deleteScheduleESOPEventDetail(i)"> <i class="fa fa-trash-o delbt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-8">
+                                    <p>Do you want to add more?</p>
+                                    <button type="button" [disabled]="disableAddScheduleESOPEventDetail" class="addAno pb-3" (click)="addScheduleESOPEventDetail()"> +
+                                        Add Another
+                                    </button>
+                                </div>
+                            </div>
+                            <hr class="mt-3 mb-3">
+
+                            <div class="row mb-2">
+                                <div class="col-md-8">
+                                    <span class="span">
+                                        Ceased to be the employee of the employer who allotted or transferred such
+                                        specified security or sweat equity share?
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <mat-radio-group name="ceasedEmployee" formControlName="ceasedEmployee">
+                                        <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px"
+                                            labelPosition="after">
+                                            Yes
+                                        </mat-radio-button>
+                                        <mat-radio-button [value]="'N'" labelPosition="after">
+                                            No
+                                        </mat-radio-button>
+                                    </mat-radio-group>
+                                    <mat-error *ngIf="
+                                        selectedFormGroup.get('ceasedEmployee').hasError('required') && selectedFormGroup?.get('ceasedEmployee')?.touched">
+                                          Please select the radio button.
+                                    </mat-error>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-2">
+                                <div class="col-md-8">
+                                    <span class="span">
+                                        Date of Ceased to be employee
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <mat-form-field appearance="outline">
+                                        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1"
+                                            class="input-field" placeholder="Choose a date" name="dateOfCeasing"
+                                            [formControl]="selectedFormGroup.get('dateOfCeasing') | formControlType"
+                                            [disabled]="disableDateOfCeasing()" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- <hr class="mt-3 mb-3">
+
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <span class="span">
+                                        Forty-eight months have expired from the end of the relevant assessment year in
+                                        which specified security or sweat equity shares referred to in the said *clause
+                                        were allotted. If yes, specify date
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <p>Date</p>
+                                    <mat-form-field appearance="outline">
+                                        <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                                            class="input-field" placeholder="Choose a date" name="dateOfCeasing"
+                                            [formControl]="selectedFormGroup.get('dateOfCeasing') | formControlType"
+                                            [disabled]="true" />
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+
+                                        <mat-error *ngIf="
+                                    scheduleESOPEventDetail.get('dateOfSale'].hasError('required')">
+                                      Select date of sale
+                                    </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div> -->
+                            <div class="row mb-2">
+                                <div class="col-md-8">
+                                    <span class="span">
+                                        Balance amount of tax deffered to be carried forward to the next Assessment
+                                        Years
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <mat-form-field appearance="outline">
+                                        <input digitsOnly trim matInput name="balanceTaxCF"
+                                            formControlName="balanceTaxCF" maxlength="50" placeholder="Amount"/>
+                                    </mat-form-field>
+                                </div>
+                        </div>
+                    </div>
+                    <div *ngIf="showForm" class="out-box">
+                        <div class="box-left">
+                          <button class="btn btn__white" (click)="cancel()">Back</button>
+                        </div>
+                        <div class="box-right">
+                          <button class="btn btn__primary" (click)="saveScheduleESOPDetail()">Save</button>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+                
+                <div *ngIf="!showForm">
+                            <button type="button" class="addAno pb-3" [hidden]="hideAddScheduleButton" (click)="addScheduleEsop()"> {{addButtonName}}
+                            </button>
+                            <table *ngIf="scheduleESOPDetailsFormArray?.length > 0" class="table table-bordered">
+                                <thead>
+                                    <th>Sr. No.</th>
+                                    <th>Assessment Year</th>
+                                    <th>Amount of Tax deferred brought forward from earlier AY</th>
+                                    <th>Security Sold</th>
+                                    <th>Ceased to be employee</th>
+                                    <th>Date of ceased to be employee</th>
+                                    <th>Tax-deferred to be carried forward to the Next AY</th>
+                                    <th>Delete</th>
+                                    <th>Edit</th>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        *ngFor="let scheduleESOPDetail of scheduleESOPDetailsFormArray.controls; let i = index">
+                                        <td>{{i+1}}</td>
+                                        <td>{{scheduleESOPDetail.get('assessmentYear').value}}</td>
+                                        <td>₹{{utilsService.currencyFormatter(scheduleESOPDetail.get('taxDeferredBFEarlierAY').value)}}</td>
+                                        <td>{{getSecurityTypeLabel(scheduleESOPDetail.get('securityType').value)}}
+                                        </td>
+                                        <td>{{scheduleESOPDetail.get('ceasedEmployee').value === 'Y' ? 'Yes':'No'}}</td>
+                                        <td>{{scheduleESOPDetail.get('dateOfCeasing').value | date: 'dd/MM/yyyy'}}</td>
+                                        <td>₹{{utilsService.currencyFormatter(scheduleESOPDetail.get('balanceTaxCF').value)}}</td>
+                                        <td class="text-center"><button type="button" class="p-0"
+                                                (click)="deleteScheduleEsop(i)"> <i class="fa fa-trash-o delbt"></i>
+                                            </button></td>
+                                        <td class="text-center"><button type="button" class="p-0"
+                                                (click)="editScheduleEsop(i)"> <i class="fa fa-pencil"></i> </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+        <div *ngIf="!showForm" class="out-box">
+            <div class="box-left">
+              <div class="btn__white" (click)="goBack()">Back</div>
+            </div>
+            <div class="box-right">
+              <div class="btn__primary" (click)="saveAll()">Save & View Summary</div>
+            </div>
+          </div>
+            </div>
+        </div>
+    </main>
+</div>

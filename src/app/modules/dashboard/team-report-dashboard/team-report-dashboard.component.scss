@@ -41,14 +41,18 @@
   }
 
   .grTx {
-    color: #494949 !important;
+    color: #63b12d !important;
   }
   .grTx1 {
-    color: #494949 !important;
+    color: #63b12d !important;
     font-weight:600;
   }
   .grBk{
-    // background-color: #f5ffeb;
+    background-color: #f5ffeb;
+  }
+
+  .grTx-blue{
+    color: #04a4bc !important;
   }
 
   .imgSiz{
@@ -57,11 +61,11 @@
   }
 
   .redTx {
-    color:#494949 !important;
+    color:#ff0000 !important;
     font-size:24px !important;
   }
   .redTx1 {
-    color:#494949 !important;
+    color:#ff0000 !important;
     // font-size:12px !important;
   }
   .OrgTx {
@@ -71,7 +75,7 @@
     background-color: #fffcf1;
   }
   .RedBk{
-    // background-color: #fff9f2;
+    background-color: #fff9f2;
   }
 
   // input {
@@ -116,7 +120,7 @@
 
   .numTxSm{
     font-size: 18px;
-    color: #494949;
+    color: #04a4bc;
     font-weight: bold;
   }
   .grytx {
@@ -437,7 +441,7 @@ line-height: 32px; /* 133.333% */
 letter-spacing: -0.48px;
 }
 .text-TxSm-1{
-  width: 116.998px;
+  width: 123px;
   height: 31px;
   flex-shrink: 0;
   color: #A3AED0;
@@ -602,7 +606,7 @@ background: #CEE5FF;
 
 .itr-box-container{
   display: flex;
-padding: 20px 76px 22px 25px;
+padding: 20px 65px 22px 25px;
 align-items: center;
 border-radius: 20px;
 border: 2px solid #ADD4FF;

@@ -43,7 +43,7 @@ export class TeamReportDashboardComponent implements OnInit {
   roles: any;
   maxDate: string = '2024-03-31';
   minStartDate: string = '2023-04-01';
-  maxStartDate=moment().toDate();
+  maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
@@ -126,10 +126,12 @@ export class TeamReportDashboardComponent implements OnInit {
   today: Date;
   totalOriginal: number;
   totalRevised: number;
+  totalItrU: number;
   scheduledCallData: any;
   totalScheduledCall: any;
-  selectedType:any = 'Original';
-  isDropdownOpen:boolean = false;
+  selectedType: any = 'Original';
+  isDropdownOpen: boolean = false;
+  subPaidScheduleCallDetails: any;
 
   constructor(
     private userMsService: UserMsService,
@@ -142,7 +144,7 @@ export class TeamReportDashboardComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnInit(): void {
@@ -164,6 +166,7 @@ export class TeamReportDashboardComponent implements OnInit {
     // this.getPartnersAssignmentDetails();
     this.getTotalCommission();
     this.getScheduledCallDetails();
+    this.getSubPaidScheduleCallCount();
   }
 
   leaderId: number;
@@ -307,6 +310,11 @@ export class TeamReportDashboardComponent implements OnInit {
             this.commissionData.itr3_revised +
             this.commissionData.itr4_revised +
             this.commissionData.reviseReturnOther;
+          this.totalItrU =
+            this.commissionData.itrU_1 +
+            this.commissionData.itrU_2 +
+            this.commissionData.itrU_3 +
+            this.commissionData.itrU_4;
           console.log('original items', this.totalOriginal);
         } else {
           this.loading = false;
@@ -319,6 +327,41 @@ export class TeamReportDashboardComponent implements OnInit {
           'error',
           'Error while filer commission report: Not_found: Data not found'
         );
+      }
+    );
+  }
+
+  getSubPaidScheduleCallCount() {
+    // 'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?toDate=2024-02-09&count=true&fromDate=2024-02-01
+    // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01' 
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let param = '';
+    let userFilter = '';
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+
+    param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}&count=true`;
+    this.reportService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.subPaidScheduleCallDetails = response.data;
+          // this.totalScheduledCall =
+          //   response.data.callsAssigned_Open +
+          //   response.data.done +
+          //   response.data.followUp;
+
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
       }
     );
   }

@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,19 +22,43 @@ import { ScheduledCallReassignDialogComponent } from '../../components/scheduled
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { RemoteConfigService } from 'src/app/services/remote-config-service';
+import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
 declare function we_track(key: string, value: any);
-
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-scheduled-call',
   templateUrl: './scheduled-call.component.html',
   styleUrls: ['./scheduled-call.component.css'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class ScheduledCallComponent implements OnInit, OnDestroy {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
   statusId: null;
-  statuslist: any = [
+  statusList: any = [
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
     { statusName: 'Follow-Up', statusId: '19' },
@@ -69,6 +93,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     { value: 'mobileNumber', name: 'Mobile No' },
   ];
   clearUserFilter: number;
+  loggedInUserRoles: any;
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
+  show: boolean;
+  scheduleCallRemoteConfig: any;
+
   constructor(
     private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
@@ -82,7 +116,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private genericCsvService: GenericCsvService,
     private reportService: ReportService,
+    public datePipe: DatePipe,
+    private remoteConfigService: RemoteConfigService
   ) {
+    this.getRemoteConfigData();
+    this.startDate.setValue(new Date());
+    this.endDate.setValue(new Date());
+    this.setToDateValidation();
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.config = {
       itemsPerPage: this.searchParam.size,
       currentPage: 1,
@@ -90,13 +131,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       pageCount: null,
     };
     let roles = this.utilsService.getUserRoles();
-    let show: boolean;
     if (roles.includes('ROLE_ADMIN')) {
-      show = true;
+      this.show = true;
     }
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
+      columnDefs: this.show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -142,6 +182,15 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     })
   }
 
+  async getRemoteConfigData() {
+    this.scheduleCallRemoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.SCHEDULE_CALL_REMOTE_CONFIG);
+  }
+
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
+  }
+
   // async getMasterStatusList() {
   //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
   // }
@@ -171,33 +220,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
   ownerId: number;
   filerId: number;
   agentId = null;
   leaderId: number;
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.leaderId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
-    }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-    } else if (this.leaderId) {
-      this.agentId = this.leaderId;
-      // this.search('agent');
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-    // this.search('agent');
-  }
+  subPaidScheduleCallList = new FormControl(false);
 
-   fromSme1(event) {
+  fromSme(event) {
     console.log('sme-drop-down', event);
     if (event) {
       this.leaderId = event ? event.userId : null;
@@ -224,11 +256,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
         leaderName: scheduleCalls[i]['leaderName'],
+        markedDoneByName: scheduleCalls[i]['markedDoneByName'],
+        leaderUserId: scheduleCalls[i]['leaderUserId'],
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
         smeName: scheduleCalls[i]['smeName'],
-        scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
-        time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
+        scheduleCallTime: (!this.subPaidScheduleCallList.value) ? scheduleCalls[i]['scheduleCallTime'] : '',
+        time: (!this.subPaidScheduleCallList.value) ? this.getCallTime(scheduleCalls[i]['scheduleCallTime']) : '',
         statusName: scheduleCalls[i]['statusName'],
         statusId: scheduleCalls[i]['statusId'],
         serviceType:
@@ -248,7 +282,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return callDateTime.substring(firstPoint + 1, secondPoint - 1);
   }
 
-  createColumnDef(view) {
+  createColumnDef(view, subPaidScheduleCallList?) {
+    const that = this;
     return [
       {
         headerName: 'User Id',
@@ -290,16 +325,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         // code to masking mobile no
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -327,6 +362,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
+        hide: subPaidScheduleCallList ? true : false,
         cellRenderer: (data) => {
           let firstPoint = data.value.indexOf('T');
           let myDate = data.value.substring(0, firstPoint);
@@ -346,6 +382,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         sortable: true,
         cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
+        hide: subPaidScheduleCallList ? true : false,
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -401,6 +438,20 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Mark Done By',
+        field: 'markedDoneByName',
+        width: 110,
+        suppressMovable: true,
+        sortable: true,
+        hide: subPaidScheduleCallList ? true : false,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
         headerName: 'Service',
         field: 'serviceType',
         width: 95,
@@ -418,7 +469,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        hide: view === 'leader' ? false : true,
+        hide: subPaidScheduleCallList ? true : (view === 'leader') ? false : true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.statusId === 17 || params.data.statusId === 19) {
@@ -517,6 +568,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 150,
+        hide: subPaidScheduleCallList ? true : false,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -540,6 +592,28 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
             style="font-size: 12px; width:50px; background-color:#008000;color: #fff; cursor:pointer;" data-action-type="call-done">Done</button>`;
 
           }
+        },
+      },
+      {
+        headerName: 'Action',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 150,
+        hide: subPaidScheduleCallList ? false : true,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Create Calender"
+            style="font-size: 12px; padding:0px 5px; background-color:green;color: #fff; cursor:pointer;" data-action-type="create-calender">Create Calender</button>`;
         },
       },
     ];
@@ -570,6 +644,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           this.callStatusChange(params.data, 19, 'FOLLOW_UP');
           break;
         }
+        case 'create-calender': {
+          this.openCalender(params.data);
+          break;
+        }
         case 'call-done': {
           this.callStatusChange(params.data, 18, 'Done');
           break;
@@ -586,18 +664,53 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  reAssignCall(data) {
-    let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
-      width: '60%',
+  openCalender(data) {
+    let disposable = this.dialog.open(SchCallCalenderComponent, {
+      width: '70%',
       height: 'auto',
+      hasBackdrop: true,
       data: {
         allData: data,
+        scheduleCallsData: this.scheduleCallsData
       },
     });
     disposable.afterClosed().subscribe((result) => {
-      this.search()
-      console.log('The dialog was closed');
+      if (result) {
+        this.search()
+      }
     });
+  }
+
+  reAssignCall(data) {
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
+          width: '60%',
+          height: 'auto',
+          data: {
+            allData: data,
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          this.search()
+          console.log('The dialog was closed');
+        });
+      }
+    },error => {
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
+    });
+
   }
 
   openWhatsappChat(client) {
@@ -627,55 +740,97 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.userName,
-        clientMobileNumber: client.userMobile
-      },
-    });
-
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.userName,
+            clientMobileNumber: client.userMobile
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('The dialog was closed');
+        });
+      }
+    },error => {
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
     });
   }
 
   async startCalling(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this.toastMsgService.alert('error', "You don't have calling role.");
-      return;
-    }
-    this.loading = true;
-    const reqBody = {
-      agent_number: agentNumber,
-      userId: user.userId,
-    };
+    this.utilsService.getUserCurrentStatus(user.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          const agentNumber = await this.utilsService.getMyCallingNumber();
+          console.log('agent number', agentNumber);
+          if (!agentNumber) {
+            this.toastMsgService.alert('error', "You don't have calling role.");
+            return;
+          }
+          this.loading = true;
+          const reqBody = {
+            agent_number: agentNumber,
+            userId: user.userId,
+          };
 
-    // const param = `/prod/call-support/call`;
-    const param = `tts/outbound-call`;
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success == false) {
-        this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+          // const param = `/prod/call-support/call`;
+          const param = `tts/outbound-call`;
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success == false) {
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+              if (result.success == true) {
+                we_track('Call', {
+                  'User Name': user.userName,
+                  'User Phone number ': agentNumber,
+                });
+                this.toastMsgService.alert('success', result.message);
+              }
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },
+      (error) => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
       }
-      if (result.success == true) {
-        we_track('Call', {
-          'User Name': user.userName,
-          'User Phone number ': agentNumber,
-        });
-        this.toastMsgService.alert("success", result.message)
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
-
+    );
   }
 
 
@@ -704,46 +859,84 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   callStatusChange(callInfo, statusId, statusName) {
-    console.log('callInfo: ', callInfo);
-    this.loading = true;
-    let reqBody = {
-      scheduleCallTime: callInfo.scheduleCallTime,
-      userId: callInfo.userId,
-      statusId: statusId,
-      statusName: statusName,
-    };
-    let param = `/schedule-call-details`;
+    this.utilsService.getUserCurrentStatus(callInfo.userId).subscribe((res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          console.log('callInfo: ', callInfo);
+          this.loading = true;
+          let reqBody = {
+            scheduleCallTime: callInfo.scheduleCallTime,
+            userId: callInfo.userId,
+            statusId: statusId,
+            statusName: statusName,
+          };
+          let param = `/schedule-call-details`;
 
-    this.userMsService.putMethod(param, reqBody).subscribe(
-      (response: any) => {
-        console.log('schedule-call Done response: ', response);
-        this.loading = false;
-        this.toastMsgService.alert(
-          'success',
-          'Call status update successfully.'
-        );
-        if (statusId === 19) {
-          we_track('Call Status - Follow Up', {
-            'User Number': callInfo.userMobile,
-          });
-        } else if (statusId === 18) {
-          we_track('Call Status - Done', {
-            'User Number': callInfo.userMobile,
-          });
+          this.userMsService.putMethod(param, reqBody).subscribe(
+            (response: any) => {
+              console.log('schedule-call Done response: ', response);
+              this.loading = false;
+              this.toastMsgService.alert(
+                'success',
+                'Call status update successfully.'
+              );
+              if (statusId === 19) {
+                we_track('Call Status - Follow Up', {
+                  'User Number': callInfo.userMobile,
+                });
+              } else if (statusId === 18) {
+          this.markAsScheduleCallDone(callInfo);
+                we_track('Call Status - Done', {
+                  'User Number': callInfo.userMobile,
+                });
+              }
+              setTimeout(() => {
+                this.search();
+                // this.showScheduleCallList();
+              }, 300);
+            },
+            (error) => {
+              this.toastMsgService.alert(
+                'error',
+                'Error during schedule-call status change.'
+              );
+              this.loading = false;
+            }
+          );
         }
-        setTimeout(() => {
-          this.search()
-          // this.showScheduleCallList();
-        }, 300);
       },
       (error) => {
-        this.toastMsgService.alert(
-          'error',
-          'Error during schedule-call status change.'
-        );
-        this.loading = false;
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
       }
     );
+
+  }
+
+  markAsScheduleCallDone(callInfo) {
+    // https://uat-api.taxbuddy.com/user/schedule-call-done?subscriptionId=12852
+    let param1 = '/schedule-call-done?subscriptionId=' + callInfo.subscriptionId;
+    this.loading = true;
+    this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
+      this.loading = false;
+      if (result.success) {
+        // this.utilsService.showSnackBar(result.message)
+      } else {
+        // this.utilsService.showSnackBar(result.message)
+      }
+    }, err => {
+      this.loading = false;
+      // this.utilsService.showSnackBar('Failed to update the details.')
+    });
   }
 
   pageChanged(event) {
@@ -766,6 +959,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this.subPaidScheduleCallList.setValue(false);
+    this.statusList = [
+      { statusName: 'Open', statusId: '17' },
+      { statusName: 'Done', statusId: '18' },
+      { statusName: 'Follow-Up', statusId: '19' },
+    ];
+    this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
@@ -774,10 +974,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.searchParam.email = null;
     this.searchParam.statusId = null;
     this.statusId = null;
-
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
-
+    this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
     if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
@@ -792,24 +991,61 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
+  onCheckBoxChange() {
+    if (this.subPaidScheduleCallList.value) {
+      this.clearUserFilter = moment.now().valueOf();
+      this.statusList = [
+        { statusName: 'Open', statusId: '17' }
+      ];
+      this.sortMenus = [
+        { value: 'userName', name: 'Name' },
+      ];
+      this.cacheManager.clearCache();
+      this.searchParam.serviceType = null;
+      this.searchParam.statusId = null;
+      this.searchParam.page = 0;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.emailId = null;
+      this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', true))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', true)));
+      if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+        this.agentId = this.utilsService.getLoggedInUserID();
+      }
+      // this?.serviceDropDown?.resetService();
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    } else {
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
+      this.statusList = [
+        { statusName: 'Open', statusId: '17' },
+        { statusName: 'Done', statusId: '18' },
+        { statusName: 'Follow-Up', statusId: '19' },
+      ];
+      this.sortMenus = [
+        { value: 'userName', name: 'Name' },
+        { value: 'scheduleCallTime', name: 'Schedule Call Date' },
+      ];
+    }
+  }
+
   search(form?, isAgent?, pageChange?) {
-   // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
-   //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
-   //
+    // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
+    //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
+    //
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
 
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.searchBy?.mobileNumber){
+    if (this.searchBy?.mobileNumber) {
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.searchParam.email = this.searchBy?.email
     }
 
@@ -865,6 +1101,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param;
     }
 
+    // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    // param = param + `?fromDate=${fromDate}&toDate=${toDate}`
+    if (this.subPaidScheduleCallList.value) {
+      param = param + '&details=true'
+    }
+
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
@@ -895,7 +1139,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    },error =>{
+    }, error => {
       this.loading = false;
     });
   }

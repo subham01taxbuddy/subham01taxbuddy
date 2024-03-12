@@ -5,17 +5,17 @@ import { ITR_JSON } from '../../interfaces/itr-input.interface';
 import { UpdateManualFilingDialogComponent } from '../update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatDialog } from '@angular/material/dialog';
+import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-validation-error-screen',
   templateUrl: './validation-error-screen.component.html',
   styleUrls: ['./validation-error-screen.component.scss'],
 })
-export class ValidationErrorScreenComponent implements OnInit {
+export class ValidationErrorScreenComponent extends WizardNavigation implements OnInit {
   errors: any;
   apiErrors: any;
   itrType: any;
-  @Output() saveAndNext = new EventEmitter<any>();
   ITR_JSON: ITR_JSON;
 
   constructor(
@@ -23,10 +23,11 @@ export class ValidationErrorScreenComponent implements OnInit {
     private schedules: Schedules,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    console.log();
     this.route.paramMap.subscribe((params) => {
       const state = window.history.state;
       this.errors = state.validationErrors;
@@ -39,8 +40,16 @@ export class ValidationErrorScreenComponent implements OnInit {
   redirectToErrorPage(schedule: String) {
     console.log(schedule, 'schedule received');
     const navigationPath = this.schedules?.getNavigationPath(schedule);
-    console.log(navigationPath, 'navigation Path');
-    this.router.navigate(['/itr-filing/' + navigationPath]);
+    const queryParams = this.schedules?.getQueryParams(schedule);
+    const state = this.schedules?.getState(schedule);
+
+    console.log(navigationPath,  'navigation Path');
+    console.log(JSON.stringify(queryParams) + ' query params');
+    console.log(JSON.stringify(state) + ' state');
+
+    this.router.navigate(['/itr-filing/' + navigationPath], {queryParams: queryParams, state: state});
+    
+    this.nextBreadcrumb.emit(this.schedules?.getTitle(schedule));
   }
 
   updateManually() {

@@ -29,6 +29,7 @@ import { MoreInformationComponent } from './pages/more-information/more-informat
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NavbarService} from "../../../services/navbar.service";
 import {SidebarService} from "../../../services/sidebar.service";
+import {SummaryConversionService} from "../../../services/summary-conversion.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -64,7 +65,7 @@ export class ItrWizardComponent implements OnInit {
     public schedules: Schedules,
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
-    private sidebarService: SidebarService
+    private summaryConversionService: SummaryConversionService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -115,6 +116,8 @@ export class ItrWizardComponent implements OnInit {
     }
     this.getCustomerName();
     // this.sidebarService.hide();
+
+    this.summaryConversionService.getPreviousItrs(this.ITR_JSON.userId, '2023-24', '2022-23');
   }
 
   getCustomerName() {
@@ -195,26 +198,24 @@ export class ItrWizardComponent implements OnInit {
 
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // if (this.jsonUploaded) {
-
+    if (this.ITR_JSON.itrSummaryJson) {
+      this.breadcrumb = null;
+      this.showIncomeSources = false;
+      this.selectedSchedule = 'Comparison of New v/s Old Regime';
+      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      return;
+    }
     this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
       console.log(result);
       // if(result.success){
-        if (result.data.errors.length > 0) {
-          let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
-          this.breadcrumb = null;
-          this.showIncomeSources = false;
-          this.selectedSchedule = 'Validation Errors';
-          this.router.navigate(['/itr-filing/itr/validation-errors'], {
-            state: { validationErrors: errorMapping },
-          });
-        }
-      if (this.validationErrors?.length > 0) {
+ 
+      if (result.data.errors.length > 0) {
+        let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
         this.breadcrumb = null;
         this.showIncomeSources = false;
         this.selectedSchedule = 'Validation Errors';
         this.router.navigate(['/itr-filing/itr/validation-errors'], {
-          state: { validationErrors: this.validationErrors },
+          state: { validationErrors: errorMapping },
         });
       } else {
         if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
@@ -238,12 +239,14 @@ export class ItrWizardComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_JSON)
         );
+
+        this.breadcrumb = null;
+        this.showIncomeSources = false;
+        this.selectedSchedule = 'Comparison of New v/s Old Regime';
+        this.router.navigate(['/itr-filing/itr/old-vs-new']);
       }
 
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Comparison of New v/s Old Regime';
-      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      
       // }
     });
 
@@ -568,6 +571,7 @@ export class ItrWizardComponent implements OnInit {
 
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
+    sessionStorage.removeItem('PREV_ITR_JSON');
     sessionStorage.removeItem('incomeSources');
     sessionStorage.removeItem('ERI-Request-Header');
     this.subscription.unsubscribe();

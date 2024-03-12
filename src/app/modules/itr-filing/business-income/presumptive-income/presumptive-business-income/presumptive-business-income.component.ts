@@ -1,13 +1,14 @@
 import { NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BusinessDialogComponent } from './business-dialog/business-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 
 @Component({
   selector: 'app-presumptive-business-income',
@@ -15,7 +16,6 @@ import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./presumptive-business-income.component.scss'],
 })
 export class PresumptiveBusinessIncomeComponent implements OnInit {
-  public businessGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   loading: boolean;
@@ -31,12 +31,17 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   maxEightAmt: number = 0;
   config: any;
   @Output() presBusinessSaved = new EventEmitter<boolean>();
-  cashPercentage: any[] = [];
-  bankPercentage: any[] = [];
-  bankPerWidth: any[] = [];
-  cashPerWidth: any[] = [];
+  cashPercentage = 0;
+  bankPercentage = 0;
+  bankPerWidth = 0;
+  cashPerWidth = 0;
   bankMinIncomePercentage = (50 / 100) * 6;
   cashMinIncomePercentage = (50 / 100) * 8;
+
+  activeIndex: number;
+  gridOptions: GridOptions;
+  selectedFormGroup: FormGroup;
+
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
@@ -45,14 +50,49 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // setting grids data
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {
+        params.api?.setRowData(
+          this.busIncomeFormArray.controls
+        );
+      },
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.controls['hasEdit'].setValue(true);
+        });
+        if (event.api.getSelectedRows().length === 0) {
+          this.busIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+            formGroup.controls['hasEdit'].setValue(false);
+          });
+        }
+      },
+      sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
+    };
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   ngOnInit(): void {
     this.config = {
       id: 'businessConfig',
-      itemsPerPage: 2,
+      itemsPerPage: 1,
       currentPage: 1,
-      totalItems: 0,
     };
 
     let presBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -60,61 +100,50 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     );
 
     this.busIncomeFormArray = new FormArray([]);
+    let srn = this.busIncomeFormArray.controls.length > 0 ? this.busIncomeFormArray.controls.length : 0;
+    this.selectedFormGroup = this.createBusIncomeForm(srn);
+    this.activeIndex = -1;
+
     if (presBusiness && presBusiness.length > 0) {
       presBusiness.forEach((element, index) => {
         let form = this.createBusIncomeForm(index, element);
         this.busIncomeFormArray.push(form);
       });
     } else {
-      let form = this.createBusIncomeForm(0, null);
-      this.busIncomeFormArray.push(form);
+      // let form = this.createBusIncomeForm(0, null);
+      // this.busIncomeFormArray.push(form);
     }
     this.busIncomeForm = this.fb.group({
       busIncomeFormArray: this.busIncomeFormArray,
     });
-
+    this.gridOptions.api?.setRowData(
+      this.busIncomeFormArray.controls
+    );
     this.busIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(index, 'cash', false);
-      this.calculatePresumptive(index, 'bank', false);
+      // this.calculatePresumptive(index, 'cash', false);
+      // this.calculatePresumptive(index, 'bank', false);
     });
-    this.config.totalItems = this.busIncomeFormArray.controls.length;
   }
 
   get getBusIncomeArray() {
     return <FormArray>this.busIncomeForm.get('busIncomeFormArray');
   }
 
-  createBusIncomeForm(index, income) {
-    let cash = income?.incomes?.filter(
-      (element) => element.incomeType === 'CASH'
-    )[0];
-
-    let bank = income?.incomes?.filter(
-      (element) => element.incomeType === 'BANK'
-    )[0];
+  createBusIncomeForm(index, income?) {
+    let cash = income?.incomes?.filter((element) => element.incomeType === 'CASH')[0];
+    let bank = income?.incomes?.filter((element) => element.incomeType === 'BANK')[0];
     console.log(cash, bank);
-
     let form = this.fb.group({
-      id: null,
-      index: [index],
+      id: null, index: [index],
       hasEdit: [false],
-      natureOfBusiness: [
-        income?.natureOfBusiness || null,
-        [Validators.required],
-      ],
+      natureOfBusiness: [income?.natureOfBusiness || null, [Validators.required],],
       tradeName: [income?.tradeName || null, [Validators.required]],
       description: [income?.description || null],
       bankReceipts: [bank ? bank.receipts : 0, [Validators.required]],
-      bankMinIncome: [
-        bank ? bank.minimumPresumptiveIncome : 0,
-        [Validators.required],
-      ],
+      bankMinIncome: [bank ? bank.minimumPresumptiveIncome : 0, [Validators.required],],
       bankPreIncome: [bank ? bank.presumptiveIncome : 0],
       cashReceipts: [cash ? cash.receipts : 0, [Validators.required]],
-      cashMinIncome: [
-        cash ? cash.minimumPresumptiveIncome : 0,
-        [Validators.required],
-      ],
+      cashMinIncome: [cash ? cash.minimumPresumptiveIncome : 0, [Validators.required],],
       cashPreIncome: [cash ? cash.presumptiveIncome : 0],
     });
     return form;
@@ -128,18 +157,15 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  addBusIncomeForm() {
-    if (this.busIncomeForm.valid || !this.busIncomeForm.controls['busIncomeFormArray']['controls'].length) {
-      this.submitted = false;
-      let form = this.createBusIncomeForm(0, null);
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(
-        0,
-        form
-      );
-    } else {
-      this.submitted = true;
-    }
-  }
+  // addBusIncomeForm() {
+  //   if (this.busIncomeForm.valid || !this.busIncomeForm.controls['busIncomeFormArray']['controls'].length) {
+  //     this.submitted = false;
+  //     let form = this.createBusIncomeForm(0, null);
+  //     (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(0, form);
+  //   } else {
+  //     this.submitted = true;
+  //   }
+  // }
 
   busSelected() {
     const busIncomeFormArray = <FormArray>(
@@ -153,143 +179,112 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const busIncomeFormArray = <FormArray>(
-      this.busIncomeForm.get('busIncomeFormArray')
-    );
-    busIncomeFormArray.controls = busIncomeFormArray.controls.filter(
+    // const busIncomeFormArray = <FormArray>this.busIncomeForm.get('busIncomeFormArray');
+    // busIncomeFormArray.controls = busIncomeFormArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <FormArray>this.busIncomeForm.get('busIncomeFormArray');
+    array.controls = array.controls.filter(
       (element) => !(element as FormGroup).controls['hasEdit'].value
     );
-    this.config.totalItems = busIncomeFormArray.controls.length;
+    this.selectedFormGroup.reset();
+    this.gridOptions?.api?.setRowData(this.busIncomeFormArray.controls);
+    this.activeIndex = -1;
   }
 
-  calculatePresumptive(index, incomeType, setValue?) {
-    const bankReceipts = (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-      index
-      ] as FormGroup
-    ).controls['bankReceipts'];
+  calculatePresumptiveIncome(incomeType, setValue?) {
+    // const bankReceipts = (
+    //   (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[index] as FormGroup).controls['bankReceipts'];
 
-    const cashReceipts = (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-      index
-      ] as FormGroup
-    ).controls['cashReceipts'];
+    // const cashReceipts = (
+    //   (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[index] as FormGroup).controls['cashReceipts'];
 
-    let total = parseFloat(bankReceipts.value) + parseFloat(cashReceipts.value);
+    let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value);
 
     if (total > 20000000) {
-      bankReceipts.setValidators([Validators.max(20000000)]);
-      bankReceipts.updateValueAndValidity();
+      this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(20000000)]);
+      this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
 
-      cashReceipts.setValidators([Validators.max(20000000)]);
-      cashReceipts.updateValueAndValidity();
+      this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(20000000)]);
+      this.selectedFormGroup.controls['cashReceipts'].updateValueAndValidity();
     }
 
     if (incomeType === 'cash') {
-      this.amountEight = cashReceipts?.value;
-      this.maxEightAmt = cashReceipts?.value;
+      this.amountEight = this.selectedFormGroup.controls['cashReceipts'].value;
+      this.maxEightAmt = this.selectedFormGroup.controls['cashReceipts'].value;
       this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
 
       if (setValue) {
-        (
-          (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-            .controls[index] as FormGroup
-        ).controls['cashMinIncome'].setValue(this.amountEight);
+        this.selectedFormGroup.controls['cashMinIncome'].setValue(this.amountEight);
       }
 
-      const cashPreIncome = (
-        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-          .controls[index] as FormGroup
-      ).controls['cashPreIncome'];
+      // const cashPreIncome = this.selectedFormGroup.controls['cashPreIncome'].value;
 
-      let CashPreIncome =
-        cashPreIncome.value !== '' ? parseFloat(cashPreIncome.value) : 0;
+      // let CashPreIncome =
+      //   cashPreIncome.value !== '' ? parseFloat(cashPreIncome.value) : 0;
 
-      if (CashPreIncome || CashPreIncome === 0) {
-        cashPreIncome?.setValidators([
-          Validators.min(this.amountEight),
-          Validators.max(this.maxEightAmt),
-        ]);
-        cashPreIncome?.updateValueAndValidity();
+      if (this.selectedFormGroup.controls['cashPreIncome'].value >= 0) {
+        this.selectedFormGroup.controls['cashPreIncome'].setValidators([
+          Validators.min(this.amountEight), Validators.max(this.maxEightAmt)]);
+        this.selectedFormGroup.controls['cashPreIncome'].updateValueAndValidity();
       } else {
-        cashPreIncome?.clearValidators();
-        cashPreIncome?.updateValueAndValidity();
+        this.selectedFormGroup.controls['cashPreIncome'].clearValidators();
+        this.selectedFormGroup.controls['cashPreIncome'].updateValueAndValidity();
       }
     } else {
-      this.amountSix = bankReceipts?.value;
-      this.maxSixAmt = bankReceipts?.value;
+      this.amountSix = this.selectedFormGroup.controls['bankReceipts'].value;
+      this.maxSixAmt = this.selectedFormGroup.controls['bankReceipts'].value;
       this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
 
       if (setValue) {
-        (
-          (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-            .controls[index] as FormGroup
-        ).controls['bankMinIncome'].setValue(this.amountSix);
+        this.selectedFormGroup.controls['bankMinIncome'].setValue(this.amountSix);
       }
 
-      const bankPreIncome = (
-        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-          .controls[index] as FormGroup
-      ).controls['bankPreIncome'];
+      // const bankPreIncome = this.selectedFormGroup.controls['bankPreIncome'].value;
 
-      let BankPreIncome =
-        bankPreIncome.value !== '' ? parseFloat(bankPreIncome.value) : 0;
+      // let BankPreIncome =
+      //   bankPreIncome.value !== '' ? parseFloat(bankPreIncome.value) : 0;
 
-      if (BankPreIncome || BankPreIncome === 0) {
-        bankPreIncome?.setValidators([
-          Validators.min(this.amountSix),
-          Validators.max(this.maxSixAmt),
-        ]);
-        bankPreIncome?.updateValueAndValidity();
+      if (this.selectedFormGroup.controls['bankPreIncome'].value >= 0) {
+        this.selectedFormGroup.controls['bankPreIncome'].setValidators([
+          Validators.min(this.amountSix), Validators.max(this.maxSixAmt)]);
+        this.selectedFormGroup.controls['bankPreIncome'].updateValueAndValidity();
       } else {
-        bankPreIncome?.clearValidators();
-        bankPreIncome?.updateValueAndValidity();
+        this.selectedFormGroup.controls['bankPreIncome'].clearValidators();
+        this.selectedFormGroup.controls['bankPreIncome'].updateValueAndValidity();
       }
     }
 
-    const cashIncomeFormArray = this.busIncomeForm.controls[
-      'busIncomeFormArray'
-    ] as FormArray;
+    const cashIncomeFormArray = this.busIncomeForm.controls['busIncomeFormArray'] as FormArray;
 
-    this.cashPercentage = [];
-    this.bankPercentage = [];
-    this.bankPerWidth = [];
-    this.cashPerWidth = [];
-    for (let i = 0; i < cashIncomeFormArray.length; i++) {
-      // cash Percentage
-      const cashReceipts = parseFloat(
-        (cashIncomeFormArray.at(i) as FormGroup).get('cashReceipts').value
-      );
-      const cashPreIncome = parseFloat(
-        (cashIncomeFormArray.at(i) as FormGroup).get('cashPreIncome').value
-      );
+    // this.cashPercentage;
+    // this.bankPercentage;
+    // this.bankPerWidth;
+    // this.cashPerWidth;
+    // for (let i = 0; i < cashIncomeFormArray.length; i++) {
+    const cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value);
+    const cashPreIncome = parseFloat(this.selectedFormGroup.controls['cashPreIncome'].value);
 
-      let cashPercentage = 0;
-      if (cashReceipts > 0) {
-        cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
-      }
-      this.cashPercentage.push(cashPercentage);
-      let cashPerWidth = (50 / 100) * cashPercentage
-      this.cashPerWidth.push(cashPerWidth);
-
-      // bank percentage
-      const bankReceipts = parseFloat(
-        (cashIncomeFormArray.at(i) as FormGroup).get('bankReceipts').value
-      );
-      const bankPreIncome = parseFloat(
-        (cashIncomeFormArray.at(i) as FormGroup).get('bankPreIncome').value
-      );
-
-      let bankPercentage = 0;
-      if (bankReceipts > 0) {
-        bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
-      }
-      this.bankPercentage.push(bankPercentage);
-      let bankPerWidth = (50 / 100) * bankPercentage
-      this.bankPerWidth.push(bankPerWidth);
-
+    let cashPercentage = 0;
+    if (cashReceipts > 0) {
+      cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
     }
+    this.cashPercentage = cashPercentage;
+    let cashPerWidth = (50 / 100) * cashPercentage
+    this.cashPerWidth = cashPerWidth;
+
+    const bankReceipts = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value);
+    const bankPreIncome = parseFloat(this.selectedFormGroup.controls['bankPreIncome'].value);
+
+    let bankPercentage = 0;
+    if (bankReceipts > 0) {
+      bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
+    }
+    this.bankPercentage = bankPercentage;
+    let bankPerWidth = (50 / 100) * bankPercentage
+    this.bankPerWidth = bankPerWidth;
+
+    // }
   }
+
 
   getByBank(item, incomeType, incomeSubType) {
     let bank = item.incomes?.filter((item) => item.incomeType === 'BANK');
@@ -565,11 +560,260 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     }
   }
 
-  businessClicked(event, index) {
-    (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-      index
-      ] as FormGroup
-    ).controls['natureOfBusiness'].setValue(event);
+  businessClicked(event) {
+    this.selectedFormGroup.controls['natureOfBusiness'].setValue(event);
+  }
+
+
+  clearForm() {
+    this.selectedFormGroup.reset();
+    this.calculatePresumptiveIncome('cash', true);
+    this.calculatePresumptiveIncome('bank', true);
+  }
+
+  saveManualEntry() {
+    if (this.selectedFormGroup.invalid) {
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      return;
+    }
+
+    let result = this.selectedFormGroup.getRawValue();
+
+    if (this.activeIndex === -1) {
+      let srn = (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).length;
+      let form = this.createBusIncomeForm(srn);
+      form.patchValue(this.selectedFormGroup.getRawValue());
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).push(form);
+    } else {
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+    }
+    this.gridOptions.api?.setRowData(this.busIncomeFormArray.controls);
+    this.activeIndex = -1;
+    this.clearForm();
+    this.cashPercentage = 0;
+    this.bankPercentage = 0;
+    this.bankPerWidth = 0;
+    this.cashPerWidth = 0;
+    this.utilsService.showSnackBar("Record saved successfully.");
+  }
+
+  editForm(event) {
+    let i = event.rowIndex;
+    this.selectedFormGroup.patchValue(
+      ((this.busIncomeForm.controls['busIncomeFormArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+    this.calculatePresumptiveIncome('cash', true);
+    this.calculatePresumptiveIncome('bank', true);
+
+    this.activeIndex = i;
+  }
+
+  columnDef() {
+    let self = this;
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Nature Of Business',
+        field: 'natureOfBusiness',
+        width: 250,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+          let natureOfBusinessName;
+          natureOfBusiness.forEach(element => {
+            if (element.code === params.data.controls['natureOfBusiness'].value)
+              natureOfBusinessName = element.label;
+          });
+          return natureOfBusinessName;
+        },
+        valueFormatter: function (params) {
+          let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+          let natureOfBusinessName;
+          natureOfBusiness.forEach(element => {
+            if (element.code === params.data.controls['natureOfBusiness'].value)
+              natureOfBusinessName = element.label;
+          });
+          return natureOfBusinessName;
+        }
+      },
+      {
+        headerName: 'Trade Name',
+        field: 'tradeName',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['tradeName'].value;
+        },
+        valueFormatter: function (params) {
+          const tradeName = params.data.controls['tradeName'].value;
+          return `${tradeName}`;
+        }
+      },
+      {
+        headerName: 'Description',
+        field: 'description',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['description'].value;
+        },
+        valueFormatter: function (params) {
+          const description = params.data.controls['description'].value;
+          return `${description}`;
+        }
+      },
+      {
+        headerName: 'Bank Receipts',
+        field: 'bankReceipts',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          let bankReceipts = params.data.controls['bankReceipts'].value;
+          return bankReceipts;
+        },
+        valueFormatter: function (params) {
+          let bankReceipts = params.data.controls['bankReceipts'].value;
+          return `₹ ${bankReceipts}`;
+        }
+      },
+      {
+        headerName: 'Bank Minimum Presumptive Income',
+        field: 'bankMinIncome',
+        width: 180,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          const bankMinIncome = Number(params.data.controls['bankMinIncome'].value)
+          return bankMinIncome;
+        },
+        valueFormatter: function (params) {
+          const bankMinIncome = Number(params.data.controls['bankMinIncome'].value)
+          return `₹ ${bankMinIncome}`;
+        }
+      },
+      {
+        headerName: 'Bank presumptive income',
+        field: 'bankPreIncome',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['bankPreIncome'].value;
+        },
+        valueFormatter: function (params) {
+          const bankPreIncome = params.data.controls['bankPreIncome'].value;
+          return `₹ ${bankPreIncome}`;
+        }
+      },
+      {
+        headerName: 'Cash Receipts',
+        field: 'cashReceipts',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['cashReceipts'].value;
+        },
+        valueFormatter: function (params) {
+          const cashReceipts = params.data.controls['cashReceipts'].value;
+          return `₹ ${cashReceipts}`;
+        }
+      },
+      {
+        headerName: 'Cash Minimum Presumptive Income',
+        field: 'cashMinIncome',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let cashMinIncome = Number(params.data.controls['cashMinIncome'].value);
+          return cashMinIncome;
+        },
+        valueFormatter: function (params) {
+          let cashMinIncome = Number(params.data.controls['cashMinIncome'].value);
+          return `₹ ${cashMinIncome}`;
+        }
+      },
+      {
+        headerName: 'Cash Presumptive Income',
+        field: 'cashPreIncome',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let cashPreIncome = Number(params.data.controls['cashPreIncome'].value);
+          return cashPreIncome;
+        },
+        valueFormatter: function (params) {
+          let cashPreIncome = Number(params.data.controls['cashPreIncome'].value);
+          return `₹ ${cashPreIncome}`;
+        }
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
   }
 }

@@ -16,6 +16,7 @@ import { MaterialModule } from '../shared/material.module';
 import { SharedModule } from '../shared/shared.module';
 import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
 import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
+import { UpdateStatusComponent } from './components/unassigned-sme/update-status/update-status.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-
     EditUpdateUnassignedSmeComponent,
     EditUpdateAssignedSmeComponent,
     EditUpdateResignedSmeComponent,
-    ConvertToExtPartnerComponent
+    ConvertToExtPartnerComponent,
+    UpdateStatusComponent
   ]
 })
 export class SmeManagementNewModule { }

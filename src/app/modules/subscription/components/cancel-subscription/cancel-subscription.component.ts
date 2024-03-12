@@ -577,39 +577,75 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   updateStatus(mode, client) {
-    let disposable = this.dialog.open(ApproveRejectComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        mode: 'Update Cancel Subscription Status',
-        userInfo: client,
-        approve: 'Approve',
-        reject: 'Reject'
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getCancelSubscriptionList(0);
+        return;
+      } else {
+        let disposable = this.dialog.open(ApproveRejectComponent, {
+          width: '50%',
+          height: 'auto',
+          data: {
+            mode: 'Update Cancel Subscription Status',
+            userInfo: client,
+            approve: 'Approve',
+            reject: 'Reject'
+          }
+        })
+        disposable.afterClosed().subscribe(result => {
+          if (result) {
+            const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+            this.getCancelSubscriptionList(this.config.currentPage);
+          }
+        });
       }
-    })
-    disposable.afterClosed().subscribe(result => {
-      if (result) {
-        const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-        this.getCancelSubscriptionList(this.config.currentPage);
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getCancelSubscriptionList(0);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
       }
     });
+
   }
 
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: (client?.mobileNumber) ? (client?.mobileNumber) : ''
-      }
-    })
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getCancelSubscriptionList(0);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: (client?.mobileNumber) ? (client?.mobileNumber) : ''
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
+        disposable.afterClosed().subscribe(result => {
+        });
+      }
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getCancelSubscriptionList(0);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
     });
+
   }
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {

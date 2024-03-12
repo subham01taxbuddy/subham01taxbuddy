@@ -36,6 +36,7 @@ export class NavbarComponent implements DoCheck {
 
   loggedInUserId: number;
   showAffiliateBtn = false;
+  showCopyLinkButton =false;
 
   loading: boolean = false;
   nav: boolean;
@@ -53,6 +54,12 @@ export class NavbarComponent implements DoCheck {
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    let role = this.utilsService.getUserRoles();
+    if(role.includes('ROLE_LEADER')){
+      this.showCopyLinkButton =true;
+    }else{
+      this.showCopyLinkButton = false;
+    }
     this.fetchAffiliateId();
   }
 
@@ -230,4 +237,25 @@ export class NavbarComponent implements DoCheck {
       console.log('The dialog was closed');
     });
   }
+
+  copyLink() {
+    let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    const smeEmailId = loggedInSmeInfo[0].email;
+    const leaderId = loggedInSmeInfo[0].userId;
+    const leaderName = loggedInSmeInfo[0].name;
+    const link = `https://uat-itr.taxbuddy.com/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;
+
+    const textarea = document.createElement('textarea');
+    textarea.value = link;
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(textarea);
+    this._toastMessageService.alert("success", 'Link copied to clipboard!');
+
+  }
+
+
 }

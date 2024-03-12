@@ -12,7 +12,7 @@ export interface ITR_JSON {
   contactNumber: string;
   panNumber: string;
   aadharNumber: string;
-  aadhaarEnrolmentId:any;
+  aadhaarEnrolmentId: any;
   residentialStatus: string;
   maritalStatus: string;
   assesseeType: string;
@@ -76,6 +76,7 @@ export interface ITR_JSON {
   exemptIncomes?: any[];
   jurisdictions?: Jurisdictions[];
   conditionsResStatus?: any;
+  conditionsNorStatus?: any;
   movableAsset?: MovableAsset[];
   immovableAsset?: Immovable[];
   bondsDeduction?: Deduction[];
@@ -108,9 +109,17 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+
   liableSection44AAflag: string;
+  incomeDeclaredUsFlag: string;
+  totalSalesExceedOneCr: string;
+  aggregateOfAllAmountsReceivedFlag: string;
+  aggregateOfAllPaymentsMadeFlag: string;
+  liableSection44ABFlag: string;
+
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
+  isITRU: boolean;
 
   agriculturalIncome: {
     grossAgriculturalReceipts: number;
@@ -134,6 +143,41 @@ export interface ITR_JSON {
     anyOtherPropertyInadequateConsideration: number;
     anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
+
+  winningsUS115BB: WinningUS115BB;
+  scheduleESOP: ScheduleESOP;
+
+}
+
+export interface ScheduleESOP {
+  scheduleESOPDetails: ScheduleESOPDetail[];
+  totalTaxAttributedAmount: number;
+}
+
+export interface ScheduleESOPDetail {
+  assessmentYear: string;
+  taxDeferredBFEarlierAY: string;
+  securityType: string;
+  ceasedEmployee: string;
+  dateOfCeasing: string;
+  scheduleESOPEventDetails: ScheduleESOPEventDetail[];
+  totalTaxAttributedAmount: number;
+  taxPayableCurrentAY: number;
+  balanceTaxCF: number;
+}
+
+export interface ScheduleESOPEventDetail {
+  dateOfSale: string;
+  taxAttributedAmount: number;
+}
+
+export interface WinningUS115BB {
+  quarter1: number;
+  quarter2: number;
+  quarter3: number;
+  quarter4: number;
+  quarter5: number;
+  total: number;
 }
 
 export interface agriculturalLandDetails {
@@ -494,8 +538,8 @@ export interface HouseProperties {
   loans: Loans[];
   eligible80EEAAmount?: any;
   eligible80EEAmount?: any;
-  totalArrearsUnrealizedRentReceived?:any;
-  arrearsUnrealizedRentReceived?:any;
+  totalArrearsUnrealizedRentReceived?: any;
+  arrearsUnrealizedRentReceived?: any;
 }
 
 export interface PresumptiveIncomes {
@@ -654,6 +698,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
+  description?:any
 }
 export interface Perquisites {
   perquisiteType: string;
@@ -1029,6 +1074,7 @@ export interface ProfitLossACIncomes {
   totalgrossProfitFromNonSpeculativeIncome?: number;
   netProfitfromNonSpeculativeIncome?: number;
   incomes: ProfitLossIncomes[];
+  otherIncomes?: NewIncome[];
   expenses?: NewExpenses[];
   totalgrossProfitFromSpeculativeIncome?: Number;
   netProfitfromSpeculativeIncome?: number;
@@ -1036,7 +1082,7 @@ export interface ProfitLossACIncomes {
 
 export interface ProfitLossIncomes {
   id: Number;
-  netIncome?:Number;
+  netIncome?: Number;
   brokerName: string;
   incomeType: string;
   turnOver: Number;
@@ -1054,10 +1100,16 @@ export interface NewExpenses {
   expenseAmount: number;
   description: any;
 }
+
+export interface NewIncome {
+  type: string;
+  amount: number;
+  description: any;
+}
 export interface NewFinancialParticulars {
   id: Number;
   membersOwnCapital: any;
-  reservesAndSurplus?:any;
+  reservesAndSurplus?: any;
   securedLoans: any;
   unSecuredLoans: any;
   totalLoans?: any;
@@ -1066,7 +1118,7 @@ export interface NewFinancialParticulars {
   sundryCreditorsAmount: Number;
   totalLiabilitiesProvision?: Number;
   totalCurrentAssetsLoansAdv?: Number;
-  netCurrentAsset?:Number;
+  netCurrentAsset?: Number;
   otherLiabilities: any;
   totalCapitalLiabilities: any;
   fixedAssets: any;
@@ -1076,8 +1128,8 @@ export interface NewFinancialParticulars {
   cashInHand: Number;
   loanAndAdvances: any;
   investment: any;
-  longTermInvestment?:any;
-  shortTermInvestment?:any;
+  longTermInvestment?: any;
+  shortTermInvestment?: any;
   totalCurrentAssets?: Number;
   otherAssets: any;
   totalAssets: any;
@@ -1159,4 +1211,28 @@ export interface TotalLossCarriedForwardedToFutureYears {
   totalLoss: number;
   speculativeBusinessLoss: number;
   broughtForwordBusinessLoss: number;
+}
+
+export interface salarySevOne {
+  id: number;
+  salaryType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
+}
+
+export interface salarySevTwo {
+  id: number;
+  perquisiteType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
+}
+
+export interface salarySevThree {
+  id: number;
+  salaryType: any;
+  taxableAmount: number;
+  exemptAmount: number;
+  description: any;
 }

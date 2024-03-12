@@ -1,6 +1,6 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {ITR_JSON, Jurisdictions} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
@@ -39,6 +39,7 @@ import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 import { RequestManager } from '../../../../shared/services/request-manager';
+import {NorDetailsDialogComponent} from "../../../components/nor-details-dialog/nor-details-dialog.component";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -474,6 +475,12 @@ export class CustomerProfileComponent implements OnInit {
 
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
 
+      if(this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT'){
+        this.ITR_JSON.jurisdictions = this.jurisdictions;
+        this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
+        this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
+      }
+
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -538,7 +545,7 @@ export class CustomerProfileComponent implements OnInit {
       );
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn');
 
       if(gender?.status === 'INVALID'){
         gender?.setValidators(Validators.required);
@@ -910,6 +917,10 @@ export class CustomerProfileComponent implements OnInit {
     );
   }
 
+  jurisdictions: Jurisdictions[];
+  conditionsResStatus: any;
+  conditionsNorStatus: any;
+
   onSelectResidential(status) {
     if (status === 'RESIDENT') {
       this.customerProfileForm.controls['contactNumber'].setValidators([
@@ -937,17 +948,40 @@ export class CustomerProfileComponent implements OnInit {
         console.info('Dialog Close result', result);
         if (result.success) {
           console.log('JUR:', result);
-          this.ITR_JSON.jurisdictions = result.data.jurisdictions;
-          this.ITR_JSON.conditionsResStatus = result.data.conditionsResStatus;
+          this.jurisdictions = result.data.jurisdictions;
+          this.conditionsResStatus = result.data.conditionsResStatus;
+          this.conditionsNorStatus = null;
         } else {
           this.customerProfileForm.controls['residentialStatus'].setValue(
             this.ITR_JSON.residentialStatus
           );
         }
       });
+    } else if (status === 'NON_ORDINARY') {
+      let disposable = this.matDialog.open(NorDetailsDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        disableClose: true,
+        // data: { residentialStatus: this.ITR_JSON.residentialStatus }
+      });
+
+      disposable.afterClosed().subscribe((result) => {
+        console.info('Dialog Close result', result);
+        if (result.success) {
+          console.log('JUR:', result);
+          this.jurisdictions = [];
+          this.conditionsResStatus = null;
+          this.conditionsNorStatus = result.data.conditionsNorStatus;
+        } else {
+          this.customerProfileForm.controls['residentialStatus'].setValue(
+              this.ITR_JSON.residentialStatus
+          );
+        }
+      });
     } else {
-      this.ITR_JSON.jurisdictions = [];
-      this.ITR_JSON.conditionsResStatus = null;
+      this.jurisdictions = [];
+      this.conditionsResStatus = null;
+      this.conditionsNorStatus = null;
     }
 
     //once user residential status changes, update the same in cg object

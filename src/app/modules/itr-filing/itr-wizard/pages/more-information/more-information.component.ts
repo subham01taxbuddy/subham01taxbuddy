@@ -3,7 +3,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
@@ -31,6 +31,7 @@ export class MoreInformationComponent
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     public utilsService: UtilsService,
     public matDialog: MatDialog
   ) {
@@ -38,7 +39,6 @@ export class MoreInformationComponent
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.show = (this.ITR_JSON.partnerInFirmFlag === 'Y' ? true : false) || (this.Copy_ITR_JSON.partnerInFirmFlag === 'Y' ? true : false)
-
     this.initList();
   }
 
@@ -61,6 +61,12 @@ export class MoreInformationComponent
         label: 'Losses to be carried forward (Schedule CFL)',
         path: 'schedule-cfl',
         type: 'scheduleCfl',
+        showOnUi :true
+      },
+      {
+        label: 'Schedule Tax deferred on ESOP',
+        path: 'schedule-esop',
+        type: 'scheduleESOP',
         showOnUi :true
       },
       {
@@ -94,6 +100,12 @@ export class MoreInformationComponent
 
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
+
+    this.route.paramMap.subscribe(() => {
+      const state = window.history.state;
+      if(state && typeof state.showList === 'boolean')
+        this.showList = state.showList;
+    });
   }
 
   gotoSection(topic) {

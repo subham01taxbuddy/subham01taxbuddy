@@ -1196,7 +1196,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.loading = false;
       this.utilsService.showErrorMsg('Please fill all mandatory details.');
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(formGroupName);
+      this.utilsService.highlightInvalidFormFields(formGroupName, 'accordBtn1');
     }
   }
 

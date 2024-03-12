@@ -6,10 +6,10 @@
             let i = index">
   <!--      <div>-->
   <div class="contents-wrapper">
-    <div [ngClass]="i === activeIndex ? 'contents-selected' : 'contents'">
-      <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Entry {{i+1}}</div>
+    <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
+      <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}</div>
       <div class="group" (click)="deleteSalaryArray(i)">
-        <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
+        <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'"></i>
       </div>
     </div>
   </div>

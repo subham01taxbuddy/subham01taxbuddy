@@ -178,87 +178,71 @@
             <mat-label> Mobile No </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
-                maxlength="10" minlength="6" trim digitsOnly required readonly/>
+                maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Name </mat-label>
+            <mat-label> Individual/Principal/Firm Name </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Name" [formControl]="name" class="input-field" />
+              <input type="text" matInput placeholder="Name" [formControl]="name" class="input-field" readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Email ID</mat-label>
+            <mat-label> Email ID </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field" />
+              <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field"
+                readonly />
             </mat-form-field>
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-sm-4">
-            <mat-label> Language </mat-label>
+            <mat-label> Pin Code </mat-label>
             <mat-form-field appearance="outline">
-              <mat-select [formControl]="languages" multiple>
-                <mat-select-trigger>
-                  {{languages.value ? languages.value : ''}}
-
-                </mat-select-trigger>
-                <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
-              </mat-select>
+              <input type="text" matInput placeholder="pin" [formControl]="pinCode" class="input-field" maxlength="10"
+                minlength="6" trim digitsOnly readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Referred Person </mat-label>
+            <mat-label> city </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Referred person" [formControl]="referredBy"
-                class="input-field" />
+              <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Income Tax Expertise </mat-label>
+            <mat-label> state </mat-label>
             <mat-form-field appearance="outline">
-              <mat-select [formControl]="itrTypes" multiple>
-                <mat-select-trigger>
-                  {{itrTypes.value ? itrTypes.value : ''}}
-
-                </mat-select-trigger>
-                <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value">
-                  {{itrType.display}}</mat-option>
-              </mat-select>
-
+              <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" readonly />
             </mat-form-field>
           </div>
         </div>
-
         <div class="row mt-3">
           <div class="col-sm-4">
             <mat-label> Qualification </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Qualification" name="" [formControl]="qualification"
-                class="input-field" />
-              <mat-error *ngIf="qualification?.hasError('required') ">
-                This field is required</mat-error>
+                class="input-field" readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> State </mat-label>
+            <mat-label> Referred by whom from taxbuddy? </mat-label>
             <mat-form-field appearance="outline">
-              <mat-select placeholder="Select state" name="state" [formControl]="state">
-                <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
-                  {{ state.stateName | titlecase }}
-                </mat-option>
-              </mat-select>
-
+              <input type="text" matInput placeholder="Referred person" [formControl]="referredBy" class="input-field"
+                readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Income Tax Special </mat-label>
+            <mat-label> Calling Number </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Income Tax Special" name="" [formControl]="special"
-                     class="input-field"  readonly/>
+              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" trim
+                [formControl]="callingNumber" class="input-field" />
+              <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['callingNumber'].hasError('required')">Please
+                  enter mobile no.</span>
+                <span *ngIf="smeFormGroup.controls['callingNumber'].hasError('pattern')">Please enter valid mobile
+                  no.</span>
+              </mat-error>
             </mat-form-field>
           </div>
-
         </div>
       </div>
       <div class="row">
@@ -272,47 +256,161 @@
             <div class="card" style="margin-top: 10px;">
               <b style="font-size: 18px">Roles: </b>
               <section class="example-section" [formGroup]="roles">
-                <p><mat-checkbox (change)="onCheckboxChange(1)" [formControl]="admin">Admin</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(1)" [formControl]="filerIndividual">Filer-Individual</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox (change)="onCheckboxChange(2)" [formControl]="leader">Leader</mat-checkbox></p>
-                <hr>
-                <p><mat-checkbox (change)="onCheckboxChange(3)" [formControl]="owner">Owner</mat-checkbox></p>
-                <hr>
-                <p><mat-checkbox (change)="onCheckboxChange(4)" [formControl]="filer">Partner/Filer</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(2)" [formControl]="filerPrinciple">Filer-Principal/Firm</mat-checkbox></p>
                 <hr>
               </section>
             </div>
           </div>
-          <div class="col-sm-5" style="margin-top: 60px;" *ngIf="filer.value">
-            <mat-label> <b style="font-size: 12px">Search Owner Name</b> <span class="text-danger">*</span></mat-label>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-4" style="margin-top: 10px;" >
+            <div class="card" style="margin-top: 10px;">
+              <b style="font-size: 18px">SME/Partner Type: </b>
+            </div>
+            <section class="example-section" [formGroup]="roles">
+              <p><mat-checkbox (change)="onCheckboxChange(3)" [formControl]="internal">Internal</mat-checkbox></p>
+              <hr>
+              <p><mat-checkbox (change)="onCheckboxChange(4)" [formControl]="external">External</mat-checkbox></p>
+              <hr>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">Documents & Bank Details</span>
+        </div>
+      </div>
+      <div class="user-data-container">
+        <b style="font-size: 18px">Click Button To View Document </b>
+        <div class="row">
+          <div class="col-6 col-sm-3 col-md-2">
+              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('signedNDA')">Signed NDA</button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-3">
+              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('cv')">CV(Resume)/COP</button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-2">
+              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('pan')">PAN</button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-3">
+              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('passbookOrCancelledCheque')">Passbook/Canceled Cheque</button>
+          </div>
+          <div class="col-6 col-sm-3 col-md-2">
+              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('gstIn')">GSTIN</button>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <b style="font-size: 18px">Bank Details</b>
+          <div class="col-sm-4">
+            <mat-label> Account No. </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput [formControl]="searchOwner" [matAutocomplete]="auto" required>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                <mat-option *ngFor="let option  of filteredOptions | async" [value]="option"
-                  (click)="getownerNameId(option)">
-                  {{option.name}}
-                </mat-option>
-              </mat-autocomplete>
-              <mat-error *ngIf="owner?.hasError('required') ">
-                This field is required</mat-error>
+              <input type="text" matInput placeholder="Account Number" name="" [formControl]="accountNumber"
+                class="input-field" readonly />
             </mat-form-field>
           </div>
-          <div class="col-sm-5" style="margin-top: 60px;" *ngIf="owner.value">
-            <mat-label> <b style="font-size: 12px">Search Leader Name</b> <span class="text-danger">*</span></mat-label>
+          <div class="col-sm-4">
+            <mat-label> IFSC Code </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" required>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn1">
-                <mat-option *ngFor="let option1  of filteredOptions1 | async" [value]="option1"
-                  (click)="getLeaderNameId(option1)">
-                  {{option1.name}}
-                </mat-option>
-              </mat-autocomplete>
-              <mat-error *ngIf="owner?.hasError('required') ">
-                This field is required</mat-error>
+              <input type="text" matInput placeholder="IFSC Code" name="" [formControl]="ifsCode"
+                class="input-field" readonly />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> Type of account </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Type of account" name="" [formControl]="accountType"
+                class="input-field" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-sm-6">
+            <div>
+              <b style="font-size: 18px">Additional ID's Required?</b>
+              <div class="row col-8">
+                <section class="example-section add-id">
+                  <mat-radio-group [formControl]="additionalIdsRequired ">
+                    <mat-radio-button [value]="true">Yes</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                </section>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-6" *ngIf="additionalIdsRequired.value">
+            <mat-label> No of additional Id's required </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
+                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true" readonly />
             </mat-form-field>
           </div>
         </div>
       </div>
+      <div class="row mt-3" >
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">Expertise & Availability</span>
+        </div>
+      </div>
+      <div class="user-data-container">
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="card" style="margin-top: 10px;">
+              <b style="font-size: 18px">Language: </b>
+              <div class="row">
+                <section class="example-section">
+                  <div *ngFor="let lang of langList" class="lang-checkbox">
+                    <p>
+                      <mat-checkbox [formControl]="getLanguageControl(lang)"
+                        (change)="onLanguageCheckboxChange(lang)">
+                        <span class="spacer">{{ lang }}</span></mat-checkbox>
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="card" style="margin-top: 10px;">
+              <b style="font-size: 18px">ITR's Type can Handle: </b>
+              <div class="row">
+                <section class="example-section">
+                  <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
+                    <p>
+                      <mat-checkbox [formControl]="getItrTypeControl(itrType)"
+                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
+                          }}</span></mat-checkbox>
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <mat-label>Interviewed By </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Interviewed By" name="" [formControl]="interviewedBy"
+                class="input-field" readonly />
+            </mat-form-field>
+          </div>
+         </div>
+      </div>
+      <div class="row mt-3" *ngIf="signedInRole.includes('ROLE_ADMIN')" >
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">Assign Parent</span>
+        </div>
+      </div>
+      <div class="user-data-container" *ngIf="signedInRole.includes('ROLE_ADMIN')">
+        <div class="row">
+          <div class="col-sm-6 ">
+            <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+              [showOwnerList]="true" [fromEditSme]="true"></app-leader-list-dropdown>
+        </div>
+        </div>
+      </div>
+
 
     <div class="mt-2" style="text-align: center;">
       <button class="save-all" [disabled]="loading" (click)=" updateSmeDetails()">Save </button>

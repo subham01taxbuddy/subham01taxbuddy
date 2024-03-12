@@ -68,6 +68,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     { label: 'Cancel', value: 'CANCEL' },
     { label: 'Downgraded', value: 'DOWNGRADE' },
   ];
+  statusList:any=[
+    { label: 'Refund Done', value: 'PROCESSED' },
+    { label: 'Pending For Refund', value: 'IN_PROGRESS,INITIATED,FAILED' },
+  ]
   searchAsPrinciple :boolean =false;
   searchBy: any = {};
   searchMenus = [
@@ -85,6 +89,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     email: new FormControl(''),
     invoiceNo: new FormControl(''),
     name: new FormControl(''),
+    status:new FormControl('')
   });
 
   get mobile() {
@@ -102,8 +107,13 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   get requestType() {
     return this.invoiceFormGroup.controls['requestType'] as FormControl;
   }
+
   get name() {
     return this.invoiceFormGroup.controls['name'] as FormControl;
+  }
+
+  get status() {
+    return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
   constructor(
@@ -121,7 +131,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   ) {
     let roles = this.utilsService.getUserRoles();
     let show: boolean;
-    if (roles.includes('ROLE_ADMIN')) {
+    if (roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')) {
       show = true;
     }
     this.refundListGridOptions = <GridOptions>{
@@ -216,6 +226,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.searchBy = {};
     this.cacheManager.clearCache();
+    this.searchParam.serviceType = null;
+    this?.serviceDropDown?.resetService();
+    this.status.setValue(null);
+    this.requestType.setValue(null);
     this.invoiceFormGroup.controls['email'].setValue(null);
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
@@ -224,7 +238,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
-    this?.serviceDropDown?.resetService();
     this.filerId = null;
     this.ownerId = null;
     this.leaderId =null;
@@ -284,6 +297,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['requestType'].value)) {
       invoiceFilter ='&requestType=' +this.invoiceFormGroup.controls['requestType'].value;
     }
+    let statusFilter ='';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['status'].value)) {
+      statusFilter ='&status=' +this.invoiceFormGroup.controls['status'].value;
+    }
 
     let userFilter = '';
 
@@ -299,7 +316,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
     let data = this.utilService.createUrlParams(this.searchParam);
 
-    param = `/bo/refund/requests?${data}${userFilter}${reqFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}`;
+    param = `/bo/refund/requests?${data}${userFilter}${reqFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}${statusFilter}`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
@@ -745,19 +762,39 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobile
-      }
-    })
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: client.mobile
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
-    });
+        disposable.afterClosed().subscribe(result => {
+          this.getRefundRequestList(0);
+        });
+      }
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
+    }
+  );
+
   }
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
@@ -777,73 +814,141 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
   revertRefund(data){
     // https://uat-api.taxnuddy.com/itr/refund-request?id=6581a4e07f576c4e8dcea4e8
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Revert/Undo Refund Request!',
-        message: 'Are you sure you want to Revert/Undo Refund Request for this invoice ?',
-      },
-    });
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.loading = true;
-        let id = data.id
-        let param = `/refund-request?id=${id}`;
-        this.itrService.deleteMethod(param).subscribe((response: any) => {
-          if (response.success) {
-            this.loading = false;
-            console.log('response', response);
-            this.utilsService.showSnackBar(response.message);
-            this.resetFilters();
-          } else {
-            this.utilsService.showSnackBar(response.message);
-            this.loading = false;
-          }
-        },(error) => {
-          this.loading = false;
-          this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+    this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
+        return;
+      } else {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Revert/Undo Refund Request!',
+            message: 'Are you sure you want to Revert/Undo Refund Request for this invoice ?',
+          },
         });
-      }
-    })
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+              console.log(res);
+              if (res.error) {
+                this.utilService.showSnackBar(res.error);
+                this.getRefundRequestList(0);
+                return;
+              } else {
+                this.loading = true;
+                let id = data.id
+                let param = `/refund-request?id=${id}`;
+                this.itrService.deleteMethod(param).subscribe((response: any) => {
+                  if (response.success) {
+                    this.loading = false;
+                    console.log('response', response);
+                    this.utilsService.showSnackBar(response.message);
+                    this.resetFilters();
+                  } else {
+                    this.utilsService.showSnackBar(response.message);
+                    this.loading = false;
+                  }
+                },(error) => {
+                  this.loading = false;
+                  this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+                });
+              }
+            },(error) => {
+              this.loading=false;
+              if (error.error && error.error.error) {
+                this.utilService.showSnackBar(error.error.error);
+                this.getRefundRequestList(0);
+              } else {
+                this.utilService.showSnackBar("An unexpected error occurred.");
+              }
+            });
 
+          }
+        })
+      }
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
+    });
   }
 
   initiateRefund(data) {
     //https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/payment/razorpay/refund'
-
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Initiate Refund Request!',
-        message: 'Are you sure you want to Initiate Refund Request for this invoice ?',
-      },
-    });
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.loading = true;
-        let param = `payment/razorpay/refund`;
-
-        const request = {
-          id: data.id,
-          // invoiceNo:data.invoiceNo
-        };
-        this.reviewService.postMethod(param, request).subscribe(
-          (response: any) => {
-            if (response.success) {
-              this.loading = false;
-              console.log('response', response);
-              this.utilsService.showSnackBar(response.message);
-            } else {
-              this.utilsService.showSnackBar(response.message);
-              this.loading = false;
-            }
+    this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getRefundRequestList(0);
+        return;
+      } else {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Initiate Refund Request!',
+            message: 'Are you sure you want to Initiate Refund Request for this invoice ?',
           },
-          (error) => {
-            this.loading = false;
-            this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+        });
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+              console.log(res);
+              if (res.error) {
+                this.utilService.showSnackBar(res.error);
+                this.getRefundRequestList(0);
+                return;
+              } else {
+                this.loading = true;
+            let param = `payment/razorpay/refund`;
+            const request = {
+              id: data.id,
+              // invoiceNo:data.invoiceNo
+            };
+            this.reviewService.postMethod(param, request).subscribe(
+              (response: any) => {
+                if (response.success) {
+                  this.loading = false;
+                  console.log('response', response);
+                  this.utilsService.showSnackBar(response.message);
+                } else {
+                  this.utilsService.showSnackBar(response.message);
+                  this.loading = false;
+                }
+              },
+              (error) => {
+                this.loading = false;
+                this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+                this.getRefundRequestList(0);
+              }
+            );
+              }
+            },(error) => {
+              this.loading=false;
+              if (error.error && error.error.error) {
+                this.utilService.showSnackBar(error.error.error);
+                this.getRefundRequestList(0);
+              } else {
+                this.utilService.showSnackBar("An unexpected error occurred.");
+              }
+            });
+
           }
+        }
         );
       }
-    }
-    );
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilService.showSnackBar(error.error.error);
+        this.getRefundRequestList(0);
+      } else {
+        this.utilService.showSnackBar("An unexpected error occurred.");
+      }
+    });
   }
 
   ngOnDestroy() {

@@ -1,0 +1,29 @@
+<h1 mat-dialog-title> For Non-Ordinary Residents</h1>
+<form [formGroup]="norDetailsForm">
+  <mat-dialog-content>
+    <div class="card__row">
+      <div class=" card__col-xs-12 card__col-sm-12">
+        Please specify the applicable section* <span
+          style="float: right;"></span>
+      </div>
+      <br>
+      <mat-form-field class="input-field-width">
+        <!--  <input matInput class="input-field" name="jur[i]" formControlName="jurisdictionResidence"
+          pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim> -->
+
+        <mat-select placeholder="" name="conditionsNorStatus" formControlName="conditionsNorStatus" required>
+          <mat-option *ngFor="let condition of conditionsList" [value]="condition.key" matTooltip="{{condition.label}}">
+            {{ condition.label | titlecase}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <br>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button class="tbd-btn" (click)="saveDetails()">Save</button>
+    <button type="submit" class="tbd-btn-secondary" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>

@@ -180,6 +180,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Other Incomes</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(profitLossAccount.nonSpeculativeOtherIncomes)}}
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Net Profit</td>
                             <td>₹
                                 {{utilsService.currencyFormatter(profitLossAccount.totalNonSpeculativeIncome)}}
@@ -418,7 +424,7 @@
                         <tr>
                             <td>Buy Value</td>
                             <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCGBuyValue)}}</td>
-                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGBuyValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGIndexCostOfAcquisition)}}</td>
                         </tr>
                         <tr>
                             <td>Cost of Improvement</td>
@@ -452,6 +458,7 @@
                     </tbody>
                 </table>
             </div>
+
 
             <div class="space" *ngIf="type === 'listedBonds'">
                 <table class="table table-borderless f-size">

@@ -22,6 +22,9 @@ import { ReportService } from 'src/app/services/report-service';
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import * as moment from 'moment';
+import { HttpClient } from '@angular/common/http';
+import { saveAs } from "file-saver/dist/FileSaver";
+
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -57,7 +60,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   minDate = new Date(2023, 3, 1);
   minStartDate: string = '2023-04-01';
-  maxStartDate=moment().toDate();
+  maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
 
@@ -114,7 +117,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'invoiceDate', name: 'Invoice Date' },
     { value: 'paymentDate', name: 'Paid Date' },
-    {value: 'invoiceNo', name: ' Invoice number'},
+    { value: 'invoiceNo', name: ' Invoice number' },
     // { value: 'billTo', name: 'Name' },
     // { value: 'invoiceDate', name: 'Invoice Date' },
     // { value: 'paymentDate', name: 'Paid Date' },
@@ -143,6 +146,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     private mobileEncryptDecryptService: MobileEncryptDecryptService,
+    public utilsService: UtilsService,
+    private httpClient: HttpClient,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -169,7 +174,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   sortByObject(object) {
@@ -525,6 +530,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
           paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
           leaderName: userInvoices[i].leaderName,
+          couponCodeClaimedServiceType:userInvoices[i].couponCodeClaimedServiceType,
+          markedDoneByName:userInvoices[i].markedDoneByName
         })
       invoices.push(updateInvoice)
     }
@@ -582,7 +589,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response:any) => {
+      this.reportService.invoiceDownload(param).subscribe((response: any) => {
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -834,7 +841,34 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         }
 
       },
+      {
+        headerName: 'Call Done By',
+        field: 'markedDoneByName',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let name = params.data.markedDoneByName
+          if(name){
+            return name
+          }else{
+            return '-'
+          }
+        }
 
+      },
+      {
+        headerName: 'Subscription Adjusted',
+        field: 'couponCodeClaimedServiceType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+      },
       {
         headerName: 'Payment ID',
         field: 'paymentId',
@@ -914,23 +948,53 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     we_track('Tax Invoice Download', {
       'User number': data.phone,
     });
-    location.href =
-      environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    this.loading = true;
+    this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
+      pdf => {
+        this.loading = false;
+        const blob = new Blob([pdf], { type: "application/pdf" });
+        saveAs(blob,'tax_invoice');
+      },
+      err => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to download document');
+      }
+    );
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.billTo,
-        clientMobileNumber: client.phone
-      },
-    });
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        this.getInvoice();
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '50%',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.billTo,
+            clientMobileNumber: client.phone
+          },
+        });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+        disposable.afterClosed().subscribe((result) => {
+          console.log('The dialog was closed');
+          this.getInvoice();
+        });
+      }
+    },(error) => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.getInvoice();
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
     });
   }
 
@@ -946,7 +1010,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
   setToDateValidation() {
     this.minEndDate = this.startDate.value;
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
 

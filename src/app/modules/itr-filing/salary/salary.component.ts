@@ -1,7 +1,7 @@
 import { Employer } from './../../../modules/shared/interfaces/itr-input.interface';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import {
   Validators,
@@ -15,15 +15,10 @@ import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
-import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/all-salary-income.component';
-import { min } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BifurcationComponent } from './bifurcation/bifurcation.component';
-import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { CalculatorsComponent } from './calculators/calculators.component';
-import { BreakUpComponent } from './break-up/break-up.component';
-import {ConfirmDialogComponent} from "../../shared/components/confirm-dialog/confirm-dialog.component";
+import { Overlay } from '@angular/cdk/overlay';
+import { ConfirmDialogComponent } from "../../shared/components/confirm-dialog/confirm-dialog.component";
 
 declare let $: any;
 
@@ -32,10 +27,9 @@ declare let $: any;
   templateUrl: './salary.component.html',
   styleUrls: ['./salary.component.scss'],
 })
-export class SalaryComponent extends WizardNavigation implements OnInit {
-  // @ViewChild('buttonContainer') buttonContainer: ElementRef;
-  // @ViewChild('buttonContainers') buttonContainers: ElementRef;
+export class SalaryComponent extends WizardNavigation implements OnInit, AfterViewInit {
 
+  @ViewChildren("bifurcation") bifurcationComponents: QueryList<BifurcationComponent>;
   loading: boolean = false;
   employerDetailsFormGroup: FormGroup;
   deductionsFormGroup: FormGroup;
@@ -63,10 +57,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       value: any;
     };
   } = {
-    SEC17_1: { total: 0, value: null },
-    SEC17_2: { total: 0, value: null },
-    SEC17_3: { total: 0, value: null },
-  };
+      SEC17_1: { total: 0, value: null },
+      SEC17_2: { total: 0, value: null },
+      SEC17_3: { total: 0, value: null },
+    };
 
   salaryDropdown = [
     {
@@ -214,6 +208,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   prescPersonalExpError: boolean = false;
   prescProfExpError: boolean = false;
   eicProfExpError: boolean = false;
+  bifurcationFormGroup: boolean = false;
+  PREV_ITR_JSON: any;
 
   constructor(
     private router: Router,
@@ -221,10 +217,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private location: Location,
-    // private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
-    private matDialog: MatDialog,
-    private overlay: Overlay,
-    private elementRef: ElementRef,
     private dialog: MatDialog
   ) {
     super();
@@ -233,6 +225,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     let extraData: any = this.location.getState();
     // this.currentIndex = extraData.data;
     // this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -326,29 +319,39 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
+      this.hasBifurcation();
+      this.bifurcation();
     } else {
       this.markActive(-1);
     }
   }
 
-  deleteEmployer(index){
-    if(index >= 0 && index < this.Copy_ITR_JSON.employers.length) {
+  ngAfterViewInit() {
+    this.bifurcationComponents.changes.subscribe((list: QueryList<BifurcationComponent>) => {
+      console.log('list length:', list.length, this.bifurcationComponents.length);
+      //make changes here
+      // this.changeDetector.detectChanges();
+    })
+  }
+
+  deleteEmployer(index) {
+    if (index >= 0 && index < this.Copy_ITR_JSON.employers.length) {
       this.localEmployer = null;
       this.Copy_ITR_JSON.employers.splice(index, 1);
       this.ITR_JSON = this.Copy_ITR_JSON;
       sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
       );
       this.serviceCall();
     }
   }
 
-  markActive(index){
-    if(this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length){
+  markActive(index) {
+    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length) {
       this.saveEmployerDetails(false);
     }
-    if(index === -1) {
+    if (index === -1) {
       this.localEmployer = {
         id: Math.random().toString(36).substr(2, 9),
         employerName: '',
@@ -375,20 +378,33 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         calculators: null,
       };
       this.Copy_ITR_JSON.employers.push(this.localEmployer);
-      this.editEmployerDetails(this.Copy_ITR_JSON.employers.length -1);
+      this.editEmployerDetails(this.Copy_ITR_JSON.employers.length - 1);
       this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     } else {
       this.currentIndex = index;
       this.editEmployerDetails(this.currentIndex);
       this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     }
-
-    if(this.bifurcationResult &&
-        (this.bifurcationResult.SEC17_1.total > 0 || this.bifurcationResult.SEC17_2.total > 0
-            || this.bifurcationResult.SEC17_3.total > 0)){
+    this.hasBifurcation();
+    this.bifurcation();
+    if (this.bifurcationResult &&
+      (this.bifurcationResult.SEC17_1.total > 0 || this.bifurcationResult.SEC17_2.total > 0
+        || this.bifurcationResult.SEC17_3.total > 0)) {
       this.changeConsetGiven = false;
     } else {
       this.changeConsetGiven = true;
+    }
+  }
+
+  getBifurcationTotal(index) {
+    switch (index) {
+      case 0:
+      default:
+        return this.bifurcationResult.SEC17_1.total;
+      case 1:
+        return this.bifurcationResult.SEC17_2.total;
+      case 2:
+        return this.bifurcationResult.SEC17_3.total;
     }
   }
 
@@ -494,11 +510,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     const data = [];
 
     data.push(
-        this.fb.group({
-          label: this.allowanceDropdown[0].label,
-          allowType: this.allowanceDropdown[0].value,
-          allowValue: [null],
-        })
+      this.fb.group({
+        label: this.allowanceDropdown[0].label,
+        allowType: this.allowanceDropdown[0].value,
+        allowValue: [null],
+      })
     );
 
     return this.fb.array(data);
@@ -525,17 +541,17 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   validateExemptIncomes(event: any) {
     let exemptIncomes = this.allowanceFormGroup.controls[
-        'allowances'
-        ] as FormArray;
+      'allowances'
+    ] as FormArray;
     let selectedValues = exemptIncomes.controls.filter(
-        (fg:FormGroup)=> fg.controls['allowType'].value === event.value);
-    if(selectedValues?.length > 1){
+      (fg: FormGroup) => fg.controls['allowType'].value === event.value);
+    if (selectedValues?.length > 1) {
       this.utilsService.showSnackBar("You cannot select same exempt income more than once");
-      selectedValues.forEach((fg:FormGroup) => {
-        fg.controls['allowType'].setErrors({invalid : true})
+      selectedValues.forEach((fg: FormGroup) => {
+        fg.controls['allowType'].setErrors({ invalid: true })
       });
     } else {
-      exemptIncomes.controls.forEach((fg:FormGroup) => {
+      exemptIncomes.controls.forEach((fg: FormGroup) => {
         fg.controls['allowType'].setErrors(null);
         let validators = null;
         if (fg.controls['allowType'].value === 'COMPENSATION_ON_VRS') {
@@ -545,36 +561,36 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
         // FOR EIC
         if ((this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
-                this.ITR_JSON.employerCategory === 'GOVERNMENT') &&
-            fg.controls['allowType'].value === 'EIC') {
+          this.ITR_JSON.employerCategory === 'GOVERNMENT') &&
+          fg.controls['allowType'].value === 'EIC') {
           fg.controls['allowValue'].setValidators(validators);
           fg.controls['allowValue'].updateValueAndValidity();
         }
 
         // FIRST PROVISIO
         if (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-            this.ITR_JSON.employerCategory !== 'PE' &&
-            this.ITR_JSON.employerCategory !== 'PESG' &&
-            fg.controls['allowType'].value === 'FIRST_PROVISO') {
+          this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+          this.ITR_JSON.employerCategory !== 'PE' &&
+          this.ITR_JSON.employerCategory !== 'PESG' &&
+          fg.controls['allowType'].value === 'FIRST_PROVISO') {
           fg.controls['allowValue'].setValidators(validators);
           fg.controls['allowValue'].updateValueAndValidity();
         }
 
         // SECOND PROVISIO
         if (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-            this.ITR_JSON.employerCategory !== 'PE' &&
-            this.ITR_JSON.employerCategory !== 'PESG' &&
-            fg.controls['allowType'].value === 'SECOND_PROVISO') {
+          this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+          this.ITR_JSON.employerCategory !== 'PE' &&
+          this.ITR_JSON.employerCategory !== 'PESG' &&
+          fg.controls['allowType'].value === 'SECOND_PROVISO') {
           fg.controls['allowValue'].setValidators(validators);
           fg.controls['allowValue'].updateValueAndValidity();
         }
 
         // OTHER
         if (fg.controls['allowType'].value !== 'EIC' &&
-            fg.controls['allowType'].value !== 'FIRST_PROVISO' &&
-            fg.controls['allowType'].value !== 'SECOND_PROVISO') {
+          fg.controls['allowType'].value !== 'FIRST_PROVISO' &&
+          fg.controls['allowType'].value !== 'SECOND_PROVISO') {
           fg.controls['allowValue'].setValidators(validators);
           fg.controls['allowValue'].updateValueAndValidity();
         }
@@ -582,30 +598,42 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  deleteExemptIncome(index){
+  deleteExemptIncome(index) {
     let exemptIncomesFormArray = this.allowanceFormGroup.controls[
-        'allowances'
-        ] as FormArray;
+      'allowances'
+    ] as FormArray;
     exemptIncomesFormArray.removeAt(index);
-    if(exemptIncomesFormArray.length === 0){
+    if (exemptIncomesFormArray.length === 0) {
       this.addExemptIncome();
     }
+    this.changeAllowancesType();
   }
 
-  addExemptIncome(allowance?){
-    let exemptIncomesFormArray = this.allowanceFormGroup.controls[
-        'allowances'
-        ] as FormArray;
+  addExemptIncome(allowance?) {
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
     let label = '';//this.allowanceDropdown[1].label;
-    if(allowance){
+    if (allowance) {
       label = this.allowanceDropdown.filter(element => element.value === allowance.allowanceType)[0]?.label;
     }
     const formGroup = this.fb.group({
       label: [label],
-      allowType: [allowance? allowance.allowanceType : null],
+      allowType: [allowance ? allowance.allowanceType : null],
       allowValue: [allowance ? allowance.exemptAmount : null],
+      description: [allowance ? allowance.description : null]
     });
     exemptIncomesFormArray.push(formGroup);
+  }
+
+  changeAllowancesType() {
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
+    this.allowanceDropdown.forEach((type) => {
+      type['disabled'] = false;
+      exemptIncomesFormArray.controls.forEach((element: FormGroup) => {
+        if (element.controls['allowType'].value == type.value) {
+          type['disabled'] = true;
+        }
+      });
+    });
   }
 
   createEmployerDetailsFormGroup() {
@@ -911,9 +939,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       return element?.get('allowType')?.value === section;
     });
     const personalExp =
-      parseFloat(FormValues?.salary[0]?.CONVEYANCE) +
-      parseFloat(FormValues?.salary[0]?.OTHER_ALLOWANCE) +
-      parseFloat(FormValues?.salary[0]?.OTHER);
+      parseFloat(FormValues?.salary?.CONVEYANCE) +
+      parseFloat(FormValues?.salary?.OTHER_ALLOWANCE) +
+      parseFloat(FormValues?.salary?.OTHER);
 
     if (personalExp && personalExp !== 0) {
       this.setValidator(section, Validators.max(personalExp));
@@ -946,7 +974,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     if (FormValues) {
       const isAtLeastOneSalaryGreaterThanZero = Object?.values(
-        FormValues?.salary[0]
+        FormValues?.salary
       ).some((element: any) => element > 0);
 
       if (isAtLeastOneSalaryGreaterThanZero) {
@@ -954,8 +982,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const hraControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'HOUSE_RENT';
           });
-          const BASIC_SALARY = parseFloat(FormValues?.salary[0]?.BASIC_SALARY);
-          const HOUSE_RENT = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
+          const BASIC_SALARY = parseFloat(FormValues?.salary?.BASIC_SALARY);
+          const HOUSE_RENT = parseFloat(FormValues?.salary?.HOUSE_RENT);
 
           let lowerOf = Math.min(
             BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY,
@@ -980,7 +1008,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const ltaControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LTA';
           });
-          const LTA = parseFloat(FormValues?.salary[0]?.LTA);
+          const LTA = parseFloat(FormValues?.salary?.LTA);
           this.setValidator('LTA', Validators.max(LTA));
 
           if (
@@ -999,7 +1027,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const gratuityControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'GRATUITY';
           });
-          const gratuity = parseFloat(FormValues?.salary[0]?.GRATUITY);
+          const gratuity = parseFloat(FormValues?.salary?.GRATUITY);
           const fixedLimit = 2000000;
 
           let lowerOf = Math.min(gratuity, fixedLimit);
@@ -1022,7 +1050,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const pensionControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'COMMUTED_PENSION';
           });
-          const pension = parseFloat(FormValues?.salary[0]?.COMMUTED_PENSION);
+          const pension = parseFloat(FormValues?.salary?.COMMUTED_PENSION);
           this.setValidator('COMMUTED_PENSION', Validators.max(pension));
 
           if (
@@ -1042,7 +1070,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
           });
           const leaveEncash = parseFloat(
-            FormValues?.salary[0]?.LEAVE_ENCASHMENT
+            FormValues?.salary?.LEAVE_ENCASHMENT
           );
           const fixedLimit = 300000;
 
@@ -1100,9 +1128,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   saveEmployerDetails(apiCall: boolean) {
+    this.bifurcationComponents.forEach(component => {
+      component.saveBifurcations()
+    });
     this.validations();
     if ((this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid && apiCall) || !apiCall) {
       this.checkGrossSalary();
+
+      let employer = JSON.parse(sessionStorage.getItem('localEmployer'));
+      if (employer) {
+        this.localEmployer = employer;
+      }
+      console.log('updated employer:', this.localEmployer);
 
       this.localEmployer.address =
         this.employerDetailsFormGroup?.controls['address']?.value;
@@ -1130,9 +1167,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       for (let i = 0; i < salaryDetails?.controls.length; i++) {
         let salary = salaryDetails?.controls[i] as FormGroup;
-        if (
-          this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)
-        ) {
+        if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
           if (salary?.controls['salaryType']?.value === 'SEC17_1') {
             basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
             if (basicSalaryAmount && basicSalaryAmount !== 0) {
@@ -1150,26 +1185,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               this.bifurcationResult?.SEC17_1?.total === 0 ||
               this.bifurcationResult?.SEC17_1?.value > 0
             ) {
-              const salaryValues = this.utilsService.getSalaryValues()?.salary;
-
-              const bifurcationValues = this.bifurcationResult?.SEC17_1?.value
-                ? this.bifurcationResult?.SEC17_1?.value
-                : salaryValues?.[0];
-
-              for (const key in bifurcationValues) {
-                if (bifurcationValues.hasOwnProperty(key)) {
-                  const element = parseFloat(bifurcationValues[key]);
-                  console.log(element);
-                  if (element && element !== 0) {
-                    this.localEmployer?.salary?.push({
-                      salaryType: key,
-                      taxableAmount: element,
-                      exemptAmount: 0,
-                    });
-                  }
+              const salaryValues = this.utilsService.getSalaryValues().salary;
+              salaryValues.forEach(element => {
+                if (element.taxableAmount > 0) {
+                  this.localEmployer?.salary?.push(element);
                 }
-              }
-              console.log(this.localEmployer);
+              })
             } else if (
               this.ITR_JSON?.employers[this.currentIndex]?.salary.length > 1 &&
               this.valueChanged === false
@@ -1195,34 +1216,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               this.bifurcationResult?.SEC17_2?.total === 0 ||
               this.bifurcationResult?.SEC17_2?.value > 0
             ) {
-              const perquisitesValues =
-                this.utilsService.getSalaryValues()?.perquisites;
-
-              const bifurcationValues = this.bifurcationResult?.SEC17_2?.value
-                ? this.bifurcationResult?.SEC17_2?.value
-                : perquisitesValues?.[0];
-
-              for (const key in bifurcationValues) {
-                if (bifurcationValues.hasOwnProperty(key)) {
-                  const element = parseFloat(bifurcationValues[key]);
-                  console.log(element);
-                  if (element && element !== 0) {
-                    this.localEmployer?.perquisites?.push({
-                      perquisiteType: key,
-                      taxableAmount: element,
-                      exemptAmount: 0,
-                    });
-                  }
+              const perquisitesValues = this.utilsService.getSalaryValues()?.perquisites;
+              perquisitesValues.forEach(element => {
+                if (element.taxableAmount > 0) {
+                  this.localEmployer?.perquisites?.push(element);
                 }
-              }
+              })
               console.log(this.localEmployer);
-            } else if (
-              this.ITR_JSON?.employers[this.currentIndex]?.perquisites?.length >
-                1 &&
-              this.valueChanged === false
-            ) {
-              this.localEmployer.perquisites =
-                this.ITR_JSON?.employers[this.currentIndex]?.perquisites;
+            } else if (this.ITR_JSON?.employers[this.currentIndex]?.perquisites?.length > 1 && this.valueChanged === false) {
+              this.localEmployer.perquisites = this.ITR_JSON?.employers[this.currentIndex]?.perquisites;
             }
           }
 
@@ -1237,45 +1239,44 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             }
 
             console.log(this.localEmployer);
-            if (
-              this.bifurcationResult?.SEC17_3?.total ||
-              this.bifurcationResult?.SEC17_3?.total === 0 ||
-              this.bifurcationResult?.SEC17_3?.value > 0
-            ) {
-              const profitsInLieuValues =
-                this.utilsService.getSalaryValues()?.profitsInLieu;
-
-              const bifurcationValues = this.bifurcationResult?.SEC17_3?.value
-                ? this.bifurcationResult?.SEC17_3?.value
-                : profitsInLieuValues?.[0];
-
-              for (const key in bifurcationValues) {
-                if (bifurcationValues.hasOwnProperty(key)) {
-                  const element = parseFloat(bifurcationValues[key]);
-                  console.log(element);
-                  if (element && element !== 0) {
-                    this.localEmployer?.profitsInLieuOfSalaryType?.push({
-                      salaryType: key,
-                      taxableAmount: element,
-                      exemptAmount: 0,
-                    });
-                  }
+            if (this.bifurcationResult?.SEC17_3?.total ||
+              this.bifurcationResult?.SEC17_3?.total === 0 || this.bifurcationResult?.SEC17_3?.value > 0) {
+              const profitsInLieuValues = this.utilsService.getSalaryValues()?.profitsInLieu;
+              profitsInLieuValues.forEach(element => {
+                if (element.taxableAmount > 0) {
+                  this.localEmployer?.profitsInLieuOfSalaryType?.push(element);
                 }
-              }
+              })
               console.log(this.localEmployer);
-            } else if (
-              this.ITR_JSON?.employers[this.currentIndex]
-                ?.profitsInLieuOfSalaryType?.length > 1 &&
-              this.valueChanged === false
-            ) {
+            } else if (this.ITR_JSON?.employers[this.currentIndex]?.profitsInLieuOfSalaryType?.length > 1 && this.valueChanged === false) {
               this.localEmployer.profitsInLieuOfSalaryType =
-                this.ITR_JSON?.employers[
-                  this.currentIndex
-                ]?.profitsInLieuOfSalaryType;
+                this.ITR_JSON?.employers[this.currentIndex]?.profitsInLieuOfSalaryType;
             }
           }
         }
       }
+      // debugger
+      // let otherSalary = this.localEmployer.salary.filter(item => item.salaryType === 'OTHER')
+      // if (otherSalary.length) {
+      //   if (otherSalary[0].salaryType === 'OTHER' && otherSalary[0].taxableAmount > 0 && !otherSalary[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
+      // let otherPerquisites = this.localEmployer.perquisites.filter(item => item.perquisiteType === 'OTH_BENEFITS_AMENITIES')
+      // if (otherPerquisites.length) {
+      //   if (otherPerquisites[0].perquisiteType === 'OTH_BENEFITS_AMENITIES' && otherPerquisites[0].taxableAmount > 0 && !otherPerquisites[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
+      // let otherProfitsInLieuOfSalaryType = this.localEmployer.profitsInLieuOfSalaryType.filter(item => item.salaryType === 'ANY_OTHER')
+      // if (otherProfitsInLieuOfSalaryType.length) {
+      //   if (otherProfitsInLieuOfSalaryType[0].salaryType === 'ANY_OTHER' && otherProfitsInLieuOfSalaryType[0].taxableAmount > 0 && !otherProfitsInLieuOfSalaryType[0]['description']) {
+      //     this.utilsService.showSnackBar('Please enter the Description');
+      //     return;
+      //   }
+      // }
 
       if (
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
@@ -1290,20 +1291,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
       let othTotalAllowExempt = 0;
-      for (
-        let i = 0;
-        i <
-        (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls
-          .length;
-        i++
-      ) {
+      for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
         let allowance = (
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
           if (
             allowance?.controls['allowType']?.value ===
-              'NON_MONETARY_PERQUISITES' &&
+            'NON_MONETARY_PERQUISITES' &&
             allowance?.controls['allowValue']?.value !== 0 &&
             allowance?.controls['allowValue']?.value > perquisitesAmount
           ) {
@@ -1323,7 +1318,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           }
           if (
             allowance?.controls['allowType']?.value ===
-              'NON_MONETARY_PERQUISITES' &&
+            'NON_MONETARY_PERQUISITES' &&
             allowance?.controls['allowValue']?.value !== 0 &&
             perquisitesAmount === 0
           ) {
@@ -1384,6 +1379,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             allowanceType: allowance?.controls['allowType']?.value,
             taxableAmount: 0,
             exemptAmount: Number(allowance?.controls['allowValue']?.value),
+            description: allowance?.controls['description']?.value,
           });
 
           if (
@@ -1415,7 +1411,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
           0
         );
-
       if (othTotalAllowExempt > employerTotal) {
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed total gross salary'
@@ -1431,6 +1426,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           allowanceType: 'ALL_ALLOWANCES',
           taxableAmount: 0,
           exemptAmount: totalAllowExempt + othTotalAllowExempt,
+          description: null
         });
       }
 
@@ -1457,7 +1453,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       );
       if (
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value !==
-          null &&
+        null &&
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value !== ''
       ) {
         this.localEmployer?.deductions?.push({
@@ -1469,7 +1465,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         });
       }
 
-      if(apiCall) {
+      if (apiCall) {
         this.serviceCall();
       } else {
         this.Copy_ITR_JSON.employers[this.currentIndex] = this.localEmployer;
@@ -1509,7 +1505,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
         this.Copy_ITR_JSON.employers.push(myEmp);
       } else {
-        if(this.localEmployer) {
+        if (this.localEmployer) {
           const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
           this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
         }
@@ -1644,23 +1640,23 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   changeConsetGiven = false;
-  confirmChange(event: Event, incomeType: string){
+  confirmChange(event: Event, incomeType: string) {
 
     if (incomeType === 'SEC17_1' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_1?.total)) {
       this.showWarningPopup(incomeType);
     }
 
-    if(incomeType === 'SEC17_2' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_2?.total)) {
+    if (incomeType === 'SEC17_2' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_2?.total)) {
       this.showWarningPopup(incomeType);
     }
 
-    if(incomeType === 'SEC17_3' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_3?.total)) {
+    if (incomeType === 'SEC17_3' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_3?.total)) {
       this.showWarningPopup(incomeType);
     }
   }
 
-  showWarningPopup(incomeType){
-    if(this.changeConsetGiven){
+  showWarningPopup(incomeType) {
+    if (this.changeConsetGiven) {
       return;
     }
     this.changeConsetGiven = false;
@@ -1676,23 +1672,34 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       // this.bifurcationResult = null;
       this.localEmployer = this.utilsService.resetBifurcation(this.localEmployer, incomeType);
       sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
+      this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
       if (incomeType === 'SEC17_1') {
         this.bifurcationResult.SEC17_1 = {
           total: 0,
           value: {}
         }
+        this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;
+        this.bifurcationResult.SEC17_1.value.HOUSE_RENT = 0;
+        this.bifurcationResult.SEC17_1.value.LTA = 0;
+        this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_1', this.bifurcationResult);
       }
       if (incomeType === 'SEC17_2') {
         this.bifurcationResult.SEC17_2 = {
           total: 0,
           value: {}
         }
+        this.bifurcationResult.SEC17_2.value.VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE = 0;
+        this.bifurcationResult.SEC17_2.value.OTH_BENEFITS_AMENITIES = 0;
+        this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_2', this.bifurcationResult);
       }
       if (incomeType === 'SEC17_3') {
         this.bifurcationResult.SEC17_3 = {
           total: 0,
           value: {}
         }
+        this.bifurcationResult.SEC17_3.value.ANY_OTHER = 0;
+        this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_3', this.bifurcationResult);
+
       }
     });
   }
@@ -1715,20 +1722,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
-        let salaryDetails = this.employerDetailsFormGroup.controls[
-          'salaryDetails'
-        ] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value ===
-            this.localEmployer.salary[i].salaryType
-        )[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.salary[i].salaryType)[0] as FormGroup;
 
         if (salary) {
-          salary.controls['salaryValue'].setValue(
-            this.localEmployer.salary[i].taxableAmount
-          );
+          salary.controls['salaryValue'].setValue(this.localEmployer.salary[i].taxableAmount);
         }
       }
       //Ashwini: need to confirm this one
@@ -1740,20 +1741,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     /* Perquisites Set Values */
     if (this.localEmployer.perquisites instanceof Array) {
       for (let i = 0; i < this.localEmployer.perquisites.length; i++) {
-        let salaryDetails = this.employerDetailsFormGroup.controls[
-          'salaryDetails'
-        ] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value ===
-            this.localEmployer.perquisites[i].perquisiteType
-        )[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.perquisites[i].perquisiteType)[0] as FormGroup;
 
         if (salary) {
-          salary.controls['salaryValue'].setValue(
-            this.localEmployer.perquisites[i].taxableAmount
-          );
+          salary.controls['salaryValue'].setValue(this.localEmployer.perquisites[i].taxableAmount);
         }
       }
     }
@@ -1764,20 +1759,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         i < this.localEmployer.profitsInLieuOfSalaryType.length;
         i++
       ) {
-        let salaryDetails = this.employerDetailsFormGroup.controls[
-          'salaryDetails'
-        ] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value ===
-            this.localEmployer.profitsInLieuOfSalaryType[i].salaryType
-        )[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.profitsInLieuOfSalaryType[i].salaryType)[0] as FormGroup;
 
         if (salary) {
-          salary.controls['salaryValue'].setValue(
-            this.localEmployer.profitsInLieuOfSalaryType[i].taxableAmount
-          );
+          salary.controls['salaryValue'].setValue(this.localEmployer.profitsInLieuOfSalaryType[i].taxableAmount);
         }
       }
     }
@@ -1785,23 +1774,20 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.checkGrossSalary();
     // Set Allowance
     if (this.localEmployer.allowance instanceof Array) {
-      const allowance = this.localEmployer.allowance.filter(
-        (item: any) => item.allowanceType !== 'ALL_ALLOWANCES'
-      );
-      let allowanceArray = this.allowanceFormGroup.controls[
-          'allowances'
-          ] as FormArray;
+      const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
+      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
       allowanceArray.controls = [];
-      for (let i = 0; i < allowance.length; i++) {
-        this.addExemptIncome(allowance[i]);
-      }
+      this.addByDefaultAllowances(allowance);
+      // for (let i = 0; i < allowance.length; i++) {
+      //   this.addExemptIncome(allowance[i]);
+      // }
     }
-    if(this.localEmployer.allowance.length == 0) {
-      let allowanceArray = this.allowanceFormGroup.controls[
-          'allowances'
-          ] as FormArray;
+    if (this.localEmployer.allowance.length == 0) {
+      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
       allowanceArray.controls = [];
-      this.addExemptIncome();
+      this.addByDefaultAllowances();
+
+      // this.addExemptIncome();
     }
 
     /* Deductions Set Values */
@@ -1871,110 +1857,301 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
   }
 
+  addByDefaultAllowances(allowance?) {
+    if (allowance) {
+      var newArr = allowance.map((x) => x.allowanceType)
+      let data;
+      if (!newArr.includes('HOUSE_RENT')) {
+        data = {
+          'allowanceType': "HOUSE_RENT",
+          'description': null,
+          'exemptAmount': 0,
+          'id': null,
+          'taxableAmount': 0
+        }
+        allowance.push(data);
+      }
+      if (!newArr.includes('LTA')) {
+        data = {
+          'allowanceType': "LTA",
+          'description': null,
+          'exemptAmount': 0,
+          'id': null,
+          'taxableAmount': 0
+        }
+        allowance.push(data);
+      } if (!newArr.includes('LEAVE_ENCASHMENT')) {
+        data = {
+          'allowanceType': "LEAVE_ENCASHMENT",
+          'description': null,
+          'exemptAmount': 0,
+          'id': null,
+          'taxableAmount': 0
+        }
+        allowance.push(data);
+      } if (!newArr.includes('ANY_OTHER')) {
+        data = {
+          'allowanceType': "ANY_OTHER",
+          'description': null,
+          'exemptAmount': 0,
+          'id': null,
+          'taxableAmount': 0
+        }
+        allowance.push(data);
+      }
+      for (let i = 0; i < allowance.length; i++) {
+        this.addExemptIncome(allowance[i]);
+      }
+    } else {
+      let data;
+      let allowance = [];
+      data = {
+        'allowanceType': "HOUSE_RENT",
+        'description': null,
+        'exemptAmount': 0,
+        'id': null,
+        'taxableAmount': 0
+      }
+      allowance.push(data);
+      data = {
+        'allowanceType': "LTA",
+        'description': null,
+        'exemptAmount': 0,
+        'id': null,
+        'taxableAmount': 0
+      }
+      allowance.push(data);
+      data = {
+        'allowanceType': "LEAVE_ENCASHMENT",
+        'description': null,
+        'exemptAmount': 0,
+        'id': null,
+        'taxableAmount': 0
+      }
+      allowance.push(data);
+      data = {
+        'allowanceType': "ANY_OTHER",
+        'description': null,
+        'exemptAmount': 0,
+        'id': null,
+        'taxableAmount': 0
+      }
+      allowance.push(data);
+
+      for (let i = 0; i < allowance.length; i++) {
+        this.addExemptIncome(allowance[i]);
+      }
+    }
+    this.changeAllowancesType();
+  }
+
+
   goBack() {
     this.saveAndNext.emit(true);
   }
 
-  bifurcation(i) {
-    this.valueChanged = this.utilsService.getChange();
-    const dialogRef = this.matDialog.open(BifurcationComponent, {
-      data: {
-        data: this.localEmployer,//this.ITR_JSON.employers[this.currentIndex],
-        index: this.currentIndex,
-        typeIndex: i,
-        valueChanged: this.changeConsetGiven,
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
+  hasBifurcation() {
+    // switch (i){
+    //   case 0:{
+    Object.keys(this.bifurcationResult.SEC17_1.value).length > 0;
+    // }
+    // case 1:{
+    Object.keys(this.bifurcationResult.SEC17_2.value).length > 0;
+    // }
+    // case 2:{
+    Object.keys(this.bifurcationResult.SEC17_3.value).length > 0;
+    // }
+    // }
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-        this.changeConsetGiven = false;
-        console.log('BifurcationComponent=', result);
-        if (result.type === 'perquisites') {
-          this.bifurcationResult.SEC17_2.total = result?.total;
+  isFormGroupValid(event) {
+    if (event) {
+      this.bifurcationFormGroup = true;
+    } else {
+      this.bifurcationFormGroup = false;
+    }
+  }
 
-          if (
-            this.bifurcationResult?.SEC17_2.total > 0 ||
-            this.bifurcationResult?.SEC17_2.total === 0
-          ) {
-            this.bifurcationResult.SEC17_2.value = result?.value[0];
+  onBifurcationUpdated(result) {
+    if (result !== undefined) {
+      this.changeConsetGiven = false;
+      console.log('BifurcationComponent=', result);
+      if (result.perquisites) {
+        if (result.perquisites.length > 0) {
+          this.bifurcationResult.SEC17_2.total = result.perquisites.reduce(
+            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
+          this.bifurcationResult.SEC17_2.value = result.perquisites;
+        } else {
+          // this.bifurcationResult.SEC17_2.total = 0;
+        }
 
-            let salaryDetails = this.employerDetailsFormGroup?.controls[
-              'salaryDetails'
-            ] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
 
-            for (let i = 0; i < salaryDetails?.controls.length; i++) {
-              let salary = salaryDetails?.controls[i] as FormGroup;
+        for (let i = 0; i < salaryDetails?.controls.length; i++) {
+          let salary = salaryDetails?.controls[i] as FormGroup;
 
-              if (salary.controls['salaryType']?.value === 'SEC17_2') {
-                let value = this.bifurcationResult?.SEC17_2.total;
-                salary.controls['salaryValue']?.setValue(value);
-                break;
-              }
-            }
+          if (salary.controls['salaryType']?.value === 'SEC17_2') {
+            let value = this.bifurcationResult?.SEC17_2.total;
+            salary.controls['salaryValue']?.setValue(value);
+            break;
           }
-        } else if (result.type === 'salary') {
-          this.bifurcationResult.SEC17_1.total = result?.total;
+        }
 
-          if (
-            this.bifurcationResult?.SEC17_1.total > 0 ||
-            this.bifurcationResult?.SEC17_1.total === 0
-          ) {
-            this.grossSalary = 0;
-            this.bifurcationResult.SEC17_1.value = result?.value[0];
-            let salaryDetails = this.employerDetailsFormGroup?.controls[
-              'salaryDetails'
-            ] as FormArray;
+      }
+      if (result.salary) {
+        if (result.salary.length > 0) {
+          this.bifurcationResult.SEC17_1.total = result.salary.reduce(
+            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
+          this.bifurcationResult.SEC17_1.value = result.salary;
+        } else {
+          // this.bifurcationResult.SEC17_1.total = 0;
+        }
+        this.grossSalary = 0;
 
-            for (let i = 0; i < salaryDetails?.controls.length; i++) {
-              let salary = salaryDetails?.controls[i] as FormGroup;
+        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
 
-              if (salary.controls['salaryType']?.value === 'SEC17_1') {
-                this.grossSalary = this.bifurcationResult?.SEC17_1.total;
-                salary.controls['salaryValue']?.setValue(this.grossSalary);
-                break;
-              }
-            }
+        for (let i = 0; i < salaryDetails?.controls.length; i++) {
+          let salary = salaryDetails?.controls[i] as FormGroup;
+
+          if (salary.controls['salaryType']?.value === 'SEC17_1') {
+            this.grossSalary = this.bifurcationResult?.SEC17_1.total;
+            salary.controls['salaryValue']?.setValue(this.grossSalary);
+            break;
           }
-        } else if (result.type === 'profitsInLieuOfSalary') {
-          this.bifurcationResult.SEC17_3.total = result?.total;
+        }
 
-          if (
-            this.bifurcationResult?.SEC17_3.total > 0 ||
-            this.bifurcationResult?.SEC17_3.total === 0
-          ) {
-            this.bifurcationResult.SEC17_3.value = result?.value[0];
+      }
+      if (result.profitsInLieu) {
+        if (result.profitsInLieu.length > 0) {
+          this.bifurcationResult.SEC17_3.total = result.profitsInLieu.reduce(
+            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
+          this.bifurcationResult.SEC17_3.value = result.profitsInLieu;
+        } else {
+          // this.bifurcationResult.SEC17_3.total = 0;
+        }
 
-            let salaryDetails = this.employerDetailsFormGroup?.controls[
-              'salaryDetails'
-            ] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
 
-            for (let i = 0; i < salaryDetails?.controls.length; i++) {
-              let salary = salaryDetails?.controls[i] as FormGroup;
+        for (let i = 0; i < salaryDetails?.controls.length; i++) {
+          let salary = salaryDetails?.controls[i] as FormGroup;
 
-              if (salary.controls['salaryType']?.value === 'SEC17_3') {
-                let value = this.bifurcationResult?.SEC17_3.total;
-                salary.controls['salaryValue']?.setValue(value);
-                break;
-              }
-            }
+          if (salary.controls['salaryType']?.value === 'SEC17_3') {
+            let value = this.bifurcationResult?.SEC17_3.total;
+            salary.controls['salaryValue']?.setValue(value);
+            break;
           }
         }
       }
-    });
+    }
   }
 
-  getTotalAllowances(){
-    return this.getAllowanceArray.getRawValue().map(val=> val.allowValue ? parseInt(val.allowValue) : 0).reduce((previousValue, currentValue) =>
-        previousValue + currentValue, 0);
+  bifurcation() {
+    this.valueChanged = this.utilsService.getChange();
+    if (Object.keys(this.bifurcationResult.SEC17_1.value).length === 0) {
+      this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;
+      this.bifurcationResult.SEC17_1.value.HOUSE_RENT = 0;
+      this.bifurcationResult.SEC17_1.value.LTA = 0;
+      this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_1', this.bifurcationResult);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('BASIC_SALARY')) {
+      // this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'salaryType': "BASIC_SALARY",
+        'taxableAmount': 0
+      }
+      this.localEmployer.salary.push(data);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('HOUSE_RENT')) {
+      // this.bifurcationResult.SEC17_1.value.HOUSE_RENT = 0;
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'salaryType': "HOUSE_RENT",
+        'taxableAmount': 0
+      }
+      this.localEmployer.salary.push(data);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('LTA')) {
+      // this.bifurcationResult.SEC17_1.value.LTA = 0;
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'salaryType': "LTA",
+        'taxableAmount': 0
+      }
+      this.localEmployer.salary.push(data);
+    }
+
+    //   break;
+    // }
+    // case 1: {
+    if (Object.keys(this.bifurcationResult.SEC17_2.value).length === 0) {
+      this.bifurcationResult.SEC17_2.value.VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE = 0;
+      this.bifurcationResult.SEC17_2.value.OTH_BENEFITS_AMENITIES = 0;
+      this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_2', this.bifurcationResult);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_2.value).includes('VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE')) {
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'perquisiteType': "VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE",
+        'taxableAmount': 0
+      }
+      this.localEmployer.perquisites.push(data);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_2.value).includes('OTH_BENEFITS_AMENITIES')) {
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'perquisiteType': "OTH_BENEFITS_AMENITIES",
+        'taxableAmount': 0
+      }
+      this.localEmployer.perquisites.push(data);
+    }
+    //   break;
+    // }
+    // case 2: {
+    if (Object.keys(this.bifurcationResult.SEC17_3.value).length === 0) {
+      this.bifurcationResult.SEC17_3.value.ANY_OTHER = 0;
+      this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_3', this.bifurcationResult);
+    }
+    if (!Object.keys(this.bifurcationResult.SEC17_3.value).includes('ANY_OTHER')) {
+      let data = {
+        'id': null,
+        'description': null,
+        'exemptAmount': null,
+        'salaryType': "ANY_OTHER",
+        'taxableAmount': 0
+      }
+      this.localEmployer.profitsInLieuOfSalaryType.push(data);
+    }
+    //   break;
+    // }
+    // }
+
   }
 
-  getTotalGrossSalary(){
-    return this.getSalaryArray.getRawValue().map(val=> val.salaryValue ? parseInt(val.salaryValue) : 0).reduce((previousValue, currentValue) =>
-        previousValue + currentValue, 0);
+  getTotalAllowances() {
+    return this.getAllowanceArray.getRawValue().map(val => val.allowValue ? parseInt(val.allowValue) : 0).reduce((previousValue, currentValue) =>
+      previousValue + currentValue, 0);
+  }
+
+  getTotalDeductions() {
+    return (this.deductionsFormGroup.controls['standardDeduction'].value ? parseInt(this.deductionsFormGroup.controls['standardDeduction'].value) : 0) +
+      (this.deductionsFormGroup.controls['entertainmentAllow'].value ? parseInt(this.deductionsFormGroup.controls['entertainmentAllow'].value) : 0) +
+      (this.deductionsFormGroup.controls['professionalTax'].value ? parseInt(this.deductionsFormGroup.controls['professionalTax'].value) : 0);
+  }
+
+  getTotalGrossSalary() {
+    return this.getSalaryArray.getRawValue().map(val => val.salaryValue ? parseInt(val.salaryValue) : 0).reduce((previousValue, currentValue) =>
+      previousValue + currentValue, 0);
   }
 
   // CALCULATORS

@@ -61,6 +61,7 @@ import { ValidationErrorScreenComponent } from './components/validation-error-sc
 import { GenericSortingComponent } from './components/generic-sorting/generic-sorting.component';
 import { GenericUserFilterComponent } from './components/generic-user-filter/generic-user-filter.component';
 import { UpdateCapacityComponent } from './components/update-capacity/update-capacity.component';
+import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -93,6 +94,7 @@ import { UpdateCapacityComponent } from './components/update-capacity/update-cap
     AgTooltipComponent,
     NumbersOnlyDirective,
     ConfirmDialogComponent,
+    MyDialogComponent,
     ServiceDropDownComponent,
     CoOwnerListDropDownComponent,
     LeaderListDropdownComponent,

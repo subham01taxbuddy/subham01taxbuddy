@@ -95,18 +95,14 @@ export class DeclarationComponent implements OnInit {
           this.ITR_JSON.declaration.capacity
         );
         this.declarationsForm.patchValue(this.ITR_JSON.declaration);
-      } else if (this.ITR_JSON.family.length > 0) {
+      }
+      if (this.ITR_JSON.family.length > 0) {
         for (let i = 0; i <= this.ITR_JSON.family.length; i++) {
           if (this.ITR_JSON.family[i].relationShipCode === 'SELF') {
             this.declarationsForm.controls['name'].setValue(
               this.setName(this.ITR_JSON.family[i])
             );
-            if (
-              this.utilsService.isNonEmpty(this.ITR_JSON.declaration)
-                ? this.ITR_JSON.declaration.childOf !== null &&
-                  this.ITR_JSON.declaration.childOf !== ''
-                : false
-            ) {
+            if (this.utilsService.isNonEmpty(this.ITR_JSON.declaration.childOf)) {
               this.declarationsForm.controls['childOf'].setValue(
                 this.titleCasePipe.transform(this.ITR_JSON.declaration.childOf)
               );

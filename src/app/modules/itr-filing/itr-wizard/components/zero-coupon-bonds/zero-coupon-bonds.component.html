@@ -18,7 +18,7 @@
                 <form [formGroup]="selectedFormGroup">
                   <div class="accordion-item" >
                     <h2 class="accordion-header" id="heading1">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      <button id="accordBtn1" type="button" class="accordion-button" data-bs-toggle="collapse"
                               data-bs-target="#collapse1">Manual Update</button>
 
                     </h2>
@@ -261,7 +261,7 @@
                           <div>
                             <div class="col-sm-12">
                               <ag-grid-angular
-                                      class="ag-theme-balham topSps"
+                                      class="newAG ag-theme-balham topSps"
                                       [gridOptions]="bondsGridOptions"
                                       (rowClicked)="editBondsForm($event)">
                               </ag-grid-angular>
@@ -283,7 +283,7 @@
 
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading2">
-                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                  <button id="accordBtn2" type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#collapse2">Add Deduction Details u/s 54F?</button>
 
                 </h2>

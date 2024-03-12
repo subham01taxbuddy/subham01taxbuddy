@@ -1,3 +1,6 @@
+@import "./../../../../../ux/scss/style.scss";
+@import './../../../../../ux/scss/layout.scss';
+
 .titTx {
     font-size: 18px;
     color: #2b2b2b;
@@ -215,4 +218,21 @@
     margin-bottom: 27px;
     width: 100%;
     border-radius: 4px;
+}
+
+.byDefaultAddBtn {
+    position: absolute;
+    top: 45px;
+    right: -28px;
+}
+
+.addBtn {
+    position: absolute;
+    bottom: 45px;
+    right: -28px;
+}
+
+.deleteBtn {
+    position: absolute;
+    bottom: 52px;
 }

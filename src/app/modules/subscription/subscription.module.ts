@@ -24,6 +24,7 @@ import { AngularFireRemoteConfigModule } from '@angular/fire/compat/remote-confi
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { CreditNoteComponent } from './components/credit-note/credit-note.component';
+import { SubscriptionAdjustmentComponent } from './components/subscription-adjustment/subscription-adjustment.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { CreditNoteComponent } from './components/credit-note/credit-note.compon
     CancelSubscriptionComponent,
     ApproveRejectComponent,
     RefundRequestComponent,
-    CreditNoteComponent
+    CreditNoteComponent,
+    SubscriptionAdjustmentComponent
   ],
   providers:[
     MobileEncryptDecryptService,

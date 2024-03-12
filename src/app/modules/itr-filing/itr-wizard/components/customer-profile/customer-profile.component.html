@@ -6,7 +6,7 @@
 <form [formGroup]="customerProfileForm">
   <div class="accordion-item">
   <h2 class="accordion-header" id="heading1">
-    <button type="button" class="accordion-button" data-bs-toggle="collapse" aria-expanded="true"
+    <button id="accordBtn" type="button" class="accordion-button" data-bs-toggle="collapse" aria-expanded="true"
             data-bs-target="#collapse1">Customer Profile</button>
 
   </h2>
@@ -209,19 +209,14 @@
         </div>
         <div class="form-field">
           <div><span class="span">Residential Status </span> <span class="text-wrapper-2">*</span></div>
-          <div class="form-control-wrapper">
+          <div [ngClass]="customerProfileForm.controls['residentialStatus'].value === 'RESIDENT' ? 'form-control-wrapper' : 'new-form-field'">
             <mat-form-field appearance="outline">
               <mat-select
                       placeholder="Residential status"
                       name="residentialStatus"
-                      (selectionChange)="
-            onSelectResidential(
-              customerProfileForm.controls['residentialStatus'].value
-            )
-          "
-                      [formControl]="
-            customerProfileForm.controls['residentialStatus'] | formControlType
-          "
+                      (selectionChange)="onSelectResidential(
+              customerProfileForm.controls['residentialStatus'].value)"
+                      [formControl]="customerProfileForm.controls['residentialStatus'] | formControlType"
                       required
               >
                 <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
@@ -229,6 +224,11 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <button *ngIf="customerProfileForm.controls['residentialStatus'].value === '`NON_RESIDENT`' ||
+            customerProfileForm.controls['residentialStatus'].value === 'NON_ORDINARY'" (click)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
+              class="resident-btn">
+              <i class="fa-solid fa-globe"></i>
+            </button>
           </div>
         </div>
         <div class="form-field">

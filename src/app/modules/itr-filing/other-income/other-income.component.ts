@@ -188,6 +188,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     },
   ];
 
+  winningsUS115BBFormGroup: FormGroup;
   otherIncomeFormGroup: FormGroup;
   otherIncomesFormArray: FormArray;
   anyOtherIncomesFormArray: FormArray;
@@ -212,9 +213,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
+    this.createOrSetWinningsUS115BBForm(this.ITR_JSON.winningsUS115BB);
+
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
       anyOtherIncomes: this.anyOtherIncomesFormArray,
+      winningsUS115BB: this.winningsUS115BBFormGroup,
       providentFundValue: new FormControl(null),
       providentFundLabel: new FormControl(null),
       giftTax: this.fb.group({
@@ -349,6 +353,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.agriIncFormArray = this.fb.array(agriIncArray);
     this.saveExemptIncomes('delete');
     this.selectedIndexes = [];
+  }
+
+  get winningsUS115BBTotal(){
+   return this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
+    this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value;
+  }
+
+  onClickRemoveZero(quarter: string){
+    if(this.winningsUS115BBFormGroup.get(quarter).value === 0)
+    this.winningsUS115BBFormGroup.get(quarter).setValue(null);
+  }
+
+  onBlurAddZero(quarter: string){
+    if(!this.winningsUS115BBFormGroup.get(quarter).value || this.winningsUS115BBFormGroup.get(quarter).value === null)
+    this.winningsUS115BBFormGroup.get(quarter).setValue(0);
   }
 
   get getIncomeArray() {
@@ -510,6 +529,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           details: null,
         });
       }
+    }
+
+    //save winningsUS115BB
+    this.Copy_ITR_JSON.winningsUS115BB = null;
+    if(this.winningsUS115BBTotal > 0){
+      this.winningsUS115BBFormGroup.get('total').setValue(this.winningsUS115BBTotal);
+      this.winningsUS115BBFormGroup.get('total').updateValueAndValidity();
+      this.Copy_ITR_JSON.winningsUS115BB = this.winningsUS115BBFormGroup.getRawValue();
     }
 
     this.providentFundArray.forEach(element => {
@@ -915,6 +942,17 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     });
 
     agriIncome?.get('incomeValue').setValue(total);
+  }
+
+  createOrSetWinningsUS115BBForm(winningsUS115BB: any = {}){
+    this.winningsUS115BBFormGroup = this.fb.group({
+      quarter1: winningsUS115BB?.quarter1,
+      quarter2: winningsUS115BB?.quarter2,
+      quarter3: winningsUS115BB?.quarter3,
+      quarter4: winningsUS115BB?.quarter4,
+      quarter5: winningsUS115BB?.quarter5,
+      total: winningsUS115BB?.quarter1 + winningsUS115BB?.quarter2 + winningsUS115BB?.quarter3 + winningsUS115BB?.quarter4 + winningsUS115BB?.quarter5,
+    })
   }
 
   getTotal() {

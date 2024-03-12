@@ -96,6 +96,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   hideSectionForAdmin: boolean;
   smeDetails: any;
   isBankDetailsFormChange: boolean;
+  roundRobinData: any = {};
+  isReadOnly:boolean =false;
+  activeCaseMaxCapacity = new FormControl('')
 
   constructor(
     private fb: FormBuilder,
@@ -108,12 +111,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private reportService: ReportService
   ) {
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
+    this.activeCaseMaxCapacity.setValue(this.smeObj?.activeCaseMaxCapacity || '');
+
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
       this.languageForm.addControl(lang, new FormControl(false));
     })
     this.itrTypeForm = this.fb.group({});
-
 
     this.inactivityTimeForm = this.fb.group({});
     this.inactivityTimeDuration.forEach((duration) => {
@@ -141,6 +145,61 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       this.getAccountType();
     }
+    if(this.smeObj.serviceEligibility_ITR?.assignmentStart){
+      this.assignmentToggle.setValue(true);
+      this.getRoundRobinCount();
+      this.isReadOnly =true;
+    }else{
+      this.assignmentToggle.setValue(false);
+      this.isReadOnly =false
+    }
+
+  }
+
+  assignmentFormGroup: FormGroup = this.fb.group({
+    itrCount: ['', [Validators.required, Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_ITR),
+      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_ITR),]],
+
+    tpaCount: ['', [Validators.required,
+      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_TPA),
+      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_TPA),
+    ]],
+    noticeCount: ['', [Validators.required,
+      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_NOTICE),
+      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_NOTICE),
+    ]],
+    gstCount: ['', [Validators.required,
+      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_GST),
+      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_GST),
+    ]],
+  });
+
+  getRoundRobinCount(){
+  // 'https://uat-api.taxbuddy.com/user/round-robin-details?role=ROLE_LEADER'
+    this.loading = true;
+    let param ='/round-robin-details?role=ROLE_LEADER'
+    this.userMsService.getMethod(param).subscribe((response:any) => {
+      this.loading = false;
+      if (response.success && response.data) {
+        this.roundRobinData = response.data;
+        this.initializeInputValues();
+        console.log('round',this.roundRobinData)
+      } else {
+        this.roundRobinData = null;
+        this.utilsService.showSnackBar('No round robin data found');
+      }
+    },
+      error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to get leader round robin count details');
+      });
+  }
+
+  initializeInputValues() {
+    this.assignmentFormGroup.controls['itrCount'].setValue(this.roundRobinData?.lowestRoundRobinLeaderCount_ITR);
+    this.assignmentFormGroup.controls['tpaCount'].setValue(this.roundRobinData?.lowestRoundRobinLeaderCount_TPA);
+    this.assignmentFormGroup.controls['noticeCount'].setValue(this.roundRobinData?.lowestRoundRobinLeaderCount_NOTICE);
+    this.assignmentFormGroup.controls['gstCount'].setValue(this.roundRobinData?.lowestRoundRobinLeaderCount_GST);
   }
 
   getPlanDetails() {
@@ -380,6 +439,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     pdToggle: new FormControl(''),
     mfToggle: new FormControl(''),
     otherToggle: new FormControl(''),
+    assignmentToggle :new FormControl('')
   })
 
   get itr() {
@@ -436,6 +496,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get otherToggle() {
     return this.services.controls['otherToggle'] as FormControl
   }
+  get assignmentToggle(){
+    return this.services.controls['assignmentToggle'] as FormControl
+  }
 
   onLanguageCheckboxChange(language: string) {
     const langControl = this.getLanguageControl(language);
@@ -481,8 +544,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       });
     }
   }
-
-
 
   getDurationControl(duration: string): FormControl {
     return this.inactivityTimeForm.get(duration) as FormControl;
@@ -608,6 +669,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeObj['assignmentOffByLeader'] = !assignment.value;
   }
 
+  laderAssignment(leaderAssignment : FormControl){
+    if(leaderAssignment.value === true){
+      this.getRoundRobinCount();
+    }
+  }
+
   serviceRecords: any[] = [];
 
   serviceUpdated(serviceType, service: FormControl) {
@@ -719,6 +786,73 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         return;
       }
     }
+    if(this.smeObj?.roles.includes('ROLE_LEADER') && this.loggedInSmeRoles.includes('ROLE_ADMIN')){
+      if(this.assignmentToggle.value === true){
+        if(this.assignmentFormGroup.valid){
+          this.smeObj['serviceEligibility_ITR']={
+            "assignmentStart":true,
+            "roundRobinLeaderCount":this.assignmentFormGroup.controls['itrCount'].value,
+            "botId":this.smeObj?.serviceEligibility_ITR?.botId || null,
+            "botName":this.smeObj?.serviceEligibility_ITR?.botName || null,
+            "roundRobinCount":this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
+          }
+          this.smeObj['serviceEligibility_TPA']={
+            "assignmentStart":true,
+            "roundRobinLeaderCount":this.assignmentFormGroup.controls['tpaCount'].value,
+            "botId":this.smeObj?.serviceEligibility_TPA?.botId || null,
+            "botName":this.smeObj?.serviceEligibility_TPA?.botName || null,
+            "roundRobinCount":this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
+          }
+          this.smeObj['serviceEligibility_NOTICE']={
+            "assignmentStart":true,
+            "roundRobinLeaderCount":this.assignmentFormGroup.controls['noticeCount'].value,
+            "botId":this.smeObj?.serviceEligibility_NOTICE?.botId || null,
+            "botName":this.smeObj?.serviceEligibility_NOTICE?.botName || null,
+            "roundRobinCount":this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
+          }
+          this.smeObj['serviceEligibility_GST']={
+            "assignmentStart":true,
+            "roundRobinLeaderCount":this.assignmentFormGroup.controls['gstCount'].value,
+            "botId":this.smeObj?.serviceEligibility_GST?.botId || null,
+            "botName":this.smeObj?.serviceEligibility_GST?.botName || null,
+            "roundRobinCount":this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
+          }
+        }else{
+          this.utilsService.showSnackBar('Fill the required count value');
+          return;
+        }
+
+      }else{
+        this.smeObj['serviceEligibility_ITR']={
+          "assignmentStart":false,
+          "roundRobinLeaderCount":this.assignmentFormGroup.controls['itrCount'].value,
+          "botId":this.smeObj?.serviceEligibility_ITR?.botId || null,
+          "botName":this.smeObj?.serviceEligibility_ITR?.botName || null,
+          "roundRobinCount":this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
+        }
+        this.smeObj['serviceEligibility_TPA']={
+          "assignmentStart":false,
+          "roundRobinLeaderCount":this.assignmentFormGroup.controls['tpaCount'].value,
+          "botId":this.smeObj?.serviceEligibility_TPA?.botId || null,
+          "botName":this.smeObj?.serviceEligibility_TPA?.botName || null,
+          "roundRobinCount":this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
+        }
+        this.smeObj['serviceEligibility_NOTICE']={
+          "assignmentStart":false,
+          "roundRobinLeaderCount":this.assignmentFormGroup.controls['noticeCount'].value,
+          "botId":this.smeObj?.serviceEligibility_NOTICE?.botId || null,
+          "botName":this.smeObj?.serviceEligibility_NOTICE?.botName || null,
+          "roundRobinCount":this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
+        }
+        this.smeObj['serviceEligibility_GST']={
+          "assignmentStart":false,
+          "roundRobinLeaderCount":this.assignmentFormGroup.controls['gstCount'].value,
+          "botId":this.smeObj?.serviceEligibility_GST?.botId || null,
+          "botName":this.smeObj?.serviceEligibility_GST?.botName || null,
+          "roundRobinCount":this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
+        }
+      }
+    }
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
         const lang = this.smeObj['languages'].filter(element => element === 'English')
@@ -736,6 +870,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       if (!this.smeObj['activeCaseMaxCapacity']) {
         this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be zero');
+        return;
+      }
+      const value = this.activeCaseMaxCapacity.value;
+      if (value && value > 0){
+        this.smeObj['activeCaseMaxCapacity']= this.activeCaseMaxCapacity.value
+      }else{
+        this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be empty or zero');
         return;
       }
 
@@ -932,4 +1073,9 @@ export interface SmeObj {
   state: string,
   smeOriginalEmail: string
   services: any
+  serviceEligibility_ITR:any
+  serviceEligibility_TPA:any
+  serviceEligibility_NOTICE:any
+  serviceEligibility_GST:any
+  activeCaseMaxCapacity:any;
 }

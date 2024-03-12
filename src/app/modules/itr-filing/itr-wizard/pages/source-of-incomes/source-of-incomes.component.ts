@@ -5,6 +5,8 @@ import { AppConstants } from '../../../../shared/constants';
 import { ITR_JSON } from '../../../../shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-source-of-incomes',
@@ -17,13 +19,15 @@ export class SourceOfIncomesComponent implements OnInit {
   eriClientValidUpto: any;
   prefillIncomeSources: any;
   userSelectedSources: any;
+  dialogRef: any;
 
   @Output() scheduleSelected: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private schedules: Schedules,
     private utilsService: UtilsService,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -59,7 +63,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.HOUSE_PROPERTY,
         },
         {
-          name: 'Business / Profession',
+          name: 'B&P Presumptive',
           selected:
             this.ITR_JSON.business != null &&
             this.ITR_JSON.business.presumptiveIncomes?.length > 0
@@ -77,7 +81,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.CAPITAL_GAIN,
         },
         {
-          name: 'P&L',
+          name: 'F&O Business',
           selected:
             this.ITR_JSON.business?.profitLossACIncomes != null &&
             this.ITR_JSON.business?.profitLossACIncomes?.length > 0
@@ -103,6 +107,9 @@ export class SourceOfIncomesComponent implements OnInit {
       sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
     } else {
       this.sourcesList = incomeSources;
+    }
+    if(this.ITR_JSON.residentialStatus === 'NON_RESIDENT'){
+      this.sourcesList = this.sourcesList.filter(item=>item.schedule !== this.schedules.FOREIGN_INCOME);
     }
     this.sourcesList.forEach((source) => {
       if (source.selected) {
@@ -146,6 +153,7 @@ export class SourceOfIncomesComponent implements OnInit {
       return false;
     }
   }
+
   arrayContains(array, schedule) {
     return array?.indexOf(this.schedules.getKey(schedule)) > -1;
   }
@@ -155,6 +163,96 @@ export class SourceOfIncomesComponent implements OnInit {
       (item) => item.name === source.name
     )[0];
     clickedSource.selected = !clickedSource.selected;
+
+    if(!clickedSource.selected){
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Warning!!',
+          message: `Do you want to deselect Income source ${clickedSource.name} ?`,
+          isHide: true,
+          showActions: true
+        },
+        disableClose: true,
+        // panelClass: 'reloadWindowPopup'
+      });      
+      this.dialogRef.afterClosed().subscribe(result => {
+        if(result === 'YES'){
+          //clear data for the income source
+          switch(clickedSource.schedule){
+            case this.schedules.SALARY:
+            {
+              this.ITR_JSON.employers = null;
+              break;
+            }
+            case this.schedules.HOUSE_PROPERTY: 
+            {
+              this.ITR_JSON.houseProperties = null;
+              break;
+            }
+            case this.schedules.BUSINESS_INCOME:
+            {
+              this.ITR_JSON.business = {
+                presumptiveIncomes: [],
+                financialParticulars: {
+                  difference: null,
+                  id: null,
+                  grossTurnOverAmount: null,
+                  membersOwnCapital: null,
+                  securedLoans: null,
+                  unSecuredLoans: null,
+                  advances: null,
+                  sundryCreditorsAmount: null,
+                  otherLiabilities: null,
+                  totalCapitalLiabilities: null,
+                  fixedAssets: null,
+                  inventories: null,
+                  sundryDebtorsAmount: null,
+                  balanceWithBank: null,
+                  cashInHand: null,
+                  loanAndAdvances: null,
+                  otherAssets: null,
+                  totalAssets: null,
+                  investment: null,
+                  GSTRNumber: null,
+                },
+                businessDescription: [],
+                fixedAssetsDetails: [],
+                profitLossACIncomes: [],
+              };
+              break;
+            }
+            case this.schedules.CAPITAL_GAIN:
+            {
+              this.ITR_JSON.capitalGain = null;
+              break;
+            }
+            case this.schedules.SPECULATIVE_INCOME:
+            {
+              this.ITR_JSON.business.businessDescription = null;
+              this.ITR_JSON.business.profitLossACIncomes = null;
+              break;
+            }
+            case this.schedules.CRYPTO_VDA:
+            {
+              this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item=> item?.assetType !== 'VDA');
+              break;
+            }
+            case this.schedules.FOREIGN_INCOME:
+            {
+              this.ITR_JSON.foreignIncome = null;
+              break;
+            }
+          }
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+          //show popup
+          this.utilsService.showSnackBar("Data for " + clickedSource.name + " will be deleted");
+        } else{
+          clickedSource.selected = true;
+        }
+      });
+      
+    }
+
     let event = {
       schedule: clickedSource,
       sources: this.sourcesList,

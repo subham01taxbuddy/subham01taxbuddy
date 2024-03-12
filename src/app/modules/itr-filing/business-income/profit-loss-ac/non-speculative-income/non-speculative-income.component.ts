@@ -3,15 +3,9 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {
-  BusinessDescription,
-  ITR_JSON,
-  NewExpenses,
-  ProfitLossIncomes,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { BusinessDescription, ITR_JSON, NewExpenses, NewIncome, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AddUpdateTradingComponent } from './add-update-trading/add-update-trading.component';
 
 @Component({
   selector: 'app-non-speculative-income',
@@ -29,6 +23,11 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     expenseAmount: null,
     description: null,
   };
+  newIncomes: NewIncome = {
+    type: null,
+    amount: null,
+    description: null,
+  };
 
   expenseTypeList: any[] = [
     // { key: 'TRADING_EXPENSES', value: 'Trading Expenses' },
@@ -40,6 +39,22 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     { key: 'INTEREST', value: 'Interest' },
     { key: 'TAXES_AND_CESS', value: 'Taxes & Cess' },
     { key: 'OTHER_EXPENSES', value: 'Other Expenses' },
+  ];
+
+  incomeTypeList: any[] = [
+    { key: 'RENT', value: 'Rent' },
+    { key: 'COMMISSION', value: 'Commission' },
+    { key: 'DIVIDEND', value: 'Dividend income' },
+    { key: 'INTEREST', value: 'Interest income' },
+    { key: 'PROFIT_ON_SALE_OF_FIXED_ASSETS', value: 'Profit on sale of fixed assets' },
+    { key: 'PROFIT_ON_SALE_OF_SECURITIES', value: 'Profit on sale of investment being securities chargeable to STT' },
+    { key: 'PROFIT_ON_SALE_OF_OTHER_INVESTMENT', value: 'Profit on sale of other investment' },
+    { key: 'GAIN_LOSS_ON_ACC_OF_FOREIGN_EXCHANGE', value: 'Gain/loss on account of foreign exchange fluctuation u/s 43AA' },
+    { key: 'PROFIT_ON_CONVERSION_OF_INVENTORY_INTO_CAPITAL_ASSET', value: 'Profit on conversion of inventory into capital asset u/s 28 (via)' },
+    { key: 'AGRICULTURAL', value: 'Agriculture income' },
+    { key: 'LIABILITY_WRITTEN_BACK', value: 'Liability written back' },
+    { key: 'ANY_OTHER', value: 'Any other income' },
+
   ];
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -58,8 +73,12 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   loading: boolean = false;
   totalNetProfit: any;
   totalOtherExpenses: any;
+  totalOtherIncomes: any;
   natOfBusinessDtlForm: FormGroup;
   natOfBusinessDtlsArray: FormArray;
+  activeIndex: number;
+  gridOptions: GridOptions;
+  selectedFormGroup: FormGroup;
 
   constructor(
     public matDialog: MatDialog,
@@ -71,6 +90,29 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // setting grids data
+    this.gridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.columnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {
+        params.api?.setRowData(
+          this.nonspecIncomeFormArray.controls
+        );
+      },
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.controls['hasEdit'].setValue(true);
+        });
+        if (event.api.getSelectedRows().length === 0) {
+          this.nonspecIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+            formGroup.controls['hasEdit'].setValue(false);
+          });
+        }
+      },
+      sortable: true,
+    };
   }
 
   ngOnInit(): void {
@@ -80,6 +122,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     };
     this.initForm();
     this.nonspecIncomeFormArray = new FormArray([]);
+    let srn = this.nonspecIncomeFormArray.controls.length > 0 ? this.nonspecIncomeFormArray.controls.length : 0;
+    this.selectedFormGroup = this.createNonSpecIncomeForm(srn);
+    this.activeIndex = -1;
+
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -116,26 +162,43 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
         this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
-        expenseList?.forEach((element) => {
-          this.addExpenseForm(element);
-        });
+        if (expenseList?.length) {
+          expenseList?.forEach((element) => {
+            this.addExpenseForm(element);
+          });
+        } else {
+          this.addExpenseForm();
+        }
+        let incomeList = data[0].otherIncomes;
+        if (incomeList?.length) {
+          incomeList?.forEach((element) => {
+            this.addIncomeForm(element);
+          });
+        } else {
+          this.addIncomeForm();
+        }
       } else {
-        let form = this.createNonSpecIncomeForm(0, null);
-        form.enable();
-        this.nonspecIncomeFormArray.push(form);
+        // let form = this.createNonSpecIncomeForm(0, null);
+        // form.enable();
+        // this.nonspecIncomeFormArray.push(form);
       }
-    } /* else {
-      let form = this.createNonSpecIncomeForm(0, null);
-      form.enable();
-      this.nonspecIncomeFormArray.push(form);
-    }*/
+    } else {
+      this.addExpenseForm();
+      this.addIncomeForm();
+      // let form = this.createNonSpecIncomeForm(0, null);
+      // form.enable();
+      // this.nonspecIncomeFormArray.push(form);
+    }
     this.nonspecIncomeForm = this.formBuilder.group({
       nonspecIncomesArray: this.nonspecIncomeFormArray,
     });
+    this.gridOptions.api?.setRowData(
+      this.nonspecIncomeFormArray.controls
+    );
     (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls.forEach((element, index) => {
-      this.calculateIncome(index);
+      this.calculateNonSpeculativeIncome(index);
     });
 
     this.natOfBusinessDtlForm = this.fb.group({
@@ -157,13 +220,16 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   addNatOfBusinessForm() {
-    let form = this.createNatOfBusinessForm(0, null);
-    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+    if (this.natOfBusinessDtlForm.valid) {
+      let form = this.createNatOfBusinessForm(0, null);
+      (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+    }
   }
 
-  deleteArray() {
-    const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
-    natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+  deleteArray(index) {
+    this.natOfBusinessDtlsArray.removeAt(index);
+    // const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+    // natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 
   specSelected() {
@@ -193,7 +259,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  createNonSpecIncomeForm(index, income: ProfitLossIncomes) {
+  createNonSpecIncomeForm(index, income?: ProfitLossIncomes) {
     return this.formBuilder.group({
       index: [index],
       hasEdit: [false],
@@ -221,15 +287,25 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       grossProfit: [''],
       netProfit: [''],
       expenses: this.formBuilder.array([]),
+      incomes: this.formBuilder.array([]),
     });
   }
 
   initExpenseForm(obj: NewExpenses) {
     return this.formBuilder.group({
       hasExpense: [false],
-      expenseType: [obj.expenseType || null, [Validators.required]],
-      expenseAmount: [obj.expenseAmount || null, [Validators.required]],
-      description: [obj.description || null],
+      expenseType: [obj ? obj.expenseType : null, []],
+      expenseAmount: [obj ? obj.expenseAmount : 0, []],
+      description: [obj ? obj.description : null],
+    });
+  }
+
+  initIncomeForm(obj: NewIncome) {
+    return this.formBuilder.group({
+      hasIncome: [false],
+      type: [obj ? obj.type : null, []],
+      amount: [obj ? obj.amount : 0, []],
+      description: [obj ? obj.description : null],
     });
   }
 
@@ -237,10 +313,29 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return <FormArray>this.profitLossForm.get('expenses');
   }
 
-  addExpenseForm(element) {
+  get incomes() {
+    return <FormArray>this.profitLossForm.get('incomes');
+  }
+
+  addExpenseForm(element?) {
     const expenses = this.expenses;
-    expenses.push(this.initExpenseForm(element));
+    if (element) {
+      expenses.push(this.initExpenseForm(element));
+    } else {
+      expenses.push(this.initExpenseForm(null));
+    }
     this.changed();
+  }
+
+
+  addIncomeForm(element?) {
+    const incomes = this.incomes;
+    if (element) {
+      incomes.push(this.initIncomeForm(element));
+    } else {
+      incomes.push(this.initIncomeForm(null));
+    }
+    this.changeIncomes();
   }
 
   deleteExpenseForm() {
@@ -250,8 +345,34 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.changed();
   }
 
-  calculateIncome(index) {
+  deleteIncomeForm() {
+    const incomes = this.incomes;
+    incomes.controls = incomes.controls.filter(element => !(element as FormGroup).controls['hasIncome'].value);
+    this.calculateNetProfit();
+    this.changeIncomes();
+  }
+
+  calculateIncome() {
     let totalExpenses = 0;
+    // let specIncome = (
+    //   this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
+    // ).controls[index] as FormGroup;
+    this.selectedFormGroup.controls['totalCredit'].setValue(
+      Number(this.selectedFormGroup.controls['turnOver'].value) +
+      Number(this.selectedFormGroup.controls['finishedGoodsClosingStock'].value)
+    );
+    this.selectedFormGroup.controls['grossProfit'].setValue(
+      Number(this.selectedFormGroup.controls['totalCredit'].value) - Number(this.selectedFormGroup.controls['finishedGoodsOpeningStock'].value)
+      - Number(this.selectedFormGroup.controls['purchase'].value)
+    );
+    this.selectedFormGroup.controls['netIncome'].setValue(
+      Number(this.selectedFormGroup.controls['grossProfit'].value) -
+      Number(this.selectedFormGroup.controls['expenditure'].value)
+    );
+    this.calculateNetProfit();
+  }
+
+  calculateNonSpeculativeIncome(index) {
     let specIncome = (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls[index] as FormGroup;
@@ -270,10 +391,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.calculateNetProfit();
   }
 
-  calculateNetProfit(index?) {
-    let specIncomeArray = this.nonspecIncomeForm.get(
-      'nonspecIncomesArray'
-    ) as FormArray;
+  calculateNetProfit() {
+    let specIncomeArray = this.nonspecIncomeForm.get('nonspecIncomesArray') as FormArray;
 
     let grossProfit = 0;
     let netIncome = 0;
@@ -296,7 +415,12 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       allExpenses += parseFloat(element.expenseAmount);
     });
     this.totalOtherExpenses = allExpenses;
-    const net = form.netProfit - allExpenses;
+    let allIncomes = 0;
+    form.incomes.forEach((element) => {
+      allIncomes += parseFloat(element.amount);
+    });
+    this.totalOtherIncomes = allIncomes;
+    const net = form.netProfit + allIncomes - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
     this.totalNetProfit = net;
   }
@@ -307,6 +431,18 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       type.disabled = false;
       expenses.controls.forEach((element: FormGroup) => {
         if (element.controls['expenseType'].value == type.key) {
+          type.disabled = true;
+        }
+      });
+    });
+  }
+
+  changeIncomes() {
+    const incomes = this.incomes;
+    this.incomeTypeList.forEach((type) => {
+      type.disabled = false;
+      incomes.controls.forEach((element: FormGroup) => {
+        if (element.controls['type'].value == type.key) {
           type.disabled = true;
         }
       });
@@ -327,6 +463,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         netProfitfromNonSpeculativeIncome: row.netProfit,
         incomes: this.nonspecIncomeFormArray.getRawValue(),
         expenses: row.expenses,
+        otherIncomes: row.incomes,
       });
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {
@@ -385,8 +522,242 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     );
   }
 
+  incomeSelected() {
+    return (
+      this.incomes.controls.filter(
+        (element: FormGroup) => element.controls['hasIncome'].value === true
+      ).length > 0
+    );
+  }
+
   deleteNonSpecArray() {
-    const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
-    nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    // const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    // nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    array.controls = array.controls.filter(
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
+    this.selectedFormGroup.reset();
+    this.gridOptions?.api?.setRowData(this.nonspecIncomeFormArray.controls);
+    this.calculateIncome();
+    this.activeIndex = -1;
+  }
+
+
+  clearForm() {
+    this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['brokerName'].setValue('Manual');
+  }
+
+  saveManualEntry() {
+    if (this.selectedFormGroup.invalid) {
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      return;
+    }
+
+    let result = this.selectedFormGroup.getRawValue();
+
+    // result.costOfImprovement = result.indexCostOfImprovement;
+
+    if (this.activeIndex === -1) {
+      let srn = (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).length;
+      let form = this.createNonSpecIncomeForm(srn);
+      form.patchValue(this.selectedFormGroup.getRawValue());
+      (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).push(form);
+    } else {
+      (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+    }
+    this.gridOptions.api?.setRowData(this.nonspecIncomeFormArray.controls);
+    this.calculateIncome();
+    this.activeIndex = -1;
+    this.clearForm();
+    this.utilsService.showSnackBar("Record saved successfully.");
+  }
+
+  editForm(event) {
+    let i = event.rowIndex;
+    this.selectedFormGroup.patchValue(
+      ((this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+    this.calculateIncome();
+    this.activeIndex = i;
+  }
+
+  columnDef() {
+    let self = this;
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Broker Name',
+        field: 'brokerName',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['brokerName'].value;
+        },
+        valueFormatter: function (params) {
+          const brokerName = params.data.controls['brokerName'].value;
+          return brokerName;
+        }
+      },
+      {
+        headerName: 'Turnover',
+        field: 'turnOver',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['turnOver'].value;
+        },
+        valueFormatter: function (params) {
+          const turnOver = params.data.controls['turnOver'].value;
+          return `₹ ${turnOver}`;
+        }
+      },
+      {
+        headerName: 'Closing stocks of finished goods',
+        field: 'finishedGoodsClosingStock',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['finishedGoodsClosingStock'].value;
+        },
+        valueFormatter: function (params) {
+          const finishedGoodsClosingStock = params.data.controls['finishedGoodsClosingStock'].value;
+          return `₹ ${finishedGoodsClosingStock}`;
+        }
+      },
+      {
+        headerName: 'Total credit to trading account',
+        field: 'totalCredit',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          let totalCredit = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value)
+          return totalCredit;
+        },
+        valueFormatter: function (params) {
+          let totalCredit = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value)
+          return `₹ ${totalCredit}`;
+        }
+      },
+      {
+        headerName: 'Opening stocks of finished goods',
+        field: 'finishedGoodsOpeningStock',
+        width: 180,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          const finishedGoodsOpeningStock = Number(params.data.controls['finishedGoodsOpeningStock'].value)
+          return finishedGoodsOpeningStock;
+        },
+        valueFormatter: function (params) {
+          const finishedGoodsOpeningStock = Number(params.data.controls['finishedGoodsOpeningStock'].value)
+          return `₹ ${finishedGoodsOpeningStock}`;
+        }
+      },
+      {
+        headerName: 'Purchase',
+        field: 'purchase',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['purchase'].value;
+        },
+        valueFormatter: function (params) {
+          const purchase = params.data.controls['purchase'].value;
+          return `₹ ${purchase}`;
+        }
+      },
+      {
+        headerName: 'Trading Expense',
+        field: 'expenditure',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['expenditure'].value;
+        },
+        valueFormatter: function (params) {
+          const expenditure = params.data.controls['expenditure'].value;
+          return `₹ ${expenditure}`;
+        }
+      },
+      {
+        headerName: 'Gross profit from trading account',
+        field: 'netIncome',
+        width: 150,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let netIncome = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value) -
+            Number(params.data.controls['finishedGoodsOpeningStock'].value) - Number(params.data.controls['purchase'].value) - Number(params.data.controls['expenditure'].value);
+          return netIncome;
+        },
+        valueFormatter: function (params) {
+          let netIncome = Number(params.data.controls['turnOver'].value) + Number(params.data.controls['finishedGoodsClosingStock'].value) -
+            Number(params.data.controls['finishedGoodsOpeningStock'].value) - Number(params.data.controls['purchase'].value) - Number(params.data.controls['expenditure'].value);
+          return `₹ ${netIncome}`;
+        }
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
   }
 }

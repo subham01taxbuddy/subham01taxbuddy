@@ -112,92 +112,149 @@ export class ReAssignActionDialogComponent implements OnInit {
 
   reAssignmentForFiler() {
     //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-filer?userIdList=14157,14159&filerUserId=14129
-    if (this.filerId) {
-      let userIdList = [];
-      this.data.data.forEach(item => {
-        userIdList.push(item.userId);
-      });
-      this.loading=true;
-      let param = '/v2/bulk-reassignment-to-filer?userIdList=' + userIdList.toString() + '&filerUserId=' + this.filerId ;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        this.loading = false;
-        if (result.data && result.data.length === 0) {
-          this.utilsService.showSnackBar('User re-assignment completed successfully');
-          this.dialogRef.close({ event: 'close', data: 'success' });
-        } else if (result.data && result.data.length > 0) {
-          this.showErrorTable = true;
-          this.errorData = result.data;
-           this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
-            width: '65%',
-            height: 'auto',
-            data: {
-              data: result.data
-            },
-            disableClose :true
+    let userIdList = this.data.data.map(row => row.userId).join(',');
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        if (this.filerId) {
+          let userIdList = [];
+          this.data.data.forEach((item) => {
+            userIdList.push(item.userId);
           });
-        }else{
+          this.loading = true;
+          let param =
+            '/v2/bulk-reassignment-to-filer?userIdList=' +
+            userIdList.toString() +
+            '&filerUserId=' +
+            this.filerId;
+          this.userMsService.getMethod(param).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.data && result.data.length === 0) {
+                this.utilsService.showSnackBar(
+                  'User re-assignment completed successfully'
+                );
+                this.dialogRef.close({ event: 'close', data: 'success' });
+              } else if (result.data && result.data.length > 0) {
+                this.showErrorTable = true;
+                this.errorData = result.data;
+                this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+                  width: '65%',
+                  height: 'auto',
+                  data: {
+                    data: result.data,
+                  },
+                  disableClose: true,
+                });
+              } else {
+                this.loading = false;
+                this.utilsService.showSnackBar(result.error);
+                this.dialogRef.close({ event: 'close', data: 'success' });
+              }
+            },
+            (error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar(error.error.error);
+              this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          );
+        } else {
           this.loading = false;
-          this.utilsService.showSnackBar(result.error)
+          this.utilsService.showSnackBar('Please select Filer Name');
         }
-      }, error => {
-        this.loading = false;
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
-      });
-    } else {
-      this.loading = false;
-      this.utilsService.showSnackBar('Please select Filer Name');
-    }
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
   }
 
   reAssignmentForLeader(){
     //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-leader?userIdList=14157,14159
     //&serviceType=ITR&leaderUserId=14129&filerUserId=1234
-    if (this.leaderId) {
-      let userIdList = [];
-      this.data.data.forEach(item => {
-        userIdList.push(item.userId);
-      });
-
-     this.loading=true;
-     let serviceType = this.data.data[0].serviceType;
-     let userFilter =''
-     if(this.leaderId ){
-      userFilter +=`&leaderUserId=${this.leaderId}`
-     }
-     if(this.filerId){
-      userFilter = userFilter+`&filerUserId=${this.filerId} `
-     }
-     let param = '/v2/bulk-reassignment-to-leader?userIdList=' + userIdList.toString() +`&serviceType=${serviceType}${userFilter}` ;
-     this.userMsService.getMethod(param).subscribe((result: any) => {
-      this.loading = false;
-      if (result.data && result.data.length === 0) {
-        this.utilsService.showSnackBar('User re-assignment completed successfully');
+    let userIdList = this.data.data.map(row => row.userId).join(',');
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
-      } else if (result.data && result.data.length > 0) {
-        this.showErrorTable = true;
-        this.errorData = result.data;
-         this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
-          width: '65%',
-          height: 'auto',
-          data: {
-            data: result.data
-          },
-          disableClose :true
-        });
-      }else{
-        this.loading = false;
-        this.utilsService.showSnackBar(result.error)
-      }
+        return;
+      } else {
+        if (this.leaderId) {
+          let userIdList = [];
+          this.data.data.forEach((item) => {
+            userIdList.push(item.userId);
+          });
 
-     }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar(error.error.error);
+          this.loading = true;
+          let serviceType = this.data.data[0].serviceType;
+          let userFilter = '';
+          if (this.leaderId) {
+            userFilter += `&leaderUserId=${this.leaderId}`;
+          }
+          if (this.filerId) {
+            userFilter = userFilter + `&filerUserId=${this.filerId} `;
+          }
+          let param =
+            '/v2/bulk-reassignment-to-leader?userIdList=' +
+            userIdList.toString() +
+            `&serviceType=${serviceType}${userFilter}`;
+          this.userMsService.getMethod(param).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.data && result.data.length === 0) {
+                this.utilsService.showSnackBar(
+                  'User re-assignment completed successfully'
+                );
+                this.dialogRef.close({ event: 'close', data: 'success' });
+              } else if (result.data && result.data.length > 0) {
+                this.showErrorTable = true;
+                this.errorData = result.data;
+                this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+                  width: '65%',
+                  height: 'auto',
+                  data: {
+                    data: result.data,
+                  },
+                  disableClose: true,
+                });
+              } else {
+                this.loading = false;
+                this.utilsService.showSnackBar(result.error);
+                this.dialogRef.close({ event: 'close', data: 'success' });
+              }
+            },
+            (error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar(error.error.error);
+              this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          );
+        } else {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Please select leader Name to reassign'
+          );
+        }
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
     });
-    }
-    else {
-      this.loading = false;
-      this.utilsService.showSnackBar('Please select leader Name to reassign');
-    }
   }
 
 

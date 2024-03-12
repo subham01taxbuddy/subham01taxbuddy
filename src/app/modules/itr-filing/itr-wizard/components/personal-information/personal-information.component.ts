@@ -14,6 +14,8 @@ import {
   FormArray,
   ValidationErrors,
   FormControl,
+  ValidatorFn,
+  AbstractControl,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -2304,7 +2306,13 @@ export class PersonalInformationComponent implements OnInit {
           }),
         ]),
       }),
-      liableSection44AAflag: 'N',
+      liableSection44AAflag: 'Y',
+      incomeDeclaredUsFlag: 'N',
+      totalSalesExceedOneCr: null,
+      aggregateOfAllAmountsReceivedFlag: null,
+      aggregateOfAllPaymentsMadeFlag: null,
+      liableSection44ABFlag: 'N',
+
       bankDetails: this.fb.array([
         this.createBankDetailsForm({ hasRefund: true }),
       ]),
@@ -2375,6 +2383,12 @@ export class PersonalInformationComponent implements OnInit {
   deleteBank(index, formGroupName) {
     const bank = <FormArray>formGroupName.get('bankDetails');
     bank.removeAt(index);
+  }
+
+  deleteSelectedBanks(formGroupName) {
+    const banks = <FormArray>formGroupName.get('bankDetails');
+    banks.controls = banks.controls.filter((element:FormGroup)=> !element.controls['hasEdit'].value);
+    banks.updateValueAndValidity();
   }
 
   getAllBankByIfsc() {
@@ -2613,8 +2627,40 @@ export class PersonalInformationComponent implements OnInit {
         this.ITR_JSON.liableSection44AAflag
       );
     } else {
-      this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue('Y');
     }
+
+    this.customerProfileForm.controls['incomeDeclaredUsFlag'].setValue(
+      this.ITR_JSON.incomeDeclaredUsFlag);
+
+    if(this.ITR_JSON.incomeDeclaredUsFlag === 'N'){
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+
+      this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(
+        this.ITR_JSON.totalSalesExceedOneCr);
+
+      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+
+      if(this.ITR_JSON.totalSalesExceedOneCr === 'Y'){
+        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+
+        this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(
+          this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
+        
+        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
+
+        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+
+        this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(
+          this.ITR_JSON.aggregateOfAllPaymentsMadeFlag);
+
+        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
+      }
+    }
+    
+    this.customerProfileForm.controls['liableSection44ABFlag'].setValue(
+      this.ITR_JSON.liableSection44ABFlag);
+
     this.seventhProvisio139();
   }
 
@@ -2629,8 +2675,9 @@ export class PersonalInformationComponent implements OnInit {
 
     if (!isBankSelected) {
       this.utilsService.showSnackBar(
-        'Please select atleast one bank account in which you prefer to get refund'
+        'Please select at least one bank account in which you prefer to get refund'
       );
+      this.openAcc();
       return false;
     }
 
@@ -2659,9 +2706,8 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailsId');
       this.personalInfoSaved.emit(false);
-      this.openAcc();
       return;
     }
 
@@ -2716,7 +2762,7 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId');
       this.personalInfoSaved.emit(false);
       this.openAcc();
     }
@@ -2725,12 +2771,14 @@ export class PersonalInformationComponent implements OnInit {
   openAcc(){
     const accordionButton = document.getElementById('bankButtonId');
     if(accordionButton){
-      accordionButton.click();
+      if(accordionButton.getAttribute("aria-expanded") === "false")
+        accordionButton.click();
     }
-    const accordion = document.getElementById('perDetailsId');
-    if(accordion){
-      accordion.click();
-    }
+    // const accordion = document.getElementById('perDetailsId');
+    // if(accordion){
+    //   if(accordion.getAttribute("aria-expanded") === "false")
+    //     accordion.click();
+    // }
   }
 
   async verifyAllBanks() {
@@ -3165,4 +3213,42 @@ export class PersonalInformationComponent implements OnInit {
       this.selectedIndexes.push(index);
     }
   }
+
+  onChangeIncomeDeclaredUsFlag(){
+    this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(null);
+    this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
+    this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
+
+    if(this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N')
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+    else 
+      this.customerProfileForm.get('totalSalesExceedOneCr').clearValidators();
+    
+    this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+  }
+
+  onChangeTotalSalesExceedOneCr(){
+    if(this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y'){
+      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+    } else {
+      this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
+      this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
+      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').clearValidators();
+      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').clearValidators();
+    }
+
+    this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
+    this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
+  }
+}
+
+function auditAplicableNotAllowedValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value as string;
+    if (value && value === 'N')
+      return { auditAplicableNotAllowed: true };
+    else 
+      return null;
+  };
 }

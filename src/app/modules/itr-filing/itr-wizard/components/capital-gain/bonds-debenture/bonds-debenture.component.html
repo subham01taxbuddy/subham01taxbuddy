@@ -16,7 +16,7 @@
                             <form [formGroup]="selectedFormGroup">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading1">
-                                        <button class="accordion-button" data-bs-target="#collapse1" data-bs-toggle="collapse"
+                                        <button id="accordBtn1" class="accordion-button" data-bs-target="#collapse1" data-bs-toggle="collapse"
                                                 type="button">Manual Update
                                         </button>
 
@@ -229,7 +229,7 @@
                                                                                 (change)="calculateIndexCost(selectedFormGroup)"
                                                                                 class="input-field"
                                                                                 digitsOnly
-                                                                                formControlName="costOfImprovement"
+                                                                                formControlName="improvementCost"
                                                                                 matInput
                                                                                 matTooltip="Cost of improvement without indexation"
                                                                                 matTooltipClass="tab-tooltip"
@@ -239,7 +239,7 @@
                                                                         />
                                                                         <mat-error
                                                                                 *ngIf="
-                                          selectedFormGroup.get('costOfImprovement').hasError('required')
+                                          selectedFormGroup.get('improvementCost').hasError('required')
                                         "
                                                                         >Please enter cost of improvement
                                                                         </mat-error
@@ -349,7 +349,7 @@
                                                 <ag-grid-angular
                                                         (rowClicked)="editBondsForm($event)"
                                                         [gridOptions]="bondsGridOptions"
-                                                        class="ag-theme-balham topSps">
+                                                        class="newAG ag-theme-balham topSps">
                                                 </ag-grid-angular>
                                             </div>
                                             <div class="row col-sm-12">
@@ -369,7 +369,7 @@
 
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading2">
-                                <button class="accordion-button" data-bs-target="#collapse2" data-bs-toggle="collapse"
+                                <button id="accordBtn2" class="accordion-button" data-bs-target="#collapse2" data-bs-toggle="collapse"
                                         type="button">Add Deduction Details u/s 54F?
                                 </button>
 

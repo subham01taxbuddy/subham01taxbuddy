@@ -17,10 +17,10 @@
         <div class="div-2">
           <div class="div-3">
             <div class="contents-wrapper">
-              <div [ngClass]="i === currentIndex ? 'contents-selected' : 'contents'" *ngFor="let house of Copy_ITR_JSON.houseProperties; let i = index">
-                <div [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">House Property {{ i+1 }}</div>
+              <div [ngClass]="i === currentIndex ? 'contents' : 'contents-selected'" *ngFor="let house of Copy_ITR_JSON.houseProperties; let i = index">
+                <div [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">House Property {{ i+1 }}</div>
                 <div class="group" (click)="deleteHousingIncome(i)">
-                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'"></i>
+                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'"></i>
                 </div>
               </div>
             </div>
@@ -62,7 +62,7 @@
                 <div class="accordion" id="myAccordion">
                   <div class="accordion-item">
                     <h2 class="accordion-header accoHdclr" id="headingOne">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                      <button id="accordBtn1" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                         {{ getPropertyTypeLabel()}} </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -79,7 +79,7 @@
                                         ? "Gross rent received / receivable / letable value"
                                         : housePropertyForm.controls["propertyType"]
                                                 .value === "DLOP"
-                                                ? "What was the expected rent amount from said property?"
+                                                ? "Expected Rent Receivable"
                                                 : ""
                                 }} *
                               </div>
@@ -94,7 +94,7 @@
                                     ? 'Gross rent received / receivable / letable value'
                                     : housePropertyForm.controls['propertyType']
                                         .value === 'DLOP'
-                                    ? 'What was the expected rent amount from said property?'
+                                    ? 'Expected Rent Receivable'
                                     : ''
                               }}"
                               matTooltipClass="tab-tooltip"
@@ -104,7 +104,7 @@
                                     ? 'Gross rent received / receivable / letable value'
                                     : housePropertyForm.controls['propertyType']
                                         .value === 'DLOP'
-                                    ? 'What was the expected rent amount from said property?'
+                                    ? 'Expected Rent Receivable'
                                     : ''
                                 }}"
                                           name="rentAmount"
@@ -190,7 +190,7 @@
                                           digitsOnly
                                           readonly/>
                                 </mat-form-field>
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" *ngIf="false">
                                   <input
                                           matInput
                                           placeholder="Annual Value"
@@ -231,7 +231,7 @@
                               </div>
                             </div>
 
-                            <div class="hp2main">
+                            <div class="hp2main" *ngIf="false">
                               <div class="hplft">Standard deduction</div>
                               <div class="hprgt">
                                 <mat-form-field appearance="outline">
@@ -428,7 +428,7 @@
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="heading2">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2">Property Address</button>
+                      <button id="accordBtn2" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2">Property Address</button>
 
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -560,7 +560,7 @@
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="heading3">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">Co-ownership Details</button>
+                      <button id="accordBtn3" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">Co-ownership Details</button>
 
                     </h2>
                     <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -587,6 +587,19 @@
                               >
                             </mat-radio-group>
                           </div>
+                        </div>
+
+                        <div class="hdTxMnBt">
+                          <div class="hdTxL">
+                            Your Percentage Share in the Property
+                          </div>
+                          <div class="hdTxR">
+                            <div class="flex share-view">
+                              <input class="number-view" [value]="getUserSharePercent()" readonly disabled/>
+                              <input class="percent-view" value="%" readonly disabled/>
+                            </div>
+                          </div>
+
                         </div>
 
                         <div formArrayName="coOwners" *ngIf="isCoOwners.value">
@@ -705,7 +718,7 @@
                   </div>
                   <div class="accordion-item" *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP'">
                     <h2 class="accordion-header" id="heading4">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse4">Tenant Details</button>
+                      <button id="accordBtn4" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse4">Tenant Details</button>
 
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -799,7 +812,7 @@
                 <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
-                <div class="rght-btn" (click)="saveHouseProperty('', '')">Save & View Summary</div>
+                <div class="rght-btn" (click)="saveHpDetails(true)">Save & View Summary</div>
               </div>
             </div>
 

@@ -2,7 +2,7 @@ import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -33,7 +33,7 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class UpdateNoJsonFilingDialogComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(15), Validators.minLength(15)]);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
   eFillingDate = new FormControl('', Validators.required);
   itrType = new FormControl('', Validators.required);
   returnType = new FormControl('', Validators.required);
@@ -46,7 +46,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     private userMsService: UserMsService,
     public location: Location,
     public utilsService: UtilsService,
-    private router: Router) {
+    private router: Router,
+    private dialogRef: MatDialogRef<UpdateNoJsonFilingDialogComponent>) {
   }
 
   ngOnInit() {
@@ -158,41 +159,62 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   }
 
   serviceCall(itrObj: ITR_JSON) {
-    let req = {
-      userId: this.data.userId,
-      itrId: itrObj.itrId,
-      email: this.data.email,
-      contactNumber: this.data.mobileNumber,
-      panNumber: this.userProfile.panNumber,
-      "aadharNumber": "",
-      "assesseeType": "INDIVIDUAL",
-      assessmentYear: this.data.assessmentYear,
-      financialYear: "2022-2023",
-      isRevised: this.returnType.value,
-      "eFillingCompleted": true,
-      eFillingDate: this.eFillingDate.value,
-      ackNumber: this.ackNumber.value,
-      itrType: `${this.itrType.value}`,
-      itrTokenNumber: '',
-      "filingTeamMemberId": this.data.callerAgentUserId,
-      filingSource: "MANUALLY"
-    }
-    console.log('Updated Data:', req)
-    const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-    this.itrMsService.putMethod(param, req).subscribe((res: any) => {
-      console.log(res);
-      this.loading = false;
-      if (res.success) {
-        this.updateStatus();
-        this.utilsService.showSnackBar('Manual Filing Details updated successfully');
-        this.location.back();
-      } else {
-        this.utilsService.showSnackBar(res.message);
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-      this.loading = false;
-    })
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close(true);
+          return;
+        } else {
+          let req = {
+            userId: this.data.userId,
+            itrId: itrObj.itrId,
+            email: this.data.email,
+            contactNumber: this.data.mobileNumber,
+            panNumber: this.userProfile.panNumber,
+            "aadharNumber": "",
+            "assesseeType": "INDIVIDUAL",
+            assessmentYear: this.data.assessmentYear,
+            financialYear: "2022-2023",
+            isRevised: this.returnType.value,
+            "eFillingCompleted": true,
+            eFillingDate: this.eFillingDate.value,
+            ackNumber: this.ackNumber.value,
+            itrType: `${this.itrType.value}`,
+            itrTokenNumber: '',
+            "filingTeamMemberId": this.data.callerAgentUserId,
+            filingSource: "MANUALLY"
+          }
+          console.log('Updated Data:', req)
+          const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+          this.itrMsService.putMethod(param, req).subscribe((res: any) => {
+            console.log(res);
+            this.loading = false;
+            if (res.success) {
+              this.updateStatus();
+              this.utilsService.showSnackBar('Manual Filing Details updated successfully');
+              this.location.back();
+            } else {
+              this.utilsService.showSnackBar(res.message);
+              this.dialogRef.close(true);
+            }
+          }, error => {
+            this.utilsService.showSnackBar('Failed to update Manual Filing Details')
+            this.loading = false;
+            this.dialogRef.close(true);
+          })
+        }
+      },error => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar( error.error.error);
+          this.dialogRef.close(true);
+        } else {
+          this.utilsService.showSnackBar( "An unexpected error occurred.");
+        }
+      });
+
   }
 
   async updateStatus() {

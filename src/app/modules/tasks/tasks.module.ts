@@ -27,6 +27,7 @@ import { ChatOptionsDialogComponent } from './components/chat-options/chat-optio
 import { ScheduledCallReassignDialogComponent } from './components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
 import { ItrAssignedUsersComponent } from './pages/itr-assigned-users/itr-assigned-users.component';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { SchCallCalenderComponent } from './pages/scheduled-call/sch-call-calender/sch-call-calender.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     ReAssignActionDialogComponent,
     ScheduledCallReassignDialogComponent,
     ItrAssignedUsersComponent,
+    SchCallCalenderComponent,
   ],
   entryComponents: [
     ReAssignDialogComponent,

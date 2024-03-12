@@ -64,9 +64,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   sortBy: any = {};
   sortMenus = [
     { value: 'name', name: 'Name' },
-    { value: 'createdDate', name: 'Creation Date'},
-    {value: 'statusUpdatedDate', name: 'Status Updated Date'},
-    {value: 'userId', name: 'User Id '}
+    { value: 'createdDate', name: 'Creation Date' },
+    { value: 'statusUpdatedDate', name: 'Status Updated Date' },
+    { value: 'userId', name: 'User Id ' }
   ];
   searchBy: any = {};
   searchMenus = [];
@@ -183,6 +183,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     console.log('unsubscribe');
     this.requestManagerSubscription.unsubscribe();
     this.cacheManager.clearCache();
+  }
+
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
   }
 
   sortByObject(object) {
@@ -340,6 +347,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
+          this.searchParam.statusId = null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
@@ -460,6 +468,20 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+         // code to masking mobile no
+         cellRenderer: (params) => {
+          const mobileNumber = params.value;
+          if (mobileNumber) {
+            if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            } else {
+              return mobileNumber;
+            }
+          } else {
+            return '-'
+          }
         },
       },
       {
@@ -620,13 +642,16 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
-            'Open': { background: '#DDEDFF', color: '#2D629B' },
+            'Open': { background: '#D3FBDA', color: '#43A352' },
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#FBEED3', color: '#A36543' },
+            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'}
+            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up': { background: '#DCDCDC', color: '#808080' },
+            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+            'Backed Out': { background: '#DCDCDC', color: '#808080' },
           };
-          const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
+          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 
           return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
@@ -778,21 +803,39 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       } return;
     }
 
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows,
-        mode: 'leaderAssignment'
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
+      console.log(res);
+      if(res.error){
+        this.utilsService.showSnackBar(res.error);
         this.search();
+        return
+      }else{
+        let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+          width: '65%',
+          height: 'auto',
+          data: {
+            data: selectedRows,
+            mode: 'leaderAssignment'
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('result of reassign user ', result);
+          if (result?.data === 'success') {
+            this.search();
+          }
+        });
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
       }
     });
-
   }
 
   reassignmentForFiler() {
@@ -815,19 +858,39 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        this.search();
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+            width: '65%',
+            height: 'auto',
+            data: {
+              data: selectedRows,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              this.search();
+            }
+          });
+        }
+      },(error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
       }
-    });
+    );
   }
 
   createRowData(userData: any) {
@@ -1094,91 +1157,134 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
-    let agent_number
-    this.loading = true;
-    // const param = `/prod/call-support/call`;
-    // TODO check the caller agent number;
-    const param = `tts/outbound-call`;
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
-    if (this.coOwnerToggle.value == true) {
-      agent_number = agentNumber;
-    } else {
-      agent_number = agentNumber;
-      // agent_number = data.callerAgentNumber;
-    }
-    const reqBody = {
-      "agent_number": agent_number,
-      "userId": data.userId,
-    }
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-    //   this.loading = false;
-    //   if (result.success.status) {
-    //     this._toastMessageService.alert("success", result.success.message)
-    //   }
-    // }, error => {
-    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
-    //   this.loading = false;
-    // })
-
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        we_track('Call', {
-          'User Name': data?.name,
-          'User Phone number ': agent_number,
-        });
-        this._toastMessageService.alert("success", result.message)
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
       } else {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        let agent_number
+        this.loading = true;
+
+        const param = `tts/outbound-call`;
+        const agentNumber = await this.utilsService.getMyCallingNumber();
+        console.log('agent number', agentNumber);
+        if (!agentNumber) {
+          this._toastMessageService.alert('error', "You don't have calling role.");
+          return;
+        }
+        if (this.coOwnerToggle.value == true) {
+          agent_number = agentNumber;
+        } else {
+          agent_number = agentNumber;
+          // agent_number = data.callerAgentNumber;
+        }
+        const reqBody = {
+          "agent_number": agent_number,
+          "userId": data.userId,
+        }
+
+        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success) {
+            we_track('Call', {
+              'User Name': data?.name,
+              'User Phone number ': agent_number,
+            });
+            this._toastMessageService.alert("success", result.message)
+          } else {
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
+          }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+        })
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
-  }
+    },error => {
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
+    });
+}
+
 
   updateStatus(mode, client) {
-    let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '60%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        mode: mode,
-        userInfo: client,
-        itrChatInitiated: false
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.data === "statusChanged") {
-          // this.searchParam.page = 0;
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
           this.search();
-        }
-      }
-    });
-  }
-  showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobileNumber
-      }
-    })
+          return;
+        } else {
+          let disposable = this.dialog.open(ChangeStatusComponent, {
+            width: '60%',
+            height: 'auto',
+            data: {
+              userId: client.userId,
+              clientName: client.name,
+              serviceType: client.serviceType,
+              mode: mode,
+              userInfo: client,
+              itrChatInitiated: false,
+            },
+          });
 
-    disposable.afterClosed().subscribe(result => {
-    });
+          disposable.afterClosed().subscribe((result) => {
+            if (result) {
+              if (result.data === 'statusChanged') {
+                // this.searchParam.page = 0;
+                this.search();
+              }
+            }
+          });
+        }
+      },error => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
+      });
+  }
+
+  showNotes(client) {
+    this.utilsService
+      .getUserCurrentStatus(client.userId)
+      .subscribe((res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let disposable = this.dialog.open(UserNotesComponent, {
+            width: '75vw',
+            height: 'auto',
+            data: {
+              userId: client.userId,
+              clientName: client.name,
+              serviceType: client.serviceType,
+              clientMobileNumber: client.mobileNumber,
+            },
+          });
+
+          disposable.afterClosed().subscribe((result) => {});
+        }
+      },error => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
+      });
   }
 
   isChatOpen = false;
@@ -1235,6 +1341,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.getStatus();
     this.cacheManager.clearCache();
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.serviceType = null;

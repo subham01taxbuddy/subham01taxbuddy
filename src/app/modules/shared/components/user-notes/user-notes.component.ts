@@ -29,6 +29,10 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       value: 'ITR',
     },
     {
+      label: 'ITR-U',
+      value: 'ITRU',
+    },
+    {
       label: 'GST',
       value: 'GST',
     },
@@ -81,7 +85,28 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     this.getNotes();
   }
 
-  async addNote() {
+   addNote() {
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if(res.error){
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close();
+        return
+      }else{
+        this.note()
+      }
+    },error => {
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar( error.error.error);
+          this.dialogRef.close();
+        } else {
+          this.utilsService.showSnackBar( "An unexpected error occurred.");
+        }
+    });
+
+  }
+
+  async note(){
     if (this.serviceType.valid && this.noteDetails.valid) {
       const fyList = await this.utilsService.getStoredFyList();
       const currentFyDetails = fyList.filter(
@@ -122,6 +147,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
           this.utilsService.showSnackBar(
             'Error while adding note, please try again.'
           );
+          this.dialogRef.close();
         }
       );
     } else {

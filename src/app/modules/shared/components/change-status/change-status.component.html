@@ -29,7 +29,7 @@
               <input matInput [value]="this.data.serviceType" readonly />
             </mat-form-field>
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6" *ngIf="! hideUndoButton">
             <mat-label>Select Status *</mat-label>
             <mat-form-field appearance="outline">
               <mat-select placeholder="Select Status" formControlName="selectStatus"
@@ -61,13 +61,13 @@
         </div>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-sm-3" *ngIf="! hideUndoButton">
         <button class="update-button-new" (click)="addStatus()" tabindex="1">{{data.mode}}</button>
       </div>
-      <div class="col-sm-3" *ngIf="data.userInfo.statusId === 39">
+      <div class="col-sm-3" *ngIf="hideUndoButton">
         <button class="update-button-new" (click)="undoStatus()" tabindex="1">undo status</button>
       </div>
-      <span class="note1 note" style="flex-basis: content;" *ngIf="data.userInfo.statusId === 39">
+      <span class="note1 note" style="flex-basis: content; margin-left: 0px;" *ngIf="hideUndoButton">
         Note - Status will be changed to previous saved status
       </span>
     </div>

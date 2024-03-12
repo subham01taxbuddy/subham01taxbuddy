@@ -19,7 +19,7 @@
                         <div class="col-sm-4 spsTp">
                           <mat-form-field appearance="outline" class="custom-bg-new">
                             <mat-label>From Date</mat-label>
-                            <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minEndDate"
+                            <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
                               [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>

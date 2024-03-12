@@ -29,6 +29,9 @@ import {
   FormGroup,
   ValidationErrors,
 } from '@angular/forms';
+import {BifurcationComponent} from "../modules/itr-filing/salary/bifurcation/bifurcation.component";
+import {formatDate} from "@angular/common";
+import {SummaryConversionService} from "./summary-conversion.service";
 
 @Injectable()
 export class UtilsService {
@@ -685,10 +688,15 @@ export class UtilsService {
       acknowledgementDate91: null,
       portugeseCC5AFlag: 'N',
       schedule5a: undefined,
-
+      isITRU : this.getIsITRU(),
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
-      liableSection44AAflag: '',
+      liableSection44AAflag: 'Y',
+      incomeDeclaredUsFlag: 'N',
+      totalSalesExceedOneCr: null,
+      aggregateOfAllAmountsReceivedFlag: null,
+      aggregateOfAllPaymentsMadeFlag: null,
+      liableSection44ABFlag:'N',
 
       agriculturalIncome: {
         grossAgriculturalReceipts: null,
@@ -720,9 +728,16 @@ export class UtilsService {
         anyOtherPropertyInadequateConsideration: 0,
         anyOtherPropertyInadequateConsiderationNotTaxable: false,
       },
+
+      winningsUS115BB: null,
+      scheduleESOP: null,
     };
 
     return ITR_JSON;
+  }
+
+  getIsITRU(){
+    return new Date().getTime() <= new Date("2024-03-31").getTime();
   }
 
   setUploadedJson(data: any) {
@@ -1338,30 +1353,68 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
-  getFilerIdByMobile(mobile,ITR?){
+  getFilerIdByMobile(mobile,ITR?,email?){
     //user list api to get filerId for create subscription
     //https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&serviceType=ITR&mobileNumber=3263636364
     let param ='';
     let role = this.getUserRoles();
     let loggedInSmeId = this.getLoggedInUserID();
+    let partnerType =this.getPartnerType();
     let userFilter = '';
     if(role.includes('ROLE_LEADER')){
       userFilter='&leaderUserId='+ loggedInSmeId ;
     }
-    if(ITR){
-      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
-    }else{
-      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&mobileNumber=${mobile}${userFilter}`
+    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+      userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
+    if(ITR && mobile){
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
+    }else if(ITR && email){
+      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}`
+    }else if(!ITR && mobile ){
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
+    }else if(!ITR && email){
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&emailId=${email}${userFilter}`
+
+    }
     return this.userMsService.getMethodNew(param);
   }
 
-  getActiveUsers(mobile){
+  getActiveUsers(mobile?,email?){
    //api to check weather user is active
   // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
-    const param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}&active=false`
+  let param
+  let role = this.getUserRoles();
+  let loggedInSmeId = this.getLoggedInUserID();
+  let partnerType =this.getPartnerType();
+
+  let userFilter = '';
+    if(role.includes('ROLE_LEADER')){
+      userFilter='&leaderUserId='+ loggedInSmeId ;
+    }
+    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+      userFilter += `&filerUserId=${loggedInSmeId}`;
+    }
+
+
+  if(mobile){
+       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
+  }else if(email){
+      param = `/bo/user-list-new?page=0&pageSize=20&email=${email}${userFilter}&active=false`
+  }
     return this.userMsService.getMethodNew(param);
+  }
+
+  getUserCurrentStatus(userIdList:any){
+    //API to get current status of the user -
+    //'https://uat-api.taxbuddy.com/user/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=17803'
+    const param = `/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=${userIdList}`
+    return this.userMsService.getMethod(param);
   }
 
   /**
@@ -1517,7 +1570,7 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup) {
+  highlightInvalidFormFields(formGroup: FormGroup, accordionBtnId) {
     Object.keys(formGroup.controls).forEach((key) => {
       if (formGroup.get(key) instanceof FormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
@@ -1532,16 +1585,22 @@ export class UtilsService {
                 ', err value: ',
               controlErrors[keyError]
             );
+            console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
+            const accordionButton = document.getElementById(accordionBtnId);
+            if(accordionButton){
+              if(accordionButton.getAttribute("aria-expanded") === "false")
+                accordionButton.click();
+            }
             return;
           });
         }
       } else if (formGroup.get(key) instanceof FormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup);
+        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup, accordionBtnId);
       } else if (formGroup.get(key) instanceof FormArray) {
         let formArray = formGroup.get(key) as FormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as FormGroup);
+          this.highlightInvalidFormFields(element as FormGroup, accordionBtnId);
         });
       }
     });
@@ -1858,6 +1917,68 @@ export class UtilsService {
           income => income.salaryType === 'SEC17_3');
     }
 
+    return localEmployer;
+  }
+
+  updateEmployerBifurcation(localEmployer: Employer, section, bifurcationResult: any){
+    const salaryValues = this.getSalaryValues()?.salary;
+    if(section === 'SEC17_1') {
+      const bifurcationValues = bifurcationResult?.SEC17_1?.value
+          ? bifurcationResult?.SEC17_1?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.salary?.push({
+              salaryType: key,
+              taxableAmount: element,
+              exemptAmount: 0,
+            });
+          // }
+        }
+      }
+    }
+    if(section === 'SEC17_2') {
+      const bifurcationValues = bifurcationResult?.SEC17_2?.value
+          ? bifurcationResult?.SEC17_2?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.perquisites?.push({
+              perquisiteType: key,
+              taxableAmount: element,
+              exemptAmount: 0
+            });
+          // }
+        }
+      }
+    }
+    if(section === 'SEC17_3') {
+      const bifurcationValues = bifurcationResult?.SEC17_3?.value
+          ? bifurcationResult?.SEC17_3?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.profitsInLieuOfSalaryType?.push({
+              salaryType: key,
+              taxableAmount: element,
+              exemptAmount: 0,
+            });
+          // }
+        }
+      }
+    }
     return localEmployer;
   }
 }

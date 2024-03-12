@@ -6,32 +6,32 @@
         <div class="col-sm-12">
           <div class="filter-box">
             <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-4" *ngIf="roles.includes('ROLE_ADMIN')">
-                <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
-                  [showOwnerList]="true"></app-leader-list-dropdown>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-form-field appearance="outline">
-                  <mat-label>Start Date:</mat-label>
-              <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
-                autocomplete="off" (dateChange)="setEndDateValidate()" />
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-form-field appearance="outline">
-                  <mat-label>End Date:</mat-label>
-              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
-                autocomplete="off" (dateChange)="setEndDateValidate()" />
-                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                  <mat-datepicker #picker2></mat-datepicker>
-                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                </mat-form-field>
-              </div>
+              <div class="row">
+                <div class="col-sm-4" *ngIf="roles.includes('ROLE_ADMIN')">
+                  <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+                    [showOwnerList]="true"></app-leader-list-dropdown>
+                </div>
+                <div class="col-sm-4 spsTp">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Start Date:</mat-label>
+                    <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                      [max]="maxStartDate" autocomplete="off" (dateChange)="setEndDateValidate()" />
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 spsTp">
+                  <mat-form-field appearance="outline">
+                    <mat-label>End Date:</mat-label>
+                    <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                      [max]="maxEndDate" autocomplete="off" (dateChange)="setEndDateValidate()" />
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                    <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                  </mat-form-field>
+                </div>
 
                 <div class="button-container">
                   <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
@@ -41,8 +41,8 @@
                   </button>
                 </div>
 
+              </div>
             </div>
-          </div>
           </div>
         </div>
 
@@ -59,63 +59,123 @@
               <span class="header-text-1">{{ service.serviceType }} Invoice</span>
             </div>
             <!-- <div class="invoice-border-radius mt-3"> -->
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="radius1">
-                    <span class="numTxSm">{{ service.invoiceRaised || 'NA' }}</span><br>
-                    <span class="TxSm">Invoice Raised</span>
-                  </div>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{ service.invoiceRaised || 'NA' }}</span><br>
+                  <span class="TxSm">Invoice Raised</span>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm grTx">₹ {{service?.invoiceAmount || 'NA'}}</span><br>
-                    <span class="TxSm">Invoice Amount</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.invoiceAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Invoice Amount</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
-                    <span class="TxSm">Total Payment Received (basis paid date)</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
+                  <span class="TxSm">Total Payment Received (basis paid date)</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 RedBk">
-                    <span class="numTxSm redTx1">{{service?.unpaidInvoiceCount || 'NA'}}</span><br>
-                    <span class="TxSm">Unpaid Invoices</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 RedBk">
+                  <span class="numTxSm redTx1">{{service?.unpaidInvoiceCount || 'NA'}}</span><br>
+                  <span class="TxSm">Unpaid Invoices</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 RedBk">
-                    <span class="numTxSm redTx1">₹ {{service?.unpaidAmount || 'NA'}}</span><br>
-                    <span class="TxSm">Unpaid Amount</span>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 RedBk">
+                  <span class="numTxSm redTx1">₹ {{service?.unpaidAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Unpaid Amount</span>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm">{{service?.noSubscriptionCancellationRequest || 'NA'}}</span><br>
-                    <span class="TxSm">No.Subscription cancellation request</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm">{{service?.noSubscriptionCancellationRequest || 'NA'}}</span><br>
+                  <span class="TxSm">No.Subscription cancellation request</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
-                    <span class="TxSm">Paid Invoices(Basis created date)</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
+                  <span class="TxSm">Paid Invoices(Basis created date)</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
-                    <span class="TxSm">Paid Amount(Basis created date)</span><br>
-                  </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Paid Amount(Basis created date)</span><br>
                 </div>
-                <div class="col-sm-4">
-                  <div class="radius1 grBk">
-                    <span class="numTxSm">{{service?.noRefundRequest || 'NA'}}</span><br>
-                    <span class="TxSm">No. Refund Request</span><br>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm">{{service?.noRefundRequest || 'NA'}}</span><br>
+                  <span class="TxSm">No. Refund Request</span><br>
+                </div>
+              </div>
+            </div>
+            <!-- </div> -->
+          </div>
+          <div class="col-sm-6">
+            <div class="col-sm-12 TxHd-12 mt-3" style="padding-top: 6px;">
+              <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>
+              <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="count-chips-container">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="commission-box-container">
+                        <div class="count-inBxR-1">
+                          <span class="itr-box-text">Calls Assigned/Open</span>
+                          <span class="itr-box-value grTx-blue">{{scheduledCallData?.callsAssigned_Open || 'NA'}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="commission-box-container">
+                        <div class="count-inBxR-1">
+                          <span class="itr-box-text">Revenue Generated from Schedule call(amount)</span>
+                          <span class="itr-box-value grTx">₹ {{scheduledCallData?.revenueGeneratedFromScheduleCall ||
+                            'NA'}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-6">
+                      <div class="commission-box-container">
+                        <div class="count-inBxR-1">
+                          <span class="itr-box-text">Calls Done</span>
+                          <span class="itr-box-value grTx-blue">{{scheduledCallData?.done || 'NA'}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="commission-box-container">
+                        <div class="count-inBxR-1">
+                          <span class="itr-box-text">Calls Follow-Up</span>
+                          <span class="itr-box-value grTx-blue">{{scheduledCallData?.followUp || 'NA'}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-6">
+                      <div class="commission-box-container">
+                        <div class="count-inBxR-1">
+                          <span class="itr-box-text">Paid but didn't Scheduled Date and Time</span>
+                          <span class="itr-box-value grTx-blue">{{subPaidScheduleCallDetails?.scheduleCallNotDone || 'NA'}}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            <!-- </div> -->
+            </div>
+
           </div>
         </div>
       </div>
@@ -143,7 +203,7 @@
               </div>
               <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/intFil.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/intFil.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Internal Filer</span>
@@ -153,7 +213,7 @@
               </div>
               <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/leader.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/leader.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Leaders</span>
@@ -163,7 +223,7 @@
               </div>
               <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/extFil.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/extFil.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">External Filers</span>
@@ -171,9 +231,22 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-3 mt-2">
+            </div>
+            <hr>
+            <div class="row mt-2">
+              <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/indFil.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/extFil.png" alt="" class="imgSiz" />
+                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
+                  <div class="count-inBxR-1">
+                    <span class="text-TxSm-1">Total External Filers</span>
+                    <span class="numTxSm-11">{{operationTeamData?.externalFiler || 'NA'}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="count-radius-1">
+                  <img src="/assets/img/indFil.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Individual Filers</span>
@@ -181,9 +254,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-3 mt-2">
+              <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/priFil.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/priFil.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Principal Filers</span>
@@ -191,9 +264,9 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-3 mt-2">
+              <div class="col-sm-3">
                 <div class="count-radius-1">
-                  <img src="/assets/img/asstFil.png" alt="" class="imgSiz"/>
+                  <img src="/assets/img/asstFil.png" alt="" class="imgSiz" />
                   <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Assistant Filers</span>
@@ -209,35 +282,30 @@
     <div class="row spsTp1">
       <div class="col-sm-12 mt-2">
         <div class="TxHd-12 d-flex justify-content-between">
-          <div class="col-sm-8">
+          <div class="col-sm-7">
             <span class="TxHd-13"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>
           </div>
-          <div class="col-sm-4 d-flex align-items-center">
+          <div class="col-sm-5 d-flex align-items-center">
             <div class="total-box"><span class="total-box-text">Total</span></div>
             <div class="total-box-value1"><span class="total-value">{{commissionData?.totalItrFiled || 'NA'}}</span>
             </div>
-            <!-- <div class="dropdown-box" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
-              <select [(ngModel)]="selectedType">
-                <option value="Original">Original</option>
-                <option value="Revised">Revised</option>
-              </select>
-            </div> -->
-            
-            <mat-select [(ngModel)]="selectedType" class="dropdown-box"  (click)="toggleDropdown()">
+            <mat-select [(ngModel)]="selectedType" class="dropdown-box" (click)="toggleDropdown()">
               <mat-option value="Original">Original</mat-option>
               <mat-option value="Revised">Revised</mat-option>
+              <mat-option value="ITRU">ITR U(updated)</mat-option>
             </mat-select>
             <div class="total-box-value">
               <div *ngIf="selectedType ==='Original' "><span class="total-value">{{totalOriginal || 'NA'}}</span></div>
               <div *ngIf="selectedType ==='Revised' "><span class="total-value">{{totalRevised || 'NA'}}</span></div>
+              <div *ngIf="selectedType ==='ITRU' "><span class="total-value">{{totalItrU || 'NA'}}</span></div>
             </div>
-           
+
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <div class="count-chips-container">            
+          <div class="count-chips-container">
             <div class="row px-4">
               <div class="col-sm-12">
                 <div class="serTypeTesxt">{{selectedType}}:</div>
@@ -245,56 +313,74 @@
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR1</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr1 ||'NA'}}</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr1_revised ||'NA'}}</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR1</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-1</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr1
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr1_revised
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_1 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR2</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr2 ||'NA'}}</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr2_revised ||'NA'}}</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR2</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-2</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr2
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr2_revised
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_2 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR3</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr3 ||'NA'}}</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr3_revised ||'NA'}}</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR3</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-3</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr3
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr3_revised
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_3 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR4</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr4 ||'NA'}}</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr4_revised ||'NA'}}</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR4</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-4</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr4
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr4_revised
+                      ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_4 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-2" *ngIf="selectedType === 'Original' || selectedType === 'Revised' ">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
                     <span class="itr-box-text">Other</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.originalReturnOther ||'NA'}}</span>
-                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.reviseReturnOther ||'NA'}}</span>
+                    <span class="itr-box-value"
+                      *ngIf="selectedType === 'Original'">{{commissionData?.originalReturnOther ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.reviseReturnOther
+                      ||'NA'}}</span>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-2" *ngIf="selectedType === 'Original'">
+              <!-- <div class="col-sm-2" *ngIf="selectedType === 'Original'">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
                     <span class="itr-box-text">ITR U</span>
-                    <span class="itr-box-value">{{commissionData?.itrU || 'NA'}}</span>
+                    <span class="itr-box-value">{{commissionData?.ITRU || 'NA'}}</span>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -357,7 +443,7 @@
         </div>
       </div>
     </div>
-    <div class="row spsTp1">
+    <!-- <div class="row spsTp1">
       <div class="col-sm-12 mt-2">
         <div class="TxHd-12">
           <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>
@@ -405,6 +491,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

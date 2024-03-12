@@ -31,7 +31,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 })
 export class MoreOptionsDialogComponent implements OnInit {
   showDetails = '';
-  services = ['ITR', 'TPA', 'NOTICE', 'GST'];
+  services = ['ITR', 'ITRU', 'TPA', 'NOTICE', 'GST'];
   selectedService = '';
   optedServicesData = [];
   loading = false;
@@ -123,27 +123,46 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   deleteUser() {
     // this.isDisable = true;
-    const param =
-      `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
-    this.userMsService.deleteMethod(param).subscribe(
-      (res: any) => {
-        if (res.success) {
-          this.utilsService.showSnackBar(`User deleted successfully!`);
-          // this.isDisable = true;
-          this.dialogRef.close(true);
-          we_track('Delete User', {
-            'User Number': this.data?.mobileNumber,
-          });
-        } else {
-          this.utilsService.showSnackBar(res.message);
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        const param =
+        `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+      this.userMsService.deleteMethod(param).subscribe(
+        (res: any) => {
+          if (res.success) {
+            this.utilsService.showSnackBar(`User deleted successfully!`);
+            // this.isDisable = true;
+            this.dialogRef.close(true);
+            we_track('Delete User', {
+              'User Number': this.data?.mobileNumber,
+            });
+          } else {
+            this.utilsService.showSnackBar(res.message);
+            // this.isDisable = false;
+          }
+        },
+        (error) => {
           // this.isDisable = false;
+          this.utilsService.showSnackBar(error.message);
+          this.dialogRef.close({ event: 'close', data: 'success' });
         }
-      },
-      (error) => {
-        // this.isDisable = false;
-        this.utilsService.showSnackBar(error.message);
+      );
       }
-    );
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
+
   }
 
   goToInvoice() {
@@ -241,52 +260,89 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   optService() {
-    if (this.utilsService.isNonEmpty(this.selectedService)) {
-      this.loading = true;
-      const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
-      this.userMsService.getMethod(param).subscribe(
-        (res: any) => {
-          this.optedServices();
-          if (res.success) {
-            this.utilsService.showSnackBar(
-              'Successfully opted the service type ' + this.selectedService
-            );
-            we_track('Other Service', {
-              'User Name': this.data?.name,
-              'User Number': this.data?.mobileNumber,
-              'Opt for which service ': this.selectedService,
-            });
-          } else {
-            this.utilsService.showSnackBar(res.message);
-          }
-        },
-        () => {
-          this.loading = false;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        if (this.utilsService.isNonEmpty(this.selectedService)) {
+          this.loading = true;
+          const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
+          this.userMsService.getMethod(param).subscribe(
+            (res: any) => {
+              this.optedServices();
+              if (res.success) {
+                this.utilsService.showSnackBar(
+                  'Successfully opted the service type ' + this.selectedService
+                );
+                we_track('Other Service', {
+                  'User Name': this.data?.name,
+                  'User Number': this.data?.mobileNumber,
+                  'Opt for which service ': this.selectedService,
+                });
+              } else {
+                this.utilsService.showSnackBar(res.message);
+              }
+            },
+            () => {
+              this.loading = false;
+              this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          );
         }
-      );
-    }
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
+
+
   }
 
   giveInsurance() {
-    this.loading = true;
-    const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
-    this.itrMsService.postMethod(param, {}).subscribe(
-      (res: any) => {
-        console.log(res);
-        this.loading = false;
-        if (!res.success) {
-          this.utilsService.showSnackBar(res.message);
-          return;
-        }
-        this.utilsService.showSnackBar('Insurance given successfully');
-      },
-      () => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to give insurance, please try again'
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        this.loading = true;
+        const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
+        this.itrMsService.postMethod(param, {}).subscribe(
+          (res: any) => {
+            console.log(res);
+            this.loading = false;
+            if (!res.success) {
+              this.utilsService.showSnackBar(res.message);
+              return;
+            }
+            this.utilsService.showSnackBar('Insurance given successfully');
+          },
+          () => {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Failed to give insurance, please try again'
+            );
+          }
         );
       }
-    );
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
   }
 
   checkSubscription(action: string) {
@@ -323,7 +379,11 @@ export class MoreOptionsDialogComponent implements OnInit {
   checkFilerAssignment(action) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
     let hasFilerAssignment = false;
-    let param = `/check-filer-assignment?userId=${this.data.userId}`
+    let serviceType = '';
+    if (this.data.serviceType === 'ITRU') {
+      serviceType = `&serviceType=ITRU`
+    }
+    let param = `/check-filer-assignment?userId=${this.data.userId}${serviceType}`
     this.userMsService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -356,14 +416,33 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   itruUpdate() {
-    let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
-      width: '60%',
-      height: 'auto',
-      data: this.data,
-    });
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
+          width: '60%',
+          height: 'auto',
+          data: this.data,
+        });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+        disposable.afterClosed().subscribe((result) => {
+          if (result) {
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          }
+        });
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
     });
   }
 
@@ -413,25 +492,44 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   reAssignUser() {
-    let disposable = this.dialog.open(ReAssignDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: this.data.userId,
-        clientName: this.data.name,
-        serviceType: this.data.serviceType,
-        ownerName: this.data.ownerName,
-        filerName: this.data.filerName,
-        filerUserId: this.data.filerUserId,
-        userInfo: this.data
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        return this.dialogRef.close({ event: 'close', data: 'success' });
-      }
-    });
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          return;
+        } else {
+          let disposable = this.dialog.open(ReAssignDialogComponent, {
+            width: '50%',
+            height: 'auto',
+            data: {
+              userId: this.data.userId,
+              clientName: this.data.name,
+              serviceType: this.data.serviceType,
+              ownerName: this.data.ownerName,
+              filerName: this.data.filerName,
+              filerUserId: this.data.filerUserId,
+              userInfo: this.data
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              return this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          });
+        }
+      },(error) => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar("An unexpected error occurred.");
+        }
+        }
+      );
   }
 
   createRowData(data) {
@@ -527,7 +625,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if(this.data.statusId != 11){
+          if (this.data.statusId != 11) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
               height: 'auto',
@@ -536,7 +634,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
             disposable.afterClosed().subscribe((result) => {
             });
-          }else{
+          } else {
             this.utilsService.showSnackBar(
               'Please complete e-verification before starting with revised return'
             );
@@ -559,7 +657,14 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   linkToFinbingo() {
-    const userId = this.data.userId;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
+      } else {
+        const userId = this.data.userId;
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -583,6 +688,18 @@ export class MoreOptionsDialogComponent implements OnInit {
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar('There is some problem while linking user to Finbingo')
+      this.dialogRef.close({ event: 'close', data: 'success' });
     })
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
+
   }
 }

@@ -51,6 +51,12 @@ export class RemoteConfigService {
           let tempValueParse = JSON.parse(tempObject._value);
           // this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempValueParse));
           return tempValueParse;
+        case AppConstants.SCHEDULE_CALL_REMOTE_CONFIG:
+          let scheduleCallJson = getValue(remoteConfig, 'scheduleCallJson');
+          let scheduleCallJsonObject = JSON.parse(JSON.stringify(scheduleCallJson));
+          let RemoteConfigScheduleCallJson = JSON.parse(scheduleCallJsonObject._value);
+          this.setLocalStorageItem(AppConstants.SCHEDULE_CALL_REMOTE_CONFIG, JSON.stringify(RemoteConfigScheduleCallJson));
+          return RemoteConfigScheduleCallJson;
       }
 
     } catch (e) {
@@ -61,6 +67,14 @@ export class RemoteConfigService {
               let tempObject = JSON.parse(JSON.stringify(result));
               this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempObject));
 
+            }, error => {
+            });
+          break;
+        case AppConstants.SCHEDULE_CALL_REMOTE_CONFIG:
+          this.httpClient.get('./assets/jsons/remote_config_schedule_call.json')
+            .subscribe((result: any) => {
+              let RemoteConfigScheduleCallJson = JSON.parse(JSON.stringify(result));
+              this.setLocalStorageItem(AppConstants.SCHEDULE_CALL_REMOTE_CONFIG, JSON.stringify(RemoteConfigScheduleCallJson));
             }, error => {
             });
           break;

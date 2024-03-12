@@ -30,6 +30,7 @@ export class AppConstants {
     public static TOKEN = environment.production ? 'TOKEN' : 'TOKEN';
     public static IS_USER_LOGGED_IN = environment.production ? 'IS_USER_LOGGED_IN' : 'IS_USER_LOGGED_IN';
     public static ITR_JSON = environment.production ? 'ITR_JSON' : 'ITR_JSON';
+    public static PREV_ITR_JSON = environment.production ? 'PREV_ITR_JSON' : 'PREV_ITR_JSON';
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
@@ -44,6 +45,7 @@ export class AppConstants {
     public static ALL_FILERS_LIST = environment.production ? 'ALL_FILERS_LIST' : 'ALL_FILERS_LIST';
     public static BANK_LIST = environment.production ? 'BANK_LIST' : 'BANK_LIST';
     public static ADMIN_GLOBAL_CONFIG = 'ADMIN_GLOBAL_CONFIG';
+    public static SCHEDULE_CALL_REMOTE_CONFIG = 'SCHEDULE_CALL_REMOTE_CONFIG';
     public static gstFyList = [
         { financialYear: '2023-24' },
         { financialYear: '2022-23' },

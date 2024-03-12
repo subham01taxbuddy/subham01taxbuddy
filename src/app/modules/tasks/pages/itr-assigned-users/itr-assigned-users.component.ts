@@ -65,8 +65,8 @@ export class ItrAssignedUsersComponent implements OnInit {
   sortMenus = [
     { value: 'name', name: 'Name' },
     { value: 'createdDate', name: 'Creation Date' },
-    {value: 'statusUpdatedDate', name: 'Status Updated Date'},
-    {value: 'userId', name: 'User Id '}
+    { value: 'statusUpdatedDate', name: 'Status Updated Date' },
+    { value: 'userId', name: 'User Id ' }
   ];
   searchBy: any = {};
   searchMenus = [];
@@ -74,6 +74,16 @@ export class ItrAssignedUsersComponent implements OnInit {
   partnerType: any;
   unAssignedUsersView = new FormControl(false);
   disableCheckboxes = false;
+  serviceTypes = [
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    {
+      label: 'ITR-U',
+      value: 'ITRU',
+    },
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -219,7 +229,14 @@ export class ItrAssignedUsersComponent implements OnInit {
             this.utilsService.showSnackBar(error.error.detail);
             return;
           });
-          let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+
+          let objITR
+          if (this.rowData.serviceType === 'ITRU') {
+            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, "2022-2023");
+            objITR.isITRU = true;
+          } else {
+            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          }
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
 
@@ -283,7 +300,11 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
-    let param = `/check-filer-assignment?userId=${data.userId}`;
+    let serviceType = '';
+    if (data.serviceType === 'ITRU') {
+      serviceType = `&serviceType=ITRU`
+    }
+    let param = `/check-filer-assignment?userId=${data.userId}${serviceType}`;
     this.userMsService.getMethod(param).subscribe(
       (response: any) => {
         this.loading = false;
@@ -336,13 +357,33 @@ export class ItrAssignedUsersComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
-            itrSubscriptionFound = true;
-            return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
-            itrSubscriptionFound = true;
-            return;
+          let item1 = item?.item;
+          console.log(data.serviceType)
+          if (data.serviceType === 'ITR') {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR')) {
+              itrSubscriptionFound = true;
+              return;
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR')) {
+              itrSubscriptionFound = true;
+              return;
+            }
           }
+
+          if (data.serviceType === 'ITRU') {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+              itrSubscriptionFound = true;
+              return;
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+              itrSubscriptionFound = true;
+              return;
+            }
+            // if (item1.service === 'ITRU' && (item1.financialYear === "2022-2023" || item1.financialYear === "2022-23") ) {
+            //   itrSubscriptionFound = true;
+            //   return;
+            // }
+          }
+
+
         });
         if (itrSubscriptionFound) {
           this.startFiling(data);
@@ -355,12 +396,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
-  getStatus() {
+  getStatus(serviceType?) {
     // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
-    let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR';
+    let param;
+    if (serviceType) {
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=' + serviceType;
+    } else {
+      // https://uat-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true';
+    }
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
+          this.searchParam.statusId=null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
@@ -370,6 +418,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         console.log('Error during fetching status info.');
       }
     );
+
+
+
+
   }
 
 
@@ -444,13 +496,20 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
+  isColumnExpanded: boolean = false;
+
+  toggleColumnExpansion(): void {
+    this.isColumnExpanded = !this.isColumnExpanded;
+    this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+  }
+
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
 
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
-    return [
+    let columnDefs = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
@@ -523,36 +582,6 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
         },
       },
-      // {
-      //   headerName: 'Status',
-      //   field: 'statusId',
-      //   width: 90,
-      //   suppressMovable: true,
-      //   sortable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     // console.log('params === ', params, params.data.statusId);
-      //     // console.log('itrStatus array === ', itrStatus);
-      //     if (itrStatus.length !== 0) {
-      //       const nameArray = itrStatus.filter(
-      //         (item: any) => item.statusId === params.data.statusId
-      //       );
-      //       if (nameArray.length !== 0) {
-      //         statusSequence = nameArray[0].sequence;
-      //         return nameArray[0].statusName;
-      //       } else {
-      //         return '-';
-      //       }
-      //     } else {
-      //       return params.data.statusId;
-      //     }
-      //   },
-      // },
       {
         headerName: 'leader Name',
         field: 'leaderName',
@@ -685,189 +714,25 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      // {
-      //   headerName: 'Action With',
-      //   field: 'conversationWithFiler',
-      //   width: 110,
-      //   suppressMovable: true,
-      //   hide: !showOwnerCols,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     {
-      //       if (params.data.conversationWithFiler === true) {
-      //         return params.data.filerName;
-      //       } else {
-      //         return params.data.leaderName;
-      //       }
-      //     }
-      //   }
-      // },
-
-
-
-
-      // {
-      //   headerName: 'Agent Name',
-      //   field: 'callerAgentName',
-      //   width: 180,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
       {
-        headerName: 'ITR Form Base Status',
-        editable: false,
+        headerName: 'Other Options',
+        headerClass: 'single-column-header',
         suppressMenu: true,
-        sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
-            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
-             </button>`;
-          } else {
-            return '-'
-          }
-        },
-        width: 120,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Call',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Call to user"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-phone" data-action-type="call"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Update Status',
-        // field: 'statusName',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          const statusName = params.data.statusName;
-          const statusColors = {
-            'Open': { background: '#DDEDFF', color: '#2D629B' },
-            'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#FBEED3', color: '#A36543' },
-            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'},
-            'Follow Up':{ background: '#FBEED3', color: '#A36543' },
-            'Interested': { background: '#F8F8F8', color: '#404040' },
-            'ITR Confirmation Received': { background: '#FFFFE0', color: '#404040' },
-            'ITR Filed - E Verification Pending': { background: '#FFC0CB', color: '#FFFFFF' },
-            'Preparing ITR': { background: '#E0FFE0', color: '#404040' },
-            'Chat Initiated': { background: '#FFC0CB', color: '#404040' },
-            'Back Out - With Refund': { background: '#ADD8E6', color: '#FFFFFF' },
-            'Chat Resolved': { background: '#FFD700', color: '#404040' },
-            'ITR Filed - E Verification Completed': { background: '#EE82EE', color: '#FFFFFF' },
-            'Back Out - Without Refund': { background: '#90EE90', color: '#FFFFFF' },
-            'Pay Later': { background: '#00FFFF', color: '#404040' },
-          };
-          const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
-
-          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
-          cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
-          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+        cellRenderer: (params: any) => {
+          return `<button type="button" class="action_icon add_button" title="More Options"
+            style="border: none; background: transparent; font-size: 12px; cursor:pointer;" data-action-type="others"
+            (click)="toggleColumnExpansion()">
+            <i class="fas ${this.isColumnExpanded ? 'fa-chevron-right' : 'fa-chevron-left'}" aria-hidden="true" data-action-type="others"></i>
           </button>`;
-
-          // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-          // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-          // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-          //  </button>`;
         },
-
-        width: 220,
+        width: 85,
         pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'left',
-            display: 'flex',
-            'align-items': 'left',
-            'justify-content': 'left',
-          };
-        },
-      },
-      {
-        headerName: 'Chat',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
-              <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
-             </button>`;
-        },
-        width: 65,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'Notes',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-          <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
-           </button>`;
-        },
-        width: 70,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
+        cellStyle: {
+          textAlign: 'center',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
         },
       },
       {
@@ -876,7 +741,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
+            const isITRU = params.data.serviceType === 'ITRU';
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
@@ -890,7 +756,7 @@ export class ItrAssignedUsersComponent implements OnInit {
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" data-action-type="startRevise" title="ITR filed successfully / Click to start revise return" style="padding: 0px 18px;  border-radius: 40px;
-              cursor:pointer; background-color:#D3FBDA; color:#43A352;">
+              cursor:pointer; background-color:#D3FBDA; color:#43A352;" ${isITRU ? 'disabled' : ''} >
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
@@ -916,7 +782,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'More',
         editable: false,
         suppressMenu: true,
-        sortable: true,
+        sortable: false,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="More Options" style="border: none;
@@ -929,13 +795,167 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
           };
         },
-      },
+      }
     ];
+
+    let additionalColumns = [];
+    if (this.isColumnExpanded) {
+      additionalColumns = [
+        {
+          headerName: 'ITR Form Base Status',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            if (params.data.serviceType === 'ITR') {
+              return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
+              style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+              <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
+               </button>`;
+            } else {
+              return '-'
+            }
+          },
+          width: 120,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Call',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Call to user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+            <i class="fa-solid fa-phone" data-action-type="call"></i>
+             </button>`;
+          },
+          width: 60,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Update Status',
+          // field: 'statusName',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            const statusName = params.data.statusName;
+            const statusColors = {
+              'Open': { background: '#D3FBDA', color: '#43A352' },
+              'Not Interested': { background: '#DCDCDC', color: '#808080' },
+              'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+              'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              'Follow Up': { background: '#DCDCDC', color: '#808080' },
+              'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
+              'Interested': { background: '#D3FBDA', color: '#43A352' },
+              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
+              'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
+              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
+              'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
+              'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
+              'Pay Later': { background: '#DCDCDC', color: '#808080' },
+            };
+            const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
+
+            return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
+            cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
+            <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+            </button>`;
+
+            // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+            // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+            // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
+            //  </button>`;
+          },
+
+          width: 180,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'left',
+              display: 'flex',
+              'align-items': 'left',
+              'justify-content': 'left',
+            };
+          },
+        },
+        {
+          headerName: 'Chat',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Open Chat"
+              style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
+                <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+               </button>`;
+          },
+          width: 65,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+        {
+          headerName: 'Notes',
+          editable: false,
+          suppressMenu: true,
+          sortable: true,
+          suppressMovable: true,
+          cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Click see/add notes"
+            style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
+            <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
+             </button>`;
+          },
+          width: 70,
+          pinned: 'right',
+          cellStyle: function (params: any) {
+            return {
+              textAlign: 'center',
+              display: 'flex',
+              'align-items': 'center',
+              'justify-content': 'center',
+            };
+          },
+        },
+      ];
+    }
+    columnDefs.splice(columnDefs.length - 2, 0, ...additionalColumns);
+    return columnDefs;
   }
 
   reassignmentForLeader() {
@@ -951,20 +971,42 @@ export class ItrAssignedUsersComponent implements OnInit {
       return;
     }
 
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows,
-        mode: 'leaderAssignment'
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+            width: '65%',
+            height: 'auto',
+            data: {
+              data: selectedRows,
+              mode: 'leaderAssignment',
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              this.search();
+            }
+          });
+        }
       },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        this.search();
+      (error) => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
       }
-    });
+    );
 
   }
 
@@ -981,18 +1023,35 @@ export class ItrAssignedUsersComponent implements OnInit {
       this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
       return;
     }
-
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
         this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+          width: '65%',
+          height: 'auto',
+          data: {
+            data: selectedRows,
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('result of reassign user ', result);
+          if (result?.data === 'success') {
+            this.search();
+          }
+        });
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
       }
     });
   }
@@ -1095,6 +1154,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.getItrStatus(params.data);
           break;
         }
+        case 'others': {
+          this.toggleColumnExpansion();
+          break;
+        }
       }
     }
   }
@@ -1119,31 +1182,49 @@ export class ItrAssignedUsersComponent implements OnInit {
   rowData: any;
 
   async startFiling(data) {
-    console.log(data);
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        // this.start(data);
+        console.log(data);
 
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+        const fyList = await this.utilsService.getStoredFyList();
+        const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-    //update ITR lifecycle api for filing started state
-    let reqData = {
-      userId: data.userId,
-      assessmentYear: currentFyDetails[0].assessmentYear,
-      taskKeyName: 'itrFilingComences',
-      taskStatus: 'Completed'
-    };
-    const userData = JSON.parse(localStorage.getItem('UMD') || '');
-    const TOKEN = userData ? userData.id_token : null;
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('environment', environment.lifecycleEnv);
-    headers = headers.append('Authorization', 'Bearer ' + TOKEN);
-    this.rowData = data;
-    this.loading = true;
-    this.requestManager.addRequest(this.LIFECYCLE,
-      this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-    we_track('Start Filing', {
-      'User Name': data?.name,
-      'User Number': data?.mobileNumber
+        //update ITR lifecycle api for filing started state
+        let reqData = {
+          userId: data.userId,
+          assessmentYear: currentFyDetails[0].assessmentYear,
+          taskKeyName: 'itrFilingComences',
+          taskStatus: 'Completed'
+        };
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
+        const TOKEN = userData ? userData.id_token : null;
+        let headers = new HttpHeaders();
+        headers = headers.append('Content-Type', 'application/json');
+        headers = headers.append('environment', environment.lifecycleEnv);
+        headers = headers.append('Authorization', 'Bearer ' + TOKEN);
+        this.rowData = data;
+        this.loading = true;
+        this.requestManager.addRequest(this.LIFECYCLE,
+          this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
+        we_track('Start Filing', {
+          'User Name': data?.name,
+          'User Number': data?.mobileNumber
+        });
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
   }
 
@@ -1194,31 +1275,49 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   openReviseReturnDialog(data) {
-    console.log('Data for revise return ', data);
-    if (data.statusId != 11) {
-      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-        width: '50%',
-        height: 'auto',
-        data: data
-      })
-      disposable.afterClosed().subscribe(result => {
-        if (result === 'reviseReturn') {
-          this.router.navigate(['/itr-filing/itr'], {
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data.eriClientValidUpto,
-              name: data.name
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        console.log('Data for revise return ', data);
+        if (data.statusId != 11) {
+          let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+            width: '50%',
+            height: 'auto',
+            data: data
+          })
+          disposable.afterClosed().subscribe(result => {
+            if (result === 'reviseReturn') {
+              this.router.navigate(['/itr-filing/itr'], {
+                state: {
+                  userId: data.userId,
+                  panNumber: data.panNumber,
+                  eriClientValidUpto: data.eriClientValidUpto,
+                  name: data.name
+                }
+              });
             }
+            console.log('The dialog was closed', result);
           });
+        } else {
+          this.utilsService.showSnackBar(
+            'Please complete e-verification before starting with revised return'
+          );
         }
-        console.log('The dialog was closed', result);
-      });
-    } else {
-      this.utilsService.showSnackBar(
-        'Please complete e-verification before starting with revised return'
-      );
-    }
+      }
+    },error => {
+      this.loading=false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
+    });
+
   }
 
 
@@ -1269,77 +1368,142 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    let agent_number
-    this.loading = true;
-    const param = `tts/outbound-call`;
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
+    this.utilsService
+      .getUserCurrentStatus(data.userId)
+      .subscribe(async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let agent_number;
+          this.loading = true;
+          const param = `tts/outbound-call`;
+          const agentNumber = await this.utilsService.getMyCallingNumber();
+          console.log('agent number', agentNumber);
+          if (!agentNumber) {
+            this._toastMessageService.alert(
+              'error',
+              "You don't have calling role."
+            );
+            return;
+          }
 
-    agent_number = agentNumber;
-    const reqBody = {
-      "agent_number": agent_number,
-      "userId": data.userId,
-    }
+          agent_number = agentNumber;
+          const reqBody = {
+            agent_number: agent_number,
+            userId: data.userId,
+          };
 
-
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        we_track('Call', {
-          'User Name': data?.name,
-          'User Phone number ': agent_number,
-        });
-        this._toastMessageService.alert("success", result.message)
-      } else {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success) {
+                we_track('Call', {
+                  'User Name': data?.name,
+                  'User Phone number ': agent_number,
+                });
+                this._toastMessageService.alert('success', result.message);
+              } else {
+                this.utilsService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },error => {
+        this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
+      });
   }
 
   updateStatus(mode, client) {
-    let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '60%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        mode: mode,
-        userInfo: client,
-        itrChatInitiated: true
-      }
-    })
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(ChangeStatusComponent, {
+          width: '60%',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            mode: mode,
+            userInfo: client,
+            itrChatInitiated: true
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.data === "statusChanged") {
-          // this.searchParam.page = 0;
-          this.search();
-        }
+        disposable.afterClosed().subscribe(result => {
+          if (result) {
+            if (result.data === "statusChanged") {
+              // this.searchParam.page = 0;
+              this.search();
+            }
+          }
+        });
       }
+    },error => {
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
     });
+
   }
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobileNumber
-      }
-    })
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: client.mobileNumber
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
+        disposable.afterClosed().subscribe(result => {
+          this.search();
+        });
+      }
+    },error => {
+      this.loading=false;
+        if (error.error && error.error.error) {
+          this._toastMessageService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this._toastMessageService.alert("error", "An unexpected error occurred.");
+        }
     });
+
   }
 
   isChatOpen = false;
@@ -1398,6 +1562,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.getStatus();
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
@@ -1465,7 +1630,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     // 'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR'
     //'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR&filerUserId=779519'
     // 'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&leaderUserId=1064&serviceType=ITR'
-    let param = `/bo/user-list-new?${data}&itrChatInitiated=true&serviceType=ITR`;
+    let param = `/bo/user-list-new?${data}&itrChatInitiated=true`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {

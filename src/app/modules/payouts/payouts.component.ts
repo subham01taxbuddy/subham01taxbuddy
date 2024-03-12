@@ -23,6 +23,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
+import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -95,6 +96,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  serviceType = new FormControl('');
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -187,6 +189,10 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   clearValue() {
     this.searchVal = "";
     this.currentUserId = 0;
+  }
+
+  fromServiceType(event) {
+   this.serviceType.setValue(event);
   }
 
   leaderId: number;
@@ -304,6 +310,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+    let serviceTypeFilter = this.serviceType.value ? `&serviceType=${this.serviceType.value}` : '';
 
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
@@ -316,7 +323,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}`;
+    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${serviceTypeFilter}`;
     this.reportService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
@@ -995,8 +1002,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.showCsvMessage = false;
   }
 
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+
   resetFilters() {
     this.cacheManager.clearCache();
+    this?.serviceDropDown?.resetService();
+    this.serviceType.setValue(null);
     this.filerId = null;
     this.leaderId = null;
     this.selectedStatus = this.statusList[2].value;

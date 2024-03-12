@@ -398,6 +398,14 @@ export class ScheduleTrComponent implements OnInit {
     } else {
       this.add();
     }
+
+    const trArray = this.getTrArray;
+    const trFlag = trArray.controls[0].get('selectedOption');
+    if (this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag === 'YES') {
+      trFlag.setValue('yes');
+    } else{
+      trFlag.setValue('no');
+    }
   }
 
   initForm() {
@@ -470,6 +478,12 @@ export class ScheduleTrComponent implements OnInit {
         }
       }
     });
+
+    if (trFlag.value === 'yes') {
+      this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'YES';
+    } else{
+      this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'NO';
+    }
   }
 
   // handleSelectionChange(event) {
@@ -504,6 +518,12 @@ export class ScheduleTrComponent implements OnInit {
         this.getTrArray.controls[0].get('assYr').value;
       this.Copy_ITR_JSON.foreignIncome.taxAmountRefunded =
         this.getTrArray.controls[0].get('amtOfTaxRef').value;
+
+      if (this.getTrArray.controls[0].get('selectedOption').value === 'yes') {
+        this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'YES';
+      } else{
+        this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'NO';
+      }
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {

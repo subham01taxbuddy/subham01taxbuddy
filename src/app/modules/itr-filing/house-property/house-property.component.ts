@@ -562,6 +562,15 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  getUserSharePercent(){
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    let sum = 0;
+    coOwner.controls.forEach((controlName) => {
+      sum = Number(sum) + Number(controlName.value.percentage);
+    });
+    return 100- sum;
+  }
+
   isduplicatePAN(i, formArrayName) {
     const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
@@ -605,9 +614,7 @@ export class HousePropertyComponent implements OnInit {
     let housePropertyForm = this.housePropertyForm.controls;
     if (itrJsonHp?.eligible80EEAAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount +
-        itrJsonHp?.eligible80EEAAmount || 0
-      );
+        itrJsonHp?.loans[0]?.interestAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -615,9 +622,7 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
     } else if (itrJsonHp?.eligible80EEAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount +
-        itrJsonHp?.eligible80EEAmount || 0
-      );
+        itrJsonHp?.loans[0]?.interestAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -629,13 +634,14 @@ export class HousePropertyComponent implements OnInit {
             itrJsonHp?.loans[0]?.interestAmount
         );
         housePropertyForm['interest24bAmount'].setValue(
-            itrJsonHp?.loans[0]?.interestAmount
+            Math.min(itrJsonHp?.loans[0]?.interestAmount, 200000)
         );
       }
       housePropertyForm['isEligibleFor80EE']?.setValue('');
       housePropertyForm['eligible80EEAAmount']?.setValue(0);
       housePropertyForm['eligible80EEAmount']?.setValue(0);
     }
+    this.calculateInterestOrDeduction();
   }
 
   editHouseProperty(index) {
@@ -818,8 +824,8 @@ export class HousePropertyComponent implements OnInit {
 
   chekIsSOPAdded() {
     this.isSelfOccupied = 0;
-    if (this.ITR_JSON.houseProperties.length > 0) {
-      for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+    if (this.ITR_JSON.houseProperties?.length > 0) {
+      for (let i = 0; i < this.ITR_JSON.houseProperties?.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           this.isSelfOccupied++;
           if (this.storedIndex != i) {
@@ -972,6 +978,22 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EEA = false;
       }
 
+      if (
+        this.housePropertyForm.controls['interestAmount'].value ||
+        this.housePropertyForm.controls['principalAmount'].value
+      ) {
+        hp.loans = [];
+        hp.loans.push({
+          interestAmount:
+            this.housePropertyForm.controls['interestAmount']?.value,
+          loanType: this.housePropertyForm.controls['loanType']?.value,
+          principalAmount:
+            this.housePropertyForm.controls['principalAmount']?.value,
+        });
+      } else {
+        hp.loans = [];
+      }
+
       // this.Copy_ITR_JSON.houseProperties = [];
       // this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
@@ -979,7 +1001,7 @@ export class HousePropertyComponent implements OnInit {
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       if (apiCall) {
-        this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+        this.serviceCall('SAVE', this.Copy_ITR_JSON);
       } else {
         this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       }
@@ -1085,14 +1107,14 @@ export class HousePropertyComponent implements OnInit {
       }
 
       if (
-        this.housePropertyForm.controls['interest24bAmount'].value ||
+        this.housePropertyForm.controls['interestAmount'].value ||
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
         hp.loans.push({
           id: null,
           interestAmount:
-            this.housePropertyForm.controls['interest24bAmount']?.value,
+            this.housePropertyForm.controls['interestAmount']?.value,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
@@ -1111,8 +1133,12 @@ export class HousePropertyComponent implements OnInit {
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
-      this.utilsService.showSnackBar('failed to save.');
+      // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
     }
   }
 
@@ -1477,7 +1503,7 @@ export class HousePropertyComponent implements OnInit {
   jsonAmt80ee: any;
   jsonAmt80eea: any;
   calculateInterestOrDeduction() {
-    let eligible80EE = this.housePropertyForm?.controls['isEligibleFor80EE'];
+    
     let interest = this.housePropertyForm?.controls['interestAmount'];
     let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
     let eligible80EEAmount =
@@ -1503,6 +1529,8 @@ export class HousePropertyComponent implements OnInit {
     }, 0);
     this.jsonAmt80eea = totalEligible80EEAAmount;
     this.enableOnOverAllValue();
+
+    let eligible80EE = this.housePropertyForm?.controls['isEligibleFor80EE'];
 
     // TOTAL OF ALL ITR OBJ INTEREST AMOUNT
     const itrJsonInterestValue = filteredJsonArray?.reduce((acc, property) => {
@@ -1824,8 +1852,10 @@ export class HousePropertyComponent implements OnInit {
         parseFloat(interest24b?.value) > 200000
       ) {
         interest24b?.setValue(200000);
+      } else if(propertyType?.value === 'SOP'){
+        interest24b?.setValue(Math.min(interest?.value, 200000));
       } else {
-        interest24b?.setValue(interest.value);
+        interest24b?.setValue(interest?.value);
       }
       interest24b?.updateValueAndValidity();
     }

@@ -128,6 +128,7 @@ export class SidebarComponent {
       submenu: [
         { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
         { name: 'Deleted Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Subscription Adjustment', url: '/subscription/subscription-adjustment', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
@@ -208,7 +209,6 @@ export class SidebarComponent {
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },

@@ -44,7 +44,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
   ackNumber = new FormControl('', [
     Validators.required,
     Validators.pattern(AppConstants.numericRegex),
-    Validators.maxLength(15),
+    Validators.maxLength(16),
     Validators.minLength(15),
   ]);
   eFillingDate = new FormControl('', Validators.required);

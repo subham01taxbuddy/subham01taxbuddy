@@ -44,8 +44,8 @@ font-weight: bold;">Update Filing Details</label>
     <mat-form-field appearance="outline">
       <mat-label>Ack Number</mat-label>
       <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field" required
-        (blur)="setFilingDate()" maxlength="15" minlength="15">
-      <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
+        (blur)="setFilingDate()" maxlength="16" minlength="15">
+      <mat-error *ngIf="ackNumber.hasError('minlength')">Enter at least 15 digit valid ack number</mat-error>
       <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
     </mat-form-field>
   </div>

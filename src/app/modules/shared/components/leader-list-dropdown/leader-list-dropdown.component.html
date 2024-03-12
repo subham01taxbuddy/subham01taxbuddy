@@ -27,7 +27,9 @@
     </div>
   </div>
     <div class="col-sm-12" *ngIf="showOwnerList">
-      <mat-label> Search By Leader </mat-label>
+      <mat-label *ngIf="!fromSme && !fromEditSme"> Search By Leader </mat-label>
+      <mat-label *ngIf="fromSme"> Interviewed By </mat-label>
+      <mat-label *ngIf="fromEditSme"> Select Parent Name </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
         <mat-autocomplete #auto>

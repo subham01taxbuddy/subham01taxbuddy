@@ -146,6 +146,8 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
             leaderName: 'Total',
             totalAssignedUsersForITR: this.totals.totalAssignedUsersForITR,
             signUpNumbersForITR: this.totals.totalSignUpNumbersForITR,
+            totalAssignedUsersForITRU:this.totals.totalAssignedUsersForITRU,
+            signUpNumbersForITRU:this.totals.totalSignUpNumbersForITRU,
             totalAssignedUsersForTPA: this.totals.totalAssignedUsersForTPA,
             signUpNumbersForTPA: this.totals.totalSignUpNumbersForTPA,
             totalAssignedUsersForGST: this.totals.totalAssignedUsersForGST,
@@ -188,6 +190,9 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
       let agentReportInfo = Object.assign({}, signUpRepoInfoArray[i], {
         leaderName: signUpData[i].leaderName,
         totalAssignedUsersForITR: signUpData[i].totalAssignedUsersForITR,
+        signUpNumbersForITRU :signUpData[i].signUpNumbersForITRU,
+        totalAssignedUsersForITRU:signUpData[i].totalAssignedUsersForITRU,
+        roundRobinCount_ITRU:signUpData[i].roundRobinCount_ITRU,
         signUpNumbersForITR: signUpData[i].signUpNumbersForITR,
         totalAssignedUsersForTPA: signUpData[i].totalAssignedUsersForTPA,
         signUpNumbersForTPA: signUpData[i].signUpNumbersForTPA,
@@ -260,6 +265,43 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
           {
             headerName: 'Round Robbin Count',
             field: 'roundRobinCount_ITR',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+        ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
+        headerName: 'ITR-U',
+        headerClass: 'centered-header',
+        children: [
+          {
+            headerName: 'Sign Up No',
+            field: 'signUpNumbersForITRU',
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total Assigned Users',
+            field: 'totalAssignedUsersForITRU',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Round Robbin Count',
+            field: 'roundRobinCount_ITRU',
             width: 180,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
