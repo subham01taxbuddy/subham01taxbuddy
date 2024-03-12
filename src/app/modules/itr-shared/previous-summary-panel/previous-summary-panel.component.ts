@@ -3,6 +3,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from '../../shared/constants';
 import { ITR_JSON } from '../../shared/interfaces/itr-input.interface';
 import { SummaryHelperService } from 'src/app/services/summary-helper-service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-previous-summary-panel',
@@ -30,10 +31,11 @@ export class PreviousSummaryPanelComponent implements OnInit {
   indexedBonds: any = {};
   listedBonds: any = {};
   unlistedBonds: any = {};
+  subscription: Subscription
 
   constructor(
     public utilsService: UtilsService,
-    private summaryHelper: SummaryHelperService
+    private summaryHelper: SummaryHelperService,
   ) { }
 
   ngOnInit(): void {
@@ -97,6 +99,13 @@ export class PreviousSummaryPanelComponent implements OnInit {
   }
 
   openPanel() {
+    this.summaryHelper.open();
+    this.subscription = this.summaryHelper.isSummaryOpen
+      .subscribe((state) => {
+        if (state) {
+          this.closePanel();
+        }
+      });
     this.displayPanel = true;
     this.utilsService.smoothScrollToTop();
     this.setSummaryData();
