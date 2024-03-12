@@ -6,7 +6,6 @@ import { FixedAssetsDetails, ITR_JSON } from 'src/app/modules/shared/interfaces/
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AddBalanceSheetComponent } from '../add-balance-sheet/add-balance-sheet.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 @Component({
   selector: 'app-depreciation-dialog',

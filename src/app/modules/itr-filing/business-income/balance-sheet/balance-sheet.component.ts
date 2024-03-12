@@ -8,8 +8,6 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { BusinessDescription, ITR_JSON, NewFinancialParticulars, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AddBalanceSheetComponent } from './add-balance-sheet/add-balance-sheet.component';
-import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-dialog.component';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
 @Component({
