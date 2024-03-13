@@ -848,8 +848,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
     const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
     const serviceType = selectedRows.map(row => row.serviceType);
+    const uniqueServiceType = new Set(serviceType);
 
-    if ((uniqueLeaderUserIds.size !== 1) || serviceType.some(type => (type !== 'ITR' && type !== 'ITRU'))) {
+    if (
+      uniqueLeaderUserIds.size !== 1 ||
+      uniqueServiceType.size !== 1 ||
+      !(uniqueServiceType.has('ITR') || uniqueServiceType.has('ITRU'))
+    ) {
       if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
         this.utilsService.showSnackBar('Please filter 1 leader and ITR/ITRU service and then try the bulk re-assignment to Filer')
       } else {
