@@ -589,6 +589,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   updateSmeDetails() {
     //https://uat-api.taxbuddy.com/user/v2/assigned-sme-details
+    this.markFormGroupTouched(this.smeFormGroup);
     if(this.smeFormGroup.valid){
     let parentId: any
     let parentName: any
@@ -614,6 +615,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.utilsService.showSnackBar('Please select at least one ITR type');
       return;
     }
+
+    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "CONSULTANT" : "INDIVIDUAL";
 
       const param = `/v2/assigned-sme-details`;
 
@@ -664,7 +667,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
       finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
       finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
-
+      finalReq.partnerDetails['partnerType'] = partnerType || ''
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
       // console.log('requestData', requestData);
@@ -695,6 +698,15 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         'please fill all required details '
       );
     }
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
 }
