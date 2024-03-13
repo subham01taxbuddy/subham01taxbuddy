@@ -994,6 +994,9 @@ export class HousePropertyComponent implements OnInit {
         hp.loans = [];
       }
 
+      if(!this.Copy_ITR_JSON.houseProperties){
+        this.Copy_ITR_JSON.houseProperties = [];
+      }
       // this.Copy_ITR_JSON.houseProperties = [];
       // this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
