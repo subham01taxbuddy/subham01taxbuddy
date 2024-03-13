@@ -127,3 +127,32 @@ line-height: 28px; /* 164.706% */
     font-weight: 500;
     line-height: 28px; /* 233.333% */
     }
+    // .document-container {
+    //   display: flex;
+    //   flex-wrap: wrap;
+    // }
+
+    // .document {
+    //   margin: 10px;
+    //   width: 200px;
+    // }
+    .document-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .document-item {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .document-title {
+      margin-bottom: 5px;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      border-radius: 0
+    }

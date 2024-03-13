@@ -209,6 +209,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   prescProfExpError: boolean = false;
   eicProfExpError: boolean = false;
   bifurcationFormGroup: boolean = false;
+  PREV_ITR_JSON: any;
 
   constructor(
     private router: Router,
@@ -224,6 +225,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let extraData: any = this.location.getState();
     // this.currentIndex = extraData.data;
     // this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
