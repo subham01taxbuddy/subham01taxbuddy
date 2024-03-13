@@ -2377,9 +2377,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         return item?.assetType === 'VDA';
       }
     );
-    const cryptoGainArray = vdaArray
+    const cryptoGainArray = vdaArray ? vdaArray
       .filter((element) => element?.headOfIncome === 'BI')
-      .reduce((total, element) => total + (element?.cgIncome || 0), 0);
+      .reduce((total, element) => total + (element?.cgIncome || 0), 0) : 0;
 
     if (type === 'business') {
       let business = totalBusinessIncome + cryptoGainArray;
