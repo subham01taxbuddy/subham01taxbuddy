@@ -37,74 +37,74 @@ export class UpdateStatusComponent implements OnInit {
   ngOnInit() {
     console.log(this.data);
 
-    if(this.data.mode === 'Update Information'){
+    if (this.data.mode === 'Update Information') {
       this.getPartnerDetails();
     }
 
     this.myForm = new FormGroup({
       name: new FormControl(this.data.partnerName),
       mobileNo: new FormControl(this.data.mobileNumber),
-      contactId: new FormControl('',[Validators.minLength(17),Validators.maxLength(19)]),
-      fundId: new FormControl('',[Validators.minLength(17),Validators.maxLength(17)])
+      contactId: new FormControl('', [Validators.minLength(17), Validators.maxLength(19)]),
+      fundId: new FormControl('', [Validators.minLength(17), Validators.maxLength(17)])
     });
   }
 
-  getPartnerDetails(){
-  // https://api.taxbuddy.com/user/partner-details?mobileNumber=9023056993
-  this.loading=true;
-  let param =`/partner-details?mobileNumber=${this.data.mobileNumber}`
-  this.userMsService.getMethodNew(param).subscribe(
-    (response: any) => {
-      this.loading = false;
-      if (response){
+  getPartnerDetails() {
+    // https://api.taxbuddy.com/user/partner-details?mobileNumber=9023056993
+    this.loading = true;
+    let param = `/partner-details?mobileNumber=${this.data.mobileNumber}`
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
         this.loading = false;
-        this.myForm.get('contactId')?.setValue(response.contactId);
-        this.myForm.get('fundId')?.setValue(response.fundId);
-      } else {
+        if (response) {
+          this.loading = false;
+          this.myForm.get('contactId')?.setValue(response.contactId);
+          this.myForm.get('fundId')?.setValue(response.fundId);
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert("error", 'No Data Found');
+        }
+      },
+      (error) => {
         this.loading = false;
-        this._toastMessageService.alert("error",'No Data Found');
+        this._toastMessageService.alert("error", 'No Data Found');
       }
-    },
-    (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error",'No Data Found');
-    }
-  );
+    );
   }
 
-  updateDetails(){
+  updateDetails() {
     //'https://7nlo6vqc673gcqlt7dx5byvgo40qcfeg.lambda-url.ap-south-1.on.aws/?mobileNumber=4570459025' \
     const contactIdValue = this.myForm.get('contactId').value;
     const fundIdValue = this.myForm.get('fundId').value;
 
     if (contactIdValue !== null || fundIdValue !== null) {
-       this.loading = true;
+      this.loading = true;
 
-       const request = {
+      const request = {
         contactId: contactIdValue,
-        fundId : fundIdValue,
+        fundId: fundIdValue,
       };
-      let param =`?mobileNumber=${this.data.mobileNumber}`;
-      this.itrMsService.putLambdaForUpdateId(param,request).subscribe((response: any) => {
+      let param = `?mobileNumber=${this.data.mobileNumber}`;
+      this.itrMsService.putLambdaForUpdateId(param, request).subscribe((response: any) => {
         this.loading = false;
         if (response.success) {
           this.loading = false;
           console.log('response', response['data']);
-          this._toastMessageService.alert('success',response.message);
-        }else{
+          this._toastMessageService.alert('success', response.message);
+        } else {
           this.loading = false;
-          this._toastMessageService.alert('error','There is some issue to Update information.');
+          this._toastMessageService.alert('error', 'There is some issue to Update information.');
         }
         setTimeout(() => {
           this.dialogRef.close({ event: 'close' })
         }, 2500)
-      },(error) => {
+      }, (error) => {
         this.loading = false;
-        this._toastMessageService.alert('error','There is some issue to Update information.');
+        this._toastMessageService.alert('error', 'There is some issue to Update information.');
       });
 
     } else {
-      this._toastMessageService.alert("error",'please provide fund Id or contact Id');
+      this._toastMessageService.alert("error", 'please provide fund Id or contact Id');
     }
 
   }

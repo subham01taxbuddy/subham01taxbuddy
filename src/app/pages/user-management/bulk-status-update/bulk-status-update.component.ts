@@ -1,12 +1,11 @@
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import {  MatDialogRef } from '@angular/material/dialog';
+import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
-import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -75,7 +74,6 @@ export class BulkStatusUpdateComponent implements OnInit {
 
 
   constructor(
-    private dialog: MatDialog,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     @Inject(LOCALE_ID) private locale: string,
@@ -114,10 +112,9 @@ export class BulkStatusUpdateComponent implements OnInit {
     this.maxStartDate = this.endDate.value;
   }
 
-  onStatusChange(statusIds) {
+  onStatusChange() {
     const selectedStatusObject = this.itrStatus.find((status) => status.statusId === this.searchParam.statusId);
     this.selectedStatus = selectedStatusObject ? selectedStatusObject.statusName : '';
-    const selectedStatusIds = this.fromStatusValue.value;
   }
 
   onToStatusChange(data) {

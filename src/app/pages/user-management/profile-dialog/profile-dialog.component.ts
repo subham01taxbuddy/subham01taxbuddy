@@ -4,10 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-
-
 @Component({
   selector: 'app-profile-dialog',
   templateUrl: './profile-dialog.component.html',
@@ -18,7 +15,7 @@ export class ProfileDialogComponent implements OnInit {
   bankForm: FormGroup;
   addressForm: FormGroup;
   addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Business', value: 'BUSINESS' }];
-  state_list:any = [{
+  state_list: any = [{
     "id": "5b4599c9c15a76370a3424c2",
     "stateId": "1",
     "countryCode": "91",
@@ -278,9 +275,14 @@ export class ProfileDialogComponent implements OnInit {
     "stateCode": "37",
     "status": true
   }]
-  constructor(public dialogRef: MatDialogRef<ProfileDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private thirdPartyService: ThirdPartyService, private _toastMessageService: ToastMessageService,
-    private userService: UserMsService, private utilService: UtilsService) { }
+  constructor(
+    public dialogRef: MatDialogRef<ProfileDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    private fb: FormBuilder,
+    private thirdPartyService: ThirdPartyService,
+    private _toastMessageService: ToastMessageService,
+    private userService: UserMsService,
+  ) { }
 
   ngOnInit() {
     this.bankForm = this.fb.group({
@@ -297,7 +299,7 @@ export class ProfileDialogComponent implements OnInit {
       id: [''],
       state: [''],
       city: [''],
-      country: ['INDIA' ],
+      country: ['INDIA'],
       premisesName: [''],
       pinCode: [''],
       addressType: [''],
@@ -306,14 +308,10 @@ export class ProfileDialogComponent implements OnInit {
       area: ['']
     })
 
-    console.log('this.data -> ',this.data);
-    if(this.data.submitBtn === "Save" && this.data.mode === "Address"){
+    console.log('this.data -> ', this.data);
+    if (this.data.submitBtn === "Save" && this.data.mode === "Address") {
       this.addressForm.patchValue(this.data.userObject)
-      // let stateCode = this.state_list.filter((item:any) => item.stateName === this.data.userObject.state)[0].stateCode;
-      // if(this.utilService.isNonEmpty(stateCode)){
-      //   this.addressForm.controls['state'].setValue(stateCode);
-      // }
-       console.log('this.addressForm.value -> ',this.addressForm.value)
+      console.log('this.addressForm.value -> ', this.addressForm.value)
     }
   }
 
@@ -324,10 +322,8 @@ export class ProfileDialogComponent implements OnInit {
         this.addressForm.controls['country'].setValue('INDIA');   //91
         this.addressForm.controls['city'].setValue(result.taluka);
         this.addressForm.controls['state'].setValue(result.stateCode);  //stateCode
-        //this.setProfileAddressValToHouse()
       }, error => {
         if (error.status === 404) {
-          //this.itrSummaryForm.controls['assesse'].controls['address.controls['city'].setValue(null);
         }
       });
     }
@@ -339,14 +335,8 @@ export class ProfileDialogComponent implements OnInit {
       let param = '/' + ifscCode.value;
       this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
         console.log("Bank details by IFSC:", res)
-        // let data = JSON.parse(res._body);
-        // let bankName = data.BANK ? data.BANK : "";
         let bankName = res.BANK ? res.BANK : "";
         this.bankForm.controls['name'].setValue(bankName)
-        // this.bankForm.controls['name'].setValue(bankName);
-
-        console.log('Bank Name: ', this.bankForm.controls['name'])
-
       }, err => {
         this._toastMessageService.alert("error", "invalid ifsc code entered");
         this.bankForm.controls['name'].setValue("");
@@ -361,21 +351,16 @@ export class ProfileDialogComponent implements OnInit {
         from: this.data.mode,
         formValue: this.bankForm.value
       }
-      this.dialogRef.close({ event: 'close', data: body})
+      this.dialogRef.close({ event: 'close', data: body })
     }
   }
 
-  addAddressInfo(){
-    console.log('this.addressForm -> ',this.addressForm.value)
-    console.log('state -> ',this.addressForm.value.state)
-    if(this.addressForm.valid){
-      // let stateCode = this.state_list.filter((item:any) => item.stateName === this.addressForm.value.state)[0].stateCode;
-      // if(this.utilService.isNonEmpty(stateCode)){
-      //   this.addressForm.controls['state'].setValue(stateCode);
-      // }
-
-      if(this.data.submitBtn === "Add"){
-        console.log('this.addressForm -> ',this.addressForm.value)
+  addAddressInfo() {
+    console.log('this.addressForm -> ', this.addressForm.value)
+    console.log('state -> ', this.addressForm.value.state)
+    if (this.addressForm.valid) {
+      if (this.data.submitBtn === "Add") {
+        console.log('this.addressForm -> ', this.addressForm.value)
         let randomId = Math.floor(100000 + Math.random() * 900000);
         this.addressForm.controls['id'].setValue(randomId.toString());
         let body = {
@@ -384,19 +369,19 @@ export class ProfileDialogComponent implements OnInit {
           action: this.data.submitBtn,
           index: ''
         }
-        console.log('Add body :-> ',body)
-        this.dialogRef.close({ event: 'close', data: body})
+        console.log('Add body :-> ', body)
+        this.dialogRef.close({ event: 'close', data: body })
       }
-      else if(this.data.submitBtn === "Save"){
-        console.log('this.addressForm -> ',this.addressForm.value)
+      else if (this.data.submitBtn === "Save") {
+        console.log('this.addressForm -> ', this.addressForm.value)
         let body = {
           from: this.data.mode,
           formValue: this.addressForm.value,
           action: this.data.submitBtn,
           index: this.data.editIndex
         }
-        console.log('Edit body :-> ',body)
-        this.dialogRef.close({ event: 'close', data: body})
+        console.log('Edit body :-> ', body)
+        this.dialogRef.close({ event: 'close', data: body })
       }
 
     }
