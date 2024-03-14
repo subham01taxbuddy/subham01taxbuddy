@@ -21,7 +21,6 @@ const routes: Routes = [
             { path: 'schedule-call', component: ScheduledCallComponent },
             { path: 'filings', component: FilingsComponent },
             { path: 'potential-users', component: PotentialUserComponent },
-            // { path: 'sign-up-exceptions', component: SignUpExceptionsComponent },
             {
                 path: 'exceptions', component: ExceptionsComponent,
                 children: [
