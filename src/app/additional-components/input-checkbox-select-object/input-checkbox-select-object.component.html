@@ -16,7 +16,7 @@
               *ngIf="item.name !== filter_label && item.name !== remove_all_label"
               class="input__checkbox-control"></label>
             <label (click)="changeStores(item, p); sendData();$event.stopPropagation(); $event.preventDefault();"
-              class="input__label input__checkbox_label select__checkbox_label">{{item.name | capitalizeFirst}}</label>
+              class="input__label input__checkbox_label select__checkbox_label">{{item.name | titlecase}}</label>
           </label>
         </li>
       </ul>

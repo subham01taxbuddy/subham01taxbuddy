@@ -8,8 +8,6 @@ import { SelectFilterPipe } from '../pipes/filter.pipe';
 import { SelectObjFilterPipe } from '../pipes/filter.pipe';
 import { SelectObjectFilterPipe } from '../pipes/object-filter.pipe';
 import { BacktipsDatePipe } from '../pipes/backtips-date.pipe';
-import { CapitalizeFirstPipe } from '../pipes/capitalize-first.pipe';
-import { SafePipe } from '../pipes/safe-html.pipe';
 
 // Additional Components
 import { ConfirmationModalComponent } from '../additional-components/confirmation-popup/confirmation-popup.component';
@@ -73,8 +71,6 @@ export const MY_FORMATS = {
     SelectFilterPipe,
     SelectObjFilterPipe,
     BacktipsDatePipe,
-    CapitalizeFirstPipe,
-    SafePipe,
     FormControlTypePipe,
     ConfirmationModalComponent,
     InputCheckboxSelectComponent,
@@ -117,8 +113,6 @@ export const MY_FORMATS = {
     SelectFilterPipe,
     SelectObjFilterPipe,
     BacktipsDatePipe,
-    CapitalizeFirstPipe,
-    SafePipe,
     FormControlTypePipe,
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }

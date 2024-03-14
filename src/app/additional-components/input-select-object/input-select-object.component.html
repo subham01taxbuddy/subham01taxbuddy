@@ -11,7 +11,7 @@
             <ul>
                 <li *ngFor="let item of (filter_items | selectObjectFilter:filterBy)"
                     (click)="value = item; sendData('click')" [class.un-item-selected]="value === item">{{item.name |
-                    capitalizeFirst}}</li>
+                        titlecase}}</li>
             </ul>
         </div>
     </div>

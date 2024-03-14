@@ -1,5 +1,5 @@
 <div class="input">
-    <label class="input__label">{{(label ? label : 'Tags') | capitalizeFirst}}</label>
+    <label class="input__label">{{(label ? label : 'Tags') | titlecase}}</label>
     <div class="input__text tag">
         <div class="tags-container">
             <span class="tag__label" *ngFor="let tag of value">
