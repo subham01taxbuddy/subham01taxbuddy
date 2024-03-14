@@ -698,6 +698,13 @@ export class HousePropertyComponent implements OnInit {
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
+
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
+      this.housePropertyForm.controls[
+          'annualRentReceived'
+          ].updateValueAndValidity();
     } else {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -728,6 +735,15 @@ export class HousePropertyComponent implements OnInit {
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
+
+      this.housePropertyForm.controls['annualRentReceived'].setValidators([
+        Validators.required,
+        Validators.pattern(AppConstants.numericRegex),
+        Validators.min(1),
+      ]);
+      this.housePropertyForm.controls[
+          'annualRentReceived'
+          ].updateValueAndValidity();
     }
   }
 
@@ -1048,6 +1064,7 @@ export class HousePropertyComponent implements OnInit {
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
     if (typeOfHp === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
       this.housePropertyForm.controls[
         'annualRentReceived'

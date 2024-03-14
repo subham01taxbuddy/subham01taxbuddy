@@ -21,7 +21,7 @@
             </mat-icon>
             <!-- </a> -->
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-5">
+        <div class="col-lg-3 col-md-3 col-sm-4">
             <a class="header__logo" (click)="navigateToHome()">
                 <span class="header__logo-img1"></span>
             </a>
@@ -39,9 +39,9 @@
             </div>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-2 col-md-2 col-sm-2">
           <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right" >
-            <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()">Copy Interview Link <i class="fa fa-copy" aria-hidden="true"></i></button>
+            <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()"><i class="fa fa-copy" aria-hidden="true"></i>Copy Interview Link</button>
           </div>
         </div>
 

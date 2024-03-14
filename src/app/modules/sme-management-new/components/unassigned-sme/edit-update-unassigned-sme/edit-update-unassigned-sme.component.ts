@@ -321,6 +321,17 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!boPartnersInfo) {
       return;
     }
+    if(boPartnersInfo?.partnerDetails?.partnerType === "CONSULTANT"){
+      this.filerPrinciple.setValue(true);
+      this.filerIndividual.setValue(false);
+    }else if(boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL"){
+      this.filerIndividual.setValue(true);
+      this.filerPrinciple.setValue(false);
+    }else{
+      this.filerPrinciple.setValue(false);
+      this.filerIndividual.setValue(false);
+    }
+
     this.pan.setValue(boPartnersInfo?.partnerDetails?.pan);
     this.gstin.setValue(boPartnersInfo?.partnerDetails?.gstin)
     this.additionalIdsRequired.setValue(boPartnersInfo?.partnerDetails?.additionalIdsRequired);
@@ -368,7 +379,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       "panInput": boPartnersInfo?.partnerDetails?.panUrl,
       "passbookOrCancelledChequeInput": boPartnersInfo?.partnerDetails?.passbookOrCancelledChequeUrl,
       "cvInput": boPartnersInfo?.partnerDetails?.cvUrl,
-      "gstinInput": boPartnersInfo?.partnerDetails?.gstin
+      "gstinInput": boPartnersInfo?.partnerDetails?.gstUrl,
+      "zipInput" : boPartnersInfo?.partnerDetails?.zipUrl
     };
 
     this.languageForm.controls['English'].enable();
@@ -393,6 +405,34 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   trimValue(controlName) {
     controlName.setValue(controlName.value.trim());
+  }
+
+  panInfo:any;
+  getUserInfoFromPan(panNum: any) {
+    // https://uat-api.taxbuddy.com//itr/api/getPanDetail?panNumber=
+    if (this.pan.value && this.pan.valid) {
+      let param = `/api/getPanDetail?panNumber=${panNum}`;
+      this.itrMsService.getMethod(param).subscribe(
+        (result: any) => {
+          console.log(result);
+          this.panInfo = result;
+          if(result.isValid != "INVALID PAN"){
+           console.log("inside valid");
+          }else{
+            this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
+            this.pan.setErrors({ 'invalidPan': true });
+          }
+
+        });
+    }
+  }
+
+  checkGstin() {
+    if (this.gstin.value && this.gstin.value.substring(2, 12) !== this.pan.value) {
+      this.gstin.setErrors({ invalid: true });
+    } else {
+      this.gstin.setErrors(null);
+    }
   }
 
 
