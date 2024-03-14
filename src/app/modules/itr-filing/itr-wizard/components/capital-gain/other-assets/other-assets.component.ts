@@ -35,6 +35,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deduction = false;
   isDisable: boolean;
   maximumDate = new Date();
+  PREV_ITR_JSON: any;
 
   constructor(
     public matDialog: MatDialog,
@@ -44,6 +45,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     @Inject(LOCALE_ID) private locale: string
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let listedData = this.ITR_JSON.capitalGain?.filter(
       (item) => item.assetType === 'GOLD'

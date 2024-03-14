@@ -82,6 +82,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   tdsPanEditIndex = 0;
   tcsEditIndex = 0;
   advanceEditIndex = 0;
+  PREV_ITR_JSON: any;
 
   constructor(
     public utilsService: UtilsService,
@@ -90,6 +91,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     private datePipe: DatePipe
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)

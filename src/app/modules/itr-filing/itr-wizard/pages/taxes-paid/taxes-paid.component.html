@@ -9,7 +9,7 @@
   <main>
   <div class="frameC">
     <h1 class="heading__title">Taxes Paid</h1>
-    <div class="space">    
+    <div class="space">
           <div class="frame-wrapper-2A">
             <!--            TDS on salary-->
             <div class="accordion" id="tdsAccordion">
@@ -57,15 +57,15 @@
                           data-bs-target="#tdsOther">Tax Deducted at Source (TDS) on Income other than salary</button>
                 </h2>
                 <div id="tdsOther" class="accordion-collapse collapse" data-bs-parent="#tdsOtherAccordion">
-                  <div class="accordion__item-body">                 
+                  <div class="accordion__item-body">
                     <div class="Bx4R" *ngIf="tdsOtherMode === 'VIEW'" >
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
-         
-                
-                 
+
+
+
                     <div class="card__row" *ngIf="tdsOtherMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
                         <app-tds-other-than-salary [editIndex]="tdsOtherEditIndex"
@@ -75,7 +75,7 @@
                                 (onSave)="saveAll($event)"></app-tds-other-than-salary>
                       </div>
                     </div>
-                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"                           
+                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"
                             class="ag-theme-balham spsTp"
                             [gridOptions]="tdsOtherThanSalary16AGridOptions"
                             [animateRows]="true"
@@ -211,7 +211,7 @@
               </div>
             </div>
           </div>
-     
+
 
         <div class="out-box">
           <div class="box-left">
@@ -221,10 +221,11 @@
             <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
           </div>
         </div>
-   
+
     </div>
   </div>
 </main>
 <app-side-summary-panel type="taxesPaid"></app-side-summary-panel>
+<app-previous-summary-panel type="taxesPaid" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 </div>
 <!--</main>-->

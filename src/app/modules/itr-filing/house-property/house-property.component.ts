@@ -74,6 +74,7 @@ export class HousePropertyComponent implements OnInit {
   storedIndex: any;
   storedValue: String;
   selectedIndexes: number[] = [];
+  PREV_ITR_JSON: any;
 
   constructor(
     private fb: FormBuilder,
@@ -83,6 +84,7 @@ export class HousePropertyComponent implements OnInit {
     public matDialog: MatDialog,
     private userMsService: UserMsService
   ) {
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -1506,7 +1508,7 @@ export class HousePropertyComponent implements OnInit {
   jsonAmt80ee: any;
   jsonAmt80eea: any;
   calculateInterestOrDeduction() {
-    
+
     let interest = this.housePropertyForm?.controls['interestAmount'];
     let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
     let eligible80EEAmount =

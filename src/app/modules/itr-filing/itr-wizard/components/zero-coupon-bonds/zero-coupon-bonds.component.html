@@ -462,4 +462,5 @@
   </main>
 
   <app-side-summary-panel  *ngIf="bondType !== 'bonds'" type="zeroCouponBonds"></app-side-summary-panel>
+  <app-previous-summary-panel type="zeroCouponBonds" *ngIf="bondType !== 'bonds' && PREV_ITR_JSON"></app-previous-summary-panel>
 </div>
