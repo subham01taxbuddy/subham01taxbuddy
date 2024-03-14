@@ -10,7 +10,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstMsService } from 'src/app/services/gst-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';
 import { Location } from "@angular/common";
@@ -346,10 +345,8 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private gstService: GstMsService,
     private _toastMessageService: ToastMessageService,
-    private thirdPartyService: ThirdPartyService,
     private dialog: MatDialog,
     private router: Router,
-    private titleCasePipe: TitleCasePipe,
     private location: Location,
   ) { }
 
@@ -480,25 +477,6 @@ export class UserProfileComponent implements OnInit {
       area: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['area'].value) || '']
     })
   }
-
-  // getStateInfo() {
-  //   return new Promise((resolve, reject) => {
-  //     this.state_list = [];
-  //     let param = '/state-masters'
-  //     this.gstService.getMethod(param).subscribe(res => {
-  //       if (Array.isArray(res)) {
-  //         res.forEach(sData => { sData.name = sData.stateMasterName });
-  //         this.state_list = res;
-  //       }
-  //       resolve(true)
-  //     },
-  //       error => {
-  //         let errorMessage = (error.error && error.error.message) ? error.error.message : "Internal server error.";
-  //         this._toastMessageService.alert("error", "state list - " + errorMessage);
-  //         resolve(false);
-  //       })
-  //   })
-  // }
 
   maskMobileNumber(mobileNumber) {
     if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
@@ -814,8 +792,8 @@ export class UserProfileComponent implements OnInit {
             return;
           }
         }
-      },(error) => {
-        this.loading=false;
+      }, (error) => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.getUserInfo(this.userId);
@@ -823,7 +801,7 @@ export class UserProfileComponent implements OnInit {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }
       }
-    );
+      );
 
   }
 
