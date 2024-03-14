@@ -411,7 +411,7 @@
               <b style="font-size: 18px">Additional ID's Required?</b>
               <div class="row col-8">
                 <section class="example-section add-id">
-                  <mat-radio-group [formControl]="additionalIdsRequired ">
+                  <mat-radio-group [formControl]="additionalIdsRequired " (change)="onAdditionalIdsRequiredChange()" >
                     <mat-radio-button [value]="true">Yes</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
@@ -424,7 +424,12 @@
             <mat-label> No of additional Id's required </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
-                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true"  />
+                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true" />
+                <mat-error *ngIf="additionalIdsCount.hasError('required')">
+                  Enter No of additional Id's required </mat-error>
+                  <mat-error *ngIf="additionalIdsCount.value === '0'">
+                    Number cannot be zero
+                  </mat-error>
             </mat-form-field>
           </div>
         </div>

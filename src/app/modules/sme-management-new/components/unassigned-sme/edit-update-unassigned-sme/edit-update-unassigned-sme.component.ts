@@ -137,27 +137,43 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  // openDocument(documentType: string) {
-  //   let url = null;
-  //   if (documentType === 'gstIn') {
-  //     url = this.urls['gstin'];
-  //   } else {
-  //     url = this.urls[`${documentType}Url`];
-  //   }
-
-  //   if (url) {
-  //     window.open(url, '_blank');
-  //   } else {
-  //    this._toastMessageService.alert('error',`${documentType} URL not found`);
-  //   }
-  // }
-
-  openDocument(documentType: string ,url) {
+  open(url) {
     if (url) {
       window.open(url, '_blank');
     } else {
+      this._toastMessageService.alert('error',` URL not found`);
+    }
+  }
+
+  openDocument(documentType: string ,url) {
+    if(url){
+      debugger
+      const parts = url.split('/');
+      const lastPart = parts[parts.length - 1];
+      const fileNameWithParams = lastPart.split('?')[0];
+      let newFileName= decodeURIComponent(fileNameWithParams);
+      console.log(newFileName,"New File Name");
+      this.getViewSignedUrl(fileNameWithParams)
+    }else{
       this._toastMessageService.alert('error',`${documentType} URL not found`);
     }
+  }
+
+  getViewSignedUrl(name){
+    let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        debugger
+        if (result && result.data) {
+          let signedUrl = result.data.s3SignedUrl;
+          this.open(signedUrl);
+        } else {
+          this.utilsService.showSnackBar(`Something went wrong while getting URL`);
+        }
+      }),
+      (err: any) => {
+        this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
+      }
   }
 
 
@@ -267,14 +283,26 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
+  onAdditionalIdsRequiredChange() {
+    if (!this.additionalIdsRequired.value) {
+      this.additionalIdsCount.clearValidators();
+      this.additionalIdsCount.setValue(null);
+    } else {
+      this.additionalIdsCount.setValidators([Validators.required, Validators.min(1)]);
+    }
+    this.additionalIdsCount.updateValueAndValidity();
+  }
 
   setFormValues(data) {
     debugger
     this.mobileNumber.setValue(data.mobileNumber);
-    // this.itrTypes.setValue(data.itrTypes);
-    // this.itrTypesData = this.itrTypes.value;
     this.pinCode.setValue(data?.partnerDetails?.pinCode);
     this.internal.setValue(data.internal)
+    if(data.internal === true || this.internal.value === true){
+      this.external.setValue(false);
+    }else{
+      this.external.setValue(true);
+    }
     if(data?.partnerDetails?.interviewedBy){
       let allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
       let filer = allFilerList.filter((item) => {
@@ -332,13 +360,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.ifsCode.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.ifsCode);
       this.accountType.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.accountType);
     }
-
-    // if (boPartnersInfo?.interviewedBy) {
-    //   const allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-    //   const filer = allFilerList.filter(item => item.userId === boPartnersInfo?.interviewedBy)
-    //                             .map(item => item.name);
-    //   this.interviewedBy.setValue(filer);
-    // }
 
     this.urls = {
       "signedNDAInput": boPartnersInfo?.partnerDetails?.signedNDAUrl,
@@ -544,8 +565,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   uploadFileS3(uploadDoc, signedUrl) {
     let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('Accept', 'application/json');
+    // headers = headers.append('Content-Type', 'application/json');
+    // headers = headers.append('Accept', 'application/json');
     headers = headers.append(
       'X-Upload-Content-Length',
       uploadDoc.size.toString()
@@ -560,6 +581,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar(`${uploadDoc.name} uploaded successfully`);
       },
       (err: any) => {
+        console.log('Error in getting Signed URL', err);
         this.utilsService.showSnackBar('Error while uploading to S3: ' + JSON.stringify(err));
       }
     );
@@ -567,6 +589,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   updateSmeDetails() {
     //https://uat-api.taxbuddy.com/user/v2/assigned-sme-details
+    this.markFormGroupTouched(this.smeFormGroup);
     if(this.smeFormGroup.valid){
     let parentId: any
     let parentName: any
@@ -593,6 +616,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
+    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "CONSULTANT" : "INDIVIDUAL";
+
       const param = `/v2/assigned-sme-details`;
 
       this.loading = true;
@@ -602,7 +627,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         name: this.name.value,
         smeOriginalEmail: this.smeOriginalEmail.value,
         mobileNumber: this.mobileNumber.value,
-        callingNumber: this.smeObj.callingNumber,
+        callingNumber: this.callingNumber.value,
         serviceType: this.smeObj.serviceType,
         roles: this.smeObj.roles,
         languages: this.getSelectedLanguages(),
@@ -642,7 +667,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
       finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
       finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
-
+      finalReq.partnerDetails['partnerType'] = partnerType || ''
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
       // console.log('requestData', requestData);
@@ -673,6 +698,15 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         'please fill all required details '
       );
     }
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
 }
