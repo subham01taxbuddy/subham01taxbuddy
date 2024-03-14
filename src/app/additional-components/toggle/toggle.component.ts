@@ -1,5 +1,4 @@
-
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-toggle',
@@ -8,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ToggleComponent {
 
-	@Input() label!: string;
+  @Input() label!: string;
   @Input() value!: boolean;
   @Input() onMessage!: string;
   @Input() offMessage!: string;

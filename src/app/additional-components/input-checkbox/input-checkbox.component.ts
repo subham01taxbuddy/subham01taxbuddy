@@ -1,5 +1,4 @@
-
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-input-checkbox',
@@ -8,17 +7,17 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class InputCheckboxComponent {
 
-	@Input() label!: string;
+  @Input() label!: string;
   @Input() value!: boolean;
-	@Input() group!: boolean;
+  @Input() group!: boolean;
   @Input() disabled!: boolean;
 
-	@Output() sendValue = new EventEmitter<boolean>();
+  @Output() sendValue = new EventEmitter<boolean>();
 
   constructor() { }
 
   sendData() {
-  	this.sendValue.emit(this.value);
+    this.sendValue.emit(this.value);
   }
 
 }

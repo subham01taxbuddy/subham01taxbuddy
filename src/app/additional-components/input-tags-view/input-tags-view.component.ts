@@ -1,5 +1,4 @@
-
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-input-tags-view',
@@ -11,18 +10,18 @@ export class InputTagsViewComponent {
   @Input() value!: any[];
   @Input() label!: string;
   @Input() disabled: boolean = false;
-  
+
   @Output() sendValue = new EventEmitter<any[]>();
-	@Output() delete = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
 
   constructor() { }
 
 
   sendData() {
-  	this.sendValue.emit(this.value);
+    this.sendValue.emit(this.value);
   }
 
-  deleteTag(tag:any) {    
+  deleteTag(tag: any) {
     this.delete.emit(tag);
   }
 }

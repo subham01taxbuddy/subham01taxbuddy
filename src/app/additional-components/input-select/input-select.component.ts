@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-input-select',
@@ -8,16 +8,16 @@ import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@a
 })
 export class InputSelectComponent {
 
-	@Input() label!: string;
-	@Input() type!: string;
-	@Input() name!: string;
+  @Input() label!: string;
+  @Input() type!: string;
+  @Input() name!: string;
   @Input() is_mandatory: string = 'false';
-	@Input() value!: string;
-	@Input() placeholder!: string;
+  @Input() value!: string;
+  @Input() placeholder!: string;
   @Input() filter_items: any;
   @Input() disabled: boolean = false;
 
-	@Output() sendValue = new EventEmitter<string>();
+  @Output() sendValue = new EventEmitter<string>();
 
   showItems!: boolean;
   filterBy: string = '';
@@ -35,7 +35,7 @@ export class InputSelectComponent {
   }
 
   sendData() {
-  	this.sendValue.emit(this.value);
+    this.sendValue.emit(this.value);
   }
 
 }

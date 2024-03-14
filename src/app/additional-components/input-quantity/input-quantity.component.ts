@@ -17,19 +17,19 @@ export class InputQuantityComponent {
   constructor() { }
 
   changeValue(val: number) {
-    if(this.value === null) {
+    if (this.value === null) {
       this.value = 0;
     }
     this.value = (Number(this.value) + Number(val));
     this.sendData();
   }
 
-  writeValue(val: number) {    
+  writeValue(val: number) {
     this.value = val
     this.sendData();
   }
 
-  sendData() {    
+  sendData() {
     this.sendValue.emit(this.value);
   }
 

@@ -1,6 +1,4 @@
-
- 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-input-tags',
@@ -14,22 +12,22 @@ export class InputTagsComponent {
   @Input() read_only!: string;
   @Input() disabled: boolean = false;
   @Input() restrict_add: boolean = false;
-  
-	in_tag: string = '';
 
-	@Output() sendValue = new EventEmitter<string[]>();
+  in_tag: string = '';
+
+  @Output() sendValue = new EventEmitter<string[]>();
 
   constructor() { }
 
 
   sendData() {
-  	this.sendValue.emit(this.value);
+    this.sendValue.emit(this.value);
   }
 
-  addTag(tag:any) {
+  addTag(tag: any) {
     tag.toString();
-    for(var i = 0; i < this.value.length; i++) {
-      if(this.value[i] === tag) {
+    for (var i = 0; i < this.value.length; i++) {
+      if (this.value[i] === tag) {
         tag = ' ';
       }
     }
@@ -40,9 +38,9 @@ export class InputTagsComponent {
     this.sendData();
   }
 
-  deleteTag(tag:any) {
-    for(var i = 0; i < this.value.length; i++) {
-      if(this.value[i] === tag) {
+  deleteTag(tag: any) {
+    for (var i = 0; i < this.value.length; i++) {
+      if (this.value[i] === tag) {
         this.value.splice(i, 1);
       }
     }
