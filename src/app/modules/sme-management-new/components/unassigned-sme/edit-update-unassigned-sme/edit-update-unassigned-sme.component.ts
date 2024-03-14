@@ -414,7 +414,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     pan: new FormControl('', [Validators.pattern(this.panregex)]),
     gstin: new FormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
     accountType: new FormControl(''),
-    additionalIdsCount: new FormControl('',[Validators.required, Validators.min(1)]),
+    additionalIdsCount: new FormControl(''),
     interviewedBy: new FormControl(''),
     additionalIdsRequired:new FormControl(''),
   });
