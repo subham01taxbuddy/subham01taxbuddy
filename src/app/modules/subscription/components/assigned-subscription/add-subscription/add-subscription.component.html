@@ -33,7 +33,7 @@
           </div>
           <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false"
-              [class.disabled]="service && service.includes('TPA')" (click)="showSelectedServicePlans('TPA')">TPA</a>
+            [class.disabled]="tpaService === 'TPA'" (click)="showSelectedServicePlans('TPA')">TPA</a>
           </div>
           <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false"
