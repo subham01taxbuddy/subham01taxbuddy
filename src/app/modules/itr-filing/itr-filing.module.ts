@@ -163,7 +163,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     UpdateManualFilingComponent,
     AddClientDialogComponent,
     PrefillDataComponent,
-    // InputUploadComponent
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
     NriDetailsDialogComponent,
