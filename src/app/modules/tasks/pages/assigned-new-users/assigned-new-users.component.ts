@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -19,7 +18,6 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
-import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
@@ -153,14 +151,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.getStatus();
     this.getMasterStatusList();
     this.activatedRoute.queryParams.subscribe(params => {
-      // this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
-
-      // if (this.searchVal) {
-      //   this.searchParam.mobileNumber = this.searchVal;
-      //   this.search('mobile');
-      // }
-      // else
       if (this.searchStatusId) {
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
@@ -220,17 +211,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             return;
           });
           let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-          //Object.assign(obj, this.ITR_JSON)
-          // Ashwini: Current implementation sends filing team member id as logged in user id.
-          // So credit will go to the one who files ITR
-          // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-          //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
           console.log('obj:', objITR);
-
-          //update status to WIP
-          //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
-
           const param = '/itr';
           this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
             console.log('My iTR Json successfully created-==', result);
@@ -251,24 +233,14 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           this.loading = false;
           console.log('end');
         } else {
-          //one more ITR objects in place, use existing ITR object
           let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
           const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
-              //no ITR found, error case
               this.utilsService.showErrorMsg('Something went wrong. Please try again');
             } else if (result.length == 1) {
-              //update status to WIP
-              //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
               let workingItr = result[0];
-              // Object.entries(workingItr).forEach((key, value) => {
-              //   console.log(key, value)
-              //   if (key[1] === null) {
-              //     delete workingItr[key[0]];
-              //   }
-              // });
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
               let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
@@ -284,7 +256,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
                 }
               });
             } else {
-              //multiple ITRs found, navigate to ITR tab with the results
               this.router.navigateByUrl('/tasks/filings',
                 { state: { 'mobileNumber': this.rowData.mobileNumber } });
             }
@@ -331,7 +302,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
@@ -359,16 +329,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     );
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.search(event - 1, true);
-  //   } else {
-  //     this.search(event - 1);
-  //   }
-  // }
-
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -387,8 +347,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       this.getStatus(this.searchParam.serviceType);
     }
@@ -418,10 +376,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    var statusSequence = 0;
-
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
       {
         field: 'Re Assign',
@@ -469,8 +423,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-         // code to masking mobile no
-         cellRenderer: (params) => {
+        // code to masking mobile no
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
           if (mobileNumber) {
             if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
@@ -619,26 +573,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        // cellRenderer: function (params: any) {
-        //   // let statusText = '';
-        //   // if (itrStatus.length !== 0) {
-        //   //   const nameArray = itrStatus.filter(
-        //   //     (item: any) => item.statusId === params.data.statusId
-        //   //   );
-        //   //   if (nameArray.length !== 0) {
-        //   //     statusSequence = nameArray[0].sequence;
-        //   //     statusText = nameArray[0].statusName;
-        //   //   } else {
-        //   //     statusText = '-';
-        //   //   }
-        //   // } else {
-        //   //   statusText = params.data.statusId;
-        //   // }
-        //   return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-        //   style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-        //   <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
-        //    </button>`;
-        // },
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
@@ -807,11 +741,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
     this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
       console.log(res);
-      if(res.error){
+      if (res.error) {
         this.utilsService.showSnackBar(res.error);
         this.search();
         return
-      }else{
+      } else {
         let disposable = this.dialog.open(ReAssignActionDialogComponent, {
           width: '65%',
           height: 'auto',
@@ -827,8 +761,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           }
         });
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
         this.search();
@@ -881,7 +815,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             }
           });
         }
-      },(error) => {
+      }, (error) => {
         this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
@@ -1201,7 +1135,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           this.loading = false;
         })
       }
-    },error => {
+    }, error => {
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
         this.search();
@@ -1209,48 +1143,48 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this._toastMessageService.alert("error", "An unexpected error occurred.");
       }
     });
-}
+  }
 
 
   updateStatus(mode, client) {
     this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilsService.showSnackBar(res.error);
-          this.search();
-          return;
-        } else {
-          let disposable = this.dialog.open(ChangeStatusComponent, {
-            width: '60%',
-            height: 'auto',
-            data: {
-              userId: client.userId,
-              clientName: client.name,
-              serviceType: client.serviceType,
-              mode: mode,
-              userInfo: client,
-              itrChatInitiated: false,
-            },
-          });
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        let disposable = this.dialog.open(ChangeStatusComponent, {
+          width: '60%',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            mode: mode,
+            userInfo: client,
+            itrChatInitiated: false,
+          },
+        });
 
-          disposable.afterClosed().subscribe((result) => {
-            if (result) {
-              if (result.data === 'statusChanged') {
-                // this.searchParam.page = 0;
-                this.search();
-              }
+        disposable.afterClosed().subscribe((result) => {
+          if (result) {
+            if (result.data === 'statusChanged') {
+              // this.searchParam.page = 0;
+              this.search();
             }
-          });
-        }
-      },error => {
-        this.loading=false;
-        if (error.error && error.error.error) {
-          this._toastMessageService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this._toastMessageService.alert("error", "An unexpected error occurred.");
-        }
-      });
+          }
+        });
+      }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
+    });
   }
 
   showNotes(client) {
@@ -1274,9 +1208,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             },
           });
 
-          disposable.afterClosed().subscribe((result) => {});
+          disposable.afterClosed().subscribe((result) => { });
         }
-      },error => {
+      }, error => {
         this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
@@ -1324,17 +1258,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.search();
       }
     });
-  }
-
-  openBulkReAssignment() {
-    let disposable = this.dialog.open(BulkReAssignDialogComponent, {
-      width: '100%',
-      height: 'auto',
-    })
-  }
-
-  isNumeric(value) {
-    return /^\d+$/.test(value);
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
@@ -1428,17 +1351,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-    // if (this.coOwnerToggle.value && isAgent && loggedInId !== this.agentId) {
-    //   param = `/${this.agentId}/user-list-new?${data}`;
-    //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
-    //   if (Object.keys(this.sortBy).length) {
-    //     param = param + sortByJson;
-    //   }
-    // }
-    // else {
-    //   param;
-    // }
-
     this.userMsService.getMethodNew(param).subscribe(
 
       (result: any) => {
@@ -1472,18 +1384,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
       })
-  }
-
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.search('', true);
   }
 
 
