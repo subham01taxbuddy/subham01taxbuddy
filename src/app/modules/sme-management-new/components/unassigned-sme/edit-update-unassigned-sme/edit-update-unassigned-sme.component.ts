@@ -321,7 +321,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!boPartnersInfo) {
       return;
     }
-    if(boPartnersInfo?.partnerDetails?.partnerType === "CONSULTANT"){
+    if(boPartnersInfo?.partnerDetails?.partnerType === "PRINCIPAL"){
       this.filerPrinciple.setValue(true);
       this.filerIndividual.setValue(false);
     }else if(boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL"){
@@ -656,7 +656,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
-    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "CONSULTANT" : "INDIVIDUAL";
+    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "PRINCIPAL" : "INDIVIDUAL";
 
       const param = `/v2/assigned-sme-details`;
 
@@ -690,7 +690,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         isLeader: this.smeObj.isLeader,
         isAdmin: this.smeObj.isAdmin,
         isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
-        partnerType :this.smeObj.partnerType,
+        partnerType : partnerType || this.smeObj.partnerType,
         skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
         partnerDetails: this.smeObj.partnerDetails
       };
