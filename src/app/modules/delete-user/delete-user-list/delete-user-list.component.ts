@@ -59,7 +59,6 @@ export class DeleteUserListComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private modalService: BsModalService,
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,

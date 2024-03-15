@@ -5,11 +5,13 @@
     <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
         <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-         Filter - Promo Codes:
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Promo Codes:
         </mat-panel-title>
         <div class="col-sm-3">
-          <button class="new-add mvRth1 new-add-tp-spc" (click)="$event.stopPropagation(); addPromoCode('Add Promo-Code','Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Promo-Code </button>
+          <button class="new-add mvRth1 new-add-tp-spc"
+            (click)="$event.stopPropagation(); addPromoCode('Add Promo-Code','Add', '')"><i aria-hidden="true"
+              class="fa fa-plus"></i> Add Promo-Code </button>
         </div>
       </mat-expansion-panel-header>
       <div class="rowClr tpSpc">
@@ -18,16 +20,17 @@
             <div class="col-sm-4">
               <mat-label> Enter Promo-Code </mat-label>
               <mat-form-field appearance="outline" class="custom-bg-new">
-                <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
+                <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue"
+                  class="input-field" name="promoCode" />
                 <mat-error *ngIf="searchValue?.hasError('required') ">
                   This field is required</mat-error>
               </mat-form-field>
             </div>
             <!-- <div class="row spsTp bdrTp"> -->
-              <div class="col-6" *ngIf="false">
-                <app-generic-sorting [sortingParameter]="sortMenus"
-                  (onChange)="sortByObject($event)"></app-generic-sorting>
-              </div>
+            <div class="col-6" *ngIf="false">
+              <app-generic-sorting [sortingParameter]="sortMenus"
+                (onChange)="sortByObject($event)"></app-generic-sorting>
+            </div>
             <!-- </div> -->
             <div class="col-sm-4">
               <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
@@ -40,38 +43,39 @@
             </div>
 
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 <div class="clearfix">
 
-<!-- Table Below -->
+  <!-- Table Below -->
 
-<div class="tableSpc">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="txTit">
-        Promo Code Details:
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="txTit">
+          Promo Code Details:
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
       </div>
     </div>
-  <div class="col-sm-4">
-  <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
-  </div>
-  </div>
-          <table>
-            <tr *ngFor="let item of PromoCodeInfo | paginate : config"></tr>
-          </table>
+    <table>
+      <tr *ngFor="let item of PromoCodeInfo | paginate : config"></tr>
+    </table>
 
-   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions" (rowClicked)="onPromoCodeRowClicked($event)">
-  </ag-grid-angular>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions"
+      (rowClicked)="onPromoCodeRowClicked($event)">
+    </ag-grid-angular>
 
-  <div *ngIf="totalCount > 1">
-    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    <div *ngIf="totalCount > 1">
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
   </div>
-</div>
 
 </div>

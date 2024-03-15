@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { DeleteUserRoutingModule } from './delete-user-routing.module';
 import { DeleteUserListComponent } from './delete-user-list/delete-user-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

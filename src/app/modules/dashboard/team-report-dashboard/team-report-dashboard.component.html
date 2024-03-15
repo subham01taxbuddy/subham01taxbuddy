@@ -167,7 +167,8 @@
                       <div class="commission-box-container">
                         <div class="count-inBxR-1">
                           <span class="itr-box-text">Paid but didn't Scheduled Date and Time</span>
-                          <span class="itr-box-value grTx-blue">{{subPaidScheduleCallDetails?.scheduleCallNotDone || 'NA'}}</span>
+                          <span class="itr-box-value grTx-blue">{{subPaidScheduleCallDetails?.scheduleCallNotDone ||
+                            'NA'}}</span>
                         </div>
                       </div>
                     </div>
@@ -373,14 +374,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="col-sm-2" *ngIf="selectedType === 'Original'">
-                <div class="itr-box-container">
-                  <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR U</span>
-                    <span class="itr-box-value">{{commissionData?.ITRU || 'NA'}}</span>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -443,54 +436,5 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row spsTp1">
-      <div class="col-sm-12 mt-2">
-        <div class="TxHd-12">
-          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>
-          <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="count-chips-container">
-            <div class="row">
-              <div class="col-sm-3">
-                <div class="commission-box-container">
-                  <div class="count-inBxR-1">
-                    <span class="itr-box-text">Calls Assigned/Open</span>
-                    <span class="itr-box-value">{{scheduledCallData?.callsAssigned_Open || 'NA'}}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="commission-box-container">
-                  <div class="count-inBxR-1">
-                    <span class="itr-box-text">Revenue Generated from Schedule call(amount)</span>
-                    <span class="itr-box-value">₹ {{scheduledCallData?.revenueGeneratedFromScheduleCall ||
-                      'NA'}}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="commission-box-container">
-                  <div class="count-inBxR-1">
-                    <span class="itr-box-text">Calls Done</span>
-                    <span class="itr-box-value">{{scheduledCallData?.done || 'NA'}}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="commission-box-container">
-                  <div class="count-inBxR-1">
-                    <span class="itr-box-text">Calls Follow-Up</span>
-                    <span class="itr-box-value">{{scheduledCallData?.followUp || 'NA'}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>

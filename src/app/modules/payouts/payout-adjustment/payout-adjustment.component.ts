@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
@@ -19,18 +19,18 @@ export class PayoutAdjustmentComponent implements OnInit {
   dialogRef: any;
   name: any;
   showAdd = false;
-  downloadURL:any;
-  showMessage ='';
-  searchAsPrinciple :boolean =false;
+  downloadURL: any;
+  showMessage = '';
+  searchAsPrinciple: boolean = false;
   isInternal = true;
 
   constructor(
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   search() {
     //https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/?userId=10488'
@@ -41,7 +41,7 @@ export class PayoutAdjustmentComponent implements OnInit {
       let param = `?userId=${userId}`;
       this.itrMsService.getAdjustmentDetails(param).subscribe(
         (response: any) => {
-          this.showAdd =true;
+          this.showAdd = true;
           this.loading = false;
           if (response.success) {
             this.loading = false;
@@ -76,33 +76,14 @@ export class PayoutAdjustmentComponent implements OnInit {
   partnerName: any;
   leaderId: number;
 
-  // fromSme(event, isOwner) {
-  //   console.log('sme-drop-down', event, isOwner);
-  //   if (isOwner) {
-  //     this.ownerId = event ? event.userId : null;
-  //   } else {
-  //     this.filerId = event ? event.userId : null;
-  //     this.partnerName = event ? event.name : null;
-  //   }
-  //   if (this.filerId) {
-  //     this.agentId = this.filerId;
-  //   } else if (this.ownerId) {
-  //     this.agentId = this.ownerId;
-  //   } else {
-  //     let loggedInId = this.utilsService.getLoggedInUserID();
-  //     this.agentId = loggedInId;
-  //   }
-  // }
-
-
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
       this.agentId = this.leaderId;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
         this.partnerName = event ? event.name : null;
@@ -198,7 +179,7 @@ export class PayoutAdjustmentComponent implements OnInit {
     return total;
   }
 
-  generateFile(){
+  generateFile() {
     //https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/'
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -208,29 +189,29 @@ export class PayoutAdjustmentComponent implements OnInit {
     });
     this.dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
-        this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
+        this.showMessage = 'CSV Generation Started - Please Do Not Close the Screen or Move out'
         this.loading = true;
         let param = ``;
         this.itrMsService.getAdjustmentCSV(param).subscribe((response: any) => {
           if (response.success) {
             this.loading = false;
             console.log('response', response['data']);
-            this.showMessage =''
+            this.showMessage = ''
             this.utilsService.showSnackBar(response.message);
             this.downloadURL = response?.downloadUrl
             window.open(this.downloadURL, '_blank');
 
           } else {
             this.loading = false;
-            this.showMessage =''
+            this.showMessage = ''
             this.utilsService.showSnackBar(response.message);
           }
         },
-        (error) => {
-          this.loading = false;
-          this.showMessage =''
-          this.utilsService.showSnackBar('Error in download/generate CSV ');
-        });
+          (error) => {
+            this.loading = false;
+            this.showMessage = ''
+            this.utilsService.showSnackBar('Error in download/generate CSV ');
+          });
       }
     });
   }
