@@ -68,6 +68,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   config: any;
   active: any;
+  PREV_ITR_JSON: any;
 
   labData: NewCapitalGain[] = [];
   constructor(
@@ -83,6 +84,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       itemsPerPage: 1,
       currentPage: 1,
     };
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 

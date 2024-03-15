@@ -103,7 +103,7 @@
   font-size: 14px;
   color: blue;
   margin-top: 20px;
-  margin-right: -77px;
+  margin-right: -13px;
   font-weight: 600;
 }
 
@@ -114,4 +114,17 @@
     justify-content: flex-end;
     display: flex;
     margin-left:22px;
+}
+.note1 {
+  background-color: #fafafa;
+  padding: 5px 0px 5px 10px;
+  width: 290px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: italic;
+  border: 1px solid #efefef;
+  color: #b60000;
+  min-width: 180px;
+  margin-top: 5px;
+  margin-left: 0px !important;
 }

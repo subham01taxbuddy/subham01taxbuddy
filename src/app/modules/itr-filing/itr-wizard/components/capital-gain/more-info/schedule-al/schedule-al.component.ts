@@ -81,6 +81,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   immovableAssetGridOptions: GridOptions;
   immovableAssetGridApi: GridApi;
   public groupDisplayType: RowGroupingDisplayType = 'groupRows';
+  PREV_ITR_JSON: any;
 
   constructor(
     public fb: FormBuilder,
@@ -91,6 +92,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     private cdRef: ChangeDetectorRef
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)

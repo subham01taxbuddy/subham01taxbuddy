@@ -15,10 +15,11 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   SpeculativeIncomeComponent!: SpeculativeIncomeComponent;
   @ViewChild('NonSpeculativeIncomeComponentRef', { static: false })
   NonSpeculativeIncomeComponent!: NonSpeculativeIncomeComponent;
-
   loading = false;
+  PREV_ITR_JSON: any;
   constructor(private utilsService: UtilsService) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
   ngOnInit(): void { }

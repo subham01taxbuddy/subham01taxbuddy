@@ -777,4 +777,7 @@
 </main>
   <app-side-summary-panel *ngIf="bondType === 'listed'" type="listedEquityShares"></app-side-summary-panel>
   <app-side-summary-panel *ngIf="bondType === 'unlisted'" type="unlistedEquityShares"></app-side-summary-panel>
+
+  <app-previous-summary-panel type="listedEquityShares" *ngIf="bondType === 'listed' && PREV_ITR_JSON"></app-previous-summary-panel>
+  <app-previous-summary-panel type="unlistedEquityShares" *ngIf="bondType === 'unlisted' && PREV_ITR_JSON"></app-previous-summary-panel>
 </div>
