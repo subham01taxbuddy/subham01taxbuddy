@@ -1,18 +1,19 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div>
-<label style="font-size: 22px;
+  <label style="font-size: 22px;
 font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-dialog-close tabindex="-1"
-  class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+    class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
   <div class="row" style="margin-top: 10px ;">
-     <!-- <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label> -->
     <div class="col-sm-6">
       <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label>
-      <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)" listType="{{ownerDropDownType}}">
+      <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)"
+        listType="{{ownerDropDownType}}">
       </app-sme-list-drop-down>
     </div>
     <div class="col-sm-6">
       <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
-      <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)" listType="ALL" [checkboxSelection]='true' [showOwnerList]=true>
+      <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)"
+        listType="ALL" [checkboxSelection]='true' [showOwnerList]=true>
       </app-sme-list-drop-down>
     </div>
 
@@ -39,17 +40,9 @@ font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-di
       </mat-form-field>
     </div>
   </div>
-  <!-- <div class="row" style="margin-top:5px ;">
-    <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
-    <div class="col-sm-6">
-      <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL">
-      </app-sme-list-drop-down>
-    </div>
-  </div> -->
   <div class="row">
     <div class="card__col-xs-12 card__col-sm-4 text-center">
-      <button class="tbd-btn" (click)="reAssign()"
-        [disabled]="loading">Bulk Re-Assign</button>
+      <button class="tbd-btn" (click)="reAssign()" [disabled]="loading">Bulk Re-Assign</button>
     </div>
   </div>
 </div>

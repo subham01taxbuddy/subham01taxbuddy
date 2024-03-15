@@ -1,4 +1,3 @@
-import { event } from 'jquery';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -17,21 +16,21 @@ export class ReAssignDialogComponent implements OnInit {
   serviceType: any;
   reAssignedOwnerName: any;
   reAssignedFilerName: any;
-  showOnlyLeader:boolean =false;
-  showLeaderFiler : boolean = false;
-  isServiceGst:boolean =false;
-  roles:any;
-  parentId:any;
+  showOnlyLeader: boolean = false;
+  showLeaderFiler: boolean = false;
+  isServiceGst: boolean = false;
+  roles: any;
+  parentId: any;
 
   constructor(public dialogRef: MatDialogRef<ReAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     public utilsService: UtilsService
   ) {
-    if(this.data.serviceType === 'GST'){
-      this.isServiceGst=true;
-    }else{
-      this.serviceType =false;
+    if (this.data.serviceType === 'GST') {
+      this.isServiceGst = true;
+    } else {
+      this.serviceType = false;
     }
     console.log('Selected UserID for reassignment',
       this.data.userId);
@@ -40,43 +39,34 @@ export class ReAssignDialogComponent implements OnInit {
   ngOnInit() {
     let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.parentId = loginSmeDetails[0].parentId
-    this.roles= this.utilsService.getUserRoles();
+    this.roles = this.utilsService.getUserRoles();
     console.log('data from more opt', this.data)
     console.log('Selected User Service ', this.data.serviceType)
-    // this.ownerId=this.data.ownerId;
-    // this.filerId=this.data.filerId;
-    this.serviceType=this.data.serviceType;
-    if(this.serviceType != 'ITR'){
+    this.serviceType = this.data.serviceType;
+    if (this.serviceType != 'ITR') {
       this.showOnlyLeader = true;
-    }else{
+    } else {
       this.showOnlyLeader = false;
     }
 
-    if(this.data.filerUserId === '-' || this.data.filerUserId === null ){
+    if (this.data.filerUserId === '-' || this.data.filerUserId === null) {
       this.showOnlyLeader = true;
-      this.showLeaderFiler =false;
-    }else{
-      this.showLeaderFiler =true;
+      this.showLeaderFiler = false;
+    } else {
+      this.showLeaderFiler = true;
       this.showOnlyLeader = false;
     }
 
-
-    let roles = this.utilsService.getUserRoles();
-    //Ashwini: This was used to control the owner list shown to leaders.
-    //We are commenting this code to enable leaders to see all owners irrepspective of the assignment.
-    // if(roles.includes('ROLE_LEADER')) {
-    //   this.checkPermission();
-    // }
   }
 
-  checkPermission(){
+  checkPermission() {
     let loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       let ownerList = result.data;
       let filteredList = ownerList.filter((item) => item.userId === this.data.userInfo.ownerUserId);
-      if(!filteredList || filteredList.length <= 0){
+      if (!filteredList || filteredList.length <= 0) {
         this.utilsService.showSnackBar('You do not have permission to reassign this user.');
         this.dialogRef.close({ event: 'close', data: 'error' });
       }
@@ -86,7 +76,7 @@ export class ReAssignDialogComponent implements OnInit {
 
   leaderId: number;
   agentId: number;
-  searchAsPrinciple:boolean =false;
+  searchAsPrinciple: boolean = false;
 
   fromOnlyLeader(event) {
     console.log('sme-drop-down', event);
@@ -102,12 +92,12 @@ export class ReAssignDialogComponent implements OnInit {
   }
 
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
 
@@ -120,8 +110,8 @@ export class ReAssignDialogComponent implements OnInit {
     }
   }
 
-  fromChild(event){
-    if(event){
+  fromChild(event) {
+    if (event) {
       this.filerId = event ? event.userId : null;
     }
 
@@ -150,64 +140,58 @@ export class ReAssignDialogComponent implements OnInit {
       this.filerId = event ? event.userId : null;
       console.log('filerId=', this.filerId)
     }
-
-    //  if( !this.ownerId && this.filerId) {
-    //   this.ownerId = this.filerId;
-    //   console.log('owner2',this.ownerId)
-    //  }
-
   }
 
   reAssign() {
-   // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
-   this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-    console.log(res);
-    if (res.error) {
-      this.utilsService.showSnackBar(res.error);
-      this.dialogRef.close({ event: 'close', data: 'success' });
-      return;
-    } else {
-      if (this.leaderId || this.filerId) {
-        this.loading = true;
-        let leaderFilter='';
-        if(this.leaderId){
-          leaderFilter += `&leaderUserId=${this.leaderId}`
-        }
-        let filerFilter ='';
-        if(this.filerId){
-          leaderFilter = '';
-          filerFilter += `&filerUserId=${this.filerId}`
-        }
-        const param = `/v2/user-reassignment?userId=${this.data.userId}&serviceType=${this.serviceType}${leaderFilter}${filerFilter}`
-        this.userMsService.getMethod(param).subscribe((res: any) => {
-          console.log(res);
-          we_track('Re-assign', {
-            'User Name': this.data?.userInfo?.name,
-            'User Number': this.data?.userInfo?.mobileNumber,
-            'From filer ': this.data?.userInfo?.filerName,
-            'From Owner': this.data?.userInfo?.ownerName,
-            'To filer ': this.reAssignedFilerName,
-            'To Owner': this.reAssignedOwnerName
-          });
-          this.utilsService.showSnackBar('User re assigned successfully.');
-          this.loading = false;
-          this.dialogRef.close({ event: 'close', data: 'success' });
-          if (res.success == false) {
-            this.utilsService.showSnackBar(res.error)
-            console.log(res.message)
-          }
-        }, error => {
-          this.loading = false;
-          this.utilsService.showSnackBar('Filer not found active, please try another.');
-          console.log(error);
-          this.dialogRef.close({ event: 'close', data: 'success' });
-        })
+    // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.dialogRef.close({ event: 'close', data: 'success' });
+        return;
       } else {
-        this.utilsService.showSnackBar('Please select leader/Filer Name');
+        if (this.leaderId || this.filerId) {
+          this.loading = true;
+          let leaderFilter = '';
+          if (this.leaderId) {
+            leaderFilter += `&leaderUserId=${this.leaderId}`
+          }
+          let filerFilter = '';
+          if (this.filerId) {
+            leaderFilter = '';
+            filerFilter += `&filerUserId=${this.filerId}`
+          }
+          const param = `/v2/user-reassignment?userId=${this.data.userId}&serviceType=${this.serviceType}${leaderFilter}${filerFilter}`
+          this.userMsService.getMethod(param).subscribe((res: any) => {
+            console.log(res);
+            we_track('Re-assign', {
+              'User Name': this.data?.userInfo?.name,
+              'User Number': this.data?.userInfo?.mobileNumber,
+              'From filer ': this.data?.userInfo?.filerName,
+              'From Owner': this.data?.userInfo?.ownerName,
+              'To filer ': this.reAssignedFilerName,
+              'To Owner': this.reAssignedOwnerName
+            });
+            this.utilsService.showSnackBar('User re assigned successfully.');
+            this.loading = false;
+            this.dialogRef.close({ event: 'close', data: 'success' });
+            if (res.success == false) {
+              this.utilsService.showSnackBar(res.error)
+              console.log(res.message)
+            }
+          }, error => {
+            this.loading = false;
+            this.utilsService.showSnackBar('Filer not found active, please try another.');
+            console.log(error);
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          })
+        } else {
+          this.utilsService.showSnackBar('Please select leader/Filer Name');
+        }
       }
-    }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
