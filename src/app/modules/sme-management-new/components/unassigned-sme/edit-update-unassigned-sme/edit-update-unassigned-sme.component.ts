@@ -709,7 +709,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
         partnerType : partnerType || this.smeObj.partnerType,
         skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
-        partnerDetails: this.smeObj.partnerDetails
+        partnerDetails: this.smeObj.partnerDetails,
+        inactivityTimeInMinutes:15
       };
 
       finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
