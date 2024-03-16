@@ -278,7 +278,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (this.smeObj?.['partnerDetails']) {
       this.smeFormGroup.controls['state'].setValue(this.smeObj?.['partnerDetails'].state);
       this.smeFormGroup.controls['city'].setValue(this.smeObj?.['partnerDetails'].city);
-      this.smeFormGroup.controls['pin'].setValue(this.smeObj?.['partnerDetails'].pin);
+      this.smeFormGroup.controls['pin'].setValue(this.smeObj?.['partnerDetails'].pinCode);
       this.additionalId.forEach(element => {
         if (element.value === this.smeObj?.['partnerDetails'].additionalIdsRequired) {
           element.status = true;

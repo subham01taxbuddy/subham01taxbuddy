@@ -342,10 +342,9 @@
             <div class="btn__primary" (click)="saveAll()">Save & View Summary</div>
           </div>
         </div>
-    
-    
   </div>
 </div>
 </main>
 <app-side-summary-panel type="scheduleAL"></app-side-summary-panel>
+<app-previous-summary-panel type="scheduleAL" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 </div>

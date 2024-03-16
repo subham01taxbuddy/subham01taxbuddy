@@ -36,6 +36,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   title: string;
   bondsGridOptions: GridOptions;
   selectedFormGroup: FormGroup;
+  PREV_ITR_JSON: any;
 
   activeIndex: number;
   constructor(
@@ -46,6 +47,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       private activateRoute: ActivatedRoute
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
         sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -278,9 +280,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     }
 
     let result = this.selectedFormGroup.getRawValue();
-    
+
     // result.costOfImprovement = result.indexCostOfImprovement;
-    
+
     if(this.activeIndex === -1){
       let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length;
       let form = this.createForm(srn);

@@ -377,6 +377,26 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Current Status',
+        field: 'onboardingStatus',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellRenderer: function (params: any) {
+        if( params.data?.partnerDetails?.onboardingStatus) {
+            let onboardingStatus = params.data?.partnerDetails?.onboardingStatus;
+            return onboardingStatus;
+          }else{
+            return'-';
+          }
+        },
+      },
+      {
         headerName: 'Joining As',
         field: 'partnerType',
         width: 120,
@@ -386,6 +406,17 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        cellRenderer: function (params: any) {
+          if (params?.data?.partnerType) {
+            let referredBy = params.data?.partnerType;
+            return referredBy;
+          } else if( params.data?.partnerDetails?.partnerType) {
+            let referredBy = params.data?.partnerDetails?.partnerType;
+            return referredBy;
+          }else{
+            return'-';
+          }
         },
       },
       {

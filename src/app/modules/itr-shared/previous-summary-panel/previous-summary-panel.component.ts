@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SummaryHelperService } from "../../../services/summary-helper-service";
-import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AppConstants } from 'src/app/modules/shared/constants';
+import { AppConstants } from '../../shared/constants';
+import { ITR_JSON } from '../../shared/interfaces/itr-input.interface';
+import { SummaryHelperService } from 'src/app/services/summary-helper-service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-side-summary-panel',
-  templateUrl: './side-summary-panel.component.html',
-  styleUrls: ['./side-summary-panel.component.scss']
+  selector: 'app-previous-summary-panel',
+  templateUrl: './previous-summary-panel.component.html',
+  styleUrls: ['./previous-summary-panel.component.scss']
 })
-export class SideSummaryPanelComponent implements OnInit {
+export class PreviousSummaryPanelComponent implements OnInit {
 
   @Input() type: string;
 
@@ -31,21 +31,21 @@ export class SideSummaryPanelComponent implements OnInit {
   indexedBonds: any = {};
   listedBonds: any = {};
   unlistedBonds: any = {};
-  subscription: Subscription;
-  constructor(private summaryHelper: SummaryHelperService, public utilsService: UtilsService) {
+  subscription: Subscription
 
-  }
+  constructor(
+    public utilsService: UtilsService,
+    private summaryHelper: SummaryHelperService,
+  ) { }
 
   ngOnInit(): void {
-
   }
 
   setSummaryData() {
     if (this.type !== 'scheduleAL' && this.type !== 'taxesPaid' && this.type !== 'listedEquityShares' && this.type !== 'profitLossAccount' && this.type !== 'houseProperty' && this.type !== 'presumptiveIncome')
       this.getSummary();
     else
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
-
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON))
     switch (this.type) {
       case 'listedEquityShares': this.setListedEquityShares();
         break;
@@ -65,7 +65,7 @@ export class SideSummaryPanelComponent implements OnInit {
   }
 
   async getSummary() {
-    await this.summaryHelper.getSummary().then((res: any) => {
+    await this.summaryHelper.getPreviousYearSummary().then((res: any) => {
       if (res) {
         this.summary = res;
         switch (this.type) {
@@ -99,13 +99,13 @@ export class SideSummaryPanelComponent implements OnInit {
   }
 
   openPanel() {
+    this.summaryHelper.open();
     this.subscription = this.summaryHelper.isSummaryOpen
       .subscribe((state) => {
         if (state) {
           this.closePanel();
         }
       });
-    this.summaryHelper.open();
     this.displayPanel = true;
     this.utilsService.smoothScrollToTop();
     this.setSummaryData();
@@ -606,4 +606,5 @@ export class SideSummaryPanelComponent implements OnInit {
       new Date('02/01/2018')
     );
   }
+
 }

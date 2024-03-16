@@ -209,6 +209,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   prescProfExpError: boolean = false;
   eicProfExpError: boolean = false;
   bifurcationFormGroup: boolean = false;
+  PREV_ITR_JSON: any;
 
   constructor(
     private router: Router,
@@ -224,6 +225,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let extraData: any = this.location.getState();
     // this.currentIndex = extraData.data;
     // this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -709,9 +711,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   // Function to set a validator
   setValidator(controlName: string, validator: any) {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const control = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === controlName;
     });
@@ -722,9 +722,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   // Function to remove a validator
   removeValidator(controlName: string, validator: any) {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const control = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === controlName;
     });
@@ -734,9 +732,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   validationApplicableForAll() {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
 
     // secondProviso
     {
@@ -774,13 +770,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       const fixedLimit = 500000;
       this.setValidator('COMPENSATION_ON_VRS', Validators.max(fixedLimit));
 
-      if (
-        (secondProvisoControl?.get('allowValue')?.errors &&
-          secondProvisoControl
-            ?.get('allowValue')
-            ?.errors?.hasOwnProperty('max')) ||
-        vrsLastYearValue
-      ) {
+      if ((secondProvisoControl?.get('allowValue')?.errors &&
+        secondProvisoControl?.get('allowValue')?.errors?.hasOwnProperty('max')) || vrsLastYearValue) {
         this.compensationOnVrsError = true;
       } else {
         this.removeValidator('COMPENSATION_ON_VRS', Validators.max(fixedLimit));
@@ -836,25 +827,16 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   setting106107(section) {
-    const employerTotal = this.employerDetailsFormGroup
-      ?.get('salaryDetails')
-      ?.value?.reduce(
-        (acc, item) =>
-          acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
-        0
-      );
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce((acc, item) =>
+      acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const Control = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === section;
     });
     this.setValidator(section, Validators.max(employerTotal));
 
-    if (
-      Control?.get('allowValue')?.errors &&
-      Control?.get('allowValue')?.errors?.hasOwnProperty('max')
-    ) {
+    if (Control?.get('allowValue')?.errors &&
+      Control?.get('allowValue')?.errors?.hasOwnProperty('max')) {
       if (section === 'US_10_7') {
         this.serviceOutIndError = true;
       } else if (section === 'REMUNERATION_REC') {
@@ -871,9 +853,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   ifFormValuesNotPresent() {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
 
     // gratuity received
     {
@@ -929,17 +909,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   prescribed14Expenses(section) {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const FormValues = this.utilsService.getSalaryValues();
     const personalExpControl = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === section;
     });
     const personalExp =
-      parseFloat(FormValues?.salary?.CONVEYANCE) +
-      parseFloat(FormValues?.salary?.OTHER_ALLOWANCE) +
-      parseFloat(FormValues?.salary?.OTHER);
+      parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'CONVEYANCE')[0]?.taxableAmount) +
+      parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'OTHER_ALLOWANCE')[0]?.taxableAmount) +
+      parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'OTHER')[0]?.taxableAmount);
 
     if (personalExp && personalExp !== 0) {
       this.setValidator(section, Validators.max(personalExp));
@@ -965,35 +943,27 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   validations() {
-    const allowance = this.allowanceFormGroup?.controls[
-      'allowances'
-    ] as FormArray;
+    debugger
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const FormValues = this.utilsService.getSalaryValues();
 
     if (FormValues) {
       const isAtLeastOneSalaryGreaterThanZero = Object?.values(
-        FormValues?.salary
-      ).some((element: any) => element > 0);
+        FormValues?.salary).some((element: any) => element.taxableAmount > 0);
 
       if (isAtLeastOneSalaryGreaterThanZero) {
         {
           const hraControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'HOUSE_RENT';
           });
-          const BASIC_SALARY = parseFloat(FormValues?.salary?.BASIC_SALARY);
-          const HOUSE_RENT = parseFloat(FormValues?.salary?.HOUSE_RENT);
+          const BASIC_SALARY = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'BASIC_SALARY')[0]?.taxableAmount);
+          const HOUSE_RENT = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'HOUSE_RENT')[0]?.taxableAmount);
 
-          let lowerOf = Math.min(
-            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY,
-            HOUSE_RENT
-          );
+          let lowerOf = Math.min(BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY, HOUSE_RENT);
 
           this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
 
-          if (
-            hraControl?.get('allowValue')?.errors &&
-            hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
+          if (hraControl?.get('allowValue')?.errors && hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
             this.hraError = true;
           } else {
             this.removeValidator('HOUSE_RENT', Validators.max(lowerOf));
@@ -1006,13 +976,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const ltaControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LTA';
           });
-          const LTA = parseFloat(FormValues?.salary?.LTA);
+          const LTA = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'LTA')[0]?.taxableAmount);
           this.setValidator('LTA', Validators.max(LTA));
 
-          if (
-            ltaControl?.get('allowValue')?.errors &&
-            ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
+          if (ltaControl?.get('allowValue')?.errors &&
+            ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
             this.ltaError = true;
           } else {
             this.removeValidator('LTA', Validators.max(LTA));
@@ -1025,17 +993,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const gratuityControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'GRATUITY';
           });
-          const gratuity = parseFloat(FormValues?.salary?.GRATUITY);
+          const gratuity = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0]?.taxableAmount);
           const fixedLimit = 2000000;
 
           let lowerOf = Math.min(gratuity, fixedLimit);
 
           this.setValidator('GRATUITY', Validators.max(lowerOf));
 
-          if (
-            gratuityControl?.get('allowValue')?.errors &&
-            gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
+          if (gratuityControl?.get('allowValue')?.errors &&
+            gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
             this.gratuityError = true;
           } else {
             this.removeValidator('GRATUITY', Validators.max(lowerOf));
@@ -1048,13 +1014,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const pensionControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'COMMUTED_PENSION';
           });
-          const pension = parseFloat(FormValues?.salary?.COMMUTED_PENSION);
+          const pension = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'COMMUTED_PENSION')[0]?.taxableAmount);
           this.setValidator('COMMUTED_PENSION', Validators.max(pension));
 
-          if (
-            pensionControl?.get('allowValue')?.errors &&
-            pensionControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
+          if (pensionControl?.get('allowValue')?.errors &&
+            pensionControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
             this.pensionError = true;
           } else {
             this.removeValidator('COMMUTED_PENSION', Validators.max(pension));
@@ -1067,9 +1031,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncashControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
           });
-          const leaveEncash = parseFloat(
-            FormValues?.salary?.LEAVE_ENCASHMENT
-          );
+          const leaveEncash = parseFloat(FormValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0]?.taxableAmount);
           const fixedLimit = 300000;
 
           let lowerOf = Math.min(leaveEncash, fixedLimit);
@@ -1086,10 +1048,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             this.setValidator('LEAVE_ENCASHMENT', Validators.max(leaveEncash));
           }
 
-          if (
-            leaveEncashControl?.get('allowValue')?.errors &&
-            leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
+          if (leaveEncashControl?.get('allowValue')?.errors &&
+            leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
             this.leaveEncashError = true;
           } else {
             if (
@@ -1100,9 +1060,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             ) {
               this.removeValidator('LEAVE_ENCASHMENT', Validators.max(lowerOf));
             } else {
-              this.removeValidator(
-                'LEAVE_ENCASHMENT',
-                Validators.max(leaveEncash)
+              this.removeValidator('LEAVE_ENCASHMENT', Validators.max(leaveEncash)
               );
             }
             this.leaveEncashError = false;
@@ -1253,29 +1211,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           }
         }
       }
-      // debugger
-      // let otherSalary = this.localEmployer.salary.filter(item => item.salaryType === 'OTHER')
-      // if (otherSalary.length) {
-      //   if (otherSalary[0].salaryType === 'OTHER' && otherSalary[0].taxableAmount > 0 && !otherSalary[0]['description']) {
-      //     this.utilsService.showSnackBar('Please enter the Description');
-      //     return;
-      //   }
-      // }
-      // let otherPerquisites = this.localEmployer.perquisites.filter(item => item.perquisiteType === 'OTH_BENEFITS_AMENITIES')
-      // if (otherPerquisites.length) {
-      //   if (otherPerquisites[0].perquisiteType === 'OTH_BENEFITS_AMENITIES' && otherPerquisites[0].taxableAmount > 0 && !otherPerquisites[0]['description']) {
-      //     this.utilsService.showSnackBar('Please enter the Description');
-      //     return;
-      //   }
-      // }
-      // let otherProfitsInLieuOfSalaryType = this.localEmployer.profitsInLieuOfSalaryType.filter(item => item.salaryType === 'ANY_OTHER')
-      // if (otherProfitsInLieuOfSalaryType.length) {
-      //   if (otherProfitsInLieuOfSalaryType[0].salaryType === 'ANY_OTHER' && otherProfitsInLieuOfSalaryType[0].taxableAmount > 0 && !otherProfitsInLieuOfSalaryType[0]['description']) {
-      //     this.utilsService.showSnackBar('Please enter the Description');
-      //     return;
-      //   }
-      // }
-
       if (
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
         Math.min(basicSalaryAmount / 5, this.maxEA)
@@ -1290,16 +1225,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       let totalAllowExempt = 0;
       let othTotalAllowExempt = 0;
       for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-        let allowance = (
-          this.allowanceFormGroup.controls['allowances'] as FormArray
-        ).controls[i] as FormGroup;
+        let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
-          if (
-            allowance?.controls['allowType']?.value ===
-            'NON_MONETARY_PERQUISITES' &&
+          if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
             allowance?.controls['allowValue']?.value !== 0 &&
-            allowance?.controls['allowValue']?.value > perquisitesAmount
-          ) {
+            allowance?.controls['allowValue']?.value > perquisitesAmount) {
             this.utilsService.showSnackBar(
               'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
             );
@@ -1337,9 +1267,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             return;
           }
 
-          const allowancesArray = this.allowanceFormGroup?.get(
-            'allowances'
-          ) as FormArray;
+          const allowancesArray = this.allowanceFormGroup?.get('allowances') as FormArray;
 
           const firstProviso = allowancesArray?.controls?.find(
             (element) => element?.value?.allowType === 'FIRST_PROVISO'
@@ -1380,36 +1308,28 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             description: allowance?.controls['description']?.value,
           });
 
-          if (
-            allowance?.controls['allowType']?.value !== 'REMUNERATION_REC' &&
-            allowance?.controls['allowType']?.value !== 'US_10_7'
-          ) {
-            totalAllowExempt =
-              totalAllowExempt + Number(allowance?.controls['allowValue']?.value);
+          if (allowance?.controls['allowType']?.value !== 'REMUNERATION_REC' &&
+            allowance?.controls['allowType']?.value !== 'US_10_7') {
+            totalAllowExempt = totalAllowExempt + Number(allowance?.controls['allowValue']?.value);
           } else {
-            othTotalAllowExempt =
-              othTotalAllowExempt +
-              Number(allowance?.controls['allowValue']?.value);
+            othTotalAllowExempt = othTotalAllowExempt + Number(allowance?.controls['allowValue']?.value);
           }
         }
       }
 
       //check allowances total is not exceeding the gross salary
       if (totalAllowExempt > this.grossSalary) {
+        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
         );
         return;
       }
 
-      const employerTotal = this.employerDetailsFormGroup
-        ?.get('salaryDetails')
-        ?.value?.reduce(
-          (acc, item) =>
-            acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
-          0
-        );
+      const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
+        (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
       if (othTotalAllowExempt > employerTotal) {
+        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed total gross salary'
         );

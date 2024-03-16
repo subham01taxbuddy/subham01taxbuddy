@@ -223,7 +223,7 @@
                           <div class="col-3">
                             <mat-form-field appearance="outline">
                               <mat-select name="allowType[i]" formControlName="allowType"
-                                (selectionChange)="validateExemptIncomes($event)">
+                                (selectionChange)="validateExemptIncomes($event);changeAllowancesType()">
                                 <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
                                   [value]="exempt.value" [disabled]="exempt['disabled']">{{ exempt.label }}</mat-option>
                               </mat-select>
@@ -246,7 +246,7 @@
                               <mat-error style="width: 70%"
                                 *ngIf=" income.value.allowType === 'HOUSE_RENT' && hraError">
                                 House rent allowance cannot be more than 50% of Basic or
-                                Total HRA
+                                Total HRA from 17(1)
                               </mat-error>
                               <mat-error style="width: 70%" *ngIf="income.value.allowType === 'LTA' && ltaError">
                                 LTA to be claimed cannot be more than the LTA that is
@@ -492,6 +492,7 @@
   </main>
 
   <app-side-summary-panel type="salary"></app-side-summary-panel>
+  <app-previous-summary-panel type="salary" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 
 
 

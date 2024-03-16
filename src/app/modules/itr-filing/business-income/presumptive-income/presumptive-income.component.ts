@@ -5,6 +5,7 @@ import { PresumptiveBusinessIncomeComponent } from './presumptive-business-incom
 import { PresumptiveProfessionalIncomeComponent } from './presumptive-professional-income/presumptive-professional-income.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-presumptive-income',
@@ -26,9 +27,11 @@ export class PresumptiveIncomeComponent
   PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   presProfessionalSaved: boolean;
   presBusinessSaved: boolean;
+  PREV_ITR_JSON: any;
 
   constructor(private utilsService: UtilsService) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
   ngOnInit(): void {

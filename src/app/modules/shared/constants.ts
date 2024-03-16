@@ -30,6 +30,7 @@ export class AppConstants {
     public static TOKEN = environment.production ? 'TOKEN' : 'TOKEN';
     public static IS_USER_LOGGED_IN = environment.production ? 'IS_USER_LOGGED_IN' : 'IS_USER_LOGGED_IN';
     public static ITR_JSON = environment.production ? 'ITR_JSON' : 'ITR_JSON';
+    public static PREV_ITR_JSON = environment.production ? 'PREV_ITR_JSON' : 'PREV_ITR_JSON';
     public static TAX_SUM = environment.production ? 'TAX_SUM' : 'TAX_SUM';
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';

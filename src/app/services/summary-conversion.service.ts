@@ -245,11 +245,6 @@ export class SummaryConversionService {
                                         : null;
                                 }
 
-                                // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-                                sessionStorage.setItem(
-                                    AppConstants.ITR_JSON,
-                                    JSON.stringify(ITR_Obj)
-                                );
                             }
 
                             //  everOptedOutOfNewRegime
@@ -295,10 +290,6 @@ export class SummaryConversionService {
                                         : null;
                                 }
 
-                                sessionStorage.setItem(
-                                    AppConstants.ITR_JSON,
-                                    JSON.stringify(ITR_Obj)
-                                );
                             }
 
                             ITR_Obj.regime =
@@ -3005,10 +2996,6 @@ export class SummaryConversionService {
                         }
                     }
 
-                    sessionStorage.setItem(
-                        AppConstants.ITR_JSON,
-                        JSON.stringify(ITR_Obj)
-                    );
                 }
 
                 // INVESTMENTS / DEDUCTIONS

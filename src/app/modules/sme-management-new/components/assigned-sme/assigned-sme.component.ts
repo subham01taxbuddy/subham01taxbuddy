@@ -720,13 +720,18 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         cellRenderer: function (params: any) {
-          if (params.data.roles.includes('ROLE_FILER')) {
-            return `<button type="button" class="action_icon add_button" title="edit active capacity"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="edit-active-capacity">
-          ${params.data.activeCaseMaxCapacity} </button>`;
-          } else {
-            return params.data.activeCaseMaxCapacity;
+          if(params.data.roles != null){
+            if (params?.data?.roles?.includes('ROLE_FILER')) {
+              return `<button type="button" class="action_icon add_button" title="edit active capacity"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="edit-active-capacity">
+            ${params.data.activeCaseMaxCapacity} </button>`;
+            } else {
+              return params.data.activeCaseMaxCapacity;
+            }
+          }else{
+            return '-';
           }
+
         },
       },
       {
@@ -782,7 +787,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           let result = [];
           serviceTypes.forEach(serviceType => {
             if (smeData[serviceType.key]) {
-              if (smeData.roles.includes('ROLE_FILER')) {
+              if (smeData.roles != null && smeData.roles.includes('ROLE_FILER')) {
                 if (smeData['assignmentOffByLeader']) {
                   result.push(
                     `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
@@ -821,15 +826,20 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         cellRenderer: (params: any) => {
           const smeData = params?.data;
           let session;
-          if (smeData.roles.includes('ROLE_FILER')) {
-            if (smeData['serviceEligibility_ITR'].assignmentStart) {
-              session = 'Active'
-            } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
-              session = 'In-Active'
+          if(smeData.roles != null){
+            if (smeData.roles.includes('ROLE_FILER')) {
+              if (smeData['serviceEligibility_ITR'].assignmentStart) {
+                session = 'Active'
+              } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
+                session = 'In-Active'
+              }
+            } else {
+              session = '-'
             }
-          } else {
+          }else{
             session = '-'
           }
+
           return session
         }
       },
@@ -887,6 +897,13 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: function (params) {
+          if (params.value) {
+            return params.value
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Principal Name',

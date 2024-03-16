@@ -175,50 +175,50 @@
       <div class="user-data-container">
         <div class="row">
           <div class="col-sm-4">
-            <mat-label> Mobile No </mat-label>
+            <mat-label> Mobile No *</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
-                maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
+                maxlength="10" minlength="6" trim [numbersOnly]="true" required readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Individual/Principal/Firm Name </mat-label>
+            <mat-label> Individual/Principal/Firm Name * </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Name" [formControl]="name" class="input-field" readonly />
+              <input type="text" matInput placeholder="Name" [formControl]="name" class="input-field"  required />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Email ID </mat-label>
+            <mat-label> Email ID * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field"
-                readonly />
+              required  />
             </mat-form-field>
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-sm-4">
-            <mat-label> Pin Code </mat-label>
+            <mat-label> Pin Code * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="pin" [formControl]="pinCode" class="input-field" maxlength="10"
-                minlength="6" trim digitsOnly readonly />
+                minlength="6" trim digitsOnly required  />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> city </mat-label>
+            <mat-label> city *</mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" readonly />
+              <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" required  />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> state </mat-label>
+            <mat-label> state *</mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" readonly />
+              <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" required />
             </mat-form-field>
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-sm-4">
-            <mat-label> Qualification </mat-label>
+            <mat-label> Qualification * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Qualification" name="" [formControl]="qualification"
                 class="input-field" readonly />
@@ -256,9 +256,9 @@
             <div class="card" style="margin-top: 10px;">
               <b style="font-size: 18px">Roles: </b>
               <section class="example-section" [formGroup]="roles">
-                <p><mat-checkbox (change)="onCheckboxChange(1)" [formControl]="filerIndividual">Filer-Individual</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(1); onChange(1)" [formControl]="filerIndividual">Filer-Individual</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox (change)="onCheckboxChange(2)" [formControl]="filerPrinciple">Filer-Principal/Firm</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(2); onChange(2)" [formControl]="filerPrinciple">Filer-Principal/Firm</mat-checkbox></p>
                 <hr>
               </section>
             </div>
@@ -283,45 +283,148 @@
         </div>
       </div>
       <div class="user-data-container">
-        <b style="font-size: 18px">Click Button To View Document </b>
-        <div class="row">
-          <div class="col-6 col-sm-3 col-md-2">
-              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('signedNDA')">Signed NDA</button>
+        <b style="font-size: 18px">Click Button To View/Upload Document</b>
+        <div class="document-container row mt-2">
+          <!-- Signed NDA Copy -->
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="document-item">
+              <div class="document-title">Signed NDA Copy</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('signedNDAInput')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="signedNDAInput" name="signedNDAInput" accept=".pdf,.doc" class="form-control-file" #signedNDAInput>
+              <button *ngIf="urls.signedNDAInput" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('signedNDAInput', urls.signedNDAInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
           </div>
-          <div class="col-6 col-sm-3 col-md-3">
-              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('cv')">CV(Resume)/COP</button>
+
+          <!-- CV (Resume)/COP -->
+          <div class="col-lg-2 col-md-4 col-sm-6"  *ngIf="!this.additionalIdsRequired.value && !this.additionalIdsCount.value">
+            <div class="document-item">
+              <div class="document-title">CV (Resume)</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('cvInput')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="cvInput" name="cvInput" accept=".pdf,.doc" class="form-control-file" #cvInput>
+              <button *ngIf="urls.cvInput" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('cvInput', urls.cvInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
           </div>
-          <div class="col-6 col-sm-3 col-md-2">
-              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('pan')">PAN</button>
+
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="this.additionalIdsRequired.value">
+            <div class="document-item">
+              <div class="document-title">COP</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('certificateOfPracticeUrl')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="certificateOfPracticeUrl" name="certificateOfPracticeUrl" accept=".pdf,.doc" class="form-control-file" #certificateOfPracticeUrl>
+              <button *ngIf="urls.certificateOfPracticeUrl" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('certificateOfPracticeUrl', urls.certificateOfPracticeUrl)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
           </div>
-          <div class="col-6 col-sm-3 col-md-3">
-              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('passbookOrCancelledCheque')">Passbook/Canceled Cheque</button>
+
+          <!-- PAN -->
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="document-item">
+              <div class="document-title">PAN</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('panInput')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="panInput" name="panInput" accept="image/*" class="form-control-file" #panInput>
+              <button *ngIf="urls.panInput" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('panInput', urls.panInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
           </div>
-          <div class="col-6 col-sm-3 col-md-2">
-              <button type="button" class="btn btn-primary btn-block" (click)="openDocument('gstIn')">GSTIN</button>
+
+          <!-- Passbook/Canceled Cheque -->
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="document-item">
+              <div class="document-title">Passbook/Cheque</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('passbookOrCancelledChequeInput')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="passbookOrCancelledChequeInput" name="passbookOrCancelledChequeInput" accept="image/*" class="form-control-file" #passbookOrCancelledChequeInput>
+              <button *ngIf="urls.passbookOrCancelledChequeInput" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('passbookOrCancelledChequeInput', urls.passbookOrCancelledChequeInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <!-- GSTIN -->
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="document-item">
+              <div class="document-title">GSTIN</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="uploadFile('gstinInput')">
+                <i class="fas fa-upload"></i>Upload
+              </button>
+              <input type="file" id="gstinInput" name="gstinInput" accept=".pdf,.doc" class="form-control-file" #gstinInput>
+              <button *ngIf="urls.gstinInput" type="button" class="btn btn-secondary btn-sm" (click)="openDocument('gstinInput', urls.gstinInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <div class="document-item">
+              <div class="document-title">ZIP Download</div>
+              <button type="button" class="btn btn-primary btn-sm" (click)="openDocument('zipInput', urls.zipInput)">
+                <i class="fas fa-download"></i>Download Zip
+              </button>
+            </div>
           </div>
         </div>
+
         <div class="row mt-3">
           <b style="font-size: 18px">Bank Details</b>
           <div class="col-sm-4">
-            <mat-label> Account No. </mat-label>
+            <mat-label> Account No. * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Account Number" name="" [formControl]="accountNumber"
-                class="input-field" readonly />
+                class="input-field" required />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> IFSC Code </mat-label>
+            <mat-label> IFSC Code * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="IFSC Code" name="" [formControl]="ifsCode"
-                class="input-field" readonly />
+                class="input-field" required />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
-            <mat-label> Type of account </mat-label>
+            <mat-label> Type of account *</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Type of account" name="" [formControl]="accountType"
-                class="input-field" readonly />
+                class="input-field" required />
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xm-12 mt-2">
+            <mat-label> PAN Number * </mat-label>
+            <mat-form-field class="input-field-width" appearance="outline">
+              <input
+                (blur)="changeToUpper(pan);trimValue(pan);getUserInfoFromPan(pan.value)"
+                matInput placeholder="PAN Number" class="input-field" name="pan" [formControl]="pan"  required
+                maxLength="10"
+                matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                matTooltipClass="tab-tooltip" matTooltipPosition="above" required>
+              <mat-error *ngIf="pan.hasError('pattern')">
+                Enter
+                valid pan (e.g XXXXX1234X)</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xm-12 mt-2">
+            <mat-label> GSTIN </mat-label>
+            <mat-form-field class="input-field-width" appearance="outline">
+              <input
+                (blur)="changeToUpper(gstin);trimValue(gstin);checkGstin()"
+                matInput placeholder="GSTIN" class="input-field" name="gstin" [formControl]="gstin">
+                <mat-error *ngIf="pan.hasError('pattern')">
+                  Enter
+                  valid GSTIN</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -331,20 +434,25 @@
               <b style="font-size: 18px">Additional ID's Required?</b>
               <div class="row col-8">
                 <section class="example-section add-id">
-                  <mat-radio-group [formControl]="additionalIdsRequired ">
-                    <mat-radio-button value="yes">Yes</mat-radio-button>
-                    <mat-radio-button value="no">No</mat-radio-button>
+                  <mat-radio-group [formControl]="additionalIdsRequired " (change)="onAdditionalIdsRequiredChange()" >
+                    <mat-radio-button [value]="true">Yes</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
                 </section>
               </div>
             </div>
 
           </div>
-          <div class="col-sm-6" *ngIf="additionalIdsRequired.value === 'yes'">
+          <div class="col-sm-6" *ngIf="additionalIdsRequired.value">
             <mat-label> No of additional Id's required </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
-                class="input-field" maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
+                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true" />
+                <mat-error *ngIf="additionalIdsCount.hasError('required')">
+                  Enter No of additional Id's required </mat-error>
+                  <mat-error *ngIf="additionalIdsCount.value === '0'">
+                    Number cannot be zero
+                  </mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -413,7 +521,7 @@
 
 
     <div class="mt-2" style="text-align: center;">
-      <button class="save-all" [disabled]="loading" (click)=" updateSmeDetails()">Save </button>
+      <button class="save-all" [disabled]="loading && smeFormGroup.invalid " (click)=" updateSmeDetails()">Save </button>
     </div>
     </div>
   </div>

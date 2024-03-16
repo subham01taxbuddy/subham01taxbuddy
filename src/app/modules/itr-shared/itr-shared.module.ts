@@ -9,6 +9,7 @@ import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component
 import { NoAccountCasesComponent } from './dialogs/no-account-cases/no-account-cases.component';
 import {WizardNavigation} from "./WizardNavigation";
 import { SideSummaryPanelComponent } from './side-summary-panel/side-summary-panel.component';
+import { PreviousSummaryPanelComponent } from './previous-summary-panel/previous-summary-panel.component';
 
 
 
@@ -17,6 +18,7 @@ import { SideSummaryPanelComponent } from './side-summary-panel/side-summary-pan
         BankDialogComponent,
         NoAccountCasesComponent,
         SideSummaryPanelComponent,
+        PreviousSummaryPanelComponent,
         // UpperCaseDirective
     ],
     imports: [
@@ -32,7 +34,8 @@ import { SideSummaryPanelComponent } from './side-summary-panel/side-summary-pan
         ShimmerModule,
         BankDialogComponent,
         NoAccountCasesComponent,
-        SideSummaryPanelComponent
+        SideSummaryPanelComponent,
+        PreviousSummaryPanelComponent,
     ],
     providers: [],
     entryComponents: [BankDialogComponent, NoAccountCasesComponent]

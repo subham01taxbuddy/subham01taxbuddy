@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="spc-blw">
   <div class="com_model perBx">
@@ -16,6 +13,8 @@
               <th class="text-center particular-label">Particulars</th>
               <th class="text-center particular-value">Old Tax Regime (₹)</th>
               <th class="text-center particular-value">New Tax Regime (₹)</th>
+              <th *ngIf="this.PREV_ITR_JSON" class="text-center particular-value">Previous Year
+                ({{this.PREV_ITR_JSON?.regime}} Regime) (₹)</th>
             </tr>
           </thead>
           <tbody>
@@ -23,11 +22,14 @@
               <td class="particular-label">
                 {{ particular.label }}
               </td>
-              <td class="particular-value">
+              <td class="text-center particular-value">
                 {{ particular.old }}
               </td>
-              <td class="particular-value">
+              <td class="text-center particular-value">
                 {{ particular.new }}
+              </td>
+              <td *ngIf="this.PREV_ITR_JSON" class="text-center particular-value">
+                {{ particular.py }}
               </td>
             </tr>
           </tbody>
@@ -37,37 +39,22 @@
 
         <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()">
           <div class="card__row flex flex-col">
-            <div
-              class="card__col-xs-12 question-label"
-              style="margin-bottom: 10px; background: #eaeaea"
-            >
+            <div class="card__col-xs-12 question-label" style="margin-bottom: 10px; background: #eaeaea">
               <strong> Tax Regime Selection </strong>
               <mat-label> Select the best suited Tax Regime </mat-label>
             </div>
 
-            <div
-              formGroupName="optionForCurrentAY"
-              *ngIf="
+            <div formGroupName="optionForCurrentAY" *ngIf="
                 this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '2'
-              "
-            >
+              ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   1. Are you opting for New Tax Regime?
                 </div>
-                <div
-                  class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
-                >
-                  <mat-radio-group
-                    name="currentYearRegime"
-                    formControlName="currentYearRegime"
-                  >
-                    <mat-radio-button
-                      [value]="'NEW'"
-                      style="margin-left: 0px; margin-right: 2px"
-                      labelPosition="before"
-                      [disabled]="!allowNewRegime"
-                    >
+                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime">
+                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before"
+                      [disabled]="!allowNewRegime">
                       Yes
                     </mat-radio-button>
                     <mat-radio-button [value]="'OLD'" labelPosition="before">
@@ -75,13 +62,11 @@
                     </mat-radio-button>
                   </mat-radio-group>
 
-                  <mat-error
-                    *ngIf="
+                  <mat-error *ngIf="
                       regimeSelectionForm.controls['optionForCurrentAY']
                         .get('currentYearRegime')
                         .hasError('required') && submitted
-                    "
-                  >
+                    ">
                     Please select an option to continue
                   </mat-error>
                 </div>
@@ -89,113 +74,71 @@
               <hr />
             </div>
 
-            <div
-              formGroupName="everOptedNewRegime"
-              *ngIf="
+            <div formGroupName="everOptedNewRegime" *ngIf="
                 this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              "
-            >
+              ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   1. Have you ever opted for New Regimes in earlier Years
                 </div>
-                <div
-                  class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
-                >
-                  <mat-radio-group
-                    name="everOptedNewRegime"
-                    formControlName="everOptedNewRegime"
-                    (change)="updateRegimeLabels()"
-                    required
-                  >
-                    <mat-radio-button
-                      [value]="true"
-                      style="margin-left: 0px; margin-right: 2px"
-                      labelPosition="before"
-                      >Yes
+                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                  <mat-radio-group name="everOptedNewRegime" formControlName="everOptedNewRegime"
+                    (change)="updateRegimeLabels()" required>
+                    <mat-radio-button [value]="true" style="margin-left: 0px; margin-right: 2px"
+                      labelPosition="before">Yes
                     </mat-radio-button>
-                    <mat-radio-button [value]="false" labelPosition="before"
-                      >No</mat-radio-button
-                    >
+                    <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
                   </mat-radio-group>
-                  <mat-error
-                    *ngIf="
+                  <mat-error *ngIf="
                       regimeSelectionForm.controls['everOptedNewRegime']
                         .get('everOptedNewRegime')
                         .hasError('required') &&
                       (this.ITR_JSON.itrType === '3' ||
                         this.ITR_JSON.itrType === '4') &&
                       submitted
-                    "
-                  >
+                    ">
                     Please select an option to continue
                   </mat-error>
                 </div>
               </div>
-              <div
-                class="card__row"
-                *ngIf="
+              <div class="card__row" *ngIf="
                   regimeSelectionForm.controls['everOptedNewRegime'].get(
                     'everOptedNewRegime'
                   ).value === true
-                "
-              >
+                ">
                 <div class="card__col-xs-4">
-                  <mat-label class="option-label"
-                    >Select Assessment Year :</mat-label
-                  >
+                  <mat-label class="option-label">Select Assessment Year :</mat-label>
                   <mat-form-field appearance="outline">
-                    <mat-select
-                      placeholder="Select Assesment Year"
-                      required
-                      name="assessmentYear"
-                      formControlName="assessmentYear"
-                      (selectionChange)="updateRegimeLabels()"
-                    >
-                      <mat-option
-                        *ngFor="let year of assesssmentYear"
-                        [value]="year.assesssmentYear"
-                      >
+                    <mat-select placeholder="Select Assesment Year" required name="assessmentYear"
+                      formControlName="assessmentYear" (selectionChange)="updateRegimeLabels()">
+                      <mat-option *ngFor="let year of assesssmentYear" [value]="year.assesssmentYear">
                         {{ year.assesssmentYear }}
                       </mat-option>
                     </mat-select>
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedNewRegime']
                           .get('assessmentYear')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
-                  <mat-label class="option-label"
-                    >Acknowledgement Number</mat-label
-                  >
+                  <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      maxlength="15"
-                      minlength="15"
+                    <input matInput maxlength="15" minlength="15"
                       (blur)="setFilingDate(regimeSelectionForm.controls['everOptedNewRegime'])"
-                      name="acknowledgementNumber"
-                      formControlName="acknowledgementNumber"
+                      name="acknowledgementNumber" formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      placeholder="Acknowledgement Number"
-                      digitsOnly
-                      onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                      autocomplete="off"
-                    />
-                    <mat-error
-                      *ngIf="
+                      placeholder="Acknowledgement Number" digitsOnly
+                      onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" />
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedNewRegime']
                           .get('acknowledgementNumber')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
@@ -208,28 +151,15 @@
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Date:</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Date of filling"
-                      [max]="fillingMaxDate"
-                      readonly
-                      name="date"
-                      formControlName="date"
-                      [matDatepicker]="picker1"
-                      autocomplete="off"
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker1"
-                    ></mat-datepicker-toggle>
+                    <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly name="date"
+                      formControlName="date" [matDatepicker]="picker1" autocomplete="off" />
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedNewRegime']
                           .get('date')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
@@ -242,112 +172,73 @@
               <hr />
             </div>
 
-            <div
-              formGroupName="everOptedOutOfNewRegime"
-              *ngIf="
+            <div formGroupName="everOptedOutOfNewRegime" *ngIf="
                 this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              "
-            >
+              ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   2. Have you ever opted out of New Regime in earlier Years
                 </div>
-                <div
-                  class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
-                >
-                  <mat-radio-group
-                    name="everOptedOutOfNewRegime"
-                    formControlName="everOptedOutOfNewRegime"
-                    (change)="updateRegimeLabels()"
-                    required
-                  >
-                    <mat-radio-button
-                      [value]="true"
-                      style="margin-left: 0px; margin-right: 2px"
-                      labelPosition="before"
-                      >Yes
+                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                  <mat-radio-group name="everOptedOutOfNewRegime" formControlName="everOptedOutOfNewRegime"
+                    (change)="updateRegimeLabels()" required>
+                    <mat-radio-button [value]="true" style="margin-left: 0px; margin-right: 2px"
+                      labelPosition="before">Yes
                     </mat-radio-button>
-                    <mat-radio-button [value]="false" labelPosition="before"
-                      >No</mat-radio-button
-                    >
+                    <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
                   </mat-radio-group>
 
-                  <mat-error
-                    *ngIf="
+                  <mat-error *ngIf="
                       regimeSelectionForm.controls['everOptedOutOfNewRegime']
                         .get('everOptedOutOfNewRegime')
                         .hasError('required') && submitted
-                    "
-                  >
+                    ">
                     Please select an option to continue
                   </mat-error>
                 </div>
               </div>
-              <div
-                class="card__row"
-                *ngIf="
+              <div class="card__row" *ngIf="
                   regimeSelectionForm.controls['everOptedOutOfNewRegime'].get(
                     'everOptedOutOfNewRegime'
                   ).value === true
-                "
-              >
+                ">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">
                     Select Assessment Year :
                   </mat-label>
                   <mat-form-field appearance="outline">
-                    <mat-select
-                      placeholder="Select Assesment Year"
-                      required
-                      name="assessmentYear"
-                      formControlName="assessmentYear"
-                    >
-                      <mat-option
-                        *ngFor="let year of assesssmentYear"
-                        [value]="year.assesssmentYear"
-                      >
+                    <mat-select placeholder="Select Assesment Year" required name="assessmentYear"
+                      formControlName="assessmentYear">
+                      <mat-option *ngFor="let year of assesssmentYear" [value]="year.assesssmentYear">
                         {{ year.assesssmentYear }}
                       </mat-option>
                     </mat-select>
 
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedOutOfNewRegime']
                           .get('assessmentYear')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
-                  <mat-label class="option-label"
-                    >Acknowledgement Number</mat-label
-                  >
+                  <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      maxlength="15"
-                      minlength="15"
+                    <input matInput maxlength="15" minlength="15"
                       (blur)="setFilingDate(regimeSelectionForm.controls['everOptedOutOfNewRegime'])"
-                      name="acknowledgementNumber"
-                      formControlName="acknowledgementNumber"
+                      name="acknowledgementNumber" formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      placeholder="Acknowledgement Number"
-                      digitsOnly
-                      onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                      autocomplete="off"
-                    />
+                      placeholder="Acknowledgement Number" digitsOnly
+                      onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" />
 
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedOutOfNewRegime']
                           .get('acknowledgementNumber')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
@@ -360,29 +251,16 @@
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Date:</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Date of filling"
-                      [max]="fillingMaxDate"
-                      readonly
-                      name="date"
-                      formControlName="date"
-                      [matDatepicker]="picker1"
-                      autocomplete="off"
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker1"
-                    ></mat-datepicker-toggle>
+                    <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly name="date"
+                      formControlName="date" [matDatepicker]="picker1" autocomplete="off" />
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
 
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         regimeSelectionForm.controls['everOptedOutOfNewRegime']
                           .get('date')
                           .hasError('required') || submitted
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
@@ -395,73 +273,48 @@
               <hr />
             </div>
 
-            <div
-              formGroupName="optionForCurrentAY"
-              *ngIf="
+            <div formGroupName="optionForCurrentAY" *ngIf="
                 this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              "
-            >
+              ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   3. Option for current Assessment year
                 </div>
-                <div
-                  class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right"
-                >
-                  <mat-radio-group
-                    name="currentYearRegime"
-                    formControlName="currentYearRegime"
-                    (change)="updateCurrentAYOptions()"
-                  >
-                    <mat-radio-button
-                      [value]="'NEW'"
-                      style="margin-left: 0px; margin-right: 2px"
-                      labelPosition="before"
-                      [disabled]="dueDateOver"
-                      >{{ newRegimeLabel }}
+                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
+                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
+                    (change)="updateCurrentAYOptions()">
+                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before"
+                      [disabled]="dueDateOver">{{ newRegimeLabel }}
                     </mat-radio-button>
                     <mat-radio-button [value]="'OLD'" labelPosition="before">{{
                       oldRegimeLabel
-                    }}</mat-radio-button>
+                      }}</mat-radio-button>
                   </mat-radio-group>
-                  <mat-error
-                    *ngIf="
+                  <mat-error *ngIf="
                       regimeSelectionForm.controls['optionForCurrentAY']
                         .get('currentYearRegime')
                         .hasError('required') && submitted
-                    "
-                  >
+                    ">
                     Please select an option to continue
                   </mat-error>
                 </div>
               </div>
               <div class="card__row" *ngIf="showCurrentAYOptions">
                 <div class="card__col-xs-4">
-                  <mat-label class="option-label"
-                    >Acknowledgement Number</mat-label
-                  >
+                  <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      maxlength="15"
-                      minlength="15"
+                    <input matInput maxlength="15" minlength="15"
                       (blur)="setFilingDate(regimeSelectionForm.controls['optionForCurrentAY'])"
-                      name="acknowledgementNumber"
-                      formControlName="acknowledgementNumber"
+                      name="acknowledgementNumber" formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      placeholder="Acknowledgement Number"
-                      digitsOnly
-                      onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                      autocomplete="off"
-                    />
+                      placeholder="Acknowledgement Number" digitsOnly
+                      onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" />
 
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         this.ITR_JSON.itrType === '3' ||
                         this.ITR_JSON.itrType === '4' ||
                         showCurrentAYOptions
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
@@ -474,28 +327,15 @@
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Date:</mat-label>
                   <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Date of filling"
-                      [max]="fillingMaxDate"
-                      readonly
-                      name="date"
-                      formControlName="date"
-                      [matDatepicker]="picker1"
-                      autocomplete="off"
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker1"
-                    ></mat-datepicker-toggle>
+                    <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly name="date"
+                      formControlName="date" [matDatepicker]="picker1" autocomplete="off" />
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
-                    <mat-error
-                      *ngIf="
+                    <mat-error *ngIf="
                         this.itrType === '3' ||
                         this.itrType === '4' ||
                         showCurrentAYOptions
-                      "
-                    >
+                      ">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
@@ -512,10 +352,7 @@
 
         <form [formGroup]="summaryToolReliefsForm">
           <div class="card__row flex flex-col">
-            <div
-              class="card__col-xs-12 question-label"
-              style="margin-bottom: 10px; background: #eaeaea"
-            >
+            <div class="card__col-xs-12 question-label" style="margin-bottom: 10px; background: #eaeaea">
               <strong> Summary Tool Fields </strong>
               <mat-label>Only Applicable if you have uploaded a Json</mat-label>
             </div>
@@ -526,72 +363,42 @@
               <div class="card__col-xs-3">
                 <mat-label>Section 89</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="section89"
-                    formControlName="section89"
-                    placeholder="Relief under section89"
-                    digitsOnly
-                  />
+                  <input matInput name="section89" formControlName="section89" placeholder="Relief under section89"
+                    digitsOnly />
                 </mat-form-field>
               </div>
             </div>
-            <div
-              *ngIf="
+            <div *ngIf="
                 summaryToolReliefsForm.get('section89').value &&
                 summaryToolReliefsForm.get('section89').value !== '0'
-              "
-              class="flex"
-              style="margin-left: auto"
-            >
+              " class="flex" style="margin-left: auto">
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Number</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgement"
-                    formControlName="acknowledgement89"
-                    placeholder="Acknowledgement"
-                    maxlength="15"
-                    minlength="15"
-                    digitsOnly
-                    required
-                  />
+                  <input matInput name="acknowledgement" formControlName="acknowledgement89"
+                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgement89')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Date</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgementDate"
-                    formControlName="acknowledgementDate89"
-                    placeholder="Acknowledgement Date"
-                    required
-                    [matDatepicker]="picker1"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="picker1"
-                  ></mat-datepicker-toggle>
+                  <input matInput name="acknowledgementDate" formControlName="acknowledgementDate89"
+                    placeholder="Acknowledgement Date" required [matDatepicker]="picker1" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgementDate89')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
@@ -605,73 +412,42 @@
               </div>
               <div class="card__col-xs-3">
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="section90"
-                    formControlName="section90"
-                    placeholder="Relief under section90"
-                    digitsOnly
-                    readonly
-                  />
+                  <input matInput name="section90" formControlName="section90" placeholder="Relief under section90"
+                    digitsOnly readonly />
                 </mat-form-field>
               </div>
             </div>
-            <div
-              *ngIf="
+            <div *ngIf="
                 summaryToolReliefsForm.get('section90').value &&
                 summaryToolReliefsForm.get('section90').value !== '0'
-              "
-              class="flex"
-              style="margin-left: auto"
-            >
+              " class="flex" style="margin-left: auto">
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Number</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgement"
-                    formControlName="acknowledgement90"
-                    placeholder="Acknowledgement"
-                    maxlength="15"
-                    minlength="15"
-                    digitsOnly
-                    required
-                  />
+                  <input matInput name="acknowledgement" formControlName="acknowledgement90"
+                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgement90')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Date</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgementDate"
-                    formControlName="acknowledgementDate90"
-                    placeholder="Acknowledgement Date"
-                    required
-                    [matDatepicker]="picker1"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="picker1"
-                  ></mat-datepicker-toggle>
+                  <input matInput name="acknowledgementDate" formControlName="acknowledgementDate90"
+                    placeholder="Acknowledgement Date" required [matDatepicker]="picker1" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgementDate90')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
@@ -683,73 +459,42 @@
               <div class="card__col-xs-9 question-label">3. Section 91</div>
               <div class="card__col-xs-3">
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="section91"
-                    formControlName="section91"
-                    placeholder="Relief under section91"
-                    digitsOnly
-                    readonly
-                  />
+                  <input matInput name="section91" formControlName="section91" placeholder="Relief under section91"
+                    digitsOnly readonly />
                 </mat-form-field>
               </div>
             </div>
-            <div
-              *ngIf="
+            <div *ngIf="
                 summaryToolReliefsForm.get('section91').value &&
                 summaryToolReliefsForm.get('section91').value !== '0'
-              "
-              class="flex"
-              style="margin-left: auto"
-            >
+              " class="flex" style="margin-left: auto">
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Number</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgement"
-                    formControlName="acknowledgement91"
-                    placeholder="Acknowledgement"
-                    maxlength="15"
-                    minlength="15"
-                    digitsOnly
-                    required
-                  />
+                  <input matInput name="acknowledgement" formControlName="acknowledgement91"
+                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgement91')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Date</mat-label>
                 <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="acknowledgementDate"
-                    formControlName="acknowledgementDate91"
-                    placeholder="Acknowledgement Date"
-                    required
-                    [matDatepicker]="picker1"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="picker1"
-                  ></mat-datepicker-toggle>
+                  <input matInput name="acknowledgementDate" formControlName="acknowledgementDate91"
+                    placeholder="Acknowledgement Date" required [matDatepicker]="picker1" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
+                <mat-error *ngIf="
                     summaryToolReliefsForm
                       .get('acknowledgementDate91')
                       .hasError('required')
-                  "
-                >
+                  ">
                   In order to claim relief, please enter the required fields
                 </mat-error>
               </div>
@@ -757,373 +502,372 @@
             <hr />
           </div>
         </form>
-        <div class="question-label"
-              style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
-              <strong> Capital gain inter/Intra headset off and quarterwise bifurcation </strong>
-              <mat-label><b>Note:</b> Calculations are according to the Old regime(by default) please select regime and save the page.<br>
-                 Come back again to check calculations according to the selected regime.</mat-label>
+        <div class="question-label" style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+          <strong> Capital gain inter/Intra headset off and quarterwise bifurcation </strong>
+          <mat-label><b>Note:</b> Calculations are according to the Old regime(by default) please select regime and save
+            the page.<br>
+            Come back again to check calculations according to the selected regime.</mat-label>
         </div>
 
         <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead style="text-align: center;">
-            <tr class="table-head">
-              <th rowspan="2" colspan="2" class="th-positon-relative">Head of income</th>
-              <th rowspan="2">Income of<br> current year<br> (1)</th>
-              <th colspan="2">Long term loss of
-                the <br>current year set off</th>
-              <th colspan="2">Short Term loss of
-                the <br>current year set off</th>
-              <th rowspan="2">Current year’s <br>Income remaining <br>after set off<br>
-                (6)= 1-2-3-4-5</th>
-              <th colspan="2">Current Year's <br>Inter Head Set off<br>
-                (7)</th>
-              <th colspan="2">Past year's <br>losses to be set off<br>
-                (8)</th>
-              <th rowspan="2">Taxable Income <br>after set off<br>
-                (9)=6-7(i)-7(ii)-8(i)-8(ii)
+          <table class="table table-bordered">
+            <thead style="text-align: center;">
+              <tr class="table-head">
+                <th rowspan="2" colspan="2" class="th-positon-relative">Head of income</th>
+                <th rowspan="2">Income of<br> current year<br> (1)</th>
+                <th colspan="2">Long term loss of
+                  the <br>current year set off</th>
+                <th colspan="2">Short Term loss of
+                  the <br>current year set off</th>
+                <th rowspan="2">Current year’s <br>Income remaining <br>after set off<br>
+                  (6)= 1-2-3-4-5</th>
+                <th colspan="2">Current Year's <br>Inter Head Set off<br>
+                  (7)</th>
+                <th colspan="2">Past year's <br>losses to be set off<br>
+                  (8)</th>
+                <th rowspan="2">Taxable Income <br>after set off<br>
+                  (9)=6-7(i)-7(ii)-8(i)-8(ii)
                 </th>
-            </tr>
+              </tr>
+              <tr class="table-head">
+                <th>
+                  10%<br>
+                  (2)
+                </th>
+                <th>
+                  20%<br>
+                  (3)
+                </th>
+                <th>
+                  15%<br>
+                  (4)
+                </th>
+                <th>
+                  Applicable rate<br>
+                  (5)
+                </th>
+                <th>
+                  House proprty<br>
+                  (i)
+                </th>
+                <th>
+                  Busines and<br> profession
+                  (ii)
+                </th>
+                <th>
+                  Long Term<br>(i)
+                </th>
+                <th>
+                  Short Term<br>(ii)
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-bold-center">
+              <tr>
+                <td colspan="2">Losses to be settoff
+                </td>
+                <td>
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff10Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff20Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoff15Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoffAppRate)}}
+                </td>
+                <td>
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearHpLoss)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearBusinessLoss)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalLTCGLoss)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalSTCGLoss)}}
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td rowspan="2">Long term
+                </td>
+                <td>10%
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearIncome)}}
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.ltclSetOff20Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoff15Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoffAppRate)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearCapitalGain)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.hpLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.businessLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg10Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg10Per)}}
+                </td>
+                <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg10Per)}}
+                </td>
+              </tr>
+              <tr>
+                <td>20%
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearIncome)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.ltclSetOff10Per)}}
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoff15Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoffAppRate)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearCapitalGain)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.hpLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.businessLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg20Per)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg20Per)}}
+                </td>
+                <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg20Per)}}
+                </td>
+              </tr>
+              <tr>
+                <td rowspan="2">Short Term
+                </td>
+                <td>15%
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearIncome)}}
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.stclSetoffAppRate)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearCapitalGain)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.hpLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.businessLossSetoff)}}
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcg15Per)}}
+                </td>
+                <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcg15Per)}}
+                </td>
+              </tr>
+              <tr>
+                <td>Applicable Rate
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearIncome)}}
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.stclSetoff15Per)}}
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearCapitalGain)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.hpLossSetoff)}}
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.businessLossSetoff)}}
+                </td>
+                <td>NA
+                </td>
+                <td>
+                  {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgAppRate)}}
+                </td>
+                <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcgAppRate)}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+
+        <div class="question-label" style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+          <strong> Quarterwise breakup of column (9) </strong>
+        </div>
+        <table class="table table-bordered">
+          <thead>
             <tr class="table-head">
-              <th>
-                10%<br>
-                (2)
-              </th>
-              <th>
-                20%<br>
-                (3)
-              </th>
-              <th>
-                15%<br>
-                (4)
-              </th>
-              <th>
-                Applicable rate<br>
-                (5)
-              </th>
-              <th>
-                House proprty<br>
-                (i)
-              </th>
-              <th>
-                Busines and<br> profession
-                (ii)
-              </th>
-              <th>
-                Long Term<br>(i)
-              </th>
-              <th>
-                Short Term<br>(ii)
-              </th>
+              <th>Sr. No</th>
+              <th>Type of Capital Gain</th>
+              <th>Upto 15 Jun</th>
+              <th>16 Jun -15 Sep</th>
+              <th>16 Sep - 15 Dec</th>
+              <th>16 Dec - 15 Mar</th>
+              <th>16 Mar - 31 Mar</th>
             </tr>
           </thead>
-          <tbody class="text-bold-center">
+          <tbody>
             <tr>
-              <td colspan="2">Losses to be settoff
+              <td>1
+              </td>
+              <td> Short-term capital gain at 15%
               </td>
               <td>
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15PerUpto15Jun)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff10Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16JunTo15Sep)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff20Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16SepTo15Dec)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoff15Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16DecTo15Mar)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoffAppRate)}}
-              </td>
-              <td>
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearHpLoss)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearBusinessLoss)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalLTCGLoss)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalSTCGLoss)}}
-              </td>
-              <td>
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16MarTo31Mar)}}
               </td>
             </tr>
             <tr>
-              <td rowspan="2">Long term
+              <td>2
               </td>
-              <td>10%
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearIncome)}}
-              </td>
-              <td>NA
+              <td>Short-term capital gain at Applicable rate
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.ltclSetOff20Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRateUpto15Jun)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoff15Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16JunTo15Sep)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoffAppRate)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16SepTo15Dec)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearCapitalGain)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16DecTo15Mar)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.hpLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.businessLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg10Per)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg10Per)}}
-              </td>
-              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg10Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16MarTo31Mar)}}
               </td>
             </tr>
             <tr>
-              <td>20%
+              <td>3
+              </td>
+              <td>Long Term Capital gain at 10%
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearIncome)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10PerUpto15Jun)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.ltclSetOff10Per)}}
-              </td>
-              <td>NA
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16JunTo15Sep)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoff15Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16SepTo15Dec)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoffAppRate)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16DecTo15Mar)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearCapitalGain)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.hpLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.businessLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg20Per)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg20Per)}}
-              </td>
-              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg20Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16MarTo31Mar)}}
               </td>
             </tr>
             <tr>
-              <td rowspan="2">Short Term
+              <td>4
               </td>
-              <td>15%
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearIncome)}}
+              <td>Long Term Capital gain at 20%
               </td>
               <td>
-                0
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20PerUpto15Jun)}}
               </td>
               <td>
-                0
-              </td>
-              <td>NA
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16JunTo15Sep)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.stclSetoffAppRate)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16SepTo15Dec)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearCapitalGain)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16DecTo15Mar)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.hpLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.businessLossSetoff)}}
-              </td>
-              <td>NA
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcg15Per)}}
-              </td>
-              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcg15Per)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16MarTo31Mar)}}
               </td>
             </tr>
             <tr>
-              <td>Applicable Rate
+              <td>5
+              </td>
+              <td>VDA 30%
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearIncome)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30PerUpto15Jun)}}
               </td>
               <td>
-                0
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16JunTo15Sep)}}
               </td>
               <td>
-                0
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16SepTo15Dec)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.stclSetoff15Per)}}
-              </td>
-              <td>NA
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16DecTo15Mar)}}
               </td>
               <td>
-                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearCapitalGain)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.hpLossSetoff)}}
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.businessLossSetoff)}}
-              </td>
-              <td>NA
-              </td>
-              <td>
-                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgAppRate)}}
-              </td>
-              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcgAppRate)}}
+                {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16MarTo31Mar)}}
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <hr />
-
-      <div class="question-label"
-      style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
-      <strong> Quarterwise breakup of column (9) </strong>
-      </div>
-      <table class="table table-bordered">
-        <thead>
-          <tr class="table-head">
-            <th>Sr. No</th>
-            <th>Type of Capital Gain</th>
-            <th>Upto 15 Jun</th>
-            <th>16 Jun -15 Sep</th>
-            <th>16 Sep - 15 Dec</th>
-            <th>16 Dec - 15 Mar</th>
-            <th>16 Mar - 31 Mar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1
-            </td>
-            <td> Short-term capital gain at 15%
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15PerUpto15Jun)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16JunTo15Sep)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16SepTo15Dec)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16DecTo15Mar)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcg15Per16MarTo31Mar)}}
-            </td>
-          </tr>
-          <tr>
-            <td>2
-            </td>
-            <td>Short-term capital gain at Applicable rate
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRateUpto15Jun)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16JunTo15Sep)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16SepTo15Dec)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16DecTo15Mar)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.stcgAppRate16MarTo31Mar)}}
-            </td>
-          </tr>
-          <tr>
-            <td>3
-            </td>
-            <td>Long Term Capital gain at 10%
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10PerUpto15Jun)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16JunTo15Sep)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16SepTo15Dec)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16DecTo15Mar)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg10Per16MarTo31Mar)}}
-            </td>
-          </tr>
-          <tr>
-            <td>4
-            </td>
-            <td>Long Term Capital gain at 20%
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20PerUpto15Jun)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16JunTo15Sep)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16SepTo15Dec)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16DecTo15Mar)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.ltcg20Per16MarTo31Mar)}}
-            </td>
-          </tr>
-          <tr>
-            <td>5
-            </td>
-            <td>VDA 30%
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30PerUpto15Jun)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16JunTo15Sep)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16SepTo15Dec)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16DecTo15Mar)}}
-            </td>
-            <td>
-              {{utilsService.currencyFormatter(cgQuarterWiseBreakUp.vda30Per16MarTo31Mar)}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <hr />
+        <hr />
       </div>
     </div>
   </div>

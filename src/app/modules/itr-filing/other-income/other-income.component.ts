@@ -197,12 +197,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   agriIncFormGroup: FormGroup;
   agriIncFormArray: FormArray;
   selectedIndexes: number[] = [];
+  PREV_ITR_JSON: any;
 
   constructor(
     public utilsService: UtilsService,
     public fb: FormBuilder,
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
   ngOnInit() {

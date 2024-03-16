@@ -74,6 +74,7 @@ export class HousePropertyComponent implements OnInit {
   storedIndex: any;
   storedValue: String;
   selectedIndexes: number[] = [];
+  PREV_ITR_JSON: any;
 
   constructor(
     private fb: FormBuilder,
@@ -83,6 +84,7 @@ export class HousePropertyComponent implements OnInit {
     public matDialog: MatDialog,
     private userMsService: UserMsService
   ) {
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -696,6 +698,13 @@ export class HousePropertyComponent implements OnInit {
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
+
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
+      this.housePropertyForm.controls[
+          'annualRentReceived'
+          ].updateValueAndValidity();
     } else {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -726,6 +735,15 @@ export class HousePropertyComponent implements OnInit {
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
+
+      this.housePropertyForm.controls['annualRentReceived'].setValidators([
+        Validators.required,
+        Validators.pattern(AppConstants.numericRegex),
+        Validators.min(1),
+      ]);
+      this.housePropertyForm.controls[
+          'annualRentReceived'
+          ].updateValueAndValidity();
     }
   }
 
@@ -994,6 +1012,9 @@ export class HousePropertyComponent implements OnInit {
         hp.loans = [];
       }
 
+      if(!this.Copy_ITR_JSON.houseProperties){
+        this.Copy_ITR_JSON.houseProperties = [];
+      }
       // this.Copy_ITR_JSON.houseProperties = [];
       // this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
@@ -1043,6 +1064,7 @@ export class HousePropertyComponent implements OnInit {
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
     if (typeOfHp === 'SOP') {
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
       this.housePropertyForm.controls[
         'annualRentReceived'
@@ -1503,7 +1525,7 @@ export class HousePropertyComponent implements OnInit {
   jsonAmt80ee: any;
   jsonAmt80eea: any;
   calculateInterestOrDeduction() {
-    
+
     let interest = this.housePropertyForm?.controls['interestAmount'];
     let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
     let eligible80EEAmount =

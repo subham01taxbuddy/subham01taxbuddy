@@ -555,4 +555,8 @@
     <app-side-summary-panel *ngIf="bondType === 'indexedBonds'" type="indexedBonds"></app-side-summary-panel>
     <app-side-summary-panel *ngIf="bondType === 'listedBonds'" type="listedBonds"></app-side-summary-panel>
     <app-side-summary-panel *ngIf="bondType === 'unlistedBonds'" type="unlistedBonds"></app-side-summary-panel>
+
+    <app-previous-summary-panel *ngIf="bondType === 'indexedBonds' && PREV_ITR_JSON" type="indexedBonds"></app-previous-summary-panel>
+    <app-previous-summary-panel *ngIf="bondType === 'listedBonds' && PREV_ITR_JSON" type="listedBonds"></app-previous-summary-panel>
+    <app-previous-summary-panel *ngIf="bondType === 'unlistedBonds' && PREV_ITR_JSON" type="unlistedBonds"></app-previous-summary-panel>
 </div>

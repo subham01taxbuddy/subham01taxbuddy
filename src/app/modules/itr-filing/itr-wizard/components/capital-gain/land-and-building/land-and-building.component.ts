@@ -45,6 +45,7 @@ export class LandAndBuildingComponent
   propertiesForm: FormGroup;
   properties = [];
   data: any;
+  PREV_ITR_JSON: any;
   constructor(
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
@@ -53,6 +54,7 @@ export class LandAndBuildingComponent
     private location: Location
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.labData = this.ITR_JSON.capitalGain?.filter(
