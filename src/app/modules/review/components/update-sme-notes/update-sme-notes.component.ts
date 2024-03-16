@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -14,13 +14,13 @@ declare function we_track(key: string, value: any);
   styleUrls: ['./update-sme-notes.component.scss']
 })
 export class UpdateSmeNotesComponent implements OnInit {
-  smeReviewForm: FormGroup;
-  updateStatusForm: FormGroup;
+  smeReviewForm: UntypedFormGroup;
+  updateStatusForm: UntypedFormGroup;
   sentimentList = AppConstants.sentimentList;
   statusList: any[] = AppConstants.statusList;
   loading: boolean;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,

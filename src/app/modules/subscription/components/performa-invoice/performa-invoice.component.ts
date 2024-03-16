@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -66,15 +66,15 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    status: new FormControl(''),
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    txbdyInvoiceId: new FormControl(''),
-    name: new FormControl(''),
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    assessmentYear: new UntypedFormControl('2023-24'),
+    startDate: new UntypedFormControl('', [Validators.required]),
+    endDate: new UntypedFormControl('', [Validators.required]),
+    status: new UntypedFormControl(''),
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    txbdyInvoiceId: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
   });
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
@@ -135,7 +135,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   constructor(
     private reviewService: ReviewService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public datePipe: DatePipe,
     private utilService: UtilsService,
     private reportService: ReportService,
@@ -299,30 +299,30 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
 
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as FormControl;
+    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as FormControl;
+    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as FormControl;
+    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
   }
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as FormControl;
+    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
   }
 
   get txbdyInvoiceId() {
-    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
+    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as UntypedFormControl;
   }
   get name() {
-    return this.invoiceFormGroup.controls['name'] as FormControl;
+    return this.invoiceFormGroup.controls['name'] as UntypedFormControl;
   }
 
 

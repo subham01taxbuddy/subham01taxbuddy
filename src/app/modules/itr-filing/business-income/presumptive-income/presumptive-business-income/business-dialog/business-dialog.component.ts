@@ -1,6 +1,6 @@
 import { NewPresumptiveIncomes } from './../../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -15,7 +15,7 @@ export class BusinessDialogComponent implements OnInit {
   natureOfBusinessDropdownAll: any;
   natureOfBusinessDropdown: any;
   loading = false;
-  businessForm: FormGroup;
+  businessForm: UntypedFormGroup;
   amountSix: number = 0;
   maxSixAmt: number = 0;
   amountEight: number = 0;
@@ -23,7 +23,7 @@ export class BusinessDialogComponent implements OnInit {
   constructor(
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public dialogRef: MatDialogRef<BusinessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {

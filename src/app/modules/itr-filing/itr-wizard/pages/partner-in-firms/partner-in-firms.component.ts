@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
-  FormArray,
-  FormBuilder,
+  UntypedFormArray,
+  UntypedFormBuilder,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -18,12 +18,12 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class PartnerInFirmsComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter();
   loading: boolean = false;
-  partnerInFirmForm: FormGroup;
+  partnerInFirmForm: UntypedFormGroup;
   config: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
 
-  constructor(public fb: FormBuilder, private utilsService: UtilsService) {
+  constructor(public fb: UntypedFormBuilder, private utilsService: UtilsService) {
 
   }
 
@@ -56,23 +56,23 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   get firmArray() {
-    return <FormArray>this.partnerInFirmForm?.get('firmArray');
+    return <UntypedFormArray>this.partnerInFirmForm?.get('firmArray');
   }
 
   editFirmForm(index) {
-    let formArray = this.partnerInFirmForm.controls['firmArray'] as FormArray;
+    let formArray = this.partnerInFirmForm.controls['firmArray'] as UntypedFormArray;
     formArray.controls[index].enable();
   }
 
   addMoreFirmData(item?) {
-    const firmArray = <FormArray>this.partnerInFirmForm?.get('firmArray');
+    const firmArray = <UntypedFormArray>this.partnerInFirmForm?.get('firmArray');
 
     firmArray.push(this.createFirmForm(firmArray.length, item));
 
     console.log('array', firmArray);
   }
 
-  createFirmForm(srn?, item?): FormGroup {
+  createFirmForm(srn?, item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : 'N'],
       name: [item ? item.name : ''],
@@ -91,12 +91,12 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   addFirmDetails(title, mode, i) {
-    const firmArray = <FormArray>this.partnerInFirmForm.get('firmArray');
+    const firmArray = <UntypedFormArray>this.partnerInFirmForm.get('firmArray');
     if (firmArray.valid || firmArray === null) {
       this.addMoreFirmData();
     } else {
       firmArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -105,10 +105,10 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   firmSelected() {
-    const improve = <FormArray>this.partnerInFirmForm.controls['firmArray'];
+    const improve = <UntypedFormArray>this.partnerInFirmForm.controls['firmArray'];
     return (
       improve.controls.filter(
-        (item: FormGroup) => item.controls['hasEdit'].value === true
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -122,9 +122,9 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   deleteFirms() {
-    let formArray = this.partnerInFirmForm.controls['firmArray'] as FormArray;
+    let formArray = this.partnerInFirmForm.controls['firmArray'] as UntypedFormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -138,7 +138,7 @@ export class PartnerInFirmsComponent implements OnInit {
 
     if (this.partnerInFirmForm.valid) {
       console.log('Save form here', this.partnerInFirmForm.getRawValue());
-      const firmsArray = <FormArray>this.partnerInFirmForm.get('firmArray');
+      const firmsArray = <UntypedFormArray>this.partnerInFirmForm.get('firmArray');
       this.Copy_ITR_JSON.partnerFirms = firmsArray.getRawValue();
 
       this.loading = true;

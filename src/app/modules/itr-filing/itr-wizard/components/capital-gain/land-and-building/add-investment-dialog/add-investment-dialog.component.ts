@@ -1,6 +1,6 @@
 import { result } from 'lodash';
 import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { GridOptions } from 'ag-grid-community';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -35,11 +35,11 @@ export const MY_FORMATS = {
 })
 export class AddInvestmentDialogComponent implements OnInit {
 
-  constructor(public fb: FormBuilder, public dialogRef: MatDialogRef<AddInvestmentDialogComponent>, private utilsService: UtilsService, private itrMsService: ItrMsService,
+  constructor(public fb: UntypedFormBuilder, public dialogRef: MatDialogRef<AddInvestmentDialogComponent>, private utilsService: UtilsService, private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     // this.investmentsCallInConstructor([]);
   }
-  investmentForm: FormGroup;
+  investmentForm: UntypedFormGroup;
 
   // InvestSectionDropdown = [
   //   { investmentName: '54', investmentSection: '54' },

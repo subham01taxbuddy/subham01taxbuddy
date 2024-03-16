@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -18,8 +18,8 @@ import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 })
 export class RevenueReportComponent implements OnInit,OnDestroy {
   loading = false;
-  leaderView = new FormControl('');
-  ownerView = new FormControl('');
+  leaderView = new UntypedFormControl('');
+  ownerView = new UntypedFormControl('');
   loggedInSme: any;
   roles: any;
   revenueReport: any;

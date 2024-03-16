@@ -1,6 +1,6 @@
 import { environment } from 'src/environments/environment';
-import { FormBuilder, Validators } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -15,11 +15,11 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   @Input() userDetails: any;
   loading = false;
   selectedOtpOption = "A";
-  validateOtpForm: FormGroup;
+  validateOtpForm: UntypedFormGroup;
   constructor(private itrMsService: ItrMsService,
     private utilsService: UtilsService,
     private router: Router,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
 
   ngOnInit() {

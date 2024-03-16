@@ -19,7 +19,7 @@ import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-upda
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
-        RoleUpdateComponent,BulkStatusUpdateComponent],
+        RoleUpdateComponent, BulkStatusUpdateComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -32,9 +32,7 @@ import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-upda
         NgxPaginationModule,
         TasksModule,
         PagesModule
-    ],
-    entryComponents: [ProfileDialogComponent,
-        RoleUpdateComponent]
+    ]
 })
 
 export class UserManagementModule { }

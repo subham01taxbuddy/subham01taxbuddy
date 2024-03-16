@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -30,7 +30,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class AddClientComponent implements OnInit, OnDestroy {
-  addClientForm: FormGroup;
+  addClientForm: UntypedFormGroup;
   loading = false;
   otpSend: boolean;
   minDate = new Date(1900, 0, 1);
@@ -39,7 +39,7 @@ export class AddClientComponent implements OnInit, OnDestroy {
   headers: any;
   selectedOtpOption = "A";
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     public datePipe: DatePipe,
     private itrMsService: ItrMsService,
     private utilsService: UtilsService,

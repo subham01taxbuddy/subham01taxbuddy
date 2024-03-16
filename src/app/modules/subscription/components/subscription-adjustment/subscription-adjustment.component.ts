@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
@@ -24,7 +24,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   searchAsPrinciple: boolean = false;
   ogStatusList: any = [];
   itrStatus: any = [];
-  assessmentYear = new FormControl('2023-24');
+  assessmentYear = new UntypedFormControl('2023-24');
   clearUserFilter: number;
   roles: any;
   allSubAdjustData: any;

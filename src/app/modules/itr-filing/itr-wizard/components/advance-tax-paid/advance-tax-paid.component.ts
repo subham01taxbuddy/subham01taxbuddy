@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Inject,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -22,7 +22,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
   @Input() isAddAdvance: Number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
-  salaryForm: FormGroup;
+  salaryForm: UntypedFormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -32,7 +32,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
   maxDate: Date;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<AdvanceTaxPaidComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -85,12 +85,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   addSalary() {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     if (salaryArray.valid) {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -104,7 +104,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     });
   }
 
-  createForm(item?): FormGroup {
+  createForm(item?): UntypedFormGroup {
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
     }
@@ -145,7 +145,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
         };
       }
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS = (
-        this.salaryForm.controls['salaryArray'] as FormGroup
+        this.salaryForm.controls['salaryArray'] as UntypedFormGroup
       ).getRawValue();
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
@@ -175,17 +175,17 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <FormArray>this.salaryForm.get('salaryArray');
+    return <UntypedFormArray>this.salaryForm.get('salaryArray');
   }
 
   addMoreSalary(item?) {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
     this.activeIndex = salaryArray.length - 1;
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = this.salaryForm.get('salaryArray') as FormArray;
+    const salaryArray = this.salaryForm.get('salaryArray') as UntypedFormArray;
     salaryArray.removeAt(index);
   }
 
@@ -198,8 +198,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
   activeIndex = 0;
   markActive(index){
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 

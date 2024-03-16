@@ -17,7 +17,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
@@ -44,7 +44,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   itrStatus: any = [];
   filerUserId: any;
   ogStatusList: any = [];
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;

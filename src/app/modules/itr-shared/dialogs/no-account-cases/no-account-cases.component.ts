@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -9,12 +9,12 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./no-account-cases.component.scss']
 })
 export class NoAccountCasesComponent implements OnInit {
-  caseAForm: FormGroup;
-  caseBForm: FormGroup;
-  caseCForm: FormGroup;
+  caseAForm: UntypedFormGroup;
+  caseBForm: UntypedFormGroup;
+  caseCForm: UntypedFormGroup;
   constructor(public dialogRef: MatDialogRef<NoAccountCasesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService) { }
 
   ngOnInit() {

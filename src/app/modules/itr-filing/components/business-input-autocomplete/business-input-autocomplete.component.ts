@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ItrMsService } from "../../../../services/itr-ms.service";
 import { UtilsService } from "../../../../services/utils.service";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 
 @Component({
   selector: 'app-business-input-autocomplete',
@@ -11,7 +11,7 @@ import { FormControl } from "@angular/forms";
 export class BusinessInputAutocompleteComponent implements OnInit, OnChanges {
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  myControl = new FormControl('');
+  myControl = new UntypedFormControl('');
   filteredOptions: any[];
   natureOfBusinessList: any;
   inputSelection = false;

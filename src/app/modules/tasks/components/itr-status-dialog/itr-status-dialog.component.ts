@@ -5,7 +5,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DatePipe } from '@angular/common';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatVerticalStepper } from '@angular/material/stepper';
 import * as moment from 'moment';
@@ -38,8 +38,8 @@ export class ItrStatusDialogComponent implements OnInit {
   isEditIncomeSources: boolean;
   showSubmitBtn: boolean;
   paymentCustomAttributes: any;
-  isInsuranceOpted: FormControl;
-  panNumber: FormControl;
+  isInsuranceOpted: UntypedFormControl;
+  panNumber: UntypedFormControl;
   showConfirmUploadBtn: boolean;
   itrFiledStatusData: any;
   refundProcessData: any = [];
@@ -59,11 +59,11 @@ export class ItrStatusDialogComponent implements OnInit {
   transactionId: any;
   viewer = 'DOC';
   docUrl = '';
-  validateAcOtp: FormControl;
-  validateFpOtp: FormControl;
-  adharOtp: FormControl;
-  bankEvc: FormControl;
-  dematEvc: FormControl;
+  validateAcOtp: UntypedFormControl;
+  validateFpOtp: UntypedFormControl;
+  adharOtp: UntypedFormControl;
+  bankEvc: UntypedFormControl;
+  dematEvc: UntypedFormControl;
   counter = 15;
   showNextOpt: any;
   showAdharEriOtp: boolean;
@@ -80,8 +80,8 @@ export class ItrStatusDialogComponent implements OnInit {
     private itrMsService: ItrMsService,
     public utilsService: UtilsService
   ) {
-    this.panNumber = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
-    this.isInsuranceOpted = new FormControl('true')
+    this.panNumber = new UntypedFormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
+    this.isInsuranceOpted = new UntypedFormControl('true')
   }
 
   ngOnInit() {

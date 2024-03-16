@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {UntypedFormControl, Validators} from "@angular/forms";
 import {UtilsService} from "../../../../services/utils.service";
 import {ItrMsService} from "../../../../services/itr-ms.service";
 import {AppConstants} from "../../constants";
@@ -14,7 +14,7 @@ export class ServiceDropDownComponent implements OnInit {
   loggedInUserRoles:any;
 
   serviceTypes = [];
-  selectedService = new FormControl('', []);
+  selectedService = new UntypedFormControl('', []);
   @Input() fromInvoices : boolean =false;
   constructor(public utilsService: UtilsService,
               private itrMsService: ItrMsService) { }

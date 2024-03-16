@@ -6,7 +6,7 @@ import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 @Component({
   selector: 'app-presumptive-professional-income',
@@ -16,15 +16,15 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  profIncomeForm: FormGroup;
-  profIncomeFormArray: FormArray;
+  profIncomeForm: UntypedFormGroup;
+  profIncomeFormArray: UntypedFormArray;
   loading: boolean;
   amountFifty: number = 0;
   amountFiftyMax: number = 0;
   submitted = false;
   activeIndex: number;
   gridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
   percentage = 0;
   minGrossIncome = (50 / 100) * 50;
@@ -33,7 +33,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -53,7 +53,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.profIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+          this.profIncomeFormArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -78,7 +78,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ngOnInit(): void {
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
       (acIncome) => acIncome.businessType === 'PROFESSIONAL');
-    this.profIncomeFormArray = new FormArray([]);
+    this.profIncomeFormArray = new UntypedFormArray([]);
     let srn = this.profIncomeFormArray.controls.length > 0 ? this.profIncomeFormArray.controls.length : 0;
     this.selectedFormGroup = this.createProfIncomeForm(srn);
     this.activeIndex = -1;
@@ -94,7 +94,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   get getProfIncomeArray() {
-    return <FormArray>this.profIncomeForm.get('profIncomeFormArray');
+    return <UntypedFormArray>this.profIncomeForm.get('profIncomeFormArray');
   }
 
   createProfIncomeForm(index, income?) {
@@ -116,19 +116,19 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   profSelected() {
-    const profIncomeFormArray = <FormArray>(
+    const profIncomeFormArray = <UntypedFormArray>(
       this.profIncomeForm?.get('profIncomeFormArray')
     );
     return (
       profIncomeFormArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
+        (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
       ).length > 0
     );
   }
 
   deleteArray() {
-    let array = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
-    array.controls = array.controls.filter((element) => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <UntypedFormArray>this.profIncomeForm.get('profIncomeFormArray');
+    array.controls = array.controls.filter((element) => !(element as UntypedFormGroup).controls['hasEdit'].value);
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -162,7 +162,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   selection = new SelectionModel<professionalIncome>(true, []);
 
   onContinue() {
-    let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
+    let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).getRawValue();
     let receiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.receipts), 0);
 
     if (receiptsTotal > 5000000) {
@@ -325,12 +325,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     let result = this.selectedFormGroup.getRawValue();
 
     if (this.activeIndex === -1) {
-      let srn = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).length;
+      let srn = (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).length;
       let form = this.createProfIncomeForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).push(form);
+      (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).push(form);
     } else {
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+      (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }
     this.gridOptions.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -342,7 +342,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   editForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-      ((this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+      ((this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculatePresumptive();
     this.activeIndex = i;
   }

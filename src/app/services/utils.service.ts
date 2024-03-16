@@ -13,7 +13,7 @@ import { ItrActionsComponent } from '../modules/shared/components/itr-actions/it
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import { FormArray, FormControl, FormGroup, ValidationErrors, } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, } from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -1353,9 +1353,9 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup, accordionBtnId) {
+  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId) {
     Object.keys(formGroup.controls).forEach((key) => {
-      if (formGroup.get(key) instanceof FormControl) {
+      if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
         if (controlErrors != null) {
           console.log(formGroup);
@@ -1378,12 +1378,12 @@ export class UtilsService {
             return;
           });
         }
-      } else if (formGroup.get(key) instanceof FormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup, accordionBtnId);
-      } else if (formGroup.get(key) instanceof FormArray) {
-        let formArray = formGroup.get(key) as FormArray;
+      } else if (formGroup.get(key) instanceof UntypedFormGroup) {
+        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId);
+      } else if (formGroup.get(key) instanceof UntypedFormArray) {
+        let formArray = formGroup.get(key) as UntypedFormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as FormGroup, accordionBtnId);
+          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId);
         });
       }
     });

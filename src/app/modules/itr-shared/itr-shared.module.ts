@@ -33,8 +33,7 @@ import { PreviousSummaryPanelComponent } from './previous-summary-panel/previous
         SideSummaryPanelComponent,
         PreviousSummaryPanelComponent,
     ],
-    providers: [],
-    entryComponents: [BankDialogComponent, NoAccountCasesComponent]
+    providers: []
 })
 export class ItrSharedModule {
     static forRoot(): ModuleWithProviders<ItrSharedModule> {

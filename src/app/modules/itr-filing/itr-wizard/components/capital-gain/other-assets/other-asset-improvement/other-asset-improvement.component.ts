@@ -6,10 +6,10 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {
-  FormGroup,
-  FormArray,
-  FormControl,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormBuilder,
   Validators,
 } from '@angular/forms';
 import { Input } from '@angular/core';
@@ -34,7 +34,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   Copy_ITR_JSON: ITR_JSON;
   financialyears = [];
   improvementYears = [];
-  isImprovement = new FormControl(false);
+  isImprovement = new UntypedFormControl(false);
   maxPurchaseDate: Date;
   minDate: Date;
   maxDate: Date;
@@ -46,7 +46,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   @Output() onSave = new EventEmitter();
   selectedIndexes: number[] = [];
   constructor(
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService
   ) {
@@ -95,7 +95,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   isImprovementValueChanges() {
     let improvementsArray = this.assetsForm.controls[
       'improvementsArray'
-    ] as FormArray;
+    ] as UntypedFormArray;
 
     this.isImprovement?.valueChanges.subscribe((value) => {
       if (value) {
@@ -186,7 +186,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     this.addMoreOtherAssetsForm();
   }
 
-  assetsForm: FormGroup;
+  assetsForm: UntypedFormGroup;
   assetIndex: number;
   addMoreOtherAssetsForm(index?) {
     this.assetsForm = this.createOtherAssetsForm(
@@ -251,14 +251,14 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       impObj?.forEach((element) => {
         if (element.srn === obj.srn) {
           const improvementsFormGroup = this.createImprovementsArray(obj ? obj.srn : srn, element);
-          (assetsForm.get('improvementsArray') as FormArray).push(
+          (assetsForm.get('improvementsArray') as UntypedFormArray).push(
             improvementsFormGroup
           );
         }
       });
     } else {
       const improvementsFormGroup = this.createImprovementsArray(obj ? obj.srn : srn);
-      (assetsForm.get('improvementsArray') as FormArray).push(
+      (assetsForm.get('improvementsArray') as UntypedFormArray).push(
         improvementsFormGroup
       );
     }
@@ -289,12 +289,12 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   addImprovementsArray() {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
-    ] as FormArray;
+    ] as UntypedFormArray;
     let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
     let srn = obj ? obj.srn : null;
     if (improvementsArray.valid) {
       const improvementsFormGroup = this.createImprovementsArray(this.objSrn);
-      (this.assetsForm.get('improvementsArray') as FormArray).push(
+      (this.assetsForm.get('improvementsArray') as UntypedFormArray).push(
         improvementsFormGroup
       );
     } else {
@@ -307,7 +307,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   deleteImprovementsArray() {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
-    ] as FormArray;
+    ] as UntypedFormArray;
 
     for (let i = improvementsArray?.controls?.length - 1; i >= 0; i--) {
       if (this.selectedIndexes.includes(i)) {
@@ -406,7 +406,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   calculateCoiIndexation(gainType) {
     let improvementsArray = this.assetsForm.controls[
       'improvementsArray'
-    ] as FormArray;
+    ] as UntypedFormArray;
     if (gainType === 'LONG') {
       let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
       let sellFinancialYear =
@@ -417,7 +417,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       // for improvements indexation
       if (improvementsArray?.controls?.length > 0) {
         improvementsArray?.controls?.forEach((item) => {
-          let element = (item as FormGroup).controls;
+          let element = (item as UntypedFormGroup).controls;
           let costOfImprovement = parseFloat(
             element['costOfImprovement'].value
           );
@@ -452,7 +452,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       }
     } else {
       improvementsArray?.controls?.forEach((item) => {
-        let element = (item as FormGroup).controls;
+        let element = (item as UntypedFormGroup).controls;
         element['indexCostOfImprovement'].setValue(
           element['costOfImprovement'].value
         );
@@ -572,7 +572,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   saveCg() {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
-    ] as FormArray;
+    ] as UntypedFormArray;
 
     const coiArray = [
       'financialYearOfImprovement',
@@ -582,7 +582,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
 
     if (this.isImprovement.value && improvementsArray?.controls?.length > 0) {
       improvementsArray?.controls?.forEach((item) => {
-        let element = (item as FormGroup).controls;
+        let element = (item as UntypedFormGroup).controls;
 
         coiArray.forEach((item) => {
           element[item]?.setValidators(Validators.required);
@@ -592,7 +592,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     } else {
       if (improvementsArray?.controls?.length > 0) {
         improvementsArray?.controls?.forEach((item) => {
-          let element = (item as FormGroup).controls;
+          let element = (item as UntypedFormGroup).controls;
 
           coiArray.forEach((item) => {
             element[item]?.clearValidators();
@@ -687,7 +687,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   get getImprovementsArray() {
     const improvementsArray = this.assetsForm.get(
       'improvementsArray'
-    ) as FormArray;
+    ) as UntypedFormArray;
     return improvementsArray;
   }
 

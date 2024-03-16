@@ -1,6 +1,6 @@
 import { UtilsService } from './../../../../services/utils.service';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -11,10 +11,10 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./bank-dialog.component.scss']
 })
 export class BankDialogComponent implements OnInit {
-  bankDetailsForm: FormGroup;
+  bankDetailsForm: UntypedFormGroup;
   constructor(public dialogRef: MatDialogRef<BankDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService) { }
 
   ngOnInit() {
