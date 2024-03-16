@@ -709,7 +709,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
         partnerType : partnerType || this.smeObj.partnerType,
         skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
-        partnerDetails: this.smeObj.partnerDetails
+        partnerDetails: this.smeObj.partnerDetails,
+        inactivityTimeInMinutes:15
       };
 
       finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
@@ -724,6 +725,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
       finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
       finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
+      finalReq.partnerDetails['gstUrl'] = this.urls['gstinInput'] || '',
       finalReq.partnerDetails['partnerType'] = partnerType || ''
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
