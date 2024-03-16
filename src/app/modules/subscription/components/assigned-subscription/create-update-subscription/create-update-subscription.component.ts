@@ -12,7 +12,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { Location } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ActivatedRoute, Router } from '@angular/router';

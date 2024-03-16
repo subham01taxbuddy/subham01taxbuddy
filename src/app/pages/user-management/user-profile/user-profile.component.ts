@@ -8,7 +8,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstMsService } from 'src/app/services/gst-ms.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';

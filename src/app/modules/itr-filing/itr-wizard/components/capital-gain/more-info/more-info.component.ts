@@ -2,7 +2,7 @@ import { result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { GridOptions, IsColumnFuncParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON, PastYearLosses } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';

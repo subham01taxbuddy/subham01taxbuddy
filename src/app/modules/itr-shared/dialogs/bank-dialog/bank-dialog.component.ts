@@ -2,7 +2,7 @@ import { UtilsService } from './../../../../services/utils.service';
 import { UntypedFormBuilder, FormControl, Validators } from '@angular/forms';
 import { UntypedFormGroup } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({

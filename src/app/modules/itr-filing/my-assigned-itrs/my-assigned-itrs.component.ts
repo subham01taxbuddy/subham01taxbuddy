@@ -7,7 +7,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Router } from '@angular/router';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import * as moment from 'moment'
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { environment } from 'src/environments/environment';

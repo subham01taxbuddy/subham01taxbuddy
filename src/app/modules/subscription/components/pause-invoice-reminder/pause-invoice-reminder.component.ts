@@ -1,7 +1,7 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { formatDate } from '@angular/common';

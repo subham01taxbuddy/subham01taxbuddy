@@ -5,7 +5,7 @@ import { ToastMessageService } from "../../services/toast-message.service";
 import { UtilsService } from "../../services/utils.service";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { MatDialog } from "@angular/material/dialog";
+import { MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog";
 import { ItrMsService } from "../../services/itr-ms.service";
 import { DatePipe, formatDate } from "@angular/common";
 import { UserNotesComponent } from "../shared/components/user-notes/user-notes.component";

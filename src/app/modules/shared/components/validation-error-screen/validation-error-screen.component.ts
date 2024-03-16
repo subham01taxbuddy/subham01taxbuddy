@@ -4,7 +4,7 @@ import { Schedules } from '../../interfaces/schedules';
 import { ITR_JSON } from '../../interfaces/itr-input.interface';
 import { UpdateManualFilingDialogComponent } from '../update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
 @Component({

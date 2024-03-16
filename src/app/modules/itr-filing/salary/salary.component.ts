@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { BifurcationComponent } from './bifurcation/bifurcation.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from "../../shared/components/confirm-dialog/confirm-dialog.component";

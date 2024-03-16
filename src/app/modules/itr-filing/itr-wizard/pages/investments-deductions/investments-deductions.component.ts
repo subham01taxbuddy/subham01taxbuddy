@@ -4,7 +4,7 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Router } from '@angular/router';

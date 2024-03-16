@@ -7,7 +7,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 declare let $: any;
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ListedUnlistedDialogComponent } from '../listed-unlisted-dialog/listed-unlisted-dialog.component';
 

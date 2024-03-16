@@ -17,7 +17,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -26,7 +26,7 @@ import {GridApi, GridOptions, RowGroupingDisplayType} from 'ag-grid-community';
 import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
 import { AddAssetsComponent } from './add-assets/add-assets.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatLegacyPaginator as MatPaginator} from "@angular/material/legacy-paginator";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();

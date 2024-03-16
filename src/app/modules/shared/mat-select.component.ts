@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
-import { MatSelect } from '@angular/material/select';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
 
 @Component({
     selector: "app-radio-cell",

@@ -5,7 +5,7 @@ import { AppConstants } from '../../../../shared/constants';
 import { ITR_JSON } from '../../../../shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, AfterContentChecked } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
 import { KommunicateDialogComponent } from '../kommunicate-dialog/kommunicate-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';

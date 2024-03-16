@@ -3,10 +3,10 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { Router } from '@angular/router';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialog,
-} from '@angular/material/dialog';
+  MatLegacyDialogRef as MatDialogRef,
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialog as MatDialog,
+} from '@angular/material/legacy-dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';

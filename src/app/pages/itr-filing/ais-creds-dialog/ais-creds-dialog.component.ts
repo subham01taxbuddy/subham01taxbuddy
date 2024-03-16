@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {UserMsService} from "../../../services/user-ms.service";
 import * as CryptoJS from "crypto-js";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
 import {UtilsService} from "../../../services/utils.service";
 
 @Component({

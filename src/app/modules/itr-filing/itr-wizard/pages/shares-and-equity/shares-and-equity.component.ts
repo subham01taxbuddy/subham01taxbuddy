@@ -26,7 +26,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { TotalCg } from 'src/app/services/itr-json-helper-service';
 import * as moment from 'moment';

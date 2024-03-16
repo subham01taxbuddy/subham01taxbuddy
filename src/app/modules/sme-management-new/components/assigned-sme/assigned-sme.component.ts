@@ -1,7 +1,7 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import * as moment from 'moment';

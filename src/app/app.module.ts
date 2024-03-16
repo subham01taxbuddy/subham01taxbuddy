@@ -21,7 +21,7 @@ import { ItrValidationService } from './services/itr-validation.service';
 import { TokenInterceptor } from './services/token-interceptor';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { AngularFireModule } from "@angular/fire/compat";

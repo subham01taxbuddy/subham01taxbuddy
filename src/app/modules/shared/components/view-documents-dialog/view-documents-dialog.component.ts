@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit,Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ActivatedRoute } from '@angular/router';
 import { GoogleDriveService } from 'src/app/services/google-drive.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';

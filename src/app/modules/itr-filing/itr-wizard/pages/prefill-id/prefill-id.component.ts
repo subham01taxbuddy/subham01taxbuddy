@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
 import { Subscription } from 'rxjs';

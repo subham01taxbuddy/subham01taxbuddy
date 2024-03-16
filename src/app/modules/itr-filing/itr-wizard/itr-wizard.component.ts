@@ -21,7 +21,7 @@ import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { CapitalGainComponent } from './components/capital-gain/capital-gain.component';
 import { AllBusinessIncomeComponent } from './pages/all-business-income/all-business-income.component';
 import { UserNotesComponent } from '../../shared/components/user-notes/user-notes.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';

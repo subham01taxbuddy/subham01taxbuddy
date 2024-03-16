@@ -6,7 +6,7 @@ import { Component, Input, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({

@@ -4,7 +4,7 @@ import { AppConstants } from '../../../../shared/constants';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
 import { UtilsService } from '../../../../../services/utils.service';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ViewDocumentsDialogComponent } from 'src/app/modules/shared/components/view-documents-dialog/view-documents-dialog.component';
 
 @Component({
