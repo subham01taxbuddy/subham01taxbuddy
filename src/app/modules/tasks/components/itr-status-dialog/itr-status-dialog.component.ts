@@ -7,8 +7,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { MatVerticalStepper } from '@angular/material/stepper';
 import * as moment from 'moment';
+import { MatStepper } from '@angular/material/stepper';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-itr-status-dialog',
@@ -16,7 +16,7 @@ declare function we_track(key: string, value: any);
   styleUrls: ['./itr-status-dialog.component.scss']
 })
 export class ItrStatusDialogComponent implements OnInit {
-  @ViewChild('stepper') stepper: MatVerticalStepper;
+  @ViewChild('stepper') stepper: MatStepper;
   allIncomeSources = [
     { key: 'Salary', value: 'SALARY', selected: false },
     { key: 'House Property', value: 'HOUSE_PROPERTY', selected: false },
