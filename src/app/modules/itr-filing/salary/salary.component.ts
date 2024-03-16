@@ -1321,7 +1321,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       if (totalAllowExempt > this.grossSalary) {
         debugger
         this.utilsService.showSnackBar(
-          'Allowances total cannot exceed the salary as per salary 17(1)'
+          'Allowances total cannot exceed gross salary'
         );
         return;
       }
