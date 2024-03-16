@@ -725,6 +725,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
       finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
       finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
+      finalReq.partnerDetails['gstUrl'] = this.urls['gstinInput'] || '',
       finalReq.partnerDetails['partnerType'] = partnerType || ''
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
