@@ -256,9 +256,9 @@
             <div class="card" style="margin-top: 10px;">
               <b style="font-size: 18px">Roles: </b>
               <section class="example-section" [formGroup]="roles">
-                <p><mat-checkbox (change)="onCheckboxChange(1)" [formControl]="filerIndividual">Filer-Individual</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(1); onChange(1)" [formControl]="filerIndividual">Filer-Individual</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox (change)="onCheckboxChange(2)" [formControl]="filerPrinciple">Filer-Principal/Firm</mat-checkbox></p>
+                <p><mat-checkbox (change)="onCheckboxChange(2); onChange(2)" [formControl]="filerPrinciple">Filer-Principal/Firm</mat-checkbox></p>
                 <hr>
               </section>
             </div>

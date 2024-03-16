@@ -285,10 +285,14 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   onAdditionalIdsRequiredChange() {
     if (!this.additionalIdsRequired.value) {
+      this.filerIndividual.setValue(true);
+      this.filerPrinciple.setValue(false);
       this.additionalIdsCount.clearValidators();
       this.additionalIdsCount.setValue(null);
     } else {
       this.additionalIdsCount.setValidators([Validators.required, Validators.min(1)]);
+      this.filerIndividual.setValue(false);
+      this.filerPrinciple.setValue(true);
     }
     this.additionalIdsCount.updateValueAndValidity();
   }
@@ -321,7 +325,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!boPartnersInfo) {
       return;
     }
-    if(boPartnersInfo?.partnerDetails?.partnerType === "CONSULTANT"){
+    if(boPartnersInfo?.partnerDetails?.partnerType === "PRINCIPAL"){
       this.filerPrinciple.setValue(true);
       this.filerIndividual.setValue(false);
     }else if(boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL"){
@@ -564,6 +568,17 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   }
 
+  onChange(checkboxNumber: number){
+    if (checkboxNumber === 1) {
+      this.additionalIdsRequired.setValue(false);
+      this.onAdditionalIdsRequiredChange();
+    }
+    if(checkboxNumber === 2){
+      this.additionalIdsRequired.setValue(true);
+      this.onAdditionalIdsRequiredChange();
+    }
+  }
+
   getSelectedLanguages(): string[] {
     return this.langList.filter(lang => this.getLanguageControl(lang).value);
   }
@@ -656,9 +671,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
-    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "CONSULTANT" : "INDIVIDUAL";
+    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "PRINCIPAL" : "INDIVIDUAL";
+    const today = new Date();
+    const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
 
-      const param = `/v2/assigned-sme-details`;
+    const param = `/v2/assigned-sme-details`;
 
       this.loading = true;
 
@@ -678,7 +695,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         botId: this.smeObj.botId,
         displayName: this.smeObj.displayName,
         active: this.smeObj.active,
-        joiningDate: this.smeObj.joiningDate,
+        joiningDate: formattedDate,
         internal: this.internal.value ? true : this.external.value ? false:null,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -690,7 +707,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         isLeader: this.smeObj.isLeader,
         isAdmin: this.smeObj.isAdmin,
         isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
-        partnerType :this.smeObj.partnerType,
+        partnerType : partnerType || this.smeObj.partnerType,
         skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
         partnerDetails: this.smeObj.partnerDetails
       };
