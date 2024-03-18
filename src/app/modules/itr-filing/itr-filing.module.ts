@@ -47,7 +47,6 @@ import { ProfessionalDialogComponent } from './business-income/presumptive-incom
 import { NonSpeculativeIncomeComponent } from './business-income/profit-loss-ac/non-speculative-income/non-speculative-income.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-speculative-income/add-update-trading/add-update-trading.component';
-import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
@@ -164,7 +163,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     UpdateManualFilingComponent,
     AddClientDialogComponent,
     PrefillDataComponent,
-    // InputUploadComponent
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
     NriDetailsDialogComponent,
@@ -196,7 +194,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     NonSpeculativeIncomeComponent,
     SpeculativeIncomeComponent,
     AddUpdateTradingComponent,
-    AddBalanceSheetComponent,
     DepreciationDialogComponent,
     PrefillIdComponent,
     SourceOfIncomesComponent,

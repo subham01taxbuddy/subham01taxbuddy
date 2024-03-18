@@ -16,7 +16,7 @@
           <mat-form-field appearance="outline" class="custom-bg-new">
             <mat-select placeholder="Select Status" [formControl]="fromStatusValue" multiple>
               <mat-option *ngFor="let status of itrStatus" [value]="status.statusId"
-                (click)="onStatusChange(fromStatusValue)">
+                (click)="onStatusChange()">
                 {{ status.statusName }}
               </mat-option>
             </mat-select>

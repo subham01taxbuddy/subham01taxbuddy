@@ -1,6 +1,5 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
-
-<form [formGroup]="bankForm"  *ngIf="data.mode === 'Bank'">
+<form [formGroup]="bankForm" *ngIf="data.mode === 'Bank'">
     <mat-dialog-content>
         <div class="row">
             <div class=" card__col-xs-12 card__col-sm-4">
@@ -44,7 +43,8 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="center">
-        <button mat-raised-button color="primary" class="mt-0" (click)="addBankInfo()" tabindex="1">{{data.submitBtn}}</button>
+        <button mat-raised-button color="primary" class="mt-0" (click)="addBankInfo()"
+            tabindex="1">{{data.submitBtn}}</button>
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
 </form>
@@ -66,24 +66,21 @@
             <div class=" card__col-xs-12 card__col-sm-2 spacTop1">
                 <mat-form-field appearance="outline">
                     <mat-label>Flat No</mat-label>
-                    <input placeholder="Flat Number" maxlength="10" 
-                        formControlName="flatNo" matInput>
+                    <input placeholder="Flat Number" maxlength="10" formControlName="flatNo" matInput>
                 </mat-form-field>
             </div>
 
             <div class=" card__col-xs-12 card__col-sm-6 spacTop1">
                 <mat-form-field appearance="outline">
                     <mat-label>Address</mat-label>
-                    <input placeholder="Business Address" maxlength="50" 
-                        formControlName="premisesName" matInput>
+                    <input placeholder="Business Address" maxlength="50" formControlName="premisesName" matInput>
                 </mat-form-field>
             </div>
 
             <div class="card__col-lg-4 spacTop1">
                 <mat-form-field appearance="outline">
                     <mat-label>Area</mat-label>
-                    <input placeholder="Area" maxlength="50" 
-                        formControlName="area" matInput>
+                    <input placeholder="Area" maxlength="50" formControlName="area" matInput>
                 </mat-form-field>
             </div>
 
@@ -100,8 +97,7 @@
             <div class="card__col-lg-4 spacTop1">
                 <mat-form-field appearance="outline">
                     <mat-label>Country</mat-label>
-                    <input placeholder="Country" maxlength="50" 
-                        formControlName="country" matInput>
+                    <input placeholder="Country" maxlength="50" formControlName="country" matInput>
                 </mat-form-field>
             </div>
 
@@ -119,8 +115,7 @@
             <div class="card__col-lg-4 spacTop1">
                 <mat-form-field appearance="outline">
                     <mat-label>City</mat-label>
-                    <input placeholder="City" maxlength="50" 
-                        formControlName="city" matInput>
+                    <input placeholder="City" maxlength="50" formControlName="city" matInput>
                 </mat-form-field>
             </div>
 
@@ -129,7 +124,8 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="center">
-        <button mat-raised-button color="primary" class="mt-0" (click)="addAddressInfo()" tabindex="1">{{data.submitBtn}}</button>
+        <button mat-raised-button color="primary" class="mt-0" (click)="addAddressInfo()"
+            tabindex="1">{{data.submitBtn}}</button>
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
 </form>

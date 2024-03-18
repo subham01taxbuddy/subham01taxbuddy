@@ -33,8 +33,6 @@ export class CreateNewUserComponent implements OnInit {
   disableUserSignUp = false;
   assessmentYear: string;
   roles: any;
-  coOwnerToggle = new FormControl('');
-  coOwnerCheck = false;
   loggedInSme: any;
   countryList: Country[] = this.countryDropdown.map(country => ({
     name: country.countryName,
@@ -147,7 +145,7 @@ export class CreateNewUserComponent implements OnInit {
 
   fromSme(event, item) {
     if (item === 1) {
-      if(event && Object.keys(event).length > 0){
+      if (event && Object.keys(event).length > 0) {
         this.leaderName = event ? event.name : null;
         this.leaderId = event ? event.userId : null;
         if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
@@ -156,7 +154,7 @@ export class CreateNewUserComponent implements OnInit {
         }
       }
     } else if (item === 2) {
-      if(event && Object.keys(event).length > 0){
+      if (event && Object.keys(event).length > 0) {
         this.partnerType = event.partnerType;
         this.filerId = event ? event.userId : null;
         this.filerName = event ? event.name : null;
@@ -165,7 +163,7 @@ export class CreateNewUserComponent implements OnInit {
         }
       }
     } else if (item === 3) {
-      if(event && Object.keys(event).length > 0){
+      if (event && Object.keys(event).length > 0) {
         this.partnerType = event.partnerType;
         this.filerId = event ? event.userId : null;
         this.filerName = event ? event.name : null;
@@ -274,11 +272,11 @@ export class CreateNewUserComponent implements OnInit {
     } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       param = param + `&filerUserId=${this.loggedInId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
-      if(this.leaderId && !this.filerId){
+      if (this.leaderId && !this.filerId) {
         param = param + `&leaderUserId=${this.leaderId}`;
-      }else if (this.leaderId && this.filerId){
+      } else if (this.leaderId && this.filerId) {
         param = param + `&leaderUserId=${this.leaderId}&filerUserId=${this.filerId}`
-      }else if(this.filerId && !this.leaderId){
+      } else if (this.filerId && !this.leaderId) {
         param = param + `&filerUserId=${this.filerId}`
       }
     }
@@ -318,23 +316,6 @@ export class CreateNewUserComponent implements OnInit {
         console.log('Error during fetching data using PAN number: ', error)
       })
     }
-  }
-
-  getSmeRecords(agentUserId) {
-    const userId = agentUserId;
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-    const param = `/bo/sme-details-new/${userId}`;
-
-    this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('sme record by service  -> ', result);
-      this.smeRecords = result.data;
-      this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
-      this.smeServices = this.smeRecords.map((item) => {
-        return { serviceType: item.serviceType };
-      });
-      console.log("servicesList for selected sme ", this.smeServices)
-      this.changeServiceType();
-    })
   }
 
   changeServiceType() {
@@ -381,17 +362,6 @@ export class CreateNewUserComponent implements OnInit {
       }
       this.disableUserSignUp = true;
     }
-    // if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
-    //   if (this.filerId) {
-    //     this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
-    //   } else {
-    //     this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
-    //   }
-    //   this.disableUserSignUp = true;
-    // } else {
-    //   this.disableUserSignUp = false;
-    // }
-
   }
 
 }

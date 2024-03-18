@@ -2991,12 +2991,10 @@ export class PersonalInformationComponent implements OnInit {
     const seventhProvisio139Value = seventhProvisio139.value;
 
     if (seventhProvisio139Flag.value === 'N') {
-      // Save the data and clear the form group
       this.seventhProvsioChangeSavedData = seventhProvisio139Value;
       seventhProvisio139.reset();
       seventhProvisio139Flag.setValue('N');
 
-      // marking questions as not required if seventhProvisio is no
       this.clearValidator('strDepAmtAggAmtExcd1CrPrYrFlg');
       this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
       this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');

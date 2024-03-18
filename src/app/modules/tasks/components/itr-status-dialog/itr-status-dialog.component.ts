@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { environment } from 'src/environments/environment';
 import { DatePipe } from '@angular/common';
 import { FormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -78,8 +77,6 @@ export class ItrStatusDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ItrStatusDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private router: Router,
-    private userMsService: UserMsService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService
   ) {

@@ -1,13 +1,6 @@
 import { ItrLifecycleDialogComponent } from './../../components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import { UtilsService } from 'src/app/services/utils.service';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  AfterContentChecked,
-  ViewChild,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy, } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -28,11 +21,9 @@ import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-o
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RequestManager } from 'src/app/modules/shared/services/request-manager';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 declare function we_track(key: string, value: any);
@@ -53,8 +44,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
   eriStatus: any = [];
   roles: any;
   loggedInSme: any;
-  coOwnerToggle = new FormControl('');
-  coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;
   searchParams = {
@@ -70,8 +59,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'family.fName', name: 'Name' },
     { value: 'eFillingDate', name: 'Date of Filing ' },
-    // { value: 'itrType', name: 'ITR Type' },
-    // { value: 'isRevised', name: 'Return Type' },
   ];
   searchBy: any = {};
   searchMenus = [
@@ -102,12 +89,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private userMsService: UserMsService,
     private toastMsgService: ToastMessageService,
     private router: Router,
     private dialog: MatDialog,
-    private cdRef: ChangeDetectorRef,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private http: HttpClient,
@@ -161,8 +145,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
       ];
     }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
-    this.getAgentList();
-    // this.getMasterStatusList();
     this.activatedRoute.queryParams.subscribe((params) => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
@@ -170,10 +152,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
       if (this.searchVal) {
         console.log('q param', this.searchVal);
         this.searchParams.mobileNumber = this.searchVal;
-        this.myItrsList(0, '');
+        this.myItrsList(0);
       } else if (this.searchStatusId) {
         this.searchParams.selectedStatusId = this.searchStatusId;
-        this.myItrsList(0, '');
+        this.myItrsList(0);
       }
     });
     if (
@@ -181,7 +163,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       !this.roles.includes('ROLE_LEADER')
     ) {
       this.agentId = this.loggedInSme[0]?.userId;
-      this.myItrsList(0, '');
+      this.myItrsList(0);
     } else {
       this.dataOnLoad = false;
     }
@@ -227,43 +209,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     );
   }
 
-  // ngAfterContentChecked() {
-  //   this.cdRef.detectChanges();
-  // }
-
-  async getMasterStatusList() {
-    //this.itrStatus = await this.utilsService.getStoredMasterStatusList();
-    this.itrStatus = [
-      {
-        statusId: 'WIP',
-        statusName: 'WIP', //WIP - Preparing ITR, Waiting for confirmation, Confirmation received
-      },
-      {
-        statusId: 'ITR_FILED',
-        statusName: 'ITR Filed',
-      },
-      {
-        statusId: 'ALL',
-        statusName: 'All', //Preparing ITR, Waiting for confirmation, Confirmation received, ITR Filed
-      },
-    ];
-    if (!this.searchParams.mobileNumber) {
-      this.searchParams.selectedStatusId = this.itrStatus[2].statusId;
-    }
-  }
-
-  getAgentList() {
-    let loggedInUserRoles = this.utilsService.getUserRoles();
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable =
-      this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, [
-        'ROLE_ADMIN',
-        'ROLE_ITR_SL',
-        'ROLE_GST_SL',
-        'ROLE_NOTICE_SL',
-      ]);
-  }
-
   agentId: any;
   filerUserId: any;
   leaderUserId: any;
@@ -295,15 +240,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.getInvoice();
   }
 
   search() {
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+    this.myItrsList(0);
   }
 
   filter() {
-    this.myItrsList(0, this.selectedFilingTeamMemberId);
+    this.myItrsList(0);
   }
 
   maskMobileNumber(mobileNumber) {
@@ -321,7 +265,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchBy = object;
   }
 
-  myItrsList(pageNo, filingTeamMemberId, fromPageChange?) {
+  myItrsList(pageNo, fromPageChange?) {
     // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -524,7 +468,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.selectedPageNo = 0;
     this.config.currentPage = 1;
     console.log(event);
-    // this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId);
   }
 
   createOnSalaryRowData(data) {
@@ -536,14 +479,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
         userId: data[i].userId,
         fName:
           this.utilsService.isNonEmpty(data[i].family) &&
-          data[i].family instanceof Array &&
-          data[i].family.length > 0
+            data[i].family instanceof Array &&
+            data[i].family.length > 0
             ? data[i].family[0].fName
             : '',
         lName:
           this.utilsService.isNonEmpty(data[i].family) &&
-          data[i].family instanceof Array &&
-          data[i].family.length > 0
+            data[i].family instanceof Array &&
+            data[i].family.length > 0
             ? data[i].family[0].lName
             : '',
         panNumber: data[i].panNumber,
@@ -582,7 +525,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     return [
       {
         headerName: 'Client Name',
-        // field: "fName",
         sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -597,16 +539,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
             : '' + ' ' + params.data.lName;
         },
       },
-      /* {
-        headerName: "Last Name",
-        field: "lName",
-        sortable: true,
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      }, */
       {
         headerName: 'Mobile',
         field: 'contactNumber',
@@ -891,20 +823,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           };
         },
       },
-      // {
-      //   headerName: "TPA",
-      //   field: "nextYearTpa",
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellRenderer: (params:any) => {
-      //     return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
-      //   },
-      //   cellStyle: params => {
-      //     return (params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === 'COMPLETED' || !params.data.eFillingCompleted) ? { 'pointer-events': 'none', opacity: '0.4' }
-      //       : '';
-      //   }
-      // },
-
       {
         headerName: 'E-Verify',
         width: 85,
@@ -945,64 +863,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           }
         },
       },
-      // {
-      //   headerName: 'Cloud',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
-      //      </button>`;
-      //   },
-      //   width: 60,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: "Review",
-      //   field: "isReviewGiven",
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellRenderer: params => {
-      //     return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
-      //   },
-      //   cellStyle: params => {
-      //     return (params.data.isReviewGiven) ? { 'pointer-events': 'none', opacity: '0.4' }
-      //       : '';
-      //   }
-      // },
-      // {
-      //   headerName: 'Update Status',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Update Status"
-      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-user" aria-hidden="true" data-action-type="updateStatus"></i>
-      //      </button>`;
-      //   },
-      //   width: 80,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
       {
         headerName: 'Notes',
         editable: false,
@@ -1064,10 +924,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.showUserDocuments(params.data);
           break;
         }
-        // case 'isReviewGiven': {
-        //   this.updateReviewStatus(params.data);
-        //   break;
-        // }
         case 'call': {
           this.startCalling(params.data);
           break;
@@ -1154,7 +1010,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1217,7 +1073,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1258,11 +1114,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.utilsService.showSnackBar(
                 'E-Verification status updated successfully'
               );
-              this.myItrsList(
-                // this.selectedFyYear,
-                this.selectedPageNo,
-                this.selectedFilingTeamMemberId
-              );
+              this.myItrsList(this.selectedPageNo);
             } else if (result?.data === 'MANUAL') {
               this.markAsEverified(data);
             }
@@ -1270,7 +1122,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1313,11 +1165,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.utilsService.showSnackBar(
                 'E-Verification status updated successfully'
               );
-              this.myItrsList(
-                // this.selectedFyYear,
-                this.selectedPageNo,
-                this.selectedFilingTeamMemberId
-              );
+              this.myItrsList(this.selectedPageNo);
             } else if (result?.data === 'MANUAL') {
               this.markAsEverified(data);
             }
@@ -1325,7 +1173,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1348,7 +1196,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
   markAsEverified(data) {
     this.loading = true;
@@ -1370,11 +1218,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(
           'E-Verification status updated successfully'
         );
-        this.myItrsList(
-          // this.selectedFyYear,
-          this.selectedPageNo,
-          this.selectedFilingTeamMemberId
-        );
+        this.myItrsList(this.selectedPageNo);
       },
       (error) => {
         this.loading = false;
@@ -1414,10 +1258,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
             this.utilsService.showSnackBar(
               'ITR Processed status updated successfully'
             );
-            this.myItrsList(
-              this.selectedPageNo,
-              this.selectedFilingTeamMemberId
-            );
+            this.myItrsList(this.selectedPageNo);
           } else {
             this.loading = false;
             this.utilsService.showSnackBar(
@@ -1451,18 +1292,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
       workingItr['assessmentYear'];
     this.itrMsService.putMethod(param, workingItr).subscribe(
       (result: ITR_JSON) => {
-        this.myItrsList(
-          // this.selectedFyYear,
-          this.selectedPageNo,
-          this.selectedFilingTeamMemberId
-        );
+        this.myItrsList(this.selectedPageNo);
       },
       (error) => {
-        this.myItrsList(
-          // this.selectedFyYear,
-          this.selectedPageNo,
-          this.selectedFilingTeamMemberId
-        );
+        this.myItrsList(this.selectedPageNo);
       }
     );
   }
@@ -1471,18 +1304,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     console.log(data);
     this.router.navigate(['/pages/itr-filing/user-docs/' + data.userId]);
   }
-
-  // updateReviewStatus(data) {
-  //   const param = `/update-itr-userProfile?itrId=${data.itrId}&userId=${data.userId}&isReviewGiven=true`;
-  //   this.itrMsService.putMethod(param, {}).subscribe(result => {
-  //     console.log(result);
-  //     this.utilsService.showSnackBar('Marked as review given');
-  //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-  //   }, error => {
-  //     this.utilsService.showSnackBar('Please try again, failed to mark as review given');
-  //     this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
-  //   })
-  // }
 
   async startCalling(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
@@ -1536,7 +1357,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1571,7 +1392,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   showNotes(client) {
     this.utilsService.getUserCurrentStatus(client.userId).subscribe(
-       (res: any) => {
+      (res: any) => {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
@@ -1593,7 +1414,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1614,11 +1435,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.selectedPageNo = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.myItrsList(event - 1, true, 'fromPageChange');
-      } else {
-        this.myItrsList(event - 1, '', 'fromPageChange');
-      }
+      this.myItrsList(event - 1);
     }
   }
 
@@ -1706,7 +1523,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
@@ -1785,16 +1602,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value);
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    } else {
-      this.coOwnerCheck = false;
-    }
-    this.myItrsList(0, true);
-  }
   ngOnDestroy() {
     this.cacheManager.clearCache();
   }

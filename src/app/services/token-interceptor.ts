@@ -1,12 +1,6 @@
 import Auth from '@aws-amplify/auth';
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, } from '@angular/common/http';
 import { catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilsService } from './utils.service';
@@ -18,20 +12,17 @@ export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   userData: any;
-  constructor(private router: Router, public utilsService: UtilsService,
-    private userMsService: UserMsService) { }
+  constructor(
+    private router: Router,
+    public utilsService: UtilsService,
+    private userMsService: UserMsService
+  ) { }
 
   private tokenExpired(token: string) {
     const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
     return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 
-  /**
-   * intercept all XHR request
-   * @param request
-   * @param next
-   * @returns {Observable<A>}
-   */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.userData = JSON.parse(localStorage.getItem('UMD'));
     Auth.currentSession()
@@ -48,17 +39,6 @@ export class TokenInterceptor implements HttpInterceptor {
     const TOKEN = this.userData ? this.userData.id_token : null;
     if (TOKEN && this.tokenExpired(TOKEN)) {
       console.log("this is expired token case");
-      // token expired, logout the user
-      // this.smeLogout();
-      // this.logout();
-      // Auth.signOut()
-      //   .then((data) => {
-      //     console.log('sign out data:', data);
-      //     this.router.navigate(['/login']);
-      //     return;
-      //   })
-      //   .catch((error) => console.log('sign out err:', error));
-      //return;
     }
     if ((request.url.startsWith(environment.url) || request.url.startsWith(environment.eri_url)) && TOKEN) {
       let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'));
@@ -112,9 +92,6 @@ export class TokenInterceptor implements HttpInterceptor {
         },
       });
     }
-    /**
- * continues request execution
- */
     // console.log('Im in intercept====', request);
     return next.handle(request).pipe(
       catchError((error, caught) => {
@@ -126,11 +103,6 @@ export class TokenInterceptor implements HttpInterceptor {
     );
   }
 
-  /**
-   * manage errors
-   * @param err
-   * @returns {any}
-   */
   private handleAuthError(err: HttpErrorResponse): Observable<any> {
     if (this.utilsService.isNonEmpty(err)) {
       if (err.status === 0) {
@@ -170,7 +142,6 @@ export class TokenInterceptor implements HttpInterceptor {
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
 
     this.userMsService.postMethod(param, '').subscribe((response: any) => {
-      //
     }, (error) => {
       console.log('error in sme Logout API', error)
     })

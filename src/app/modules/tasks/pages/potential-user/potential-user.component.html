@@ -1,5 +1,4 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
 <div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
@@ -50,7 +49,8 @@
                     </div>
                     <!-- Table Sorting inside filter ends -->
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+                        Search
                       </button>
                       <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                         <i class="fa fa-download" aria-hidden="true"></i> Download File

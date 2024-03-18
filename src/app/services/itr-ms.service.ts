@@ -14,12 +14,10 @@ export class ItrMsService {
   getMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(
       environment.url + this.microService + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   getItrLifeCycle<T>(...param: any): Observable<T> {
@@ -29,18 +27,15 @@ export class ItrMsService {
       environment.ITR_LIFECYCLE + this.microService + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   getLambda<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(
       environment.check_upload + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   downloadLambda<T>(...param: any): Observable<T> {
@@ -51,7 +46,6 @@ export class ItrMsService {
       environment.download_file + param[0], param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   postLambda<T>(...param: any): Observable<T> {
@@ -62,47 +56,38 @@ export class ItrMsService {
       environment.upload_file + param[0], param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   getAdjustmentDetails<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.get_adjustment + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   getAdjustmentCSV<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.get_adjustment_csv + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   addAdjustment<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.adjustment + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   getTdsDetails<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.get_tds + param[0],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   postAdjustmentDetails<T>(...param: any): Observable<T> {
@@ -113,16 +98,13 @@ export class ItrMsService {
       environment.add_adjustment + param[0], param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   putLambdaForUpdateId<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.put<T>(
       environment.update_id + param[0], param[1], { headers: this.headers });
-    // .map(response => response.json())
   }
 
   postMethod<T>(...param: any): Observable<T> {
@@ -134,15 +116,11 @@ export class ItrMsService {
       param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   postMethodForEri<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('panNumber', param[2].panNumber);
-    // this.headers.append('assessmentYear',param[2].assessmentYear);
-    // this.headers.append('userId',param[2].userId);
     console.log('POst Param', param);
     console.log('headers', this.headers);
     console.log(
@@ -159,42 +137,34 @@ export class ItrMsService {
       param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   putMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.put<T>(
       environment.url + this.microService + param[0],
       param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
   patchMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.patch<T>(
       environment.url + this.microService + param[0],
       param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   deleteMethod<T>(param: any): Observable<T> {
-    // this.TOKEN = this.encrDecrService.get(AppConstants.TOKEN);
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.delete<T>(
       environment.url + this.microService + param,
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 
   deleteMethodWithRequest(param: any, body: any) {
@@ -208,7 +178,6 @@ export class ItrMsService {
       body: body,
     };
     return this.httpClient.delete(environment.url + param, reqBody);
-    //  .map(response => response.json());
   }
 
   downloadXML(param: any) {
@@ -233,7 +202,6 @@ export class ItrMsService {
     console.log('get Param', param);
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
-    // const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
     this.headers = new Headers();
     this.headers.append('Authorization', 'Bearer ' + TOKEN);
     return this.http
@@ -252,7 +220,6 @@ export class ItrMsService {
     console.log('get Param', param);
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
-    // const TOKEN = sessionStorage.getItem(AppConstants.TOKEN);
     this.headers = new Headers();
     this.headers.append('Authorization', 'Bearer ' + TOKEN);
     return this.http

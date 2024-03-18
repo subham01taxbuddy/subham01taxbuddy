@@ -1,12 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
         <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-        Filter - Partners:
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Partners:
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="rowClr">
@@ -38,7 +37,8 @@
             <div class="col-sm-3">
               <mat-label>Search By Mobile Number: </mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text" (change)="clearValue1()" digitsOnly
+                <input matInput placeholder="Enter Mobile Number" [formControl]="searchMobileNumber" type="text"
+                  (change)="clearValue1()" digitsOnly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
               </mat-form-field>
@@ -46,21 +46,14 @@
             <div class="col-sm-3">
               <mat-label>Search By Email: </mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="Enter Email" [formControl]="searchEmail" type="text" (change)="clearValue()">
+                <input matInput placeholder="Enter Email" [formControl]="searchEmail" type="text"
+                  (change)="clearValue()">
               </mat-form-field>
             </div>
 
-            </div>
-            <div class="row">
+          </div>
+          <div class="row">
             <div class="col-sm-12 spsTp text-end">
-              <!-- <button
-                class="btn"
-                style="border: none; cursor: pointer"
-
-                (click)="getBoPartners()"
-              >
-                Search
-              </button> -->
               <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="advanceSearch('mobile')">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
@@ -69,43 +62,32 @@
               </button>
             </div>
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 <div class="main clearfix">
-       <!-- Table -->
-      <div class="tableSpc">
-        <div class="row">
-          <div class="col-sm-8">
-            <div class="txTit">
-              Partners Details:
-            </div>
-          </div>
-          <div class="col-sm-4">
-          <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-          </div>
-          </div>
-          <table>
-            <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
-          </table>
-
-          <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="partnersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)">
-          </ag-grid-angular>
-
-          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="txTit">
+          Partners Details:
         </div>
-        <!-- <div class="card__row">
-          <ag-grid-angular
-            class="ag-theme-balham"
-            [gridOptions]="partnersGridOptions"
-            (rowClicked)="onUsersRowClicked($event)"
-          >
-                 paginationPageSize=15 pagination=true-->
-        <!-- </ag-grid-angular>
-        </div> -->
+      </div>
+      <div class="col-sm-4">
+        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+      </div>
+    </div>
+    <table>
+      <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
+    </table>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="partnersGridOptions"
+      (rowClicked)="onUsersRowClicked($event)">
+    </ag-grid-angular>
+
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 </div>

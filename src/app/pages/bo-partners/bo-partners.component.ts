@@ -7,11 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ViewDocumentsComponent } from './view-documents/view-documents.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
 import { DatePipe } from '@angular/common';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -33,7 +29,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class BoPartnersComponent implements OnInit,OnDestroy{
+export class BoPartnersComponent implements OnInit, OnDestroy {
   config: any;
   loading!: boolean;
   partnersGridOptions: GridOptions;
@@ -44,7 +40,7 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
   minToDate: any;
   searchMobileNumber = new FormControl('');
   searchEmail = new FormControl('');
-  fromDateValue =new FormControl('2022-09-01', Validators.required);
+  fromDateValue = new FormControl('2022-09-01', Validators.required);
   toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
@@ -102,11 +98,6 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
     this.minToDate = this.fromDateValue.value;
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   this.getBoPartners();
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -115,7 +106,7 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      this.getBoPartners('',event);
+      this.getBoPartners('', event);
     }
   }
 
@@ -170,8 +161,8 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
-          if(params.value) {
+        cellRenderer: function (params) {
+          if (params.value) {
             return `<a href="mailto:${params.value}">${params.value}</a>`
           } else {
             return 'NA';
@@ -443,58 +434,58 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
     ];
   }
 
-  clearValue(){
-  this.searchMobileNumber.setValue(null);
+  clearValue() {
+    this.searchMobileNumber.setValue(null);
   }
-  clearValue1(){
+  clearValue1() {
     this.searchEmail.setValue(null);
-    }
+  }
 
-  advanceSearch(mobile?){
-    if(this.searchEmail.value){
-    //curl --location 'http://localhost:9055/report/partner-details?emailAddress=dinesh1%40gmail.com'
-    this.loading = true;
-    let param = `/partner-details?emailAddress=${this.searchEmail.value}`
+  advanceSearch(mobile?) {
+    if (this.searchEmail.value) {
+      //curl --location 'http://localhost:9055/report/partner-details?emailAddress=dinesh1%40gmail.com'
+      this.loading = true;
+      let param = `/partner-details?emailAddress=${this.searchEmail.value}`
 
-    this.userMsService.getMethodNew(param).subscribe(
-      (response: any) => {
-      this.loading = false;
-      if (response) {
-        this.loading = false;
-        this.boPartnersInfo = response;
-        this.config.totalItems = response.totalElements;
-        this.partnersGridOptions.api?.setRowData(
-          this.createRowData(this.boPartnersInfo)
-        );
-      } else {
-        this.loading = false;
-        this.config.totalItems = 0;
-        this.partnersGridOptions.api?.setRowData(this.createRowData([]));
-        this._toastMessageService.alert("error",'No Data Found');
-      }
-      },(error) => {
-        this.loading = false;
-      }
+      this.userMsService.getMethodNew(param).subscribe(
+        (response: any) => {
+          this.loading = false;
+          if (response) {
+            this.loading = false;
+            this.boPartnersInfo = response;
+            this.config.totalItems = response.totalElements;
+            this.partnersGridOptions.api?.setRowData(
+              this.createRowData(this.boPartnersInfo)
+            );
+          } else {
+            this.loading = false;
+            this.config.totalItems = 0;
+            this.partnersGridOptions.api?.setRowData(this.createRowData([]));
+            this._toastMessageService.alert("error", 'No Data Found');
+          }
+        }, (error) => {
+          this.loading = false;
+        }
       )
 
-    }else(
+    } else (
       this.getBoPartners(mobile)
     )
   }
 
-  getBoPartners(mobile?,pageChange?) {
+  getBoPartners(mobile?, pageChange?) {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
-      if(!pageChange){
+      if (!pageChange) {
         this.cacheManager.clearCache();
         console.log('in clear cache')
       }
       const fromDateValue = this.fromDateValue.value;
       const toDateValue = this.toDateValue.value;
 
-      let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
-      let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+      let fromDate = this.datePipe.transform(fromDateValue, 'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(toDateValue, 'yyyy-MM-dd');
 
       this.loading = true;
       let param
@@ -528,7 +519,7 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
             this.loading = false;
             this.config.totalItems = 0;
             this.partnersGridOptions.api?.setRowData(this.createRowData([]));
-            this._toastMessageService.alert("error",'No Data Found');
+            this._toastMessageService.alert("error", 'No Data Found');
           }
         },
         (error) => {
@@ -596,7 +587,7 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
   }
 
   sendEmail(partnerData) {
-    if(this.utileService.isNonEmpty(partnerData.emailAddress)) {
+    if (this.utileService.isNonEmpty(partnerData.emailAddress)) {
       this.loading = true;
       let partnerName = partnerData.name;
       let mobile = partnerData.mobileNumber;
@@ -722,7 +713,7 @@ export class BoPartnersComponent implements OnInit,OnDestroy{
     });
   }
 
-  updateInfo(partnerData){
+  updateInfo(partnerData) {
     let disposable = this.dialog.open(UpdateStatusComponent, {
       width: '50%',
       height: 'auto',

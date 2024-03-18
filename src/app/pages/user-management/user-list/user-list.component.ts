@@ -9,7 +9,6 @@ import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { RoleUpdateComponent } from "../role-update/role-update.component";
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/more-options-dialog/more-options-dialog.component';
 @Component({
@@ -42,7 +41,8 @@ export class UserListComponent implements OnInit {
   key: any;
   searchBy: any = {};
   clearUserFilter: number;
-  constructor(private userService: UserMsService,
+  constructor(
+    private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
@@ -79,9 +79,9 @@ export class UserListComponent implements OnInit {
   }
 
   advanceSearch() {
-    if(Object.keys(this.searchBy).length){
+    if (Object.keys(this.searchBy).length) {
       this.user_data = [];
-      const searchParam =this.searchBy;
+      const searchParam = this.searchBy;
       const key = Object.keys(searchParam)[0];
       let value = searchParam[key];
       if (value !== "") {
@@ -89,18 +89,18 @@ export class UserListComponent implements OnInit {
           value = value.toLocaleLowerCase();
         }
         this.getUserSearchList(key, value);
-      }else{
-        this._toastMessageService.alert('error',"Please enter value ");
+      } else {
+        this._toastMessageService.alert('error', "Please enter value ");
       }
-    }else{
-      this._toastMessageService.alert("error",'please select attribute and enter value and then search ' );
+    } else {
+      this._toastMessageService.alert("error", 'please select attribute and enter value and then search ');
     }
 
   }
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
   getUserSearchList(key: any, searchValue: any) {
@@ -131,7 +131,6 @@ export class UserListComponent implements OnInit {
 
   pageChanged(event: any) {
     this.config.currentPage = event;
-    // this.getUserData(event - 1);
   }
 
   getUserData(pageNo: any) {
@@ -319,28 +318,6 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      // {
-      //   headerName: 'Cloud',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="View Document cloud" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-cloud" aria-hidden="true" data-action-type="link-to-doc-cloud"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
       {
         headerName: "Review",
         field: "isReviewGiven",
@@ -376,72 +353,6 @@ export class UserListComponent implements OnInit {
           }
         },
       },
-      // {
-      //   headerName: 'Otp Service',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Click to assign user for other services" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-user-plus" aria-hidden="true" data-action-type="assign-user"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Add Client',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Add Client" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Add Role',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Add Role" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-users" aria-hidden="true" data-action-type="add-role"></i>
-      //      </button>`;
-      //   },
-      //   width: 50,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
     ]
   }
 
@@ -472,36 +383,12 @@ export class UserListComponent implements OnInit {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'invoice': {
-          this.redirectTowardInvoice(params.data);
-          break;
-        }
-        case 'subscription': {
-          this.redirectTowardSubscription(params.data)
-          break;
-        }
-        case 'profile': {
-          this.router.navigate(['pages/user-management/profile/' + params.data.userId])
-          break;
-        }
         case 'link-to-finbingo': {
           this.linkToFinbingo(params.data.userId);
           break;
         }
-        case 'link-to-doc-cloud': {
-          this.linkToDocumentCloud(params.data.userId);
-          break;
-        }
         case 'isReviewGiven': {
           this.updateReviewStatus(params.data);
-          break;
-        }
-        case 'add-client': {
-          this.router.navigate(['/eri'], { state: { userId: params.data.userId, panNumber: params.data.pan, eriClientValidUpto: params.data.eriClientValidUpto, name: params.data.name } });
-          break;
-        }
-        case 'add-role': {
-          this.updateRoles(params.data);
           break;
         }
         case 'addNotes': {
@@ -514,14 +401,6 @@ export class UserListComponent implements OnInit {
         }
       }
     }
-  }
-
-  redirectTowardInvoice(userInfo: any) {
-    this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
-  }
-
-  redirectTowardSubscription(userInfo: any) {
-    this.router.navigate(['/pages/subscription/sub'], { queryParams: { userMobNo: userInfo.mobileNumber } });
   }
 
   linkToFinbingo(userId: any) {
@@ -549,10 +428,6 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  linkToDocumentCloud(userId: any) {
-    this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
-  }
-
   updateReviewStatus(data: any) {
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
     this.itrMsService.putMethod(param, {}).subscribe(result => {
@@ -563,20 +438,7 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  updateRoles(data) {
-    let disposable = this.dialog.open(RoleUpdateComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: data.userId,
-        clientName: data.name
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
+ 
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',

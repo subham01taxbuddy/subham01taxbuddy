@@ -424,12 +424,6 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     })
   }
 
-  // pageChanged(event){
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   this.getPromoCodeList();
-
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);

@@ -10,7 +10,6 @@ import { PagesModule } from './pages/pages.module';
 
 // Services
 import { NavbarService } from './services/navbar.service';
-import { UploadService } from './services/upload.service';
 import { ExportTableService } from './services/export-table.service';
 import { ToastMessageService } from './services/toast-message.service';
 import { AuthGuard } from './services/auth.guard';
@@ -60,7 +59,6 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
   ],
   providers: [
     NavbarService,
-    UploadService,
     ExportTableService,
     ToastMessageService,
     AuthGuard,
