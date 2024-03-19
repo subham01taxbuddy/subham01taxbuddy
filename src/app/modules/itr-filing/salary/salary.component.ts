@@ -1,7 +1,7 @@
 import { Employer } from './../../../modules/shared/interfaces/itr-input.interface';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, OnInit, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { Location } from '@angular/common';
 import {
   Validators,
@@ -17,7 +17,6 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { MatDialog } from '@angular/material/dialog';
 import { BifurcationComponent } from './bifurcation/bifurcation.component';
-import { Overlay } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from "../../shared/components/confirm-dialog/confirm-dialog.component";
 
 declare let $: any;
@@ -210,7 +209,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   eicProfExpError: boolean = false;
   bifurcationFormGroup: boolean = false;
   PREV_ITR_JSON: any;
-
+  totalGrossSalary: number = 0;
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -943,7 +942,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   validations() {
-    debugger
     const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const FormValues = this.utilsService.getSalaryValues();
 
@@ -1319,7 +1317,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
       //check allowances total is not exceeding the gross salary
       if (totalAllowExempt > this.grossSalary) {
-        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
         );
@@ -1329,7 +1326,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
         (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
       if (othTotalAllowExempt > employerTotal) {
-        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed total gross salary'
         );
@@ -1891,97 +1887,24 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   onBifurcationUpdated(result) {
-    debugger
+    this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {
-      this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
+      if (element.get('salaryType').value === 'SEC17_1') {
+        element.get('salaryValue').setValue(parseFloat(result.secOneTotal || 0));
+        this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
+      }
+      if (element.get('salaryType').value === 'SEC17_2') {
+        element.get('salaryValue').setValue(parseFloat(result.secTwoTotal || 0));
+        this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
+      }
+      if (element.get('salaryType').value === 'SEC17_3') {
+        element.get('salaryValue').setValue(parseFloat(result.secThreeTotal || 0));
+        this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
+      }
     });
-    result = this.utilsService.getSalaryValues();
-    debugger
-    if (result !== undefined) {
-      this.changeConsetGiven = false;
-      console.log('BifurcationComponent=', result);
-      if (result.perquisites) {
-        if (result.perquisites.length > 0) {
-          let total = result.perquisites.reduce(
-            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
-          this.bifurcationResult.SEC17_2.value = result.perquisites;
-
-          if (total > 0) {
-            this.bifurcationResult.SEC17_2.total = total;
-          }
-        } else {
-          // this.bifurcationResult.SEC17_2.total = 0;
-        }
-
-        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
-
-        for (let i = 0; i < salaryDetails?.controls.length; i++) {
-          let salary = salaryDetails?.controls[i] as FormGroup;
-
-          if (salary.controls['salaryType']?.value === 'SEC17_2') {
-            let value = this.bifurcationResult?.SEC17_2.total;
-            salary.controls['salaryValue']?.setValue(value);
-            break;
-          }
-        }
-
-      }
-      if (result.salary) {
-        if (result.salary.length > 0) {
-          let total = result.salary.reduce(
-            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
-          this.bifurcationResult.SEC17_1.value = result.salary;
-          if (total > 0) {
-            this.bifurcationResult.SEC17_1.total = total;
-          }
-        } else {
-          // this.bifurcationResult.SEC17_1.total = 0;
-        }
-        this.grossSalary = 0;
-
-        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
-
-        for (let i = 0; i < salaryDetails?.controls.length; i++) {
-          let salary = salaryDetails?.controls[i] as FormGroup;
-
-          if (salary.controls['salaryType']?.value === 'SEC17_1') {
-            this.grossSalary = this.bifurcationResult?.SEC17_1.total;
-            salary.controls['salaryValue']?.setValue(this.grossSalary);
-            break;
-          }
-        }
-
-      }
-      if (result.profitsInLieu) {
-        if (result.profitsInLieu.length > 0) {
-          let total = result.profitsInLieu.reduce(
-            (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
-          this.bifurcationResult.SEC17_3.value = result.profitsInLieu;
-          debugger
-          if (total > 0) {
-            this.bifurcationResult.SEC17_3.total = total;
-          }
-        } else {
-          // this.bifurcationResult.SEC17_3.total = 0;
-        }
-
-        let salaryDetails = this.employerDetailsFormGroup?.controls['salaryDetails'] as FormArray;
-
-        for (let i = 0; i < salaryDetails?.controls.length; i++) {
-          let salary = salaryDetails?.controls[i] as FormGroup;
-
-          if (salary.controls['salaryType']?.value === 'SEC17_3') {
-            let value = this.bifurcationResult?.SEC17_3.total;
-            salary.controls['salaryValue']?.setValue(value);
-            break;
-          }
-        }
-      }
-    }
   }
 
   bifurcation() {
-    debugger
     this.valueChanged = this.utilsService.getChange();
     if (Object.keys(this.bifurcationResult.SEC17_1.value).length === 0) {
       this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;
