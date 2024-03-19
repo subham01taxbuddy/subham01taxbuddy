@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -138,7 +137,6 @@ export class TeamReportDashboardComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private reportService: ReportService,
-    private router: Router,
     public datePipe: DatePipe
   ) {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));

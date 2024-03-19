@@ -7,14 +7,12 @@ import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { MatDialog } from "@angular/material/dialog";
 import { ItrMsService } from "../../services/itr-ms.service";
-import { NavbarService } from "../../services/navbar.service";
 import { DatePipe, formatDate } from "@angular/common";
 import { UserNotesComponent } from "../shared/components/user-notes/user-notes.component";
 import { ChatOptionsDialogComponent } from "../tasks/components/chat-options/chat-options-dialog.component";
 import { SmeListDropDownComponent } from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
 import { environment } from "../../../environments/environment";
 import { RoleBaseAuthGuardService } from "../shared/services/role-base-auth-guard.service";
-import { capitalize } from "lodash";
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
@@ -192,7 +190,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   fromServiceType(event) {
-   this.serviceType.setValue(event);
+    this.serviceType.setValue(event);
   }
 
   leaderId: number;
@@ -203,9 +201,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.leaderId = event ? event.userId : null;
       console.log('fromowner:', event);
       this.agentId = this.leaderId;
-      //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
   fromPrinciple(event) {
@@ -224,9 +219,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     if (event) {
       this.filerId = event ? event.userId : null;
       this.agentId = this.filerId;
-      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
 
@@ -352,10 +344,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.serviceCall('');
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -997,7 +985,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
     ]
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report',fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }

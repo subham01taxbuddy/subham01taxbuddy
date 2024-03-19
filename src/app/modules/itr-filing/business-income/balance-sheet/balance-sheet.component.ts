@@ -1,20 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {
-  BusinessDescription,
-  ITR_JSON,
-  NewFinancialParticulars,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { BusinessDescription, ITR_JSON, NewFinancialParticulars, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AddBalanceSheetComponent } from './add-balance-sheet/add-balance-sheet.component';
-import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-dialog.component';
-import { Location } from '@angular/common';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
 @Component({
@@ -43,7 +36,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public fb: FormBuilder,
-    private location: Location
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -82,293 +74,37 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
-  createNatOfBusinessForm(index, detail: BusinessDescription) {
-    return this.fb.group({
-      id: detail?.id ? detail?.id : index,
-      hasEdit: [false],
-      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
-      tradeName: detail?.tradeName,
-      businessDescription: detail?.businessDescription,
-    });
-  }
-
-  pageChanged(event) {
-    this.config.currentPage = event;
-  }
-
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  displayedColumns: string[] = [
-    'select',
-    'natureOfBusiness',
-    'tradeName',
-    'businessDescription',
-  ];
   dataSource = new MatTableDataSource<BusinessDescription>();
   selection = new SelectionModel<BusinessDescription>(true, []);
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach((row) => this.selection.select(row));
-  }
-  removeSelectedRows() {
-    this.selection.selected.forEach((item) => {
-      let index: number = this.dataSource.data.findIndex((d) => d === item);
-      console.log(this.dataSource.data.findIndex((d) => d === item));
-      this.dataSource.data.splice(index, 1);
-
-      this.dataSource = new MatTableDataSource<BusinessDescription>(
-        this.dataSource.data
-      );
-    });
-    this.selection = new SelectionModel<BusinessDescription>(true, []);
-  }
-  getBalanceSheetTableData(rowsData) {
-    if (!rowsData) {
-      rowsData = [];
-    }
-    this.balanceSheetGridOptions = <GridOptions>{
-      rowData: rowsData,
-      columnDefs: this.createBalanceSheetColumnDef(rowsData),
-      onGridReady: () => {
-        this.balanceSheetGridOptions.api.sizeColumnsToFit();
-      },
-      suppressDragLeaveHidesColumns: true,
-      enableCellChangeFlash: true,
-      defaultColDef: {
-        resizable: true,
-        editable: false,
-      },
-      suppressRowTransform: true,
-    };
-  }
-
-  createBalanceSheetColumnDef(rowsData) {
-    return [
-      {
-        headerName: 'Sr. No',
-        field: 'id',
-        suppressMovable: true,
-        editable: false,
-        width: 80,
-        valueGetter: function nameFromCode(params) {
-          return params.data.id
-            ? params.data.id.toLocaleString('en-IN')
-            : params.data.id;
-        },
-      },
-
-      {
-        headerName: 'Code',
-        field: 'natureOfBusiness',
-        suppressMovable: true,
-        editable: false,
-        width: 250,
-        valueGetter: function nameFromCode(params) {
-          return params.data.natureOfBusiness
-            ? params.data.natureOfBusiness.toLocaleString('en-IN')
-            : params.data.natureOfBusiness;
-        },
-      },
-
-      {
-        headerName: 'Trade Name of the proprietorship, if any',
-        field: 'tradeName',
-        editable: false,
-        suppressMovable: true,
-        width: 250,
-        valueGetter: function nameFromCode(params) {
-          return params.data.tradeName
-            ? params.data.tradeName.toLocaleString('en-IN')
-            : params.data.tradeName;
-        },
-      },
-
-      {
-        headerName: 'Description',
-        editable: false,
-        field: 'businessDescription',
-        width: 400,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.businessDescription
-            ? params.data.businessDescription.toLocaleString('en-IN')
-            : params.data.businessDescription;
-        },
-      },
-
-      {
-        headerName: 'Actions',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        sortable: true,
-        pinned: 'right',
-        width: 100,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button"  title="Update Bonds details" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>
-          <button type="button" class="action_icon add_button" title="Delete Bonds" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-        },
-      },
-    ];
-  }
-
-  // public onBalanceSheetRowClicked(params) {
-  //   if (params.event.target !== undefined) {
-  //     const actionType = params.event.target.getAttribute('data-action-type');
-  //     switch (actionType) {
-  //       case 'remove': {
-  //         this.deleteBalanceSheet(params.rowIndex);
-  //         break;
-  //       }
-  //       case 'edit': {
-  //         this.addEditBalanceSheetRow('EDIT', params.data, 'balance', params.rowIndex);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  deleteBalanceSheet(index) {
-    this.balanceSheetGridOptions.rowData.splice(index, 1);
-    this.balanceSheetGridOptions.api.setRowData(
-      this.balanceSheetGridOptions.rowData
-    );
-  }
-
-  addBalanceSheetRow(mode, data: any, type, index?) {
-    const dialogRef = this.matDialog.open(AddBalanceSheetComponent, {
-      data: {
-        mode: mode,
-        data: this.dataSource.data,
-        type: type,
-        natureList: this.dataSource.data,
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('balanceSheetData=', result);
-      if (result !== undefined) {
-        if (mode === 'ADD') {
-          //  balanceSheetData.push(result)
-          this.dataSource.data.push(result);
-          this.dataSource = new MatTableDataSource(this.dataSource.data);
-          // this.balanceSheetGridOptions.rowData.push(result);
-          // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
-        }
-      }
-    });
-  }
-  editBalanceSheetRow(mode, data: any, type, index?) {
-    const dialogRef = this.matDialog.open(AddBalanceSheetComponent, {
-      data: {
-        mode: mode,
-        data: this.selection.selected[0],
-        type: type,
-        natureList: this.dataSource.data,
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('balanceSheetData=', result);
-      if (result !== undefined) {
-        if (mode === 'EDIT') {
-          let itemIndex = this.dataSource.data.findIndex(
-            (item) => item.tradeName == this.selection.selected[0].tradeName
-          );
-          this.dataSource.data[itemIndex] = result;
-          this.dataSource = new MatTableDataSource(this.dataSource.data);
-          // this.balanceSheetGridOptions.rowData[index] = result;
-          // this.balanceSheetGridOptions.api.setRowData(this.balanceSheetGridOptions.rowData);
-        }
-      }
-    });
-  }
-
-  //liabilities////////////////////////
 
   initForm(obj?: NewFinancialParticulars) {
     this.assetLiabilitiesForm = this.fb.group({
       id: [obj?.id],
       membersOwnCapital: [obj?.membersOwnCapital, [Validators.pattern(AppConstants.numericRegex)],],
       reservesAndSurplus: [obj?.reservesAndSurplus, [Validators.pattern(AppConstants.numericRegex)]],
-      securedLoans: [
-        obj?.securedLoans,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
-      unSecuredLoans: [
-        obj?.unSecuredLoans,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      securedLoans: [obj?.securedLoans, Validators.pattern(AppConstants.numericRegex)],
+      unSecuredLoans: [obj?.unSecuredLoans, Validators.pattern(AppConstants.numericRegex)],
       totalLoans: [obj?.totalLoans],
       advances: [obj?.advances, Validators.pattern(AppConstants.numericRegex)],
       totalSourcesOfFunds: [obj?.totalSourcesOfFunds],
-      sundryCreditorsAmount: [
-        obj?.sundryCreditorsAmount ? obj?.sundryCreditorsAmount : 0,
-        [Validators.required, Validators.pattern(AppConstants.numericRegex)],
-      ],
-      otherLiabilities: [
-        obj?.otherLiabilities,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      sundryCreditorsAmount: [obj?.sundryCreditorsAmount ? obj?.sundryCreditorsAmount : 0, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      otherLiabilities: [obj?.otherLiabilities, Validators.pattern(AppConstants.numericRegex)],
       totalCapitalLiabilities: [obj?.totalCapitalLiabilities],
       totalLiabilitiesProvision: [obj?.totalLiabilitiesProvision],
       netCurrentAsset: [obj?.netCurrentAsset],
-      fixedAssets: [
-        obj?.fixedAssets,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
-      inventories: [
-        obj?.inventories ? obj?.inventories : 0,
-        [Validators.required, Validators.pattern(AppConstants.numericRegex)],
-      ],
+      fixedAssets: [obj?.fixedAssets, Validators.pattern(AppConstants.numericRegex)],
+      inventories: [obj?.inventories ? obj?.inventories : 0, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
       totalCurrentAssets: [obj?.totalCurrentAssets],
       totalCurrentAssetsLoansAdv: [obj?.totalCurrentAssetsLoansAdv],
-      sundryDebtorsAmount: [
-        obj?.sundryDebtorsAmount ? obj?.sundryDebtorsAmount : 0,
-        [Validators.required, Validators.pattern(AppConstants.numericRegex)],
-      ],
-      balanceWithBank: [
-        obj?.balanceWithBank,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
-      cashInHand: [
-        obj?.cashInHand ? obj?.cashInHand : 0,
-        [Validators.required, Validators.pattern(AppConstants.numericRegex)],
-      ],
-      loanAndAdvances: [
-        obj?.loanAndAdvances,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      sundryDebtorsAmount: [obj?.sundryDebtorsAmount ? obj?.sundryDebtorsAmount : 0, [Validators.required, Validators.pattern(AppConstants.numericRegex)],],
+      balanceWithBank: [obj?.balanceWithBank, Validators.pattern(AppConstants.numericRegex)],
+      cashInHand: [obj?.cashInHand ? obj?.cashInHand : 0, [Validators.required, Validators.pattern(AppConstants.numericRegex)]],
+      loanAndAdvances: [obj?.loanAndAdvances, Validators.pattern(AppConstants.numericRegex)],
       investment: [obj?.investment, Validators.pattern(AppConstants.numericRegex),],
       shortTermInvestment: [obj?.shortTermInvestment, Validators.pattern(AppConstants.numericRegex),],
       longTermInvestment: [obj?.longTermInvestment, Validators.pattern(AppConstants.numericRegex),],
-      otherAssets: [
-        obj?.otherAssets,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      otherAssets: [obj?.otherAssets, Validators.pattern(AppConstants.numericRegex)],
       totalAssets: [obj?.totalAssets],
       GSTRNumber: [obj?.GSTRNumber, Validators.pattern(AppConstants.gstrReg)],
       grossTurnOverAmount: [obj?.grossTurnOverAmount],
@@ -401,8 +137,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value
       ) +
       Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
-    // this.difference = this.total1 - this.total2;
-    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
 
@@ -417,8 +151,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
       Number(this.assetLiabilitiesForm.controls['investment'].value) +
       Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
-    // this.difference = this.total1 - this.total2;
-    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
   getFixedAssetData(data) {
@@ -479,30 +211,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['difference'].setValue(difference);
   }
 
-  showPopUp(value) {
-    if (value) {
-      const dialogRef = this.matDialog.open(DepreciationDialogComponent, {
-        data: {
-          data: value,
-          list: this.depreciationObj,
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '90%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('depreciationGridData=', result);
-        if (result !== undefined) {
-          this.depreciationObj = result;
-        }
-      });
-    }
-  }
-
   goBack() {
     this.saveAndNext.emit(false);
-    //this.location.back();
   }
 
   onContinue() {

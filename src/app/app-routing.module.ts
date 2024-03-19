@@ -28,7 +28,7 @@ export const appRoutes: Routes = [
   {
     path: 'itr-filing', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/itr-filing/itr-filing.module').then(m => m.ItrFilingModule)
   },
-  { path: 'subscription',component: LayoutComponent, loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
+  { path: 'subscription', component: LayoutComponent, loadChildren: () => import('./modules/subscription/subscription.module').then(m => m.SubscriptionModule) },
   {
     path: 'review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
   },
@@ -37,14 +37,13 @@ export const appRoutes: Routes = [
   },
   { path: 'dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'payouts', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/payouts/payouts.module').then(m => m.PayoutsModule) },
-  { path: 'promo-code', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/promo-codes/promo-codes.module').then(m => m.PromoCodesModule)},
-  { path: 'academy-courses', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/academy-courses/academy-courses.module').then(m => m.AcademyCoursesModule)},
-  { path: 'delete-user', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/delete-user/delete-user.module').then(m => m.DeleteUserModule)},
+  { path: 'promo-code', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/promo-codes/promo-codes.module').then(m => m.PromoCodesModule) },
+  { path: 'academy-courses', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/academy-courses/academy-courses.module').then(m => m.AcademyCoursesModule) },
+  { path: 'delete-user', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/delete-user/delete-user.module').then(m => m.DeleteUserModule) },
 
   {
     path: 'reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)
   },
-  { path: 'ux', loadChildren: () => import('./ux/ux.module').then(m => m.UxModule) },
   { path: '**', redirectTo: 'login' },
 ];
 

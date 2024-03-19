@@ -25,8 +25,14 @@ export class SignUpExceptionsComponent implements OnInit {
   config: any;
   selectedPageNo = 0;
   signUpExceptionList = [];
-  constructor(private userMsService: UserMsService, @Inject(LOCALE_ID) private locale: string, private toastMsgService: ToastMessageService, private utilsService: UtilsService,
-    private route: Router, private dialog: MatDialog,) {
+  constructor(
+    private userMsService: UserMsService,
+    @Inject(LOCALE_ID) private locale: string,
+    private toastMsgService: ToastMessageService,
+    private utilsService: UtilsService,
+    private route: Router,
+    private dialog: MatDialog
+  ) {
     this.signupExceptionGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.createColumnDef(),

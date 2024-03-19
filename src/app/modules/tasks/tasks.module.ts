@@ -1,4 +1,3 @@
-import { AssignedUsersComponent } from './pages/assigned-users/assigned-users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -44,7 +43,6 @@ import { SchCallCalenderComponent } from './pages/scheduled-call/sch-call-calend
   ],
   declarations: [
     TasksComponent,
-    AssignedUsersComponent,
     AssignedNewUsersComponent,
     ScheduledCallComponent,
     ReAssignDialogComponent,

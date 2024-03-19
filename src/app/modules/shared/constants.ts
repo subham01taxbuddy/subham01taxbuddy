@@ -1,4 +1,3 @@
-import { COUNTRIES } from './../../sources/countries';
 import { environment } from "src/environments/environment";
 
 export class AppConstants {

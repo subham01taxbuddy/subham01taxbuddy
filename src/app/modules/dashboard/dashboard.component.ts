@@ -5,7 +5,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -46,7 +45,7 @@ export class DashboardComponent implements OnInit {
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
   maxStartDate = new Date().toISOString().slice(0, 10);
-  minEndDate= new Date().toISOString().slice(0, 10);
+  minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
   invoiceData: any;
@@ -58,22 +57,22 @@ export class DashboardComponent implements OnInit {
   today: Date;
   itrOverview: any;
   hideCommission: boolean;
-  totalOriginal:number;
-  totalRevised:number;
-  statusWiseCountData:any;
+  totalOriginal: number;
+  totalRevised: number;
+  statusWiseCountData: any;
   partnerType: any;
   searchChild = new FormControl('');
   filteredChild: Observable<any[]>;
   childOptions: User[] = [];
   childList: any;
-  callSummaryData:any;
-  searchAsPrinciple:boolean =false;
+  callSummaryData: any;
+  searchAsPrinciple: boolean = false;
 
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private reportService:ReportService,
+    private reportService: ReportService,
     private router: Router,
     public datePipe: DatePipe,
   ) {
@@ -92,8 +91,8 @@ export class DashboardComponent implements OnInit {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
     this.partnerType = this.utilsService.getPartnerType();
-    if( this.partnerType === 'PRINCIPAL'){
-      this.searchAsPrinciple =true;
+    if (this.partnerType === 'PRINCIPAL') {
+      this.searchAsPrinciple = true;
       this.getChild();
     }
     this.getStatuswiseCount();
@@ -154,7 +153,7 @@ export class DashboardComponent implements OnInit {
       this.getSummaryConfirmationList(searchType);
     } else if (searchType == 'eVerificationPending') {
       this.getItrFilledEVerificationPendingList(searchType);
-    }  else {
+    } else {
       this.getCallingSummary();
       this.getStatuswiseCount();
       this.getInvoiceReports();
@@ -202,31 +201,31 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  filerId:any;
+  filerId: any;
   getChildNameId(option) {
     console.log(option);
     this.filerId = option.userId;
   }
 
-  getCallingSummary(){
+  getCallingSummary() {
     // http://localhost:9055/report/bo/dashboard/calling-summary
     // ?page=0&pageSize=20&fromDate=2023-04-01&toDate=2023-11-21&filerUserId=114823
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -235,32 +234,32 @@ export class DashboardComponent implements OnInit {
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.callSummaryData = response?.data;
 
-    },(error) => {
+    }, (error) => {
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
     })
 
   }
 
-  getStatuswiseCount(){
+  getStatuswiseCount() {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/status-wise-report?fromDate=2023-04-17&toDate=2023-11-20&filerUserId=14124'
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let filerUserId = '';
-    let userFilter='';
+    let userFilter = '';
 
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -270,16 +269,16 @@ export class DashboardComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         this.statusWiseCountData = response?.data?.content[0]?.statusWiseData[0];
-        console.log('data from filer dash statuswiae',this.statusWiseCountData)
+        console.log('data from filer dash statuswiae', this.statusWiseCountData)
       } else {
         this.loading = false;
         this._toastMessageService.alert('error', response.message);
       }
     },
-    (error) => {
-      this.loading = false;
-      this._toastMessageService.alert('error', 'Error');
-    }
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      }
     )
 
   }
@@ -292,18 +291,18 @@ export class DashboardComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = '';
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -312,18 +311,18 @@ export class DashboardComponent implements OnInit {
 
     this.reportService.getMethod(param).subscribe(
       (response: any) => {
-      this.loading = false;
-      if (response.success) {
-        this.invoiceData = response.data;
-
-      } else {
         this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", "Error");
-    })
+        if (response.success) {
+          this.invoiceData = response.data;
+
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert("error", response.message);
+        }
+      }, (error) => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Error");
+      })
   }
 
   getPaymentReceivedList(configType) {
@@ -334,18 +333,18 @@ export class DashboardComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -374,18 +373,18 @@ export class DashboardComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -414,18 +413,18 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam[configType]);
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -457,18 +456,18 @@ export class DashboardComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     this.loading = true;
     let filerUserId = '';
-    let userFilter='';
-    if(this.filerId){
-      if(this.searchAsPrinciple === true){
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${this.filerId}`;
       }
-    }else{
-      filerUserId=this.loggedInSmeUserId;
-      if(this.searchAsPrinciple === true){
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
         userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
-      }else{
+      } else {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
@@ -479,8 +478,8 @@ export class DashboardComponent implements OnInit {
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
-          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
-          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
+          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU;
+          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised;
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
@@ -493,32 +492,6 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  // getItrUserOverview() {
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
-  //   this.loading = true;
-  //   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  //   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  //   let filerUserId = this.loggedInSmeUserId;
-
-  //   let param = `/dashboard/itr-users-overview?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}&page=0&size=30`
-
-  //   this.userMsService.getMethodNew(param).subscribe((response: any) => {
-  //     if (response.success == false) {
-  //       this.itrOverview = null;
-  //       this._toastMessageService.alert("error", response.message);
-  //     }
-  //     if (response.success) {
-  //       this.itrOverview = response?.data;
-  //     } else {
-  //       this.loading = false;
-  //       this._toastMessageService.alert("error", response.message);
-  //     }
-  //   }, (error) => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Error");
-  //   });
-  // }
 
   goTo(form?) {
     if (form == 'myUsers') {

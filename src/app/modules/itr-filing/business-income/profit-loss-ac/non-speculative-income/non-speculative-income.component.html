@@ -21,24 +21,6 @@
                   <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                     <div class="accordion__item-body">
                       <form [formGroup]="natOfBusinessDtlForm" style="position: relative;">
-                        <!-- <div class="pre-box1">
-                          <div class="hdByr-L">
-                            &nbsp; </div>
-                          <div class="hdByr-R">
-                            <div class="Bx4">
-                              <div class="Bx4L">
-                                <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
-                                  <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                </button>
-                              </div>
-                              <div class="Bx4R">
-                                <button type="button" class="addAno" (click)="addNatOfBusinessForm()"> + Add Another
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div> -->
-
                         <div class="" formArrayName="natOfBusinessDtlsArray">
                           <div class="row"
                             *ngFor="let income of getnatOfBusinessDtlsArray.controls | paginate : config;let i = index"
@@ -46,11 +28,6 @@
                             <div class="col-10">
                               <div class=" gray_box">
                                 <div class="div-6 ">
-                                  <!-- <div class="col-sm-1 spsTp">
-                                  <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                                  </mat-checkbox>
-                                </div> -->
-
                                   <div class="form-field">
                                     <app-business-input-autocomplete [businessType]="'ALL'"
                                       [selectedInput]="natOfBusinessDtlsArray.controls[i].get('natureOfBusiness').value"
@@ -138,31 +115,7 @@
                     <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body">
                         <form [formGroup]="selectedFormGroup">
-                          <!-- <div class="pre-box1">
-
-                            <div class="hdByr-L">
-                              Trading Account
-                            </div>
-
-                            <div class="hdByr-R">
-
-                              <div class="Bx4">
-                                <div class="Bx4L">
-                                  <button type="button" (click)="deleteNonSpecArray()" [disabled]="!nonspecSelected()">
-                                    <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                  </button>
-                                </div>
-                                <div class="Bx4R">
-                                  <button type="button" class="addAno" (click)="addNonSpecIncomeForm()"> + Add Another
-                                  </button>
-                                </div>
-                              </div>
-
-                            </div>
-                          </div> -->
                           <div class="gray_container">
-                            <!-- <div *ngFor="let income of getIncomeArray.controls; let i = index"
-                              [formGroupName]="fieldGlobalIndex(i)"> -->
                             <div class="div-6 mb-20">
                               <div class="form-field">
                                 <div><span class="normal_text">Broker Name</span>
@@ -269,7 +222,6 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <!-- </div> -->
                           </div>
                         </form>
                         <div class="out-box">
@@ -461,18 +413,6 @@
                             </mat-form-field>
                           </div>
                         </div>
-
-                        <!-- <div class="out-box">
-                            <div class="box-left">
-                              <button (click)="clearForm()" class="btn btn__white">Cancel</button>
-                            </div>
-                            <div class="box-right">
-                              <button (click)="saveManualEntry()" class="btn btn__primary">Save
-                                Details
-                              </button>
-                            </div>
-                          </div> -->
-
                       </div>
                     </div>
                   </div>

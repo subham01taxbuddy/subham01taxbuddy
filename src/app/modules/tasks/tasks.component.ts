@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import {UtilsService} from "../../services/utils.service";
+import { UtilsService } from "../../services/utils.service";
 
 @Component({
     selector: 'app-tasks',
@@ -8,8 +8,10 @@ import {UtilsService} from "../../services/utils.service";
 })
 export class TasksComponent implements OnInit {
     loggedInUserRoles: any;
-    constructor(private roleBaseAuthGuardService: RoleBaseAuthGuardService,
-                private utilsService: UtilsService) { }
+    constructor(
+        private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+        private utilsService: UtilsService
+    ) { }
     ngOnInit() {
         this.loggedInUserRoles = this.utilsService.getUserRoles();
     }

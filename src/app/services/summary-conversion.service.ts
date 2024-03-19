@@ -1,13 +1,10 @@
-
-// Income from Family Pension Income
-import {AppConstants} from "../modules/shared/constants";
-import {formatDate} from "@angular/common";
-import {ITR_JSON} from "../modules/shared/interfaces/itr-input.interface";
+import { formatDate } from "@angular/common";
+import { ITR_JSON } from "../modules/shared/interfaces/itr-input.interface";
 import { UtilsService } from "./utils.service";
-import {environment} from "../../environments/environment";
-import {ItrMsService} from "./itr-ms.service";
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
+import { environment } from "../../environments/environment";
+import { ItrMsService } from "./itr-ms.service";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class SummaryConversionService {
@@ -16,15 +13,15 @@ export class SummaryConversionService {
     ITR14_IncomeDeductions = '';
     taxComputation = '';
     regime = '';
-    
+
     constructor(private utilsService: UtilsService,
-                private itrMsService: ItrMsService,
-                private httpClient: HttpClient){}
+        private itrMsService: ItrMsService,
+        private httpClient: HttpClient) { }
     convertJsonToObject(ItrJSON: any, ITR_Obj: ITR_JSON, userProfile: any) {
         //setting itrSummaryJson in ITR obj
         ITR_Obj.itrSummaryJson = ItrJSON;
 
-        
+
         // Setting the ITR Type in ITR Object and updating the ITR_Type and incomeDeductions key
         {
             if (ItrJSON.hasOwnProperty('ITR1')) {
@@ -142,7 +139,7 @@ export class SummaryConversionService {
                         ITR_Obj.family[0].lName =
                             ItrJSON[
                                 this.ITR_Type
-                                ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
+                            ].PersonalInfo.AssesseeName?.SurNameOrOrgName;
                         ITR_Obj.family[0].fatherName =
                             ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
 
@@ -224,7 +221,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedNewRegime.assessmentYear =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                                            ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                                         : null;
 
                                     ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
@@ -241,7 +238,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                            ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                                         : null;
                                 }
 
@@ -268,7 +265,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                                            ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                                         : null;
 
                                     ItrJSON[this.ITR_Type].FilingStatus
@@ -286,7 +283,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                            ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                                         : null;
                                 }
 
@@ -368,7 +365,7 @@ export class SummaryConversionService {
                             ITR_Obj.address.city =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PersonalInfo.Address?.CityOrTownOrDistrict;
+                                ].PersonalInfo.Address?.CityOrTownOrDistrict;
                             ITR_Obj.address.flatNo =
                                 ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceNo;
                             ITR_Obj.address.premisesName =
@@ -391,7 +388,7 @@ export class SummaryConversionService {
                                 );
                             } else {
                                 ITR_Obj.bankDetails = UtilityBankDetails?.map(
-                                    ({IFSCCode, BankName, BankAccountNo, UseForRefund}) => {
+                                    ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
                                         return {
                                             id: null,
                                             bankType: null,
@@ -427,16 +424,16 @@ export class SummaryConversionService {
                             ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                                ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
                             ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.AmtSeventhProvisio139iii;
+                                ]?.FilingStatus?.AmtSeventhProvisio139iii;
 
                             ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                                ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
                             ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
 
@@ -445,11 +442,11 @@ export class SummaryConversionService {
                                     ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
                                 if (ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                                ]?.FilingStatus?.clauseiv7provisio139iDtls) {
                                     ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                                        ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                                             (element) => ({
                                                 nature: parseFloat(
                                                     element?.clauseiv7provisio139iNature
@@ -469,11 +466,11 @@ export class SummaryConversionService {
                                     ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
                                 if (ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                                ]?.FilingStatus?.clauseiv7provisio139iDtls) {
                                     ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                                        ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                                             (element) => ({
                                                 nature: parseFloat(
                                                     element?.clauseiv7provisio139iNature
@@ -488,11 +485,11 @@ export class SummaryConversionService {
                                 ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
                                     ItrJSON[
                                         this.ITR_Type
-                                        ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                                    ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
                                 ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
                                     ItrJSON[
                                         this.ITR_Type
-                                        ]?.FilingStatus?.AmtSeventhProvisio139i;
+                                    ]?.FilingStatus?.AmtSeventhProvisio139i;
                             }
                         }
                     }
@@ -524,29 +521,29 @@ export class SummaryConversionService {
                                 periodTo: '',
                                 taxableIncome:
                                     salaryDetails?.IncomeFromSal === 0 ||
-                                    salaryDetails?.IncomeFromSal === null
+                                        salaryDetails?.IncomeFromSal === null
                                         ? 0
                                         : salaryDetails?.IncomeFromSal,
                                 standardDeduction:
                                     salaryDetails?.DeductionUs16ia === 0 ||
-                                    salaryDetails?.DeductionUs16ia === null ||
-                                    this.regime === 'NEW'
+                                        salaryDetails?.DeductionUs16ia === null ||
+                                        this.regime === 'NEW'
                                         ? 0
                                         : salaryDetails?.DeductionUs16ia,
                                 employerCategory: '',
                                 exemptIncome:
                                     salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
-                                    0 ||
-                                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
-                                    null ||
-                                    this.regime === 'NEW'
+                                        0 ||
+                                        salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                                        null ||
+                                        this.regime === 'NEW'
                                         ? 0
                                         : salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10,
                                 taxRelief: null,
                                 taxDeducted: null,
                                 salary:
                                     salaryDetails?.Salary === 0 ||
-                                    salaryDetails?.Salary === null
+                                        salaryDetails?.Salary === null
                                         ? []
                                         : [
                                             {
@@ -557,10 +554,10 @@ export class SummaryConversionService {
                                         ],
                                 allowance:
                                     salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
-                                    0 ||
-                                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
-                                    null ||
-                                    this.regime === 'NEW'
+                                        0 ||
+                                        salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                                        null ||
+                                        this.regime === 'NEW'
                                         ? [
                                             {
                                                 allowanceType: 'GRATUITY',
@@ -627,7 +624,7 @@ export class SummaryConversionService {
                                         ],
                                 perquisites:
                                     salaryDetails?.PerquisitesValue === 0 ||
-                                    salaryDetails?.PerquisitesValue === null
+                                        salaryDetails?.PerquisitesValue === null
                                         ? []
                                         : [
                                             {
@@ -638,7 +635,7 @@ export class SummaryConversionService {
                                         ],
                                 profitsInLieuOfSalaryType:
                                     salaryDetails?.ProfitsInSalary === 0 ||
-                                    salaryDetails?.ProfitsInSalary === null
+                                        salaryDetails?.ProfitsInSalary === null
                                         ? []
                                         : [
                                             {
@@ -707,9 +704,9 @@ export class SummaryConversionService {
                                                 ? 'DLOP'
                                                 : housePropertyDetails?.TypeOfHP,
                                 grossAnnualRentReceivedTotal:
-                                housePropertyDetails?.GrossRentReceived,
+                                    housePropertyDetails?.GrossRentReceived,
                                 grossAnnualRentReceived:
-                                housePropertyDetails?.GrossRentReceived,
+                                    housePropertyDetails?.GrossRentReceived,
 
                                 propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                                 ownerPercentage: null,
@@ -732,14 +729,14 @@ export class SummaryConversionService {
                                 coOwners: [],
                                 loans:
                                     housePropertyDetails?.InterestPayable === 0 ||
-                                    housePropertyDetails?.InterestPayable === null
+                                        housePropertyDetails?.InterestPayable === null
                                         ? []
                                         : [
                                             {
                                                 loanType: 'HOUSING',
                                                 principalAmount: null,
                                                 interestAmount:
-                                                housePropertyDetails?.InterestPayable,
+                                                    housePropertyDetails?.InterestPayable,
                                             },
                                         ],
                                 ArrearsUnrealizedRentRcvd: Math.round(
@@ -747,8 +744,8 @@ export class SummaryConversionService {
                                 ),
                                 totalArrearsUnrealizedRentReceived:
                                     (Math.round(
-                                            housePropertyDetails?.ArrearsUnrealizedRentRcvd
-                                        ) *
+                                        housePropertyDetails?.ArrearsUnrealizedRentRcvd
+                                    ) *
                                         100) /
                                     30,
                             };
@@ -770,10 +767,10 @@ export class SummaryConversionService {
                             //getting all the other income keys from the JSON and passing it to the updateOtherIncomes function
                             const availableOtherIncomes = ItrJSON[this.ITR_Type][
                                 this.ITR14_IncomeDeductions
-                                ]?.OthersInc?.OthersIncDtlsOthSrc?.map(
+                            ]?.OthersInc?.OthersIncDtlsOthSrc?.map(
                                 (value) => value?.OthSrcNatureDesc
                             );
-                            this.updateOtherIncomes(ItrJSON, ITR_Obj,availableOtherIncomes, this.ITR_Type);
+                            this.updateOtherIncomes(ItrJSON, ITR_Obj, availableOtherIncomes, this.ITR_Type);
                         } else {
                             console.log(
                                 'ITROBJECT => OTHERINCOMES',
@@ -802,7 +799,7 @@ export class SummaryConversionService {
                                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                                 const availableExemptIncomes = ItrJSON[
                                     this.ITR_Type
-                                    ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
+                                ]?.ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.map(
                                     (value) => value.NatureDesc
                                 );
                                 this.updateExemptIncomes(ItrJSON, ITR_Obj,
@@ -830,7 +827,7 @@ export class SummaryConversionService {
                                 //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                                 const availableExemptIncomes = ItrJSON[
                                     this.ITR_Type
-                                    ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.map(
+                                ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.map(
                                     (value) => value.NatureDesc
                                 );
                                 this.updateExemptIncomes(ItrJSON, ITR_Obj,
@@ -895,13 +892,13 @@ export class SummaryConversionService {
                         } else {
                             ITR_Obj.taxPaid.onSalary = jsonSalaryTDS.map(
                                 ({
-                                     EmployerOrDeductorOrCollectDetl: {
-                                         TAN,
-                                         EmployerOrDeductorOrCollecterName,
-                                     },
-                                     IncChrgSal,
-                                     TotalTDSSal,
-                                 }) => {
+                                    EmployerOrDeductorOrCollectDetl: {
+                                        TAN,
+                                        EmployerOrDeductorOrCollecterName,
+                                    },
+                                    IncChrgSal,
+                                    TotalTDSSal,
+                                }) => {
                                     return {
                                         id: null,
                                         srNo: null,
@@ -929,17 +926,17 @@ export class SummaryConversionService {
 
                         if (jsonOtherThanSalaryTDS) {
                             const mapJsonToITRObj16A = ({
-                                                            EmployerOrDeductorOrCollectDetl,
-                                                            AmtForTaxDeduct,
-                                                            ClaimOutOfTotTDSOnAmtPaid,
-                                                            TANOfDeductor,
-                                                            TDSClaimed,
-                                                            GrossAmount,
-                                                            HeadOfIncome,
-                                                            TDSDeducted,
-                                                            BroughtFwdTDSAmt,
-                                                            TDSCreditCarriedFwd,
-                                                        }) => {
+                                EmployerOrDeductorOrCollectDetl,
+                                AmtForTaxDeduct,
+                                ClaimOutOfTotTDSOnAmtPaid,
+                                TANOfDeductor,
+                                TDSClaimed,
+                                GrossAmount,
+                                HeadOfIncome,
+                                TDSDeducted,
+                                BroughtFwdTDSAmt,
+                                TDSCreditCarriedFwd,
+                            }) => {
                                 const TAN =
                                     this.ITR_Type === 'ITR1'
                                         ? EmployerOrDeductorOrCollectDetl.TAN
@@ -979,16 +976,16 @@ export class SummaryConversionService {
                             ItrJSON[this.ITR_Type]?.ScheduleTDS3Dtls?.TDS3Details ?? [];
 
                         const mapJsonToITRObj = ({
-                                                     PANofTenant,
-                                                     NameOfTenant,
-                                                     GrsRcptToTaxDeduct,
-                                                     TDSClaimed,
-                                                     GrossAmount,
-                                                     HeadOfIncome,
-                                                     TDSDeducted,
-                                                     TDSCreditCarriedFwd,
-                                                     BroughtFwdTDSAmt,
-                                                 }) => {
+                            PANofTenant,
+                            NameOfTenant,
+                            GrsRcptToTaxDeduct,
+                            TDSClaimed,
+                            GrossAmount,
+                            HeadOfIncome,
+                            TDSDeducted,
+                            TDSCreditCarriedFwd,
+                            BroughtFwdTDSAmt,
+                        }) => {
                             return {
                                 id: null,
                                 srNo: null,
@@ -1020,14 +1017,14 @@ export class SummaryConversionService {
                         } else {
                             ITR_Obj.taxPaid.tcs = jsonTCS?.map(
                                 ({
-                                     EmployerOrDeductorOrCollectDetl: {
-                                         TAN,
-                                         EmployerOrDeductorOrCollecterName,
-                                     },
-                                     AmtTaxCollected,
-                                     AmtTCSClaimedThisYear,
-                                     Amtfrom26AS,
-                                 }) => {
+                                    EmployerOrDeductorOrCollectDetl: {
+                                        TAN,
+                                        EmployerOrDeductorOrCollecterName,
+                                    },
+                                    AmtTaxCollected,
+                                    AmtTCSClaimedThisYear,
+                                    Amtfrom26AS,
+                                }) => {
                                     return {
                                         id: null,
                                         srNo: null,
@@ -1061,7 +1058,7 @@ export class SummaryConversionService {
                             );
                         } else {
                             ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT?.map(
-                                ({BSRCode, DateDep, SrlNoOfChaln, Amt}) => {
+                                ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
                                     return {
                                         id: null,
                                         srNo: null,
@@ -1226,50 +1223,50 @@ export class SummaryConversionService {
                                     id: null,
                                     grossTurnOverAmount: null,
                                     membersOwnCapital:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.PartnerMemberOwnCapital,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.PartnerMemberOwnCapital,
                                     securedLoans:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.SecuredLoans,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.SecuredLoans,
                                     unSecuredLoans:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.UnSecuredLoans,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.UnSecuredLoans,
                                     advances:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.Advances,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.Advances,
                                     sundryCreditorsAmount:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.SundryCreditors,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.SundryCreditors,
                                     otherLiabilities:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.OthrCurrLiab,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.OthrCurrLiab,
                                     totalCapitalLiabilities:
-                                    ItrJSON[this.ITR_Type].ScheduleBP.FinanclPartclrOfBusiness
-                                        .TotCapLiabilities,
+                                        ItrJSON[this.ITR_Type].ScheduleBP.FinanclPartclrOfBusiness
+                                            .TotCapLiabilities,
                                     fixedAssets:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.FixedAssets,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.FixedAssets,
                                     inventories:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.Inventories,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.Inventories,
                                     sundryDebtorsAmount:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.SundryDebtors,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.SundryDebtors,
                                     balanceWithBank:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.BalWithBanks,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.BalWithBanks,
                                     cashInHand:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.CashInHand,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.CashInHand,
                                     loanAndAdvances:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.LoansAndAdvances,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.LoansAndAdvances,
                                     otherAssets:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.OtherAssets,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.OtherAssets,
                                     totalAssets:
-                                    ItrJSON[this.ITR_Type].ScheduleBP
-                                        ?.FinanclPartclrOfBusiness?.TotalAssets,
+                                        ItrJSON[this.ITR_Type].ScheduleBP
+                                            ?.FinanclPartclrOfBusiness?.TotalAssets,
                                     investment: null,
                                     GSTRNumber: null,
                                     difference: null,
@@ -1395,22 +1392,22 @@ export class SummaryConversionService {
                         ITR_Obj.email =
                             ItrJSON[
                                 this.ITR_Type
-                                ].PartA_GEN1.PersonalInfo?.Address?.EmailAddress;
+                            ].PartA_GEN1.PersonalInfo?.Address?.EmailAddress;
 
                         ITR_Obj.family[0].fName =
                             ItrJSON[
                                 this.ITR_Type
-                                ].PartA_GEN1.PersonalInfo?.AssesseeName?.FirstName;
+                            ].PartA_GEN1.PersonalInfo?.AssesseeName?.FirstName;
 
                         ITR_Obj.family[0].mName =
                             ItrJSON[
                                 this.ITR_Type
-                                ].PartA_GEN1.PersonalInfo?.AssesseeName?.MiddleName;
+                            ].PartA_GEN1.PersonalInfo?.AssesseeName?.MiddleName;
 
                         ITR_Obj.family[0].lName =
                             ItrJSON[
                                 this.ITR_Type
-                                ].PartA_GEN1.PersonalInfo?.AssesseeName?.SurNameOrOrgName;
+                            ].PartA_GEN1.PersonalInfo?.AssesseeName?.SurNameOrOrgName;
 
                         ITR_Obj.family[0].fatherName =
                             ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
@@ -1506,7 +1503,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedNewRegime.assessmentYear =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                                            ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                                         : null;
 
                                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
@@ -1523,7 +1520,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
+                                            ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
                                         : null;
                                 }
 
@@ -1550,7 +1547,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                                            ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                                         : null;
 
                                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
@@ -1568,7 +1565,7 @@ export class SummaryConversionService {
                                         ? (ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                                             ItrJSON[
                                                 this.ITR_Type
-                                                ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                            ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                                         : null;
                                 }
 
@@ -1591,7 +1588,7 @@ export class SummaryConversionService {
                                 ? (ITR_Obj.optionForCurrentAY.acknowledgementNumber =
                                     ItrJSON[
                                         this.ITR_Type
-                                        ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
+                                    ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
                                 : null;
 
                         }
@@ -1653,7 +1650,7 @@ export class SummaryConversionService {
                         (ITR_Obj.aadhaarEnrolmentId =
                             ItrJSON[
                                 this.ITR_Type
-                                ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
+                            ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
                             // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
                             this.parseAndFormatDate(
                                 ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
@@ -1668,32 +1665,32 @@ export class SummaryConversionService {
                             ITR_Obj.address.pinCode =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.PinCode;
+                                ].PartA_GEN1.PersonalInfo?.Address?.PinCode;
 
                             ITR_Obj.address.country =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.CountryCode;
+                                ].PartA_GEN1.PersonalInfo?.Address?.CountryCode;
 
                             ITR_Obj.address.state =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.StateCode;
+                                ].PartA_GEN1.PersonalInfo?.Address?.StateCode;
 
                             ITR_Obj.address.city =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.CityOrTownOrDistrict;
+                                ].PartA_GEN1.PersonalInfo?.Address?.CityOrTownOrDistrict;
 
                             ITR_Obj.address.flatNo =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.ResidenceNo;
+                                ].PartA_GEN1.PersonalInfo?.Address?.ResidenceNo;
 
                             ITR_Obj.address.premisesName =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].PartA_GEN1.PersonalInfo?.Address?.ResidenceName;
+                                ].PartA_GEN1.PersonalInfo?.Address?.ResidenceName;
 
                             ITR_Obj.address.area =
                                 ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address
@@ -1715,7 +1712,7 @@ export class SummaryConversionService {
                                 );
                             } else {
                                 ITR_Obj.bankDetails = UtilityBankDetails.map(
-                                    ({IFSCCode, BankName, BankAccountNo, UseForRefund}) => {
+                                    ({ IFSCCode, BankName, BankAccountNo, UseForRefund }) => {
                                         return {
                                             id: null,
                                             bankType: null,
@@ -1751,16 +1748,16 @@ export class SummaryConversionService {
                             ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                                ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
                             ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.AmtSeventhProvisio139iii;
+                                ]?.FilingStatus?.AmtSeventhProvisio139iii;
 
                             ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                                ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
                             ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
 
@@ -1768,11 +1765,11 @@ export class SummaryConversionService {
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
                             if (ItrJSON[
                                 this.ITR_Type
-                                ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                            ]?.FilingStatus?.clauseiv7provisio139iDtls) {
                                 ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                                     ItrJSON[
                                         this.ITR_Type
-                                        ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                                         (element) => ({
                                             nature: parseFloat(element?.clauseiv7provisio139iNature),
                                             amount: parseFloat(element?.clauseiv7provisio139iAmount),
@@ -1783,7 +1780,7 @@ export class SummaryConversionService {
                             ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                                ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
                             ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139i;
                         }
@@ -1806,12 +1803,12 @@ export class SummaryConversionService {
                                 } else {
                                     ITR_Obj.directorInCompany = directorDetails.map(
                                         ({
-                                             NameOfCompany,
-                                             CompanyType,
-                                             PAN,
-                                             SharesTypes,
-                                             DIN,
-                                         }) => {
+                                            NameOfCompany,
+                                            CompanyType,
+                                            PAN,
+                                            SharesTypes,
+                                            DIN,
+                                        }) => {
                                             return {
                                                 id: null,
                                                 companyName: NameOfCompany,
@@ -1848,21 +1845,21 @@ export class SummaryConversionService {
                                     ITR_Obj.unlistedSharesDetails =
                                         HeldUnlistedEqShrPrYrFlg.map(
                                             ({
-                                                 NameOfCompany,
-                                                 CompanyType,
-                                                 PAN,
-                                                 OpngBalNumberOfShares,
-                                                 OpngBalCostOfAcquisition,
-                                                 ShrAcqDurYrNumberOfShares,
-                                                 DateOfSubscrPurchase,
-                                                 FaceValuePerShare,
-                                                 IssuePricePerShare,
-                                                 PurchasePricePerShare,
-                                                 ShrTrnfNumberOfShares,
-                                                 ShrTrnfSaleConsideration,
-                                                 ClsngBalNumberOfShares,
-                                                 ClsngBalCostOfAcquisition,
-                                             }) => {
+                                                NameOfCompany,
+                                                CompanyType,
+                                                PAN,
+                                                OpngBalNumberOfShares,
+                                                OpngBalCostOfAcquisition,
+                                                ShrAcqDurYrNumberOfShares,
+                                                DateOfSubscrPurchase,
+                                                FaceValuePerShare,
+                                                IssuePricePerShare,
+                                                PurchasePricePerShare,
+                                                ShrTrnfNumberOfShares,
+                                                ShrTrnfSaleConsideration,
+                                                ClsngBalNumberOfShares,
+                                                ClsngBalCostOfAcquisition,
+                                            }) => {
                                                 return {
                                                     companyName: NameOfCompany,
                                                     typeOfCompany: CompanyType,
@@ -1893,10 +1890,10 @@ export class SummaryConversionService {
                                 ITR_Obj.partnerInFirmFlag =
                                     ItrJSON[
                                         this.ITR_Type
-                                        ]?.PartA_GEN1?.FilingStatus?.PartnerInFirmFlg;
+                                    ]?.PartA_GEN1?.FilingStatus?.PartnerInFirmFlg;
                                 ITR_Obj.partnerInFirms = ItrJSON[
                                     this.ITR_Type
-                                    ]?.PartA_GEN1?.FilingStatus?.PartnerInFirm?.PartnerInFirmDtls?.map(
+                                ]?.PartA_GEN1?.FilingStatus?.PartnerInFirm?.PartnerInFirmDtls?.map(
                                     (element) => ({
                                         name: element?.NameOfFirm,
                                         panNumber: element?.PAN,
@@ -1911,7 +1908,7 @@ export class SummaryConversionService {
 
                                     ITR_Obj.partnerFirms = ItrJSON[
                                         this.ITR_Type
-                                        ]?.ScheduleIF?.PartnerFirmDetails?.map((element) => ({
+                                    ]?.ScheduleIF?.PartnerFirmDetails?.map((element) => ({
                                         name: element?.FirmName,
                                         panNumber: element?.FirmPAN,
                                         isLiableToAudit: element?.IsLiableToAudit,
@@ -1952,7 +1949,7 @@ export class SummaryConversionService {
                                     ITR_Obj.schedule5a.booksSpouse44ABFlg =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ]?.Schedule5A2014?.BooksSpouse44ABFlg;
+                                        ]?.Schedule5A2014?.BooksSpouse44ABFlg;
 
                                     ITR_Obj.schedule5a.booksSpouse92EFlg =
                                         ItrJSON[this.ITR_Type]?.Schedule5A2014?.BooksSpouse92EFlg;
@@ -2014,9 +2011,9 @@ export class SummaryConversionService {
                 {
                     const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
                     const salaryTypes = [
-                        {code: 'SEC17_1', desc: 'Salary'},
-                        {code: 'BASIC_SALARY', desc: 'Basic Salary', natureDesc: '1'},
-                        {code: 'DA', desc: 'Dearness Allowance', natureDesc: '2'},
+                        { code: 'SEC17_1', desc: 'Salary' },
+                        { code: 'BASIC_SALARY', desc: 'Basic Salary', natureDesc: '1' },
+                        { code: 'DA', desc: 'Dearness Allowance', natureDesc: '2' },
                         {
                             code: 'CONVEYANCE',
                             desc: 'Conveyance Allowance',
@@ -2027,7 +2024,7 @@ export class SummaryConversionService {
                             desc: 'House Rent Allowance',
                             natureDesc: '4',
                         },
-                        {code: 'LTA', desc: 'Leave Travel Allowance', natureDesc: '5'},
+                        { code: 'LTA', desc: 'Leave Travel Allowance', natureDesc: '5' },
                         {
                             code: 'CHILDREN_EDUCATION',
                             desc: 'Children Education Allowance',
@@ -2063,7 +2060,7 @@ export class SummaryConversionService {
                             desc: 'Commuted Pension',
                             natureDesc: '12',
                         },
-                        {code: 'GRATUITY', desc: 'Gratuity', natureDesc: '13'},
+                        { code: 'GRATUITY', desc: 'Gratuity', natureDesc: '13' },
                         {
                             code: 'FEES_COMMISSION',
                             desc: 'Fees/Commission',
@@ -2084,7 +2081,7 @@ export class SummaryConversionService {
                             desc: 'Contribution by central government towards Agnipath scheme (80CCH)',
                             natureDesc: '17',
                         },
-                        {code: 'OTH', desc: 'Others', natureDesc: 'OTH'},
+                        { code: 'OTH', desc: 'Others', natureDesc: 'OTH' },
                     ];
                     const perquisiteTypes = [
                         {
@@ -2092,7 +2089,7 @@ export class SummaryConversionService {
                             desc: 'Income chargeable under the head Perquisities',
                             natureDesc: null,
                         },
-                        {code: 'ACCOMODATION', desc: 'Accommodation', natureDesc: '1'},
+                        { code: 'ACCOMODATION', desc: 'Accommodation', natureDesc: '1' },
                         {
                             code: 'MOTOR_CAR',
                             desc: 'Cars / Other Automotive',
@@ -2123,8 +2120,8 @@ export class SummaryConversionService {
                             desc: 'Free or concessional travel',
                             natureDesc: '7',
                         },
-                        {code: 'FREE_MEALS', desc: 'Free meals', natureDesc: '8'},
-                        {code: 'FREE_EDU', desc: 'Free education', natureDesc: '9'},
+                        { code: 'FREE_MEALS', desc: 'Free meals', natureDesc: '8' },
+                        { code: 'FREE_EDU', desc: 'Free education', natureDesc: '9' },
                         {
                             code: 'GIFT_VOUCHERS',
                             desc: 'Gifts, vouchers, etc.',
@@ -2135,7 +2132,7 @@ export class SummaryConversionService {
                             desc: 'Credit card expenses',
                             natureDesc: '11',
                         },
-                        {code: 'CLUB_EXP', desc: 'Club expenses', natureDesc: '12'},
+                        { code: 'CLUB_EXP', desc: 'Club expenses', natureDesc: '12' },
                         {
                             code: 'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
                             desc: 'Use of movable assets by employees',
@@ -2203,7 +2200,7 @@ export class SummaryConversionService {
                             desc: 'Any amount due/received by assessee from any person before joining or after cessation of employment with that person',
                             natureDesc: '3',
                         },
-                        {code: 'ANY_OTHER', desc: 'Any Other', natureDesc: 'OTH'},
+                        { code: 'ANY_OTHER', desc: 'Any Other', natureDesc: 'OTH' },
                     ];
 
                     if (salaries && salaries !== 0) {
@@ -2222,7 +2219,7 @@ export class SummaryConversionService {
                                 periodTo: '',
                                 taxableIncome: null,
                                 standardDeduction:
-                                ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia,
+                                    ItrJSON[this.ITR_Type].ScheduleS?.DeductionUnderSection16ia,
                                 employerCategory: salary?.NatureOfEmployment,
                                 exemptIncome: null,
                                 taxRelief: null,
@@ -2440,7 +2437,7 @@ export class SummaryConversionService {
                             // setting salary Allowances
                             const availableSalaryAllowances = ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
+                            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
                                 (value) => value.SalNatureDesc
                             );
 
@@ -2452,23 +2449,23 @@ export class SummaryConversionService {
                             //Setting professional tax
                             ITR_Obj.employers.forEach(
                                 (employer) =>
-                                    (employer.deductions.find(
-                                        (deductionType) =>
-                                            deductionType.deductionType === 'PROFESSIONAL_TAX'
-                                    ).exemptAmount =
-                                        ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii /
-                                        salaries.length)
+                                (employer.deductions.find(
+                                    (deductionType) =>
+                                        deductionType.deductionType === 'PROFESSIONAL_TAX'
+                                ).exemptAmount =
+                                    ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii /
+                                    salaries.length)
                             );
 
                             //Setting entertainment allowance
                             ITR_Obj.employers.forEach(
                                 (employer) =>
-                                    (employer.deductions.find(
-                                        (deductionType) =>
-                                            deductionType.deductionType === 'ENTERTAINMENT_ALLOW'
-                                    ).exemptAmount =
-                                        ItrJSON[this.ITR_Type].ScheduleS
-                                            ?.EntertainmntalwncUs16ii / salaries.length)
+                                (employer.deductions.find(
+                                    (deductionType) =>
+                                        deductionType.deductionType === 'ENTERTAINMENT_ALLOW'
+                                ).exemptAmount =
+                                    ItrJSON[this.ITR_Type].ScheduleS
+                                        ?.EntertainmntalwncUs16ii / salaries.length)
                             );
                         }
                     }
@@ -2493,9 +2490,9 @@ export class SummaryConversionService {
                                                 ? 'DLOP'
                                                 : 'LOP',
                                 grossAnnualRentReceivedTotal:
-                                houseProperty?.Rentdetails?.AnnualLetableValue,
+                                    houseProperty?.Rentdetails?.AnnualLetableValue,
                                 grossAnnualRentReceived:
-                                houseProperty?.Rentdetails?.AnnualLetableValue,
+                                    houseProperty?.Rentdetails?.AnnualLetableValue,
 
                                 // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
                                 propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
@@ -2509,18 +2506,18 @@ export class SummaryConversionService {
                                 pinCode: houseProperty?.AddressDetailWithZipCode?.PinCode,
                                 taxableIncome: houseProperty?.Rentdetails?.IncomeOfHP,
                                 exemptIncome:
-                                houseProperty?.Rentdetails?.ThirtyPercentOfBalance,
+                                    houseProperty?.Rentdetails?.ThirtyPercentOfBalance,
                                 isEligibleFor80EE: null, // how to decide which property needs to be marked as true in case deduction 80ee, 80eea is present
                                 isEligibleFor80EEA: null, // how to decide which property needs to be marked as true in case deduction 80ee, 80eea is present
                                 ownerPercentage: null,
                                 coOwners: houseProperty?.CoOwners?.map(
                                     ({
-                                         CoOwnersSNo,
-                                         NameCoOwner,
-                                         PAN_CoOwner,
-                                         Aadhaar_CoOwner,
-                                         PercentShareProperty,
-                                     }) => ({
+                                        CoOwnersSNo,
+                                        NameCoOwner,
+                                        PAN_CoOwner,
+                                        Aadhaar_CoOwner,
+                                        PercentShareProperty,
+                                    }) => ({
                                         id: null,
                                         name: NameCoOwner,
                                         isSelf: null,
@@ -2530,11 +2527,11 @@ export class SummaryConversionService {
                                 ),
                                 tenant: houseProperty?.TenantDetails?.map(
                                     ({
-                                         TenantSNo,
-                                         NameofTenant,
-                                         PANofTenant,
-                                         AadhaarofTenant,
-                                     }) => ({
+                                        TenantSNo,
+                                        NameofTenant,
+                                        PANofTenant,
+                                        AadhaarofTenant,
+                                    }) => ({
                                         id: null,
                                         name: NameofTenant,
                                         panNumber: PANofTenant,
@@ -2553,8 +2550,8 @@ export class SummaryConversionService {
                                 ),
                                 totalArrearsUnrealizedRentReceived:
                                     (Math.round(
-                                            houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
-                                        ) *
+                                        houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
+                                    ) *
                                         100) /
                                     30,
                             };
@@ -2754,27 +2751,27 @@ export class SummaryConversionService {
                         ITR_Obj.giftTax.aggregateValueWithoutConsideration =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x;
+                            ].ScheduleOS?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x;
 
                         ITR_Obj.giftTax.anyOtherPropertyInadequateConsideration =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x;
+                            ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x;
 
                         ITR_Obj.giftTax.anyOtherPropertyWithoutConsideration =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x;
+                            ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x;
 
                         ITR_Obj.giftTax.immovablePropertyInadequateConsideration =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x;
+                            ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x;
 
                         ITR_Obj.giftTax.immovablePropertyWithoutConsideration =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x;
+                            ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x;
                     }
                 }
 
@@ -2824,13 +2821,13 @@ export class SummaryConversionService {
                             } else {
                                 ITR_Obj.taxPaid.onSalary = jsonSalaryTDS?.map(
                                     ({
-                                         EmployerOrDeductorOrCollectDetl: {
-                                             TAN,
-                                             EmployerOrDeductorOrCollecterName,
-                                         },
-                                         IncChrgSal,
-                                         TotalTDSSal,
-                                     }) => {
+                                        EmployerOrDeductorOrCollectDetl: {
+                                            TAN,
+                                            EmployerOrDeductorOrCollecterName,
+                                        },
+                                        IncChrgSal,
+                                        TotalTDSSal,
+                                    }) => {
                                         return {
                                             id: null,
                                             srNo: null,
@@ -2859,16 +2856,16 @@ export class SummaryConversionService {
 
                         if (jsonOtherThanSalaryTDS) {
                             const mapJsonToITRObj16A = ({
-                                                            TaxDeductCreditDtls: {
-                                                                TaxDeductedOwnHands,
-                                                                TaxClaimedOwnHands,
-                                                            },
-                                                            TDSCreditName,
-                                                            TANOfDeductor,
-                                                            GrossAmount,
-                                                            HeadOfIncome,
-                                                            AmtCarriedFwd,
-                                                        }) => {
+                                TaxDeductCreditDtls: {
+                                    TaxDeductedOwnHands,
+                                    TaxClaimedOwnHands,
+                                },
+                                TDSCreditName,
+                                TANOfDeductor,
+                                GrossAmount,
+                                HeadOfIncome,
+                                AmtCarriedFwd,
+                            }) => {
                                 return {
                                     id: null,
                                     srNo: null,
@@ -2898,17 +2895,17 @@ export class SummaryConversionService {
                             [];
 
                         const mapJsonToITRObj = ({
-                                                     TaxDeductCreditDtls: {
-                                                         TaxDeductedOwnHands,
-                                                         TaxClaimedOwnHands,
-                                                     },
-                                                     TDSCreditName,
-                                                     PANOfBuyerTenant,
-                                                     AadhaarOfBuyerTenant,
-                                                     GrossAmount,
-                                                     HeadOfIncome,
-                                                     AmtCarriedFwd,
-                                                 }) => {
+                            TaxDeductCreditDtls: {
+                                TaxDeductedOwnHands,
+                                TaxClaimedOwnHands,
+                            },
+                            TDSCreditName,
+                            PANOfBuyerTenant,
+                            AadhaarOfBuyerTenant,
+                            GrossAmount,
+                            HeadOfIncome,
+                            AmtCarriedFwd,
+                        }) => {
                             return {
                                 id: null,
                                 srNo: null,
@@ -2976,7 +2973,7 @@ export class SummaryConversionService {
                             );
                         } else {
                             ITR_Obj.taxPaid.otherThanTDSTCS = jsonAdvSAT?.map(
-                                ({BSRCode, DateDep, SrlNoOfChaln, Amt}) => {
+                                ({ BSRCode, DateDep, SrlNoOfChaln, Amt }) => {
                                     return {
                                         id: null,
                                         srNo: null,
@@ -3036,7 +3033,7 @@ export class SummaryConversionService {
                         // getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
                         const availableExemptIncomes = ItrJSON[
                             this.ITR_Type
-                            ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
+                        ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
                             (value) => value.NatureDesc
                         );
                         this.updateExemptIncomes(ItrJSON, ITR_Obj, availableExemptIncomes, this.ITR_Type);
@@ -3063,7 +3060,7 @@ export class SummaryConversionService {
                         ITR_Obj.agriculturalIncome.netAgriculturalIncome =
                             ItrJSON[
                                 this.ITR_Type
-                                ].ScheduleEI?.NetAgriIncOrOthrIncRule7;
+                            ].ScheduleEI?.NetAgriIncOrOthrIncRule7;
 
                         ITR_Obj.agriculturalIncome.unabsorbedAgriculturalLoss =
                             ItrJSON[this.ITR_Type].ScheduleEI?.UnabAgriLossPrev8;
@@ -3132,28 +3129,28 @@ export class SummaryConversionService {
                             grossTurnOverAmount: null,
 
                             membersOwnCapital:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.PropFund
-                                ?.TotPropFund,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.PropFund
+                                    ?.TotPropFund,
 
                             securedLoans:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds?.SecrLoan
-                                ?.TotSecrLoan,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds?.SecrLoan
+                                    ?.TotSecrLoan,
 
                             unSecuredLoans:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds
-                                ?.UnsecrLoan?.TotUnSecrLoan,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundSrc?.LoanFunds
+                                    ?.UnsecrLoan?.TotUnSecrLoan,
 
                             advances:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.LoanAdv?.TotLoanAdv,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.LoanAdv?.TotLoanAdv,
 
                             sundryCreditorsAmount:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrLiabilitiesProv?.CurrLiabilities?.SundryCred,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrLiabilitiesProv?.CurrLiabilities?.SundryCred,
 
                             otherLiabilities:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrLiabilitiesProv?.Provisions?.TotProvisions,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrLiabilitiesProv?.Provisions?.TotProvisions,
 
                             totalCapitalLiabilities:
                                 ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
@@ -3162,36 +3159,36 @@ export class SummaryConversionService {
                                     ?.CurrLiabilitiesProv?.CurrLiabilities?.SundryCred,
 
                             fixedAssets:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.FixedAsset
-                                ?.TotFixedAsset,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.FixedAsset
+                                    ?.TotFixedAsset,
 
                             inventories:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrAsset?.Inventories?.TotInventries,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrAsset?.Inventories?.TotInventries,
 
                             sundryDebtorsAmount:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrAsset?.SndryDebtors,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrAsset?.SndryDebtors,
 
                             balanceWithBank:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrAsset?.CashOrBankBal?.BankBal,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrAsset?.CashOrBankBal?.BankBal,
 
                             cashInHand:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.CurrAsset?.CashOrBankBal?.CashinHand,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.CurrAsset?.CashOrBankBal?.CashinHand,
 
                             loanAndAdvances:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
-                                ?.LoanAdv?.TotLoanAdv,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.CurrAssetLoanAdv
+                                    ?.LoanAdv?.TotLoanAdv,
 
                             otherAssets: null,
 
                             totalAssets: null,
 
                             investment:
-                            ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.Investments
-                                ?.TotInvestments,
+                                ItrJSON[this.ITR_Type].PARTA_BS?.FundApply?.Investments
+                                    ?.TotInvestments,
 
                             GSTRNumber: null,
 
@@ -3275,7 +3272,7 @@ export class SummaryConversionService {
                                     ?.LongTermCapGain23?.Proviso112Applicable;
 
                             if (Proviso112Applicabledtls) {
-                                Proviso112Applicabledtls.forEach(({zcb}, index) => {
+                                Proviso112Applicabledtls.forEach(({ zcb }, index) => {
                                     if (
                                         zcb === Proviso112Applicabledtls[0] &&
                                         Proviso112Applicabledtls[0] &&
@@ -3335,14 +3332,14 @@ export class SummaryConversionService {
                                                     sellValue: null,
                                                     stampDutyValue: null,
                                                     valueInConsideration:
-                                                    zcb.Proviso112Applicabledtls?.FullConsideration,
+                                                        zcb.Proviso112Applicabledtls?.FullConsideration,
                                                     sellExpense:
-                                                    zcb.Proviso112Applicabledtls.DeductSec48
-                                                        ?.ExpOnTrans,
+                                                        zcb.Proviso112Applicabledtls.DeductSec48
+                                                            ?.ExpOnTrans,
                                                     purchaseDate: this.parseAndFormatDate('2022-03-13'),
                                                     purchaseCost:
-                                                    zcb.Proviso112Applicabledtls?.DeductSec48
-                                                        ?.AquisitCost,
+                                                        zcb.Proviso112Applicabledtls?.DeductSec48
+                                                            ?.AquisitCost,
                                                     isinCode: null,
                                                     nameOfTheUnits: null,
                                                     sellOrBuyQuantity: 1,
@@ -3353,9 +3350,9 @@ export class SummaryConversionService {
                                                     whetherDebenturesAreListed: null,
                                                     fmvAsOn31Jan2018: null,
                                                     capitalGain:
-                                                    zcb.Proviso112Applicabledtls?.CapgainonAssets,
+                                                        zcb.Proviso112Applicabledtls?.CapgainonAssets,
                                                     cgBeforeDeduction:
-                                                    zcb.Proviso112Applicabledtls?.CapgainonAssets,
+                                                        zcb.Proviso112Applicabledtls?.CapgainonAssets,
                                                     indexCostOfAcquisition: null,
                                                     totalFairMarketValueOfCapitalAsset: null,
                                                     grandFatheredValue: null,
@@ -3434,11 +3431,11 @@ export class SummaryConversionService {
                                             sellValue: null,
                                             stampDutyValue: null,
                                             valueInConsideration:
-                                            SaleofBondsDebntr?.FullConsideration,
+                                                SaleofBondsDebntr?.FullConsideration,
                                             sellExpense: SaleofBondsDebntr?.DeductSec48?.ExpOnTrans,
                                             purchaseDate: this.parseAndFormatDate('2020-03-13'),
                                             purchaseCost:
-                                            SaleofBondsDebntr?.DeductSec48?.AquisitCost,
+                                                SaleofBondsDebntr?.DeductSec48?.AquisitCost,
                                             isinCode: null,
                                             nameOfTheUnits: null,
                                             sellOrBuyQuantity: 1,
@@ -3576,7 +3573,7 @@ export class SummaryConversionService {
                                                     ?.ExemptionOrDednUs54Dtls
                                                     ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
                                                         (
-                                                            {ExemptionSecCode, ExemptionAmount},
+                                                            { ExemptionSecCode, ExemptionAmount },
                                                             index
                                                         ) => ({
                                                             srn: index,
@@ -3661,7 +3658,7 @@ export class SummaryConversionService {
                                                     sellValue: landAndBuilding?.FullConsideration,
                                                     stampDutyValue: landAndBuilding?.PropertyValuation,
                                                     valueInConsideration:
-                                                    landAndBuilding?.FullConsideration50C,
+                                                        landAndBuilding?.FullConsideration50C,
                                                     sellExpense: landAndBuilding?.ExpOnTrans,
                                                     purchaseDate: this.parseAndFormatDate(
                                                         landAndBuilding?.DateofPurchase
@@ -3681,7 +3678,7 @@ export class SummaryConversionService {
                                                     capitalGain: landAndBuilding?.Balance,
                                                     cgBeforeDeduction: landAndBuilding?.Balance,
                                                     indexCostOfAcquisition:
-                                                    landAndBuilding?.AquisitCostIndex,
+                                                        landAndBuilding?.AquisitCostIndex,
                                                     totalFairMarketValueOfCapitalAsset: null,
                                                     grandFatheredValue: null,
                                                     brokerName: null,
@@ -3801,7 +3798,7 @@ export class SummaryConversionService {
                                                     isIndexationBenefitAvailable: null,
                                                     whetherDebenturesAreListed: null,
                                                     fmvAsOn31Jan2018:
-                                                    equityLtcg?.FairMktValuePerShareunit,
+                                                        equityLtcg?.FairMktValuePerShareunit,
                                                     capitalGain: equityLtcg.Balance,
                                                     cgBeforeDeduction: equityLtcg.Balance,
                                                     indexCostOfAcquisition: null,
@@ -3887,7 +3884,7 @@ export class SummaryConversionService {
                                             sellExpense: SaleOnOtherAssets?.DeductSec48?.ExpOnTrans,
                                             purchaseDate: this.parseAndFormatDate('2022-04-15'),
                                             purchaseCost:
-                                            SaleOnOtherAssets?.DeductSec48?.AquisitCost,
+                                                SaleOnOtherAssets?.DeductSec48?.AquisitCost,
                                             isinCode: null,
                                             nameOfTheUnits: null,
                                             sellOrBuyQuantity: 1,
@@ -3935,29 +3932,29 @@ export class SummaryConversionService {
                                             gainType: 'SHORT',
                                             sellDate: this.parseAndFormatDate('2023-03-15'),
                                             sellValue:
-                                            equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                                                equityStcg.EquityMFonSTTDtls?.FullConsideration,
                                             stampDutyValue: null,
                                             valueInConsideration: null,
                                             sellExpense:
-                                            equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
+                                                equityStcg.EquityMFonSTTDtls.DeductSec48?.ExpOnTrans,
                                             purchaseDate: this.parseAndFormatDate('2022-04-15'),
                                             purchaseCost:
-                                            equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                                                equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                                             isinCode: null,
                                             nameOfTheUnits: null,
                                             sellOrBuyQuantity: 1,
                                             sellValuePerUnit:
-                                            equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                                                equityStcg.EquityMFonSTTDtls?.FullConsideration,
                                             purchaseValuePerUnit:
-                                            equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
+                                                equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                                             algorithm: 'cgSharesMF',
                                             isIndexationBenefitAvailable: null,
                                             whetherDebenturesAreListed: null,
                                             fmvAsOn31Jan2018: null,
                                             capitalGain:
-                                            equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                                                equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                                             cgBeforeDeduction:
-                                            equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                                                equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                                             indexCostOfAcquisition: null,
                                             grandFatheredValue: null,
                                             brokerName: null,
@@ -3992,8 +3989,8 @@ export class SummaryConversionService {
                                                     financialYearOfImprovement: null,
                                                     dateOfImprovement: null,
                                                     costOfImprovement:
-                                                    equityStcg.EquityMFonSTTDtls?.DeductSec48
-                                                        ?.ImproveCost,
+                                                        equityStcg.EquityMFonSTTDtls?.DeductSec48
+                                                            ?.ImproveCost,
                                                     indexCostOfImprovement: null,
                                                 },
                                             ],
@@ -4008,32 +4005,32 @@ export class SummaryConversionService {
                                                     gainType: 'SHORT',
                                                     sellDate: this.parseAndFormatDate('2023-03-15'),
                                                     sellValue:
-                                                    equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                                                        equityStcg.EquityMFonSTTDtls?.FullConsideration,
                                                     stampDutyValue: null,
                                                     valueInConsideration: null,
                                                     sellExpense:
-                                                    equityStcg.EquityMFonSTTDtls.DeductSec48
-                                                        ?.ExpOnTrans,
+                                                        equityStcg.EquityMFonSTTDtls.DeductSec48
+                                                            ?.ExpOnTrans,
                                                     purchaseDate: this.parseAndFormatDate('2022-04-15'),
                                                     purchaseCost:
-                                                    equityStcg.EquityMFonSTTDtls.DeductSec48
-                                                        ?.AquisitCost,
+                                                        equityStcg.EquityMFonSTTDtls.DeductSec48
+                                                            ?.AquisitCost,
                                                     isinCode: null,
                                                     nameOfTheUnits: null,
                                                     sellOrBuyQuantity: 1,
                                                     sellValuePerUnit:
-                                                    equityStcg.EquityMFonSTTDtls?.FullConsideration,
+                                                        equityStcg.EquityMFonSTTDtls?.FullConsideration,
                                                     purchaseValuePerUnit:
-                                                    equityStcg.EquityMFonSTTDtls.DeductSec48
-                                                        ?.AquisitCost,
+                                                        equityStcg.EquityMFonSTTDtls.DeductSec48
+                                                            ?.AquisitCost,
                                                     algorithm: 'cgSharesMF',
                                                     isIndexationBenefitAvailable: null,
                                                     whetherDebenturesAreListed: null,
                                                     fmvAsOn31Jan2018: null,
                                                     capitalGain:
-                                                    equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                                                        equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                                                     cgBeforeDeduction:
-                                                    equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                                                        equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                                                     indexCostOfAcquisition: null,
                                                     totalFairMarketValueOfCapitalAsset: null,
                                                     grandFatheredValue: null,
@@ -4141,7 +4138,7 @@ export class SummaryConversionService {
                                                     sellValue: landAndBuilding?.FullConsideration,
                                                     stampDutyValue: landAndBuilding?.PropertyValuation,
                                                     valueInConsideration:
-                                                    landAndBuilding?.FullConsideration50C,
+                                                        landAndBuilding?.FullConsideration50C,
                                                     sellExpense: landAndBuilding?.ExpOnTrans,
                                                     purchaseDate: this.parseAndFormatDate(
                                                         landAndBuilding?.DateofPurchase
@@ -4161,7 +4158,7 @@ export class SummaryConversionService {
                                                     capitalGain: landAndBuilding?.Balance,
                                                     cgBeforeDeduction: landAndBuilding?.Balance,
                                                     indexCostOfAcquisition:
-                                                    landAndBuilding?.AquisitCostIndex,
+                                                        landAndBuilding?.AquisitCostIndex,
                                                     totalFairMarketValueOfCapitalAsset: null,
                                                     grandFatheredValue: null,
                                                     brokerName: null,
@@ -4206,14 +4203,14 @@ export class SummaryConversionService {
 
                     ITR_Obj.foreignIncome.taxReliefClaimed = ItrJSON[
                         this.ITR_Type
-                        ]?.ScheduleFSI?.ScheduleFSIDtls?.map((element, index) => ({
+                    ]?.ScheduleFSI?.ScheduleFSIDtls?.map((element, index) => ({
                         id: '0',
                         claimedDTAA:
-                        ItrJSON[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
-                            ?.ReliefClaimedUsSection,
+                            ItrJSON[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                                ?.ReliefClaimedUsSection,
                         reliefClaimedUsSection:
-                        ItrJSON[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
-                            ?.ReliefClaimedUsSection,
+                            ItrJSON[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                                ?.ReliefClaimedUsSection,
                         countryCode: element?.CountryCodeExcludingIndia,
                         countryName: element?.CountryName,
                         taxPayerID: element?.TaxIdentificationNo,
@@ -4259,10 +4256,10 @@ export class SummaryConversionService {
                                     id: '0',
                                     incomeType: 'BUSINESS_OR_PROFESSION',
                                     claimedDTAA:
-                                    element?.IncFromBusiness?.DTAAReliefUs90or90A,
+                                        element?.IncFromBusiness?.DTAAReliefUs90or90A,
                                     outsideIncome: element?.IncFromBusiness?.IncFrmOutsideInd,
                                     outsideTaxPaid:
-                                    element?.IncFromBusiness?.TaxPaidOutsideInd,
+                                        element?.IncFromBusiness?.TaxPaidOutsideInd,
                                     taxPayable: element?.IncFromBusiness?.TaxPayableinInd,
                                     taxRelief: element?.IncFromBusiness?.TaxReliefinInd,
                                 }
@@ -4276,7 +4273,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.taxPaidOutsideIndiaFlag =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleTR1?.TaxPaidOutsideIndFlg;
+                        ]?.ScheduleTR1?.TaxPaidOutsideIndFlg;
 
                     if (
                         ItrJSON[this.ITR_Type]?.ScheduleTR1
@@ -4298,7 +4295,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsForiegnBank?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsForiegnBank?.map((element) => ({
                             accountNumber: element?.ForeignAccountNumber,
                             accountOpeningDate: element?.AccOpenDate,
                             addressOfInstitution: element?.AddressOfBank,
@@ -4323,7 +4320,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.custodialAccounts =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DtlsForeignCustodialAcc?.map((element) => ({
+                        ]?.ScheduleFA?.DtlsForeignCustodialAcc?.map((element) => ({
                             accountNumber: element?.AccountNumber,
                             accountOpeningDate: element?.AccOpenDate,
                             addressOfInstitution: element?.FinancialInstAddress,
@@ -4362,7 +4359,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DtlsForeignEquityDebtInterest?.map((element) => ({
+                        ]?.ScheduleFA?.DtlsForeignEquityDebtInterest?.map((element) => ({
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
                             nameOfEntity: element?.NameOfEntity,
@@ -4384,7 +4381,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DtlsForeignCashValueInsurance?.map((element) => ({
+                        ]?.ScheduleFA?.DtlsForeignCashValueInsurance?.map((element) => ({
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
                             nameOfInstitution: element?.FinancialInstName,
@@ -4412,7 +4409,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsFinancialInterest?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsFinancialInterest?.map((element) => ({
                             id: null,
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
@@ -4456,7 +4453,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.immovablePropertryDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsImmovableProperty?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsImmovableProperty?.map((element) => ({
                             id: null,
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
@@ -4497,7 +4494,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsOthAssets?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsOthAssets?.map((element) => ({
                             id: null,
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
@@ -4538,7 +4535,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsOfAccntsHvngSigningAuth?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsOfAccntsHvngSigningAuth?.map((element) => ({
                             id: null,
                             institutionName: element?.NameOfInstitution,
                             address: element?.AddressOfInstitution,
@@ -4577,7 +4574,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.trustsDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsOfTrustOutIndiaTrustee?.map((element) => ({
+                        ]?.ScheduleFA?.DetailsOfTrustOutIndiaTrustee?.map((element) => ({
                             id: null,
                             countryName: element?.CountryName,
                             countryCode: element?.CountryCodeExcludingIndia,
@@ -4620,7 +4617,7 @@ export class SummaryConversionService {
                     ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails =
                         ItrJSON[
                             this.ITR_Type
-                            ]?.ScheduleFA?.DetailsOfOthSourcesIncOutsideIndia?.map(
+                        ]?.ScheduleFA?.DetailsOfOthSourcesIncOutsideIndia?.map(
                             (element) => ({
                                 id: null,
                                 countryName: element?.CountryName,
@@ -4656,15 +4653,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4702,15 +4699,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4751,15 +4748,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4800,15 +4797,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4849,15 +4846,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4898,15 +4895,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4947,15 +4944,15 @@ export class SummaryConversionService {
                                         ?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalHPPTILossCF,
+                                    LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -4991,14 +4988,14 @@ export class SummaryConversionService {
                                     LossCFFromPrevYrToAY?.CarryFwdLossDetail?.DateOfFiling
                                 ),
                                 housePropertyLoss:
-                                LossCFFromPrevYrToAY?.CarryFwdLossDetail?.TotalHPPTILossCF,
+                                    LossCFFromPrevYrToAY?.CarryFwdLossDetail?.TotalHPPTILossCF,
                                 pastYear: 0,
                                 STCGLoss:
-                                LossCFFromPrevYrToAY?.CarryFwdLossDetail
-                                    ?.TotalSTCGPTILossCF,
+                                    LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                                        ?.TotalSTCGPTILossCF,
                                 LTCGLoss:
-                                LossCFFromPrevYrToAY?.CarryFwdLossDetail
-                                    ?.TotalLTCGPTILossCF,
+                                    LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                                        ?.TotalLTCGPTILossCF,
 
                                 hasEdit: null,
                                 speculativeBusinessLoss: null,
@@ -5092,9 +5089,9 @@ export class SummaryConversionService {
                                                 TradingAc?.Purchases -
                                                 TradingAc?.ClsngStckOfFinishedStcks),
                                         finishedGoodsClosingStock:
-                                        TradingAc?.ClsngStckOfFinishedStcks,
+                                            TradingAc?.ClsngStckOfFinishedStcks,
                                         finishedGoodsOpeningStock:
-                                        TradingAc?.OpngStckOfFinishedStcks,
+                                            TradingAc?.OpngStckOfFinishedStcks,
                                         purchase: TradingAc?.Purchases,
                                         netIncome:
                                             TradingAc?.TotRevenueFrmOperations -
@@ -5110,9 +5107,9 @@ export class SummaryConversionService {
                                 ],
                                 expenses:
                                     TradingAc?.OtherIncDtls ||
-                                    TradingAc?.DirectExpensesTotal > 0 ||
-                                    TradingAc?.DutyTaxPay?.ExciseCustomsVAT
-                                        ?.TotExciseCustomsVAT > 0
+                                        TradingAc?.DirectExpensesTotal > 0 ||
+                                        TradingAc?.DutyTaxPay?.ExciseCustomsVAT
+                                            ?.TotExciseCustomsVAT > 0
                                         ? getExpenses(
                                             TradingAc?.OtherIncDtls,
                                             TradingAc?.DutyTaxPay?.ExciseCustomsVAT
@@ -5173,7 +5170,7 @@ export class SummaryConversionService {
                             ITR_Obj.section89 =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section89;
+                                ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section89;
                         }
 
                         if (
@@ -5183,7 +5180,7 @@ export class SummaryConversionService {
                             ITR_Obj.section90 =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section90;
+                                ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section90;
                         }
 
                         if (
@@ -5193,7 +5190,7 @@ export class SummaryConversionService {
                             ITR_Obj.section91 =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section91;
+                                ]?.PartB_TTI?.ComputationOfTaxLiability?.TaxRelief?.Section91;
                         }
 
                     }
@@ -5222,7 +5219,7 @@ export class SummaryConversionService {
         return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
     }
 
-    updateSalaryAllowances(ItrJSON:any, ITR_Obj: ITR_JSON, salaryAllowances, ITR_Type) {
+    updateSalaryAllowances(ItrJSON: any, ITR_Obj: ITR_JSON, salaryAllowances, ITR_Type) {
         // create a mapping object to map the JSON names to the new names of ITR Object
         const mapping = {
             '10(5)': 'LTA',
@@ -5259,13 +5256,13 @@ export class SummaryConversionService {
                         if (this.ITR_Type === 'ITR2') {
                             salaryAllowancesDetail = ItrJSON[
                                 ITR_Type
-                                ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+                            ].ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
                                 (salaryAllowances) => salaryAllowances.SalNatureDesc === type
                             );
                         } else {
                             salaryAllowancesDetail = ItrJSON[this.ITR_Type][
                                 this.ITR14_IncomeDeductions
-                                ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
+                            ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls.find(
                                 (salaryAllowances) => salaryAllowances.SalNatureDesc === type
                             );
                         }
@@ -5346,7 +5343,7 @@ export class SummaryConversionService {
                 allAllowance.exemptAmount =
                     ItrJSON[this.ITR_Type][
                         this.ITR14_IncomeDeductions
-                        ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
+                    ]?.AllwncExemptUs10?.TotalAllwncExemptUs10;
             }
             // this.allowanceDetails23 = this.ITR_Obj.employers[0].allowance;
             // console.log(this.allowanceDetails23, 'allowanceDetails23');
@@ -5364,19 +5361,19 @@ export class SummaryConversionService {
                 if (this.ITR_Type === 'ITR1') {
                     JsonDetail = ItrJSON[
                         ITR_Type
-                        ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
+                    ].ITR1_IncomeDeductions?.ExemptIncAgriOthUs10?.ExemptIncAgriOthUs10Dtls?.find(
                         (jsonAllowance) => jsonAllowance.NatureDesc === type
                     );
                 } else if (this.ITR_Type === 'ITR4') {
                     JsonDetail = ItrJSON[
                         ITR_Type
-                        ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.find(
+                    ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.find(
                         (jsonAllowance) => jsonAllowance.NatureDesc === type
                     );
                 } else if (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3') {
                     JsonDetail = ItrJSON[
                         ITR_Type
-                        ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
+                    ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
                         (jsonAllowance) => jsonAllowance.NatureDesc === type
                     );
                 }
@@ -5460,14 +5457,14 @@ export class SummaryConversionService {
     }
 
     // Mapping other income from json to itr Object
-    updateOtherIncomes(ItrJSON:any, ITR_Obj:ITR_JSON, otherIncomes, ITR_Type) {
+    updateOtherIncomes(ItrJSON: any, ITR_Obj: ITR_JSON, otherIncomes, ITR_Type) {
         if (this.ITR_Type === 'ITR1' || this.ITR_Type === 'ITR4') {
             // Savings Interest Income
             {
                 // finding and storing the object in utility with the name SAV
                 const JsonDetailSAV = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'SAV'
                 );
 
@@ -5488,7 +5485,7 @@ export class SummaryConversionService {
                 // finding and storing the object in utility with the name IFD
                 const JsonDetailIFD = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'IFD'
                 );
 
@@ -5509,7 +5506,7 @@ export class SummaryConversionService {
                 // finding and storing the object in utility with the name SAV
                 const JsonDetailFAP = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'FAP'
                 );
 
@@ -5530,7 +5527,7 @@ export class SummaryConversionService {
                 // finding and storing the object in utility with the name TAX
                 const JsonDetailTAX = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'TAX'
                 );
 
@@ -5551,7 +5548,7 @@ export class SummaryConversionService {
                 // finding and storing the object in utility with the name OTH
                 const JsonDetailOTH = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome.OthSrcNatureDesc === 'OTH'
                 );
 
@@ -5571,7 +5568,7 @@ export class SummaryConversionService {
             {
                 const DIV = ItrJSON[this.ITR_Type][
                     this.ITR14_IncomeDeductions
-                    ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (jsonOtherIncome) => jsonOtherIncome?.OthSrcNatureDesc === 'DIV'
                 );
 
@@ -5718,19 +5715,19 @@ export class SummaryConversionService {
                                 ?.DoneeWithPan;
 
                         const mapJsonToITRObjDon100Percent = ({
-                                                                  DoneeWithPanName,
-                                                                  DoneePAN,
-                                                                  AddressDetail: {
-                                                                      AddrDetail,
-                                                                      CityOrTownOrDistrict,
-                                                                      StateCode,
-                                                                      PinCode,
-                                                                  },
-                                                                  DonationAmtCash,
-                                                                  DonationAmtOtherMode,
-                                                                  DonationAmt,
-                                                                  EligibleDonationAmt,
-                                                              }) => {
+                            DoneeWithPanName,
+                            DoneePAN,
+                            AddressDetail: {
+                                AddrDetail,
+                                CityOrTownOrDistrict,
+                                StateCode,
+                                PinCode,
+                            },
+                            DonationAmtCash,
+                            DonationAmtOtherMode,
+                            DonationAmt,
+                            EligibleDonationAmt,
+                        }) => {
                             return {
                                 id: null,
                                 donationType: 'OTHER',
@@ -5762,19 +5759,19 @@ export class SummaryConversionService {
                                 ?.Don50PercentNoApprReqd?.DoneeWithPan;
 
                         const mapJsonToITRObjDon50Percent = ({
-                                                                 DoneeWithPanName,
-                                                                 DoneePAN,
-                                                                 AddressDetail: {
-                                                                     AddrDetail,
-                                                                     CityOrTownOrDistrict,
-                                                                     StateCode,
-                                                                     PinCode,
-                                                                 },
-                                                                 DonationAmtCash,
-                                                                 DonationAmtOtherMode,
-                                                                 DonationAmt,
-                                                                 EligibleDonationAmt,
-                                                             }) => {
+                            DoneeWithPanName,
+                            DoneePAN,
+                            AddressDetail: {
+                                AddrDetail,
+                                CityOrTownOrDistrict,
+                                StateCode,
+                                PinCode,
+                            },
+                            DonationAmtCash,
+                            DonationAmtOtherMode,
+                            DonationAmt,
+                            EligibleDonationAmt,
+                        }) => {
                             return {
                                 id: null,
                                 donationType: 'OTHER',
@@ -5811,19 +5808,19 @@ export class SummaryConversionService {
                                 ?.Don100PercentApprReqd?.DoneeWithPan;
 
                         const mapJsonToITRObjDon100PercentAGTI = ({
-                                                                      DoneeWithPanName,
-                                                                      DoneePAN,
-                                                                      AddressDetail: {
-                                                                          AddrDetail,
-                                                                          CityOrTownOrDistrict,
-                                                                          StateCode,
-                                                                          PinCode,
-                                                                      },
-                                                                      DonationAmtCash,
-                                                                      DonationAmtOtherMode,
-                                                                      DonationAmt,
-                                                                      EligibleDonationAmt,
-                                                                  }) => {
+                            DoneeWithPanName,
+                            DoneePAN,
+                            AddressDetail: {
+                                AddrDetail,
+                                CityOrTownOrDistrict,
+                                StateCode,
+                                PinCode,
+                            },
+                            DonationAmtCash,
+                            DonationAmtOtherMode,
+                            DonationAmt,
+                            EligibleDonationAmt,
+                        }) => {
                             return {
                                 id: null,
                                 donationType: 'OTHER',
@@ -5860,19 +5857,19 @@ export class SummaryConversionService {
                                 ?.DoneeWithPan;
 
                         const mapJsonToITRObjDon50PercentAGTI = ({
-                                                                     DoneeWithPanName,
-                                                                     DoneePAN,
-                                                                     AddressDetail: {
-                                                                         AddrDetail,
-                                                                         CityOrTownOrDistrict,
-                                                                         StateCode,
-                                                                         PinCode,
-                                                                     },
-                                                                     DonationAmtCash,
-                                                                     DonationAmtOtherMode,
-                                                                     DonationAmt,
-                                                                     EligibleDonationAmt,
-                                                                 }) => {
+                            DoneeWithPanName,
+                            DoneePAN,
+                            AddressDetail: {
+                                AddrDetail,
+                                CityOrTownOrDistrict,
+                                StateCode,
+                                PinCode,
+                            },
+                            DonationAmtCash,
+                            DonationAmtOtherMode,
+                            DonationAmt,
+                            EligibleDonationAmt,
+                        }) => {
                             return {
                                 id: null,
                                 donationType: 'OTHER',
@@ -6045,7 +6042,7 @@ export class SummaryConversionService {
                             const json80DSeniorCitizen =
                                 ItrJSON[
                                     this.ITR_Type
-                                    ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                                ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
                                     'SeniorCitizenFlag'
                                 );
 
@@ -6059,35 +6056,35 @@ export class SummaryConversionService {
                                     itrObjSelf80D.premium =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HlthInsPremSlfFamSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HlthInsPremSlfFamSrCtzn;
                                     // SELF PREVENTIVE HEALTH CHECK UP
                                     itrObjSelf80D.preventiveCheckUp =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
                                     // SELF MEDICAL EXPENDITURE
                                     itrObjSelf80D.medicalExpenditure =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
                                 } else {
                                     // SELF HEALTH INSURANCE PREMIUM
                                     itrObjSelf80D.premium =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HealthInsPremSlfFam;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.HealthInsPremSlfFam;
                                     // SELF PREVENTIVE HEALTH CHECK UP
                                     itrObjSelf80D.preventiveCheckUp =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFam;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFam;
                                 }
                             }
 
                             // finding the Section80D array for parents in itr object
                             const json80DParentsSeniorCitizen = ItrJSON[
                                 this.ITR_Type
-                                ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
+                            ].Schedule80D?.Sec80DSelfFamSrCtznHealth.hasOwnProperty(
                                 'ParentsSeniorCitizenFlag'
                             );
 
@@ -6102,31 +6099,31 @@ export class SummaryConversionService {
                                     itrObjParents80D.premium =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParentsSrCtzn;
 
                                     // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
                                     itrObjParents80D.preventiveCheckUp =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
 
                                     // PARENTS MEDICAL EXPENDITURE
                                     itrObjParents80D.medicalExpenditure =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
                                 } else {
                                     // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
                                     itrObjParents80D.premium =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.HlthInsPremParents;
 
                                     // PARENTS PREVENTIVE HEALTH CHECK UP - not working for seniorCitizen. Need to check later
                                     itrObjParents80D.preventiveCheckUp =
                                         ItrJSON[
                                             this.ITR_Type
-                                            ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
+                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParents;
                                 }
                             } else {
                                 ITR_Obj.systemFlags.hasParentOverSixty = false;
@@ -6191,7 +6188,7 @@ export class SummaryConversionService {
         }
     }
 
-    getPreviousItrs(userId, assessmentYear, financialYear){
+    getPreviousItrs(userId, assessmentYear, financialYear) {
         let userProfile;
         this.utilsService.getUserProfile(userId).then((result: any) => {
             userProfile = result;
@@ -6199,16 +6196,16 @@ export class SummaryConversionService {
         const param = `/cloud/file-info?currentPath=${userId}/ITR/${financialYear}/Original/ITR%20Filing%20Docs`; //+ this.userObj.userId;
         this.itrMsService.getMethod(param).subscribe(
             (result: any) => {
-                if(Array.isArray(result)) {
-                    result.forEach(doc =>{
-                        if(doc.documentTag === 'FILED_ITR_JSON'){
+                if (Array.isArray(result)) {
+                    result.forEach(doc => {
+                        if (doc.documentTag === 'FILED_ITR_JSON') {
                             let signedUrl = environment.url + '/itr/cloud/download?filePath=' + doc.filePath;
                             this.httpClient.get(signedUrl).subscribe(
-                                (jsonObject:any) => {
+                                (jsonObject: any) => {
                                     console.log(jsonObject);
                                     let itrJson = this.utilsService.createEmptyJson(userProfile, assessmentYear, financialYear);
                                     let convertedItrJson = this.convertJsonToObject(jsonObject.ITR, itrJson, userProfile);
-                                    if(convertedItrJson) {
+                                    if (convertedItrJson) {
                                         sessionStorage.setItem('PREV_ITR_JSON', JSON.stringify(convertedItrJson));
                                     }
                                     return convertedItrJson;

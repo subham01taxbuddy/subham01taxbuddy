@@ -38,7 +38,7 @@ export class AppComponent {
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
     private idleService: IdleService,
-    private kommunicateSsoService:KommunicateSsoService,
+    private kommunicateSsoService: KommunicateSsoService,
     private http: HttpClient,
     private utilsService: UtilsService,
     private userMsService: UserMsService,

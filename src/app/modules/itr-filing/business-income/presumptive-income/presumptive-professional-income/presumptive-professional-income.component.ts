@@ -3,24 +3,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
-import {
-  ITR_JSON,
-  professionalIncome,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
-
-const professionalData: professionalIncome[] = [
-  {
-    natureOfBusiness: null,
-    tradeName: null,
-    receipts: null,
-    presumptiveIncome: null,
-  },
-];
 @Component({
   selector: 'app-presumptive-professional-income',
   templateUrl: './presumptive-professional-income.component.html',
@@ -31,15 +18,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   profIncomeForm: FormGroup;
   profIncomeFormArray: FormArray;
-  professionalData: professionalIncome = {
-    natureOfBusiness: null,
-    tradeName: null,
-    receipts: null,
-    presumptiveIncome: null,
-  };
   loading: boolean;
-  natureOfBusinessList: any;
-  config: any;
   amountFifty: number = 0;
   amountFiftyMax: number = 0;
   submitted = false;
@@ -97,36 +76,20 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.config = {
-      id: 'professionConfig',
-      itemsPerPage: 2,
-      currentPage: 1,
-    };
-
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
-      (acIncome) => acIncome.businessType === 'PROFESSIONAL'
-    );
-
+      (acIncome) => acIncome.businessType === 'PROFESSIONAL');
     this.profIncomeFormArray = new FormArray([]);
     let srn = this.profIncomeFormArray.controls.length > 0 ? this.profIncomeFormArray.controls.length : 0;
     this.selectedFormGroup = this.createProfIncomeForm(srn);
     this.activeIndex = -1;
-
     if (profBusiness && profBusiness.length > 0) {
       profBusiness.forEach((element, index) => {
         let form = this.createProfIncomeForm(index, element);
         this.profIncomeFormArray.push(form);
       });
-    } else {
-      // let form = this.createProfIncomeForm(0, null);
-      // this.profIncomeFormArray.push(form);
     }
     this.profIncomeForm = this.fb.group({
       profIncomeFormArray: this.profIncomeFormArray,
-    });
-
-    this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      // this.calculatePresumptive();
     });
   }
 
@@ -152,25 +115,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     return form;
   }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-  }
-
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  // addProfIncomeForm() {
-  //   if (this.profIncomeForm.valid) {
-  //     this.submitted = false;
-  //     let form = this.createProfIncomeForm(0, null);
-  //     (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(0, form);
-  //     this.percentage.unshift({ "natOfBusiness": "", "percentage": 0 });
-  //   } else {
-  //     this.submitted = true;
-  //   }
-  // }
-
   profSelected() {
     const profIncomeFormArray = <FormArray>(
       this.profIncomeForm?.get('profIncomeFormArray')
@@ -183,12 +127,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    // const profIncomeFormArray = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
-    // profIncomeFormArray.controls = profIncomeFormArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
     let array = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
-    array.controls = array.controls.filter(
-      (element) => !(element as FormGroup).controls['hasEdit'].value
-    );
+    array.controls = array.controls.filter((element) => !(element as FormGroup).controls['hasEdit'].value);
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -196,28 +136,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   calculatePresumptive() {
     this.percentage = 0;
-    // const profIncomeFormArray = <FormArray>(
-    //   this.profIncomeForm.get('profIncomeFormArray')
-    // );
-
-    // for (let i = 0; i < profIncomeFormArray.length; i++) {
-    const receipt = this.selectedFormGroup.controls['receipts'].value;
-    const minimumPresumptiveIncome = this.selectedFormGroup.controls['minimumPresumptiveIncome'].value;
-    const presumptiveIncome = this.selectedFormGroup.controls['presumptiveIncome'].value;
-    const natOfBusiness = this.selectedFormGroup.controls['natureOfBusiness'].value;
-
     this.amountFifty = 0;
     this.amountFiftyMax = 0;
     this.amountFifty = this.selectedFormGroup.controls['receipts'].value;
     this.amountFiftyMax = this.selectedFormGroup.controls['receipts'].value;
     this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
-
     this.selectedFormGroup.controls['minimumPresumptiveIncome'].setValue(this.amountFifty);
-
-    // let PresumptiveIncome =
-    //   presumptiveIncome.value !== ''
-    //     ? parseFloat(presumptiveIncome.value)
-    //     : 0;
 
     if (this.selectedFormGroup.controls['presumptiveIncome'].value >= 0) {
       this.selectedFormGroup.controls['presumptiveIncome'].setValidators([
@@ -232,215 +156,17 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       (parseFloat(this.selectedFormGroup.controls['presumptiveIncome'].value) * 100) / parseFloat(this.selectedFormGroup.controls['receipts'].value)
     );
     this.percentage = percentage;
-    // console.log(
-    //   this.percentage[0] === natOfBusiness ? this.percentage[1] : 0
-    // );
-    // }
-
-    console.log(this.percentage);
   }
 
   dataSource = new MatTableDataSource<professionalIncome>();
   selection = new SelectionModel<professionalIncome>(true, []);
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.data.forEach((row) => this.selection.select(row));
-  }
-  removeSelectedRows() {
-    this.selection.selected.forEach((item) => {
-      let index: number = this.dataSource.data.findIndex((d) => d === item);
-      console.log(this.dataSource.data.findIndex((d) => d === item));
-      this.dataSource.data.splice(index, 1);
-
-      this.dataSource = new MatTableDataSource<professionalIncome>(
-        this.dataSource.data
-      );
-    });
-    this.selection = new SelectionModel<professionalIncome>(true, []);
-  }
-
-  getMastersData() {
-    this.loading = true;
-    const param = '/itrmaster';
-    this.itrMsService.getMethod(param).subscribe(
-      (result: any) => {
-        let natureOfBusinessAll = result.natureOfBusiness;
-        this.loading = false;
-        sessionStorage.setItem(
-          'NATURE_OF_BUSINESS',
-          JSON.stringify(natureOfBusinessAll)
-        );
-        this.natureOfBusinessList = natureOfBusinessAll.filter(
-          (item: any) => item.section === '44ADA'
-        );
-        sessionStorage.setItem('MASTER', JSON.stringify(result));
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to get nature of Business list, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
-  }
-
-
-  createProfessionalColumnDef(natureOfBusinessList, rowsData) {
-    return [
-      {
-        headerName: 'Nature of Profession',
-        field: 'natureOfBusiness',
-        suppressMovable: true,
-        editable: false,
-        width: 400,
-        valueGetter: function nameFromCode(params) {
-          console.log(natureOfBusinessList.length);
-          let business = natureOfBusinessList.filter(
-            (item) => item.code === params.data.natureOfBusiness
-          );
-          return business[0] ? business[0].label : null;
-        },
-      },
-
-      {
-        headerName: 'Trade Name',
-        field: 'tradeName',
-        editable: false,
-        suppressMovable: true,
-        width: 290,
-        valueGetter: function nameFromCode(params) {
-          return params.data.tradeName
-            ? params.data.tradeName.toLocaleString('en-IN')
-            : params.data.tradeName;
-        },
-      },
-
-      {
-        headerName: 'Gross Receipt',
-        editable: false,
-        field: 'receipts',
-        width: 250,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.receipts
-            ? params.data.receipts.toLocaleString('en-IN')
-            : params.data.receipts;
-        },
-      },
-
-      {
-        headerName: 'presumptive Income min 50%',
-        field: 'presumptiveIncome',
-        editable: false,
-        width: 250,
-        suppressMovable: true,
-        valueGetter: function nameFromCode(params) {
-          return params.data.presumptiveIncome
-            ? params.data.presumptiveIncome.toLocaleString('en-IN')
-            : params.data.presumptiveIncome;
-        },
-      },
-
-      {
-        headerName: 'Actions',
-        editable: false,
-        suppressMovable: true,
-        suppressMenu: true,
-        sortable: true,
-        pinned: 'right',
-        width: 100,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button"  title="Update Bonds details" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: green">
-          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-         </button>
-          <button type="button" class="action_icon add_button" title="Delete Bonds" style="border: none;
-          background: transparent; font-size: 16px; cursor:pointer;color: red">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-        },
-      },
-    ];
-  }
-
-
-  addProfessionalRow(mode, data: any, index?) {
-    if (mode === 'ADD') {
-      const length = this.dataSource.data.length;
-    }
-    const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
-      data: {
-        mode: mode,
-        data: this.dataSource.data,
-        natureList: this.dataSource.data,
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result add CG=', result);
-      if (result !== undefined) {
-        if (mode === 'ADD') {
-          this.dataSource.data.push(result);
-          this.dataSource = new MatTableDataSource(this.dataSource.data);
-        }
-      }
-    });
-  }
-
-  editProfessionalRow(mode, data: any, index?) {
-    const dialogRef = this.matDialog.open(ProfessionalDialogComponent, {
-      data: {
-        mode: mode,
-        data: this.selection.selected[0],
-        natureList: this.dataSource.data,
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result add CG=', result);
-      if (result !== undefined) {
-        if (mode === 'EDIT') {
-          let itemIndex = this.dataSource.data.findIndex(
-            (item) => item.tradeName == this.selection.selected[0].tradeName
-          );
-          this.dataSource.data[itemIndex] = result;
-          this.dataSource = new MatTableDataSource(this.dataSource.data);
-          this.selection.clear();
-        }
-      }
-    });
-  }
-
   onContinue() {
-    // form values
-    let profBusinessFormIncome = (
-      this.profIncomeForm.controls['profIncomeFormArray'] as FormArray
-    ).getRawValue();
-
-    let receiptsTotal = profBusinessFormIncome.reduce(
-      (acc, value) => acc + parseFloat(value?.receipts),
-      0
-    );
+    let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
+    let receiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.receipts), 0);
 
     if (receiptsTotal > 5000000) {
-      this.utilsService.showSnackBar(
-        'Please make sure that the receipts total in Professional details is within the specified limit'
-      );
+      this.utilsService.showSnackBar('Please make sure that the receipts total in Professional details is within the specified limit');
       return;
     }
     this.loading = true;
@@ -450,13 +176,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
     if (this.profIncomeForm.valid) {
       this.submitted = false;
-
       // all the arrays with type professional under presumptive income
-      let profBusiness = this.ITR_JSON.business?.presumptiveIncomes;
-
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
-
       // IF PROF INCOME FORM IS VALID
       profBusinessFormIncome?.forEach((element) => {
         let isAdded = false;
@@ -585,10 +307,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   businessClicked(event) {
-    // (
-    //   (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-    //     .controls[index] as FormGroup
-    // ).controls['natureOfBusiness'].setValue(event);
     this.selectedFormGroup.controls['natureOfBusiness'].setValue(event);
   }
 

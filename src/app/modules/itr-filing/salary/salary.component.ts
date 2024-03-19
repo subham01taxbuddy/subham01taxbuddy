@@ -1891,14 +1891,24 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   onBifurcationUpdated(result) {
+    debugger
+    this.getSalaryArray.controls.forEach(element => {
+      this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
+    });
+    result = this.utilsService.getSalaryValues();
+    debugger
     if (result !== undefined) {
       this.changeConsetGiven = false;
       console.log('BifurcationComponent=', result);
       if (result.perquisites) {
         if (result.perquisites.length > 0) {
-          this.bifurcationResult.SEC17_2.total = result.perquisites.reduce(
+          let total = result.perquisites.reduce(
             (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
           this.bifurcationResult.SEC17_2.value = result.perquisites;
+
+          if (total > 0) {
+            this.bifurcationResult.SEC17_2.total = total;
+          }
         } else {
           // this.bifurcationResult.SEC17_2.total = 0;
         }
@@ -1918,9 +1928,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       }
       if (result.salary) {
         if (result.salary.length > 0) {
-          this.bifurcationResult.SEC17_1.total = result.salary.reduce(
+          let total = result.salary.reduce(
             (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
           this.bifurcationResult.SEC17_1.value = result.salary;
+          if (total > 0) {
+            this.bifurcationResult.SEC17_1.total = total;
+          }
         } else {
           // this.bifurcationResult.SEC17_1.total = 0;
         }
@@ -1941,9 +1954,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       }
       if (result.profitsInLieu) {
         if (result.profitsInLieu.length > 0) {
-          this.bifurcationResult.SEC17_3.total = result.profitsInLieu.reduce(
+          let total = result.profitsInLieu.reduce(
             (sum: number, x: any) => sum += parseInt(x.taxableAmount), 0) as number;
           this.bifurcationResult.SEC17_3.value = result.profitsInLieu;
+          debugger
+          if (total > 0) {
+            this.bifurcationResult.SEC17_3.total = total;
+          }
         } else {
           // this.bifurcationResult.SEC17_3.total = 0;
         }
@@ -1964,6 +1981,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   bifurcation() {
+    debugger
     this.valueChanged = this.utilsService.getChange();
     if (Object.keys(this.bifurcationResult.SEC17_1.value).length === 0) {
       this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;

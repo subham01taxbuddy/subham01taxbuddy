@@ -9,9 +9,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { environment } from 'src/environments/environment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
-import { event } from 'jquery';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
-import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
@@ -66,7 +64,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new FormControl(false);
   coOwnerCheck = false;
   roles: any;
   loggedUserId: any;
@@ -149,26 +147,18 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.roles = this.utilsService.getUserRoles();
     this.agentId = userId;
     this.getAgentList();
-    var userInfo = JSON.parse(localStorage.getItem('UMD'));
     if (!this.utilsService.isNonEmpty(this.loggedUserId)) {
       this.loggedUserId = userId;
     }
-    // this.showScheduleCallList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
-      // console.log('q param', this.searchVal)
-      // this.searchParam.mobileNumber = this.searchVal;
-      // this.search('mobile');
-
       if (this.searchVal) {
-        // console.log('q param',this.searchVal)
         this.searchParam.mobileNumber = this.searchVal;
         this.search('mobile');
       }
       else if (this.searchStatusId) {
-        // console.log('q param',this.searchStatus)
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
@@ -191,9 +181,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.maxStartDate = this.endDate.value;
   }
 
-  // async getMasterStatusList() {
-  //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
-  // }
   getAgentList() {
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable =
@@ -202,10 +189,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']
       );
   }
-
-  // showScheduleCallList() {
-  //   this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
-  // }
 
   maskMobileNumber(mobileNumber) {
     if (mobileNumber) {
@@ -223,8 +206,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     console.log('object from search param ', this.searchBy);
   }
 
-  ownerId: number;
-  filerId: number;
   agentId = null;
   leaderId: number;
   subPaidScheduleCallList = new FormControl(false);
@@ -244,7 +225,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
 
   createRowData(scheduleCalls) {
-    // console.log('scheduleCalls -> ', scheduleCalls);
     console.log('scheduleCalls -> ', scheduleCalls);
     var scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
@@ -324,7 +304,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // code to masking mobile no
         cellRenderer: (params) => {
           const mobileNumber = params.value;
           if (mobileNumber) {
@@ -411,19 +390,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
-      // {
-      //   headerName: 'Filer Name',
-      //   field: 'filerName',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   sortable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      // },
       {
         headerName: 'Leader Name',
         field: 'leaderName',
@@ -701,14 +667,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           console.log('The dialog was closed');
         });
       }
-    },error => {
-      this.loading=false;
-        if (error.error && error.error.error) {
-          this.toastMsgService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this.toastMsgService.alert("error", "An unexpected error occurred.");
-        }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this.toastMsgService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this.toastMsgService.alert("error", "An unexpected error occurred.");
+      }
     });
 
   }
@@ -760,14 +726,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           console.log('The dialog was closed');
         });
       }
-    },error => {
-      this.loading=false;
-        if (error.error && error.error.error) {
-          this.toastMsgService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this.toastMsgService.alert("error", "An unexpected error occurred.");
-        }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this.toastMsgService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this.toastMsgService.alert("error", "An unexpected error occurred.");
+      }
     });
   }
 
@@ -822,7 +788,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
           this.search();
@@ -860,57 +826,56 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   callStatusChange(callInfo, statusId, statusName) {
     this.utilsService.getUserCurrentStatus(callInfo.userId).subscribe((res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilsService.showSnackBar(res.error);
-          this.search();
-          return;
-        } else {
-          console.log('callInfo: ', callInfo);
-          this.loading = true;
-          let reqBody = {
-            scheduleCallTime: callInfo.scheduleCallTime,
-            userId: callInfo.userId,
-            statusId: statusId,
-            statusName: statusName,
-          };
-          let param = `/schedule-call-details`;
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        console.log('callInfo: ', callInfo);
+        this.loading = true;
+        let reqBody = {
+          scheduleCallTime: callInfo.scheduleCallTime,
+          userId: callInfo.userId,
+          statusId: statusId,
+          statusName: statusName,
+        };
+        let param = `/schedule-call-details`;
 
-          this.userMsService.putMethod(param, reqBody).subscribe(
-            (response: any) => {
-              console.log('schedule-call Done response: ', response);
-              this.loading = false;
-              this.toastMsgService.alert(
-                'success',
-                'Call status update successfully.'
-              );
-              if (statusId === 19) {
-                we_track('Call Status - Follow Up', {
-                  'User Number': callInfo.userMobile,
-                });
-              } else if (statusId === 18) {
-                this.markAsScheduleCallDone(callInfo);
-                we_track('Call Status - Done', {
-                  'User Number': callInfo.userMobile,
-                });
-              }
-              setTimeout(() => {
-                this.search();
-                // this.showScheduleCallList();
-              }, 300);
-            },
-            (error) => {
-              this.toastMsgService.alert(
-                'error',
-                'Error during schedule-call status change.'
-              );
-              this.loading = false;
+        this.userMsService.putMethod(param, reqBody).subscribe(
+          (response: any) => {
+            console.log('schedule-call Done response: ', response);
+            this.loading = false;
+            this.toastMsgService.alert(
+              'success',
+              'Call status update successfully.'
+            );
+            if (statusId === 19) {
+              we_track('Call Status - Follow Up', {
+                'User Number': callInfo.userMobile,
+              });
+            } else if (statusId === 18) {
+              this.markAsScheduleCallDone(callInfo);
+              we_track('Call Status - Done', {
+                'User Number': callInfo.userMobile,
+              });
             }
-          );
-        }
-      },
+            setTimeout(() => {
+              this.search();
+            }, 300);
+          },
+          (error) => {
+            this.toastMsgService.alert(
+              'error',
+              'Error during schedule-call status change.'
+            );
+            this.loading = false;
+          }
+        );
+      }
+    },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.toastMsgService.alert("error", error.error.error);
           this.search();
@@ -1174,17 +1139,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.showCsvMessage = false;
   }
 
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.search('', true);
-  }
 
   ngOnDestroy() {
     this.cacheManager.clearCache();

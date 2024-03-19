@@ -1,5 +1,3 @@
-// import { environment } from './../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { concatMap, Observable, Subject } from 'rxjs';
@@ -9,29 +7,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  Employer,
-  ITR_JSON,
-  OptedInNewRegime,
-  OptedOutNewRegime,
-} from '../modules/shared/interfaces/itr-input.interface';
+import { Employer, ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
-import { Environment } from 'ag-grid-community';
-import { parse } from '@typescript-eslint/parser';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import {
-  Form,
-  FormArray,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-} from '@angular/forms';
-import {BifurcationComponent} from "../modules/itr-filing/salary/bifurcation/bifurcation.component";
-import {formatDate} from "@angular/common";
-import {SummaryConversionService} from "./summary-conversion.service";
+import { FormArray, FormControl, FormGroup, ValidationErrors, } from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -51,14 +33,8 @@ export class UtilsService {
     private userMsService: UserMsService,
     private storageService: StorageService,
     private reportService: ReportService
-  ) {}
-  /**
-   * @function isNonEmpty()
-   * @param param
-   * @description This function is used for checking the expected parameter is empty undefined or null, this function will be used for objects as well as strings
-   * @author Ashish Hulwan
-   * @returns this will return boolean value
-   */
+  ) { }
+
   isNonEmpty(param: any): boolean {
     if (param !== null && param !== undefined && param !== '') return true;
     else return false;
@@ -202,25 +178,6 @@ export class UtilsService {
                 name: profile.fName + ' ' + profile.lName,
               },
             });
-            /* if (this.utilsService.isNonEmpty(profile.panNumber)) {
-                      if (this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) ? (this.ITR_JSON.panNumber !== profile.panNumber) : false) {
-                        this.openConformationDialog(this.ITR_JSON, profile, assessmentYear, financialYear);
-                      } else {
-                        if (this.utilsService.isNonEmpty(this.ITR_JSON.lastVisitedURL)) {
-                          this.lastVisitedDialog();
-                        } else {
-                          //this.router.navigate(['/revisereturn']);
-                          this.router.navigate(['/assited']);
-                        }
-                      }
-                    } else {
-                      if (this.utilsService.isNonEmpty(this.ITR_JSON.lastVisitedURL)) {
-                        this.lastVisitedDialog();
-                      } else {
-                        // this.router.navigate(['/revisereturn']);
-                        this.router.navigate(['/assited']);
-                      }
-                    } */
           } else {
             this.loading = false;
             if (ref === 'ITR') {
@@ -384,35 +341,9 @@ export class UtilsService {
         country: '',
         pinCode: '',
       },
-      // this.isNonEmpty(profile) && this.isNonEmpty(profile.address) ? profile.address[0] : null,
       upload: [],
       employers: [],
-      houseProperties: [
-        // {
-        //   propertyType: 'LOP',
-        //   grossAnnualRentReceived: null,
-        //   propertyTax: null,
-        //   ownerPercentage: null,
-        //   address: '',
-        //   city: '',
-        //   state: '',
-        //   country: '',
-        //   pinCode: '',
-        //   taxableIncome: null,
-        //   exemptIncome: null,
-        //   isEligibleFor80EE: false,
-        //   isEligibleFor80EEA: false,
-        //   tenant: [],
-        //   coOwners: [],
-        //   loans: [
-        //     {
-        //       loanType: 'HOUSING',
-        //       principalAmount: null,
-        //       interestAmount: null,
-        //     },
-        //   ],
-        // },
-      ],
+      houseProperties: [],
       capitalGain: [],
       business: {
         presumptiveIncomes: [],
@@ -463,113 +394,14 @@ export class UtilsService {
           otherIncomeDetails: [],
         },
       },
-      incomes: [
-        // {
-        //   incomeType: 'SAVING_INTEREST',
-        //   details: null,
-        //   amount: 0,
-        //   expenses: null,
-        // },
-        // {
-        //   incomeType: 'FD_RD_INTEREST',
-        //   details: null,
-        //   amount: 0,
-        //   expenses: null,
-        // },
-        // {
-        //   incomeType: 'TAX_REFUND_INTEREST',
-        //   details: null,
-        //   amount: 0,
-        //   expenses: null,
-        // },
-        // {
-        //   incomeType: 'ANY_OTHER',
-        //   details: null,
-        //   amount: 0,
-        //   expenses: null,
-        // },
-        // {
-        //   incomeType: 'FAMILY_PENSION',
-        //   details: 'FAMILY_PENSION',
-        //   amount: 0,
-        //   expenses: null,
-        // },
-      ],
-      dividendIncomes: [
-        // { income: 0, date: '2022-04-28T18:30:00.000Z', quarter: 1 },
-        // { income: 0, date: '2022-07-28T18:30:00.000Z', quarter: 2 },
-        // { income: 0, date: '2022-09-28T18:30:00.000Z', quarter: 3 },
-        // { income: 0, date: '2022-12-28T18:30:00.000Z', quarter: 4 },
-        // { income: 0, date: '2023-03-20T18:30:00.000Z', quarter: 5 },
-      ],
-      exemptIncomes: [
-        // { natureDesc: 'AGRI', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(10D)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(11)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(12)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(13)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(16)', amount: 0, othNatOfInc: null },
-        // { natureDesc: 'DMDP', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(17)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(17A)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(18)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(10BC)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(19)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(26)', amount: 0, othNatOfInc: null },
-        // { natureDesc: '10(26AAA)', amount: 0, othNatOfInc: null },
-        // { natureDesc: 'OTH', amount: 0, othNatOfInc: null },
-      ],
-      investments: [
-        // { investmentType: 'ELSS', amount: 0, details: 'ELSS' },
-        // {
-        //   investmentType: 'PENSION_FUND',
-        //   amount: 0,
-        //   details: 'PENSION_FUND',
-        // },
-        // {
-        //   investmentType: 'PS_EMPLOYEE',
-        //   amount: 0,
-        //   details: 'PS_EMPLOYEE',
-        // },
-        // {
-        //   investmentType: 'PS_EMPLOYER',
-        //   amount: 0,
-        //   details: 'PS_EMPLOYER',
-        // },
-        // {
-        //   investmentType: 'PENSION_SCHEME',
-        //   amount: 0,
-        //   details: 'PENSION_SCHEME',
-        // },
-      ],
+      incomes: [],
+      dividendIncomes: [],
+      exemptIncomes: [],
+      investments: [],
       donations: [],
-      loans: [
-        // {
-        //   loanType: 'EDUCATION',
-        //   name: null,
-        //   interestPaidPerAnum: 0,
-        //   principalPaidPerAnum: 0,
-        //   loanAmount: 0,
-        //   details: null,
-        // },
-      ],
+      loans: [],
 
-      expenses: [
-        // {
-        //   expenseType: 'HOUSE_RENT_PAID',
-        //   expenseFor: null,
-        //   details: null,
-        //   amount: 0,
-        //   noOfMonths: 0,
-        // },
-        // {
-        //   expenseType: 'ELECTRIC_VEHICLE',
-        //   expenseFor: null,
-        //   details: null,
-        //   amount: 0,
-        //   noOfMonths: 0,
-        // },
-      ],
+      expenses: [],
       insurances: [
         {
           typeOfPolicy: '',
@@ -688,7 +520,7 @@ export class UtilsService {
       acknowledgementDate91: null,
       portugeseCC5AFlag: 'N',
       schedule5a: undefined,
-      isITRU : this.getIsITRU(),
+      isITRU: this.getIsITRU(),
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
       liableSection44AAflag: 'Y',
@@ -696,7 +528,7 @@ export class UtilsService {
       totalSalesExceedOneCr: null,
       aggregateOfAllAmountsReceivedFlag: null,
       aggregateOfAllPaymentsMadeFlag: null,
-      liableSection44ABFlag:'N',
+      liableSection44ABFlag: 'N',
 
       agriculturalIncome: {
         grossAgriculturalReceipts: null,
@@ -736,7 +568,7 @@ export class UtilsService {
     return ITR_JSON;
   }
 
-  getIsITRU(){
+  getIsITRU() {
     return new Date().getTime() <= new Date("2024-03-31").getTime();
   }
 
@@ -937,24 +769,24 @@ export class UtilsService {
       userId: userId,
       action: action,
     };
-    this.userMsService.postMethod(param, request).subscribe((res) => {});
+    this.userMsService.postMethod(param, request).subscribe((res) => { });
   }
 
-  manageFilerLoginSession(userId: any){
-     //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
-     let token = sessionStorage.getItem('webToken');
-     let query = ''
-     if (token) {
-       query = `&firebaseWebToken=${token}`;
-     }
-     const param = `/sme-login?smeUserId=${userId}${query}`;
-     this.userMsService.postMethod(param).subscribe((res: any) => {
-       if (res.success) {
-         console.log('sme login registered successfully');
-       } else {
-         console.log('login', res);
-       }
-     });
+  manageFilerLoginSession(userId: any) {
+    //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
+    let token = sessionStorage.getItem('webToken');
+    let query = ''
+    if (token) {
+      query = `&firebaseWebToken=${token}`;
+    }
+    const param = `/sme-login?smeUserId=${userId}${query}`;
+    this.userMsService.postMethod(param).subscribe((res: any) => {
+      if (res.success) {
+        console.log('sme login registered successfully');
+      } else {
+        console.log('login', res);
+      }
+    });
   }
 
   getMyCallingNumber() {
@@ -967,12 +799,6 @@ export class UtilsService {
     ) {
       return loggedInSmeInfo[0].callingNumber;
     }
-    // const SME_LIST: any = await this.getStoredSmeList();
-    // const sme = SME_LIST.filter((item: any) => item.userId === userObj.USER_UNIQUE_ID);
-    // if (sme instanceof Array && sme.length > 0 && (sme[0]['roles'].length > 0 && sme[0]['roles'].includes('ROLE_CALLING_TEAM'))) {
-
-    //     return sme[0].mobileNumber;
-    // }
     return false;
   }
 
@@ -980,7 +806,6 @@ export class UtilsService {
     const agentList = JSON.parse(
       sessionStorage.getItem(AppConstants.MY_AGENT_LIST) || null
     );
-    // console.log('fyList', fyList);
     if (
       this.isNonEmpty(agentList) &&
       agentList instanceof Array &&
@@ -1031,7 +856,7 @@ export class UtilsService {
           ay,
           currentFyDetails[0].financialYear,
           filingTeamMemberId
-        ).catch((error) => {});
+        ).catch((error) => { });
         this.loading = false;
         if (res && res.itrId) {
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(res));
@@ -1100,20 +925,7 @@ export class UtilsService {
           return this.ITR_JSON;
         } else {
           this.loading = false;
-          // TODO need to check the flow for revise return;
-          // if (ref === "ITR") {
-          //     let disposable = this.dialog.open(ItrActionsComponent, {
-          //         width: '50%',
-          //         height: 'auto',
-          //         data: {
-          //             itrObjects: result,
-          //         }
-          //     })
-          //     disposable.afterClosed().subscribe(result => {
-          //         console.log('The dialog was closed');
-          //     });
-          //     return;
-          // }
+
           alert('ITR Filed/Acknowledgement not received');
         }
       } else {
@@ -1122,24 +934,13 @@ export class UtilsService {
           ay,
           currentFyDetails[0].financialYear,
           filingTeamMemberId
-        ).catch((error) => {});
+        ).catch((error) => { });
         this.loading = false;
         if (result && result.itrId) {
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
           return result;
         }
-        // this.ITR_JSON = this.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-        // this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-        // const param = '/itr';
-        // this.itrMsService.postMethod(param, this.ITR_JSON).subscribe((result: any) => {
-        //     console.log('My iTR Json successfully created-==', result);
-        //     this.ITR_JSON = result;
-        //     this.loading = false;
-        //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        //     // this.router.navigate(['/pages/itr-filing/customer-profile']);
-        // }, error => {
-        //     this.loading = false;
-        // });
+
       }
     }
   }
@@ -1260,14 +1061,6 @@ export class UtilsService {
     return promise;
   }
 
-  // updateAssignmentToggle(assignmentToggleData) :Observable<any>{
-  //     return this.httpClient.post('environment.url' + '/user/sme/assignment-logic-toggle', assignmentToggleData)
-  // }
-
-  // getAssignmentToggle() :Observable<any>{
-  //     return this.httpClient.get('environment.url' + '/user/sme/assignment-logic-toggle')
-  // }
-
   private updateItrObject(result, itrObject: ITR_JSON) {
     //update type in ITR object & save
     itrObject.itrType = result?.data?.itrType;
@@ -1281,11 +1074,6 @@ export class UtilsService {
     return this.itrMsService.putMethod(param, itrObject);
   }
 
-  /**
-   * This method shall be used throughout ITR utility for saving the ITR json data to backend.
-   * The exception cases are for saving the initial data after prefill or summary json upload.
-   * @param itrObject The ITR object to be saved to backend
-   */
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {
@@ -1353,75 +1141,70 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
-  getFilerIdByMobile(mobile,ITR?,email?){
+  getFilerIdByMobile(mobile, ITR?, email?) {
     //user list api to get filerId for create subscription
     //https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&serviceType=ITR&mobileNumber=3263636364
-    let param ='';
+    let param = '';
     let role = this.getUserRoles();
     let loggedInSmeId = this.getLoggedInUserID();
-    let partnerType =this.getPartnerType();
+    let partnerType = this.getPartnerType();
     let userFilter = '';
-    if(role.includes('ROLE_LEADER')){
-      userFilter='&leaderUserId='+ loggedInSmeId ;
+    if (role.includes('ROLE_LEADER')) {
+      userFilter = '&leaderUserId=' + loggedInSmeId;
     }
-    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+    if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
-    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+    } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
-    if(ITR && mobile){
+    if (ITR && mobile) {
       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
-    }else if(ITR && email){
+    } else if (ITR && email) {
       param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}`
-    }else if(!ITR && mobile ){
+    } else if (!ITR && mobile) {
       param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
-    }else if(!ITR && email){
+    } else if (!ITR && email) {
       param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&emailId=${email}${userFilter}`
 
     }
     return this.userMsService.getMethodNew(param);
   }
 
-  getActiveUsers(mobile?,email?){
-   //api to check weather user is active
-  // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
-  let param
-  let role = this.getUserRoles();
-  let loggedInSmeId = this.getLoggedInUserID();
-  let partnerType =this.getPartnerType();
+  getActiveUsers(mobile?, email?) {
+    //api to check weather user is active
+    // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
+    let param
+    let role = this.getUserRoles();
+    let loggedInSmeId = this.getLoggedInUserID();
+    let partnerType = this.getPartnerType();
 
-  let userFilter = '';
-    if(role.includes('ROLE_LEADER')){
-      userFilter='&leaderUserId='+ loggedInSmeId ;
+    let userFilter = '';
+    if (role.includes('ROLE_LEADER')) {
+      userFilter = '&leaderUserId=' + loggedInSmeId;
     }
-    if(role.includes('ROLE_FILER') && partnerType === "PRINCIPAL"){
+    if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
-    }else if (role.includes('ROLE_FILER') && partnerType ==="INDIVIDUAL"){
+    } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
 
-  if(mobile){
-       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
-  }else if(email){
+    if (mobile) {
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
+    } else if (email) {
       param = `/bo/user-list-new?page=0&pageSize=20&email=${email}${userFilter}&active=false`
-  }
+    }
     return this.userMsService.getMethodNew(param);
   }
 
-  getUserCurrentStatus(userIdList:any){
+  getUserCurrentStatus(userIdList: any) {
     //API to get current status of the user -
     //'https://uat-api.taxbuddy.com/user/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=17803'
     const param = `/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=${userIdList}`
     return this.userMsService.getMethod(param);
   }
 
-  /**
-   * API call to get pan details with user id
-   * @param panNumber PAN number for which details to be checked
-   * @param userId The user with which the PAN is associated, user id is optional when creating when user
-   */
   getPanDetails(panNumber, userId?) {
     const param = userId
       ? `/itr/api/getPanDetail?panNumber=${panNumber}&userId=${userId}`
@@ -1579,17 +1362,17 @@ export class UtilsService {
           Object.keys(controlErrors).forEach((keyError) => {
             console.log(
               'Key control: ' +
-                key +
-                ', keyError: ' +
-                keyError +
-                ', err value: ',
+              key +
+              ', keyError: ' +
+              keyError +
+              ', err value: ',
               controlErrors[keyError]
             );
             console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
             const accordionButton = document.getElementById(accordionBtnId);
-            if(accordionButton){
-              if(accordionButton.getAttribute("aria-expanded") === "false")
+            if (accordionButton) {
+              if (accordionButton.getAttribute("aria-expanded") === "false")
                 accordionButton.click();
             }
             return;
@@ -1870,13 +1653,13 @@ export class UtilsService {
 
   getBifurcation(localEmployer: Employer) {
     let bifurcation = {
-      SEC17_1: {total: 0, value: {}},
-      SEC17_2: {total: 0, value: {}},
-      SEC17_3: {total: 0, value: {}}
+      SEC17_1: { total: 0, value: {} },
+      SEC17_2: { total: 0, value: {} },
+      SEC17_3: { total: 0, value: {} }
     };
     let total = 0;
     localEmployer.salary.forEach(income => {
-      if(income.salaryType !== 'SEC17_1'){
+      if (income.salaryType !== 'SEC17_1') {
         bifurcation.SEC17_1.value[income.salaryType] = income.taxableAmount;
         total += income.taxableAmount;
       }
@@ -1884,7 +1667,7 @@ export class UtilsService {
     bifurcation.SEC17_1.total = total;
     total = 0;
     localEmployer.perquisites.forEach(income => {
-      if(income.perquisiteType !== 'SEC17_2'){
+      if (income.perquisiteType !== 'SEC17_2') {
         bifurcation.SEC17_2.value[income.perquisiteType] = income.taxableAmount;
         total += income.taxableAmount;
       }
@@ -1892,7 +1675,7 @@ export class UtilsService {
     bifurcation.SEC17_2.total = total;
     total = 0;
     localEmployer.profitsInLieuOfSalaryType.forEach(income => {
-      if(income.salaryType !== 'SEC17_3'){
+      if (income.salaryType !== 'SEC17_3') {
         bifurcation.SEC17_3.value[income.salaryType] = income.taxableAmount;
         total += income.taxableAmount;
       }
@@ -1904,77 +1687,77 @@ export class UtilsService {
 
   resetBifurcation(localEmployer: Employer, section) {
     let total = 0;
-    if(section === 'SEC17_1') {
+    if (section === 'SEC17_1') {
       localEmployer.salary = localEmployer.salary.filter(income => income.salaryType === 'SEC17_1');
     }
 
-    if(section === 'SEC17_2') {
+    if (section === 'SEC17_2') {
       localEmployer.perquisites = localEmployer.perquisites.filter(income => income.perquisiteType === 'SEC17_2');
     }
 
-    if(section === 'SEC17_3') {
+    if (section === 'SEC17_3') {
       localEmployer.profitsInLieuOfSalaryType = localEmployer.profitsInLieuOfSalaryType.filter(
-          income => income.salaryType === 'SEC17_3');
+        income => income.salaryType === 'SEC17_3');
     }
 
     return localEmployer;
   }
 
-  updateEmployerBifurcation(localEmployer: Employer, section, bifurcationResult: any){
+  updateEmployerBifurcation(localEmployer: Employer, section, bifurcationResult: any) {
     const salaryValues = this.getSalaryValues()?.salary;
-    if(section === 'SEC17_1') {
+    if (section === 'SEC17_1') {
       const bifurcationValues = bifurcationResult?.SEC17_1?.value
-          ? bifurcationResult?.SEC17_1?.value
-          : salaryValues?.[0];
+        ? bifurcationResult?.SEC17_1?.value
+        : salaryValues?.[0];
 
       for (const key in bifurcationValues) {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
           // if (element && element !== 0) {
-            localEmployer?.salary?.push({
-              salaryType: key,
-              taxableAmount: element,
-              exemptAmount: 0,
-            });
+          localEmployer?.salary?.push({
+            salaryType: key,
+            taxableAmount: element,
+            exemptAmount: 0,
+          });
           // }
         }
       }
     }
-    if(section === 'SEC17_2') {
+    if (section === 'SEC17_2') {
       const bifurcationValues = bifurcationResult?.SEC17_2?.value
-          ? bifurcationResult?.SEC17_2?.value
-          : salaryValues?.[0];
+        ? bifurcationResult?.SEC17_2?.value
+        : salaryValues?.[0];
 
       for (const key in bifurcationValues) {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
           // if (element && element !== 0) {
-            localEmployer?.perquisites?.push({
-              perquisiteType: key,
-              taxableAmount: element,
-              exemptAmount: 0
-            });
+          localEmployer?.perquisites?.push({
+            perquisiteType: key,
+            taxableAmount: element,
+            exemptAmount: 0
+          });
           // }
         }
       }
     }
-    if(section === 'SEC17_3') {
+    if (section === 'SEC17_3') {
       const bifurcationValues = bifurcationResult?.SEC17_3?.value
-          ? bifurcationResult?.SEC17_3?.value
-          : salaryValues?.[0];
+        ? bifurcationResult?.SEC17_3?.value
+        : salaryValues?.[0];
 
       for (const key in bifurcationValues) {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
           // if (element && element !== 0) {
-            localEmployer?.profitsInLieuOfSalaryType?.push({
-              salaryType: key,
-              taxableAmount: element,
-              exemptAmount: 0,
-            });
+          localEmployer?.profitsInLieuOfSalaryType?.push({
+            salaryType: key,
+            taxableAmount: element,
+            exemptAmount: 0,
+          });
           // }
         }
       }

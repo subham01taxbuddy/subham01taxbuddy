@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -408,7 +407,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
-          this.searchParam.statusId=null;
+          this.searchParam.statusId = null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
@@ -998,7 +997,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.search();
@@ -1045,8 +1044,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
         });
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
         this.search();
@@ -1217,8 +1216,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           'User Number': data?.mobileNumber
         });
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
         this.search();
@@ -1231,47 +1230,6 @@ export class ItrAssignedUsersComponent implements OnInit {
   async getUserProfile(userId) {
     const param = `/profile/${userId}`;
     return await this.userMsService.getMethod(param).toPromise();
-  }
-
-  updateITRtoWIP(data, itr, assessmentYear) {
-    console.log('data', itr);
-    if (data.statusId) {
-      const param = '/itr'
-      const request = {
-        'userId': data.userId,
-        'assessmentYear': assessmentYear,
-        'isRevised': itr.isRevised,
-        'status': 'PREPARING_ITR'
-      };
-
-      this.loading = true;
-      this.itrMsService.patchMethod(param, request).subscribe(result => {
-        console.log('##########################', result['statusId']);
-        this.loading = false;
-      }, err => {
-        this.loading = false;
-        // this.utilsService.showSnackBar('Failed to update Filing status.')
-      });
-    }
-
-    //also update user status
-    let param = '/itr-status';
-    let sType = data.serviceType;
-    if (data.serviceType === '-' || data.serviceType === null || data.serviceType === undefined) {
-      sType = 'ITR';
-    }
-    let param2 = {
-      "statusId": 5,//preparing ITR
-      "userId": data.userId,
-      "assessmentYear": assessmentYear,
-      "completed": false,
-      "serviceType": sType
-    }
-    console.log("param2: ", param2);
-    this.userMsService.postMethod(param, param2).subscribe(res => {
-      console.log("Status update response: ", res)
-    }, error => {
-    });
   }
 
   openReviseReturnDialog(data) {
@@ -1308,8 +1266,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           );
         }
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this._toastMessageService.alert("error", error.error.error);
         this.search();
@@ -1355,15 +1313,6 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   linkToDocumentCloud(userId: any) {
     this.router.navigate(['/pages/itr-filing/user-docs/' + userId]);
-  }
-
-  updateReviewStatus(data: any) {
-    const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
-    this.itrMsService.putMethod(param, {}).subscribe(result => {
-      this.utilsService.showSnackBar('Marked as review given');
-    }, error => {
-      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
-    })
   }
 
   async call(data) {
@@ -1419,8 +1368,8 @@ export class ItrAssignedUsersComponent implements OnInit {
             }
           );
         }
-      },error => {
-        this.loading=false;
+      }, error => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.search();
@@ -1460,14 +1409,14 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
         });
       }
-    },error => {
-      this.loading=false;
-        if (error.error && error.error.error) {
-          this._toastMessageService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this._toastMessageService.alert("error", "An unexpected error occurred.");
-        }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
 
   }
@@ -1494,14 +1443,14 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.search();
         });
       }
-    },error => {
-      this.loading=false;
-        if (error.error && error.error.error) {
-          this._toastMessageService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this._toastMessageService.alert("error", "An unexpected error occurred.");
-        }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
 
   }
@@ -1554,9 +1503,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     })
   }
 
-  isNumeric(value) {
-    return /^\d+$/.test(value);
-  }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;

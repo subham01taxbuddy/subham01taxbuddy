@@ -29,7 +29,7 @@
           <div class="col-sm-3 spsTp">
             <mat-label>First name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <input matInput placeholder="First Name" required type="text" formControlName="firstName" capitalizeFirst>
+              <input matInput placeholder="First Name" required type="text" formControlName="firstName">
               <mat-error class="error-msg" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>
@@ -37,7 +37,7 @@
           <div class="col-sm-3 spsTp">
             <mat-label>Middle Name</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
+              <input placeholder="Middle Name" type="text" formControlName="middleName" matInput>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter
                 the
                 valid name.</mat-error>
@@ -46,7 +46,7 @@
           <div class="col-sm-3 spsTp">
             <mat-label>Last Name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <input matInput placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst required>
+              <input matInput placeholder="Last Name" type="text" formControlName="lastName" required>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>

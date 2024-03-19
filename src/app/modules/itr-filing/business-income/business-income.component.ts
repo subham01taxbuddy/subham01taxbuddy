@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
