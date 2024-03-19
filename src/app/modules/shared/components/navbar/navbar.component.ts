@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -40,6 +40,8 @@ export class NavbarComponent implements DoCheck {
 
   loading: boolean = false;
   nav: boolean;
+  isDropdownOpen = false;
+  showDropDown:boolean =false;
 
   constructor(
     private router: Router,
@@ -51,16 +53,31 @@ export class NavbarComponent implements DoCheck {
     private kommunicateSsoService: KommunicateSsoService,
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
+    private renderer: Renderer2,
+    private elementRef: ElementRef
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
+    let partnerType = this.utilsService.getPartnerType();
     if(role.includes('ROLE_LEADER')){
       this.showCopyLinkButton =true;
     }else{
       this.showCopyLinkButton = false;
     }
     this.fetchAffiliateId();
+
+    if(role.includes('ROLE_FILER') && (partnerType === 'PRINCIPAL' || partnerType ==='INDIVIDUAL')){
+      this.showDropDown =true;
+    }else{
+      this.showDropDown=false;
+    }
+
+    // this.renderer.listen('window', 'click', (event: Event) => {
+    //   if (!this.elementRef.nativeElement.contains(event.target)) {
+    //     this.isDropdownOpen = false;
+    //   }
+    // });
   }
 
 
@@ -258,5 +275,20 @@ export class NavbarComponent implements DoCheck {
 
   }
 
+
+  navigateToProfile(){
+    let userId = this.utilsService.getLoggedInUserID();
+    this.router.navigate(['/sme-management-new/partner-profile'],{queryParams: { userId: userId }},)
+  }
+
+  navigateToAssistantManagement(){
+    this._toastMessageService.alert("success", 'Work In Progress!!!!');
+    this.isDropdownOpen =false
+    return
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
 
 }
