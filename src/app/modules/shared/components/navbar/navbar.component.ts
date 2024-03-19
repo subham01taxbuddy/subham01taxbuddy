@@ -3,7 +3,7 @@ import { Component, DoCheck } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
 import { Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';

@@ -55,7 +55,6 @@
               }
             ],
             "styles": [
-              "src/assets/styles/material.scss",
               "src/styles.css",
               "src/assets/styles/components.css",
               "src/assets/styles/colors.css",

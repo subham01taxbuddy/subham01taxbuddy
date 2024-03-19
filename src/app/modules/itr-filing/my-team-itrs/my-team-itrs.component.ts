@@ -4,7 +4,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FilingStatusDialogComponent } from '../filing-status-dialog/filing-status-dialog.component';
 import { ReviseReturnDialogComponent } from '../revise-return-dialog/revise-return-dialog.component';
 import * as moment from 'moment'

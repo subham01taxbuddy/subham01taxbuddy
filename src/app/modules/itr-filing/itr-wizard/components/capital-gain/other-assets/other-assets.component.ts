@@ -1,6 +1,6 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {

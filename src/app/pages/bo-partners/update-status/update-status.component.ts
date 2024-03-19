@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewDocumentsComponent } from '../view-documents/view-documents.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstDailyReportService } from 'src/app/services/gst-daily-report.service';

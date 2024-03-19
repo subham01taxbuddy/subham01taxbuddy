@@ -2,6 +2,8 @@
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
+@import './assets/styles/material.scss';
+
 
 .ag-theme-balham {
   font-family: 'DM Sans', sans-serif;
@@ -35,7 +37,8 @@
   padding-left: 10px;
 }
 
-.mat-chip.mat-standard-chip.mat-chip-selected.mat-primary {
+/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
+.mat-mdc-chip.mat-mdc-standard-chip.mat-chip-selected.mat-primary {
   background-color: #1b67ba !important;
   color: white;
 }
@@ -3725,7 +3728,7 @@ main {
   transform: rotate(90deg);
 }
 
-.mat-dialog-container {
+.mat-mdc-dialog-container {
   border: 2px solid #162c3e !important;
 }
 
@@ -3833,7 +3836,7 @@ main {
   color: #ffffff;
 }
 
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100% !important;
   /* background-color: #DDEDFF; */
 }
@@ -3918,11 +3921,13 @@ pagination-controls {
   display: block !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-wrapper {
   padding-bottom: 0em !important;
   /* margin-top: 20px!important; */
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .class1 .mat-form-field-wrapper {
   padding-bottom: 1em !important;
 }
@@ -4321,7 +4326,7 @@ mat-step-header .mat-step-label.mat-step-label-active {
   background-color: #1C78F6 !important;
 }
 
-.sources-chip .mat-chip {
+.sources-chip .mat-mdc-chip {
   background-color: #FFFFFF;
   border: 1.94547px solid #E3E3E3;
   border-radius: 8px;
@@ -12837,10 +12842,12 @@ body[dir=rtl] .checkbox[checked=true] {
   background-color: #2199e8;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-wrapper {
   margin: 0 !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .class1 .mat-form-field-wrapper {
   padding-bottom: 0 !important;
 }

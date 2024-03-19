@@ -2,7 +2,7 @@
 import { Component, HostListener, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogState as MatDialogState } from "@angular/material/legacy-dialog";
+import { MatDialog, MatDialogState } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
 import { EMPTY, from, Observable, Subscription, timer } from "rxjs";
 import { Messaging, onMessage, getToken } from "@angular/fire/messaging";

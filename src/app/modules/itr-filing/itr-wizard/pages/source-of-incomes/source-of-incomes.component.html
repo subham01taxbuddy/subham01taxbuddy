@@ -16,12 +16,12 @@
       >
         <div class="sources-back">
           <!-- sources-of-income options  -->
-          <mat-chip-list
+          <mat-chip-listbox
             class="sources-chip"
             multiple
             (change)="sourcesUpdated($event)"
           >
-            <mat-chip
+            <mat-chip-option
               disableRipple
               *ngFor="let source of sourcesList"
               (click)="sourcesUpdated(source)"
@@ -32,8 +32,8 @@
 
               <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
               <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
-            </mat-chip>
-          </mat-chip-list>
+            </mat-chip-option>
+          </mat-chip-listbox>
         </div>
       </div>
       <div>

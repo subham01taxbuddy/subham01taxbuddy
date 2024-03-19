@@ -20,7 +20,7 @@ import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.inte
 import { UtilsService } from 'src/app/services/utils.service';
 import { withLatestFrom } from 'rxjs';
 import { filter, forEach } from 'lodash';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment/moment';
 @Component({
   selector: 'app-other-asset-improvement',

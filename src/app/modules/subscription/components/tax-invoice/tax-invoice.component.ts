@@ -9,7 +9,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Observable, map, startWith } from 'rxjs';
 import { AppConstants } from "../../../shared/constants";

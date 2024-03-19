@@ -59,7 +59,7 @@ import { DonationsComponent } from './itr-wizard/components/donations/donations.
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { UploadDocComponent } from './itr-wizard/components/upload-doc/upload-doc.component';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TdsOnSalaryComponent } from './itr-wizard/components/tds-on-salary/tds-on-salary.component';
 import { TdsOtherThanSalaryComponent } from './itr-wizard/components/tds-other-than-salary/tds-other-than-salary.component';
 import { TcsComponent } from './itr-wizard/components/tcs/tcs.component';

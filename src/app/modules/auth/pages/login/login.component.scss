@@ -15,7 +15,7 @@
   width: 60%;
 }
 
-.mat-form-field {
+.mat-mdc-form-field {
   display: inline!important;
   position: relative;
   text-align: left;
@@ -155,6 +155,7 @@ p {
   font-weight: bold!important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-appearance-outline .mat-form-field-flex {
   padding: 0 0.75em 0 0.75em;
   /* margin-top: -0.25em; */

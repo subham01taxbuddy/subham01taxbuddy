@@ -3,7 +3,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import {  MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import {  MatDialogRef } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { UserMsService } from 'src/app/services/user-ms.service';

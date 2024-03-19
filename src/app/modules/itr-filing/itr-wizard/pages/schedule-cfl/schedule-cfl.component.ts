@@ -15,9 +15,9 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import {
-  MatLegacyFormField as MatFormField,
-  MatLegacyFormFieldAppearance as MatFormFieldAppearance,
-} from '@angular/material/legacy-form-field';
+  MatFormField,
+  MatFormFieldAppearance,
+} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-schedule-cfl',

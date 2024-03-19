@@ -27,7 +27,7 @@ import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-salary/tds-other-than-salary.component';
 import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
 import { SelectionComponent } from './selection-component/selection-component.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
