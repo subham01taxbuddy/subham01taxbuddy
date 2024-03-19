@@ -393,7 +393,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   formValuesChanged() {
     this.changeConsentGiven = false;
     if (this.salaryFormGroup.valid) {
-      debugger
       this.utilsService.setSalaryValues(this.salaryFormGroup.getRawValue());
       this.valueChanged.emit(this.salaryFormGroup.getRawValue());
     }
@@ -767,7 +766,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   }
 
   confirmChange(event: Event, incomeType: string) {
-    debugger
     if (incomeType === 'SEC17_1') {
       let total = this.salaryFormGroup?.get('salary')?.value?.reduce(
         (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);

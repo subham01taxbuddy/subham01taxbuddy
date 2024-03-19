@@ -1317,7 +1317,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
       //check allowances total is not exceeding the gross salary
       if (totalAllowExempt > this.grossSalary) {
-        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
         );
@@ -1327,7 +1326,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
         (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
       if (othTotalAllowExempt > employerTotal) {
-        debugger
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed total gross salary'
         );
@@ -1572,7 +1570,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   showWarningPopup(incomeType) {
-    debugger
     if (this.changeConsetGiven) {
       return;
     }
@@ -1890,7 +1887,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   onBifurcationUpdated(result) {
-    debugger
     this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {
       if (element.get('salaryType').value === 'SEC17_1') {

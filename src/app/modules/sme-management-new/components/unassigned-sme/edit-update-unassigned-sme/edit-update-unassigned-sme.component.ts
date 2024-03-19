@@ -147,7 +147,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   openDocument(documentType: string ,url) {
     if(url){
-      debugger
       const parts = url.split('/');
       const lastPart = parts[parts.length - 1];
       const fileNameWithParams = lastPart.split('?')[0];
@@ -163,7 +162,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
     this.itrMsService.getMethod(param).subscribe(
       (result: any) => {
-        debugger
         if (result && result.data) {
           let signedUrl = result.data.s3SignedUrl;
           this.open(signedUrl);
@@ -298,7 +296,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
   setFormValues(data) {
-    debugger
     this.mobileNumber.setValue(data.mobileNumber);
     this.pinCode.setValue(data?.partnerDetails?.pinCode);
     this.internal.setValue(data.internal)
@@ -599,7 +596,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
       this.itrMsService.getMethod(param).subscribe(
         (result: any) => {
-          debugger
           if (result && result.data) {
             let signedUrl = result.data.s3SignedUrl;
             this.urls[inputId] = signedUrl;
