@@ -3723,11 +3723,9 @@ export class SummaryConversionService {
                                             purchaseCost: equityLtcg?.AcquisitionCost,
                                             isinCode: equityLtcg?.ISINCode,
                                             nameOfTheUnits: equityLtcg?.ShareUnitName,
-                                            sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                                            sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
-                                            purchaseValuePerUnit:
-                                                equityLtcg?.AcquisitionCost /
-                                                equityLtcg?.NumSharesUnits,
+                                            sellOrBuyQuantity: 1,
+                                            sellValuePerUnit: equityLtcg?.TotSaleValue,
+                                            purchaseValuePerUnit: equityLtcg?.AcquisitionCost,
                                             algorithm: 'cgSharesMF',
                                             isIndexationBenefitAvailable: null,
                                             whetherDebenturesAreListed: null,
@@ -3789,11 +3787,9 @@ export class SummaryConversionService {
                                                     purchaseCost: equityLtcg?.AcquisitionCost,
                                                     isinCode: equityLtcg?.ISINCode,
                                                     nameOfTheUnits: equityLtcg?.ShareUnitName,
-                                                    sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                                                    sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
-                                                    purchaseValuePerUnit:
-                                                        equityLtcg?.AcquisitionCost /
-                                                        equityLtcg?.NumSharesUnits,
+                                                    sellOrBuyQuantity: 1,
+                                                    sellValuePerUnit: equityLtcg?.TotSaleValue,
+                                                    purchaseValuePerUnit: equityLtcg?.AcquisitionCost,
                                                     algorithm: 'cgSharesMF',
                                                     isIndexationBenefitAvailable: null,
                                                     whetherDebenturesAreListed: null,
@@ -6063,10 +6059,8 @@ export class SummaryConversionService {
                                             this.ITR_Type
                                         ].Schedule80D.Sec80DSelfFamSrCtznHealth?.PrevHlthChckUpSlfFamSrCtzn;
                                     // SELF MEDICAL EXPENDITURE
-                                    itrObjSelf80D.medicalExpenditure =
-                                        ItrJSON[
-                                            this.ITR_Type
-                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn;
+                                    itrObjSelf80D.medicalExpenditure = ItrJSON[this.ITR_Type].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn ?
+                                        ItrJSON[this.ITR_Type].Schedule80D.Sec80DSelfFamSrCtznHealth?.MedicalExpSlfFamSrCtzn : 0;
                                 } else {
                                     // SELF HEALTH INSURANCE PREMIUM
                                     itrObjSelf80D.premium =
@@ -6108,10 +6102,8 @@ export class SummaryConversionService {
                                         ].Schedule80D.Sec80DSelfFamSrCtznHealth.PrevHlthChckUpParentsSrCtzn;
 
                                     // PARENTS MEDICAL EXPENDITURE
-                                    itrObjParents80D.medicalExpenditure =
-                                        ItrJSON[
-                                            this.ITR_Type
-                                        ].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn;
+                                    itrObjParents80D.medicalExpenditure = ItrJSON[this.ITR_Type].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn ?
+                                        ItrJSON[this.ITR_Type].Schedule80D.Sec80DSelfFamSrCtznHealth.MedicalExpParentsSrCtzn : 0;
                                 } else {
                                     // PARENTS HEALTH INSURANCE - not working for seniorCitizen. Need to check later
                                     itrObjParents80D.premium =
