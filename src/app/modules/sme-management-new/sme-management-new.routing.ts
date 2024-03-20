@@ -10,6 +10,8 @@ import { SmeManagementNewComponent } from './sme-management-new.component';
 import { EditUpdateUnassignedSmeComponent } from './components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
 import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
+import { AssistantManagementComponent } from './components/assistant-management/assistant-management.component';
+import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
 
 
 const routes: Routes = [
@@ -24,6 +26,8 @@ const routes: Routes = [
             { path: 'edit-resignedsme', component: EditUpdateResignedSmeComponent },
             { path: 'convert-to-partner', component: ConvertToExtPartnerComponent },
             { path: 'partner-profile',component:PartnerManagementComponent},
+            { path: 'assistant-management',component:AssistantManagementComponent},
+            { path: 'edit-child',component:EditChildProfileComponent }
         ]
     },
     { path: '', redirectTo: '/sme-management-new/unassignedsme', pathMatch: 'full' }

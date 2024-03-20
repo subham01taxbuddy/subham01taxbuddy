@@ -17,7 +17,10 @@ import { SharedModule } from '../shared/shared.module';
 import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
 import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 import { UpdateStatusComponent } from './components/unassigned-sme/update-status/update-status.component';
+import { AssistantManagementComponent } from './components/assistant-management/assistant-management.component';
 import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
+import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
+import { ChildRegistrationComponent } from './components/assistant-management/child-registration/child-registration.component';
 
 @NgModule({
   imports: [
@@ -42,7 +45,10 @@ import { PartnerManagementComponent } from './components/partner-management/part
     EditUpdateResignedSmeComponent,
     ConvertToExtPartnerComponent,
     UpdateStatusComponent,
-    PartnerManagementComponent
+    PartnerManagementComponent,
+    AssistantManagementComponent,
+    EditChildProfileComponent,
+    ChildRegistrationComponent,
   ]
 })
 export class SmeManagementNewModule { }

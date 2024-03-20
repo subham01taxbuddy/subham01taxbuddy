@@ -73,11 +73,11 @@ export class NavbarComponent implements DoCheck {
       this.showDropDown=false;
     }
 
-    // this.renderer.listen('window', 'click', (event: Event) => {
-    //   if (!this.elementRef.nativeElement.contains(event.target)) {
-    //     this.isDropdownOpen = false;
-    //   }
-    // });
+    this.renderer.listen('window', 'click', (event: Event) => {
+      if (!this.elementRef.nativeElement.contains(event.target)) {
+        this.isDropdownOpen = false;
+      }
+    });
   }
 
 
@@ -282,9 +282,8 @@ export class NavbarComponent implements DoCheck {
   }
 
   navigateToAssistantManagement(){
-    this._toastMessageService.alert("success", 'Work In Progress!!!!');
-    this.isDropdownOpen =false
-    return
+    let userId = this.utilsService.getLoggedInUserID();
+    this.router.navigate(['/sme-management-new/assistant-management'],{queryParams: { userId: userId }},)
   }
 
   toggleDropdown() {
