@@ -3723,11 +3723,9 @@ export class SummaryConversionService {
                                             purchaseCost: equityLtcg?.AcquisitionCost,
                                             isinCode: equityLtcg?.ISINCode,
                                             nameOfTheUnits: equityLtcg?.ShareUnitName,
-                                            sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                                            sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
-                                            purchaseValuePerUnit:
-                                                equityLtcg?.AcquisitionCost /
-                                                equityLtcg?.NumSharesUnits,
+                                            sellOrBuyQuantity: 1,
+                                            sellValuePerUnit: equityLtcg?.TotSaleValue,
+                                            purchaseValuePerUnit: equityLtcg?.AcquisitionCost,
                                             algorithm: 'cgSharesMF',
                                             isIndexationBenefitAvailable: null,
                                             whetherDebenturesAreListed: null,
@@ -3789,11 +3787,9 @@ export class SummaryConversionService {
                                                     purchaseCost: equityLtcg?.AcquisitionCost,
                                                     isinCode: equityLtcg?.ISINCode,
                                                     nameOfTheUnits: equityLtcg?.ShareUnitName,
-                                                    sellOrBuyQuantity: equityLtcg?.NumSharesUnits,
-                                                    sellValuePerUnit: equityLtcg?.SalePricePerShareUnit,
-                                                    purchaseValuePerUnit:
-                                                        equityLtcg?.AcquisitionCost /
-                                                        equityLtcg?.NumSharesUnits,
+                                                    sellOrBuyQuantity: 1,
+                                                    sellValuePerUnit: equityLtcg?.TotSaleValue,
+                                                    purchaseValuePerUnit: equityLtcg?.AcquisitionCost,
                                                     algorithm: 'cgSharesMF',
                                                     isIndexationBenefitAvailable: null,
                                                     whetherDebenturesAreListed: null,
