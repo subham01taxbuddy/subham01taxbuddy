@@ -50,10 +50,19 @@
                 <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
                         aria-hidden="true"></i></button>
             </div>
-            <div class="header__breadcrumbs" style="float:right">
-                <div class="user">
-                    <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
-                </div>
+            <div *ngIf="showDropDown" class="header__breadcrumbs" style="float:right;cursor: pointer;">
+              <div class="user" id="userDropdown" (click)="toggleDropdown()">
+                  <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i> &nbsp;
+              </div>
+              <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
+                  <a id="option1" (click)="navigateToProfile()">My Profile</a>
+                  <a id="option2" (click)="navigateToAssistantManagement()">Assistant Management</a>
+              </div>
+            </div>
+            <div *ngIf="!showDropDown" class="header__breadcrumbs" style="float:right">
+              <div class="user">
+                  <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
+              </div>
             </div>
             <div *ngIf="showAffiliateBtn" class="header__breadcrumbs" style="float:right">
                 <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;

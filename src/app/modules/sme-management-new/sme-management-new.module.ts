@@ -17,6 +17,7 @@ import { SharedModule } from '../shared/shared.module';
 import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
 import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 import { UpdateStatusComponent } from './components/unassigned-sme/update-status/update-status.component';
+import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { UpdateStatusComponent } from './components/unassigned-sme/update-status
     EditUpdateAssignedSmeComponent,
     EditUpdateResignedSmeComponent,
     ConvertToExtPartnerComponent,
-    UpdateStatusComponent
+    UpdateStatusComponent,
+    PartnerManagementComponent
   ]
 })
 export class SmeManagementNewModule { }
