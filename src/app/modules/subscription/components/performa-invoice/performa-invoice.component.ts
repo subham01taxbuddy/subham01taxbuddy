@@ -819,7 +819,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           }
         },
         width: 90,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
@@ -859,7 +859,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
         },
         width: 90,
-        pinned: 'right',
+        pinned: true,
         cellStyle: { textAlign: 'center' },
       },
       {
@@ -875,7 +875,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         </button>`;
         },
         width: 93,
-        pinned: 'right',
+        pinned: true,
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -897,7 +897,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 60,
-        pinned: 'right',
+        pinned: true,
       },
       {
         headerName: 'See/Add Notes',
@@ -912,7 +912,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 90,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

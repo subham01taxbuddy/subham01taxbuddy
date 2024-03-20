@@ -528,7 +528,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
-        pinned: 'left',
+        pinned: true,
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -734,7 +734,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         headerName: 'Actions',
         width: 90,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           if (
             params.data.eFillingCompleted &&
@@ -791,7 +791,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 60,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -813,7 +813,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 58,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -827,7 +827,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         headerName: 'E-Verify',
         width: 85,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
@@ -876,7 +876,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

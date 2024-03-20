@@ -417,7 +417,7 @@ export class BondsComponent implements OnInit {
         suppressMovable: true,
         suppressMenu: true,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         width: 80,
         cellStyle: { textAlign: 'center' },
         cellRenderer: function (params: any) {
@@ -629,7 +629,7 @@ export class BondsComponent implements OnInit {
         suppressMovable: true,
         suppressMenu: true,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         width: 80,
         cellStyle: { textAlign: 'center' },
         cellRenderer: function (params: any) {

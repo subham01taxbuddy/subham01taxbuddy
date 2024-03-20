@@ -94,7 +94,7 @@ export class DelayComponent implements AfterContentChecked {
         field: 'itrId',
         sortable: true,
         width: 80,
-        pinned: 'left',
+        pinned: true,
       },
       {
         headerName: "Name",
@@ -159,7 +159,7 @@ export class DelayComponent implements AfterContentChecked {
         headerName: 'Status',
         width: 80,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
@@ -178,7 +178,7 @@ export class DelayComponent implements AfterContentChecked {
         headerName: 'Ack Status',
         width: 80,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">

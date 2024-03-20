@@ -278,7 +278,7 @@ export class SpeculativeIncomeComponent implements OnInit {
         field: '',
         headerCheckboxSelection: true,
         width: 80,
-        pinned: 'left',
+        pinned: true,
         checkboxSelection: (params) => {
           return true;
         },
@@ -394,7 +394,7 @@ export class SpeculativeIncomeComponent implements OnInit {
            </button>`;
         },
         width: 60,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

@@ -890,7 +890,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         </button>`;
         },
         width: 95,
-        pinned: 'right',
+        pinned: true,
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -911,7 +911,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 90,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

@@ -2,7 +2,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -262,7 +262,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return callDateTime.substring(firstPoint + 1, secondPoint - 1);
   }
 
-  createColumnDef(view, subPaidScheduleCallList?) {
+  createColumnDef(view, subPaidScheduleCallList?): ColDef[] {
     const that = this;
     return [
       {
@@ -284,7 +284,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         width: 160,
         suppressMovable: true,
         sortable: true,
-        pinned: 'left',
+        pinned: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -450,7 +450,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
         },
         width: 95,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -473,7 +473,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -496,7 +496,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -517,7 +517,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 60,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -535,7 +535,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? true : false,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -568,7 +568,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? false : true,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

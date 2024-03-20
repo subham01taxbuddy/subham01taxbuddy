@@ -588,7 +588,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -611,7 +611,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -640,7 +640,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
         },
         width: 85,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -669,7 +669,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
         },
         width: 85,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

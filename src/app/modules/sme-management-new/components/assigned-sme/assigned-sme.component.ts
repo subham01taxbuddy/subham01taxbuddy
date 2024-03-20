@@ -675,7 +675,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-        pinned: 'left',
+        pinned: true,
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => { },
@@ -685,7 +685,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         field: 'mobileNumber',
         width: 110,
         suppressMovable: true,
-        pinned: 'left',
+        pinned: true,
         cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -697,7 +697,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Name',
         field: 'name',
         width: 130,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -1011,7 +1011,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+        pinned: true,
 
       },
       {
@@ -1019,7 +1019,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         field: '',
         width: 100,
         suppressMovable: true,
-        pinned: 'right',
+        pinned: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {

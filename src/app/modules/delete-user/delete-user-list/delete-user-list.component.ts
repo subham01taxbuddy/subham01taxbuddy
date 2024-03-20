@@ -241,7 +241,7 @@ export class DeleteUserListComponent implements OnInit {
            </button>`;
         },
         width: 100,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

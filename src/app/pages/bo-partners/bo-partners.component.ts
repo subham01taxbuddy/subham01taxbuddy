@@ -116,7 +116,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         headerName: 'Type - Individual/ Consultant',
         field: 'partnerType',
         width: 170,
-        pinned: 'left',
+        pinned: true,
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
         filter: 'agTextColumnFilter',
@@ -129,7 +129,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         headerName: 'Lead Type',
         field: 'leadType',
         width: 150,
-        pinned: 'left',
+        pinned: true,
         cellStyle: { textAlign: 'center' },
         suppressMovable: true,
         filter: 'agTextColumnFilter',
@@ -347,7 +347,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
          </button>`;
         },
         width: 100,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -364,7 +364,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -387,7 +387,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -410,7 +410,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           //console.log(params);
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {

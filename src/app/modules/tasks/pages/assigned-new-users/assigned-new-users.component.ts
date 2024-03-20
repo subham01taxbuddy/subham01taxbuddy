@@ -382,7 +382,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerCheckboxSelection: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
-        pinned: 'left',
+        pinned: true,
         checkboxSelection: (params) => {
           if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
@@ -404,7 +404,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         field: 'name',
         width: 160,
         suppressMovable: true,
-        pinned: 'left',
+        pinned: true,
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -557,7 +557,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 60,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -594,7 +594,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         },
 
         width: 170,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'left',
@@ -617,7 +617,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -640,7 +640,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -655,7 +655,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         hide: true,
         width: 90,
         sortable: true,
-        pinned: 'right',
+        pinned: true,
         cellRenderer: function (params: any) {
           if (params.data.serviceType === 'ITR') {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
@@ -706,7 +706,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

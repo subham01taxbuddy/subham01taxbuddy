@@ -320,7 +320,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   //       headerName: 'Sr. No.',
   //       field: 'id',
   //       suppressMovable: true,
-  //       pinned: 'left',
+  //       pinned: true,
   //     },
   //     {
   //       headerName: 'Section',
@@ -372,7 +372,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   //       sortable: true,
   //       suppressMovable: true,
   //       width: 70,
-  //       pinned: 'right',
+  //       pinned: true,
   //       cellRenderer: function (params) {
   //         return `<button type="button" class="action_icon add_button" title="Edit">
   //         <i class="fal fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -388,7 +388,7 @@ export class AddInvestmentDialogComponent implements OnInit {
   //       sortable: true,
   //       suppressMovable: true,
   //       width: 70,
-  //       pinned: 'right',
+  //       pinned: true,
   //       cellRenderer: function (params) {
   //         return `<button type="button" class="action_icon add_button" title="Delete">
   //         <i class="fal fa-trash" aria-hidden="true" data-action-type="remove"></i>

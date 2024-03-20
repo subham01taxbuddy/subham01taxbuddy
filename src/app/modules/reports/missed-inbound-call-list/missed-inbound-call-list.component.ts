@@ -248,7 +248,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
         field: 'clientName',
         sortable: true,
         width: 200,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -310,7 +310,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
       },
 
     ]

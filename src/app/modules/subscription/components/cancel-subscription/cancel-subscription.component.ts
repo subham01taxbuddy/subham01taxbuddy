@@ -451,7 +451,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -474,7 +474,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -497,7 +497,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

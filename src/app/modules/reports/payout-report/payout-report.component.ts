@@ -267,7 +267,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       {
         headerName: 'Sr. No.',
         width: 40,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -283,7 +283,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         headerName: 'Filer Name',
         field: 'filerName',
         width: 150,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",

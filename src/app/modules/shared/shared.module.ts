@@ -39,7 +39,6 @@ import { KnowlarityNotificationComponent } from './components/knowlarity-notific
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
-import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
@@ -109,24 +108,23 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
     ],
     imports: [
         CommonModule,
-        MaterialModule,
         MatBottomSheetModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
         MaterialModule,
-        AgGridModule.withComponents([
-            CustomDateComponent,
-            AgGridMaterialSelectEditorComponent,
-            MatInputComponent,
-            AgTooltipComponent,
-            /* CheckboxRenderer */
-        ]),
+        AgGridModule,
+        // AgGridModule.withComponents([
+        //     CustomDateComponent,
+        //     AgGridMaterialSelectEditorComponent,
+        //     MatInputComponent,
+        //     AgTooltipComponent,
+        //     /* CheckboxRenderer */
+        // ]),
         NgxPaginationModule,
         NgxImageZoomModule,
         NgxDocViewerModule,
         NgxLoadingModule.forRoot({}),
-        ShimmerModule,
         MatDialogModule,
     ],
     exports: [
@@ -157,7 +155,6 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
         KnowlarityNotificationComponent,
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
-        ShimmerModule,
         DigitsOnlyDirective,
         AgTooltipComponent,
         NumbersOnlyDirective,
@@ -167,7 +164,8 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
         TwoDigitDecimaNumberDirective,
         ViewDocumentsDialogComponent,
         GenericSortingComponent,
-        GenericUserFilterComponent
+        GenericUserFilterComponent,
+        UpdateNoJsonFilingDialogComponent,
     ],
     providers: [StorageService, Schedules, RequestManager]
 })

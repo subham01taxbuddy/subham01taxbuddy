@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -317,12 +317,12 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   }
 
 
-  reportsCodeColumnDef(view) {
+  reportsCodeColumnDef(view)  {
     return [
       {
         headerName: 'Sr. No.',
         width: 40,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -343,7 +343,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         field: 'filerName',
         sortable: true,
         width: 150,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -606,7 +606,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         field: 'leaderName',
         sortable: true,
         width: view === 'leader' ? 200 : 140,
-        pinned: 'right',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",

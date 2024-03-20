@@ -361,7 +361,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Sr. No.',
         width: 50,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -377,7 +377,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         headerName: 'Filer Name',
         field: 'filerUserId',
         width: 150,
-        pinned: 'left',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -634,7 +634,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         field: 'commissionPaymentStatus',
         width: 100,
         suppressMovable: true,
-        pinned: 'right',
+        pinned: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -703,7 +703,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 75,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -725,7 +725,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -748,7 +748,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -774,7 +774,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           }
         },
         width: 95,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -788,14 +788,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         field: "commissionPaymentApprovalStatus",
         headerCheckboxSelection: this.isEditAllowed,
         width: 50,
-        pinned: 'right',
+        pinned: true,
         hide: !this.isEditAllowed,
         checkboxSelection: (params) => {
           return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
         },
-        showDisabledCheckboxes: (params) => {
-          return params.data.commissionPaymentApprovalStatus === 'APPROVED'
-        },
+        showDisabledCheckboxes:true
+        // method not allowed
+        // showDisabledCheckboxes: (params) => {
+        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        // },
         // valueGetter: function (params:any){
         //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
         // }

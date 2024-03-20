@@ -320,7 +320,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-        pinned: 'left',
+        pinned: true,
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => {},
@@ -330,7 +330,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         field: 'mobileNumber',
         width: 120,
         suppressMovable: true,
-        pinned: 'left',
+        pinned: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -490,7 +490,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'View/Edit Profile',
         field: '',
         width: 100,
-        pinned: 'right',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -505,7 +505,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Update Status',
         field: '',
         width: 100,
-        pinned: 'right',
+        pinned: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -529,7 +529,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -543,7 +543,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       //   headerName: 'Reject/Backed Out',
       //   field: '',
       //   width: 120,
-      //   pinned: 'right',
+      //   pinned: true,
       //   suppressMovable: true,
       //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 

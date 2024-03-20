@@ -76,7 +76,7 @@ export class FilingTasksComponent implements OnInit {
         field: 'userId',
         sortable: true,
         width: 80,
-        pinned: 'left',
+        pinned: true,
       },
       {
         headerName: "Client Name",
@@ -145,14 +145,14 @@ export class FilingTasksComponent implements OnInit {
         },
         width: 80,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        pinned: 'right',
+        pinned: true,
       },
 
       //   {
       //     headerName: 'Status',
       //     width: 80,
       //     sortable: true,
-      //     pinned: 'right',
+      //     pinned: true,
       //     cellRenderer: function (params:any) {
       //       return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
       //         background: transparent; font-size: 16px; cursor:pointer;">
@@ -171,7 +171,7 @@ export class FilingTasksComponent implements OnInit {
       //     headerName: 'Ack Status',
       //     width: 80,
       //     sortable: true,
-      //     pinned: 'right',
+      //     pinned: true,
       //     cellRenderer: function (params:any) {
       //       return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
       //         background: transparent; font-size: 16px; cursor:pointer;">

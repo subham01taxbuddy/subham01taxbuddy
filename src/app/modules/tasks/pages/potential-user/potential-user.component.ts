@@ -394,7 +394,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         field: 'name',
         width: 180,
         suppressMovable: true,
-        pinned: 'left',
+        pinned: true,
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -606,7 +606,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -628,7 +628,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       //        </button>`;
       //   },
       //   width: 60,
-      //   pinned: 'right',
+      //   pinned: true,
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -650,7 +650,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -672,7 +672,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 85,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

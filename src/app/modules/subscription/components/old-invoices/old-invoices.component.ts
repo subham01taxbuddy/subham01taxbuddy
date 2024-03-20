@@ -434,7 +434,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
 
         },
         width: 95,
-        pinned: 'right',
+        pinned: true,
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -470,7 +470,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
           }
         },
         width: 90,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
@@ -504,7 +504,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
            </button>`;
         },
         width: 95,
-        pinned: 'right',
+        pinned: true,
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

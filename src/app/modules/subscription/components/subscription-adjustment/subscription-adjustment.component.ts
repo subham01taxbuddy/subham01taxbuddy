@@ -473,7 +473,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         headerName: 'Revert Coupon',
         field: '',
         width: 120,
-        pinned: 'right',
+        pinned: true,
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
