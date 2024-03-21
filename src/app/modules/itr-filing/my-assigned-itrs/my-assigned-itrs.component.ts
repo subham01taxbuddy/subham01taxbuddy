@@ -170,7 +170,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         field: 'itrId',
         sortable: true,
         width: 70,
-        pinned: true,
+        pinned: 'left',
       },
       {
         headerName: "Client Name",
@@ -262,7 +262,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         headerName: 'Actions',
         width: 50,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.eFillingCompleted) {
             return `<i class="fa fa-check" title="ITR filed successfully" aria-hidden="true"></i>`;
@@ -301,7 +301,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         headerName: 'Status',
         width: 50,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
@@ -329,7 +329,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
            </button>`;
         },
         width: 50,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -342,7 +342,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       //   headerName: "TPA",
       //   field: "nextYearTpa",
       //   width: 50,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellRenderer: (params:any) => {
       //     return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
       //   },
@@ -356,7 +356,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         headerName: 'E-Verify',
         width: 50,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
@@ -403,7 +403,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       //      </button>`;
       //   },
       //   width: 50,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -416,7 +416,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
         headerName: "Review",
         field: "isReviewGiven",
         width: 50,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: params => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
@@ -438,7 +438,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
            </button>`;
         },
         width: 60,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -460,7 +460,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
            </button>`;
         },
         width: 60,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

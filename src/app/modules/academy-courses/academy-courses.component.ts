@@ -169,7 +169,7 @@ export class AcademyCoursesComponent implements OnInit {
         headerName: 'Course Name',
         field: 'courseName',
         width: 280,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",

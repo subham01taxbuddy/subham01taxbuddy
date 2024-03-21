@@ -419,7 +419,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       {
         headerName: 'Sr. No.',
         width: 50,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -492,7 +492,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
            </button>`;
         },
         width: 90,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -506,7 +506,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         headerName: 'Delete',
         field: '',
         width: 90,
-        pinned: true,
+        pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },

@@ -246,7 +246,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
         field: 'clientName',
         sortable: true,
         width: 200,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",

@@ -317,14 +317,14 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   }
 
 
-  reportsCodeColumnDef(view)  {
-    return [
+  reportsCodeColumnDef(view) {
+    let columnDefs: ColDef[] = [
       {
         headerName: 'Sr. No.',
         width: 40,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold', },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -343,7 +343,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         field: 'filerName',
         sortable: true,
         width: 150,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -606,7 +606,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         field: 'leaderName',
         sortable: true,
         width: view === 'leader' ? 200 : 140,
-        pinned: true,
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -615,7 +615,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         }
       },
-    ]
+    ] as (ColDef<object> | ColGroupDef<object>)[];
+    return columnDefs;
   }
 
   async downloadReport() {

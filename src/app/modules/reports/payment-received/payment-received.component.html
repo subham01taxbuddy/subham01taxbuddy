@@ -17,7 +17,7 @@
                     <div class="col-sm-12">
                       <div class="row">
                         <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-label>From Date</mat-label>
                             <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
                               [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
@@ -27,7 +27,7 @@
                           </mat-form-field>
                         </div>
                         <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-label>To Date</mat-label>
                             <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
                               [max]="maxEndDate" autocomplete="off" />

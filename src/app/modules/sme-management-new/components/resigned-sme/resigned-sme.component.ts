@@ -158,7 +158,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-        pinned: true,
+        pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => { },
@@ -168,7 +168,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         field: 'mobileNumber',
         width: 140,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -234,7 +234,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         field: '',
         width: 100,
         suppressMovable: true,
-        pinned: true,
+         pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
@@ -249,7 +249,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         field: '',
         width: 150,
         suppressMovable: true,
-        pinned: true,
+         pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {

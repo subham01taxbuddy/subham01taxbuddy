@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GridOptions } from "ag-grid-community";
+import { ColDef, GridOptions } from "ag-grid-community";
 import { UserMsService } from "../../services/user-ms.service";
 import { ToastMessageService } from "../../services/toast-message.service";
 import { UtilsService } from "../../services/utils.service";
@@ -357,11 +357,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   usersCreateColumnDef(list: any, leaderList: any) {
-    return [
+    let columnDefs: ColDef[] = [
+      // return [
       {
         headerName: 'Sr. No.',
         width: 50,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -377,7 +378,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         headerName: 'Filer Name',
         field: 'filerUserId',
         width: 150,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -634,7 +635,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         field: 'commissionPaymentStatus',
         width: 100,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'right',
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
@@ -703,7 +704,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 75,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -725,7 +726,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -748,7 +749,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -774,7 +775,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           }
         },
         width: 95,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -788,12 +789,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         field: "commissionPaymentApprovalStatus",
         headerCheckboxSelection: this.isEditAllowed,
         width: 50,
-        pinned: true,
+        pinned: 'right',
         hide: !this.isEditAllowed,
         checkboxSelection: (params) => {
           return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
         },
-        showDisabledCheckboxes:true
+        showDisabledCheckboxes: true
         // method not allowed
         // showDisabledCheckboxes: (params) => {
         //   return params.data.commissionPaymentApprovalStatus === 'APPROVED'
@@ -803,6 +804,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         // }
       },
     ]
+    return columnDefs;
   }
 
   createRowData(userData: any) {

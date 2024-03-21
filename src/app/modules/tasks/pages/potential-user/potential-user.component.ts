@@ -1,7 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -388,13 +388,15 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     let loggedInUserRoles = this.utilsService.getUserRoles();
     let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
-    return [
+    let columnDefs: ColDef[] = [
+
+    // return [
       {
         headerName: 'Name',
         field: 'name',
         width: 180,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'left',
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -606,7 +608,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -628,7 +630,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       //        </button>`;
       //   },
       //   width: 60,
-      //   pinned: true,
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -650,7 +652,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -672,7 +674,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 85,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -683,6 +685,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
 
     ]
+    return columnDefs;
   }
 
 

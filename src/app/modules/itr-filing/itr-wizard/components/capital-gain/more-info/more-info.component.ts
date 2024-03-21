@@ -92,7 +92,7 @@ export class MoreInfoComponent implements OnInit {
         // field: 'assessmentPastYear',
         editable: false,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'left',
         width: 100,
         valueGetter: (params: ValueGetterParams) => {
           let rowIndex = params.node.rowIndex;
@@ -322,7 +322,7 @@ export class MoreInfoComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params) {
           if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
           } else {

@@ -284,7 +284,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         width: 160,
         suppressMovable: true,
         sortable: true,
-        pinned: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -450,7 +450,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
         },
         width: 95,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -473,7 +473,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -496,7 +496,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -517,7 +517,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 60,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -535,7 +535,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? true : false,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -568,7 +568,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? false : true,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

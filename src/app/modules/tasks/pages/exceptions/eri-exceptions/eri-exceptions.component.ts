@@ -223,7 +223,7 @@ export class EriExceptionsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 50,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -251,7 +251,7 @@ export class EriExceptionsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 60,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -273,7 +273,7 @@ export class EriExceptionsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 60,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -295,7 +295,7 @@ export class EriExceptionsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 50,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -323,7 +323,7 @@ export class EriExceptionsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 60,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -343,7 +343,7 @@ export class EriExceptionsComponent implements OnInit {
       //     style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
       //   },
       //   width: 180,
-      //   pinned: true,
+      //   pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',

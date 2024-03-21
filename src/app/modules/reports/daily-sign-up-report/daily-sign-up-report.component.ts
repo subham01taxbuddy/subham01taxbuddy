@@ -219,7 +219,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
       {
         headerName: 'Sr. No.',
         width: 40,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -235,7 +235,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         headerName: 'Leader Name',
         field: 'leaderName',
         width: 150,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",

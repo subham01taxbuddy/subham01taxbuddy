@@ -122,7 +122,7 @@ export class PayProcessingComponent implements OnInit {
       {
         headerName: 'Sr. No.',
         width: 50,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',

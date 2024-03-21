@@ -354,7 +354,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         field: '',
         headerCheckboxSelection: true,
         width: 80,
-        pinned: true,
+        pinned: 'left',
         checkboxSelection: (params) => {
           return true;
         },
@@ -487,7 +487,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
            </button>`;
         },
         width: 60,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

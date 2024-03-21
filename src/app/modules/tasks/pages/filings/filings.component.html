@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-sm-2">
                           <label class="input__label" for="attr">ITR Type</label>
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [formControl]="itrType">
                               <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
                                 {{itr.name}}
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-sm-2">
                           <label class="input__label" for="attr">Return Type</label>
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [formControl]="returnType">
                               <mat-option *ngFor="let return of returnTypes" [value]="return.value">
                                 {{return.name}}

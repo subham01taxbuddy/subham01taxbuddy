@@ -281,7 +281,7 @@ export class ViewReviewComponent implements OnInit {
            </button>`;
         },
         width: 50,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

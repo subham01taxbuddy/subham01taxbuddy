@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
@@ -668,14 +668,15 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   }
 
   smeCreateColumnDef(allFilerList, itrPlanList) {
-    return [
+    let columnDefs: ColDef[] = [
+      // return [
       {
         field: 'selection',
         headerName: '',
         // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
-        pinned: true,
+        pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
         cellRenderer: (params) => { },
@@ -685,7 +686,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         field: 'mobileNumber',
         width: 110,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'left',
         cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -697,7 +698,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Name',
         field: 'name',
         width: 130,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -720,7 +721,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         cellRenderer: function (params: any) {
-          if(params.data.roles != null){
+          if (params.data.roles != null) {
             if (params?.data?.roles?.includes('ROLE_FILER')) {
               return `<button type="button" class="action_icon add_button" title="edit active capacity"
             style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="edit-active-capacity">
@@ -728,7 +729,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
             } else {
               return params.data.activeCaseMaxCapacity;
             }
-          }else{
+          } else {
             return '-';
           }
 
@@ -770,7 +771,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Assigned Services',
         field: 'services',
         width: 120,
-        display: 'block',
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
@@ -826,7 +826,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         cellRenderer: (params: any) => {
           const smeData = params?.data;
           let session;
-          if(smeData.roles != null){
+          if (smeData.roles != null) {
             if (smeData.roles.includes('ROLE_FILER')) {
               if (smeData['serviceEligibility_ITR'].assignmentStart) {
                 session = 'Active'
@@ -836,7 +836,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
             } else {
               session = '-'
             }
-          }else{
+          } else {
             session = '-'
           }
 
@@ -935,7 +935,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Role',
         field: 'role',
         width: 180,
-        display: 'flex',
         suppressMovable: true,
         wrapText: true,
         autoHeight: true,
@@ -1011,7 +1010,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: true,
+        pinned: 'right',
 
       },
       {
@@ -1019,7 +1018,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         field: '',
         width: 100,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
@@ -1030,6 +1029,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    return columnDefs;
   }
   public rowSelection: 'single';
   rowMultiSelectWithClick: false;
@@ -1070,9 +1070,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
     disposable.afterClosed().subscribe(result => {
       // if (result) {
-        // if (result) {
-          this.advanceSearch();
-        // }
+      // if (result) {
+      this.advanceSearch();
+      // }
       // }
     });
   }

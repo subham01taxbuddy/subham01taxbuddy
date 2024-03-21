@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -508,19 +508,18 @@ export class ItrAssignedUsersComponent implements OnInit {
 
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
-    let columnDefs = [
+    let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
-        pinned: true,
+        pinned: 'left',
         checkboxSelection: (params) => {
           return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
             display: 'flex',
             'align-items': 'center',
             'justify-content': 'center',
@@ -532,7 +531,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         field: 'name',
         width: 160,
         suppressMovable: true,
-        pinned: true,
+        pinned: 'left',
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
@@ -558,7 +557,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -611,7 +609,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -648,7 +645,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -726,7 +722,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           </button>`;
         },
         width: 85,
-        pinned: true,
+        pinned: 'right',
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -738,7 +734,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Start Filing',
         width: 90,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
             const isITRU = params.data.serviceType === 'ITRU';
@@ -790,7 +786,7 @@ export class ItrAssignedUsersComponent implements OnInit {
            </button>`;
         },
         width: 65,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -819,7 +815,7 @@ export class ItrAssignedUsersComponent implements OnInit {
             }
           },
           width: 120,
-          pinned: true,
+          pinned: 'right',
           cellStyle: function (params: any) {
             return {
               textAlign: 'center',
@@ -842,7 +838,7 @@ export class ItrAssignedUsersComponent implements OnInit {
              </button>`;
           },
           width: 60,
-          pinned: true,
+          pinned: 'right',
           cellStyle: function (params: any) {
             return {
               textAlign: 'center',
@@ -895,7 +891,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           },
 
           width: 180,
-          pinned: true,
+          pinned: 'right',
           cellStyle: function (params: any) {
             return {
               textAlign: 'left',
@@ -918,7 +914,7 @@ export class ItrAssignedUsersComponent implements OnInit {
                </button>`;
           },
           width: 65,
-          pinned: true,
+          pinned: 'right',
           cellStyle: function (params: any) {
             return {
               textAlign: 'center',
@@ -941,7 +937,7 @@ export class ItrAssignedUsersComponent implements OnInit {
              </button>`;
           },
           width: 70,
-          pinned: true,
+          pinned: 'right',
           cellStyle: function (params: any) {
             return {
               textAlign: 'center',

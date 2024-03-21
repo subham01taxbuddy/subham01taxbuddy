@@ -319,7 +319,7 @@ export class CreditNoteComponent implements OnInit {
         field: 'creditNoteNo',
         sortable: true,
         width: 150,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",

@@ -5,7 +5,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -16,7 +16,7 @@ import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
   templateUrl: './revenue-report.component.html',
   styleUrls: ['./revenue-report.component.scss']
 })
-export class RevenueReportComponent implements OnInit,OnDestroy {
+export class RevenueReportComponent implements OnInit, OnDestroy {
   loading = false;
   leaderView = new UntypedFormControl('');
   ownerView = new UntypedFormControl('');
@@ -110,7 +110,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
   showReports(pageChange?) {
     // 'http://localhost:9055/report/calling-report/revenue-report?page=0&pageSize=100&filerUserId=1111'
     //'http://localhost:9055/report/calling-report/revenue-report?page=0&pageSize=100&ownerView=true'
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -182,7 +182,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
         this.cacheManager.initializeCache(this.createRowData(this.revenueReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.revenueReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.revenueReport));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -234,13 +234,14 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
   }
 
   reportsCodeColumnDef(view) {
-    return [
+    let columnDefs: ColDef[] = [
+      // return [
       {
         headerName: (view === 'leader' ? 'Leader Name' : (view === 'owner' ? 'Owner Name And Team' : 'Filer Name')),
         field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
         sortable: true,
         width: 170,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -463,7 +464,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
         hide: view === 'leader' ? true : false,
         sortable: true,
         width: 140,
-        pinned: true,
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -477,7 +478,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
         field: 'leaderName',
         sortable: true,
         width: view === 'leader' ? 200 : 140,
-        pinned: true,
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -486,7 +487,8 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
           debounceMs: 0
         }
       },
-    ]
+    ] as (ColDef<object> | ColGroupDef<object>)[];
+    return columnDefs;
   }
 
   async downloadReport() {

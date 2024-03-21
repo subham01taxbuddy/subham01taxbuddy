@@ -190,7 +190,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
         headerName: 'Code',
         field: 'code',
         width: 140,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -203,7 +203,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
         headerName: 'Title',
         field: 'title',
         width: 200,
-        pinned: true,
+        pinned: 'left',
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -215,7 +215,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
         headerName: 'Description',
         field: 'description',
         width: 250,
-        // pinned: true,
+        // pinned: 'left',
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -348,7 +348,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
           <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="editPromo"> Edit</i>
            </button>`;
         },
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

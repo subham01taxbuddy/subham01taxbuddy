@@ -1,10 +1,12 @@
-.search-icon{
-width: 24px;
-height: 24px;
-color: #298FFF;
+.search-icon {
+  width: 24px;
+  height: 24px;
+  color: #298FFF;
+  font-size: 20px;
 }
 
 .mat-mdc-form-field {
-  background: #DDEDFF;
-  background-color: #DDEDFF;
+    background: #DDEDFF !important;
+    background-color: #DDEDFF !important;
+    height: 38px;
 }

@@ -498,7 +498,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMenu: true,
         sortable: true,
         width: 70,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -518,7 +518,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>

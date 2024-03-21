@@ -286,7 +286,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 85,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -309,7 +309,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 60,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -322,7 +322,7 @@ export class UserListComponent implements OnInit {
         headerName: "Review",
         field: "isReviewGiven",
         width: 75,
-        pinned: true,
+         pinned: 'right',
         cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
@@ -344,7 +344,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 65,
-        pinned: true,
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

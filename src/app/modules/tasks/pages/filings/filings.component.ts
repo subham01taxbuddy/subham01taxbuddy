@@ -1,7 +1,7 @@
 import { ItrLifecycleDialogComponent } from './../../components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy, } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -113,7 +113,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     };
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
 
-    if (this.router.getCurrentNavigation().extras.state) {
+    if (this.router.getCurrentNavigation()?.extras?.state) {
       this.searchParams.mobileNumber =
         this.router.getCurrentNavigation().extras.state['mobileNumber'];
       console.log(this.router.getCurrentNavigation().extras.state);
@@ -189,7 +189,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
             AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
             JSON.stringify(this.allFilerList)
           );
-          this.myItrsGridOptions.api.setColumnDefs(
+          this.myItrsGridOptions.api?.setColumnDefs(
             this.columnDef(this.allFilerList)
           );
         } else {
@@ -522,13 +522,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   columnDef(filerList?) {
-    return [
+    let columnDefs: ColDef[] = [
+      // return [
       {
         headerName: 'Client Name',
         sortable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
-        pinned: true,
+        pinned: 'left',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -734,7 +735,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         headerName: 'Actions',
         width: 90,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           if (
             params.data.eFillingCompleted &&
@@ -791,7 +792,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 60,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -813,7 +814,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 58,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -827,7 +828,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         headerName: 'E-Verify',
         width: 85,
         sortable: true,
-        pinned: true,
+        pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
@@ -876,7 +877,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: true,
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -887,6 +888,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    return columnDefs;
   }
   public onRowClicked(params) {
     if (params.event.target !== undefined) {

@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 
 @import "./variable.scss";
+
 body {
     font-family: 'DM Sans', sans-serif;
 }
@@ -193,6 +194,7 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
 
 .headers-align {
     .mat-expansion-panel {
+        color: #00aeca;
         margin-bottom: 28px;
 
         .mat-expanded {
@@ -241,7 +243,7 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
     text-align: right;
     margin-top: 20px;
     padding: 14px 0 19px;
-    border-top-style: solid;   
+    border-top-style: solid;
 
     .edit_btn {
         display: flex;
@@ -257,7 +259,7 @@ $altTheme: mat-dark-theme($themePrimary, $themeAccent, $themeWarn);
         border: 1px solid #797979;
         border-radius: 6.86273px;
     }
-    
+
     .edit_btn:hover {
         background: #c2e8f7;
     }
@@ -294,29 +296,19 @@ mat-form-field .mat-mdc-form-field {
     width: 90%;
     background: #FFFFFF;
     border-radius: 6.62375px;
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-    .mat-form-field-wrapper {
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-        .mat-form-field-flex {
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-            .mat-form-field-infix {
-                padding: 0.4em 0 !important;
-                margin-bottom: 5px;
+
+
+    .mat-mdc-text-field-wrapper {
+        .mat-mdc-form-field-flex {
+            .mdc-notched-outline {
+                .mdc-notched-outline__notch {
+                    border-right: none;
+                    border-left: none;
+                }
+            }
+
+            .mat-mdc-form-field-infix {
+                padding: 0.6em 0 !important;
 
                 .mat-mdc-input-element {
                     font-weight: 500;
@@ -330,20 +322,24 @@ mat-form-field .mat-mdc-form-field {
                 }
 
                 .mat-mdc-select {
+
                     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                    .mat-select-trigger {
+                    .mat-mdc-select-trigger {
+
                         /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                         /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                         /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                        .mat-select-value {
+                        .mat-mdc-select-value {
+
                             /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                             /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                            .mat-select-value-text {
+                            .mat-mdc-select-value-text {
+
                                 /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                                .mat-select-min-line {
+                                .mat-mdc-select-min-line {
                                     font-weight: 400;
                                     font-size: 12.6259px;
                                     line-height: 14px;
@@ -354,24 +350,55 @@ mat-form-field .mat-mdc-form-field {
                         }
                     }
                 }
+
                 /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                 /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                .mat-select-disabled {
+                .mat-mdc-select-disabled {
+
                     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
-                    .mat-select-min-line {
+                    .mat-mdc-select-min-line {
                         color: #07070C !important;
                     }
                 }
             }
         }
     }
+
+    &.small-inp {
+        .mat-mdc-form-field-flex {
+            .mat-mdc-form-field-infix {
+                padding: 0.4em 0 !important;
+            }
+        }
+    }
+
+
+    &.no-height {
+        .mat-mdc-text-field-wrapper {
+            .mat-mdc-form-field-flex {
+                .mdc-notched-outline {
+                    .mdc-notched-outline__notch {
+                        .mdc-floating-label--float-above {
+                            transform: translateY(-22.75px) scale(0.75);
+                        }
+                    }
+                }
+            }
+        }
+
+        .mat-mdc-form-field-subscript-wrapper {
+            height: 0px;
+        }
+    }
 }
 
 .mat-mdc-radio-group {
     .mat-mdc-radio-button {
+
         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
         .mat-radio-label {
+
             /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
             .mat-radio-label-content {
                 font-weight: 400;
@@ -381,13 +408,16 @@ mat-form-field .mat-mdc-form-field {
             }
         }
     }
+
     /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
     /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
     /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
     .mat-radio-checked {
+
         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
         /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
         .mat-radio-label {
+
             /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
             .mat-radio-label-content {
                 font-weight: 400;
@@ -494,3 +524,14 @@ mat-form-field .mat-mdc-form-field {
     margin-left: 30px;
     color: #000000;
 }
+
+.mat-mdc-form-field-icon-prefix>.mat-icon,
+.mat-mdc-form-field-icon-suffix>.mat-icon {
+    padding: 0px !important;
+}
+
+.cdk-overlay-pane {
+    position: absolute !important;
+    background: #FFF;
+}
+
