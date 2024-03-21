@@ -24,7 +24,7 @@
                     <div class="row">
                       <div class="col-sm-4">
                         <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                          [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                          [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
                       </div>
                       <div class="col-8">
                         <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
