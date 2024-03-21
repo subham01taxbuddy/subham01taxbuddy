@@ -1,6 +1,9 @@
 @use '@angular/material' as mat;
+@import '@angular/cdk/overlay-prebuilt.css';
 
 @import "./variable.scss";
+
+@include mat.core();
 
 body {
     font-family: 'DM Sans', sans-serif;
@@ -534,4 +537,8 @@ mat-form-field .mat-mdc-form-field {
     position: absolute !important;
     background: #FFF;
 }
+
+
+
+
 
