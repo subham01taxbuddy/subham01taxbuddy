@@ -28,7 +28,6 @@ export const environment = {
   get_tds : 'https://cihbintebntput6bydyqnksj2a0zykgg.lambda-url.ap-south-1.on.aws/',
   adjustment : 'https://ufkz5k66goajzposopzqdn5ciq0bimle.lambda-url.ap-south-1.on.aws/',
   get_adjustment_csv : 'https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/',
-  cognito_Url : 'https://cognito-idp.ap-south-1.amazonaws.com/',
 
 	gdrive: {
 		GOOGLE_DRIVE_CLIENT_ID: '994281120398-930gtuaop72na800aqf6f38uqjc77mvq.apps.googleusercontent.com',

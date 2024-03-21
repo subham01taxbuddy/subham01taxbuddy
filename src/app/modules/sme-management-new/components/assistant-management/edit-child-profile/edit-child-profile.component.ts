@@ -1,13 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ChildRegistrationComponent } from '../child-registration/child-registration.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import Auth from '@aws-amplify/auth';
+import { TitleCasePipe } from '@angular/common';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { InterceptorSkipHeader } from 'src/app/services/token-interceptor';
 
 @Component({
   selector: 'app-edit-child-profile',
@@ -24,7 +29,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   itrTypeForm: FormGroup;
   itrPlanList: any;
   lang=[];
-  skillSetPlanIdList:any={}
+  skillSetPlanIdList=[]
   smeDetails: any;
   inactivityTimeForm: FormGroup;
   inactivityTimeDuration = [
@@ -33,6 +38,25 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     { key: "45 Min", checked: false, value: 45 },
     { key: "60 Min", checked: false, value: 60 }
   ];
+  showOtp:boolean =false;
+  showSignUp:boolean=false;
+  signUp: AmplifySignUp = {
+    username: '',
+    password: '',
+    attributes: {
+      'custom:first_name': '',
+      'custom:last_name': ''
+    },
+    validationData: []
+  };
+  signUpData: any;
+  otpMode:any;
+  childUserId:any;
+  otpVerificationDone:boolean =false;
+  token:any;
+  isReadOnly : boolean =false;
+  loggedInSmeInfo :any;
+  maxNumber:number;
 
   constructor(
     private fb: FormBuilder,
@@ -43,21 +67,35 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private router: Router,
     private _toastMessageService: ToastMessageService,
+    private http: HttpClient,
+    private titleCasePipe: TitleCasePipe,
   ) {
     this.initLanguageForm();
     this.initItrTypeForm();
     this.initInactivityTimeForm();
+    this.getPlanDetails();
    }
 
   ngOnInit() {
+    this.loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     this.childObj = JSON.parse(sessionStorage.getItem('childObject'));
-    this.getPlanDetails();
     if(this.childObj && this.childObj?.type === 'edit'){
       this.fromEdit =true;
+      this.isReadOnly = true;
+      this.otpVerificationDone = true
       this.smeFormGroup.patchValue(this.childObj.data);
       this.setFromValues(this.childObj.data)
+    }else{
+      this.setParentName();
     }
 
+  }
+
+  setParentName(){
+    this.parentName.setValue(this.loggedInSmeInfo[0].name);
+    this.principalName.setValue(this.loggedInSmeInfo[0].parentName);
+    this.activeCaseMaxCapacity.setValue(10)
+    this.maxNumber = 10
   }
 
   initLanguageForm() {
@@ -91,7 +129,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     languages: new FormControl(''),
     callingNumber:new FormControl(''),
     qualification:new FormControl(''),
-    pinCode:new FormControl(''),
+    pinCode:new FormControl('',Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])),
     state:new FormControl(''),
     city:new FormControl(''),
     filerAssistant:new FormControl(true),
@@ -102,6 +140,8 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     smeOfficialEmail:new FormControl(),
     email:new FormControl(),
     principalName:new FormControl(),
+    itr: new FormControl(''),
+    itrToggle: new FormControl(''),
   })
 
   get mobileNumber() {
@@ -156,6 +196,79 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     return this.smeFormGroup.controls['principalName'] as FormControl
   }
 
+  get itr() {
+    return this.smeFormGroup.controls['itr'] as FormControl
+  }
+
+  get itrToggle() {
+    return this.smeFormGroup.controls['itrToggle'] as FormControl
+  }
+
+  loginFormGroup: FormGroup = this.fb.group({
+    firstName:new FormControl(''),
+    lastName:new FormControl(''),
+    emailAddress:new FormControl(''),
+  })
+
+  get firstName() {
+    return this.loginFormGroup.controls['firstName'] as FormControl
+  }
+  get lastName() {
+    return this.loginFormGroup.controls['lastName'] as FormControl
+  }
+  get emailAddress() {
+    return this.loginFormGroup.controls['emailAddress'] as FormControl
+  }
+
+  otpFormGroup :FormGroup = this.fb.group({
+    otp:new FormControl(''),
+  })
+
+  get otp() {
+    return this.otpFormGroup.controls['otp'] as FormControl
+  }
+
+  getCityData() {
+    //'https://uat-api.taxbuddy.com/user/pincode/1343'
+    if (this.pinCode.valid) {
+      let param = `/pincode/${this.pinCode.value}`;
+     this.userMsService.getMethod(param)
+        .subscribe((result: any) => {
+         this.city.setValue(result.districtName);
+         this.state.setValue(result.stateName);
+          console.log('Picode Details:', result);
+        }, error => {
+          if (error.status === 404) {
+            this.city.setValue(null);
+          }
+        });
+    }
+  }
+
+
+  serviceUpdated(serviceType, service: FormControl) {
+    if (service.value) {
+      if (!this.childObj.data[serviceType]) {
+        this.childObj.data[serviceType] = {
+          "assignmentStart": true,
+          "roundRobinLeaderCount": 0,
+          "roundRobinCount": 0,
+          "botId": null,
+          "botName": null
+        }
+      }
+    } else {
+      this.childObj.data[serviceType] = null;
+    }
+  }
+
+  assignmentUpdated(assignment: FormControl) {
+    if(this.childObj){
+      this.childObj.data['assignmentOffByLeader'] = !assignment.value;
+    }
+
+  }
+
   setFromValues(partnerInfo:any){
     if (typeof partnerInfo?.languageProficiency === 'string') {
       const languageProficiencies = partnerInfo.partnerDetails?.languageProficiency.split(',');
@@ -180,6 +293,9 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       }
     });
     this.activeCaseMaxCapacity.setValue(partnerInfo?.activeCaseMaxCapacity || '');
+
+    this.itr.setValue((this.childObj?.data['serviceEligibility_ITR']) ? true : false);
+    this.itrToggle.setValue((this.childObj?.data['assignmentOffByLeader']) ? false : true);
   }
 
   onLanguageCheckboxChange(language: string) {
@@ -204,7 +320,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   onItrTypeCheckboxChange(itrType: string) {
     const itrTypeControl = this.getItrTypeControl(itrType);
-    let planId = this.skillSetPlanIdList['skillSetPlanIdList'] || [];
+    let planId = this.skillSetPlanIdList || [];
 
     if (itrTypeControl.value) {
         const selectedPlan = this.itrPlanList.find(element => element.name === itrType);
@@ -291,7 +407,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   getDurationControl(duration: string): FormControl {
     return this.inactivityTimeForm.get(duration) as FormControl;
   }
-
+  checkedDuration:any;
   onDurationCheckboxChange(event: any, selectedDuration: string) {
     if (event.checked) {
       this.inactivityTimeDuration.forEach((duration) => {
@@ -306,6 +422,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
           this.childObj.data['inactivityTimeInMinutes'] = element.value;
         }
       });
+      this.checkedDuration = this.inactivityTimeDuration.find(duration => duration.checked);
     } else {
       this.getDurationControl(selectedDuration).setValue(true);
     }
@@ -320,26 +437,246 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  registerUser(){
-    let disposable = this.matDialog.open(ChildRegistrationComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        mobileNumber: this.mobileNumber.value,
-        name: this.name.value,
-        smeOriginalEmail: this.smeOriginalEmail.value,
-
-      },
-    });
-
-    disposable.afterClosed().subscribe((result) => {
-      console.log('statusData:', result);
-      if (result) {
-        if (result.data === 'statusChanged') {
-        //  this.getSmeList();
-        }
+  async amplifySignIn() {
+   if(this.mobileNumber.value && this.mobileNumber.valid){
+    this.loading =true;
+    Auth.signIn(this.createSignInObj()).then(res => {
+      this.loading =false;
+      console.log('Result:', res);
+      this.showOtp =true
+      this.signUpData = res;
+      this.otpMode = 'SIGN_IN';
+    }, async (err) => {
+      this.loading =false;
+      console.log('Error', err);
+      if (err.code === 'UserNotFoundException') {
+        this.showSignUp = true
       }
+    })
+  }else{
+    this._toastMessageService.alert('error',
+      'please enter mobile Number.'
+    );
+  }
+  }
+
+  amplifySignUp(){
+    if(this.firstName.valid && this.lastName.valid && this.emailAddress.valid){
+      const signUp = this.createSignUpObj();
+      console.log('SignUp Object:', signUp);
+      Auth.signUp(signUp).then(res => {
+        console.log('SignUp Result:', res);
+
+        Auth.signIn(res.user.getUsername()).then(signInRes => {
+          console.log('Sign In Result After Sign Up:', signInRes);
+          this.signUpData = signInRes
+          this.showSignUp = false;
+          this.showOtp =true
+          this.otpMode = 'SIGN_UP';
+        }).catch(signInErr => {
+          console.log('Sign In err After Sign Up:', signInErr);
+        })
+
+      }).catch(err => {
+        console.log('Sign Up err:', err);
+      })
+    }else{
+      this._toastMessageService.alert('error',
+      'please enter all values.'
+    );
+    }
+  }
+
+  otpValidationMethod(){
+    if (this.otpFormGroup.valid) {
+      this.loading =true
+      Auth.sendCustomChallengeAnswer(this.signUpData, this.otp.value).then(otpValidateRes => {
+        console.log('OTP VAlidation result:', otpValidateRes);
+        this.loading =false;
+        if (this.utilsService.isNonEmpty(otpValidateRes.signInUserSession)) {
+          if (this.otpMode === 'SIGN_IN') {
+            this.getUserByCognitoId(otpValidateRes, 'SIGN_IN');
+          }else{
+            this.createUserInDB(otpValidateRes, 'SIGN_UP');
+          }
+        }else{
+          this.loading =false;
+          this._toastMessageService.alert('error', 'Please enter valid OTP');
+        }
+      },otpError => {
+        this.loading =false;
+        this._toastMessageService.alert('error', otpError);
+        console.error('Otp Validation  Error:', otpError);
+      })
+    }
+
+  }
+
+  createSignInObj() {
+    const signIn = this.mobileNumber.value;
+    console.log(signIn, 'Login form group', this.mobileNumber.value);
+    const username = `+91${this.mobileNumber.value}`;
+    return username;
+  }
+
+  createSignUpObj() {
+    this.signUp.attributes.email = '';
+    this.signUp.password = Math.random().toString(36).slice(-8);
+    this.signUp.attributes['custom:first_name'] = this.titleCasePipe.transform(this.loginFormGroup.controls['firstName'].value.trim());
+    this.signUp.attributes['custom:last_name'] = this.titleCasePipe.transform(this.loginFormGroup.controls['lastName'].value.trim());
+    this.signUp.validationData = [];
+    this.signUp.username = '';
+    this.signUp.username = this.signUp.attributes.phone_number = `+91${this.mobileNumber.value}`;
+
+    return this.signUp;
+  }
+
+  getUserByCognitoId(data, mode) {
+    const url = `${environment.url}/user/user_account/${data.attributes.sub}`;
+
+    this.token = data.signInUserSession.accessToken.jwtToken
+    let  headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+      'X-Skip-Interceptor': 'true',
     });
+    headers = headers.append(InterceptorSkipHeader, '');
+    this.loading =true;
+    this.http.get(url, { headers }).subscribe(
+      (response:any) => {
+        this.loading =false;
+        console.log('Our dB user data:', response);
+        this.childUserId = response.userId;
+        this.utilsService.showSnackBar('Thanks For SignUp/SignIn with Taxbuddy,Please Fill Further Details');
+        this.otpVerificationDone = true;
+        this.fromEdit = true;
+        this.smeOriginalEmail.setValue(this.emailAddress.value || response.email)
+        this.name.setValue(response.firstName + " " + response.lastName);
+        this.getFlySdkDetails(response, mode);
+      },
+      (error) => {
+        this.loading =false;
+        console.error('Error:', error);
+        this.utilsService.showSnackBar('Apologies for inconvenience caused, There is some technical error due to OTP validation we will get in touch with you soon.')
+      }
+    );
+  }
+
+
+  createUserInDB(cognitoData, type?) {
+    console.log('createUserInDB() signUpData:', cognitoData.attributes);
+    const url = `${environment.url}/user/user_account`;
+    this.token = cognitoData.signInUserSession.accessToken.jwtToken
+    const data = {
+      firstName: cognitoData.attributes['custom:first_name'],
+      lastName: cognitoData.attributes['custom:last_name'],
+      email: this.emailAddress.value,
+      mobile: cognitoData.attributes['phone_number'].substring(3, 13),
+      langKey: 'en',
+      authorities: ['ROLE_USER'],
+      cognitoId: cognitoData.attributes['sub'],
+      source: 'WEB',
+      initialData: '',
+      serviceType:'ITR',
+      countryCode:'+91',
+      language:'English'
+    };
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+      'X-Skip-Interceptor': 'true'
+    });
+
+    this.http.post(url, data, { headers }).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.getUserByCognitoId(cognitoData, 'SIGN_UP');
+      },
+      (error) => {
+        this.loading =false;
+        console.error('Error:', error);
+        this.utilsService.showSnackBar('Apologies for inconvenience caused, There is some technical error due to OTP validation we will get in touch with you soon.')
+      }
+    );
+
+  }
+
+  getFlySdkDetails(user, mode) {
+    const url = `${environment.url}/itr/the-fly/user`;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+      'X-Skip-Interceptor': 'true'
+    });
+    const request = {
+      userId: user.userId,
+      isNew: mode === 'SIGN_UP' ? true : false,
+      userName: user.firstName + ' ' + user.lastName,
+    };
+
+    this.http.post(url, request, { headers }).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        if (mode === 'SIGN_UP') {
+          setTimeout(() => {
+            this.getAffiliateDetails(mode, user.userId);
+          }, 2000);
+        }
+        if (mode != 'SIGN_UP') {
+          this.getAssignmentDetails(user.userId);
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  getAffiliateDetails(mode, userId) {
+    if (mode === 'SIGN_UP') {
+      const url = `${environment.url}/user/sme-affiliate/${userId}`;
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'X-Skip-Interceptor': 'true'
+      });
+
+      this.http.get(url, { headers }).subscribe(
+        (response:any) => {
+          if (response.success) {
+            let id = response?.data?.referrer_user_id
+            this.getAssignmentDetails(userId , id);
+          } else {
+          }
+        })
+    }
+  }
+
+  getAssignmentDetails(userId ,id?) {
+    const sType = 'ITR'
+    let param;
+    if (id && sType === 'ITR') {
+      param = `?userId=${userId}&serviceType=${sType}&affiliateId=${id}`;
+    } else {
+      param = `?userId=${userId}&serviceType=${sType}`;
+    }
+    const url = `${environment.url}/user/leader-assignment${param}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`,
+      'X-Skip-Interceptor': 'true'
+    });
+
+    this.http.get(url, { headers }).subscribe(
+      (response:any) => {
+        if (response.success) {
+        } else {
+        }
+      })
+
   }
 
   cancelUpdate() {
@@ -351,49 +688,69 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     if(this.smeFormGroup.valid){
 
       // let reqBody = this.partnerInfo;
+      let userId = this.childObj ? this.childObj.data.userId : this.childUserId
+      let parentId = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentId;
+      let parentName = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentName;
+      let service
+      if(this.itr.value && !this.itrToggle.value){
+        service= {
+          "assignmentStart" : false
+        }
+      }else if(this.itr.value && this.itrToggle.value){
+        service = {
+          "assignmentStart" : true
+        }
+      }
+      const today = new Date();
+      const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
       const param = `/v2/assistant-details`;
 
       const requestBody = {
-        userId: this.childObj.data.userId,
+        userId:userId,
         name: this.name.value,
         mobileNumber: this.mobileNumber.value,
         callingNumber: this.callingNumber.value,
+        roles : ["ROLE_FILER"],
         languages: this.lang,
-        parentId: this.childObj.data.parentId,
-        parentName: this.childObj.data.parentName,
-        displayName: this.childObj.data.displayName,
-        active: this.childObj.data.active,
-        internal: this.childObj.data.internal,
-        assessmentYears: this.childObj.data.assessmentYears,
-        isFiler: this.childObj.data.isFiler,
+        parentId: parentId,
+        displayName:this.childObj ? this.childObj.data.displayName : this.name.value,
+        active:this.childObj ? this.childObj.data.active : true,
+        joiningDate :formattedDate,
+        internal: this.internal.value ? true : this.external.value ? false:null,
+        assessmentYears: this.childObj ? this.childObj.data.assessmentYears :[ "2022-2023","2023-2024"],
+        parentName: parentName,
+        isFiler:this.childObj ? this.childObj.data.isFiler : true,
+        state: this.state.value,
         qualification: this.qualification.value,
-        partnerType: this.childObj.data.partnerType,
-        assignmentOffByLeader: this.childObj.data.assignmentOffByLeader,
+        smeOriginalEmail :this.smeOriginalEmail.value,
+        serviceEligibility_ITR : service,
+        parentPrincipalUserId:this.childObj ? this.childObj.data?.parentPrincipalUserId : this.loggedInSmeInfo[0].userId,
+        activeCaseMaxCapacity: this.activeCaseMaxCapacity.value,
+        partnerType: this.childObj ? this.childObj.data?.partnerType : 'CHILD',
+        skillSetPlanIdList : this.skillSetPlanIdList,
+        assignmentOffByLeader: this.childObj ? this.childObj.data?.assignmentOffByLeader : false,
         partnerDetails: {
-          ...this.childObj.data.partnerDetails,
           name: this.name.value,
           mobileNumber: this.mobileNumber.value,
-          emailAddress: this.email.value,
+          emailAddress: this.smeOriginalEmail.value,
           city: this.city.value,
           state: this.state.value,
+          partnerType:this.childObj ? this.childObj.data?.partnerType : 'CHILD',
           languageProficiency: this.lang.join(', '),
+          qualification: this.qualification.value,
+
           pinCode: this.pinCode.value,
-          pan: this.childObj.data.partnerDetails.pan,
-          gstin: this.childObj.data.partnerDetails.gstin,
-          bankDetails: {
-            ...this.childObj.data.partnerDetails.bankDetails,
-            accountType: this.childObj.data.partnerDetails.bankDetails.accountType,
-            ifsCode: this.childObj.data.partnerDetails.bankDetails.ifsCode,
-            accountNumber: this.childObj.data.partnerDetails.bankDetails.accountNumber
-          },
-          parentPrincipalUserId: this.childObj.data.partnerDetails.parentPrincipalUserId,
-          interviewedBy: this.childObj.data.partnerDetails.interviewedBy
+          pan:this.childObj ?  this.childObj.data?.partnerDetails?.pan : '' ,
+          gstin: this.childObj ? this.childObj.data?.partnerDetails?.gstin : '',
+          parentPrincipalUserId: this.childObj ? this.childObj.data?.parentPrincipalUserId : this.loggedInSmeInfo[0].userId,
+          interviewedBy: this.childObj ? this.childObj.data?.partnerDetails?.interviewedBy : ''
         },
-        inactivityTimeInMinutes: this.childObj.data.inactivityTimeInMinutes
+        inactivityTimeInMinutes: this.checkedDuration ? this.checkedDuration.value : 10
       };
 
       this.loading = true;
-      this.userMsService.putMethod(param, requestBody).subscribe(
+      this.userMsService.postMethod(param, requestBody).subscribe(
         (res: any) => {
           console.log('Profile update response:', res);
           this.loading = false;
@@ -418,5 +775,18 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     sessionStorage.removeItem('childObject');
+    this.token='';
   }
+}
+
+interface AmplifySignUp {
+  username: string;
+  password: string;
+  attributes: {
+    email?: string;
+    phone_number?: string;
+    'custom:first_name': string;
+    'custom:last_name': string;
+  };
+  validationData: any[];
 }

@@ -42,6 +42,7 @@ export class NavbarComponent implements DoCheck {
   nav: boolean;
   isDropdownOpen = false;
   showDropDown:boolean =false;
+  partnerType :any;
 
   constructor(
     private router: Router,
@@ -59,7 +60,7 @@ export class NavbarComponent implements DoCheck {
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
-    let partnerType = this.utilsService.getPartnerType();
+    this.partnerType = this.utilsService.getPartnerType();
     if(role.includes('ROLE_LEADER')){
       this.showCopyLinkButton =true;
     }else{
@@ -67,7 +68,7 @@ export class NavbarComponent implements DoCheck {
     }
     this.fetchAffiliateId();
 
-    if(role.includes('ROLE_FILER') && (partnerType === 'PRINCIPAL' || partnerType ==='INDIVIDUAL')){
+    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
       this.showDropDown =true;
     }else{
       this.showDropDown=false;

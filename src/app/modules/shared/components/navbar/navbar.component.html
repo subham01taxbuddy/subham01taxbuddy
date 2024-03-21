@@ -56,7 +56,7 @@
               </div>
               <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
                   <a id="option1" (click)="navigateToProfile()">My Profile</a>
-                  <a id="option2" (click)="navigateToAssistantManagement()">Assistant Management</a>
+                  <a id="option2" *ngIf="partnerType === 'PRINCIPAL'" (click)="navigateToAssistantManagement()">Assistant Management</a>
               </div>
             </div>
             <div *ngIf="!showDropDown" class="header__breadcrumbs" style="float:right">

@@ -5,7 +5,7 @@ import { UnassignedSmeComponent } from './components/unassigned-sme/unassigned-s
 import { ResignedSmeComponent } from './components/resigned-sme/resigned-sme.component';
 import { AssignedSmeComponent } from './components/assigned-sme/assigned-sme.component';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { SmeManagementNewComponent } from './sme-management-new.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -20,7 +20,6 @@ import { UpdateStatusComponent } from './components/unassigned-sme/update-status
 import { AssistantManagementComponent } from './components/assistant-management/assistant-management.component';
 import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
 import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
-import { ChildRegistrationComponent } from './components/assistant-management/child-registration/child-registration.component';
 
 @NgModule({
   imports: [
@@ -48,7 +47,7 @@ import { ChildRegistrationComponent } from './components/assistant-management/ch
     PartnerManagementComponent,
     AssistantManagementComponent,
     EditChildProfileComponent,
-    ChildRegistrationComponent,
-  ]
+  ],
+  providers: [TitleCasePipe]
 })
 export class SmeManagementNewModule { }
