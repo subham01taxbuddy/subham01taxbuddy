@@ -12817,7 +12817,7 @@ body[dir=rtl] .checkbox[checked=true] {
 }
 
 .iframe-height {
-  height: 43vw;
+  height: 43.5vw;
   width: 600px;
   border-radius: 15px;
 }
