@@ -24,6 +24,8 @@
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
                   maxlength="10" minlength="6" trim [numbersOnly]="true" required  />
+                  <mat-error *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                    Mobile number is required and must be valid.</mat-error>
               </mat-form-field>
             </div>
             <div *ngIf="!fromEdit" class=" col-sm-4  verifyBank">
@@ -38,12 +40,16 @@
               <mat-label>First Name *</mat-label>
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="First Name" [formControl]="firstName" class="input-field"  required />
+                <mat-error *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                  First name is required.</mat-error>
               </mat-form-field>
             </div>
             <div class="col-sm-4">
               <mat-label>Last Name *</mat-label>
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="Last Name" [formControl]="lastName" class="input-field"  required />
+                <mat-error *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                  Last name is required.</mat-error>
               </mat-form-field>
             </div>
             <div class="col-sm-4">
@@ -51,6 +57,8 @@
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field"
                 required  />
+                <mat-error *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)">
+                  Email address is required and must be valid.</mat-error>
               </mat-form-field>
             </div>
             <div *ngIf="!fromEdit" class="row mt-2 verifyBank">
@@ -65,7 +73,9 @@
               <mat-label> OTP * </mat-label>
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="OTP" [formControl]="otp" class="input-field"
-                required  />
+                required maxlength="6" minlength="6" digitsOnly  />
+                <mat-error *ngIf="otp.invalid && (otp.dirty || otp.touched)">
+                  Please Enter Valid OTP</mat-error>
               </mat-form-field>
             </div>
             <div *ngIf="!fromEdit" class=" col-sm-4  verifyBank">
@@ -91,19 +101,50 @@
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
                 maxlength="10" minlength="6" trim [numbersOnly]="true" required  />
+                <mat-error *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  Mobile number is required and must be valid.</mat-error>
             </mat-form-field>
           </div>
-          <div class="col-sm-4">
+          <!-- <div class="col-sm-4">
             <mat-label>Assistant Name(First,Middle & Last Name)*</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="First,Middle & Last Name" [formControl]="name" class="input-field"  required />
             </mat-form-field>
-          </div>
+          </div> -->
           <div class="col-sm-4">
             <mat-label> Email ID * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field"
               required  />
+              <mat-error *ngIf="smeOriginalEmail.invalid && (smeOriginalEmail.dirty || smeOriginalEmail.touched)">
+                Email address is required and must be valid.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-sm-4">
+            <mat-label>First Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="First Name" [formControl]="firstName" class="input-field"  required />
+              <mat-error *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                First name is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label>Middle Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Middle Name" [formControl]="middleName" class="input-field"  required />
+              <mat-error *ngIf="middleName.invalid && (middleName.dirty || middleName.touched)">
+                Middle name is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label>Last Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Last Name" [formControl]="lastName" class="input-field"  required />
+              <mat-error *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                Last name is required.</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -113,7 +154,7 @@
             <mat-label> Pin Code * </mat-label>
             <mat-form-field appearance="outline">
               <input autocomplete="off" type="text" matInput placeholder="PIN code" [formControl]="pinCode" class="input-field"
-               maxlength="6" minlength="6" trim digitsOnly   (blur)="getCityData()" />
+               maxlength="6" minlength="6" trim digitsOnly   (blur)="getCityData()" required />
                <mat-error
                   *ngIf="pinCode.hasError('required') || pinCode.hasError('pattern') || pinCode.hasError('minLength') || pinCode.hasError('maxLength')">
                   Enter
@@ -124,12 +165,16 @@
             <mat-label> city *</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" required  />
+              <mat-error *ngIf="city.invalid && (city.dirty || city.touched)">
+                City is required.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-4">
             <mat-label> state *</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" required />
+              <mat-error *ngIf="state.invalid && (state.dirty || state.touched)">
+                State is required.</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -138,7 +183,9 @@
             <mat-label> Qualification * </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Qualification" name="" [formControl]="qualification"
-                class="input-field"  [readonly]="isReadOnly" />
+                class="input-field"  [readonly]="isReadOnly" required />
+                <mat-error *ngIf="qualification.invalid && (qualification.dirty || qualification.touched)">
+                  Qualification is required.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-4">
@@ -278,7 +325,7 @@
                 <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
                 <div class="row">
                     <div class="col-sm-12">
-                        <input type="number" min="1" max="maxNumber" class="form-control" [formControl]="activeCaseMaxCapacity" required>
+                        <input type="number" [min]="1" [max]="maxNumber" class="form-control" [formControl]="activeCaseMaxCapacity" required>
                         <div *ngIf="activeCaseMaxCapacity.invalid && (activeCaseMaxCapacity.value === null || activeCaseMaxCapacity.value === '')" class="text-danger">This field is required.</div>
                         <div *ngIf="activeCaseMaxCapacity.value === 0" class="text-danger">Please enter a value greater than zero.</div>
                     </div>
