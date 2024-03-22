@@ -92,10 +92,13 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   }
 
   setParentName(){
-    this.parentName.setValue(this.loggedInSmeInfo[0].name);
-    this.principalName.setValue(this.loggedInSmeInfo[0].parentName);
+    this.parentName.setValue(this.loggedInSmeInfo[0].parentName);
+    this.principalName.setValue(this.loggedInSmeInfo[0].name);
     this.activeCaseMaxCapacity.setValue(10)
-    this.maxNumber = 10
+    this.callingNumber.setValue(this.mobileNumber.value)
+    this.maxNumber = 10;
+
+
   }
 
   initLanguageForm() {
@@ -142,6 +145,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     principalName:new FormControl(),
     itr: new FormControl(''),
     itrToggle: new FormControl(''),
+    middleName:new FormControl('')
   })
 
   get mobileNumber() {
@@ -202,6 +206,9 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   get itrToggle() {
     return this.smeFormGroup.controls['itrToggle'] as FormControl
+  }
+  get middleName() {
+    return this.smeFormGroup.controls['middleName'] as FormControl
   }
 
   loginFormGroup: FormGroup = this.fb.group({
@@ -374,6 +381,37 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
           }
 
         });
+
+        if(!this.fromEdit){
+          if (this.smeDetails?.languages) {
+            this.langList.forEach(lang => {
+              const langControl = this.getLanguageControl(lang);
+              if (langControl) {
+                if (this.smeDetails.languages.includes(lang)) {
+                  langControl.setValue(true);
+                } else {
+                  langControl.disable();
+                }
+              }
+            });
+          }
+
+          if (this.smeDetails?.skillSetPlanIdList) {
+            itrPlanList.forEach(element => {
+              const selectedPlan = this.smeDetails.skillSetPlanIdList.includes(element.planId);
+              const itrTypeControl = this.getItrTypeControl(element.name);
+              if (itrTypeControl) {
+                if (selectedPlan) {
+                  itrTypeControl.setValue(true);
+                } else {
+                  itrTypeControl.disable();
+                }
+              }
+            });
+          }
+
+        }
+
       }
     })
   }
@@ -550,8 +588,10 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar('Thanks For SignUp/SignIn with Taxbuddy,Please Fill Further Details');
         this.otpVerificationDone = true;
         this.fromEdit = true;
-        this.smeOriginalEmail.setValue(this.emailAddress.value || response.email)
-        this.name.setValue(response.firstName + " " + response.lastName);
+        this.smeOriginalEmail.setValue(this.emailAddress.value || response.email);
+        // this.name.setValue(response.firstName + " " + response.lastName);
+        this.firstName.setValue(response.firstName);
+        this.lastName.setValue(response.lastName);
         this.getFlySdkDetails(response, mode);
       },
       (error) => {
@@ -703,6 +743,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       }
       const today = new Date();
       const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+      let name = this.name.setValue(`${this.firstName.value} ${this.middleName.value} ${this.lastName.value}`);
 
       const param = `/v2/assistant-details`;
 

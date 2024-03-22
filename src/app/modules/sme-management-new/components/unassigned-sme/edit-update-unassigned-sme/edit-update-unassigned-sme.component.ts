@@ -13,6 +13,8 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { ReportService } from 'src/app/services/report-service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { NameAlertComponent } from '../name-alert/name-alert.component';
 
 export interface User {
   name: string;
@@ -62,6 +64,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   smeDetails: any;
   signedInRole:any;
   public panregex = AppConstants.panNumberRegex;
+  panName:any;
 
   constructor(
     private fb: FormBuilder,
@@ -70,7 +73,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
     private httpClient: HttpClient,
-    private reportService:ReportService
+    private reportService:ReportService,
+    private dialog: MatDialog,
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
@@ -419,6 +423,27 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.panInfo = result;
           if(result.isValid != "INVALID PAN"){
            console.log("inside valid");
+           if(this.panInfo?.firstName && this.panInfo?.lastName){
+            if (this.panInfo.middleName && this.panInfo.middleName.trim() !== '') {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.middleName + ' ' + this.panInfo.lastName;
+            } else {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
+            }
+            if (this.panName != this.smeFormGroup.controls['name'].value) {
+              const dialogRef = this.dialog.open(NameAlertComponent, {
+                width: '40%',
+                disableClose: true,
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+                if (this.utilsService.isNonEmpty(result) && result === 'PAN') {
+                  this.smeFormGroup.controls['name'].setValue(this.panName);
+                  return;
+                }
+
+              });
+            }
+           }
           }else{
             this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
             this.pan.setErrors({ 'invalidPan': true });
@@ -689,7 +714,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         pinCode:this.pinCode.value,
         state: this.state.value,
         botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName,
+        displayName: this.smeObj.displayName || this.name.value,
         active: this.smeObj.active,
         joiningDate: formattedDate,
         internal: this.internal.value ? true : this.external.value ? false:null,

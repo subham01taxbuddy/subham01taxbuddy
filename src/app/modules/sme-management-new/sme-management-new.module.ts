@@ -20,6 +20,7 @@ import { UpdateStatusComponent } from './components/unassigned-sme/update-status
 import { AssistantManagementComponent } from './components/assistant-management/assistant-management.component';
 import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
 import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
+import { NameAlertComponent } from './components/unassigned-sme/name-alert/name-alert.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { EditChildProfileComponent } from './components/assistant-management/edi
     PartnerManagementComponent,
     AssistantManagementComponent,
     EditChildProfileComponent,
+    NameAlertComponent
   ],
   providers: [TitleCasePipe]
 })

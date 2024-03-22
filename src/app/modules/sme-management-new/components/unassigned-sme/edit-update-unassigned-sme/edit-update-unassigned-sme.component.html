@@ -446,12 +446,12 @@
           <div class="col-sm-6" *ngIf="additionalIdsRequired.value">
             <mat-label> No of additional Id's required </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
-                class="input-field" maxlength="2" minlength="0" trim [numbersOnly]="true" />
+              <input type="number" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
+                class="input-field" max="5" min="1" trim [numbersOnly]="true" />
                 <mat-error *ngIf="additionalIdsCount.hasError('required')">
                   Enter No of additional Id's required </mat-error>
-                  <mat-error *ngIf="additionalIdsCount.value === '0'">
-                    Number cannot be zero
+                  <mat-error *ngIf="additionalIdsCount.value === '0' || additionalIdsCount.value > 5">
+                    Number must be between 1 and 5 for additional IDs count.
                   </mat-error>
             </mat-form-field>
           </div>
