@@ -5,7 +5,7 @@ import { UnassignedSmeComponent } from './components/unassigned-sme/unassigned-s
 import { ResignedSmeComponent } from './components/resigned-sme/resigned-sme.component';
 import { AssignedSmeComponent } from './components/assigned-sme/assigned-sme.component';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { SmeManagementNewComponent } from './sme-management-new.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,9 @@ import { SharedModule } from '../shared/shared.module';
 import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
 import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 import { UpdateStatusComponent } from './components/unassigned-sme/update-status/update-status.component';
+import { AssistantManagementComponent } from './components/assistant-management/assistant-management.component';
+import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
+import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
 
 @NgModule({
   imports: [
@@ -40,7 +43,11 @@ import { UpdateStatusComponent } from './components/unassigned-sme/update-status
     EditUpdateAssignedSmeComponent,
     EditUpdateResignedSmeComponent,
     ConvertToExtPartnerComponent,
-    UpdateStatusComponent
-  ]
+    UpdateStatusComponent,
+    PartnerManagementComponent,
+    AssistantManagementComponent,
+    EditChildProfileComponent,
+  ],
+  providers: [TitleCasePipe]
 })
 export class SmeManagementNewModule { }

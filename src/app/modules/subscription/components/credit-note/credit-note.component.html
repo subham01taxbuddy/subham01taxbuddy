@@ -11,62 +11,59 @@
               Filter - Credit Note:
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="filter-box">
-                <div class="row">
-                  <div class="col-sm-12 bckClr">
-                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                      (sendPrincipleIndividual)="fromSme($event,false, true)"
-                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-                  </div>
-                  <div class="col-sm-2 spsTp">
-                    <mat-label style="margin-top: 4px;">From Date</mat-label>
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height"
-                      style="margin-top: 9px;">
-                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
-                        [max]="maxDate" autocomplete="off" (dateChange)="setToDateValidation()" />
-                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                      <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-2 spsTp">
-                    <mat-label style="margin-top: 4px;">To Date</mat-label>
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height"
-                      style="margin-top: 9px;">
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin"
-                        [max]="maxDate" autocomplete="off" />
-                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                      <mat-datepicker #picker2></mat-datepicker>
-                      <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                      <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-2 spsTp">
-                    <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                      [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
-                  </div>
-                  <div class="col-6 spsTp">
-                    <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                      (onChange)="searchByObject($event)"></app-generic-user-filter>
-                  </div>
-                  <div class="row mt-3">
-                    <div class="col-sm-6 spcTp">
-                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-                        (onChange)="sortByObject($event)"></app-generic-sorting>
-                    </div>
-                  </div>
-                  <div class="button-container">
-                    <button class="srch-btn-1" [disabled]="loading" (click)="getCreditNote()">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Credit
-                    </button>
-                    <button
-                      *ngIf="loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER')"
-                      class="dwldBtn-1" [disabled]="loading" (click)="downloadCreditNote()">
-                      <i class="fa fa-download" aria-hidden="true"></i> Download File
-                    </button>
-                    <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-12 bckClr" >
+                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                  (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              </div>
+              <div class="col-sm-2 spsTp">
+                <mat-label style="margin-top: 4px;">From Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new" style="margin-top: 9px;">
+                  <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
+                    [max]="maxDate" autocomplete="off" (dateChange)="setToDateValidation()" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-2 spsTp">
+                <mat-label style="margin-top: 4px;">To Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new" style="margin-top: 9px;">
+                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin"
+                    [max]="maxDate" autocomplete="off" />
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-2 spsTp">
+                <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                  [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
+              </div>
+              <div class="col-6 spsTp">
+                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+              </div>
+              <div class="row mt-3">
+                <div class="col-sm-6 spcTp">
+                  <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                    (onChange)="sortByObject($event)"></app-generic-sorting>
+                </div>
+              </div>
+              <div class="button-container">
+                <button class="srch-btn-1" [disabled]="loading" (click)="getCreditNote()">
+                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Credit
+                </button>
+                <button
+                  *ngIf="loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER')"
+                  class="dwldBtn-1" [disabled]="loading" (click)="downloadCreditNote()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
 
                   </div>
                   <div class="row mt-3">

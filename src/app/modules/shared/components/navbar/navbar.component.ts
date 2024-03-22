@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -40,6 +40,9 @@ export class NavbarComponent implements DoCheck {
 
   loading: boolean = false;
   nav: boolean;
+  isDropdownOpen = false;
+  showDropDown:boolean =false;
+  partnerType :any;
 
   constructor(
     private router: Router,
@@ -51,16 +54,31 @@ export class NavbarComponent implements DoCheck {
     private kommunicateSsoService: KommunicateSsoService,
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
+    private renderer: Renderer2,
+    private elementRef: ElementRef
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
+    this.partnerType = this.utilsService.getPartnerType();
     if(role.includes('ROLE_LEADER')){
       this.showCopyLinkButton =true;
     }else{
       this.showCopyLinkButton = false;
     }
     this.fetchAffiliateId();
+
+    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
+      this.showDropDown =true;
+    }else{
+      this.showDropDown=false;
+    }
+
+    this.renderer.listen('window', 'click', (event: Event) => {
+      if (!this.elementRef.nativeElement.contains(event.target)) {
+        this.isDropdownOpen = false;
+      }
+    });
   }
 
 
@@ -243,7 +261,7 @@ export class NavbarComponent implements DoCheck {
     const smeEmailId = loggedInSmeInfo[0].email;
     const leaderId = loggedInSmeInfo[0].userId;
     const leaderName = loggedInSmeInfo[0].name;
-    const link = `https://uat-itr.taxbuddy.com/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;
+    const link = `${environment.webportal_url}/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;
 
     let encoded = encodeURI(link);
     const textarea = document.createElement('textarea');
@@ -258,5 +276,19 @@ export class NavbarComponent implements DoCheck {
 
   }
 
+
+  navigateToProfile(){
+    let userId = this.utilsService.getLoggedInUserID();
+    this.router.navigate(['/sme-management-new/partner-profile'],{queryParams: { userId: userId }},)
+  }
+
+  navigateToAssistantManagement(){
+    let userId = this.utilsService.getLoggedInUserID();
+    this.router.navigate(['/sme-management-new/assistant-management'],{queryParams: { userId: userId }},)
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
 
 }

@@ -161,15 +161,26 @@
                     <h2 class="accordion-header" id="headingTwo">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo">Gross Salary
-                        <input type="number" class="form-control inpClr2" value="{{getTotalGrossSalary()}}"
+                        <input type="number" class="form-control inpClr2" [value]="totalGrossSalary"
                           readonly></button>
-
+                          <!-- {{getTotalGrossSalary()}} -->
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="card-body" formArrayName="salaryDetails">
+                     
+
+                     <app-salary-bifurcation [localEmployer]="localEmployer"
+                     [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)"
+                     (isValid)="isFormGroupValid($event)"></app-salary-bifurcation>
+                     
+                      <!-- need to remove in feature -->
+
+
+
+
+                      <!-- <div class="card-body" formArrayName="salaryDetails"> -->
 
                         <!-- 4 Box -->
-                        <div *ngFor="let income of getSalaryArray.controls; let i = index" [formGroupName]="i">
+                        <!-- <div *ngFor="let income of getSalaryArray.controls; let i = index" [formGroupName]="i">
                           <div class="out-4box">
                             <div class="area-1">
                               {{ income.value.label }}
@@ -181,7 +192,7 @@
                                   maxlength="125" (change)="changed(true);"
                                   (beforeinput)="confirmChange($event, income.value.salaryType)" />
                               </mat-form-field>
-                            </div>
+                            </div> -->
                             <!-- <div class="area-3" *ngIf="!hasBifurcation(i)" >
                               OR
                             </div>
@@ -189,15 +200,16 @@
                               <button type="button" class="btnSal" (click)="bifurcation(i)"> + Add based on category </button>
                             </div> -->
 
-                          </div>
+                          <!-- </div> -->
                           <!--Bifurcation component-->
-                          <app-bifurcation #bifurcation [typeIndex]="i" [localEmployer]="localEmployer"
-                            [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)" (isValid)="isFormGroupValid($event)"></app-bifurcation>
+                          <!-- <app-bifurcation #bifurcation [typeIndex]="i" [localEmployer]="localEmployer"
+                            [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)"
+                            (isValid)="isFormGroupValid($event)"></app-bifurcation>
                         </div>
-                        <img class="line" src="img/line-2-2.svg" />
+                        <img class="line" src="img/line-2-2.svg" /> -->
                         <!-- 4 Box -->
 
-                      </div>
+                      <!-- </div> -->
                     </div>
                   </div>
                 </form>
@@ -264,14 +276,14 @@
                                 than the commuted pension u/s 10(10A) that is provided
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf=" income.value.allowType === 'LEAVE_ENCASHMENT' && leaveEncashError">
+                                *ngIf=" income.value.allowType === 'LEAVE_ENCASHMENT' && leaveEnCashError">
                                 Leave Encashment to be claimed cannot be more than the
                                 Leave Encashment that is provided or salary entered in
                                 Salary 17(1) or 3 lakhs (for non-goverment employees),
                                 whichever is lower
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === 'SECOND_PROVISO_CGOV' && secProvisoCgovError">
+                                *ngIf="income.value.allowType === 'SECOND_PROVISO_CGOV' && secProvisoCGovError">
                                 Second proviso under central government can be only
                                 claimed by government employees and should be less than
                                 salary in 17(1) or 5 lakhs, whichever is lower
@@ -297,13 +309,13 @@
                                 under 17(1), 17(2) and 17(3)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === '10(14)(ii)' && prescPersonalExpError">
+                                *ngIf="income.value.allowType === '10(14)(ii)' && presPersonalExpError">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === '10(14)(i)' && prescProfExpError">
+                                *ngIf="income.value.allowType === '10(14)(i)' && presProfExpError">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)
@@ -481,7 +493,8 @@
                 <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
-                <button class="rght-btn" (click)="saveEmployerDetails(true)" [disabled]="bifurcationFormGroup">Save & View Summary</button>
+                <button class="rght-btn" (click)="saveEmployerDetails(true)" [disabled]="bifurcationFormGroup">Save &
+                  View Summary</button>
               </div>
             </div>
 

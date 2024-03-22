@@ -12820,25 +12820,26 @@ body[dir=rtl] .checkbox[checked=true] {
   transition: unset;
 }
 
-
 .iframe-height {
-  height: 47vw;
-  width: 530px;
+  height: 43.5vw;
+  width: 600px;
   border-radius: 15px;
 }
 
-
-
 .close-kmChat {
   position: absolute;
-  top: -7px;
-  left: -2px;
-  font-size: 22px;
+  top: 10px;
+  left: 5px;
+  font-size: 25px;
   font-weight: bold;
+  z-index: 200;
 }
 
 .kmIcon {
-  background-color: #2199e8;
+  background-color: #ffffff;
+  padding: 5px;
+  border-radius:8px;
+  border:1px solid #cccccc;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */

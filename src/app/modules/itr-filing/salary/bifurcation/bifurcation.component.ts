@@ -636,8 +636,6 @@ export class BifurcationComponent implements OnInit, OnChanges {
           this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
         }
       }
-
-      console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
     this.utilsService.setChange(false);
@@ -674,7 +672,8 @@ export class BifurcationComponent implements OnInit, OnChanges {
       this.profitsInLieu.removeAt(index);
       this.changeSectionOne('profitsInLieu');
     }
-    this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
+    this.formValuesChanged();
+    // this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
   }
 
   addItem(item?) {
