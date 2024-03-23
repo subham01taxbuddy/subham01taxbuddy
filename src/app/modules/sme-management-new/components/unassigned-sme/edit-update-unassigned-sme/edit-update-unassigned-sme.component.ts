@@ -12,6 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { NameAlertComponent } from '../name-alert/name-alert.component';
 
 export interface User {
   name: string;
@@ -60,6 +63,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   itrPlanList: any;
   smeDetails: any;
   signedInRole:any;
+  public panregex = AppConstants.panNumberRegex;
+  panName:any;
 
   constructor(
     private fb: FormBuilder,
@@ -67,8 +72,9 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
-
-    private reportService:ReportService
+    private httpClient: HttpClient,
+    private reportService:ReportService,
+    private dialog: MatDialog,
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
@@ -135,20 +141,43 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  openDocument(documentType: string) {
-    let url = null;
-    if (documentType === 'gstIn') {
-      url = this.urls['gstin'];
-    } else {
-      url = this.urls[`${documentType}Url`];
-    }
-
+  open(url) {
     if (url) {
       window.open(url, '_blank');
     } else {
-     this._toastMessageService.alert('error',`${documentType} URL not found`);
+      this._toastMessageService.alert('error',` URL not found`);
     }
   }
+
+  openDocument(documentType: string ,url) {
+    if(url){
+      const parts = url.split('/');
+      const lastPart = parts[parts.length - 1];
+      const fileNameWithParams = lastPart.split('?')[0];
+      let newFileName= decodeURIComponent(fileNameWithParams);
+      console.log(newFileName,"New File Name");
+      this.getViewSignedUrl(fileNameWithParams)
+    }else{
+      this._toastMessageService.alert('error',`${documentType} URL not found`);
+    }
+  }
+
+  getViewSignedUrl(name){
+    let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        if (result && result.data) {
+          let signedUrl = result.data.s3SignedUrl;
+          this.open(signedUrl);
+        } else {
+          this.utilsService.showSnackBar(`Something went wrong while getting URL`);
+        }
+      }),
+      (err: any) => {
+        this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
+      }
+  }
+
 
   onLanguageCheckboxChange(language: string) {
     const langControl = this.getLanguageControl(language);
@@ -256,14 +285,29 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
+  onAdditionalIdsRequiredChange() {
+    if (!this.additionalIdsRequired.value) {
+      this.filerIndividual.setValue(true);
+      this.filerPrinciple.setValue(false);
+      this.additionalIdsCount.clearValidators();
+      this.additionalIdsCount.setValue(null);
+    } else {
+      this.additionalIdsCount.setValidators([Validators.required, Validators.min(1)]);
+      this.filerIndividual.setValue(false);
+      this.filerPrinciple.setValue(true);
+    }
+    this.additionalIdsCount.updateValueAndValidity();
+  }
 
   setFormValues(data) {
-    debugger
     this.mobileNumber.setValue(data.mobileNumber);
-    // this.itrTypes.setValue(data.itrTypes);
-    // this.itrTypesData = this.itrTypes.value;
-    this.pinCode.setValue(data.pincode);
+    this.pinCode.setValue(data?.partnerDetails?.pinCode);
     this.internal.setValue(data.internal)
+    if(data.internal === true || this.internal.value === true){
+      this.external.setValue(false);
+    }else{
+      this.external.setValue(true);
+    }
     if(data?.partnerDetails?.interviewedBy){
       let allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
       let filer = allFilerList.filter((item) => {
@@ -282,7 +326,19 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (!boPartnersInfo) {
       return;
     }
+    if(boPartnersInfo?.partnerDetails?.partnerType === "PRINCIPAL"){
+      this.filerPrinciple.setValue(true);
+      this.filerIndividual.setValue(false);
+    }else if(boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL"){
+      this.filerIndividual.setValue(true);
+      this.filerPrinciple.setValue(false);
+    }else{
+      this.filerPrinciple.setValue(false);
+      this.filerIndividual.setValue(false);
+    }
 
+    this.pan.setValue(boPartnersInfo?.partnerDetails?.pan);
+    this.gstin.setValue(boPartnersInfo?.partnerDetails?.gstin)
     this.additionalIdsRequired.setValue(boPartnersInfo?.partnerDetails?.additionalIdsRequired);
     this.additionalIdsCount.setValue(boPartnersInfo?.partnerDetails?.additionalIdsCount || 0);
     if (!this.mobileNumber.value) this.mobileNumber.setValue(boPartnersInfo?.partnerDetails?.mobileNumber);
@@ -321,21 +377,15 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.accountType.setValue(boPartnersInfo?.partnerDetails?.bankDetails?.accountType);
     }
 
-    // if (boPartnersInfo?.interviewedBy) {
-    //   const allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-    //   const filer = allFilerList.filter(item => item.userId === boPartnersInfo?.interviewedBy)
-    //                             .map(item => item.name);
-    //   this.interviewedBy.setValue(filer);
-    // }
-
     this.urls = {
-      "signedNDAUrl": boPartnersInfo?.partnerDetails?.signedNDAUrl,
+      "signedNDAInput": boPartnersInfo?.partnerDetails?.signedNDAUrl,
       "certificateOfPracticeUrl": boPartnersInfo?.partnerDetails?.certificateOfPracticeUrl,
       "aadhaarUrl": boPartnersInfo?.partnerDetails?.aadhaarUrl,
-      "panUrl": boPartnersInfo?.partnerDetails?.panUrl,
-      "passbookOrCancelledChequeUrl": boPartnersInfo?.partnerDetails?.passbookOrCancelledChequeUrl,
-      "cvUrl": boPartnersInfo?.partnerDetails?.cvUrl,
-      "gstin": boPartnersInfo?.partnerDetails?.gstin
+      "panInput": boPartnersInfo?.partnerDetails?.panUrl,
+      "passbookOrCancelledChequeInput": boPartnersInfo?.partnerDetails?.passbookOrCancelledChequeUrl,
+      "cvInput": boPartnersInfo?.partnerDetails?.cvUrl,
+      "gstinInput": boPartnersInfo?.partnerDetails?.gstUrl,
+      "zipInput" : boPartnersInfo?.partnerDetails?.zipUrl
     };
 
     this.languageForm.controls['English'].enable();
@@ -354,6 +404,63 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
+  changeToUpper(control) {
+    control.setValue(control.value.toUpperCase());
+  }
+
+  trimValue(controlName) {
+    controlName.setValue(controlName.value.trim());
+  }
+
+  panInfo:any;
+  getUserInfoFromPan(panNum: any) {
+    // https://uat-api.taxbuddy.com//itr/api/getPanDetail?panNumber=
+    if (this.pan.value && this.pan.valid) {
+      let param = `/api/getPanDetail?panNumber=${panNum}`;
+      this.itrMsService.getMethod(param).subscribe(
+        (result: any) => {
+          console.log(result);
+          this.panInfo = result;
+          if(result.isValid != "INVALID PAN"){
+           console.log("inside valid");
+           if(this.panInfo?.firstName && this.panInfo?.lastName){
+            if (this.panInfo.middleName && this.panInfo.middleName.trim() !== '') {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.middleName + ' ' + this.panInfo.lastName;
+            } else {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
+            }
+            if (this.panName != this.smeFormGroup.controls['name'].value) {
+              const dialogRef = this.dialog.open(NameAlertComponent, {
+                width: '40%',
+                disableClose: true,
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+                if (this.utilsService.isNonEmpty(result) && result === 'PAN') {
+                  this.smeFormGroup.controls['name'].setValue(this.panName);
+                  return;
+                }
+
+              });
+            }
+           }
+          }else{
+            this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
+            this.pan.setErrors({ 'invalidPan': true });
+          }
+
+        });
+    }
+  }
+
+  checkGstin() {
+    if (this.gstin.value && this.gstin.value.substring(2, 12) !== this.pan.value) {
+      this.gstin.setErrors({ invalid: true });
+    } else {
+      this.gstin.setErrors(null);
+    }
+  }
+
 
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
@@ -367,16 +474,23 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     pinCode:new FormControl(''),
     city:new FormControl(''),
     state: new FormControl(''),
-    searchOwner: new FormControl('', [Validators.required]),
-    searchLeader: new FormControl('', [Validators.required]),
     special: new FormControl(''),
     accountNumber: new FormControl(''),
     ifsCode: new FormControl(''),
+    pan: new FormControl('', [Validators.pattern(this.panregex)]),
+    gstin: new FormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
     accountType: new FormControl(''),
     additionalIdsCount: new FormControl(''),
     interviewedBy: new FormControl(''),
     additionalIdsRequired:new FormControl(''),
   });
+
+  get pan() {
+    return this.smeFormGroup.controls['pan'] as FormControl;
+  }
+  get gstin() {
+    return this.smeFormGroup.controls['gstin'] as FormControl;
+  }
   get additionalIdsRequired() {
     return this.smeFormGroup.controls['additionalIdsRequired'] as FormControl;
   }
@@ -443,7 +557,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     filerIndividual: new FormControl(''),
     filerPrinciple: new FormControl(''),
     internal: new FormControl(''),
-    external: new FormControl(''),
+    external: new FormControl(true),
 
   });
 
@@ -476,13 +590,83 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   }
 
+  onChange(checkboxNumber: number){
+    if (checkboxNumber === 1) {
+      this.additionalIdsRequired.setValue(false);
+      this.onAdditionalIdsRequiredChange();
+    }
+    if(checkboxNumber === 2){
+      this.additionalIdsRequired.setValue(true);
+      this.onAdditionalIdsRequiredChange();
+    }
+  }
+
   getSelectedLanguages(): string[] {
     return this.langList.filter(lang => this.getLanguageControl(lang).value);
   }
 
+  openUploadedDocument(url: string) {
+    window.open(url, '_blank');
+  }
+
+  uploadFile(inputId: string) {
+    // 'https://uat-api.taxbuddy.com/itr/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=test.pdf'
+    const fileInput: HTMLInputElement | null = document.getElementById(inputId) as HTMLInputElement;
+    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+      const file: File = fileInput.files[0];
+      const timestamp = new Date().getTime();
+      const fileNameWithTimestamp = `${timestamp}_${file.name}`;
+
+      let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${fileNameWithTimestamp}`;
+
+      this.itrMsService.getMethod(param).subscribe(
+        (result: any) => {
+          if (result && result.data) {
+            let signedUrl = result.data.s3SignedUrl;
+            this.urls[inputId] = signedUrl;
+            console.log(this.urls)
+            this.uploadFileS3(file, signedUrl);
+          } else {
+            this.utilsService.showSnackBar(`Something went wrong while uploading ${file.name}`);
+          }
+        },
+        (err: any) => {
+          this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
+        }
+      );
+    } else {
+      this.utilsService.showSnackBar(`Please select a file`);
+    }
+  }
+
+  uploadFileS3(uploadDoc, signedUrl) {
+    let headers = new HttpHeaders();
+    // headers = headers.append('Content-Type', 'application/json');
+    // headers = headers.append('Accept', 'application/json');
+    headers = headers.append(
+      'X-Upload-Content-Length',
+      uploadDoc.size.toString()
+    );
+    headers = headers.append(
+      'X-Upload-Content-Type',
+      'application/octet-stream'
+    );
+
+    this.httpClient.put(signedUrl, uploadDoc, { headers: headers }).subscribe(
+      () => {
+        this.utilsService.showSnackBar(`${uploadDoc.name} uploaded successfully`);
+      },
+      (err: any) => {
+        console.log('Error in getting Signed URL', err);
+        this.utilsService.showSnackBar('Error while uploading to S3: ' + JSON.stringify(err));
+      }
+    );
+  }
+
   updateSmeDetails() {
     //https://uat-api.taxbuddy.com/user/v2/assigned-sme-details
-
+    this.markFormGroupTouched(this.smeFormGroup);
+    if(this.smeFormGroup.valid){
     let parentId: any
     let parentName: any
     if (this.signedInRole.includes('ROLE_ADMIN') && this.leaderId) {
@@ -508,7 +692,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       return;
     }
 
-      const param = `/v2/assigned-sme-details`;
+    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "PRINCIPAL" : "INDIVIDUAL";
+    const today = new Date();
+    const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
+    const param = `/v2/assigned-sme-details`;
 
       this.loading = true;
 
@@ -517,7 +705,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         name: this.name.value,
         smeOriginalEmail: this.smeOriginalEmail.value,
         mobileNumber: this.mobileNumber.value,
-        callingNumber: this.smeObj.callingNumber,
+        callingNumber: this.callingNumber.value,
         serviceType: this.smeObj.serviceType,
         roles: this.smeObj.roles,
         languages: this.getSelectedLanguages(),
@@ -526,9 +714,9 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         pinCode:this.pinCode.value,
         state: this.state.value,
         botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName,
+        displayName: this.smeObj.displayName || this.name.value,
         active: this.smeObj.active,
-        joiningDate: this.smeObj.joiningDate,
+        joiningDate: formattedDate,
         internal: this.internal.value ? true : this.external.value ? false:null,
         assignmentStart: this.smeObj.assignmentStart,
         itrTypes: this.itrTypes.value,
@@ -540,14 +728,26 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         isLeader: this.smeObj.isLeader,
         isAdmin: this.smeObj.isAdmin,
         isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
-        partnerType :this.smeObj.partnerType,
+        partnerType : partnerType || this.smeObj.partnerType,
         skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
-        partnerDetails: this.smeObj.partnerDetails
+        partnerDetails: this.smeObj.partnerDetails,
+        inactivityTimeInMinutes:15
       };
 
       finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
       finalReq.partnerDetails['additionalIdsCount'] = this.additionalIdsCount.value;
+      finalReq.partnerDetails['gstin'] = this.gstin.value;
+      finalReq.partnerDetails['pan'] = this.pan.value;
+      finalReq.partnerDetails['pinCode'] = this.pinCode.value;
 
+      finalReq.partnerDetails['signedNDAUrl'] = this.urls['signedNDAInput'] || '',
+      finalReq.partnerDetails['certificateOfPracticeUrl']=this.urls['certificateOfPracticeUrl'] || '',
+      finalReq.partnerDetails['aadhaarUrl']= this.urls['aadhaarUrl'] || '',
+      finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
+      finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
+      finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
+      finalReq.partnerDetails['gstUrl'] = this.urls['gstinInput'] || '',
+      finalReq.partnerDetails['partnerType'] = partnerType || ''
       // console.log('reqBody', requestBody);
       // let requestData = JSON.parse(JSON.stringify(finalReq));
       // console.log('requestData', requestData);
@@ -572,7 +772,23 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.loading = false;
         }
       );
+    }else{
+      this._toastMessageService.alert(
+        'false',
+        'please fill all required details '
+      );
+    }
   }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
 }
 
 export interface SmeObj {

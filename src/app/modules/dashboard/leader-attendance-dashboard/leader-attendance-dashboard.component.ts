@@ -3,14 +3,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { User } from '../../subscription/components/performa-invoice/performa-invoice.component';
-import { Observable, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { ReportService } from 'src/app/services/report-service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
@@ -44,18 +40,18 @@ export const MY_FORMATS = {
 })
 export class LeaderAttendanceDashboardComponent implements OnInit {
   loading = false;
-  loggedInSmeUserId:any;
-  roles:any;
+  loggedInSmeUserId: any;
+  roles: any;
   minStartDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  maxStartDate=moment().toDate();
+  maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
-  minEndDate= new Date().toISOString().slice(0, 10);
+  minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
-  allDetails:any;
+  allDetails: any;
   today: Date;
-  grandTotal:any;
+  grandTotal: any;
   searchQuery: string;
   filteredData: any[];
   partnerCount: number;
@@ -63,51 +59,48 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   inactivePartnerCount: number;
   assignmentOnCount: number;
   assignmentOffCount: number;
-  itrOverview:any;
-  allPartnerDetails:any;
+  itrOverview: any;
+  allPartnerDetails: any;
   searchParam: any = {
     page: 0,
     pageSize: 50,
   };
 
   constructor(
-    private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private reportService:ReportService,
-    private router: Router,
+    private reportService: ReportService,
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
   ) {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = this.loggedInSmeUserId;
     }
     this.search();
   }
 
-  search(){
-    // this.getItrUserOverview();
+  search() {
     this.getAllPartnerDetails();
   }
 
-  getAllPartnerDetails(){
+  getAllPartnerDetails() {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/attendance-performance-report?fromDate=2023-04-01&toDate=2023-11-13&page=0&pageSize=5'
-  this.loading = true;
-  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  // let leaderUserId = this.loggedInSmeUserId
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    // let leaderUserId = this.loggedInSmeUserId
 
-  let param=''
-  let userFilter = ''
+    let param = ''
+    let userFilter = ''
     if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
@@ -120,13 +113,13 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param =`/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param = `/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     this.reportService.getMethod(param).subscribe((response: any) => {
-      if(response.success == false){
-        this.allDetails=null;
+      if (response.success == false) {
+        this.allDetails = null;
         this.calculateCounts();
-        this. _toastMessageService.alert("error",response.message);
+        this._toastMessageService.alert("error", response.message);
       }
       if (response.success) {
         this.loading = false;
@@ -150,104 +143,67 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
         const averageUserRating = this.allDetails?.reduce((total, item) => total + item.averageUserRating, 0);
 
         this.grandTotal = {
-        totalNumberOfClientsAssigned,
-        totalItr1,
-        totalItr2,
-        totalItr3,
-        totalItr4,
-        totalItrOthers,
-        totalItrU,
-        totalItrFiled,
-        totalRevenueGenerated,
-        totalCommissionEarnedBeforeTDS,
-        totalTds,
-        totalCommissionEarnedAfterTDS,
-        totalCommissionPaid,
-        totalCommissionPayable,
-        averageUserRating
+          totalNumberOfClientsAssigned,
+          totalItr1,
+          totalItr2,
+          totalItr3,
+          totalItr4,
+          totalItrOthers,
+          totalItrU,
+          totalItrFiled,
+          totalRevenueGenerated,
+          totalCommissionEarnedBeforeTDS,
+          totalTds,
+          totalCommissionEarnedAfterTDS,
+          totalCommissionPaid,
+          totalCommissionPayable,
+          averageUserRating
         };
 
-      }else{
-        this.allDetails=null;
+      } else {
+        this.allDetails = null;
         this.calculateCounts();
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
-      this.allDetails=null;
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.allDetails = null;
       this.calculateCounts();
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     });
 
 
   }
 
   calculateCounts() {
-    if(this.allDetails){
-    this.partnerCount = this.allDetails?.length;
-    this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo === 'Active').length;
-    this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
-    this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
-    this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
-    }else{
+    if (this.allDetails) {
+      this.partnerCount = this.allDetails?.length;
+      this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo === 'Active').length;
+      this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
+      this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
+      this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
+    } else {
       this.partnerCount = 0;
-      this.activePartnerCount=0;
-      this.inactivePartnerCount=0;
-      this.assignmentOnCount=0;
-      this.assignmentOffCount=0;
-      this.grandTotal=null;
+      this.activePartnerCount = 0;
+      this.inactivePartnerCount = 0;
+      this.assignmentOnCount = 0;
+      this.assignmentOffCount = 0;
+      this.grandTotal = null;
     }
   }
-
-  // getItrUserOverview(){
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?leaderUserId=34321&fromDate=2023-04-01&toDate=2023-05-16
-  //   this.loading = true;
-  //   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  //   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  //   // let leaderUserId = this.loggedInSmeUserId;
-
-  //   let param=''
-  //   let userFilter = '';
-  //   if (this.leaderId && !this.ownerId) {
-  //     userFilter += `&leaderUserId=${this.leaderId}`;
-  //   }
-  //   if (this.ownerId) {
-  //     userFilter += `&ownerUserId=${this.ownerId}`;
-  //   }
-
-  //    param =`/dashboard/itr-users-overview?fromDate=${fromDate}&toDate=${toDate}&page=0&size=30${userFilter}`
-
-  //   this.itrService.getMethod(param).subscribe((response: any) => {
-  //     if(response.success == false){
-  //       this.itrOverview=null;
-  //       this. _toastMessageService.alert("error",response.message);
-  //     }
-  //     if (response.success) {
-  //       this.itrOverview = response.data;
-  //     }else{
-  //        this.loading = false;
-  //        this. _toastMessageService.alert("error",response.message);
-  //      }
-  //   },(error) => {
-  //     this.loading = false;
-  //     this. _toastMessageService.alert("error","Error");
-  //   });
-  // }
-
   leaderId: number;
   filerId: number;
   agentId: number;
-  searchAsPrinciple:boolean =false;
+  searchAsPrinciple: boolean = false;
 
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
 
@@ -275,7 +231,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
-    let param=''
+    let param = ''
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -290,7 +246,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param =`/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param = `/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     let fieldName = [
       { key: 'nameOfFiler', value: 'Name of Partners' },
@@ -314,7 +270,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
       { key: 'averageUserRating', value: 'Average of users Rating' },
     ]
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', fieldName, {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'attendance-performance-report', fieldName, {});
     this.loading = false;
   }
 

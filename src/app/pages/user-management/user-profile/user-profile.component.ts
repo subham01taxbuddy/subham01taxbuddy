@@ -10,7 +10,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstMsService } from 'src/app/services/gst-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';
 import { Location } from "@angular/common";
@@ -333,9 +332,7 @@ export class UserProfileComponent implements OnInit {
     "status": true
   }]
 
-  // get getAddressArray() {
-  //   return <FormArray>this.userProfileForm.get('address');
-  // }
+
   roles: any;
   unMaskedMobileNo: any;
   serviceType: any;
@@ -346,21 +343,17 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private gstService: GstMsService,
     private _toastMessageService: ToastMessageService,
-    private thirdPartyService: ThirdPartyService,
     private dialog: MatDialog,
     private router: Router,
-    private titleCasePipe: TitleCasePipe,
     private location: Location,
   ) { }
 
   ngOnInit() {
     this.roles = this.utilsService.getUserRoles();
-    // this.getStateInfo().then(res => {
     this.activatedRoute.params.subscribe(params => {
       this.getUserInfo(params['id']);
       this.userId = params['id'];
     });
-    // })
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params) {
         this.serviceType = params['serviceType'];
@@ -380,7 +373,7 @@ export class UserProfileComponent implements OnInit {
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
       mobileNumber: ['', [Validators.minLength(10), Validators.maxLength(10)]],
       residentialStatus: ['RESIDENT'],
-      address: [],   //this.fb.array([]),
+      address: [],
       bankDetails: []
     })
 
@@ -398,34 +391,6 @@ export class UserProfileComponent implements OnInit {
       s3BusinessSignature: [''],
       s3GstCertificate: [''],
 
-      // businessAddress: this.fb.group({
-      //   address: [''],
-      //   pincode: ['', [Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)]],
-      //   state: ['']
-      // }),
-      // bankInformation: this.fb.group({
-      //   bankName: [''],
-      //   accountBranch: [''],
-      //   accountNumber: [''],
-      //   ifscCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]]
-      // })
-    });
-
-    // const familyData = <FormArray>this.userProfileForm.get('address');
-    // familyData.push(this.createAddressForm())
-  }
-
-  createAddressForm(obj: { premisesName?: string, state?: string, pinCode?: number, addressType?: string, flatNo?: any, road?: any, area?: any, city?: any, country?: any } = {}): FormGroup {
-    return this.fb.group({
-      premisesName: [obj.premisesName || ''],
-      state: [obj.state || ''],
-      pinCode: [obj.pinCode || ''],
-      addressType: [obj.addressType || ''],
-      flatNo: [obj.flatNo || ''],
-      road: null,
-      area: [obj.area || ''],
-      city: [obj.city || ''],
-      country: [obj.country || '']
     });
   }
 
@@ -445,60 +410,6 @@ export class UserProfileComponent implements OnInit {
         })
     }
   }
-
-  // getCityData(pinCode) {
-  //   if (pinCode.valid) {
-  //     const param = '/pincode/' + pinCode.value;
-  //     this.userService.getMethod(param).subscribe((result: any) => {
-  //       const addressData = <FormArray>this.userProfileForm.get('address');
-  //       console.log('After pinCode add -> ', this.updateAddressForm(result))
-  //       addressData.insert(0, this.updateAddressForm(result))
-  //       addressData.removeAt(1)
-  //       // this.userProfileForm.controls['country'].setValue('INDIA');   //91
-  //       // this.userProfileForm.controls['city'].setValue(result.taluka);
-  //       // this.userProfileForm.controls['state'].setValue(result.stateName);  //stateCode
-  //       //  this.setProfileAddressValToHouse()
-  //     }, error => {
-  //       if (error.status === 404) {
-  //         //this.itrSummaryForm.controls['assesse'].controls['address.controls['city'].setValue(null);
-  //       }
-  //     });
-  //   }
-  // }
-
-  updateAddressForm(obj: any) {
-    return this.fb.group({
-      state: [obj.stateCode || ''],
-      city: [obj.taluka || ''],
-      country: ['INDIA' || ''],
-
-      premisesName: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['premisesName'].value) || ''],
-      pinCode: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['pinCode'].value) || ''],
-      addressType: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['addressType'].value) || ''],
-      flatNo: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['flatNo'].value) || ''],
-      road: null,
-      area: [(((this.userProfileForm.controls['address'] as FormArray).controls[0] as FormGroup).controls['area'].value) || '']
-    })
-  }
-
-  // getStateInfo() {
-  //   return new Promise((resolve, reject) => {
-  //     this.state_list = [];
-  //     let param = '/state-masters'
-  //     this.gstService.getMethod(param).subscribe(res => {
-  //       if (Array.isArray(res)) {
-  //         res.forEach(sData => { sData.name = sData.stateMasterName });
-  //         this.state_list = res;
-  //       }
-  //       resolve(true)
-  //     },
-  //       error => {
-  //         let errorMessage = (error.error && error.error.message) ? error.error.message : "Internal server error.";
-  //         this._toastMessageService.alert("error", "state list - " + errorMessage);
-  //         resolve(false);
-  //       })
-  //   })
-  // }
 
   maskMobileNumber(mobileNumber) {
     if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
@@ -626,17 +537,12 @@ export class UserProfileComponent implements OnInit {
   }
 
   getPartyInfoByGSTIN(event: any) {
-    ///gst/api/partiesByGstin
     let gstinNo = event.target.value;
     let param = '/partiesByGstin?gstin=' + gstinNo;
     this.gstService.getMethod(param).subscribe((res: any) => {
       if (res) {
         this.gstForm.patchValue(res);
         this.gstForm.controls['gstType'].setValue(this.getGstType(res['gstnType']));
-        // this.merchantData.gstDetails.businessAddress.state = this.getStateName(partyInfo.stateName);
-        // this.merchantData.gstDetails.businessAddress.pincode = partyInfo.pineCode;
-        // this.merchantData.gstDetails.businessAddress.address = this.getAddress(partyInfo);
-        //this.gstForm.controls['gstr1Type'].setValue(this.titleCasePipe.transform(res['gstDetails']['gstr1Type']));
       }
     },
       error => {
@@ -664,7 +570,6 @@ export class UserProfileComponent implements OnInit {
           if (result && result.key) {
             this.userInfo.gstDetails.businessLogo = result.key;
             this.getS3Image(this.userInfo.gstDetails.businessLogo).then(s3Image => {
-              // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
               this.gstForm.controls['s3BusinessLogo'].setValue(s3Image);
               this.loading = false;
               console.log('After Business Loho upload -> ', this.userInfo)
@@ -696,7 +601,6 @@ export class UserProfileComponent implements OnInit {
           if (result && result.key) {
             this.userInfo.gstDetails.businessSignature = result.key;
             this.getS3Image(this.userInfo.gstDetails.businessSignature).then(s3Image => {
-              // this.userInfo.gstDetails.s3BusinessSignature = s3Image;
               this.gstForm.controls['s3BusinessSignature'].setValue(s3Image);
               this.loading = false;
               console.log('After Business Signature upload -> ', this.userInfo)
@@ -728,7 +632,6 @@ export class UserProfileComponent implements OnInit {
           if (result && result.key) {
             this.userInfo.gstDetails.gstCertificate = result.key;
             this.getS3Image(this.userInfo.gstDetails.gstCertificate).then(s3Image => {
-              // this.userInfo.gstDetails.s3GstCertificate = s3Image;
               this.gstForm.controls['s3GstCertificate'].setValue(s3Image);
               this.loading = false;
               console.log('After GST Certificate upload -> ', this.userInfo)
@@ -814,8 +717,8 @@ export class UserProfileComponent implements OnInit {
             return;
           }
         }
-      },(error) => {
-        this.loading=false;
+      }, (error) => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.getUserInfo(this.userId);
@@ -823,7 +726,7 @@ export class UserProfileComponent implements OnInit {
           this._toastMessageService.alert("error", "An unexpected error occurred.");
         }
       }
-    );
+      );
 
   }
 
@@ -855,34 +758,6 @@ export class UserProfileComponent implements OnInit {
       error => {
         console.log('Error during update user role: ', error);
       })
-  }
-
-  saveUserRole() {
-    console.log("user Role: ", this.userRole, this.userRole.value);
-    // console.log("user Role value: ",this.userRole.value, typeof this.userRole.value);
-    // console.log("user Role value lengh: ",this.userRole.value.lengh);
-    if (this.userRole.value !== null) {
-      this.loading = true;
-      let param = '/users';
-      let reqBody = {
-        "userId": parseInt(this.userId),
-        "role": this.userRole.value
-      }
-      this.userService.putMethod(param, reqBody).subscribe((res: any) => {
-        this.loading = false;
-        console.log("Add user roles responce: ", res);
-        if (this.utilsService.isNonEmpty(res['error'])) {
-          this._toastMessageService.alert("error", res['error']);
-          return;
-        }
-        this._toastMessageService.alert("success", this.userInfo.fName + " User role updated successfully.");
-      },
-        error => {
-          console.log("there is error : ", error);
-          this._toastMessageService.alert("error", this.userInfo.fName + "User role not update, try after some time.");
-          this.loading = false;
-        })
-    }
   }
 
   onCancelClick() {

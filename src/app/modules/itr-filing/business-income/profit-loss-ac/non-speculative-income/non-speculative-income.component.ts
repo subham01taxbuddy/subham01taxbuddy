@@ -58,18 +58,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   ];
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  tradingData: ProfitLossIncomes = {
-    id: 0,
-    brokerName: '',
-    incomeType: 'NONSPECULATIVEINCOME',
-    turnOver: 0,
-    finishedGoodsOpeningStock: 0,
-    finishedGoodsClosingStock: 0,
-    purchase: 0,
-    COGS: 0,
-    grossProfit: 0,
-    expenditure: 0,
-  };
   loading: boolean = false;
   totalNetProfit: any;
   totalOtherExpenses: any;

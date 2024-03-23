@@ -24,7 +24,8 @@
                     <div class="col-sm-12">
                       <div class="row">
                         <div class="col-sm-3 spsTp">
-                          <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                          <app-service-drop-down #serviceDropDown ngDefaultControl
+                            (sendService)="fromServiceType($event)"
                             [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
                         </div>
                         <div *ngIf="itrStatus" class="col-sm-3 spsTp">
@@ -53,7 +54,8 @@
 
                     <!-- Adding new content in filter ends -->
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+                        Search
                       </button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
@@ -66,26 +68,20 @@
                         </span>
                       </div>
                     </div>
-                    <div class="right" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+                    <div class="right"
+                      *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
                       <button class="bulk-buttons bulk" style="float:right"
-                      (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk Re-Assignment to Filer</span></button>
+                        (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
+                          Re-Assignment to Filer</span></button>
                       <button class="bulk-buttons bulk spRt" style="float:right"
-                      (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk Re-Assignment to Leader</span></button>
+                        (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
+                          Re-Assignment to Leader</span></button>
                     </div>
                   </div>
 
                 </div>
 
               </div>
-              <!-- <div class="col-sm-4">
-                        <div class="button-container">
-                          <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                          </button>
-                          <button class="clrLnk-1" (click)="this.resetFilters()">
-                            Clear form
-                          </button>
-                        </div>
-                      </div> -->
             </div>
           </mat-expansion-panel>
         </mat-accordion>
@@ -120,4 +116,3 @@
   </div>
 
 </div>
-

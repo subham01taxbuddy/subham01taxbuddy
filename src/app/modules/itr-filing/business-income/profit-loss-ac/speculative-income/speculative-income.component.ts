@@ -1,9 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  ITR_JSON,
-  ProfitLossIncomes,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -17,27 +14,10 @@ import { GridOptions } from 'ag-grid-community';
 })
 export class SpeculativeIncomeComponent implements OnInit {
   loading = false;
-
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-
   specIncomeFormArray: FormArray;
   specIncomeForm: FormGroup;
-  speculativeIncome: ProfitLossIncomes = {
-    id: null,
-    brokerName: '',
-    incomeType: 'SPECULATIVEINCOME',
-    turnOver: null,
-    finishedGoodsOpeningStock: null,
-    finishedGoodsClosingStock: null,
-    purchase: null,
-    COGS: null,
-    grossProfit: null,
-    expenditure: null,
-    netIncomeFromSpeculativeIncome: null,
-  };
-
-  config: any;
   gridOptions: GridOptions;
   selectedFormGroup: FormGroup;
   activeIndex: number;
@@ -77,11 +57,6 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.config = {
-      itemsPerPage: 2,
-      currentPage: 1,
-    };
-
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
     this.specIncomeFormArray = new FormArray([]);
     let srn = this.specIncomeFormArray.controls.length > 0 ? this.specIncomeFormArray.controls.length : 0;
@@ -94,10 +69,6 @@ export class SpeculativeIncomeComponent implements OnInit {
         let form = this.createSpecIncomeForm(index++, income);
         this.specIncomeFormArray.push(form);
       }
-      // this.speculativeIncome = specBusiness?.incomes[0];
-    } else {
-      // let form = this.createSpecIncomeForm(0, null);
-      // this.specIncomeFormArray.push(form);
     }
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
@@ -124,36 +95,9 @@ export class SpeculativeIncomeComponent implements OnInit {
     });
   }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-  }
-
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  addSpeculativeFormValidation(index) {
-    let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
-    if (specIncome) {
-      if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
-        specIncome.controls['grossProfit'].setValidators(Validators.required);
-        specIncome.controls['grossProfit'].updateValueAndValidity();
-        specIncome.controls['turnOver'].setValidators(Validators.required);
-        specIncome.controls['turnOver'].updateValueAndValidity();
-        // specIncome.markAsDirty();
-      }
-    }
-  }
-
   calculateNetIncome() {
-    // let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
-
-    // inputs
     let turnover = this.selectedFormGroup.controls['turnOver'].value;
     let netIncome = this.selectedFormGroup.controls['netIncome'].value;
-    let grossProfit = this.selectedFormGroup.controls['grossProfit'].value;
-
-    // values
     let turnoverValue = parseFloat(this.selectedFormGroup?.controls['turnOver']?.value ?
       this.selectedFormGroup?.controls['turnOver']?.value : null);
     let grossProfitValue = parseFloat(this.selectedFormGroup?.controls['grossProfit']?.value
@@ -163,17 +107,10 @@ export class SpeculativeIncomeComponent implements OnInit {
     let netIncomeValue = parseFloat(this.selectedFormGroup?.controls['netIncome']?.value
       ? this.selectedFormGroup?.controls['netIncome']?.value : 0
     );
-
-    // if turnover is not 0 calculate net income else set all to 0
-    // if (turnover && grossProfitValue) {
     this.selectedFormGroup.controls['netIncome'].setValue(grossProfitValue - expenditureValue);
     this.selectedFormGroup.controls['netIncome'].updateValueAndValidity();
     netIncomeValue = this.selectedFormGroup.controls['netIncome'].value;
-    // } else 
     if (turnover && turnover.value == 0) {
-      // grossProfit?.setValue(0);
-      // grossProfit?.updateValueAndValidity();
-      // grossProfitValue = grossProfit?.value;
       this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(turnover.value)]);
       this.selectedFormGroup.controls['turnOver'].setValidators([Validators.required]);
       this.selectedFormGroup.controls['expenditure'].setValue(0);
@@ -190,10 +127,8 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.selectedFormGroup.controls['turnOver'].updateValueAndValidity();
         this.selectedFormGroup.controls['turnOver'].markAllAsTouched();
         this.selectedFormGroup.controls['grossProfit'].markAllAsTouched();
-        // specIncome.controls['grossProfit'].markAsDirty();
       }
     }
-    // set validator for gp if gp greater than turnover
     if (grossProfitValue > turnoverValue) {
       this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(this.selectedFormGroup.controls['turnOver'].value)]);
       this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
@@ -202,18 +137,11 @@ export class SpeculativeIncomeComponent implements OnInit {
       this.selectedFormGroup.controls['grossProfit'].updateValueAndValidity();
 
     }
-    //else {
-    //   grossProfit?.clearValidators();
-    //   grossProfit?.updateValueAndValidity();
-    // }
   }
 
   addSpecIncomeForm() {
     let form = this.createSpecIncomeForm(0, null);
-    (this.specIncomeForm.controls['specIncomesArray'] as FormArray).insert(
-      0,
-      form
-    );
+    (this.specIncomeForm.controls['specIncomesArray'] as FormArray).insert(0, form);
   }
 
   onContinue() {
@@ -291,9 +219,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   specSelected() {
-    const specIncomesArray = <FormArray>(
-      this.specIncomeForm.get('specIncomesArray')
-    );
+    const specIncomesArray = <FormArray>(this.specIncomeForm.get('specIncomesArray'));
     return (
       specIncomesArray.controls.filter(
         (element) => (element as FormGroup).controls['hasEdit'].value === true
@@ -323,9 +249,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     }
 
     let result = this.selectedFormGroup.getRawValue();
-
-    // result.costOfImprovement = result.indexCostOfImprovement;
-
     if (this.activeIndex === -1) {
       let srn = (this.specIncomeForm.controls['specIncomesArray'] as FormArray).length;
       let form = this.createSpecIncomeForm(srn);

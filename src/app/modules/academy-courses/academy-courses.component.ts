@@ -51,7 +51,6 @@ export class AcademyCoursesComponent implements OnInit {
   constructor(
     private cacheManager: CacheManager,
     private reviewService:ReviewService,
-    private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string,

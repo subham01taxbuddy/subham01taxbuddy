@@ -74,6 +74,7 @@ export class SharesAndEquityComponent
   @Input() goldCg: NewCapitalGain;
   saveClicked: boolean = false;
   formToBeShownAfterSaveAll: Array<any> = [];
+  PREV_ITR_JSON: any;
 
   constructor(
     private fb: FormBuilder,
@@ -85,6 +86,7 @@ export class SharesAndEquityComponent
     @Inject(LOCALE_ID) private locale: string
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.getImprovementYears();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
@@ -1790,7 +1792,7 @@ export class SharesAndEquityComponent
     return (
       this.utilsService.isNonEmpty(securities.controls['purchaseDate'].value) &&
       new Date(securities.controls['purchaseDate'].value) <
-      new Date('02/01/2018')    
+      new Date('02/01/2018')
       );
   }
 

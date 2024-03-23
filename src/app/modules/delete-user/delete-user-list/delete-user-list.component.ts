@@ -6,9 +6,7 @@ import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ConfirmationModalComponent } from 'src/app/additional-components/confirmation-popup/confirmation-popup.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FormControl } from '@angular/forms';
@@ -61,7 +59,6 @@ export class DeleteUserListComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private modalService: BsModalService,
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,

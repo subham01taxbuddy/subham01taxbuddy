@@ -47,7 +47,6 @@ import { ProfessionalDialogComponent } from './business-income/presumptive-incom
 import { NonSpeculativeIncomeComponent } from './business-income/profit-loss-ac/non-speculative-income/non-speculative-income.component';
 import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
 import { AddUpdateTradingComponent } from './business-income/profit-loss-ac/non-speculative-income/add-update-trading/add-update-trading.component';
-import { AddBalanceSheetComponent } from './business-income/balance-sheet/add-balance-sheet/add-balance-sheet.component';
 import { DepreciationDialogComponent } from './business-income/balance-sheet/depreciation-dialog/depreciation-dialog.component';
 import { PrefillIdComponent } from './itr-wizard/pages/prefill-id/prefill-id.component';
 import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/source-of-incomes.component';
@@ -101,6 +100,7 @@ import { BusinessInputAutocompleteComponent } from './components/business-input-
 import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
 import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
 import { BifurcationComponent } from './salary/bifurcation/bifurcation.component';
+import { SalaryBifurcationComponent } from './salary/salary-bifurcation/salary-bifurcation.component';
 import { CalculatorsComponent } from './salary/calculators/calculators.component';
 import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
@@ -164,7 +164,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     UpdateManualFilingComponent,
     AddClientDialogComponent,
     PrefillDataComponent,
-    // InputUploadComponent
     CoOwnerComponent,
     DeleteConfirmationDialogComponent,
     NriDetailsDialogComponent,
@@ -196,7 +195,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     NonSpeculativeIncomeComponent,
     SpeculativeIncomeComponent,
     AddUpdateTradingComponent,
-    AddBalanceSheetComponent,
     DepreciationDialogComponent,
     PrefillIdComponent,
     SourceOfIncomesComponent,
@@ -231,6 +229,7 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     CryptoVdaComponent,
     PartnerInFirmsComponent,
     BifurcationComponent,
+    SalaryBifurcationComponent,
     CalculatorsComponent,
     BreakUpComponent,
     OtherDeductionsComponent,

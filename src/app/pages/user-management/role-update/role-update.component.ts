@@ -1,7 +1,6 @@
 import { FormControl, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -14,36 +13,23 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 export class RoleUpdateComponent implements OnInit {
   notes = [];
   userRoles: any = [
-    { label: 'User', value: 'ROLE_USER' }, // User specific bacially used from fron end only
-    { label: 'Admin', value: 'ROLE_ADMIN' }, // Admin all access
-    // { label: 'Super Lead', value: 'ROLE_SUPER_LEAD' }, // Admin all access
-    { label: 'ITR Super Lead', value: 'ROLE_ITR_SL' }, // Admin all access
-    { label: 'GST Super Lead', value: 'ROLE_GST_SL' }, // Admin all access
-    { label: 'Notice Super Lead', value: 'ROLE_NOTICE_SL' }, // Admin all access
-    { label: 'ITR Agent', value: 'ROLE_ITR_AGENT' }, // Admin all access
-    { label: 'GST Agent', value: 'ROLE_GST_AGENT' }, // Admin all access
-    { label: 'Notice Agent', value: 'ROLE_NOTICE_AGENT' }, // Admin all access
-    { label: 'GST Caller', value: 'ROLE_GST_CALLER' }, // Admin all access
-    { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' }, // Admin all access
-    // { label: 'Calling Team', value: 'ROLE_CALLING_TEAM' }, // ITR Caller
-    // { label: 'ITR - Filer', value: 'ROLE_FILING_TEAM' }, // ITR Filer
-    // { label: 'SME', value: 'ROLE_SME' }, // ITR Filer
-
-    // { label: 'ITR - Super Lead', value: 'ITR_SUPER_LEAD' }, // ITR Super lead
-    // { label: 'GST - Super Lead', value: 'GST_SUPER_LEAD' }, // GST Super lead
-    // { label: 'ITR - Team Lead', value: 'ITR_TEAM_LEAD' }, // ITR Team lead
-    // { label: 'GST - Team Lead', value: 'GST_TEAM_LEAD' }, // GST Team lead
-    // { label: 'GST - Filer', value: 'GST_FILER' }, // GST Team lead
-    // { label: 'TPA SME', value: 'ROLE_TPA_SME' },// TPA filer
-    // { label: 'IFA', value: 'ROLE_IFA' }, // IFA will explore asnif required
+    { label: 'User', value: 'ROLE_USER' },
+    { label: 'Admin', value: 'ROLE_ADMIN' },
+    { label: 'ITR Super Lead', value: 'ROLE_ITR_SL' },
+    { label: 'GST Super Lead', value: 'ROLE_GST_SL' },
+    { label: 'Notice Super Lead', value: 'ROLE_NOTICE_SL' },
+    { label: 'ITR Agent', value: 'ROLE_ITR_AGENT' },
+    { label: 'GST Agent', value: 'ROLE_GST_AGENT' },
+    { label: 'Notice Agent', value: 'ROLE_NOTICE_AGENT' },
+    { label: 'GST Caller', value: 'ROLE_GST_CALLER' },
+    { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' },
   ];
-  // userId: number;
   noteDetails = new FormControl('', Validators.required);
   userRole: any = new FormControl([], Validators.required);
   loading = false;
-  constructor(public dialogRef: MatDialogRef<RoleUpdateComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<RoleUpdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private itrMsService: ItrMsService,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,

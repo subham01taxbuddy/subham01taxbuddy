@@ -5,6 +5,7 @@ import { PresumptiveBusinessIncomeComponent } from './presumptive-business-incom
 import { PresumptiveProfessionalIncomeComponent } from './presumptive-professional-income/presumptive-professional-income.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { AppConstants } from 'src/app/modules/shared/constants';
 
 @Component({
   selector: 'app-presumptive-income',
@@ -13,8 +14,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 })
 export class PresumptiveIncomeComponent
   extends WizardNavigation
-  implements OnInit
-{
+  implements OnInit {
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
@@ -26,9 +26,11 @@ export class PresumptiveIncomeComponent
   PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   presProfessionalSaved: boolean;
   presBusinessSaved: boolean;
+  PREV_ITR_JSON: any;
 
   constructor(private utilsService: UtilsService) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
   ngOnInit(): void {
@@ -61,13 +63,8 @@ export class PresumptiveIncomeComponent
   subscription: Subscription;
 
   subscribeToEmitter(componentRef) {
-    //this may not be needed for us
-    // if (!(componentRef instanceof ExemptIncomeComponent)){
-    //   return;
-    // }
     const child: WizardNavigation = componentRef;
     child.saveAndNext.subscribe(() => {
-      //this.gotoSources();
     });
   }
 

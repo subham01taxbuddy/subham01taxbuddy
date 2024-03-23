@@ -10,7 +10,6 @@ import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-o
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { FormControl } from '@angular/forms';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -59,13 +58,12 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   searchBy: any = {};
   searchMenus = [];
   clearUserFilter: number;
-  searchAsPrinciple :boolean =false;
-  partnerType:any;
+  searchAsPrinciple: boolean = false;
+  partnerType: any;
 
   constructor(
     private reviewService: ReviewService,
     private utilsService: UtilsService,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
@@ -95,12 +93,12 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    this.partnerType =this.utilsService.getPartnerType();
+    this.partnerType = this.utilsService.getPartnerType();
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
       ]
-    }else{
+    } else {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
@@ -128,7 +126,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
 
@@ -150,15 +148,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   }
 
-  ownerId: number;
   filerId: number;
   leaderId: number;
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -166,8 +163,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -196,7 +193,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-    search(form?, isAgent?, pageChange?) {
+  search(form?, isAgent?, pageChange?) {
     //'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -204,22 +201,22 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
-    if(this.searchBy?.mobileNumber){
+    if (this.searchBy?.mobileNumber) {
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.searchParam.emailId = this.searchBy?.email
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
@@ -230,14 +227,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (this.leaderId) {
       leaderFilter = `&leaderUserId=${this.leaderId}`
     }
-    let filerFilter ='';
-    if(this.filerId && this.searchAsPrinciple === true){
-      leaderFilter ='';
-      filerFilter=`&searchAsPrincipal=true&filerUserId=${this.filerId}`
+    let filerFilter = '';
+    if (this.filerId && this.searchAsPrinciple === true) {
+      leaderFilter = '';
+      filerFilter = `&searchAsPrincipal=true&filerUserId=${this.filerId}`
     }
-    if(this.filerId && this.searchAsPrinciple === false){
-      leaderFilter ='';
-      filerFilter=`&filerUserId=${this.filerId}`
+    if (this.filerId && this.searchAsPrinciple === false) {
+      leaderFilter = '';
+      filerFilter = `&filerUserId=${this.filerId}`
     }
 
     let param = `/bo/user-list-new?${data}&active=false${leaderFilter}${filerFilter}`;
@@ -293,29 +290,29 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
     let leaderFilter = ''
     if (this.leaderId) {
       leaderFilter = `&leaderUserId=${this.leaderId}`
     }
-    let filerFilter ='';
-    if(this.filerId && this.searchAsPrinciple === true){
-      leaderFilter ='';
-      filerFilter=`&searchAsPrincipal=true&filerUserId=${this.filerId}`
+    let filerFilter = '';
+    if (this.filerId && this.searchAsPrinciple === true) {
+      leaderFilter = '';
+      filerFilter = `&searchAsPrincipal=true&filerUserId=${this.filerId}`
     }
-    if(this.filerId && this.searchAsPrinciple === false){
-      leaderFilter ='';
-      filerFilter=`&filerUserId=${this.filerId}`
+    if (this.filerId && this.searchAsPrinciple === false) {
+      leaderFilter = '';
+      filerFilter = `&filerUserId=${this.filerId}`
     }
 
     let status = ''
@@ -348,7 +345,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       { key: 'filerName', value: 'Filer Name' },
     ]
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -388,7 +385,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    var statusSequence = 0;
     let loggedInUserRoles = this.utilsService.getUserRoles();
     let filtered = loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
@@ -416,17 +412,17 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-         // code to masking mobile no
-         cellRenderer: (params)=> {
+        // code to masking mobile no
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -719,48 +715,39 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     // let callInfo = data.customerNumber;
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
       (res: any) => {
-       console.log(res);
-       if (res.error) {
-         this.utilsService.showSnackBar(res.error);
-         this.search();
-         return;
-       } else {
-        this.loading = true;
-        const param = `tts/outbound-call`;
-        const reqBody = {
-          "agent_number": data.callerAgentNumber,
-          "customer_number": data.mobileNumber
-        }
-        // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-        //   this.loading = false;
-        //   if (result.success.status) {
-        //     this._toastMessageService.alert("success", result.success.message)
-        //   }
-        // }, error => {
-        //   this.utilsService.showSnackBar('Error while making call, Please try again.');
-        //   this.loading = false;
-        // })
-        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-          this.loading = false;
-          if (result.success == false) {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          this.loading = true;
+          const param = `tts/outbound-call`;
+          const reqBody = {
+            "agent_number": data.callerAgentNumber,
+            "customer_number": data.mobileNumber
+          }
+          this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
             this.loading = false;
+            if (result.success == false) {
+              this.loading = false;
+              this.utilsService.showSnackBar('Error while making call, Please try again.');
+            }
+            if (result.success) {
+              we_track('Call', {
+                'User Name': data?.name,
+                'User Phone number ': data.callerAgentNumber,
+              });
+              this._toastMessageService.alert("success", result.message)
+            }
+          }, error => {
             this.utilsService.showSnackBar('Error while making call, Please try again.');
-          }
-          if (result.success) {
-            we_track('Call', {
-              'User Name': data?.name,
-              'User Phone number ': data.callerAgentNumber,
-            });
-            this._toastMessageService.alert("success", result.message)
-          }
-        }, error => {
-          this.utilsService.showSnackBar('Error while making call, Please try again.');
-          this.loading = false;
-        })
-       }
+            this.loading = false;
+          })
+        }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.search();
@@ -810,14 +797,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         disposable.afterClosed().subscribe(result => {
         });
       }
-    },error => {
-      this.loading=false;
-        if (error.error && error.error.error) {
-          this._toastMessageService.alert("error", error.error.error);
-          this.search();
-        } else {
-          this._toastMessageService.alert("error", "An unexpected error occurred.");
-        }
+    }, error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this._toastMessageService.alert("error", error.error.error);
+        this.search();
+      } else {
+        this._toastMessageService.alert("error", "An unexpected error occurred.");
+      }
     });
 
   }
@@ -863,7 +850,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this._toastMessageService.alert("error", error.error.error);
           this.search();
@@ -873,16 +860,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.search(event - 1, true);
-  //   } else {
-  //     this.search(event - 1);
-  //   }
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
@@ -900,19 +877,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.search('', true);
-  }
-
-
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
@@ -927,7 +891,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
-    this.searchBy ={};
+    this.searchBy = {};
     this.agentId = this.utilsService.getLoggedInUserID();
   }
 

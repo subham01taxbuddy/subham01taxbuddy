@@ -40,6 +40,8 @@ export class AddSubscriptionComponent implements OnInit {
   searchAsPrinciple: boolean = false;
   cancelSubscriptionData: any;
   onlyServiceITR: boolean = false;
+  tpaService: any;
+  tpaServiceDetails: any;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
@@ -186,6 +188,9 @@ export class AddSubscriptionComponent implements OnInit {
           let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
           this.service = itrPlanDetails[0]?.servicesType;
           this.serviceDetails = itrPlanDetails[0]?.name;
+          let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
+          this.tpaService = TpaPlanDetails[0]?.servicesType;
+          this.tpaServiceDetails = TpaPlanDetails[0]?.name;
         }
       }
     })

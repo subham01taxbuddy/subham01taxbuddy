@@ -244,21 +244,21 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
       },
-      {
-        headerName: 'Convert To External Partner',
-        field: '',
-        width: 150,
-        suppressMovable: true,
-        pinned: 'right',
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      // {
+      //   headerName: 'Convert To External Partner',
+      //   field: '',
+      //   width: 150,
+      //   suppressMovable: true,
+      //   pinned: 'right',
+      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to Lead Partner"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#000000;">
-          <i class="fa-solid fa-person-walking-arrow-loop-left" data-action-type="ConvertToLeadPartner"></i>
-           </button>`;
-        },
-      },
+      //   cellRenderer: function (params: any) {
+      //     return `<button type="button" class="action_icon add_button" title="Click to Lead Partner"
+      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#000000;">
+      //     <i class="fa-solid fa-person-walking-arrow-loop-left" data-action-type="ConvertToLeadPartner"></i>
+      //      </button>`;
+      //   },
+      // },
     ];
   }
   public rowSelection: 'single';

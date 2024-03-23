@@ -1,0 +1,27 @@
+<div class="modal-header header-common-style">
+  <h4 class="modal-title">PAN Name Alert</h4>
+  <!-- <button type="button" class="close" style="cursor: pointer" (click)="dialogRef.close()">&times;</button> -->
+</div>
+<ng-container>
+  <mat-dialog-content>
+    <div class="dialog-min-height">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 inpTx">
+          Your name as per PAN is does not match with the name entered.
+          Please select the name you prefer for registration.
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-xs-12 BtTpTst">
+        <div class="sub_btn ">
+          <button type="button" style="width: auto;" class="btn cancel float-left" (click)="usePanName()">Continue With
+            Name on PAN</button>
+          <!-- <button type="submit" class="btn save btSav" (click)="dialogRef.close()">Continue as is</button> -->
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</ng-container>

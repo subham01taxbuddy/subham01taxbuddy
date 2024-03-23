@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -259,23 +259,20 @@ export class SchCallCalenderComponent implements OnInit {
             } else {
               this.utilService.showSnackBar(response['data']['response'].toString());
               this.loading = false;
-              // this.dialogRef.close();
             }
           }
         } else {
           this.utilService.showSnackBar(response['error']);
           this.loading = false;
-          // this.dialogRef.close(false);
         }
       },
         error => {
           this.utilService.showSnackBar('Failed to set up meeting with tax expert');
           this.loading = false;
-          // this.dialogRef.close(false);
         })
     }
   }
 
-  
+
 }
 

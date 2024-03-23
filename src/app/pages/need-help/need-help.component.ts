@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import {AppConstants} from "../../modules/shared/constants";
+import { AppConstants } from "../../modules/shared/constants";
 
 @Component({
   selector: 'app-need-help',
@@ -77,7 +77,7 @@ export class NeedHelpComponent implements OnInit {
     this.btnDisabled = true;
     const target = event.target as HTMLInputElement;
     if (target.files.length > 0) {
-      this.selectedFileName=target.files[0].name;
+      this.selectedFileName = target.files[0].name;
       this.userMsService.uploadFile(target.files.item(0)).subscribe(res => {
         console.log('file upload res:', res);
         this.fileName = res && res.data && res.data.fileName ? res.data.fileName : '';

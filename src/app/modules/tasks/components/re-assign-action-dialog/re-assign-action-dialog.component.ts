@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -14,12 +13,12 @@ export class ReAssignActionDialogComponent implements OnInit {
   loading: boolean;
   ownerId: number;
   filerId: number;
-  leaderId :number;
-  searchAsPrinciple:boolean = false;
+  leaderId: number;
+  searchAsPrinciple: boolean = false;
   ownerDropDownType = 'ASSIGNED';
-  loggedInUserRoles:any;
+  loggedInUserRoles: any;
   showErrorTable: boolean = false;
-  errorData:any;
+  errorData: any;
   @ViewChild('errorTableTemplate') errorTableTemplate: TemplateRef<any>;
   constructor(
     public dialogRef: MatDialogRef<ReAssignActionDialogComponent>,
@@ -31,17 +30,11 @@ export class ReAssignActionDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('data from selected rows',this.data)
+    console.log('data from selected rows', this.data)
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-
-    //Ashwini: This was used to control the owner list shown to leaders.
-    //We are commenting this code to enable leaders to see all owners irrepspective of the assignment.
-    // if(this.loggedInUserRoles.includes('ROLE_LEADER')) {
-    //   this.checkPermission();
-    // }
   }
 
-  checkPermission(){
+  checkPermission() {
     let loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
@@ -52,8 +45,7 @@ export class ReAssignActionDialogComponent implements OnInit {
         ownerIdList.push(item.ownerUserId);
       });
       let filteredList = ownerList.filter((item) => ownerIdList.includes(item.userId));
-      // let filteredList = ownerList.filter((item) => item.userId === this.data?.data?.ownerUserId);
-      if(!filteredList || filteredList.length <= 0){
+      if (!filteredList || filteredList.length <= 0) {
         this.utilsService.showSnackBar('You do not have permission to reassign this user.');
         this.dialogRef.close({ event: 'close', data: 'error' });
       }
@@ -62,12 +54,12 @@ export class ReAssignActionDialogComponent implements OnInit {
   }
 
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
 
@@ -80,8 +72,8 @@ export class ReAssignActionDialogComponent implements OnInit {
     }
   }
 
-  fromChild(event){
-    if(event){
+  fromChild(event) {
+    if (event) {
       this.filerId = event ? event.userId : null;
     }
   }
@@ -102,10 +94,10 @@ export class ReAssignActionDialogComponent implements OnInit {
     }
   }
 
-  reAssign(){
-    if(this.filerId){
+  reAssign() {
+    if (this.filerId) {
       this.reAssignment();
-    }else{
+    } else {
       this.leaderLevelReassignment();
     }
   }
@@ -167,8 +159,8 @@ export class ReAssignActionDialogComponent implements OnInit {
           this.utilsService.showSnackBar('Please select Filer Name');
         }
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
@@ -178,7 +170,7 @@ export class ReAssignActionDialogComponent implements OnInit {
     });
   }
 
-  reAssignmentForLeader(){
+  reAssignmentForLeader() {
     //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-leader?userIdList=14157,14159
     //&serviceType=ITR&leaderUserId=14129&filerUserId=1234
     let userIdList = this.data.data.map(row => row.userId).join(',');
@@ -246,8 +238,8 @@ export class ReAssignActionDialogComponent implements OnInit {
           );
         }
       }
-    },error => {
-      this.loading=false;
+    }, error => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
@@ -258,76 +250,76 @@ export class ReAssignActionDialogComponent implements OnInit {
   }
 
 
-  closeErrorTable(){
+  closeErrorTable() {
     this.dialogRef.close({ event: 'close', data: 'success' });
     this.dialogRef1.close();
   }
 
-progressMessage: string = '';
+  progressMessage: string = '';
 
-async reAssignment() {
-  //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
-  if (this.filerId) {
-    this.loading=true;
-    const userIdList = this.data.data.map(item => item.userId);
-    const totalUsers = userIdList.length;
-    let completedUsers = 0;
-
-    for (let i = 0; i < totalUsers; i++) {
-      const userId = userIdList[i];
-      let param = `/user-reassignment-new?userId=${userId}&serviceTypes=ITR&ownerUserId=${this.ownerId}&filerUserId=${this.filerId}`
-      try {
-        const result: any = await this.userMsService.getMethod(param).toPromise();
-        completedUsers++;
-        this.updateProgress(completedUsers, totalUsers);
-        this.loading=false;
-        // this.utilsService.showSnackBar(result.message);
-      } catch (error) {
-        this.loading=false;
-        this.utilsService.showSnackBar(error.error.error);
-      }
-    }
-    this.utilsService.showSnackBar('User re-assignment Completed.');
-    this.loading = false;
-    this.dialogRef.close({ event: 'close', data: 'success' });
-  } else {
-    this.utilsService.showSnackBar('Please select Filer Name');
-  }
-}
-
-updateProgress(completedUsers: number, totalUsers: number) {
-  this.progressMessage = `${completedUsers} out of ${totalUsers} re-assignment completed`;
-
-}
-
-async leaderLevelReassignment(){
-    // this.utilsService.showSnackBar("into leader assig");
+  async reAssignment() {
     //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
-    if(this.ownerId){
-      this.loading=true;
+    if (this.filerId) {
+      this.loading = true;
       const userIdList = this.data.data.map(item => item.userId);
       const totalUsers = userIdList.length;
       let completedUsers = 0;
 
       for (let i = 0; i < totalUsers; i++) {
-      const userId = userIdList[i];
-      const param = `/user-reassignment-new?userId=${userId}&serviceTypes=ALL&ownerUserId=${this.ownerId}&filerUserId=${this.ownerId}`;
-      try {
-        const result: any = await this.userMsService.getMethod(param).toPromise();
-        completedUsers++;
-        this.updateProgress(completedUsers, totalUsers);
-        this.loading=false;
-        // this.utilsService.showSnackBar('User re-assigned successfully.');
-      } catch (error) {
-        this.loading=false;
-        this.utilsService.showSnackBar(error.error.error);
-      }
+        const userId = userIdList[i];
+        let param = `/user-reassignment-new?userId=${userId}&serviceTypes=ITR&ownerUserId=${this.ownerId}&filerUserId=${this.filerId}`
+        try {
+          const result: any = await this.userMsService.getMethod(param).toPromise();
+          completedUsers++;
+          this.updateProgress(completedUsers, totalUsers);
+          this.loading = false;
+          // this.utilsService.showSnackBar(result.message);
+        } catch (error) {
+          this.loading = false;
+          this.utilsService.showSnackBar(error.error.error);
+        }
       }
       this.utilsService.showSnackBar('User re-assignment Completed.');
       this.loading = false;
       this.dialogRef.close({ event: 'close', data: 'success' });
     } else {
-    this.utilsService.showSnackBar('Please select Owner Name');
+      this.utilsService.showSnackBar('Please select Filer Name');
+    }
+  }
+
+  updateProgress(completedUsers: number, totalUsers: number) {
+    this.progressMessage = `${completedUsers} out of ${totalUsers} re-assignment completed`;
+
+  }
+
+  async leaderLevelReassignment() {
+    // this.utilsService.showSnackBar("into leader assig");
+    //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
+    if (this.ownerId) {
+      this.loading = true;
+      const userIdList = this.data.data.map(item => item.userId);
+      const totalUsers = userIdList.length;
+      let completedUsers = 0;
+
+      for (let i = 0; i < totalUsers; i++) {
+        const userId = userIdList[i];
+        const param = `/user-reassignment-new?userId=${userId}&serviceTypes=ALL&ownerUserId=${this.ownerId}&filerUserId=${this.ownerId}`;
+        try {
+          const result: any = await this.userMsService.getMethod(param).toPromise();
+          completedUsers++;
+          this.updateProgress(completedUsers, totalUsers);
+          this.loading = false;
+          // this.utilsService.showSnackBar('User re-assigned successfully.');
+        } catch (error) {
+          this.loading = false;
+          this.utilsService.showSnackBar(error.error.error);
+        }
+      }
+      this.utilsService.showSnackBar('User re-assignment Completed.');
+      this.loading = false;
+      this.dialogRef.close({ event: 'close', data: 'success' });
+    } else {
+      this.utilsService.showSnackBar('Please select Owner Name');
     }
   }
 

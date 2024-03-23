@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';

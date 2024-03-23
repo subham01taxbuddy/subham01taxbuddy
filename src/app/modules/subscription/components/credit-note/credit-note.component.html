@@ -42,7 +42,7 @@
               </div>
               <div class="col-sm-2 spsTp">
                 <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                  [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                  [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
               </div>
               <div class="col-6 spsTp">
                 <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"

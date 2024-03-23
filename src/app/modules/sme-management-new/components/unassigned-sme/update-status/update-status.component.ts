@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GstDailyReportService } from 'src/app/services/gst-daily-report.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
@@ -22,7 +21,6 @@ export class UpdateStatusComponent implements OnInit {
     public dialogRef: MatDialogRef<UpdateStatusComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _toastMessageService: ToastMessageService,
-    private gstreportService: GstDailyReportService,
     private userMsService: UserMsService,
   ) { }
 

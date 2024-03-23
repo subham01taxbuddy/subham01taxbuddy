@@ -50,8 +50,8 @@ export class ZeroCouponBondsComponent
   title: string;
   bondsGridOptions: GridOptions;
   selectedFormGroup: FormGroup;
-
   activeIndex: number;
+  PREV_ITR_JSON: any;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -60,6 +60,7 @@ export class ZeroCouponBondsComponent
     private activateRoute: ActivatedRoute
   ) {
     super();
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
         sessionStorage.getItem(AppConstants.ITR_JSON)

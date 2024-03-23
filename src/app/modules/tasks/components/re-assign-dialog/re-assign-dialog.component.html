@@ -3,26 +3,23 @@
 font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: right;" mat-dialog-close tabindex="-1"
   class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div class="row spsTp bdrTp">
-  <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
   <div class="clo-sm-12" *ngIf="roles.includes('ROLE_FILER')">
     <span style="font-weight: bold; font-size: 16px;">Leader Name : {{data.userInfo.leaderName}} </span>
   </div>
   <div class="col-sm-6" *ngIf="showOnlyLeader">
-    <div >
-      <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromOnlyLeader($event)"
-      [showOwnerList]="true" [forGstServiceType]="isServiceGst"></app-leader-list-dropdown>
+    <div>
+      <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromOnlyLeader($event)" [showOwnerList]="true"
+        [forGstServiceType]="isServiceGst"></app-leader-list-dropdown>
     </div>
   </div>
   <div class="col-sm-12" *ngIf="showLeaderFiler">
     <div>
-      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader] =true [parentId]='parentId'
-      (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader]=true
+        [parentId]='parentId' (sendPrincipleIndividual)="fromPrinciple($event)"
+        (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
     </div>
   </div>
   <div class="col-sm-3">
-    <button class="tbd-btn save-btn spsTp2" (click)="reAssign()"
-      [disabled]="loading">Re-Assign</button>
+    <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assign</button>
   </div>
 </div>
-<!-- <div class="card__col-xs-12 card__col-sm-3"> -->
-<!-- </div> -->

@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EriFlowRoutingModule } from "./eri-flow.routing";
 import { AddClientComponent } from "./components/add-client/add-client.component";
 import { PrefillDataComponent } from "./components/prefill-data/prefill-data.component";
-import { EVerifyComponent } from "./components/e-verify/e-verify.component";
 import { ItrSharedModule } from "../itr-shared/itr-shared.module";
 import {PagesModule} from "../../pages/pages.module";
 
@@ -14,7 +13,6 @@ import {PagesModule} from "../../pages/pages.module";
     declarations: [
         AddClientComponent,
         PrefillDataComponent,
-        EVerifyComponent
     ],
     imports: [
         CommonModule,
