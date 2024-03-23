@@ -3,7 +3,6 @@ import { AckFailureComponent } from './acknowledgement/ack-failure/ack-failure.c
 import { AckDelayComponent } from './acknowledgement/ack-delay/ack-delay.component';
 import { AckSuccessComponent } from './acknowledgement/ack-success/ack-success.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UsersComponent } from './users/users.component';
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
@@ -23,7 +22,6 @@ import { AcknowledgementComponent } from './acknowledgement/acknowledgement.comp
 import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 import { BusinessComponent } from './business/business.component';
-import { MyTeamItrsComponent } from './my-team-itrs/my-team-itrs.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -132,7 +130,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
   ],
   declarations: [
     ItrFilingComponent,
-    UsersComponent,
     CustomerProfileComponent,
     ItrWizardComponent,
     PersonalInformationComponent,
@@ -153,7 +150,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     MyAssignedItrsComponent,
     BusinessComponent,
     // WhatsAppDialogComponent,
-    MyTeamItrsComponent,
     // KommunicateDialogComponent,
     // FilingStatusDialogComponent,
     DocumentUploadComponent,
