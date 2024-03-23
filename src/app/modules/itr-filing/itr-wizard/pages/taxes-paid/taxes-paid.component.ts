@@ -565,7 +565,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
   deleteAsset(data, gridapi:GridApi, rowNode:RowNode) {
 
-    gridapi?.removeItems([rowNode]);
+    // need to refresh grid
+    // gridapi?.removeItems([rowNode]);
     if(data.tdsCode === this.TDS_TYPE_CODE){
       this.taxPaid?.onSalary?.splice(data.index, 1);
     } else if(data.tdsCode === this.TDS_OTHER_TYPE_CODE){

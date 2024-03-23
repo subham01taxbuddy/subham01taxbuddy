@@ -463,7 +463,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
           }
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -492,7 +492,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //     }
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     if (params.data.paymentStatus === 'Paid') {
       //       return {
@@ -526,7 +526,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: {
       //     textAlign: 'center', display: 'flex',
       //     'align-items': 'center',
@@ -547,7 +547,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
 
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: {
       //     textAlign: 'center', display: 'flex',
       //     'align-items': 'center',
@@ -576,7 +576,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //     }
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     if (params.data.paymentStatus === 'Paid') {
       //       return {
@@ -617,7 +617,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //     }
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     if (params.data.paymentStatus === 'Paid') {
       //       return {
@@ -658,7 +658,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //     }
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     if (params.data.paymentStatus === 'Paid') {
       //       return {
@@ -691,7 +691,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 55,
-      //   pinned: 'right',
+      //    pinned: 'right',
       // },
       // {
       //   headerName: 'See/Add Notes',
@@ -706,7 +706,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 60,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',

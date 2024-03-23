@@ -17,9 +17,9 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import {
   AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { setTimeout } from 'timers';
@@ -39,10 +39,10 @@ export class OtherInformationComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
 
-  directorForm: FormGroup;
-  sharesForm: FormGroup;
-  firmForm: FormGroup;
-  schedule5AForm: FormGroup;
+  directorForm: UntypedFormGroup;
+  sharesForm: UntypedFormGroup;
+  firmForm: UntypedFormGroup;
+  schedule5AForm: UntypedFormGroup;
 
   config: any;
   loading = false;
@@ -63,7 +63,7 @@ export class OtherInformationComponent implements OnInit {
     public matDialog: MatDialog,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.config = {
       itemsPerPage: 2,
@@ -146,7 +146,7 @@ export class OtherInformationComponent implements OnInit {
   // constructor calls
   sharesCallInConstructor() {
     this.sharesForm = this.initSharesForm();
-    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     for (let i = 0; i < this.ITR_JSON?.unlistedSharesDetails.length; i++) {
       const val = this.ITR_JSON.unlistedSharesDetails[i];
       const temp = {
@@ -172,7 +172,7 @@ export class OtherInformationComponent implements OnInit {
 
   directorCallInConstructor() {
     this.directorForm = this.initDirectorForm();
-    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    let formArray = this.directorForm.controls['directorsArray'] as UntypedFormArray;
     for (let i = 0; i < this.ITR_JSON?.directorInCompany.length; i++) {
       const val = this.ITR_JSON.directorInCompany[i];
       const temp = {
@@ -196,7 +196,7 @@ export class OtherInformationComponent implements OnInit {
     }
     this.firmForm = this.initFirmsForm();
     this.formAdded = true;
-    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    let formArray = this.firmForm.controls['firmsArray'] as UntypedFormArray;
     for (let i = 0; i < this.ITR_JSON?.partnerInFirms.length; i++) {
       const val = this.ITR_JSON.partnerInFirms[i];
       const temp = {
@@ -233,7 +233,7 @@ export class OtherInformationComponent implements OnInit {
             if (selectedIncome) {
               const incomeFormGroup = this.schedule5AForm.get(
                 selectedIncomeType
-              ) as FormGroup;
+              ) as UntypedFormGroup;
               incomeFormGroup.patchValue({
                 incomeReceived: selectedIncome.incomeReceived,
                 apportionedAmountOfSpouse:
@@ -415,7 +415,7 @@ export class OtherInformationComponent implements OnInit {
       ?.value?.toUpperCase();
 
     const partnerPan = (
-      this.firmForm.controls['firmsArray'] as FormArray
+      this.firmForm.controls['firmsArray'] as UntypedFormArray
     )?.controls[index ? index : 0]
       ?.get('panNumber')
       ?.value?.toUpperCase();
@@ -491,7 +491,7 @@ export class OtherInformationComponent implements OnInit {
     } else {
       if (this.Copy_ITR_JSON.unlistedSharesDetails.length > 0) {
         this.Copy_ITR_JSON.unlistedSharesDetails = [];
-        (this.sharesForm.controls['sharesArray'] as FormArray).clear();
+        (this.sharesForm.controls['sharesArray'] as UntypedFormArray).clear();
         this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
       }
     }
@@ -504,7 +504,7 @@ export class OtherInformationComponent implements OnInit {
       if (this.Copy_ITR_JSON?.directorInCompany.length > 0) {
         this.Copy_ITR_JSON.directorInCompany = [];
         // this.directorForm.reset();
-        (this.directorForm.controls['directorsArray'] as FormArray).clear();
+        (this.directorForm.controls['directorsArray'] as UntypedFormArray).clear();
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
       }
     }
@@ -528,17 +528,17 @@ export class OtherInformationComponent implements OnInit {
         // this.directorForm.reset();
         this.firmForm.reset();
         this.formAdded = false;
-        (this.firmForm.controls['firmsArray'] as FormArray).clear();
+        (this.firmForm.controls['firmsArray'] as UntypedFormArray).clear();
       }
     }
     console.log('Remove shares data here');
   }
 
   firmSelected() {
-    const firmArray = <FormArray>this.firmForm.get('firmsArray');
+    const firmArray = <UntypedFormArray>this.firmForm.get('firmsArray');
     return (
       firmArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
+        (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -563,12 +563,12 @@ export class OtherInformationComponent implements OnInit {
   }
 
   addSharesDetails(title, mode, i) {
-    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     formArray.insert(0, this.createSharesForm());
   }
 
   addDirectorDetails(title, mode, i) {
-    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    let formArray = this.directorForm.controls['directorsArray'] as UntypedFormArray;
     formArray.insert(0, this.createDirectorForm());
   }
 
@@ -577,31 +577,31 @@ export class OtherInformationComponent implements OnInit {
       this.firmForm = this.initFirmsForm();
       this.formAdded = true;
     }
-    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    let formArray = this.firmForm.controls['firmsArray'] as UntypedFormArray;
     formArray.insert(0, this.createFirmsForm());
   }
 
   // edit functions
   editSharesForm(index) {
-    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     formArray.controls[index].enable();
   }
 
   editDirectorForm(index) {
-    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    let formArray = this.directorForm.controls['directorsArray'] as UntypedFormArray;
     formArray.controls[index].enable();
   }
 
   editFirmForm(index) {
-    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    let formArray = this.firmForm.controls['firmsArray'] as UntypedFormArray;
     formArray.controls[index].enable();
   }
 
   // delete
   deleteDirectors() {
-    let formArray = this.directorForm.controls['directorsArray'] as FormArray;
+    let formArray = this.directorForm.controls['directorsArray'] as UntypedFormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -610,9 +610,9 @@ export class OtherInformationComponent implements OnInit {
   }
 
   deleteShares() {
-    let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -621,9 +621,9 @@ export class OtherInformationComponent implements OnInit {
   }
 
   deleteFirms() {
-    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    let formArray = this.firmForm.controls['firmsArray'] as UntypedFormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -775,7 +775,7 @@ export class OtherInformationComponent implements OnInit {
     // saving director details
     if (this.directorForm?.valid) {
       console.log('SaveDirectorDetails', this.directorForm?.getRawValue());
-      const directorsArray = <FormArray>(
+      const directorsArray = <UntypedFormArray>(
         this.directorForm?.get('directorsArray')
       );
       this.Copy_ITR_JSON.directorInCompany = directorsArray?.getRawValue();
@@ -791,7 +791,7 @@ export class OtherInformationComponent implements OnInit {
     // save unlisted details
     if (this.sharesForm?.valid) {
       console.log('saveUnlistedDetailsShares', this.sharesForm?.getRawValue());
-      const sharesArray = <FormArray>this.sharesForm?.get('sharesArray');
+      const sharesArray = <UntypedFormArray>this.sharesForm?.get('sharesArray');
       this.Copy_ITR_JSON.unlistedSharesDetails = sharesArray?.getRawValue();
 
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares =
@@ -805,7 +805,7 @@ export class OtherInformationComponent implements OnInit {
     // save firm details
     if (this.firmForm?.valid) {
       console.log('SaveFirmDetails', this.firmForm?.getRawValue());
-      const firmsArray = <FormArray>this.firmForm?.get('firmsArray');
+      const firmsArray = <UntypedFormArray>this.firmForm?.get('firmsArray');
       this.Copy_ITR_JSON.partnerInFirms = firmsArray?.getRawValue();
 
       if (
@@ -847,14 +847,14 @@ export class OtherInformationComponent implements OnInit {
 
   // get functions
   get getDirectorsArray() {
-    return <FormArray>this.directorForm.get('directorsArray');
+    return <UntypedFormArray>this.directorForm.get('directorsArray');
   }
   get getSharesArray() {
-    return <FormArray>this.sharesForm.get('sharesArray');
+    return <UntypedFormArray>this.sharesForm.get('sharesArray');
   }
 
   get getFirmsArray() {
-    return <FormArray>this.firmForm.get('firmsArray');
+    return <UntypedFormArray>this.firmForm.get('firmsArray');
   }
 
   getIncomeTypeKey(type: string): string {

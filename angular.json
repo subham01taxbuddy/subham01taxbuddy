@@ -2,7 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": "7559d794-bc9f-49fa-b065-57b2b8b972b7",
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -53,7 +55,6 @@
               }
             ],
             "styles": [
-              "src/assets/styles/material.scss",
               "src/styles.css",
               "src/assets/styles/components.css",
               "src/assets/styles/colors.css",
@@ -176,6 +177,5 @@
         }
       }
     }
-  },
-  "defaultProject": "taxbuddy-backoffice"
+  }
 }

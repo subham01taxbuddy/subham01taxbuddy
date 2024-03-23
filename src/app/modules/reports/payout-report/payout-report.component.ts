@@ -7,7 +7,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -61,9 +61,9 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     { value: 'tdsNotApplicable', name: 'TDS Not Applicable' },
   ];
   searchAsPrinciple: boolean = false;
-  selectedStatus = new FormControl();
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  selectedStatus = new UntypedFormControl();
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();

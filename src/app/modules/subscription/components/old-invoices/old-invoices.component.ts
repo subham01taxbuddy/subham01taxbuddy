@@ -1,6 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -85,7 +85,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
   minEndDate = new Date().toISOString().slice(0, 10);
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilService: UtilsService,
     public datePipe: DatePipe,
     private reportService:ReportService,
@@ -124,24 +124,24 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     //  this.getInvoices()
   }
 
-  invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl(''),
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
-    status: new FormControl(''),
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    assessmentYear: new UntypedFormControl(''),
+    startDate: new UntypedFormControl(''),
+    endDate: new UntypedFormControl(''),
+    status: new UntypedFormControl(''),
 
   })
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as FormControl;
+    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as FormControl;
+    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as FormControl;
+    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
   }
 
   resetFilters(){
@@ -434,7 +434,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
 
         },
         width: 95,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -470,7 +470,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
           }
         },
         width: 90,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
@@ -504,7 +504,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
            </button>`;
         },
         width: 95,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

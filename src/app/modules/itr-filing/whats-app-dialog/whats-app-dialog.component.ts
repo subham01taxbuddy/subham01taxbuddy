@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { environment } from 'src/environments/environment';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -29,7 +29,7 @@ export class WhatsAppDialogComponent implements OnInit {
   userLastMsgTime: any;
   environmentPath: any;
   smeInfo: any;
-  whatsAppForm: FormGroup;
+  whatsAppForm: UntypedFormGroup;
   templateInfo: any;
   tempArrributes: any;
   oldAttributes: any = [];
@@ -76,7 +76,7 @@ export class WhatsAppDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<WhatsAppDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
               private userService: UserMsService, private _toastMessageService: ToastMessageService,
                private utileService: UtilsService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
                 this.environmentPath = environment.url;
                 const loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "");
                 if (loggedInSmeInfo && loggedInSmeInfo[0]) {

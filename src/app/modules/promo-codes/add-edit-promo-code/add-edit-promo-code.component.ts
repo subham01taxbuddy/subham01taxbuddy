@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -35,7 +35,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   loading!: boolean;
   discountData: any = [{ label: 'Amount', value: 'AMOUNT' }, { label: 'Percentage', value: 'PERCENTAGE' }];
   statusList: any = [{ label: 'Active', value: true }, { label: 'InActive', value: false }]
-  promoCodeForm!: FormGroup;
+  promoCodeForm!: UntypedFormGroup;
   minEndDate: any = new Date();
   maxEndDate: any = new Date('2024-03-31');
   allPlans: any[] = [];
@@ -48,7 +48,7 @@ export class AddEditPromoCodeComponent implements OnInit {
     public dialogRef: MatDialogRef<AddEditPromoCodeComponent>,
     private _toastMessageService: ToastMessageService,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private itrService: ItrMsService,
     public utilsService: UtilsService
   ) {
@@ -202,7 +202,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   // }
 
   get getFixedPricingArray() {
-    return <FormArray>this.promoCodeForm.get('discountDetails');
+    return <UntypedFormArray>this.promoCodeForm.get('discountDetails');
   }
 
   addEdit() {

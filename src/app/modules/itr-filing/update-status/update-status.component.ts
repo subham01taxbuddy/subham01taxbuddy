@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, AfterContentChecked } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { WhatsAppDialogComponent } from '../whats-app-dialog/whats-app-dialog.component';
@@ -15,7 +15,7 @@ import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes
   styleUrls: ['./update-status.component.css']
 })
 export class UpdateStatusComponent implements OnInit, AfterContentChecked {
-  fillingStatus = new FormControl('', Validators.required);
+  fillingStatus = new UntypedFormControl('', Validators.required);
   currentUrl: any = '';
   // ITR_JSON: ITR_JSON;
   @Input() userId: any;

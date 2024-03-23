@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -80,15 +80,15 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
   searchVal: any;
   key: any;
   showError: boolean = false;
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minDate = new Date(2023, 3, 1);
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   toDateMin = this.minDate;
-  selectedStatus = new FormControl('');
+  selectedStatus = new UntypedFormControl('');
   statusList = [
     { value: 'SHORTLISTED', name: 'Shortlisted' },
     { value: 'FINALIZED', name: 'Finalized' },
@@ -490,7 +490,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'View/Edit Profile',
         field: '',
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -505,7 +505,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Update Status',
         field: '',
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -529,7 +529,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -543,7 +543,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       //   headerName: 'Reject/Backed Out',
       //   field: '',
       //   width: 120,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   suppressMovable: true,
       //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 

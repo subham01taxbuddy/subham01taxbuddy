@@ -8,10 +8,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -41,8 +41,8 @@ export class SharesAndEquityComponent
   implements OnInit
 {
   step = 1;
-  securitiesForm: FormGroup;
-  deductionForm: FormGroup;
+  securitiesForm: UntypedFormGroup;
+  deductionForm: UntypedFormGroup;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -68,7 +68,7 @@ export class SharesAndEquityComponent
   isAdd = true;
   equityGridOptions: GridOptions;
   // improvements
-  isImprovement = new FormControl(false);
+  isImprovement = new UntypedFormControl(false);
   improvementYears = [];
   financialyears = [];
   @Input() goldCg: NewCapitalGain;
@@ -77,7 +77,7 @@ export class SharesAndEquityComponent
   PREV_ITR_JSON: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
@@ -215,7 +215,7 @@ export class SharesAndEquityComponent
     this.updateDeductionUI();
   }
 
-  createForm(srn, item?): FormGroup {
+  createForm(srn, item?): UntypedFormGroup {
     let validators =
       this.bondType === 'listed'
         ? [
@@ -280,7 +280,7 @@ export class SharesAndEquityComponent
   initDetailedForm(itrObject: ITR_JSON) {
     let assetDetails;
     let data;
-    const securitiesArray = <FormArray>(
+    const securitiesArray = <UntypedFormArray>(
       this.securitiesForm.get('securitiesArray')
     );
     securitiesArray.clear();
@@ -337,7 +337,7 @@ export class SharesAndEquityComponent
     }
   }
 
-  initDeductionForm(obj?): FormGroup {
+  initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -485,14 +485,14 @@ export class SharesAndEquityComponent
   addMore() {
     // this.compactView = false;
     this.isAdd = true;
-    const securitiesArray = <FormArray>(
+    const securitiesArray = <UntypedFormArray>(
       this.securitiesForm?.get('securitiesArray')
     );
     this.selectedFormGroup = this.createForm(securitiesArray.length);
   }
 
   addMoreData(item?) {
-    const securitiesArray = <FormArray>(
+    const securitiesArray = <UntypedFormArray>(
       this.securitiesForm.get('securitiesArray')
     );
     securitiesArray.insert(0, this.createForm(securitiesArray.length, item));
@@ -571,19 +571,19 @@ export class SharesAndEquityComponent
       let capitalGain = 0;
       let saleValue = 0;
       let expenses = 0;
-      const securitiesArray = <FormArray>(
+      const securitiesArray = <UntypedFormArray>(
         this.securitiesForm.get('securitiesArray')
       );
       securitiesArray.controls.forEach((element) => {
-        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+        if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-            (element as FormGroup).controls['capitalGain'].value
+            (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-            (element as FormGroup).controls['sellValue'].value
+            (element as UntypedFormGroup).controls['sellValue'].value
           );
           expenses += parseInt(
-            (element as FormGroup).controls['sellExpense'].value
+            (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });
@@ -741,7 +741,7 @@ export class SharesAndEquityComponent
     if (gainType === 'LONG' && this.bondType !== 'listed') {
       let improvementsArray = this.selectedFormGroup?.controls[
         'improvementsArray'
-      ] as FormGroup;
+      ] as UntypedFormGroup;
       let selectedYear = moment(
         this.selectedFormGroup?.controls['sellDate']?.value
       );
@@ -771,7 +771,7 @@ export class SharesAndEquityComponent
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST : ', res);
         (
-          this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+          this.selectedFormGroup?.controls['improvementsArray'] as UntypedFormGroup
         )?.controls['indexCostOfImprovement']?.setValue(
           res?.data?.costOfAcquisitionOrImprovement
         );
@@ -782,9 +782,9 @@ export class SharesAndEquityComponent
       this.calculateTotalCG(this.selectedFormGroup);
     } else {
       (
-        this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+        this.selectedFormGroup?.controls['improvementsArray'] as UntypedFormGroup
       )?.controls['indexCostOfImprovement']?.setValue(
-        (this.selectedFormGroup?.controls['improvementsArray'] as FormGroup)
+        (this.selectedFormGroup?.controls['improvementsArray'] as UntypedFormGroup)
           ?.controls['costOfImprovement']?.value
       );
       this.getImprovementYears();
@@ -922,16 +922,16 @@ export class SharesAndEquityComponent
 
       const securitiesImprovement = [];
 
-      const securitiesArray = <FormArray>(
+      const securitiesArray = <UntypedFormArray>(
         this.securitiesForm.get('securitiesArray')
       );
       securitiesArray.controls.forEach((element) => {
-        let securityImprovement = (element as FormGroup).controls[
+        let securityImprovement = (element as UntypedFormGroup).controls[
           'improvementsArray'
         ].value;
 
         securitiesImprovement?.push({
-          srn: (element as FormGroup).controls['srn'].value,
+          srn: (element as UntypedFormGroup).controls['srn'].value,
           dateOfImprovement: securityImprovement?.dateOfImprovement,
           costOfImprovement: securityImprovement?.costOfImprovement,
           indexCostOfImprovement: securityImprovement?.indexCostOfImprovement,
@@ -1036,16 +1036,16 @@ export class SharesAndEquityComponent
       }
       const securitiesImprovement = [];
 
-      const securitiesArray = <FormArray>(
+      const securitiesArray = <UntypedFormArray>(
         this.securitiesForm.get('securitiesArray')
       );
       securitiesArray.controls.forEach((element) => {
-        let securityImprovement = (element as FormGroup).controls[
+        let securityImprovement = (element as UntypedFormGroup).controls[
           'improvementsArray'
         ].value;
 
         securitiesImprovement?.push({
-          srn: (element as FormGroup).controls['srn'].value,
+          srn: (element as UntypedFormGroup).controls['srn'].value,
           dateOfImprovement: securityImprovement?.dateOfImprovement,
           costOfImprovement: securityImprovement?.costOfImprovement,
           indexCostOfImprovement: securityImprovement?.indexCostOfImprovement,
@@ -1197,7 +1197,7 @@ export class SharesAndEquityComponent
   }
 
   get getSecuritiesArray() {
-    return <FormArray>this.securitiesForm.get('securitiesArray');
+    return <UntypedFormArray>this.securitiesForm.get('securitiesArray');
   }
 
   totalCg: TotalCg = {
@@ -1340,12 +1340,12 @@ export class SharesAndEquityComponent
   }
 
   deleteArray() {
-    const securitiesArray = <FormArray>(
+    const securitiesArray = <UntypedFormArray>(
       this.securitiesForm.get('securitiesArray')
     );
 
     securitiesArray.controls = securitiesArray.controls.filter(
-      (item: FormGroup) => item.controls['hasEdit'].value !== true
+      (item: UntypedFormGroup) => item.controls['hasEdit'].value !== true
     );
     this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
     this.updateDeductionUI();
@@ -1672,7 +1672,7 @@ export class SharesAndEquityComponent
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.getSecuritiesArray.controls.forEach((formGroup: FormGroup) => {
+          this.getSecuritiesArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -1694,7 +1694,7 @@ export class SharesAndEquityComponent
     this.isImprovement?.valueChanges?.subscribe((value) => {
       let improvementsFormArray = this.selectedFormGroup.controls[
         'improvementsArray'
-      ] as FormGroup;
+      ] as UntypedFormGroup;
 
       if (value === false) {
         improvementsFormArray.controls['financialYearOfImprovement'].setValue(
@@ -1730,7 +1730,7 @@ export class SharesAndEquityComponent
   }
 
   @ViewChild('editEquity', { static: true }) editEquity: TemplateRef<any>;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
   confirmDialog: MatDialogRef<ConfirmDialogComponent>;
 
   deductionChanged(event) {
@@ -1770,12 +1770,12 @@ export class SharesAndEquityComponent
   }
 
   equitySelected() {
-    const securitiesArray = <FormArray>(
+    const securitiesArray = <UntypedFormArray>(
       this.securitiesForm.controls['securitiesArray']
     );
     return (
       securitiesArray.controls.filter(
-        (item: FormGroup) => item.controls['hasEdit'].value === true
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }

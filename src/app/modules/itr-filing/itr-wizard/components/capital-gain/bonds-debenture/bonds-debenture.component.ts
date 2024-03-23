@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Bonds, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -18,8 +18,8 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class BondsDebentureComponent extends WizardNavigation implements OnInit {
   step = 1;
-  bondsForm: FormGroup;
-  deductionForm: FormGroup;
+  bondsForm: UntypedFormGroup;
+  deductionForm: UntypedFormGroup;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -35,12 +35,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   assetType: string;
   title: string;
   bondsGridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
   PREV_ITR_JSON: any;
 
   activeIndex: number;
   constructor(
-      private fb: FormBuilder,
+      private fb: UntypedFormBuilder,
       public utilsService: UtilsService,
       private itrMsService: ItrMsService,
       private toastMsgService: ToastMessageService,
@@ -76,7 +76,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.getBondsArray.controls.forEach((formGroup: FormGroup) => {
+          this.getBondsArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -173,10 +173,10 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   bondSelected() {
-    const securitiesArray = <FormArray>this.bondsForm.controls['bondsArray'];
+    const securitiesArray = <UntypedFormArray>this.bondsForm.controls['bondsArray'];
     return (
         securitiesArray.controls.filter(
-            (item: FormGroup) => item.controls['hasEdit'].value === true
+            (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
         ).length > 0
     );
   }
@@ -204,7 +204,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
-  createForm(srn, item?): FormGroup {
+  createForm(srn, item?): UntypedFormGroup {
     return this.fb.group({
       isIndexationBenefitAvailable: [
         this.assetType === 'INDEXED_BONDS' ? true : false,
@@ -284,12 +284,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     // result.costOfImprovement = result.indexCostOfImprovement;
 
     if(this.activeIndex === -1){
-      let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length;
+      let srn = (this.bondsForm.controls['bondsArray'] as UntypedFormArray).length;
       let form = this.createForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.bondsForm.controls['bondsArray'] as FormArray).push(form);
+      (this.bondsForm.controls['bondsArray'] as UntypedFormArray).push(form);
     } else {
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+      (this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
@@ -301,23 +301,23 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   editBondsForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-        ((this.bondsForm.controls['bondsArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+        ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
   }
 
   get getBondsArray() {
-    return <FormArray>this.bondsForm.get('bondsArray');
+    return <UntypedFormArray>this.bondsForm.get('bondsArray');
   }
 
   addMoreBondsData(item) {
-    const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+    const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.push(this.createForm(bondsArray.length, item));
   }
 
   deleteBondsArray() {
-    let bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+    let bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls = bondsArray.controls.filter(
-        (element) => !(element as FormGroup).controls['hasEdit'].value
+        (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
     if(bondsArray.length == 0){
       this.deductionForm.reset();
@@ -678,15 +678,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   getBondsCg() {
     let ltcg = 0;
     let stcg = 0;
-    const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+    const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
       ltcg +=
-          (element as FormGroup).controls['gainType'].value === 'LONG'
-              ? parseInt((element as FormGroup).controls['capitalGain'].value)
+          (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
+              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
               : 0;
       stcg +=
-          (element as FormGroup).controls['gainType'].value === 'SHORT'
-              ? parseInt((element as FormGroup).controls['capitalGain'].value)
+          (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
+              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
               : 0;
     });
     this.totalCg.ltcg = ltcg;
@@ -716,7 +716,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       );
 
       let bondImprovement = [];
-      const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+      const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
 
       // bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex]?.assetDetails;
@@ -724,13 +724,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       //   bondsList = [];
       // }
       bondsArray.controls.forEach((element) => {
-          let costOfImprovement = (element as FormGroup).controls[
+          let costOfImprovement = (element as UntypedFormGroup).controls[
               'improvementCost'
               ].value;
-          let indexedValue = (element as FormGroup).controls['indexCostOfImprovement'].value;
+          let indexedValue = (element as UntypedFormGroup).controls['indexCostOfImprovement'].value;
           bondImprovement.push({
-            srn: (element as FormGroup).controls['srn'].value,
-            dateOfImprovement: (element as FormGroup).controls[
+            srn: (element as UntypedFormGroup).controls['srn'].value,
+            dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
                 ].value,
             indexCostOfImprovement: indexedValue,
@@ -738,12 +738,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           });
           if(this.assetType === 'INDEXED_BONDS'){
             if(indexedValue > 0){
-              (element as FormGroup).controls['costOfImprovement'].setValue(indexedValue);
+              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(indexedValue);
             } else {
-              (element as FormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
+              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
             }
           }
-          bondsList.push((element as FormGroup).getRawValue());
+          bondsList.push((element as UntypedFormGroup).getRawValue());
       });
 
       const bondData = {
@@ -807,7 +807,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   getYearsList(bonds) {
     let yearsList = [];
     yearsList = yearsList.concat(this.improvementYears);
-    let purchaseDate = (bonds as FormGroup).controls['purchaseDate'].value;
+    let purchaseDate = (bonds as UntypedFormGroup).controls['purchaseDate'].value;
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
@@ -902,7 +902,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
-  initDeductionForm(obj?): FormGroup {
+  initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -927,17 +927,17 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       let capitalGain = 0;
       let saleValue = 0;
       let expenses = 0;
-      const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+      const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+        if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-              (element as FormGroup).controls['capitalGain'].value
+              (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-              (element as FormGroup).controls['valueInConsideration'].value
+              (element as UntypedFormGroup).controls['valueInConsideration'].value
           );
           expenses += parseInt(
-              (element as FormGroup).controls['sellExpense'].value
+              (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });

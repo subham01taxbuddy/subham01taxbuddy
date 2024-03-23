@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { FixedAssetsDetails, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -15,7 +15,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 export class DepreciationDialogComponent implements OnInit {
   @Output() onSave = new EventEmitter();
   loading: boolean = false;
-  depreciationForm: FormGroup;
+  depreciationForm: UntypedFormGroup;
   config: any;
 
   assetTypeList = [
@@ -49,7 +49,7 @@ export class DepreciationDialogComponent implements OnInit {
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public toastMsgService: ToastMessageService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public dialogRef: MatDialogRef<DepreciationDialogComponent>,
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -65,7 +65,7 @@ export class DepreciationDialogComponent implements OnInit {
       currentPage: 1,
     };
     this.depreciationForm = this.initDepreciationForm();
-    const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+    const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
     if (this.Copy_ITR_JSON?.business.fixedAssetsDetails && this.Copy_ITR_JSON?.business.fixedAssetsDetails.length > 0) {
       this.Copy_ITR_JSON.business.fixedAssetsDetails.forEach(item => {
         let index = 0;
@@ -88,7 +88,7 @@ export class DepreciationDialogComponent implements OnInit {
     })
   }
 
-  createForm(index, obj?: FixedAssetsDetails): FormGroup {
+  createForm(index, obj?: FixedAssetsDetails): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [],
       id: [obj?.id ? obj?.id : index],
@@ -137,14 +137,14 @@ export class DepreciationDialogComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.depreciationForm.valid) {
       console.log("formGroup", this.depreciationForm)
-      const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+      const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
       this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit(this.Copy_ITR_JSON);
       this.loading = false;
     } else {
       this.loading = false;
-      const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+      const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
       this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit(this.Copy_ITR_JSON);
@@ -152,17 +152,17 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   get getDepreciationArray() {
-    return <FormArray>this.depreciationForm.get('depreciationArray');
+    return <UntypedFormArray>this.depreciationForm.get('depreciationArray');
   }
 
   addMore(item?) {
     let form = this.createForm(0, item);
-    (this.depreciationForm.controls['depreciationArray'] as FormArray).insert(0, form);
+    (this.depreciationForm.controls['depreciationArray'] as UntypedFormArray).insert(0, form);
   }
 
   deleteDepreciationArray() {
-    const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
-    depreciationArray.controls = depreciationArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
+    depreciationArray.controls = depreciationArray.controls.filter(element => !(element as UntypedFormGroup).controls['hasEdit'].value);
     this.calculateDepreciationTotal();
   }
 
@@ -170,23 +170,23 @@ export class DepreciationDialogComponent implements OnInit {
     let totalGrossBlock = 0;
     let totalDepreciationAmount = 0;
     let totalNetBlock = 0;
-    const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+    const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
     if (depreciationArray.controls.length) {
       depreciationArray.controls.forEach((element, index) => {
-        if ((element as FormGroup).controls['bookValue'].value) {
-          totalGrossBlock += Number((element as FormGroup).controls['bookValue'].value);
+        if ((element as UntypedFormGroup).controls['bookValue'].value) {
+          totalGrossBlock += Number((element as UntypedFormGroup).controls['bookValue'].value);
           this.depreciationForm.controls['totalGrossBlock'].setValue(totalGrossBlock);
         } else {
           this.depreciationForm.controls['totalGrossBlock'].setValue(0);
         }
-        if ((element as FormGroup).controls['depreciationAmount'].value) {
-          totalDepreciationAmount += Number((element as FormGroup).controls['depreciationAmount'].value);
+        if ((element as UntypedFormGroup).controls['depreciationAmount'].value) {
+          totalDepreciationAmount += Number((element as UntypedFormGroup).controls['depreciationAmount'].value);
           this.depreciationForm.controls['totalDepreciationAmount'].setValue(totalDepreciationAmount);
         } else {
           this.depreciationForm.controls['totalDepreciationAmount'].setValue(0);
         }
-        if ((element as FormGroup).controls['fixedAssetClosingAmount'].value) {
-          totalNetBlock += Number((element as FormGroup).controls['fixedAssetClosingAmount'].value);
+        if ((element as UntypedFormGroup).controls['fixedAssetClosingAmount'].value) {
+          totalNetBlock += Number((element as UntypedFormGroup).controls['fixedAssetClosingAmount'].value);
           this.depreciationForm.controls['totalNetBlock'].setValue(totalNetBlock);
         } else {
           this.depreciationForm.controls['totalNetBlock'].setValue(0);

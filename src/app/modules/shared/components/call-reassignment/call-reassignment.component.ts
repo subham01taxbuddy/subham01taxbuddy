@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ToastMessageService } from "src/app/services/toast-message.service";
 import { UserMsService } from "src/app/services/user-ms.service";
@@ -13,7 +13,7 @@ import { UtilsService } from "src/app/services/utils.service";
 })
 export class CallReassignmentComponent implements OnInit {
   loading = false;
-  callReassignForm!: FormGroup;
+  callReassignForm!: UntypedFormGroup;
   agentList: any = [];
   smeList: any = [];
   agentsCall = true;
@@ -21,7 +21,7 @@ export class CallReassignmentComponent implements OnInit {
   agentMessage = 'All calls of selected agent id will be re assigned equally to newly selected callers from list irrespective of current assignment.'
   // itrStatus: any = [];
   constructor(public dialogRef: MatDialogRef<CallReassignmentComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private userMsService: UserMsService, private fb: FormBuilder,
+    private userMsService: UserMsService, private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private toastMsgService: ToastMessageService) { }
 

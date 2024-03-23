@@ -9,7 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -28,7 +28,7 @@ import * as moment from 'moment/moment';
 export class AddClientsComponent implements OnInit, OnDestroy {
   loading: boolean;
   ITR_JSON: ITR_JSON;
-  addClientForm: FormGroup;
+  addClientForm: UntypedFormGroup;
   minDate = new Date(1900, 0, 1);
   maxDate = new Date();
   headers: any;
@@ -55,12 +55,12 @@ export class AddClientsComponent implements OnInit, OnDestroy {
   @ViewChild('stepper') private myStepper: MatStepper;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private itrService: ItrMsService,
     public datePipe: DatePipe,
     private utiService: UtilsService,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private location: Location
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

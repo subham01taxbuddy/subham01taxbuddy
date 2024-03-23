@@ -255,7 +255,7 @@ export class MyTeamItrsComponent implements OnInit {
         headerName: 'Start',
         width: 50,
         sortable: true,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.eFillingCompleted && params.data.ackStatus === 'SUCCESS') {
             return `<button type="button" class="action_icon add_button" title="Acknowledgement not received, Contact team lead" style="border: none;
@@ -298,7 +298,7 @@ export class MyTeamItrsComponent implements OnInit {
         headerName: 'Status',
         width: 50,
         sortable: true,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Show Kommunicate/Whats app chat" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: blueviolet">
@@ -317,7 +317,7 @@ export class MyTeamItrsComponent implements OnInit {
       //   headerName: "TPA",
       //   field: "nextYearTpa",
       //   width: 50,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellRenderer: (params:any) => {
       //     return `<input type='checkbox' data-action-type="isTpa" ${params.data.nextYearTpa === 'INTERESTED' || params.data.nextYearTpa === "COMPLETED" ? 'checked' : ''} />`;
       //   },
@@ -330,7 +330,7 @@ export class MyTeamItrsComponent implements OnInit {
         headerName: 'E-Verify',
         width: 50,
         sortable: true,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           if (params.data.isEverified) {
             return `<button type="button" class="action_icon add_button" style="border: none;
@@ -377,7 +377,7 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
         },
         width: 50,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -391,7 +391,7 @@ export class MyTeamItrsComponent implements OnInit {
         headerName: 'RR',
         width: 50,
         sortable: true,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params:any) {
           return `<button type="button" class="action_icon add_button" title="Start Revise return" style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;color: #0dbbc3">
@@ -411,7 +411,7 @@ export class MyTeamItrsComponent implements OnInit {
       //   headerName: "Doc",
       //   field: "showDocument",
       //   width: 50,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellRenderer: (params:any) => {
       //     return `<button type="button" class="action_icon add_button" title="Show User Documents" style="border: none;
       //             background: transparent; font-size: 16px; color: yellow">
@@ -432,7 +432,7 @@ export class MyTeamItrsComponent implements OnInit {
       //      </button>`;
       //   },
       //   width: 50,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   cellStyle: function (params: any) {
       //     return {
       //       textAlign: 'center', display: 'flex',
@@ -445,7 +445,7 @@ export class MyTeamItrsComponent implements OnInit {
         headerName: "Review",
         field: "isReviewGiven",
         width: 50,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
@@ -467,7 +467,7 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
         },
         width: 60,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -489,7 +489,7 @@ export class MyTeamItrsComponent implements OnInit {
            </button>`;
         },
         width: 60,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

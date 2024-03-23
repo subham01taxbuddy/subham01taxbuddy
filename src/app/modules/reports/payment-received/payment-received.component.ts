@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
@@ -34,8 +34,8 @@ export const MY_FORMATS = {
   ],
 })
 export class PaymentReceivedComponent implements OnInit {
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();

@@ -1,7 +1,7 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
 import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -54,7 +54,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   allFilerList: any;
   roles: any;
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
@@ -92,7 +92,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   searchedEmail:any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: MatDialog,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -230,16 +230,16 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   isAllowed = false;
 
-  subscriptionFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
-    serviceType: new FormControl(''),
+  subscriptionFormGroup: UntypedFormGroup = this.fb.group({
+    assessmentYear: new UntypedFormControl('2023-24'),
+    serviceType: new UntypedFormControl(''),
   });
 
   get assessmentYear() {
-    return this.subscriptionFormGroup.controls['assessmentYear'] as FormControl;
+    return this.subscriptionFormGroup.controls['assessmentYear'] as UntypedFormControl;
   }
   get serviceType() {
-    return this.subscriptionFormGroup.controls['serviceType'] as FormControl;
+    return this.subscriptionFormGroup.controls['serviceType'] as UntypedFormControl;
   }
 
   allSubscriptions = [];
@@ -805,7 +805,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Delete Subscription',
         field: '',
         width: 120,
-        pinned: 'right',
+         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -821,7 +821,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Update/Revise Subscription',
         field: '',
         width: 120,
-        pinned: 'right',
+         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -844,7 +844,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Create Coupon Code',
         field: '',
         width: 120,
-        pinned: 'right',
+         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         hide: view === 'admin' ? false : true,

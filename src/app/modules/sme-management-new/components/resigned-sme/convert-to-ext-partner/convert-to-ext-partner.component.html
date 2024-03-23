@@ -11,21 +11,21 @@
       <div class="row">
         <div class="col-sm-4">
           <mat-label> Mobile No </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
               maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Individual/Principal/Firm Name </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Name" [formControl]="name" class="input-field" readonly />
 
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> Email ID </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field"
               readonly />
 
@@ -35,7 +35,7 @@
       <div class="row">
         <div class="col-sm-4">
           <mat-label> Pin Code </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="pin" [formControl]="pin" class="input-field" maxlength="10"
               minlength="6" trim digitsOnly readonly />
 
@@ -43,14 +43,14 @@
         </div>
         <div class="col-sm-4">
           <mat-label> city </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" readonly />
 
           </mat-form-field>
         </div>
         <div class="col-sm-4">
           <mat-label> state </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" readonly />
 
           </mat-form-field>
@@ -60,7 +60,7 @@
       <div class="row">
         <div class="col-sm-4">
           <mat-label> Qualification </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Qualification" name="" [formControl]="qualification"
               class="input-field" readonly />
 
@@ -68,7 +68,7 @@
         </div>
         <div class="col-sm-4">
           <mat-label> Referred by whom from taxbuddy? </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Referred person" [formControl]="referredBy" class="input-field"
               readonly />
 
@@ -76,10 +76,10 @@
         </div>
         <div class="col-sm-4">
           <mat-label> Calling Number </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" [formControl]="callingNumber"
               class="input-field" />
-            <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
+            <mat-error> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
                 enter mobile no.</span>
               <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('pattern')">Please enter valid mobile
                 no.</span>
@@ -95,10 +95,10 @@
         <div class="col-sm-3">
           <mat-label> PAN (Individual/Firm) TDS deducted against
             this PAN</mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Pan" (keyup)="setUpperCase()" placeholder="XXXXX1234X"
               minLength="10" maxLength="10" [formControl]="pan" class="input-field" maxlength="10" trim />
-            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['pan'].hasError('required')">Please
+            <mat-error> <span *ngIf="smeFormGroup.controls['pan'].hasError('required')">Please
                 enter pan no.</span>
               <span *ngIf="smeFormGroup.controls['pan'].hasError('pattern')">Please enter valid pan
                 no.</span>
@@ -108,11 +108,11 @@
 
         <div class="col-sm-2">
           <mat-label class="mb-3"> GSTN </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput (blur)="trimValue(smeFormGroup.controls['gstin']);checkGstin()"
               (change)="changeToUpper(smeFormGroup.controls['gstin'])" placeholder="GSTN" [formControl]="gstin"
               class="input-field" trim [disabled]="smeFormGroup.controls['gstin'].value" />
-            <mat-error class="mt-3" *ngIf="smeFormGroup.controls['gstin'].invalid">
+            <mat-error *ngIf="smeFormGroup.controls['gstin'].invalid">
               Enter valid GSTIN</mat-error>
           </mat-form-field>
         </div>
@@ -120,30 +120,30 @@
           <div class="row">
             <div class="col-sm-5">
               <mat-label> Account Number* </mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="small-inp no-height">
                 <input type="text" matInput placeholder="Account No" formControlName="accountNumber" class="input-field"
                   trim [numbersOnly]="true" required maxlength="20" minlength="3"
                   (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])"
                   (change)="updateBankDetailsForm()" />
-                <mat-error class="mt-3"
+                <mat-error
                   *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('pattern') || bankDetailsFormGroup.controls['accountNumber'].hasError('minlength') || bankDetailsFormGroup.controls['accountNumber'].hasError('maxlength')">
                   Account number should be 3-20 digits.</mat-error>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('required')">
+                <mat-error *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('required')">
                   Enter Account number</mat-error>
               </mat-form-field>
             </div>
 
             <div class=" col-sm-4">
               <mat-label> IFSC Code* </mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="small-inp no-height">
                 <input type="text" matInput placeholder="IFSC code"
                   (blur)="trimValue(bankDetailsFormGroup.controls['ifsCode'])"
                   (keyup)="changeToUpper(bankDetailsFormGroup.controls['ifsCode'])" formControlName="ifsCode"
                   class="input-field" maxLength="11" trim required (change)="updateBankDetailsForm()" />
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
+                <mat-error *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
                   valid
                   IFSC.</mat-error>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('required')">Enter
+                <mat-error *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('required')">Enter
                   valid
                   IFSC.</mat-error>
               </mat-form-field>
@@ -151,14 +151,14 @@
 
             <div class="col-sm-3">
               <mat-label> Type of Account* </mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="small-inp no-height">
                 <mat-select placeholder="Account Type" name="accountType" formControlName="accountType" required
                   (selectionChange)="updateBankDetailsForm()">
                   <mat-option *ngFor="let account of accountTypeDropdown" [value]="account.value">
                     {{ account.label }}
                   </mat-option>
                 </mat-select>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
+                <mat-error *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
                   account type</mat-error>
               </mat-form-field>
             </div>
@@ -250,28 +250,28 @@
       <div class="row">
         <div class="col-sm-3">
           <mat-label>Parent Name </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput [formControl]="parentName" [matAutocomplete]="auto" class="input-field" />
             <mat-autocomplete #auto>
               <mat-option *ngFor="let leader of filteredLeaders | async" [value]="leader.name">
                 {{ leader.name }}
               </mat-option>
             </mat-autocomplete>
-            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['parentName'].hasError('required')">Please
+            <mat-error> <span *ngIf="smeFormGroup.controls['parentName'].hasError('required')">Please
                 select parent name.</span>
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3">
           <mat-label> Official Email ID</mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Official Email ID" [formControl]="smeOfficialEmail"
               class="input-field" readonly />
           </mat-form-field>
         </div>
         <div class="col-sm-3">
           <mat-label> Kommunicate ID </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="small-inp no-height">
             <input type="text" matInput placeholder="Kommunicate ID" [formControl]="email" class="input-field"
               readonly />
           </mat-form-field>

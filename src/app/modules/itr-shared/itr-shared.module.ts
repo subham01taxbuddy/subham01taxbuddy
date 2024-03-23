@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { MaterialModule } from '../shared/material.module';
 import { BankDialogComponent } from './dialogs/bank-dialog/bank-dialog.component';
 import { NoAccountCasesComponent } from './dialogs/no-account-cases/no-account-cases.component';
@@ -21,20 +20,17 @@ import { PreviousSummaryPanelComponent } from './previous-summary-panel/previous
         CommonModule,
         MaterialModule,
         FormsModule,
-        ReactiveFormsModule,
-        ShimmerModule
+        ReactiveFormsModule
     ],
     exports: [
         CommonModule,
         MaterialModule,
-        ShimmerModule,
         BankDialogComponent,
         NoAccountCasesComponent,
         SideSummaryPanelComponent,
         PreviousSummaryPanelComponent,
     ],
-    providers: [],
-    entryComponents: [BankDialogComponent, NoAccountCasesComponent]
+    providers: []
 })
 export class ItrSharedModule {
     static forRoot(): ModuleWithProviders<ItrSharedModule> {

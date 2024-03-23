@@ -1,4 +1,4 @@
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -9,10 +9,10 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./co-owner.component.scss']
 })
 export class CoOwnerComponent implements OnInit {
-  coOwnerForm: FormGroup;
+  coOwnerForm: UntypedFormGroup;
   constructor(public dialogRef: MatDialogRef<CoOwnerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder) { }
+    private fb: UntypedFormBuilder) { }
 
   ngOnInit() {
     console.log(this.data)

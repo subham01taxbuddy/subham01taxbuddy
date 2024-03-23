@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'
 
 import { Component, Inject, OnInit } from '@angular/core'
 
@@ -17,7 +17,7 @@ import {forEach} from "lodash";
   styleUrls: ['./nor-details-dialog.component.scss']
 })
 export class NorDetailsDialogComponent implements OnInit {
-  norDetailsForm: FormGroup
+  norDetailsForm: UntypedFormGroup
 
   ITR_JSON: ITR_JSON;
 
@@ -43,7 +43,7 @@ export class NorDetailsDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<NorDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
