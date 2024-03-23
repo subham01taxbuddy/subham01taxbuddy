@@ -84,6 +84,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       this.isReadOnly = true;
       this.otpVerificationDone = true
       this.smeFormGroup.patchValue(this.childObj.data);
+      console.log(JSON.stringify(this.childObj.data))
       this.setFromValues(this.childObj.data)
     }else{
       this.setParentName();
@@ -95,7 +96,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     this.parentName.setValue(this.loggedInSmeInfo[0].parentName);
     this.principalName.setValue(this.loggedInSmeInfo[0].name);
     this.activeCaseMaxCapacity.setValue(10)
-    this.callingNumber.setValue(this.mobileNumber.value)
+    this.callingNumber.setValue(this.mobileNumber.value);
     this.maxNumber = 10;
 
 
@@ -277,6 +278,18 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   }
 
   setFromValues(partnerInfo:any){
+    const nameParts = this.childObj.data.name.split(' ');
+    const lastName = nameParts.pop();
+    const firstName = nameParts.shift();
+    const middleName = nameParts.join(' ');
+
+    this.firstName.setValue(firstName);
+    this.middleName.setValue(middleName);
+    this.lastName.setValue(lastName);
+
+    this.pinCode.setValue(partnerInfo?.partnerDetails?.pinCode);
+    this.city.setValue(partnerInfo?.partnerDetails?.city);
+
     if (typeof partnerInfo?.languageProficiency === 'string') {
       const languageProficiencies = partnerInfo.partnerDetails?.languageProficiency.split(',');
       this.setLanguageCheckboxes(languageProficiencies);
@@ -382,13 +395,14 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
         });
 
-        if(!this.fromEdit){
+
           if (this.smeDetails?.languages) {
             this.langList.forEach(lang => {
               const langControl = this.getLanguageControl(lang);
               if (langControl) {
                 if (this.smeDetails.languages.includes(lang)) {
                   langControl.setValue(true);
+                  this.lang.push(lang);
                 } else {
                   langControl.disable();
                 }
@@ -403,6 +417,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
               if (itrTypeControl) {
                 if (selectedPlan) {
                   itrTypeControl.setValue(true);
+                  this.skillSetPlanIdList.push(element.planId);
                 } else {
                   itrTypeControl.disable();
                 }
@@ -410,7 +425,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
             });
           }
 
-        }
+
 
       }
     })
@@ -460,7 +475,10 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
           this.childObj.data['inactivityTimeInMinutes'] = element.value;
         }
       });
-      this.checkedDuration = this.inactivityTimeDuration.find(duration => duration.checked);
+      const selectedDurationObject = this.inactivityTimeDuration.find(duration => duration.checked);
+    if (selectedDurationObject) {
+      this.checkedDuration = selectedDurationObject.value;
+    }
     } else {
       this.getDurationControl(selectedDuration).setValue(true);
     }
@@ -500,6 +518,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   amplifySignUp(){
     if(this.firstName.valid && this.lastName.valid && this.emailAddress.valid){
+      this.loading =true;
       const signUp = this.createSignUpObj();
       console.log('SignUp Object:', signUp);
       Auth.signUp(signUp).then(res => {
@@ -507,21 +526,25 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
         Auth.signIn(res.user.getUsername()).then(signInRes => {
           console.log('Sign In Result After Sign Up:', signInRes);
+          this.loading =false;
           this.signUpData = signInRes
           this.showSignUp = false;
           this.showOtp =true
           this.otpMode = 'SIGN_UP';
         }).catch(signInErr => {
           console.log('Sign In err After Sign Up:', signInErr);
+          this.loading =false;
         })
 
       }).catch(err => {
         console.log('Sign Up err:', err);
+        this.loading =false;
       })
     }else{
       this._toastMessageService.alert('error',
       'please enter all values.'
     );
+    this.loading =false;
     }
   }
 
@@ -592,6 +615,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
         // this.name.setValue(response.firstName + " " + response.lastName);
         this.firstName.setValue(response.firstName);
         this.lastName.setValue(response.lastName);
+        this.callingNumber.setValue(this.mobileNumber.value)
         this.getFlySdkDetails(response, mode);
       },
       (error) => {
@@ -787,7 +811,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
           parentPrincipalUserId: this.childObj ? this.childObj.data?.parentPrincipalUserId : this.loggedInSmeInfo[0].userId,
           interviewedBy: this.childObj ? this.childObj.data?.partnerDetails?.interviewedBy : ''
         },
-        inactivityTimeInMinutes: this.checkedDuration ? this.checkedDuration.value : 10
+        inactivityTimeInMinutes: this.checkedDuration ? this.checkedDuration : 15
       };
 
       this.loading = true;
