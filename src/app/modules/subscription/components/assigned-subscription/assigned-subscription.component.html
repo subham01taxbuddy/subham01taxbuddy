@@ -29,7 +29,13 @@
                       <div class="col-sm-2">
                         <label class="input__label" for="attr">F.Y Year </label>
                         <mat-form-field appearance="outline" class="custom-bg-new">
-                          <input type="text" matInput [formControl]="assessmentYear" readonly>
+                          <mat-select [formControl]="assessmentYear" required>
+                            <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                              {{year.financialYear}}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="assessmentYear.hasError('required')">Select Financial
+                            Year</mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">

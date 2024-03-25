@@ -86,11 +86,11 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false;
   startDate = new FormControl('', [Validators.required]);
   endDate = new FormControl('', [Validators.required]);
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 1, 1);
+  maxDate = new Date(2025, 2, 31);
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
   toDateMin: any;
   partnerType: any;
-  minStartDate: string = '2023-01-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -109,7 +109,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     public datePipe: DatePipe,
     @Inject(LOCALE_ID) private locale: string) {
-    this.startDate.setValue('2023-01-01');
+    this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
