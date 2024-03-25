@@ -231,10 +231,10 @@ export class ItrAssignedUsersComponent implements OnInit {
 
           let objITR
           if (this.rowData.serviceType === 'ITRU') {
-            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, "2022-2023");
+            objITR = this.utilsService.createEmptyJson(profile, 'ITRU', currentFyDetails[0].assessmentYear, "2022-2023");
             objITR.isITRU = true;
           } else {
-            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+            objITR = this.utilsService.createEmptyJson(profile, 'ITR', currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           }
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
@@ -269,7 +269,8 @@ export class ItrAssignedUsersComponent implements OnInit {
               let workingItr = result[0];
 
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-              let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+              let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
+              let obj = this.utilsService.createEmptyJson(null, serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));

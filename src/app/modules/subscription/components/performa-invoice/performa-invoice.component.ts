@@ -66,8 +66,17 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
+  financialYear = [
+    {
+      assessmentYear : "2024-2025",
+      financialYear : "2023-2024"
+    },
+    {
+      assessmentYear : "2023-2024",
+      financialYear : "2022-2023"
+    }];
   invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
+    assessmentYear: new FormControl(this.financialYear[0].financialYear),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
     status: new FormControl(''),
@@ -76,7 +85,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     txbdyInvoiceId: new FormControl(''),
     name: new FormControl(''),
   });
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -221,6 +230,17 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  updateDates(){
+    if(this.assessmentYear.value === this.financialYear[0].financialYear){
+      //current year
+      this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+      this.startDate.setValue(this.minStartDate);
+    }  else {
+      this.minStartDate = moment('2023-04-01').toDate();
+      this.startDate.setValue(this.minStartDate);
+    }
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {

@@ -50,7 +50,7 @@ export class BulkStatusUpdateComponent implements OnInit {
   };
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);

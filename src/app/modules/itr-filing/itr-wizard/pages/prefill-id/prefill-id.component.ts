@@ -1204,12 +1204,12 @@ export class PrefillIdComponent implements OnInit {
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
             let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4: undefined;
-            if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
-              this.utilsService.showSnackBar(
-                'AY is other than 2023-24'
-              );
-              return;
-            }
+            // if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
+            //   this.utilsService.showSnackBar(
+            //     'AY is other than 2023-24'
+            //   );
+            //   return;
+            // }
 
             this.utilsService.showSnackBar(
               'JSON has been sucessfully uploaded'
@@ -1303,8 +1303,9 @@ export class PrefillIdComponent implements OnInit {
         if (
           this.ITR_Obj?.panNumber !== ItrJSON[this.ITR_Type].PersonalInfo?.PAN
         ) {
+          let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
           this.ITR_JSON = this.utilsService.createEmptyJson(
-            this.userProfile,
+            this.userProfile, serviceType,
             this.ITR_JSON.assessmentYear,
             this.ITR_JSON.financialYear,
             this.ITR_JSON.itrId,
@@ -2625,8 +2626,9 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj?.panNumber !==
           ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.PAN
         ) {
+          let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
           this.ITR_JSON = this.utilsService.createEmptyJson(
-            this.userProfile,
+            this.userProfile, serviceType,
             this.ITR_JSON.assessmentYear,
             this.ITR_JSON.financialYear,
             this.ITR_JSON.itrId,
@@ -4041,16 +4043,15 @@ export class PrefillIdComponent implements OnInit {
                 incomeType: 'ANY_OTHER',
                 details: null,
                 amount:
-                  IncChargeable -
-                  IntrstFrmSavingBank -
-                  IntrstFrmTermDeposit -
-                  IntrstFrmIncmTaxRefund -
-                  FamilyPension -
-                  DividendGross -
-                  pfInterest1011IP -
-                  pfInterest1011IIP -
-                  pfInterest1012IP -
-                  pfInterest1012IIP,
+                    IncChargeable - (IntrstFrmSavingBank +
+                        IntrstFrmTermDeposit +
+                        IntrstFrmIncmTaxRefund +
+                        FamilyPension +
+                        DividendGross +
+                        (pfInterest1011IP ? pfInterest1011IP : 0) +
+                        (pfInterest1011IIP ? pfInterest1011IIP : 0) +
+                        (pfInterest1012IP ? pfInterest1012IP : 0) +
+                        (pfInterest1012IIP ? pfInterest1012IIP : 0)),
                 expenses: null,
               });
             }
@@ -6683,8 +6684,9 @@ export class PrefillIdComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result) => {
         console.log(result);
         if (result === 'YES') {
+          let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
           this.ITR_JSON = this.utilsService.createEmptyJson(
-            this.userProfile,
+            this.userProfile, serviceType,
             this.ITR_JSON.assessmentYear,
             this.ITR_JSON.financialYear,
             this.ITR_JSON.itrId,
@@ -6726,8 +6728,9 @@ export class PrefillIdComponent implements OnInit {
       if (result === 'YES') {
         this.ITR_JSON.itrSummaryJson = null;
         this.uploadedJson = false;
+        let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
         this.ITR_JSON = this.utilsService.createEmptyJson(
-          this.userProfile,
+          this.userProfile, serviceType,
           this.ITR_JSON.assessmentYear,
           this.ITR_JSON.financialYear,
           this.ITR_JSON.itrId,
@@ -6809,8 +6812,9 @@ export class PrefillIdComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
       if (result === 'YES') {
+        let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
         this.ITR_JSON = this.utilsService.createEmptyJson(
-          this.userProfile,
+          this.userProfile, serviceType,
           this.ITR_JSON.assessmentYear,
           this.ITR_JSON.financialYear,
           this.ITR_JSON.itrId,

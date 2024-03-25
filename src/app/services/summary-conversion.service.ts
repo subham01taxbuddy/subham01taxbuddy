@@ -6195,7 +6195,7 @@ export class SummaryConversionService {
                             this.httpClient.get(signedUrl).subscribe(
                                 (jsonObject: any) => {
                                     console.log(jsonObject);
-                                    let itrJson = this.utilsService.createEmptyJson(userProfile, assessmentYear, financialYear);
+                                    let itrJson = this.utilsService.createEmptyJson(userProfile, 'ITR', assessmentYear, financialYear);
                                     let convertedItrJson = this.convertJsonToObject(jsonObject.ITR, itrJson, userProfile);
                                     if (convertedItrJson) {
                                         sessionStorage.setItem('PREV_ITR_JSON', JSON.stringify(convertedItrJson));

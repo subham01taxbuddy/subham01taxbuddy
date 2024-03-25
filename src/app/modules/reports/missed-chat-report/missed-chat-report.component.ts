@@ -47,7 +47,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);

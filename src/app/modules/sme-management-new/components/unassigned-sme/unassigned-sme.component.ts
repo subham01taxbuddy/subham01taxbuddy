@@ -82,8 +82,8 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minDate = new Date(2023, 3, 1);
-  minStartDate: string = '2023-04-01';
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  minStartDate: string = '2024-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -127,7 +127,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       totalItems: null,
     };
 
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minDate);
     this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
   }

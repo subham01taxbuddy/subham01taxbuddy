@@ -58,8 +58,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  minDate = new Date(2023, 3, 1);
-  minStartDate: string = '2023-04-01';
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -225,7 +225,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       this.options1 = this.allFilers;
     }
 
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minDate);
     this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
 
@@ -253,6 +253,17 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  updateDates(){
+    if(this.assessmentYear.value === this.financialYear[0].financialYear){
+      //current year
+      this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+      this.startDate.setValue(this.minStartDate);
+    }  else {
+      this.minStartDate = moment('2023-04-01').toDate();
+      this.startDate.setValue(this.minStartDate);
+    }
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {
@@ -322,8 +333,18 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   }
 
+  financialYear = [
+    {
+      assessmentYear : "2024-2025",
+      financialYear : "2023-2024"
+    },
+    {
+      assessmentYear : "2023-2024",
+      financialYear : "2022-2023"
+    }];
+
   invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
+    assessmentYear: new FormControl(this.financialYear[0].financialYear),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
     status: new FormControl('Paid'),
@@ -375,7 +396,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this?.serviceDropDown?.resetService();
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     this.mobile.setValue(null);
