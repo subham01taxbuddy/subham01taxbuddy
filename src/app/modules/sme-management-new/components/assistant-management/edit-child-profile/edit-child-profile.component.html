@@ -55,8 +55,9 @@
             <div class="col-sm-4">
               <mat-label> Email Address * </mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field"
-                required  />
+                <input type="text" matInput placeholder="Enter email address" name="email" [formControl]="emailAddress" class="input-field"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50"
+                (blur)="trimValue(emailAddress)" required  />
                 <mat-error *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)">
                   Email address is required and must be valid.</mat-error>
               </mat-form-field>

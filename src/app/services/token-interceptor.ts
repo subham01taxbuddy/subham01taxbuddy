@@ -29,7 +29,7 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request.clone({ headers }));
     }
     this.userData = JSON.parse(localStorage.getItem('UMD'));
-    if(this.userData.id_token){
+    if(this.userData?.id_token){
       const TOKEN = this.userData ? this.userData.id_token : null;
     }else{
       Auth.currentSession()
