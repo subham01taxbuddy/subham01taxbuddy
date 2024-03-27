@@ -828,9 +828,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           let session;
           if(smeData.roles != null){
             if (smeData.roles.includes('ROLE_FILER')) {
-              if (smeData['serviceEligibility_ITR'].assignmentStart) {
+              if (smeData['serviceEligibility_ITR']?.assignmentStart) {
                 session = 'Active'
-              } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
+              } else if (!smeData['serviceEligibility_ITR']?.assignmentStart) {
                 session = 'In-Active'
               }
             } else {
