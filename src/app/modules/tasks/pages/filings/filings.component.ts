@@ -971,8 +971,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
             );
             return;
           }
+          let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
           let obj = this.utilsService.createEmptyJson(
             null,
+            serviceType,
             currentFyDetails[0].assessmentYear,
             currentFyDetails[0].financialYear
           );

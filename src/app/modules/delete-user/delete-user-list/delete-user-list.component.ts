@@ -50,7 +50,7 @@ export class DeleteUserListComponent implements OnInit {
   toDate = new UntypedFormControl('');
   deleteUserData: any = [];
   modalRef!: BsModalRef;
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);

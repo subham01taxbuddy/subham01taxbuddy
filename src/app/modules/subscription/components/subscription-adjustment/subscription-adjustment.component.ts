@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
@@ -24,7 +24,16 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   searchAsPrinciple: boolean = false;
   ogStatusList: any = [];
   itrStatus: any = [];
-  assessmentYear = new UntypedFormControl('2023-24');
+  financialYear = [
+    {
+      assessmentYear : "2025-2026",
+      financialYear : "2024-2025"
+    },
+    {
+      assessmentYear : "2024-2025",
+      financialYear : "2023-2024"
+    }];
+  assessmentYear = new FormControl(this.financialYear[0].financialYear);
   clearUserFilter: number;
   roles: any;
   allSubAdjustData: any;
@@ -43,6 +52,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
     page: 0,
     pageSize: 20,
     serviceType: null,
+    financialYear: null
   };
   searchMenus = [
     { value: 'name', name: 'User Name' },
@@ -165,6 +175,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    this.searchParam.financialYear = this.assessmentYear.value;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     var param = `/bo/subscription-adjustment?${data}${userFilter}`;

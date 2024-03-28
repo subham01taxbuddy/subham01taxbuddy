@@ -34,7 +34,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   loading: boolean = false;
   overlayRef: any;
   salaryMappings = ['BASIC_SALARY', 'HOUSE_RENT', 'DA'];
-  perquisiteMapping = ['VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE','OTH_BENEFITS_AMENITIES'];
+  perquisiteMapping = ['VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE', 'OTH_BENEFITS_AMENITIES'];
   profitInLieuMapping = ['ANY_OTHER'];
 
   @Output() valueChanged: EventEmitter<any> = new EventEmitter<any>();
@@ -322,8 +322,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     let secThreeTotal = this.localEmployer?.profitsInLieuOfSalaryType?.filter(
       (item) => item?.salaryType == 'SEC17_3')
     this.salaryFormGroup.controls['secThreeTotal'].setValue(secThreeTotal.length > 0 ? secThreeTotal[0].taxableAmount : 0)
-
-
     this.formValuesChanged();
   }
 
@@ -410,11 +408,19 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       this.addItem('SEC17_3', item);
     });
 
-    this.utilsService.getData().subscribe((data) => {
-      // this.handleData(data);
-    });
+    let secOneTotal = this.localEmployer?.salary?.filter(
+      (item) => item?.salaryType == 'SEC17_1')
+    this.salaryFormGroup.controls['secOneTotal'].setValue(secOneTotal.length > 0 ? secOneTotal[0].taxableAmount : 0)
+
+    let secTwoTotal = this.localEmployer?.perquisites?.filter(
+      (item) => item?.perquisiteType == 'SEC17_2')
+    this.salaryFormGroup.controls['secTwoTotal'].setValue(secTwoTotal.length > 0 ? secTwoTotal[0].taxableAmount : 0)
+
+    let secThreeTotal = this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+      (item) => item?.salaryType == 'SEC17_3')
+    this.salaryFormGroup.controls['secThreeTotal'].setValue(secThreeTotal.length > 0 ? secThreeTotal[0].taxableAmount : 0)
     this.utilsService.setSalaryValues(values);
-    
+
     this.formValuesChanged();
   }
 
@@ -470,7 +476,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   }
 
   formValuesChanged() {
-    debugger
     this.changeConsentGiven = false;
     if (this.salaryFormGroup.valid) {
       this.utilsService.setSalaryValues(this.salaryFormGroup.getRawValue());
@@ -594,7 +599,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       const bifurcationValues = this.value.perquisites[0];
 
       this.localEmployer.perquisites = [];
-      debugger
       for (const key in bifurcationValues) {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
@@ -683,15 +687,15 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     if (type === 'salary') {
       this.salary.removeAt(index);
       this.changeSectionOne('salary');
-      this.setDescriptionValidation(type, item);
+      this.setDescriptionValidation(type, item, true);
     } else if (type === 'perquisites') {
       this.perquisites.removeAt(index);
       this.changeSectionOne('perquisites');
-      this.setDescriptionValidation(type, item);
+      this.setDescriptionValidation(type, item, true);
     } else if (type === 'profitsInLieu') {
       this.profitsInLieu.removeAt(index);
       this.changeSectionOne('profitsInLieu');
-      this.setDescriptionValidation(type, item);
+      this.setDescriptionValidation(type, item, true);
     }
 
     this.formValuesChanged();
@@ -705,21 +709,21 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       let salaryForm = this.createSevOneForm(item);
       salary.push(salaryForm);
       this.changeSectionOne('salary');
-      this.setDescriptionValidation('salary', salaryForm)
+      this.setDescriptionValidation('salary', salaryForm, false)
     } else if (salaryType === 'SEC17_2') {
       type = 'perquisites';
       const perquisites = this.perquisites;
       let perquisitesForm = this.createSevTwoForm(item)
       perquisites.push(perquisitesForm);
       this.changeSectionOne('perquisites');
-      this.setDescriptionValidation('perquisites', perquisitesForm)
+      this.setDescriptionValidation('perquisites', perquisitesForm, false)
     } else if (salaryType === 'SEC17_3') {
       type = 'profitsInLieu';
       const profitsInLieu = this.profitsInLieu;
       let profitForm = this.createSevThreeForm(item);
       profitsInLieu.push(profitForm);
       this.changeSectionOne('profitsInLieu');
-      this.setDescriptionValidation('profitsInLieu', profitForm)
+      this.setDescriptionValidation('profitsInLieu', profitForm, false)
     }
   }
 
@@ -799,11 +803,13 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     }
   }
 
-  setDescriptionValidation(type, item) {
+  setDescriptionValidation(type, item, updateTotal) {
     if (type === 'salary') {
-      let total = this.salaryFormGroup?.get('salary')?.value?.reduce(
-        (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
-      this.salaryFormGroup.controls['secOneTotal'].setValue(total);
+      if (updateTotal) {
+        let total = this.salaryFormGroup?.get('salary')?.value?.reduce(
+          (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
+        this.salaryFormGroup.controls['secOneTotal'].setValue(total);
+      }
       if (item.controls['salaryType'].value === 'OTHER' && item.controls['taxableAmount'].value > 0) {
         item.controls['description'].setValidators([Validators.required]);
         item.controls['description'].markAsTouched();
@@ -814,9 +820,11 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         item.controls['description'].updateValueAndValidity();
       }
     } else if (type === 'perquisites') {
-      let total = this.salaryFormGroup?.get('perquisites')?.value?.reduce(
-        (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
-      this.salaryFormGroup.controls['secTwoTotal'].setValue(total);
+      if (updateTotal) {
+        let total = this.salaryFormGroup?.get('perquisites')?.value?.reduce(
+          (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
+        this.salaryFormGroup.controls['secTwoTotal'].setValue(total);
+      }
       if (item.controls['perquisiteType'].value === 'OTH_BENEFITS_AMENITIES' && item.controls['taxableAmount'].value > 0) {
         item.controls['description'].setValidators([Validators.required]);
         item.controls['description'].markAsTouched();
@@ -828,9 +836,11 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
 
       }
     } else if (type === 'profitsInLieu') {
-      let total = this.salaryFormGroup?.get('profitsInLieu')?.value?.reduce(
-        (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
-      this.salaryFormGroup.controls['secThreeTotal'].setValue(total);
+      if (updateTotal) {
+        let total = this.salaryFormGroup?.get('profitsInLieu')?.value?.reduce(
+          (acc, item) => acc + parseFloat(item?.taxableAmount ? item?.taxableAmount : 0), 0);
+        this.salaryFormGroup.controls['secThreeTotal'].setValue(total);
+      }
       if (item.controls['salaryType'].value === 'ANY_OTHER' && item.controls['taxableAmount'].value > 0) {
         item.controls['description'].setValidators([Validators.required]);
         item.controls['description'].markAsTouched();
@@ -936,7 +946,6 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   }
 
   changed(value?) {
-    debugger
     if (value === true) {
       // this.valueChanged = true;
       this.utilsService.setChange(this.valueChanged);

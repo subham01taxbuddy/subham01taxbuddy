@@ -50,7 +50,15 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   subscriptionListGridOptions: GridOptions;
   config: any;
   loading!: boolean;
-  financialYear = AppConstants.gstFyList;
+  financialYear = [
+    {
+      assessmentYear : "2025-2026",
+      financialYear : "2024-2025"
+    },
+    {
+      assessmentYear : "2024-2025",
+      financialYear : "2023-2024"
+    }];
   loggedInSme: any;
   allFilerList: any;
   roles: any;
@@ -61,6 +69,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     page: 0,
     pageSize: 20,
     serviceType: null,
+    financialYear: null
     // mobileNumber: null,
     // emailId: null,
   };
@@ -231,7 +240,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   isAllowed = false;
 
   subscriptionFormGroup: UntypedFormGroup = this.fb.group({
-    assessmentYear: new UntypedFormControl('2023-24'),
+    assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
     serviceType: new UntypedFormControl(''),
   });
 
@@ -309,6 +318,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    this.searchParam.financialYear = this.assessmentYear.value;
     let data = this.utilsService.createUrlParams(this.searchParam);
     // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
 
@@ -597,6 +607,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.statusId = null;
     this.searchParam.serviceType = null;
+    this.searchParam.financialYear = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.subscriptionFormGroup.controls['serviceType'].setValue(null);

@@ -236,6 +236,10 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     return this.otpFormGroup.controls['otp'] as FormControl
   }
 
+  trimValue(controlName) {
+    controlName.setValue(controlName.value.trim());
+  }
+
   getCityData() {
     //'https://uat-api.taxbuddy.com/user/pincode/1343'
     if (this.pinCode.valid) {
@@ -749,6 +753,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   updateSmeDetails(){
     //'https://uat-api.taxbuddy.com/user/v2/assistant-details' \
+    this.markFormGroupTouched(this.smeFormGroup);
     if(this.smeFormGroup.valid){
 
       // let reqBody = this.partnerInfo;
@@ -836,6 +841,15 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       this._toastMessageService.alert('error', 'Please fill in all required details correctly.');
     }
 
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   ngOnDestroy() {

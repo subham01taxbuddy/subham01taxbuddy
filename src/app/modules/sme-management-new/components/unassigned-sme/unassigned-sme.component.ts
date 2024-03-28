@@ -82,8 +82,8 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   startDate = new UntypedFormControl('');
   endDate = new UntypedFormControl('');
-  minDate = new Date(2023, 3, 1);
-  minStartDate: string = '2023-04-01';
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  minStartDate: string = '2024-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -93,12 +93,12 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     { value: 'SHORTLISTED', name: 'Shortlisted' },
     { value: 'FINALIZED', name: 'Finalized' },
     { value: 'DOC_PENDING', name: 'Document Pending' },
-];
+  ];
 
   roles: any;
   searchBy: any = {};
   clearUserFilter: number;
-  allFilerList:any;
+  allFilerList: any;
 
   constructor(
     private userMsService: UserMsService,
@@ -117,7 +117,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       columnDefs: this.smeCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -127,7 +127,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       totalItems: null,
     };
 
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minDate);
     this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
   }
@@ -260,8 +260,8 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     if ((this.leaderId)) {
       userFilter += `&interviewedBy=${this.leaderId}`;
     }
-    let statusFilter='';
-    if(this.selectedStatus.value){
+    let statusFilter = '';
+    if (this.selectedStatus.value) {
       statusFilter += `&onboardingStatus=${this.selectedStatus.value}`;
     }
 
@@ -277,7 +277,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     this.reportService.getMethod(param).subscribe(
       (result: any) => {
         console.log('sme list result -> ', result);
-        if (Array.isArray(result.data.content) && result.data.content.length > 0) {
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
           this.loading = false;
           this.smeInfo = result.data.content;
           console.log('smelist', this.smeList);
@@ -297,6 +297,10 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           this.loading = false;
           console.log('in else');
           this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+          this._toastMessageService.alert(
+            'error',
+            result.error
+          );
           this.config.totalItems = 0;
         }
 
@@ -323,7 +327,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'Mobile No',
@@ -388,11 +392,11 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         cellRenderer: function (params: any) {
-        if( params.data?.partnerDetails?.onboardingStatus) {
+          if (params.data?.partnerDetails?.onboardingStatus) {
             let onboardingStatus = params.data?.partnerDetails?.onboardingStatus;
             return onboardingStatus;
-          }else{
-            return'-';
+          } else {
+            return '-';
           }
         },
       },
@@ -411,11 +415,11 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           if (params?.data?.partnerType) {
             let referredBy = params.data?.partnerType;
             return referredBy;
-          } else if( params.data?.partnerDetails?.partnerType) {
+          } else if (params.data?.partnerDetails?.partnerType) {
             let referredBy = params.data?.partnerDetails?.partnerType;
             return referredBy;
-          }else{
-            return'-';
+          } else {
+            return '-';
           }
         },
       },
@@ -490,7 +494,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'View/Edit Profile',
         field: '',
         width: 100,
-         pinned: 'right',
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -505,7 +509,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Update Status',
         field: '',
         width: 100,
-         pinned: 'right',
+        pinned: 'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -529,7 +533,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -616,7 +620,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       width: '50%',
       height: 'auto',
       data: {
-        userId : partner.userId,
+        userId: partner.userId,
         id: partner.id,
         partnerName: partner.name,
         emailAddress: partner.emailAddress,
@@ -631,7 +635,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
-         this.getSmeList();
+          this.getSmeList();
         }
       }
     });
@@ -649,10 +653,10 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
 
-  reject(data){
+  reject(data) {
     let disposable = this.matDialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Reject/Backed Out SME!',

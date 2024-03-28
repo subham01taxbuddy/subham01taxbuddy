@@ -66,6 +66,15 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
+  financialYear = [
+    {
+      assessmentYear: "2025-2026",
+      financialYear: "2024-2025"
+    },
+    {
+      assessmentYear: "2024-2025",
+      financialYear: "2023-2024"
+    }];
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
     assessmentYear: new UntypedFormControl('2023-24'),
     startDate: new UntypedFormControl('', [Validators.required]),
@@ -76,7 +85,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     txbdyInvoiceId: new UntypedFormControl(''),
     name: new UntypedFormControl(''),
   });
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -221,6 +230,17 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  updateDates() {
+    if (this.assessmentYear.value === this.financialYear[0].financialYear) {
+      //current year
+      this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+      this.startDate.setValue(this.minStartDate);
+    } else {
+      this.minStartDate = moment('2023-04-01').toDate();
+      this.startDate.setValue(this.minStartDate);
+    }
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {
@@ -819,7 +839,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           }
         },
         width: 90,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
             return {
@@ -859,7 +879,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
         },
         width: 90,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: { textAlign: 'center' },
       },
       {
@@ -875,7 +895,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         </button>`;
         },
         width: 93,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -897,7 +917,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 60,
-         pinned: 'right',
+        pinned: 'right',
       },
       {
         headerName: 'See/Add Notes',
@@ -912,7 +932,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 90,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -1104,14 +1124,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
             }
           );
         }
-      },(error) => {
-        this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilService.showSnackBar(error.error.error);
-        this.getInvoice();
-      } else {
-        this.utilService.showSnackBar("An unexpected error occurred.");
-      }
+      }, (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilService.showSnackBar(error.error.error);
+          this.getInvoice();
+        } else {
+          this.utilService.showSnackBar("An unexpected error occurred.");
+        }
       }
     );
   }
@@ -1138,15 +1158,15 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           console.log('The dialog was closed');
         });
       }
-    },(error) => {
-      this.loading=false;
+    }, (error) => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
         this.getInvoice();
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }
-      }
+    }
     );
 
   }
