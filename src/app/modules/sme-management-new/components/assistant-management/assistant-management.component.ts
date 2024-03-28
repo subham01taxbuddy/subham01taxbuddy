@@ -20,6 +20,7 @@ export class AssistantManagementComponent implements OnInit {
     page: 0,
     pageSize: 10,
   };
+  childInfoCount: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -68,12 +69,14 @@ export class AssistantManagementComponent implements OnInit {
           this.loading = false;
           this.childInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
+          this.childInfoCount = result.data.content.length;
           this.childListGridOptions.api?.setRowData(this.createRowData(this.childInfo));
         }else {
           this.loading = false;
           this._toastMessageService.alert('error','no child data found');
           this.childListGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this.childInfoCount = 0;
         }
       },
       (error) => {

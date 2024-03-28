@@ -210,7 +210,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             this.utilsService.showSnackBar(error.error.detail);
             return;
           });
-          let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          let objITR = this.utilsService.createEmptyJson(profile, this.rowData.serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
           const param = '/itr';
@@ -242,7 +242,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             } else if (result.length == 1) {
               let workingItr = result[0];
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-              let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+              let obj = this.utilsService.createEmptyJson(null, this.rowData.serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));

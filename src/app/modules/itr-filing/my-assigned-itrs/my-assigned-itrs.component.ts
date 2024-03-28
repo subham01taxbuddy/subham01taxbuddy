@@ -530,7 +530,8 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
       this.utilsService.showSnackBar('There is no any active filing year available')
       return;
     }
-    let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
+    let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
+    let obj = this.utilsService.createEmptyJson(null, serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear)
     Object.assign(obj, workingItr)
     console.log('obj:', obj)
     workingItr = JSON.parse(JSON.stringify(obj))

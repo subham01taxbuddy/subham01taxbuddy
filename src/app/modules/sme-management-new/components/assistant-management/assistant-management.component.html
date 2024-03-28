@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="col-sm-5">
-          <button class="new-add mvRth1 new-add-tp-spc width-1" (click)="addAssistant()"><i aria-hidden="true"
+          <button class="new-add mvRth1 new-add-tp-spc width-1" [disabled]="childInfoCount >= 5" (click)="addAssistant()"><i aria-hidden="true"
             class="fa fa-plus"></i> Add Assistant  </button>
         </div>
       </div>

@@ -78,7 +78,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               //no ITR object found, create a new ITR object
               this.loading = true;
               let objITR = this.utilsService.createEmptyJson(
-                this.userProfile,
+                this.userProfile, this.data.serviceType,
                 this.data?.assessmentYear,
                 '2022-2023'
               );
@@ -123,8 +123,9 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
                   } else if (result.length == 1) {
 
                     let workingItr = result[0];
+                    let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
                     let obj = this.utilsService.createEmptyJson(
-                      null,
+                      null, serviceType,
                       this.data.assessmentYear,
                       '2022-2023'
                     );

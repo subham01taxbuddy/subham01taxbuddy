@@ -49,7 +49,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   endDate = new UntypedFormControl('');
   leaderView = new UntypedFormControl('');
   ownerView = new UntypedFormControl('');
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
