@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostListener, NgModule, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -15,9 +15,12 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
+import { FloatingWidgetComponent } from 'src/app/modules/chat/floating-widget/floating-widget.component';
+
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
+
 
 @Component({
   selector: 'app-navbar',
@@ -43,6 +46,13 @@ export class NavbarComponent implements DoCheck {
   isDropdownOpen = false;
   showDropDown:boolean =false;
   partnerType :any;
+
+  floatingWidgetShow: boolean = false;
+
+
+  toggleWidget(){
+    this.floatingWidgetShow = !this.floatingWidgetShow;
+  }
 
   constructor(
     private router: Router,

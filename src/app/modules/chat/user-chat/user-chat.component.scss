@@ -1,0 +1,120 @@
+
+/* .user-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  } */
+  
+  .header {
+    background-color: #3498db;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 15px;
+  }
+  
+  .widget-title {
+    flex-grow: 1;
+    font-size: 18px;
+    text-align: center;
+  }
+    
+
+  .floating-widget {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 350px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  padding-bottom: 20px;
+  height: 351px;
+  display: flex;
+  flex-direction: column;
+}
+
+  .user-info img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+ 
+  }
+
+  .user-input{
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  margin-top: 10px;
+  }
+
+  .user-input span {
+    font-size: 18px;
+    color: #888;
+    margin-right: 10px;
+  }
+
+  .glyphicon-paperclip{
+    margin-left: 10px;
+  }
+
+  .glyphicon-send{
+    margin-right: 2px;
+  }
+  
+  .user-input input {
+    flex-grow: 1;
+    padding: 8px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    margin-left: 5px;
+  }
+  
+
+  .user-input button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #3498db;
+    margin-left: 10px;
+  }
+
+  .glyphicon{
+    cursor: pointer;
+    margin-right: 15px;
+  }
+
+  .file-type-option{
+    text-align: center;
+  }
+
+  .glyphicon-earphone{
+    margin-right: 0px;
+  }
+
+  .glyphicon-new-window{
+    margin-left: -128px;
+  }

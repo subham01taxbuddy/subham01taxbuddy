@@ -62,6 +62,8 @@ import { GenericSortingComponent } from './components/generic-sorting/generic-so
 import { GenericUserFilterComponent } from './components/generic-user-filter/generic-user-filter.component';
 import { UpdateCapacityComponent } from './components/update-capacity/update-capacity.component';
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
+import { ChatModule } from '../chat/chat.module';
+import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -86,6 +88,7 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
     LayoutComponent,
     SidebarComponent,
     NavbarComponent,
+    FloatingWidgetComponent,
     DirectCallingComponent,
     KnowlarityNotificationComponent,
     UpdateManualFilingDialogComponent,
@@ -128,6 +131,7 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
     NgxLoadingModule.forRoot({}),
     ShimmerModule,
     MatDialogModule,
+    ChatModule
   ],
   exports: [
     CommonModule,

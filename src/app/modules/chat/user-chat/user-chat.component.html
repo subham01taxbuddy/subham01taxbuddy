@@ -1,0 +1,25 @@
+<div class="floating-widget">
+    <div class="header">
+        <span class="glyphicon glyphicon-chevron-left" (click)="goBack()"></span>
+        <span class="glyphicon glyphicon-new-window"></span>        
+        <span class="file-type-option">{{ filetype }}</span>
+        <span class="glyphicon glyphicon-earphone"></span>
+    </div>
+
+    <div class="user-info">
+        <img [src]="user.image" alt="user-image">
+        <span class="username">{{ user.name }}</span>
+    </div>
+
+    <div class="chat-messages">
+
+    </div>
+
+    <div class="user-input">
+        <span class="glyphicon glyphicon-paperclip"></span>
+        <input type="text" placeholder="Type your message">
+        <span class=""></span>
+        <span></span>
+        <button (Click)="sendMessage()" class="glyphicon glyphicon-send"></button>
+    </div>
+</div>

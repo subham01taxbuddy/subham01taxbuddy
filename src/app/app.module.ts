@@ -32,7 +32,8 @@ import { SpeedTestModule } from 'ng-speed-test';
 import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import {SummaryConversionService} from "./services/summary-conversion.service";
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+ 
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +57,7 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     SpeedTestModule,
+    FontAwesomeModule,
   ],
   providers: [
     NavbarService,
@@ -76,5 +78,5 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
     { provide: SERVICE_WORKER, useFactory: () => typeof navigator !== 'undefined' && navigator.serviceWorker?.register('firebase-messaging-sw.js', { scope: '__' }) || undefined },
   ],
   bootstrap: [AppComponent]
-})
+ })
 export class AppModule { }

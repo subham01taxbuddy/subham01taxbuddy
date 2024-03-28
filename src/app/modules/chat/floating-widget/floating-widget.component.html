@@ -1,0 +1,45 @@
+<div [@widgetVisibility]="showWidget" class="floating-widget" *ngIf="showWidget">
+
+
+    <!-- <app-user-chat *ngIf="selectedUser" [user]="selectedUser" filetype="ITR"></app-user-chat> -->
+  
+
+
+  <div class="header">
+      <span class="icon menu-icon">&#9776;</span>
+      <span class="glyphicon glyphicon-new-window"></span>        
+      <span class="widget-title">Chat</span>
+      <span class="glyphicon glyphicon-remove" (click)="closeWidget()"></span>
+
+  </div>
+
+  <div class="options">
+      <div class="option-box">ITR</div>
+      <div class="option-box">TPA</div>
+      <div class="option-box">Notices</div>
+      <div class="option-box">GST</div>
+  </div>
+
+  <div class="search-bar">
+      <span class="glyphicon glyphicon-search"></span>
+      <input type="text" placeholder="Search messages or users">
+  </div>
+
+  <div class="user-list">
+      <div class="user-box" *ngFor="let user of users">
+        <img [src]="user.image" alt="User Icon">
+        <div class="user-info">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="chat-snippet">{{ user.snippet }}</span>
+          <span class="user-time">{{ user.showTime ? getCurrentTime() : '' }}</span>
+          <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div>
+
+        </div>
+
+      </div>
+  </div>
+
+
+
+</div>
+
