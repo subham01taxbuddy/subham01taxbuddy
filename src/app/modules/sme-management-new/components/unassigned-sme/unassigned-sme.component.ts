@@ -277,7 +277,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     this.reportService.getMethod(param).subscribe(
       (result: any) => {
         console.log('sme list result -> ', result);
-        if (Array.isArray(result.data.content) && result.data.content.length > 0) {
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
           this.loading = false;
           this.smeInfo = result.data.content;
           console.log('smelist', this.smeList);
@@ -297,6 +297,10 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           this.loading = false;
           console.log('in else');
           this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+          this._toastMessageService.alert(
+            'error',
+            result.error
+          );
           this.config.totalItems = 0;
         }
 
