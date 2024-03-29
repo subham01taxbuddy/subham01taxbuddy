@@ -26,14 +26,14 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   itrStatus: any = [];
   financialYear = [
     {
-      assessmentYear : "2025-2026",
-      financialYear : "2024-2025"
-    },
-    {
       assessmentYear : "2024-2025",
       financialYear : "2023-2024"
+    },
+    {
+      assessmentYear : "2023-2024",
+      financialYear : "2022-2023"
     }];
-  assessmentYear = new FormControl(this.financialYear[0].financialYear);
+  assessmentYear = new FormControl(this.financialYear[0]);
   clearUserFilter: number;
   roles: any;
   allSubAdjustData: any;
@@ -52,7 +52,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
     page: 0,
     pageSize: 20,
     serviceType: null,
-    financialYear: null
+    assessmentYear: null
   };
   searchMenus = [
     { value: 'name', name: 'User Name' },
@@ -175,7 +175,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    this.searchParam.financialYear = this.assessmentYear.value;
+    this.searchParam.asseessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     var param = `/bo/subscription-adjustment?${data}${userFilter}`;

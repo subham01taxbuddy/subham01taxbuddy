@@ -52,12 +52,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   loading!: boolean;
   financialYear = [
     {
-      assessmentYear : "2025-2026",
-      financialYear : "2024-2025"
-    },
-    {
       assessmentYear : "2024-2025",
       financialYear : "2023-2024"
+    },
+    {
+      assessmentYear : "2023-2024",
+      financialYear : "2022-2023"
     }];
   loggedInSme: any;
   allFilerList: any;
@@ -69,7 +69,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     page: 0,
     pageSize: 20,
     serviceType: null,
-    financialYear: null
+    assessmentYear: null
     // mobileNumber: null,
     // emailId: null,
   };
@@ -240,7 +240,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   isAllowed = false;
 
   subscriptionFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl(this.financialYear[0].financialYear),
+    assessmentYear: new FormControl(this.financialYear[0]),
     serviceType: new FormControl(''),
   });
 
@@ -318,7 +318,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    this.searchParam.financialYear = this.assessmentYear.value;
+    this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
     // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
 
@@ -607,7 +607,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.statusId = null;
     this.searchParam.serviceType = null;
-    this.searchParam.financialYear = null;
+    this.searchParam.assessmentYear = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.subscriptionFormGroup.controls['serviceType'].setValue(null);
