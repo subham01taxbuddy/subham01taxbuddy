@@ -234,7 +234,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         field: '',
         width: 100,
         suppressMovable: true,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {

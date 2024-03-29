@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
 import { TitleCasePipe } from '@angular/common';
@@ -41,8 +41,8 @@ export class UserProfileComponent implements OnInit {
 
   loading!: boolean;
   userInfo: any;
-  userProfileForm!: FormGroup;
-  gstForm!: FormGroup;
+  userProfileForm!: UntypedFormGroup;
+  gstForm!: UntypedFormGroup;
   gstType: any = [{ label: 'Regular', value: 'REGULAR' }, { label: 'Composite', value: 'COMPOSITE' }, { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }]
   gstr1List: any = [{ label: 'Monthly', value: 'MONTHLY' }, { label: 'Quarterly', value: 'QUARTERLY' }];
   genderData: any = [{ label: 'Male', value: 'MALE' }, { label: 'Female', value: 'FEMALE' }]
@@ -66,7 +66,7 @@ export class UserProfileComponent implements OnInit {
     // { label: 'SME', value: 'ROLE_SME' },
   ];
 
-  userRole: any = new FormControl();
+  userRole: any = new UntypedFormControl();
   userId: any;
 
   bankData: any = [];
@@ -340,7 +340,7 @@ export class UserProfileComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private gstService: GstMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,

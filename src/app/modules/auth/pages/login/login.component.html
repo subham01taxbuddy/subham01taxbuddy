@@ -18,7 +18,7 @@
         </h2>
         <form [formGroup]="form" class="" *ngIf="mode === 'SIGN_IN'">
             <mat-label style="color: #07070c">Mobile Number</mat-label>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="no-height">
               <input matInput placeholder="Mobile Number"
                 formControlName="user"
                 maxlength="10"
@@ -37,7 +37,7 @@
           <!-- <div>- - - - - - - - - - - - - - - - OR - - - - - - - - - - - - - - - -</div> -->
           <div class="spTp">
             <mat-label style="color: #07070c">Password</mat-label>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="no-height">
               <input
                 matInput
                 placeholder="Password"

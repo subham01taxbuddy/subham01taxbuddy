@@ -5,11 +5,13 @@ import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angu
 import { Location } from '@angular/common';
 import {
   Validators,
-  FormBuilder,
-  FormGroup,
-  FormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  UntypedFormArray,
   AbstractControl,
   ValidatorFn,
+  FormArray,
+  FormGroup,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -29,9 +31,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   @ViewChildren("bifurcation") bifurcationComponents: QueryList<SalaryBifurcationComponent>;
   loading: boolean = false;
-  employerDetailsFormGroup: FormGroup;
-  deductionsFormGroup: FormGroup;
-  allowanceFormGroup: FormGroup;
+  employerDetailsFormGroup: UntypedFormGroup;
+  deductionsFormGroup: UntypedFormGroup;
+  allowanceFormGroup: UntypedFormGroup;
   freeze: boolean = false;
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
@@ -206,7 +208,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   totalGrossSalary: number = 0;
   constructor(
     private router: Router,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private location: Location,
@@ -455,10 +457,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   get getSalaryArray() {
-    return <FormArray>this.employerDetailsFormGroup.get('salaryDetails');
+    return <UntypedFormArray>this.employerDetailsFormGroup.get('salaryDetails');
   }
   get getAllowanceArray() {
-    return <FormArray>this.allowanceFormGroup.get('allowances');
+    return <UntypedFormArray>this.allowanceFormGroup.get('allowances');
   }
 
   createSalaryDetailsArray() {
@@ -510,16 +512,16 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   validateExemptIncomes(event: any) {
     let exemptIncomes = this.allowanceFormGroup.controls[
       'allowances'
-    ] as FormArray;
+    ] as UntypedFormArray;
     let selectedValues = exemptIncomes.controls.filter(
-      (fg: FormGroup) => fg.controls['allowType'].value === event.value);
+      (fg: UntypedFormGroup) => fg.controls['allowType'].value === event.value);
     if (selectedValues?.length > 1) {
       this.utilsService.showSnackBar("You cannot select same exempt income more than once");
-      selectedValues.forEach((fg: FormGroup) => {
+      selectedValues.forEach((fg: UntypedFormGroup) => {
         fg.controls['allowType'].setErrors({ invalid: true })
       });
     } else {
-      exemptIncomes.controls.forEach((fg: FormGroup) => {
+      exemptIncomes.controls.forEach((fg: UntypedFormGroup) => {
         fg.controls['allowType'].setErrors(null);
         let validators = null;
         if (fg.controls['allowType'].value === 'COMPENSATION_ON_VRS') {
@@ -569,7 +571,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   deleteExemptIncome(index) {
     let exemptIncomesFormArray = this.allowanceFormGroup.controls[
       'allowances'
-    ] as FormArray;
+    ] as UntypedFormArray;
     exemptIncomesFormArray.removeAt(index);
     if (exemptIncomesFormArray.length === 0) {
       this.addExemptIncome();
@@ -578,7 +580,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   addExemptIncome(allowance?) {
-    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
     let label = '';//this.allowanceDropdown[1].label;
     if (allowance) {
       label = this.allowanceDropdown.filter(element => element.value === allowance.allowanceType)[0]?.label;
@@ -593,10 +595,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   changeAllowancesType() {
-    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
     this.allowanceDropdown.forEach((type) => {
       type['disabled'] = false;
-      exemptIncomesFormArray.controls.forEach((element: FormGroup) => {
+      exemptIncomesFormArray.controls.forEach((element: UntypedFormGroup) => {
         if (element.controls['allowType'].value == type.value) {
           type['disabled'] = true;
         }
@@ -679,8 +681,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   // Function to set a validator
   setValidator(controlName: string, validator: any) {
-    debugger
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
     const control = allowance?.controls?.find((element, index) => {
       return element?.get('allowType')?.value === controlName;
     });
@@ -691,7 +692,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   // Function to remove a validator
   removeValidator(controlName: string, validator: any) {
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
     const control = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === controlName;
     });
@@ -701,7 +702,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   validationApplicableForAll() {
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
 
     // secondProviso
     {
@@ -796,7 +797,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   setting106107(section) {
     const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce((acc, item) =>
       acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
     const Control = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === section;
     });
@@ -820,7 +821,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   ifFormValuesNotPresent() {
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
 
     // gratuity received
     {
@@ -872,7 +873,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   prescribed14Expenses(section) {
-    const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
+    const allowance = this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray;
     const FormValues = this.utilsService.getSalaryValues();
     const personalExpControl = allowance?.controls?.find((element) => {
       return element?.get('allowType')?.value === section;
@@ -1360,14 +1361,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
       let salaryDetails = this.employerDetailsFormGroup?.controls[
         'salaryDetails'
-      ] as FormArray;
+      ] as UntypedFormArray;
 
       let basicSalaryAmount = 0;
       let perquisitesAmount = 0;
       let profitsInLieuAmount = 0;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       for (let i = 0; i < salaryDetails?.controls.length; i++) {
-        let salary = salaryDetails?.controls[i] as FormGroup;
+        let salary = salaryDetails?.controls[i] as UntypedFormGroup;
         if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
           if (salary?.controls['salaryType']?.value === 'SEC17_1') {
             basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
@@ -1469,8 +1470,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
       let othTotalAllowExempt = 0;
-      for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-        let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
+      for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as UntypedFormArray)?.controls.length; i++) {
+        let allowance = (this.allowanceFormGroup.controls['allowances'] as UntypedFormArray).controls[i] as UntypedFormGroup;
         if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
           if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
             allowance?.controls['allowValue']?.value !== 0 &&
@@ -1512,7 +1513,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             return;
           }
 
-          const allowancesArray = this.allowanceFormGroup?.get('allowances') as FormArray;
+          const allowancesArray = this.allowanceFormGroup?.get('allowances') as UntypedFormArray;
 
           const firstProviso = allowancesArray?.controls?.find(
             (element) => element?.value?.allowType === 'FIRST_PROVISO'
@@ -1773,11 +1774,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.grossSalary = 0;
     let salaryDetails = this.employerDetailsFormGroup.controls[
       'salaryDetails'
-    ] as FormArray;
+    ] as UntypedFormArray;
 
     //check for SEC17_1 for gross salary
     for (let i = 0; i < salaryDetails.controls.length; i++) {
-      let salary = salaryDetails.controls[i] as FormGroup;
+      let salary = salaryDetails.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)) {
         if (salary.controls['salaryType'].value === 'SEC17_1') {
           this.grossSalary = salary.controls['salaryValue'].value;
@@ -1818,11 +1819,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     if (this.localEmployer.salary instanceof Array) {
       // const salary = this.localEmployer.salary.filter((item:any) => item.salaryType !== 'SEC17_1');
       for (let i = 0; i < this.localEmployer.salary.length; i++) {
-        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as UntypedFormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value === this.localEmployer.salary[i].salaryType)[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.salary[i].salaryType)[0] as UntypedFormGroup;
 
         if (salary) {
           salary.controls['salaryValue'].setValue(this.localEmployer.salary[i].taxableAmount);
@@ -1837,11 +1838,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     /* Perquisites Set Values */
     if (this.localEmployer.perquisites instanceof Array) {
       for (let i = 0; i < this.localEmployer.perquisites.length; i++) {
-        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as UntypedFormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value === this.localEmployer.perquisites[i].perquisiteType)[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.perquisites[i].perquisiteType)[0] as UntypedFormGroup;
 
         if (salary) {
           salary.controls['salaryValue'].setValue(this.localEmployer.perquisites[i].taxableAmount);
@@ -1855,11 +1856,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         i < this.localEmployer.profitsInLieuOfSalaryType.length;
         i++
       ) {
-        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as FormArray;
+        let salaryDetails = this.employerDetailsFormGroup.controls['salaryDetails'] as UntypedFormArray;
 
         const salary = salaryDetails.controls.filter(
           (item: any) =>
-            item.controls['salaryType'].value === this.localEmployer.profitsInLieuOfSalaryType[i].salaryType)[0] as FormGroup;
+            item.controls['salaryType'].value === this.localEmployer.profitsInLieuOfSalaryType[i].salaryType)[0] as UntypedFormGroup;
 
         if (salary) {
           salary.controls['salaryValue'].setValue(this.localEmployer.profitsInLieuOfSalaryType[i].taxableAmount);
@@ -1871,7 +1872,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     // Set Allowance
     if (this.localEmployer.allowance instanceof Array) {
       const allowance = this.localEmployer.allowance.filter((item: any) => item.allowanceType !== 'ALL_ALLOWANCES');
-      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
+      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
       allowanceArray.controls = [];
       this.addByDefaultAllowances(allowance);
       // for (let i = 0; i < allowance.length; i++) {
@@ -1879,7 +1880,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       // }
     }
     if (this.localEmployer.allowance.length == 0) {
-      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as FormArray;
+      let allowanceArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
       allowanceArray.controls = [];
       this.addByDefaultAllowances();
 
@@ -2084,7 +2085,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
       }
     });
-
 
 
 

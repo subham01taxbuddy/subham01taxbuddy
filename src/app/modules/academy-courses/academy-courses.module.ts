@@ -11,19 +11,16 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxPaginationModule,
-    AcademyCoursesRoutes,
-    NgxLoadingModule.forRoot({}),
-    NgxMaterialTimepickerModule,
-  ],
-  declarations: [AcademyCoursesComponent,AddNewCourseComponent],
-  entryComponents: [
-    AcademyCoursesComponent,
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxPaginationModule,
+        AcademyCoursesRoutes,
+        NgxLoadingModule.forRoot({}),
+        NgxMaterialTimepickerModule,
+    ],
+    declarations: [AcademyCoursesComponent, AddNewCourseComponent]
 })
 export class AcademyCoursesModule { }

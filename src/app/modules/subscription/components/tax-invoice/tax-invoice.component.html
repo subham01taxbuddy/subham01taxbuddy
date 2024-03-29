@@ -22,7 +22,7 @@
                   </div>
                   <div class="col-sm-4 spsTp">
                     <mat-label> Select FY </mat-label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
+                    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                       <mat-select [formControl]="assessmentYear" required (selectionChange)="updateDates()">
                         <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
                           {{year.financialYear}}
@@ -33,7 +33,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height">
                       <mat-label>From Date</mat-label>
                       <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
                         [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()">
@@ -43,7 +43,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height">
                       <mat-label>To Date</mat-label>
                       <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxEndDate"
                         autocomplete="off">

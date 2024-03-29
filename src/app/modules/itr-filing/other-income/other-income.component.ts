@@ -1,5 +1,5 @@
-import { FormArray, FormControl, Validators } from '@angular/forms';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -188,20 +188,20 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     },
   ];
 
-  winningsUS115BBFormGroup: FormGroup;
-  otherIncomeFormGroup: FormGroup;
-  otherIncomesFormArray: FormArray;
-  anyOtherIncomesFormArray: FormArray;
-  exemptIncomeFormGroup: FormGroup;
-  exemptIncomesFormArray: FormArray;
-  agriIncFormGroup: FormGroup;
-  agriIncFormArray: FormArray;
+  winningsUS115BBFormGroup: UntypedFormGroup;
+  otherIncomeFormGroup: UntypedFormGroup;
+  otherIncomesFormArray: UntypedFormArray;
+  anyOtherIncomesFormArray: UntypedFormArray;
+  exemptIncomeFormGroup: UntypedFormGroup;
+  exemptIncomesFormArray: UntypedFormArray;
+  agriIncFormGroup: UntypedFormGroup;
+  agriIncFormArray: UntypedFormArray;
   selectedIndexes: number[] = [];
   PREV_ITR_JSON: any;
 
   constructor(
     public utilsService: UtilsService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -221,8 +221,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       otherIncomes: this.otherIncomesFormArray,
       anyOtherIncomes: this.anyOtherIncomesFormArray,
       winningsUS115BB: this.winningsUS115BBFormGroup,
-      providentFundValue: new FormControl(null),
-      providentFundLabel: new FormControl(null),
+      providentFundValue: new UntypedFormControl(null),
+      providentFundLabel: new UntypedFormControl(null),
       giftTax: this.fb.group({
         aggregateValueWithoutConsideration: [],
         aggregateValueWithoutConsiderationNotTaxable: [false],
@@ -242,17 +242,17 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter4: [null],
         quarter5: [null],
       }),
-      familyPension: new FormControl(null),
+      familyPension: new UntypedFormControl(null),
       famPenDeduction: [],
       totalFamPenDeduction: [],
     });
 
     this.agriIncFormGroup = this.fb.group({
-      grossAgriculturalReceipts: new FormControl(null),
-      expenditureIncurredOnAgriculture: new FormControl(null),
-      unabsorbedAgriculturalLoss: new FormControl(null),
-      agriIncomePortionRule7: new FormControl(null),
-      netAgriculturalIncome: new FormControl(null),
+      grossAgriculturalReceipts: new UntypedFormControl(null),
+      expenditureIncurredOnAgriculture: new UntypedFormControl(null),
+      unabsorbedAgriculturalLoss: new UntypedFormControl(null),
+      agriIncomePortionRule7: new UntypedFormControl(null),
+      netAgriculturalIncome: new UntypedFormControl(null),
       agriInc: this.createAgriIncForm(),
     });
 
@@ -373,19 +373,19 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   get getIncomeArray() {
-    return <FormArray>this.otherIncomeFormGroup.get('otherIncomes');
+    return <UntypedFormArray>this.otherIncomeFormGroup.get('otherIncomes');
   }
 
   get getAnyIncomeArray() {
-    return <FormArray>this.otherIncomeFormGroup.get('anyOtherIncomes');
+    return <UntypedFormArray>this.otherIncomeFormGroup.get('anyOtherIncomes');
   }
 
   get getExemptIncomeArray() {
-    return <FormArray>this.exemptIncomeFormGroup.get('exemptIncomes');
+    return <UntypedFormArray>this.exemptIncomeFormGroup.get('exemptIncomes');
   }
 
   get getAgriIncomeArray() {
-    const agri = <FormArray>this.agriIncFormGroup.get('agriInc');
+    const agri = <UntypedFormArray>this.agriIncFormGroup.get('agriInc');
     return agri;
   }
 
@@ -418,7 +418,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as UntypedFormGroup;
 
     this.Copy_ITR_JSON.giftTax = {
       aggregateValueWithoutConsideration: giftTax.get(
@@ -455,7 +455,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     let dividendIncomes = this.otherIncomeFormGroup.controls[
       'dividendIncomes'
-    ] as FormGroup;
+    ] as UntypedFormGroup;
 
     this.Copy_ITR_JSON.dividendIncomes = [
       {
@@ -505,10 +505,10 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
     }
-    let otherIncomes = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
+    let otherIncomes = this.otherIncomeFormGroup.controls['otherIncomes'] as UntypedFormArray;
     for (let i = 0; i < otherIncomes.controls.length; i++) {
       console.log(otherIncomes.controls[i]);
-      let otherIncome = otherIncomes.controls[i] as FormGroup;
+      let otherIncome = otherIncomes.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(otherIncome.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.incomes.push({
           expenses: 0,
@@ -519,10 +519,10 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    let anyOtherIncomes = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as FormArray;
+    let anyOtherIncomes = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as UntypedFormArray;
     for (let i = 0; i < anyOtherIncomes.controls.length; i++) {
       console.log(anyOtherIncomes.controls[i]);
-      let anyOtherIncome = anyOtherIncomes.controls[i] as FormGroup;
+      let anyOtherIncome = anyOtherIncomes.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(anyOtherIncome.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.incomes.push({
           expenses: 0,
@@ -587,9 +587,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON.exemptIncomes = [];
     let exemptIncomes = this.exemptIncomeFormGroup.controls[
       'exemptIncomes'
-    ] as FormArray;
+    ] as UntypedFormArray;
     for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
-      let exempt = exemptIncomes.controls[i] as FormGroup;
+      let exempt = exemptIncomes.controls[i] as UntypedFormGroup;
       console.log(exempt.controls['incomeValue'].value);
       if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
@@ -696,13 +696,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           item.incomeType === 'FD_RD_INTEREST' ||
           item.incomeType === 'TAX_REFUND_INTEREST'
       );
-      let otherIncomesFormArray = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
+      let otherIncomesFormArray = this.otherIncomeFormGroup.controls['otherIncomes'] as UntypedFormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         console.log(otherIncomes[i].incomeType);
         const control = otherIncomesFormArray.controls.filter(
           (item: any) =>
             item.controls['incomeType'].value === otherIncomes[i].incomeType
-        )[0] as FormGroup;
+        )[0] as UntypedFormGroup;
         control.controls['incomeValue'].setValue(otherIncomes[i].amount);
       }
 
@@ -712,13 +712,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           item.incomeType === 'ROYALTY_US_80QQB' ||
           item.incomeType === 'ANY_OTHER'
       );
-      let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as FormArray;
+      let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as UntypedFormArray;
       for (let i = 0; i < anyOtherIncomes.length; i++) {
         console.log(anyOtherIncomes[i].incomeType);
         const control = anyOtherIncomesFormArray.controls.filter(
           (item: any) =>
             item.controls['incomeType'].value === anyOtherIncomes[i].incomeType
-        )[0] as FormGroup;
+        )[0] as UntypedFormGroup;
         control.controls['incomeValue'].setValue(anyOtherIncomes[i].amount);
       }
 
@@ -754,7 +754,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     if (this.ITR_JSON.giftTax != null) {
       let giftTaxJson = this.ITR_JSON.giftTax;
-      let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+      let giftTax = this.otherIncomeFormGroup.get('giftTax') as UntypedFormGroup;
       giftTax
         .get('aggregateValueWithoutConsideration')
         .setValue(giftTaxJson.aggregateValueWithoutConsideration);
@@ -794,7 +794,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     if (this.ITR_JSON.dividendIncomes instanceof Array) {
       let dividendIncomes = this.otherIncomeFormGroup.controls[
         'dividendIncomes'
-      ] as FormGroup;
+      ] as UntypedFormGroup;
       for (let i = 0; i < this.ITR_JSON.dividendIncomes.length; i++) {
         switch (this.ITR_JSON.dividendIncomes[i].quarter) {
           case 1: {
@@ -835,7 +835,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   setExemptIncomeValues() {
     let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
       'exemptIncomes'
-    ] as FormArray;
+    ] as UntypedFormArray;
     if (this.ITR_JSON.exemptIncomes instanceof Array) {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
 
@@ -844,7 +844,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           (item: any) =>
             item.controls['incomeType'].value ===
             this.ITR_JSON.exemptIncomes[i].natureDesc
-        )[0] as FormGroup;
+        )[0] as UntypedFormGroup;
         formGroup.controls['incomeValue'].setValue(
           this.ITR_JSON.exemptIncomes[i].amount
         );
@@ -872,7 +872,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     const agriArrayItr = this.ITR_JSON.agriculturalLandDetails;
 
     if (agriArrayItr && agriArrayItr.length > 0) {
-      const agriIncArray = form.get('agriInc') as FormArray;
+      const agriIncArray = form.get('agriInc') as UntypedFormArray;
       agriIncArray.clear();
 
       agriArrayItr.forEach((item) => {
@@ -960,7 +960,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   getTotal() {
     let dividendIncomes = this.otherIncomeFormGroup.controls[
       'dividendIncomes'
-    ] as FormGroup;
+    ] as UntypedFormGroup;
     let q1 = Number(
       dividendIncomes.controls['quarter1'].value
         ? dividendIncomes.controls['quarter1'].value
@@ -1058,7 +1058,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   getTotalGiftIncome() {
-    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as UntypedFormGroup;
     let total = 0;
 
     if (!giftTax.get('aggregateValueWithoutConsiderationNotTaxable').value &&
@@ -1098,9 +1098,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') &&
         otherIncome.incomeValue !== null &&
         otherIncome.incomeValue !== '')) {
-      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as UntypedFormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
-        const otherIncome = otherIncomes.at(i) as FormGroup;
+        const otherIncome = otherIncomes.at(i) as UntypedFormGroup;
         if (
           (otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
             otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
@@ -1112,9 +1112,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         }
       }
     } else {
-      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as UntypedFormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
-        const otherIncome = otherIncomes.at(i) as FormGroup;
+        const otherIncome = otherIncomes.at(i) as UntypedFormGroup;
         if (otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
           otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
           otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' ||

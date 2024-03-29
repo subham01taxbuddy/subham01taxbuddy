@@ -2,7 +2,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
@@ -64,7 +64,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   roles: any;
   loggedUserId: any;
@@ -92,8 +92,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   ];
   clearUserFilter: number;
   loggedInUserRoles: any;
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
@@ -208,7 +208,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   agentId = null;
   leaderId: number;
-  subPaidScheduleCallList = new FormControl(false);
+  subPaidScheduleCallList = new UntypedFormControl(false);
 
   fromSme(event) {
     console.log('sme-drop-down', event);
@@ -262,7 +262,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return callDateTime.substring(firstPoint + 1, secondPoint - 1);
   }
 
-  createColumnDef(view, subPaidScheduleCallList?) {
+  createColumnDef(view, subPaidScheduleCallList?): ColDef[] {
     const that = this;
     return [
       {
@@ -450,7 +450,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
         },
         width: 95,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -473,7 +473,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -496,7 +496,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -517,7 +517,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 60,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -535,7 +535,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? true : false,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -568,7 +568,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? false : true,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

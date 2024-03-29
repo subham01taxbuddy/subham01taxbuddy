@@ -1,4 +1,4 @@
-import { FormGroup, FormControl, Validators, FormBuilder, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@aws-amplify/auth';
 declare let $: any;
@@ -12,7 +12,7 @@ export class ValidateOtpComponent implements OnInit {
   countDown: any;
   @Input() username: any;
   @Output() sendValue = new EventEmitter<any>();
-  otpForm!: FormGroup;
+  otpForm!: UntypedFormGroup;
   isError: Boolean = false;
   isOtpSent: Boolean = false;
   busy: Boolean = false;
@@ -23,7 +23,7 @@ export class ValidateOtpComponent implements OnInit {
   public strengthLabels = ['(Very weak)', '(Weak)', '(Ok)', '(Strong)', '(Very strong!)'];
   counterAPICall = 0;
   apiCallCounter = 0;
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
   ) {
 
   }
@@ -32,8 +32,8 @@ export class ValidateOtpComponent implements OnInit {
   ngOnInit() {
 
     this.otpForm = this.fb.group({
-      otp: new FormControl('', [Validators.required, Validators.maxLength(6)]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      otp: new UntypedFormControl('', [Validators.required, Validators.maxLength(6)]),
+      password: new UntypedFormControl('', [Validators.required, Validators.minLength(6)]),
     });
 
     console.log('username Mob Num:', this.username);

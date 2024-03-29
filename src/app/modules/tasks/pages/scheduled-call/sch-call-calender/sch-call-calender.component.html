@@ -35,7 +35,7 @@
                     <mat-label class="desc">Add Description *</mat-label>
                     <mat-form-field autocomplete="off">
                         <textarea matInput formControlName="description" maxlength="100" placeholder=""></textarea>
-                        <mat-error class="mt-3"
+                        <mat-error
                             *ngIf="scheduleForm.controls['description'].invalid && (scheduleForm.controls['description'].dirty || scheduleForm.controls['description'].touched)">
                             <div *ngIf="scheduleForm.controls['description'].errors?.['required']">
                                 Please enter the description.

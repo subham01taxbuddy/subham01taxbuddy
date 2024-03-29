@@ -1,5 +1,5 @@
 <label class="input__label" for="attr">Select Service </label>
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" class="small-inp no-height">
   <mat-select placeholder="" [formControl]="selectedService"
     (selectionChange)="changeService(selectedService.value)">
     <mat-option *ngFor="let service of serviceTypes" [value]="service.value">

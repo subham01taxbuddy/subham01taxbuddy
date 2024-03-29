@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
@@ -19,7 +19,7 @@ export class SchCallCalenderComponent implements OnInit {
   uploadDoc: File;
   uploadedDocList = [];
 
-  scheduleForm: FormGroup;
+  scheduleForm: UntypedFormGroup;
   loading: boolean;
   scheduleCallRemoteConfig: any;
   endTimeStr: any;
@@ -43,7 +43,7 @@ export class SchCallCalenderComponent implements OnInit {
   uploadDocs3URL: any;
   constructor(
     public dialogRef: MatDialogRef<SchCallCalenderComponent>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private utilService: UtilsService,
     private utilsService: UtilsService,

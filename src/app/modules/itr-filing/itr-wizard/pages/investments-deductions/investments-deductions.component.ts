@@ -1,6 +1,6 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -36,7 +36,7 @@ export class InvestmentsDeductionsComponent
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
-  investmentDeductionForm: FormGroup;
+  investmentDeductionForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   DonationGridOptions: GridOptions;
@@ -655,7 +655,7 @@ export class InvestmentsDeductionsComponent
   constructor(
     private router: Router,
     public utilsService: UtilsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
     public matDialog: MatDialog
   ) {

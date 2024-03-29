@@ -1,6 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -80,35 +80,35 @@ export class CreditNoteComponent implements OnInit {
     { value: 'invoiceNo', name: 'Invoice number' },
   ];
 
-  creditNoteFormGroup: FormGroup = this.fb.group({
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    invoiceNo: new FormControl(''),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
+  creditNoteFormGroup: UntypedFormGroup = this.fb.group({
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    invoiceNo: new UntypedFormControl(''),
+    startDate: new UntypedFormControl('', [Validators.required]),
+    endDate: new UntypedFormControl('', [Validators.required]),
   });
 
   get mobile() {
-    return this.creditNoteFormGroup.controls['mobile'] as FormControl;
+    return this.creditNoteFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.creditNoteFormGroup.controls['email'] as FormControl;
+    return this.creditNoteFormGroup.controls['email'] as UntypedFormControl;
   }
 
   get invoiceNo() {
-    return this.creditNoteFormGroup.controls['invoiceNo'] as FormControl;
+    return this.creditNoteFormGroup.controls['invoiceNo'] as UntypedFormControl;
   }
 
   get startDate() {
-    return this.creditNoteFormGroup.controls['startDate'] as FormControl;
+    return this.creditNoteFormGroup.controls['startDate'] as UntypedFormControl;
   }
   get endDate() {
-    return this.creditNoteFormGroup.controls['endDate'] as FormControl;
+    return this.creditNoteFormGroup.controls['endDate'] as UntypedFormControl;
   }
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     public datePipe: DatePipe,
     private reportService: ReportService,

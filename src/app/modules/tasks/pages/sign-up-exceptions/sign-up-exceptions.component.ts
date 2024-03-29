@@ -240,7 +240,7 @@ export class SignUpExceptionsComponent implements OnInit {
            </button>`;
         },
         width: 65,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -268,7 +268,7 @@ export class SignUpExceptionsComponent implements OnInit {
            </button>`;
         },
         width: 90,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -290,7 +290,7 @@ export class SignUpExceptionsComponent implements OnInit {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -312,7 +312,7 @@ export class SignUpExceptionsComponent implements OnInit {
            </button>`;
         },
         width: 65,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -340,7 +340,7 @@ export class SignUpExceptionsComponent implements OnInit {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -360,7 +360,7 @@ export class SignUpExceptionsComponent implements OnInit {
           style="font-size: 12px; cursor:pointer;" data-action-type="call-done">Done</button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',

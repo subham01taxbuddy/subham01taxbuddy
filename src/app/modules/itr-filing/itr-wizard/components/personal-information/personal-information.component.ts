@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 import {
   Validators,
-  FormGroup,
-  FormBuilder,
-  FormArray,
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  UntypedFormArray,
   ValidationErrors,
   FormControl,
   ValidatorFn,
@@ -66,7 +66,7 @@ export class PersonalInformationComponent implements OnInit {
   @Input() isEditPersonal = false;
   @Output() personalInfoSaved = new EventEmitter<boolean>();
 
-  customerProfileForm: FormGroup;
+  customerProfileForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
   bankList: any;
@@ -2176,7 +2176,7 @@ export class PersonalInformationComponent implements OnInit {
   ];
 
   constructor(
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
     private titlecasePipe: TitleCasePipe,
@@ -2227,7 +2227,7 @@ export class PersonalInformationComponent implements OnInit {
 
   charRegex = AppConstants.charRegex;
 
-  createCustomerProfileForm(): FormGroup {
+  createCustomerProfileForm(): UntypedFormGroup {
     let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
     if (Date() > itrFilingDueDate) {
       console.log('Due date is over');
@@ -2322,7 +2322,7 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   get addressForm() {
-    return this.customerProfileForm.controls['address'] as FormGroup;
+    return this.customerProfileForm.controls['address'] as UntypedFormGroup;
   }
 
   createBankDetailsForm(
@@ -2333,7 +2333,7 @@ export class PersonalInformationComponent implements OnInit {
       hasRefund?: boolean;
       hasEdit?: boolean;
     } = {}
-  ): FormGroup {
+  ): UntypedFormGroup {
     return this.fb.group({
       ifsCode: [
         obj.ifsCode || '',
@@ -2365,7 +2365,7 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   addMoreBanks(formGroupName) {
-    const bankDetails = <FormArray>formGroupName.get('bankDetails');
+    const bankDetails = <UntypedFormArray>formGroupName.get('bankDetails');
     if (bankDetails.valid) {
       bankDetails.push(this.createBankDetailsForm());
     } else {
@@ -2377,17 +2377,17 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   get getBankDetailsArray() {
-    return <FormArray>this.customerProfileForm.get('bankDetails');
+    return <UntypedFormArray>this.customerProfileForm.get('bankDetails');
   }
 
   deleteBank(index, formGroupName) {
-    const bank = <FormArray>formGroupName.get('bankDetails');
+    const bank = <UntypedFormArray>formGroupName.get('bankDetails');
     bank.removeAt(index);
   }
 
   deleteSelectedBanks(formGroupName) {
-    const banks = <FormArray>formGroupName.get('bankDetails');
-    banks.controls = banks.controls.filter((element:FormGroup)=> !element.controls['hasEdit'].value);
+    const banks = <UntypedFormArray>formGroupName.get('bankDetails');
+    banks.controls = banks.controls.filter((element:UntypedFormGroup)=> !element.controls['hasEdit'].value);
     banks.updateValueAndValidity();
   }
 
@@ -2410,19 +2410,19 @@ export class PersonalInformationComponent implements OnInit {
       );
       if (bank.length !== 0) {
         (
-          (this.customerProfileForm.controls['bankDetails'] as FormGroup)
-            .controls[i] as FormGroup
+          (this.customerProfileForm.controls['bankDetails'] as UntypedFormGroup)
+            .controls[i] as UntypedFormGroup
         ).controls['name'].setValue(bank[0].bankName);
       } else {
         (
-          (this.customerProfileForm.controls['bankDetails'] as FormGroup)
-            .controls[i] as FormGroup
+          (this.customerProfileForm.controls['bankDetails'] as UntypedFormGroup)
+            .controls[i] as UntypedFormGroup
         ).controls['name'].setValue(null);
       }
     } else {
       (
-        (this.customerProfileForm.controls['bankDetails'] as FormGroup)
-          .controls[i] as FormGroup
+        (this.customerProfileForm.controls['bankDetails'] as UntypedFormGroup)
+          .controls[i] as UntypedFormGroup
       ).controls['name'].setValue(null);
     }
   }
@@ -2510,25 +2510,25 @@ export class PersonalInformationComponent implements OnInit {
 
   getCityData() {
     if (
-      (this.customerProfileForm.controls['address'] as FormGroup).controls[
+      (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
         'pinCode'
       ].valid
     ) {
       this.changeCountry('91');
       const param =
         '/pincode/' +
-        (this.customerProfileForm.controls['address'] as FormGroup).controls[
+        (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
           'pinCode'
         ].value;
       this.userMsService.getMethod(param).subscribe(
         (result: any) => {
-          (this.customerProfileForm.controls['address'] as FormGroup).controls[
+          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
             'country'
           ].setValue('91');
-          (this.customerProfileForm.controls['address'] as FormGroup).controls[
+          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
             'city'
           ].setValue(result.taluka);
-          (this.customerProfileForm.controls['address'] as FormGroup).controls[
+          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
             'state'
           ].setValue(result.stateCode);
           console.log('Picode Details:', result);
@@ -2536,7 +2536,7 @@ export class PersonalInformationComponent implements OnInit {
         (error) => {
           if (error.status === 404) {
             (
-              this.customerProfileForm.controls['address'] as FormGroup
+              this.customerProfileForm.controls['address'] as UntypedFormGroup
             ).controls['city'].setValue(null);
           }
         }
@@ -2560,7 +2560,7 @@ export class PersonalInformationComponent implements OnInit {
           status: true,
         },
       ];
-      (this.customerProfileForm.controls['address'] as FormGroup).controls[
+      (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
         'state'
       ].setValue('99');
     } else {
@@ -2593,7 +2593,7 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.bankDetails.length > 0
     ) {
       this.customerProfileForm.controls['bankDetails'] = this.fb.array([]);
-      var bank = <FormArray>this.customerProfileForm.get('bankDetails');
+      var bank = <UntypedFormArray>this.customerProfileForm.get('bankDetails');
       this.ITR_JSON.bankDetails.forEach((obj) => {
         bank.push(this.createBankDetailsForm(obj));
       });
@@ -2926,13 +2926,13 @@ export class PersonalInformationComponent implements OnInit {
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILING SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   get seventhProviso139() {
-    return this.customerProfileForm.controls['seventhProviso139'] as FormGroup;
+    return this.customerProfileForm.controls['seventhProviso139'] as UntypedFormGroup;
   }
 
   get getClauseiv7provisio139iDtls() {
     return this.seventhProviso139.controls[
       'clauseiv7provisio139iDtls'
-    ] as FormArray;
+    ] as UntypedFormArray;
   }
 
   addClauseIv(classIvDtls) {
@@ -3148,8 +3148,8 @@ export class PersonalInformationComponent implements OnInit {
     };
 
     let control = clauseIvArray?.controls[index];
-    let selectionValue = (control as FormGroup)?.controls['nature'];
-    let amountControl = (control as FormGroup)?.controls['amount'];
+    let selectionValue = (control as UntypedFormGroup)?.controls['nature'];
+    let amountControl = (control as UntypedFormGroup)?.controls['amount'];
 
     amountControl?.setValidators(validatorMap[selectionValue.value] || []);
     amountControl?.updateValueAndValidity();

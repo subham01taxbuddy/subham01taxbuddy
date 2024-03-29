@@ -10,24 +10,19 @@ import { ViewDocumentsComponent } from './view-documents/view-documents.componen
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxPaginationModule,
-    BoPartnersRoutes,
-    NgxLoadingModule.forRoot({}),
-  ],
-  declarations: [
-    BoPartnersComponent,
-    UpdateStatusComponent,
-    ViewDocumentsComponent,
-  ],
-  entryComponents: [
-    BoPartnersComponent,
-    UpdateStatusComponent,
-    ViewDocumentsComponent,
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxPaginationModule,
+        BoPartnersRoutes,
+        NgxLoadingModule.forRoot({}),
+    ],
+    declarations: [
+        BoPartnersComponent,
+        UpdateStatusComponent,
+        ViewDocumentsComponent,
+    ]
 })
 export class BoPartnersModule {}

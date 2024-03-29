@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-5">
     <label class="input__label" for="attr">Select attribute</label>
-    <mat-form-field appearance="outline" class="custom-bg-new ">
+    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height ">
       <mat-select [(ngModel)]="searchKey" (selectionChange)="changeInput(); clearValue()">
         <mat-option *ngFor="let drop of searchParameter" [value]="drop.value">
           {{ drop.name }}
@@ -12,7 +12,7 @@
 
   <div class="col-sm-6">
     <label class="input__label">Enter Value </label>
-    <input type="text" class="select__box ogp_select noBg" style="background-image:none" (change)="changeInput()"
+    <input type="text" class="select__box noBg" style="background-image:none" (change)="changeInput()"
       [formControl]="searchValue" />
     <div *ngIf="searchValue?.invalid && (searchValue?.dirty || searchValue?.touched)" class="errorMessage">
       <div *ngIf="searchValue.errors?.['required']">

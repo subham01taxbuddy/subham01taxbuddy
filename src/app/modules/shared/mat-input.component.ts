@@ -4,7 +4,7 @@ import { ViewChildren, ViewContainerRef, QueryList, Component, AfterViewInit } f
 @Component({
     selector: "app-input-cell",
     template: `
-        <mat-card>
+        <mat-card appearance="outlined">
         <form class="container" tabindex="0" (keydown)="onKeyDown($event)">
             <mat-form-field class="example-full-width">
                 <input matInput [(ngModel)]="receipts" placeholder="Amount/ month" pattern="[0-9]*"
@@ -20,10 +20,10 @@ import { ViewChildren, ViewContainerRef, QueryList, Component, AfterViewInit } f
             </mat-form-field> */
     styles: [
         `
-            .container {
-                width: 250px;
-            }
-        `
+                     .container {
+                         width: 250px;
+                     }
+                 `
     ]
 })
 export class MatInputComponent implements ICellEditorAngularComp, AfterViewInit {

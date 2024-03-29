@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -78,7 +78,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   filteredOptions1: Observable<User[]>;
   allFilers: any;
 
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
@@ -134,7 +134,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   loginSmeDetails: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private datePipe: DatePipe,
     private utilService: UtilsService,
     private userMsService: UserMsService,
@@ -332,7 +332,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }
 
   }
-
   financialYear = [
     {
       assessmentYear : "2025-2026",
@@ -342,44 +341,43 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       assessmentYear : "2024-2025",
       financialYear : "2023-2024"
     }];
-
-  invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl(this.financialYear[0].financialYear),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    status: new FormControl('Paid'),
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    invoiceNo: new FormControl(''),
-    name: new FormControl(''),
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    assessmentYear: new UntypedFormControl('2023-24'),
+    startDate: new UntypedFormControl('', [Validators.required]),
+    endDate: new UntypedFormControl('', [Validators.required]),
+    status: new UntypedFormControl('Paid'),
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    invoiceNo: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
   });
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as FormControl;
+    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as FormControl;
+    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as FormControl;
+    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
   }
 
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as FormControl;
+    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
   }
 
   get invoiceNo() {
-    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
+    return this.invoiceFormGroup.controls['invoiceNo'] as UntypedFormControl;
   }
 
   get name() {
-    return this.invoiceFormGroup.controls['name'] as FormControl;
+    return this.invoiceFormGroup.controls['name'] as UntypedFormControl;
   }
 
 
@@ -911,7 +909,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         </button>`;
         },
         width: 95,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -932,7 +930,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 90,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

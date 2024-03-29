@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -80,25 +80,25 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
   searchVal: any;
   key: any;
   showError: boolean = false;
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minDate = moment.min(moment(), moment('2024-04-01')).toDate();
   minStartDate: string = '2024-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   toDateMin = this.minDate;
-  selectedStatus = new FormControl('');
+  selectedStatus = new UntypedFormControl('');
   statusList = [
     { value: 'SHORTLISTED', name: 'Shortlisted' },
     { value: 'FINALIZED', name: 'Finalized' },
     { value: 'DOC_PENDING', name: 'Document Pending' },
-];
+  ];
 
   roles: any;
   searchBy: any = {};
   clearUserFilter: number;
-  allFilerList:any;
+  allFilerList: any;
 
   constructor(
     private userMsService: UserMsService,
@@ -117,7 +117,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       columnDefs: this.smeCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -260,8 +260,8 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     if ((this.leaderId)) {
       userFilter += `&interviewedBy=${this.leaderId}`;
     }
-    let statusFilter='';
-    if(this.selectedStatus.value){
+    let statusFilter = '';
+    if (this.selectedStatus.value) {
       statusFilter += `&onboardingStatus=${this.selectedStatus.value}`;
     }
 
@@ -327,7 +327,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
         pinned: 'left',
         lockPosition: true,
         suppressMovable: false,
-        cellRenderer: (params) => {},
+        cellRenderer: (params) => { },
       },
       {
         headerName: 'Mobile No',
@@ -392,11 +392,11 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         cellRenderer: function (params: any) {
-        if( params.data?.partnerDetails?.onboardingStatus) {
+          if (params.data?.partnerDetails?.onboardingStatus) {
             let onboardingStatus = params.data?.partnerDetails?.onboardingStatus;
             return onboardingStatus;
-          }else{
-            return'-';
+          } else {
+            return '-';
           }
         },
       },
@@ -415,11 +415,11 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           if (params?.data?.partnerType) {
             let referredBy = params.data?.partnerType;
             return referredBy;
-          } else if( params.data?.partnerDetails?.partnerType) {
+          } else if (params.data?.partnerDetails?.partnerType) {
             let referredBy = params.data?.partnerDetails?.partnerType;
             return referredBy;
-          }else{
-            return'-';
+          } else {
+            return '-';
           }
         },
       },
@@ -547,7 +547,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       //   headerName: 'Reject/Backed Out',
       //   field: '',
       //   width: 120,
-      //   pinned: 'right',
+      //    pinned: 'right',
       //   suppressMovable: true,
       //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
@@ -620,7 +620,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       width: '50%',
       height: 'auto',
       data: {
-        userId : partner.userId,
+        userId: partner.userId,
         id: partner.id,
         partnerName: partner.name,
         emailAddress: partner.emailAddress,
@@ -635,7 +635,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
-         this.getSmeList();
+          this.getSmeList();
         }
       }
     });
@@ -653,10 +653,10 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
 
-  reject(data){
+  reject(data) {
     let disposable = this.matDialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Reject/Backed Out SME!',
