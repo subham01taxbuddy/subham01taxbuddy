@@ -159,7 +159,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   ) {
     // this.getAgentList();
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.minEndDate = this.invoiceFormGroup.controls['startDate'].value;
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);

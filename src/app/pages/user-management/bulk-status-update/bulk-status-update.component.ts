@@ -79,7 +79,7 @@ export class BulkStatusUpdateComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     public datePipe: DatePipe,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
   }
