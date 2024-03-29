@@ -71,7 +71,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   showCurrentAYOptions = false;
   submitted: boolean = false;
   dueDateOver: boolean = false;
-  allowNewRegime = false;
+  allowNewRegime = true;
   isITRU: boolean;
   PREV_ITR_JSON: any;
   pySummary: any;
