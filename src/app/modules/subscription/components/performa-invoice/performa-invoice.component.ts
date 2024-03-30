@@ -76,7 +76,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       financialYear: "2023-2024"
     }];
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
-    assessmentYear: new UntypedFormControl('2023-24'),
+    assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
     startDate: new UntypedFormControl('', [Validators.required]),
     endDate: new UntypedFormControl('', [Validators.required]),
     status: new UntypedFormControl(''),
