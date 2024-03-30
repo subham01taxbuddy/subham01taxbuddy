@@ -194,7 +194,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   stateDropdown = AppConstants.stateDropdown;
 
   // errors keys
-  hraError: boolean = false;
   compensationOnVrsError: boolean = false;
   firstProvisoError: boolean = false;
   secondProvisoError: boolean = false;
@@ -206,6 +205,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   bifurcationFormGroup: boolean = false;
   PREV_ITR_JSON: any;
   totalGrossSalary: number = 0;
+  invalid: boolean = false;
   constructor(
     private router: Router,
     private fb: UntypedFormBuilder,
@@ -311,7 +311,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.hasBifurcation();
       this.bifurcation();
     } else {
-      this.markActive(-1);
+      this.markActive(-1, false);
     }
   }
 
@@ -336,7 +336,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }
   }
 
-  markActive(index) {
+  markActive(index, hasValidate) {
+    if (hasValidate && (this.allowanceFormGroup.invalid || !this.bifurcationFormGroup || this.invalid)) {
+      this.utilsService.showSnackBar(
+        'This form has error. Please verify'
+      );
+      return;
+    }
     if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length) {
       this.saveEmployerDetails(false);
     }
@@ -907,6 +913,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   validations() {
+    this.invalid = false;
     const allowance = this.allowanceFormGroup?.controls['allowances'] as FormArray;
     const formValues = this.utilsService.getSalaryValues();
     if (formValues) {
@@ -920,16 +927,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           });
           const BASIC_SALARY = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'BASIC_SALARY')[0]?.taxableAmount);
           const HOUSE_RENT = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'HOUSE_RENT')[0]?.taxableAmount);
-
+          debugger
           let lowerOf = Math.min(BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY, HOUSE_RENT);
 
           this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
 
           if (hraControl?.get('allowValue')?.errors && hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
-            this.hraError = true;
           } else {
             this.removeValidator('HOUSE_RENT', Validators.max(lowerOf));
-            this.hraError = false;
           }
         }
 
@@ -1040,7 +1045,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let employer = JSON.parse(sessionStorage.getItem('localEmployer'));
     if (employer) {
       this.localEmployer = employer;
-      debugger
     }
 
 
@@ -1080,9 +1084,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
             });
           }
-          // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
 
-          console.log(this.localEmployer);
           if (
             this.bifurcationResult?.SEC17_1?.total ||
             this.bifurcationResult?.SEC17_1?.total === 0 ||
@@ -1162,6 +1164,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
       Math.min(basicSalaryAmount / 5, this.maxEA)
     ) {
+      this.invalid = true;
       this.utilsService.showSnackBar(
         'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower'
       );
@@ -1177,6 +1180,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
           allowance?.controls['allowValue']?.value !== 0 &&
           allowance?.controls['allowValue']?.value > perquisitesAmount) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
           );
@@ -1186,6 +1190,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           allowance?.controls['allowType']?.value === 'HOUSE_RENT' &&
           allowance?.controls['allowValue']?.value > basicSalaryAmount / 2
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'HRA cannot be more than 50% of Salary u/s 17(1).'
           );
@@ -1197,6 +1202,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           allowance?.controls['allowValue']?.value !== 0 &&
           perquisitesAmount === 0
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'Tax paid by employer on non-monetary perquisites u/s 10CC is allowed only for Perquisites - Salary 17(2)'
           );
@@ -1208,6 +1214,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           (this.allowanceFormGroup?.controls['vrsLastYear']?.value === true ||
             this.allowanceFormGroup?.controls['sec89']?.value === true)
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'VRS exemption cannot be claimed again in this year'
           );
@@ -1263,9 +1270,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         }
       }
     }
-
-    //check allowances total is not exceeding the gross salary
+    this.checkGrossSalary();
     if (totalAllowExempt > this.grossSalary) {
+      debugger
+      this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed gross salary'
       );
@@ -1275,6 +1283,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
       (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
     if (othTotalAllowExempt > employerTotal) {
+      this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed total gross salary'
       );
@@ -1333,6 +1342,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   saveEmployerDetails(apiCall: boolean) {
+    this.invalid = false;
     this.validations();
     if ((this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid && apiCall) || !apiCall) {
       this.checkGrossSalary();
@@ -1461,6 +1471,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
         Math.min(basicSalaryAmount / 5, this.maxEA)
       ) {
+        this.invalid = true;
         this.utilsService.showSnackBar(
           'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower'
         );
@@ -1476,6 +1487,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
             allowance?.controls['allowValue']?.value !== 0 &&
             allowance?.controls['allowValue']?.value > perquisitesAmount) {
+            this.invalid = true;
             this.utilsService.showSnackBar(
               'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
             );
@@ -1485,6 +1497,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             allowance?.controls['allowType']?.value === 'HOUSE_RENT' &&
             allowance?.controls['allowValue']?.value > basicSalaryAmount / 2
           ) {
+            this.invalid = true;
             this.utilsService.showSnackBar(
               'HRA cannot be more than 50% of Salary u/s 17(1).'
             );
@@ -1496,6 +1509,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             allowance?.controls['allowValue']?.value !== 0 &&
             perquisitesAmount === 0
           ) {
+            this.invalid = true;
             this.utilsService.showSnackBar(
               'Tax paid by employer on non-monetary perquisites u/s 10CC is allowed only for Perquisites - Salary 17(2)'
             );
@@ -1507,6 +1521,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             (this.allowanceFormGroup?.controls['vrsLastYear']?.value === true ||
               this.allowanceFormGroup?.controls['sec89']?.value === true)
           ) {
+            this.invalid = true;
             this.utilsService.showSnackBar(
               'VRS exemption cannot be claimed again in this year'
             );
@@ -1562,9 +1577,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           }
         }
       }
+      this.checkGrossSalary();
 
       //check allowances total is not exceeding the gross salary
       if (totalAllowExempt > this.grossSalary) {
+        debugger
+        this.invalid = true;
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
         );
@@ -1574,6 +1592,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
         (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
       if (othTotalAllowExempt > employerTotal) {
+        this.invalid = true;
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed total gross salary'
         );
@@ -2070,6 +2089,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   }
 
   onBifurcationUpdated(result) {
+    this.invalid = false;
     this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {
       if (element.get('salaryType').value === 'SEC17_1') {
@@ -2094,7 +2114,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let employer = JSON.parse(sessionStorage.getItem('localEmployer'));
     if (employer) {
       this.localEmployer = employer;
-      debugger
     }
 
 
@@ -2134,9 +2153,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
             });
           }
-          // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
-
-          console.log(this.localEmployer);
           if (
             this.bifurcationResult?.SEC17_1?.total ||
             this.bifurcationResult?.SEC17_1?.total === 0 ||
@@ -2195,7 +2211,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             });
           }
 
-          console.log(this.localEmployer);
           if (this.bifurcationResult?.SEC17_3?.total ||
             this.bifurcationResult?.SEC17_3?.total === 0 || this.bifurcationResult?.SEC17_3?.value > 0) {
             const profitsInLieuValues = this.utilsService.getSalaryValues()?.profitsInLieu;
@@ -2219,6 +2234,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.utilsService.showSnackBar(
         'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower'
       );
+      this.invalid = true;
       return;
     }
 
@@ -2234,12 +2250,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           this.utilsService.showSnackBar(
             'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
           );
+          this.invalid = true;
           return;
         }
         if (
           allowance?.controls['allowType']?.value === 'HOUSE_RENT' &&
           allowance?.controls['allowValue']?.value > basicSalaryAmount / 2
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'HRA cannot be more than 50% of Salary u/s 17(1).'
           );
@@ -2251,6 +2269,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           allowance?.controls['allowValue']?.value !== 0 &&
           perquisitesAmount === 0
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'Tax paid by employer on non-monetary perquisites u/s 10CC is allowed only for Perquisites - Salary 17(2)'
           );
@@ -2262,6 +2281,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           (this.allowanceFormGroup?.controls['vrsLastYear']?.value === true ||
             this.allowanceFormGroup?.controls['sec89']?.value === true)
         ) {
+          this.invalid = true;
           this.utilsService.showSnackBar(
             'VRS exemption cannot be claimed again in this year'
           );
@@ -2317,9 +2337,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         }
       }
     }
-
+    this.checkGrossSalary();
     //check allowances total is not exceeding the gross salary
     if (totalAllowExempt > this.grossSalary) {
+      debugger
+      this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed gross salary'
       );
@@ -2329,6 +2351,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     const employerTotal = this.employerDetailsFormGroup?.get('salaryDetails')?.value?.reduce(
       (acc, item) => acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0), 0);
     if (othTotalAllowExempt > employerTotal) {
+      this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed total gross salary'
       );

@@ -14,7 +14,7 @@
           <div class="div-3">
             <div class="contents-wrapper" *ngFor="let employer of Copy_ITR_JSON.employers; let i = index;">
               <div [ngClass]="i === currentIndex ? 'contents' : 'contents-selected'">
-                <div [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">
+                <div [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i, true)">
                   Employer {{ i + 1}}</div>
                 <div class="group" (click)="deleteEmployer(i)">
                   <i class="fa fa-trash-o delbt"
@@ -24,7 +24,7 @@
             </div>
             <div class="contents-wrapper">
               <div class="field-text-wrapper">
-                <div class="field-text-2" (click)="markActive(-1)">+ Add Another Employer</div>
+                <div class="field-text-2" (click)="markActive(-1, true)">+ Add Another Employer</div>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo">Gross Salary
                         <input type="number" class="form-control inpClr2" [value]="totalGrossSalary" readonly></button>
-                      <!-- {{getTotalGrossSalary()}} -->
+                    
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
 
@@ -171,44 +171,6 @@
                         (valueChanged)="onBifurcationUpdated($event)"
                         (isValid)="isFormGroupValid($event)"></app-salary-bifurcation>
 
-                      <!-- need to remove in feature -->
-
-
-
-
-                      <!-- <div class="card-body" formArrayName="salaryDetails"> -->
-
-                      <!-- 4 Box -->
-                      <!-- <div *ngFor="let income of getSalaryArray.controls; let i = index" [formGroupName]="i">
-                          <div class="out-4box">
-                            <div class="area-1">
-                              {{ income.value.label }}
-                            </div>
-                            <div class="area-2">
-                              <mat-form-field appearance="outline" class="input-field-width">
-                                <input type="text" digitsOnly trim matInput placeholder="" name="salaryValue[i]"
-                                  formControlName="salaryValue" (blur)="checkGrossSalary()" class="form-control inpClr1"
-                                  maxlength="125" (change)="changed(true);"
-                                  (beforeinput)="confirmChange($event, income.value.salaryType)" />
-                              </mat-form-field>
-                            </div> -->
-                      <!-- <div class="area-3" *ngIf="!hasBifurcation(i)" >
-                              OR
-                            </div>
-                            <div class="area-4" *ngIf="!hasBifurcation(i)" >
-                              <button type="button" class="btnSal" (click)="bifurcation(i)"> + Add based on category </button>
-                            </div> -->
-
-                      <!-- </div> -->
-                      <!--Bifurcation component-->
-                      <!-- <app-bifurcation #bifurcation [typeIndex]="i" [localEmployer]="localEmployer"
-                            [index]="currentIndex" (valueChanged)="onBifurcationUpdated($event)"
-                            (isValid)="isFormGroupValid($event)"></app-bifurcation>
-                        </div>
-                        <img class="line" src="img/line-2-2.svg" /> -->
-                      <!-- 4 Box -->
-
-                      <!-- </div> -->
                     </div>
                   </div>
                 </form>
@@ -255,7 +217,7 @@
                                 Only any one is allowed of the three
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf=" income.value.allowType === 'HOUSE_RENT' && hraError">
+                                *ngIf=" income.value.allowType === 'HOUSE_RENT' && getAllowanceArray.controls[i].get('allowValue').hasError('max')">
                                 House rent allowance cannot be more than 50% of Basic or
                                 Total HRA from 17(1)
                               </mat-error>
