@@ -55,6 +55,7 @@ export class AppConstants {
         // { financialYear: '2017-18' },
     ];
     public static subscriptionFyList = [
+        { financialYear: '2024-2025' },
         { financialYear: '2023-2024' },
         { financialYear: '2022-2023' },
         { financialYear: '2021-2022' },

@@ -1294,6 +1294,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               userId: this.userId,
               mobileNo: this.mobileNumber,
               filerId: this.assignedFilerId,
+              assessmentYear:this.assessmentYear.value.assessmentYear
             },
           });
           console.log('send data', data);
@@ -1527,4 +1528,5 @@ export interface ConfirmModel {
   userId: number
   mobileNo: number
   filerId:number
+  assessmentYear: string
 }
