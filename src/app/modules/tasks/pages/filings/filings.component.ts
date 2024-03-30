@@ -1245,6 +1245,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       uiAction: 'NotRequired',
       taskStatus: 'Completed',
       assessmentYear: workingItr.assessmentYear,
+      serviceType: workingItr.itru ? 'ITRU' : 'ITR'
     };
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;

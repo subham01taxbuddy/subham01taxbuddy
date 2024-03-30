@@ -169,7 +169,7 @@ export class ItrStatusDialogComponent implements OnInit {
 
   getItrLifeCycleStatus() {
     this.loading = true;
-    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear;
+    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear + '&serviceType=' + this.data?.userInfo?.serviceType;
     this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false

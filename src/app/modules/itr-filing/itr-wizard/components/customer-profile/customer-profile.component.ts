@@ -1,6 +1,6 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
-import {ITR_JSON, Jurisdictions} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {UntypedFormGroup, Validators, UntypedFormBuilder, ValidationErrors} from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder, ValidationErrors } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -39,7 +39,7 @@ import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 import { RequestManager } from '../../../../shared/services/request-manager';
-import {NorDetailsDialogComponent} from "../../../components/nor-details-dialog/nor-details-dialog.component";
+import { NorDetailsDialogComponent } from "../../../components/nor-details-dialog/nor-details-dialog.component";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -475,7 +475,7 @@ export class CustomerProfileComponent implements OnInit {
 
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
 
-      if(this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT'){
+      if (this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT') {
         this.ITR_JSON.jurisdictions = this.jurisdictions;
         this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
         this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
@@ -547,7 +547,7 @@ export class CustomerProfileComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn');
 
-      if(gender?.status === 'INVALID'){
+      if (gender?.status === 'INVALID') {
         gender?.setValidators(Validators.required);
         gender?.updateValueAndValidity();
       } else {
@@ -574,10 +574,10 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  openAccordion(){
+  openAccordion() {
     const accordionButton = document.getElementsByClassName('accordion-button');
-    if(accordionButton){
-     ( accordionButton[0] as HTMLDivElement).click();
+    if (accordionButton) {
+      (accordionButton[0] as HTMLDivElement).click();
     }
   }
 
@@ -876,11 +876,11 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   uploadDoc: any;
+  //This method call not in used
   uploadDocument(document) {
     this.loading = true;
-    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${
-      document.name
-    }`;
+    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${document.name
+      }`;
     let cloudFileMetaData =
       '{"fileName":"' +
       document.name +
@@ -974,7 +974,7 @@ export class CustomerProfileComponent implements OnInit {
           this.conditionsNorStatus = result.data.conditionsNorStatus;
         } else {
           this.customerProfileForm.controls['residentialStatus'].setValue(
-              this.ITR_JSON.residentialStatus
+            this.ITR_JSON.residentialStatus
           );
         }
       });
@@ -991,11 +991,10 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   getFilePath() {
-    return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${
-      this.customerProfileForm.controls['isRevised'].value === 'Y'
-        ? 'Revised'
-        : 'Original'
-    }/ITR Filing Docs`;
+    return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y'
+      ? 'Revised'
+      : 'Original'
+      }/ITR Filing Docs`;
   }
 
   addClient() {
