@@ -172,7 +172,7 @@ export class AddSubscriptionComponent implements OnInit {
     });
 
     this.loading = true;
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.allSubscriptions = response.data.content
