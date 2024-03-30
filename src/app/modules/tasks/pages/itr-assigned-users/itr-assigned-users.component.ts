@@ -1196,7 +1196,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           userId: data.userId,
           assessmentYear: currentFyDetails[0].assessmentYear,
           taskKeyName: 'itrFilingComences',
-          taskStatus: 'Completed'
+          taskStatus: 'Completed',
+          serviceType: data.serviceType
         };
         const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = userData ? userData.id_token : null;
