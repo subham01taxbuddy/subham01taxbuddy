@@ -12873,3 +12873,7 @@ body[dir=rtl] .checkbox[checked=true] {
   border: 0 !important;
   margin-bottom: 10px;
 }
+
+.ag-cell-label-container{
+  padding: 0 !important;
+}

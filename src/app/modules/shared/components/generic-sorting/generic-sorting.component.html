@@ -2,7 +2,7 @@
   <div class="sortBy">Sort By : </div>
   <div class="">
     <div class="sorting-Container">
-      <div class="col-sm-4">
+      <div class="col-sm-6">
         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
           <mat-label>Select attribute</mat-label>
           <mat-select [(ngModel)]="sortName" (change)="changeInput(true)">
@@ -12,7 +12,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-sm-4" style="margin-left: -10px;">
+      <div class="col-sm-6" style="margin-left: -10px;">
         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height" >
           <mat-label>Sorting Order</mat-label>
           <mat-select [(ngModel)]="sortOrder" (selectionChange)="changeInput(true)">
