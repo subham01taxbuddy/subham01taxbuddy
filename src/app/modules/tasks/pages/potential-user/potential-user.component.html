@@ -25,7 +25,7 @@
                       <div class="row">
                         <div class="col-sm-3 " style="margin-top: 10px;">
                           <mat-label>Select Status</mat-label>
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
                               <mat-option *ngFor="let status of statuslist" [value]="status.statusId">
                                 {{ status.statusName }}
