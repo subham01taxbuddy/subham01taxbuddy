@@ -346,6 +346,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   checkSubscription(action: string) {
+    
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
