@@ -670,6 +670,7 @@ export class SummaryComponent implements OnInit {
       taxAtNormalRate: Number;
       taxAtSpecialRate: Number;
       rebateOnAgricultureIncome: Number;
+      marginalRelief: Number;
       totalTax: Number;
     };
     rebateUnderSection87A: Number;
@@ -1813,6 +1814,7 @@ export class SummaryComponent implements OnInit {
                 ]?.TotalTaxPayable,
               taxAtSpecialRate: 0,
               rebateOnAgricultureIncome: 0,
+              marginalRelief:0,
               totalTax:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
@@ -4225,6 +4227,8 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
 
+              marginalRelief: 0, //need to add correct key from schema
+
               totalTax:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI
@@ -6044,6 +6048,7 @@ export class SummaryComponent implements OnInit {
                 rebateOnAgricultureIncome:
                   this.finalSummary?.assessment?.taxSummary
                     ?.rebateOnAgricultureIncome,
+                marginalRelief: this.finalSummary?.assessment?.taxSummary?.surchargeMarginalRelif,
                 totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
               },
               rebateUnderSection87A:

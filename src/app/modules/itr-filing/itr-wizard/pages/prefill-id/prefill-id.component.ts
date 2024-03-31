@@ -6932,70 +6932,13 @@ export class PrefillIdComponent implements OnInit {
     this.loading = true;
 
     var data = new FormData();
-    data.append('from', 'support@taxbuddy.com');
-    data.append('subject', 'Summary Json Parsing Failed!!!');
-    data.append(
-      'body',
-      `<!DOCTYPE html>
-<html>
-
-<head>
-    <title></title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-</head>
-
-<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
-    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
-        <tr>
-            <td align="center">
-                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
-                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
-                        <td>
-                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
-                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
-                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
-                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0px 15px 0px 15px">
-                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
-                                <tr>
-                                    <td style="font-size: 14px;color: #333;"> <br> <br> <br>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Summary JSON parsing has failed for user: ${this.data.name} PAN:${this.data.panNumber} itrId:${this.data.itrId} userId:${this.data.userId}</p> <br>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please check attachment for json. </p> <br>
-
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Regards, </p>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Taxbuddy Dev Team </p> <br>
-
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="background-color: #1c3550;padding: 20px 15px;">
-                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-
-</html>`
-    );
-    data.append('cc', 'divya@taxbuddy.com');
-    data.append('isHtml', 'true');
+    data.append('userId', this.data.userId);
+    data.append('itrId', this.data.itrId);
+    data.append('panNumber', this.data.panNumber);
+    data.append('name', this.data.name);
     data.append('file', this.uploadDoc);
-    data.append('to', 'gitanjali.kakade@taxbuddy.com, pratik.bharda@taxbuddy.com');
 
-    let param = '/send-mail';
+    let param = '/json-failed-send-mail-alert';
     this.userService.postMethod(param, data).subscribe(
       (res: any) => {
         console.log(res);

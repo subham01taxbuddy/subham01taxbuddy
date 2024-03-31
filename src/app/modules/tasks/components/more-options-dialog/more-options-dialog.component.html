@@ -72,12 +72,12 @@
     </button>
   </span>
   <!-- might be below 'No JSON filing' changes required in april -->
-  <!-- <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])">
+  <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN', 'ROLE_LEADER'])">
     <button type="button" class="more-new-button" title="Update Filing w/out JSON"
       (click)="checkSubscription('update-filing')">
       No JSON Filing
     </button>
-  </span> -->
+  </span>
   <span
     *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER'])">
     <button type="button" title="update ITR-U filling" class="more-new-button"
