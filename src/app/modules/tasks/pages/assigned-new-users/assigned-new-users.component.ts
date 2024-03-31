@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -17,7 +17,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
@@ -44,7 +44,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   itrStatus: any = [];
   filerUserId: any;
   ogStatusList: any = [];
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;
@@ -210,7 +210,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             this.utilsService.showSnackBar(error.error.detail);
             return;
           });
-          let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          let objITR = this.utilsService.createEmptyJson(profile, this.rowData.serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
           const param = '/itr';
@@ -242,7 +242,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             } else if (result.length == 1) {
               let workingItr = result[0];
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-              let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+              let obj = this.utilsService.createEmptyJson(null, this.rowData.serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
@@ -376,7 +376,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    return [
+    let columnDefs: ColDef[] = [
+
+      // return [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
@@ -415,7 +417,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -481,7 +482,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -494,7 +494,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -717,6 +716,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    return columnDefs;
   }
 
   reassignmentForLeader() {
@@ -959,7 +959,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       userId: data.userId,
       assessmentYear: currentFyDetails[0].assessmentYear,
       taskKeyName: 'itrFilingComences',
-      taskStatus: 'Completed'
+      taskStatus: 'Completed',
+      serviceType: data.serviceType
     };
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;

@@ -102,7 +102,7 @@
             <input type="text" matInput (blur)="trimValue(smeFormGroup.controls['gstin']);checkGstin()"
               (change)="changeToUpper(smeFormGroup.controls['gstin'])" placeholder="GSTN" [formControl]="gstin"
               class="input-field" trim [disabled]="smeFormGroup.controls['gstin'].value" readonly />
-            <mat-error class="mt-3" *ngIf="smeFormGroup.controls['gstin'].invalid">
+            <mat-error  *ngIf="smeFormGroup.controls['gstin'].invalid">
               Enter valid GSTIN</mat-error>
           </mat-form-field>
         </div>
@@ -232,7 +232,7 @@
                 {{ leader.name }}
               </mat-option>
             </mat-autocomplete>
-            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['parentName'].hasError('required')">Please
+            <mat-error > <span *ngIf="smeFormGroup.controls['parentName'].hasError('required')">Please
                 select parent name.</span>
             </mat-error>
           </mat-form-field>

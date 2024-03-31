@@ -5,10 +5,10 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DatePipe } from '@angular/common';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { MatVerticalStepper } from '@angular/material/stepper';
 import * as moment from 'moment';
+import { MatStepper } from '@angular/material/stepper';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-itr-status-dialog',
@@ -16,7 +16,7 @@ declare function we_track(key: string, value: any);
   styleUrls: ['./itr-status-dialog.component.scss']
 })
 export class ItrStatusDialogComponent implements OnInit {
-  @ViewChild('stepper') stepper: MatVerticalStepper;
+  @ViewChild('stepper') stepper: MatStepper;
   allIncomeSources = [
     { key: 'Salary', value: 'SALARY', selected: false },
     { key: 'House Property', value: 'HOUSE_PROPERTY', selected: false },
@@ -38,8 +38,8 @@ export class ItrStatusDialogComponent implements OnInit {
   isEditIncomeSources: boolean;
   showSubmitBtn: boolean;
   paymentCustomAttributes: any;
-  isInsuranceOpted: FormControl;
-  panNumber: FormControl;
+  isInsuranceOpted: UntypedFormControl;
+  panNumber: UntypedFormControl;
   showConfirmUploadBtn: boolean;
   itrFiledStatusData: any;
   refundProcessData: any = [];
@@ -59,11 +59,11 @@ export class ItrStatusDialogComponent implements OnInit {
   transactionId: any;
   viewer = 'DOC';
   docUrl = '';
-  validateAcOtp: FormControl;
-  validateFpOtp: FormControl;
-  adharOtp: FormControl;
-  bankEvc: FormControl;
-  dematEvc: FormControl;
+  validateAcOtp: UntypedFormControl;
+  validateFpOtp: UntypedFormControl;
+  adharOtp: UntypedFormControl;
+  bankEvc: UntypedFormControl;
+  dematEvc: UntypedFormControl;
   counter = 15;
   showNextOpt: any;
   showAdharEriOtp: boolean;
@@ -80,8 +80,8 @@ export class ItrStatusDialogComponent implements OnInit {
     private itrMsService: ItrMsService,
     public utilsService: UtilsService
   ) {
-    this.panNumber = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
-    this.isInsuranceOpted = new FormControl('true')
+    this.panNumber = new UntypedFormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
+    this.isInsuranceOpted = new UntypedFormControl('true')
   }
 
   ngOnInit() {
@@ -169,7 +169,7 @@ export class ItrStatusDialogComponent implements OnInit {
 
   getItrLifeCycleStatus() {
     this.loading = true;
-    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear;
+    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear + '&serviceType=' + this.data?.userInfo?.serviceType;
     this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false

@@ -24,8 +24,15 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (request.headers.has(InterceptorSkipHeader)) {
+      const headers = request.headers.delete(InterceptorSkipHeader);
+      return next.handle(request.clone({ headers }));
+    }
     this.userData = JSON.parse(localStorage.getItem('UMD'));
-    Auth.currentSession()
+    if(this.userData?.id_token){
+      const TOKEN = this.userData ? this.userData.id_token : null;
+    }else{
+      Auth.currentSession()
       .then((data) => {
         if (data.isValid()) {
           this.userData.id_token = data.getAccessToken().getJwtToken();
@@ -36,6 +43,8 @@ export class TokenInterceptor implements HttpInterceptor {
         }
       })
       .catch((err) => console.log('Auth.currentSession err:', err));
+    }
+
     const TOKEN = this.userData ? this.userData.id_token : null;
     if (TOKEN && this.tokenExpired(TOKEN)) {
       console.log("this is expired token case");

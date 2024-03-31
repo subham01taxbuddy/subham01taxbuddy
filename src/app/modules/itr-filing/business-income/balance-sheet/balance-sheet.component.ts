@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions } from 'ag-grid-community';
@@ -20,7 +20,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   natureOfBusinessDropdownAll: any;
-  assetLiabilitiesForm: FormGroup;
+  assetLiabilitiesForm: UntypedFormGroup;
   total1 = 0;
   total2 = 0;
   difference = 0;
@@ -35,7 +35,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));

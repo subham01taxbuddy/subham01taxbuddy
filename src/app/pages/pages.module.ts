@@ -49,47 +49,44 @@ export const MY_FORMATS = {
   }
 };
 @NgModule({
-  declarations: [
-    SelectObjectFilterPipe,
-    SelectFilterPipe,
-    SelectObjFilterPipe,
-    BacktipsDatePipe,
-    FormControlTypePipe,
-    ValidateOtpByWhatAppComponent,
-    NeedHelpComponent,
-    AisCredsDialogComponent,
-  ],
-  entryComponents: [
-    ValidateOtpByWhatAppComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(routes),
-    NgxLoadingModule.forRoot({}),
-    ModalModule.forRoot(),
-    PdfViewerModule,
-    SharedModule,
-  ],
-  providers: [
-    SelectObjectFilterPipe,
-    SelectFilterPipe,
-    SelectObjFilterPipe,
-    BacktipsDatePipe,
-    FormControlTypePipe,
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
-  ],
-  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-
-  exports: [
-    BacktipsDatePipe,
-    AgGridModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxLoadingModule,
-    NeedHelpComponent,
-    FormControlTypePipe]
+    declarations: [
+        SelectObjectFilterPipe,
+        SelectFilterPipe,
+        SelectObjFilterPipe,
+        BacktipsDatePipe,
+        FormControlTypePipe,
+        ValidateOtpByWhatAppComponent,
+        NeedHelpComponent,
+        AisCredsDialogComponent,
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule.forChild(routes),
+        NgxLoadingModule.forRoot({}),
+        ModalModule.forRoot(),
+        PdfViewerModule,
+        SharedModule,
+    ],
+    providers: [
+        SelectObjectFilterPipe,
+        SelectFilterPipe,
+        SelectObjFilterPipe,
+        BacktipsDatePipe,
+        FormControlTypePipe,
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+    ],
+    schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+    exports: [
+        BacktipsDatePipe,
+        AgGridModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxLoadingModule,
+        NeedHelpComponent,
+        FormControlTypePipe
+    ]
 })
 export class PagesModule { }

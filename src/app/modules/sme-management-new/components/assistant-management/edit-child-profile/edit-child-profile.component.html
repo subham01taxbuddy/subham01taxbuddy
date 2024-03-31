@@ -1,0 +1,387 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="rowClr-1">
+  <div class="row ">
+    <div class="col-sm-12">
+      <div class="sub-title-container">
+        <span class="sub-title-text">Child Details</span>
+      </div>
+    </div>
+  </div>
+  <div class="new-assigned-container">
+    <div class="new-sub-container">
+
+      <div class="row" *ngIf="!fromEdit && !otpVerificationDone">
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">SignIn/SignUp With Taxbuddy</span>
+        </div>
+      </div>
+      <div class="user-data-container" *ngIf="!fromEdit && !otpVerificationDone">
+        <div>
+          <div class="row">
+            <div class="col-sm-4">
+              <mat-label> Mobile No/Login No*</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
+                  maxlength="10" minlength="6" trim [numbersOnly]="true" required  />
+                  <mat-error *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                    Mobile number is required and must be valid.</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!fromEdit" class=" col-sm-4  verifyBank">
+              <button class="verify-button "
+                    [disabled]="mobileNumber.invalid || loading || showSignUp || showOtp"
+                    (click)="amplifySignIn()">Verify Number
+                  </button>
+            </div>
+          </div>
+          <div class="row mt-3" *ngIf="showSignUp">
+            <div class="col-sm-4">
+              <mat-label>First Name *</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="First Name" [formControl]="firstName" class="input-field"  required />
+                <mat-error *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                  First name is required.</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-label>Last Name *</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Last Name" [formControl]="lastName" class="input-field"  required />
+                <mat-error *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                  Last name is required.</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4">
+              <mat-label> Email Address * </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Enter email address" name="email" [formControl]="emailAddress" class="input-field"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50"
+                (blur)="trimValue(emailAddress)" required  />
+                <mat-error *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)">
+                  Email address is required and must be valid.</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!fromEdit" class="row mt-2 verifyBank">
+              <button class="col-2 verify-button "
+                    [disabled]="loading"
+                    (click)="amplifySignUp()">Sign Up
+                  </button>
+            </div>
+          </div>
+          <div class="row mt-3" *ngIf="showOtp">
+            <div class="col-sm-4">
+              <mat-label> OTP * </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="OTP" [formControl]="otp" class="input-field"
+                required maxlength="6" minlength="6" digitsOnly  />
+                <mat-error *ngIf="otp.invalid && (otp.dirty || otp.touched)">
+                  Please Enter Valid OTP</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!fromEdit" class=" col-sm-4  verifyBank">
+              <button class="verify-button "
+                    [disabled]="otp.invalid || loading"
+                    (click)="otpValidationMethod()">Submit OTP
+                  </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="fromEdit && otpVerificationDone">
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">Personal Details</span>
+        </div>
+      </div>
+      <div class="user-data-container" *ngIf="fromEdit && otpVerificationDone">
+
+        <div class="row mt-3">
+          <div class="col-sm-4">
+            <mat-label> Mobile No/Login No*</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
+                maxlength="10" minlength="6" trim [numbersOnly]="true" required  />
+                <mat-error *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  Mobile number is required and must be valid.</mat-error>
+            </mat-form-field>
+          </div>
+          <!-- <div class="col-sm-4">
+            <mat-label>Assistant Name(First,Middle & Last Name)*</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="First,Middle & Last Name" [formControl]="name" class="input-field"  required />
+            </mat-form-field>
+          </div> -->
+          <div class="col-sm-4">
+            <mat-label> Email ID * </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="email id" [formControl]="smeOriginalEmail" class="input-field"
+              required  />
+              <mat-error *ngIf="smeOriginalEmail.invalid && (smeOriginalEmail.dirty || smeOriginalEmail.touched)">
+                Email address is required and must be valid.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-sm-4">
+            <mat-label>First Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="First Name" [formControl]="firstName" class="input-field"  required />
+              <mat-error *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                First name is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label>Middle Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Middle Name" [formControl]="middleName" class="input-field"  required />
+              <mat-error *ngIf="middleName.invalid && (middleName.dirty || middleName.touched)">
+                Middle name is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label>Last Name *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Last Name" [formControl]="lastName" class="input-field"  required />
+              <mat-error *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                Last name is required.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-sm-4">
+            <mat-label> Pin Code * </mat-label>
+            <mat-form-field appearance="outline">
+              <input autocomplete="off" type="text" matInput placeholder="PIN code" [formControl]="pinCode" class="input-field"
+               maxlength="6" minlength="6" trim digitsOnly   (blur)="getCityData()" required />
+               <mat-error
+                  *ngIf="pinCode.hasError('required') || pinCode.hasError('pattern') || pinCode.hasError('minLength') || pinCode.hasError('maxLength')">
+                  Enter
+                  6 digit pinCode .</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> city *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="city" [formControl]="city" class="input-field" required  />
+              <mat-error *ngIf="city.invalid && (city.dirty || city.touched)">
+                City is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> state *</mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" required />
+              <mat-error *ngIf="state.invalid && (state.dirty || state.touched)">
+                State is required.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-4">
+            <mat-label> Qualification * </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Qualification" name="" [formControl]="qualification"
+                class="input-field"  [readonly]="isReadOnly" required />
+                <mat-error *ngIf="qualification.invalid && (qualification.dirty || qualification.touched)">
+                  Qualification is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <mat-label> Calling Number </mat-label>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" trim
+                [formControl]="callingNumber" class="input-field" maxlength="10" minlength="6"  />
+              <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['callingNumber'].hasError('required')">Please
+                  enter calling no.</span>
+                <span *ngIf="smeFormGroup.controls['callingNumber'].hasError('pattern')">Please enter valid calling
+                  no.</span>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 TxHd-12">
+            <span class="header-text-1">Roles</span>
+          </div>
+        </div>
+        <div class="user-data-container">
+          <div class="row">
+            <div class="col-sm-4" style="margin-top: 10px;">
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">Roles: </b>
+                <section class="example-section" >
+                  <p><mat-checkbox  [formControl]="filerAssistant">Filer-Assistant</mat-checkbox></p>
+                  <hr>
+                </section>
+              </div>
+            </div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4" style="margin-top: 10px;" >
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">SME/Partner Type: </b>
+              </div>
+              <section class="example-section" >
+                <p><mat-checkbox (change)="onCheckboxChange(3)" [formControl]="internal">Internal</mat-checkbox></p>
+                <hr>
+                <p><mat-checkbox (change)="onCheckboxChange(4)" [formControl]="external">External</mat-checkbox></p>
+                <hr>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-12 TxHd-12">
+            <span class="header-text-1">Expertise & Availability</span>
+          </div>
+        </div>
+        <div class="user-data-container">
+          <div class="row">
+            <div class="col-sm-5">
+              <div class="card" style="margin-top: 10px;">
+                <span>
+                  <b style="font-size: 18px">Services: </b>
+                  <b style="font-size: 18px;float:right;">Assignment on/off toggle: </b>
+                </span>
+                <div class="row">
+                  <section class="example-section" >
+                    <p><mat-checkbox [formControl]="itr"
+                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox>
+                      <mat-slide-toggle
+                       [formControl]="itrToggle"
+                      style="float:right ; margin-right: 10px;"
+                      (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
+                  </p>
+                  <hr>
+                  </section>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <mat-hint>
+                      <p> <i class="fas fa-circle"></i> Select checkbox to active service</p>
+                    </mat-hint>
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-hint>
+                      <p><i class="fas fa-circle"></i> Toggle to assign service</p>
+                    </mat-hint>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">Language: </b>
+                <div class="row">
+                  <section class="example-section">
+                    <div *ngFor="let lang of langList" class="lang-checkbox">
+                      <p>
+                        <mat-checkbox [formControl]="getLanguageControl(lang)"
+                          [disabled]="languageForm.controls[lang].status==='DISABLED'"
+                          (change)="onLanguageCheckboxChange(lang)">
+                          <span class="spacer">{{ lang }}</span></mat-checkbox>
+                      </p>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">ITR's Type can Handle: </b>
+                <div class="row">
+                  <section class="example-section">
+                    <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
+                      <p>
+                        <mat-checkbox [formControl]="getItrTypeControl(itrType)"
+                          (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
+                            }}</span></mat-checkbox>
+                      </p>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">Inactivity Time Duration:</b>
+                <div class="row">
+                  <section class="example-section">
+                    <div *ngFor="let duration of inactivityTimeDuration" class="duration-checkbox">
+                      <p>
+                        <mat-checkbox [formControl]="getDurationControl(duration.key)"
+                          (change)="onDurationCheckboxChange($event,duration.key)">
+                          <span class="spacer">{{ duration.key }}</span>
+                        </mat-checkbox>
+                      </p>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input type="number" [min]="1" [max]="maxNumber" class="form-control" [formControl]="activeCaseMaxCapacity" required>
+                        <div *ngIf="activeCaseMaxCapacity.invalid && (activeCaseMaxCapacity.value === null || activeCaseMaxCapacity.value === '')" class="text-danger">This field is required.</div>
+                        <div *ngIf="activeCaseMaxCapacity.value === 0" class="text-danger">Please enter a value greater than zero.</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 TxHd-12">
+            <span class="header-text-1">Other Details</span>
+          </div>
+        </div>
+        <div class="user-data-container">
+          <div class="row">
+            <div class="col-sm-3">
+              <mat-label>Parent Name </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Name" [formControl]="parentName" class="input-field" readonly />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3" *ngIf="fromEdit">
+              <mat-label> Official Email ID</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Official Email ID" [formControl]="smeOfficialEmail"
+                  class="input-field" readonly />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3" *ngIf="fromEdit">
+              <mat-label> Kommunicate ID </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Kommunicate ID" [formControl]="email" class="input-field"
+                  readonly />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3">
+              <mat-label>Principle Name </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput placeholder="Name" [formControl]="principalName" class="input-field"
+                  readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+        <div class="row mt-3">
+          <div style="flex: 1 0 0; text-align: left;">
+            <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
+          </div>
+          <div style=" flex: 1 0 0; text-align: right;">
+            <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

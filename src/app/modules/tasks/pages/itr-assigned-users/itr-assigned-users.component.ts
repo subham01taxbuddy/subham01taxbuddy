@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -17,7 +17,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
@@ -71,7 +71,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
-  unAssignedUsersView = new FormControl(false);
+  unAssignedUsersView = new UntypedFormControl(false);
   disableCheckboxes = false;
   serviceTypes = [
     {
@@ -231,10 +231,10 @@ export class ItrAssignedUsersComponent implements OnInit {
 
           let objITR
           if (this.rowData.serviceType === 'ITRU') {
-            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, "2022-2023");
+            objITR = this.utilsService.createEmptyJson(profile, 'ITRU', currentFyDetails[0].assessmentYear, "2022-2023");
             objITR.isITRU = true;
           } else {
-            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+            objITR = this.utilsService.createEmptyJson(profile, 'ITR', currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           }
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
@@ -269,7 +269,8 @@ export class ItrAssignedUsersComponent implements OnInit {
               let workingItr = result[0];
 
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-              let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+              let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
+              let obj = this.utilsService.createEmptyJson(null, serviceType, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
@@ -508,7 +509,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
-    let columnDefs = [
+    let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
@@ -520,7 +521,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
         cellStyle: function (params: any) {
           return {
-            textAlign: 'center',
             display: 'flex',
             'align-items': 'center',
             'justify-content': 'center',
@@ -558,7 +558,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -611,7 +610,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -648,7 +646,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -1199,7 +1196,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           userId: data.userId,
           assessmentYear: currentFyDetails[0].assessmentYear,
           taskKeyName: 'itrFilingComences',
-          taskStatus: 'Completed'
+          taskStatus: 'Completed',
+          serviceType: data.serviceType
         };
         const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = userData ? userData.id_token : null;

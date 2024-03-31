@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -41,9 +41,9 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   userInfo: any = [];
   loggedInUserRoles: any;
   isOwner: boolean;
-  invoiceFormGroup: FormGroup = this.fb.group({
-    mobile: new FormControl(''),
-    email: new FormControl(''),
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
   });
   sortBy: any = {};
   sortMenus = [
@@ -53,11 +53,11 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     // { value: 'payableSubscriptionAmount', name: 'Amount to be approved / refunded' },
   ];
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as FormControl;
+    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
   }
   dataOnLoad = true;
   searchBy: any = {};
@@ -78,7 +78,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   itrStatus: any = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: MatDialog,
     private _toastMessageService: ToastMessageService,
     private utilService: UtilsService,
@@ -451,7 +451,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -474,7 +474,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -497,7 +497,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 70,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

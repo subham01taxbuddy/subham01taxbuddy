@@ -5,7 +5,7 @@ import { MatSelect } from '@angular/material/select';
 @Component({
     selector: "app-radio-cell",
     template: `
-    <mat-card>
+    <mat-card appearance="outlined">
         <div class="container" #group tabindex="0" (keydown)="onKeyDown($event)">
         <mat-form-field>
             <mat-select [(ngModel)]="selectedPeriod">
@@ -21,15 +21,15 @@ import { MatSelect } from '@angular/material/select';
 `,
     styles: [
         `
-            .container {
-                width: 190px;
-                height: 48px;
-            }
-
-            .container:focus {
-                outline: none;
-            }
-        `
+                     .container {
+                         width: 190px;
+                         height: 48px;
+                     }
+         
+                     .container:focus {
+                         outline: none;
+                     }
+                 `
     ],
     
 })

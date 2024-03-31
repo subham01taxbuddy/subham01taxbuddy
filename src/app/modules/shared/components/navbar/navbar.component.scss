@@ -109,11 +109,12 @@
 
 .hamburger {
     color: #1b67ba;
-    font-size: 37px;
+    font-size: 28px;
     text-align: center;
     justify-content: flex-end;
     display: flex;
-    margin-left:22px;
+    margin-left: 11px;
+    margin-top: 10px;
 }
 .note1 {
   background-color: #fafafa;
@@ -127,4 +128,23 @@
   min-width: 180px;
   margin-top: 5px;
   margin-left: 0px !important;
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   Validators,
-  FormArray,
-  FormControl,
+  UntypedFormArray,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,12 +26,12 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 })
 export class HousePropertyComponent implements OnInit {
   loading: boolean = false;
-  housePropertyForm: FormGroup;
+  housePropertyForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
-  isCoOwners = new FormControl(false);
+  isCoOwners = new UntypedFormControl(false);
   hpView: string = 'FORM';
   propertyTypeDropdown = [
     {
@@ -77,7 +77,7 @@ export class HousePropertyComponent implements OnInit {
   PREV_ITR_JSON: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
@@ -234,8 +234,8 @@ export class HousePropertyComponent implements OnInit {
     if (
       Number(
         (
-          (this.housePropertyForm.controls['loans'] as FormGroup)
-            .controls[0] as FormGroup
+          (this.housePropertyForm.controls['loans'] as UntypedFormGroup)
+            .controls[0] as UntypedFormGroup
         ).controls['interestAmount'].value
       ) <= 200000
     ) {
@@ -286,7 +286,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createHousePropertyForm(): FormGroup {
+  createHousePropertyForm(): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -430,7 +430,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string } = {}): FormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -472,7 +472,7 @@ export class HousePropertyComponent implements OnInit {
       panNumber?: string;
       percentage?: number;
     } = {}
-  ): FormGroup {
+  ): UntypedFormGroup {
     let formGroup =
       this.fb.group({
         name: [obj.name || '', [Validators.required]],
@@ -494,11 +494,11 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getCoOwnersArray() {
-    return <FormArray>this.housePropertyForm.get('coOwners');
+    return <UntypedFormArray>this.housePropertyForm.get('coOwners');
   }
 
   addMoreCoOwner() {
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
@@ -508,7 +508,7 @@ export class HousePropertyComponent implements OnInit {
 
   removeCoOwner(index) {
     console.log('Remove Index', index);
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     coOwner.removeAt(index);
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
@@ -518,7 +518,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   coOwnerPanValidation() {
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     // This method is written in utils service for common usablity.
     let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
       'panNumber',
@@ -546,7 +546,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   calPercentage() {
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     coOwner.controls.forEach((controlName) => {
       sum = Number(sum) + Number(controlName.value.percentage);
@@ -565,7 +565,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getUserSharePercent(){
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     coOwner.controls.forEach((controlName) => {
       sum = Number(sum) + Number(controlName.value.percentage);
@@ -574,7 +574,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isduplicatePAN(i, formArrayName) {
-    const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
+    const formArray = <UntypedFormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
       (item) =>
         item['controls'].panNumber.value ===
@@ -676,7 +676,7 @@ export class HousePropertyComponent implements OnInit {
 
     // setting coOwners Details
     if (itrJsonHp?.coOwners?.length > 0) {
-      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+      const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
       this.isCoOwners.setValue(true);
       itrJsonHp?.coOwners?.forEach(element => {
         let obj = {
@@ -706,7 +706,7 @@ export class HousePropertyComponent implements OnInit {
           'annualRentReceived'
           ].updateValueAndValidity();
     } else {
-      const tenant = <FormArray>this.housePropertyForm.get('tenant');
+      const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
         itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
@@ -749,7 +749,7 @@ export class HousePropertyComponent implements OnInit {
 
   haveCoOwners() {
     console.log('Hp===', this.isCoOwners.value);
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     if (this.isCoOwners.value) {
       coOwner.push(this.createCoOwnerForm());
     } else {
@@ -767,11 +767,11 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getTenantArray() {
-    return <FormArray>this.housePropertyForm.get('tenant');
+    return <UntypedFormArray>this.housePropertyForm.get('tenant');
   }
 
   addMoreTenants() {
-    const tenant = <FormArray>this.housePropertyForm.get('tenant');
+    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
@@ -781,7 +781,7 @@ export class HousePropertyComponent implements OnInit {
 
   removeTenant(index) {
     console.log('Remove Index', index);
-    const tenant = <FormArray>this.housePropertyForm.get('tenant');
+    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
     tenant.removeAt(index);
     // Condition is added because at least one tenant details is mandatory
     if (tenant.length === 0) {
@@ -790,7 +790,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   tenantPanValidation() {
-    const tenant = <FormArray>this.housePropertyForm.get('tenant');
+    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
     // This method is written in utils service for common usablity.
     let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
       'panNumber',
@@ -822,7 +822,7 @@ export class HousePropertyComponent implements OnInit {
       principalAmount?: number;
       interestAmount?: number;
     } = {}
-  ): FormGroup {
+  ): UntypedFormGroup {
     return this.fb.group({
       loanType: ['HOUSING'],
       principalAmount: [
@@ -837,7 +837,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getLoansArray() {
-    return <FormArray>this.housePropertyForm.get('loans');
+    return <UntypedFormArray>this.housePropertyForm.get('loans');
   }
 
   chekIsSOPAdded() {
@@ -929,12 +929,12 @@ export class HousePropertyComponent implements OnInit {
       ].updateValueAndValidity();
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
-        const tenant = <FormArray>this.housePropertyForm.get('tenant');
+        const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
         this.annualValue = null;
         this.thirtyPctOfAnnualValue = null;
       } else {
-        const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
+        const nilTenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
         // Condition is added because at least one tenant details is mandatory
         if (nilTenant.length === 0) {
           nilTenant.push(this.createTenantForm());
@@ -1473,7 +1473,7 @@ export class HousePropertyComponent implements OnInit {
         standardDeduction.setValue(0);
       }
 
-      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+      const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
       let totalCoOwnerPercent = 0;
       if (coOwner.value instanceof Array) {
         coOwner.value.forEach((item) => {

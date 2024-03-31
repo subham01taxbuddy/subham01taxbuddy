@@ -1,6 +1,6 @@
 import { filter } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -27,7 +27,7 @@ export class AddSubscriptionComponent implements OnInit {
   filteredPlans: any = [];
   selectedBtn: any = '';
   servicesType: any = [{ value: 'ITR' }, { value: 'ITR-U' }, { value: 'NOTICE' }, { value: 'GST' }, { value: 'TPA' }, { value: 'ALL' }];
-  subscriptionPlan = new FormControl('', Validators.required);
+  subscriptionPlan = new UntypedFormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
   roles: any;
@@ -178,7 +178,7 @@ export class AddSubscriptionComponent implements OnInit {
     });
 
     this.loading = true;
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.allSubscriptions = response.data.content

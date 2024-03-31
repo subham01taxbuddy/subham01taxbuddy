@@ -621,10 +621,10 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   updateFilingNoJson() {
-    const param = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-    this.itrMsService.getMethod(param).subscribe(
-      (res: any) => {
-        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+    // const param = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+    // this.itrMsService.getMethod(param).subscribe(
+    //   (res: any) => {
+    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           if (this.data.statusId != 11) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
@@ -640,20 +640,20 @@ export class MoreOptionsDialogComponent implements OnInit {
             );
           }
 
-        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-          this.utilsService.showSnackBar(
-            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure that the payment has been made by the user to proceed ahead'
-          );
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(error);
-      }
-    );
+    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+    //       this.utilsService.showSnackBar(
+    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+    //       );
+    //     } else {
+    //       this.utilsService.showSnackBar(
+    //         'Please make sure that the payment has been made by the user to proceed ahead'
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     this.utilsService.showSnackBar(error);
+    //   }
+    // );
   }
 
   linkToFinbingo() {

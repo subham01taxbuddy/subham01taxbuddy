@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import {  MatDialogRef } from '@angular/material/dialog';
@@ -50,16 +50,16 @@ export class BulkStatusUpdateComponent implements OnInit {
   };
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
 
   toDateMin: any = this.minDate;
-  startDate = new FormControl();
-  endDate = new FormControl();
-  toStatusValue = new FormControl();
-  fromStatusValue = new FormControl();
+  startDate = new UntypedFormControl();
+  endDate = new UntypedFormControl();
+  toStatusValue = new UntypedFormControl();
+  fromStatusValue = new UntypedFormControl();
   showBulkUpdateBtn: any;
   userInfo: any = [];
   usersGridOptions: GridOptions;
@@ -79,7 +79,7 @@ export class BulkStatusUpdateComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     public datePipe: DatePipe,
   ) {
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
   }

@@ -30,7 +30,7 @@
             <mat-label>First name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <input matInput placeholder="First Name" required type="text" formControlName="firstName">
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
+              <mat-error class="" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>
           </div>
@@ -38,7 +38,7 @@
             <mat-label>Middle Name</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <input placeholder="Middle Name" type="text" formControlName="middleName" matInput>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter
+              <mat-error class="" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter
                 the
                 valid name.</mat-error>
             </mat-form-field>
@@ -47,7 +47,7 @@
             <mat-label>Last Name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <input matInput placeholder="Last Name" type="text" formControlName="lastName" required>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
+              <mat-error class="" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>
           </div>
@@ -69,14 +69,14 @@
             <mat-form-field appearance="outline" class="class1">
               <input matInput [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile"
                 name="mobile" [maxlength]="maxNo" [minlength]="minNo" required />
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
+              <mat-error class="" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
                 is required</mat-error>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
+              <mat-error class="" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
                 valid mobile no.</mat-error>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number
+              <mat-error class="" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number
                 cannot
                 exceed 10 characters.</mat-error>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('minlength')">Mobile number
+              <mat-error class="" *ngIf="signUpForm.controls['mobile'].hasError('minlength')">Mobile number
                 must
                 be 10 digits.</mat-error>
             </mat-form-field>
@@ -86,9 +86,9 @@
             <mat-form-field appearance="outline" class="class1">
               <input matInput type="email" placeholder="Enter email address" formControlName="email" name="mobile"
                 pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50" required />
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('required')">Email address is
+              <mat-error class="" *ngIf="signUpForm.controls['email'].hasError('required')">Email address is
                 required</mat-error>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('pattern')">Please enter a valid
+              <mat-error class="" *ngIf="signUpForm.controls['email'].hasError('pattern')">Please enter a valid
                 email address.</mat-error>
             </mat-form-field>
           </div>
@@ -101,7 +101,7 @@
                   <span> {{service.key}}</span>
                 </mat-option>
               </mat-select>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
+              <mat-error class="" *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
                 Service type </mat-error>
             </mat-form-field>
           </div>

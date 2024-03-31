@@ -9,21 +9,18 @@ import { PromoCodeRoutes } from './promo-codes.routing';
 import {AddEditPromoCodeComponent} from './add-edit-promo-code/add-edit-promo-code.component'
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxPaginationModule,
-    PromoCodeRoutes,
-    NgxLoadingModule.forRoot({}),
-  ],
-  declarations: [
-    PromoCodesComponent,
-    AddEditPromoCodeComponent
-  ],
-  entryComponents: [
-    PromoCodesComponent,
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxPaginationModule,
+        PromoCodeRoutes,
+        NgxLoadingModule.forRoot({}),
+    ],
+    declarations: [
+        PromoCodesComponent,
+        AddEditPromoCodeComponent
+    ]
 })
 export class PromoCodesModule { }

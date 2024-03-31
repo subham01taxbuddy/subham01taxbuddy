@@ -14,15 +14,15 @@ import { AgEditorComponent, } from 'ag-grid-angular';
 `,
     styles: [
         `
-            .container {
-                width: 190px;
-                height: 48px;
-            }
-
-            .container:focus {
-                outline: none;
-            }
-        `
+                     .container {
+                         width: 190px;
+                         height: 48px;
+                     }
+         
+                     .container:focus {
+                         outline: none;
+                     }
+                 `
     ]
 })
 export class AgGridMaterialSelectEditorComponent implements  AgEditorComponent {

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -13,7 +13,7 @@ declare let $: any;
 export class DonationsComponent implements OnInit {
   @Input() isAddDonation: Number;
   @Input() type: string;
-  generalDonationForm: FormGroup;
+  generalDonationForm: UntypedFormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -428,7 +428,7 @@ export class DonationsComponent implements OnInit {
   config: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private userMsService: UserMsService
   ) {}
@@ -470,14 +470,14 @@ export class DonationsComponent implements OnInit {
   }
 
   addDonations() {
-    const donationArray = <FormArray>(
+    const donationArray = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
     if (donationArray.valid) {
       this.addMoreDonations();
     } else {
       donationArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -491,7 +491,7 @@ export class DonationsComponent implements OnInit {
     });
   }
 
-  createDonationForm(item?): FormGroup {
+  createDonationForm(item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : '', Validators.maxLength(25)],
@@ -535,19 +535,19 @@ export class DonationsComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(
       (result: any) => {
         (
-          (this.generalDonationForm.controls['donationArray'] as FormGroup)
-            .controls[i] as FormGroup
+          (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+            .controls[i] as UntypedFormGroup
         ).controls['city'].setValue(result.taluka);
         (
-          (this.generalDonationForm.controls['donationArray'] as FormGroup)
-            .controls[i] as FormGroup
+          (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+            .controls[i] as UntypedFormGroup
         ).controls['state'].setValue(result.stateCode);
       },
       (error) => {
         if (error.status === 404) {
           (
-            (this.generalDonationForm.controls['donationArray'] as FormGroup)
-              .controls[i] as FormGroup
+            (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+              .controls[i] as UntypedFormGroup
           ).controls['city'].setValue(null);
         }
       }
@@ -560,8 +560,8 @@ export class DonationsComponent implements OnInit {
         (item: any) =>
           item.value ===
           (
-            (this.generalDonationForm.controls['donationArray'] as FormGroup)
-              .controls[i] as FormGroup
+            (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+              .controls[i] as UntypedFormGroup
           ).controls['schemeCode'].value
       );
       this.donationToolTip = donationLabel[0].label;
@@ -570,8 +570,8 @@ export class DonationsComponent implements OnInit {
         (item: any) =>
           item.value ===
           (
-            (this.generalDonationForm.controls['donationArray'] as FormGroup)
-              .controls[i] as FormGroup
+            (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+              .controls[i] as UntypedFormGroup
           ).controls['schemeCode'].value
       );
       this.donationToolTip = donationLabel[0].label;
@@ -580,8 +580,8 @@ export class DonationsComponent implements OnInit {
 
   getEligibleAmount(i) {
     let formGroup = (
-      this.generalDonationForm.controls['donationArray'] as FormGroup
-    ).controls[i] as FormGroup;
+      this.generalDonationForm.controls['donationArray'] as UntypedFormGroup
+    ).controls[i] as UntypedFormGroup;
     let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
     let amountOtherThanCash = parseInt(
       formGroup.controls['amountOtherThanCash'].value
@@ -595,8 +595,8 @@ export class DonationsComponent implements OnInit {
 
   getTotalAmount(i) {
     let formGroup = (
-      this.generalDonationForm.controls['donationArray'] as FormGroup
-    ).controls[i] as FormGroup;
+      this.generalDonationForm.controls['donationArray'] as UntypedFormGroup
+    ).controls[i] as UntypedFormGroup;
     let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
     let amountOtherThanCash = parseInt(
       formGroup.controls['amountOtherThanCash'].value
@@ -606,8 +606,8 @@ export class DonationsComponent implements OnInit {
 
   editDonationForm(i) {
     (
-      (this.generalDonationForm.controls['donationArray'] as FormGroup)
-        .controls[i] as FormGroup
+      (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+        .controls[i] as UntypedFormGroup
     ).enable();
   }
 
@@ -659,15 +659,15 @@ export class DonationsComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.ITR_JSON['panNumber'] === donation.controls['panNumber'].value) {
       (
-        (this.generalDonationForm.controls['donationArray'] as FormGroup)
-          .controls[i] as FormGroup
+        (this.generalDonationForm.controls['donationArray'] as UntypedFormGroup)
+          .controls[i] as UntypedFormGroup
       ).controls['panNumber'].setErrors({ incorrect: true });
     }
     this.panValidation();
   }
 
   panValidation() {
-    const buyersDetails = <FormArray>(
+    const buyersDetails = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
     // This method is written in utils service for common usablity.
@@ -704,11 +704,11 @@ export class DonationsComponent implements OnInit {
   }
 
   get getDonationArray() {
-    return <FormArray>this.generalDonationForm.get('donationArray');
+    return <UntypedFormArray>this.generalDonationForm.get('donationArray');
   }
 
   addMoreDonations(item?) {
-    const donationArray = <FormArray>(
+    const donationArray = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
     donationArray.push(this.createDonationForm(item));
@@ -716,11 +716,11 @@ export class DonationsComponent implements OnInit {
   }
 
   deleteDonationArray() {
-    const donationArray = <FormArray>(
+    const donationArray = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
     donationArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
+      if ((element as UntypedFormGroup).controls['hasEdit'].value) {
         donationArray.removeAt(index);
         this.changed();
       }
@@ -728,11 +728,11 @@ export class DonationsComponent implements OnInit {
   }
 
   changed() {
-    const donationArray = <FormArray>(
+    const donationArray = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
     this.otherDonationToDropdown.forEach((type) => {
-      donationArray.controls.forEach((element: FormGroup) => {
+      donationArray.controls.forEach((element: UntypedFormGroup) => {
         if (element.controls['schemeCode'].value == type.value) {
           type.active = false;
         }

@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Form } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Form } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -90,14 +90,14 @@ export class ScheduleFaComponent implements OnInit {
   natureOfInterestOwnership = ['DIRECT', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
   status = ['Select', 'OWNER', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
   countryCodeList: any;
-  scheduleFa: FormGroup;
+  scheduleFa: UntypedFormGroup;
   isPanelOpen: boolean = false;
   maxPurchaseDate: any;
   selectedIndexes: number[] = [];
   selectedAccountIndexes: number[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private cd: ChangeDetectorRef
   ) { }
@@ -584,7 +584,7 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   updateMultipleTypeForm(asset, assetType) {
-    const formArray = this.scheduleFa?.controls[assetType] as FormArray;
+    const formArray = this.scheduleFa?.controls[assetType] as UntypedFormArray;
     formArray.clear();
 
     const groupedAccounts = asset?.reduce((result, acc) => {
@@ -633,7 +633,7 @@ export class ScheduleFaComponent implements OnInit {
           zipCode: [group?.zipCode],
           account: this.fb.array([]),
         });
-        const accountFormArray = formGroup?.get('account') as FormArray;
+        const accountFormArray = formGroup?.get('account') as UntypedFormArray;
 
         group.account.forEach((other) => {
           const accountFormGroup = this.fb.group({
@@ -664,7 +664,7 @@ export class ScheduleFaComponent implements OnInit {
 
   createForms(assetType: string, asset: any[]) {
     console.log('creatingForms:', asset, assetType);
-    const formArray = this.scheduleFa?.controls[assetType] as FormArray;
+    const formArray = this.scheduleFa?.controls[assetType] as UntypedFormArray;
     formArray.clear();
     if (assetType === 'depositoryAccounts') {
       this.updateMultipleTypeForm(asset, assetType);
@@ -804,7 +804,7 @@ export class ScheduleFaComponent implements OnInit {
     const newFormGroup = this.initForms(section);
 
     if (newFormGroup) {
-      const formArray = this.scheduleFa.get(section) as FormArray;
+      const formArray = this.scheduleFa.get(section) as UntypedFormArray;
       if (formArray.valid) {
         formArray.push(newFormGroup.controls[0]);
       } else {
@@ -894,10 +894,10 @@ export class ScheduleFaComponent implements OnInit {
     ];
 
     formArrayNames.forEach((formArrayName) => {
-      const formArray = this.scheduleFa.get(formArrayName) as FormArray;
+      const formArray = this.scheduleFa.get(formArrayName) as UntypedFormArray;
 
       for (let i = formArray.length - 1; i >= 0; i--) {
-        const control = formArray?.at(i) as FormGroup;
+        const control = formArray?.at(i) as UntypedFormGroup;
         const value = control?.get('countryCode');
 
         if (!value?.value) {
@@ -929,11 +929,11 @@ export class ScheduleFaComponent implements OnInit {
       ];
 
       objToSave.forEach((section) => {
-        const formArray = this.scheduleFa.get(section) as FormArray;
+        const formArray = this.scheduleFa.get(section) as UntypedFormArray;
 
         if (formArray.valid) {
           const formValueToSave = (
-            this.scheduleFa.controls[section] as FormArray
+            this.scheduleFa.controls[section] as UntypedFormArray
           ).getRawValue();
 
           // have to implement later if required
@@ -959,7 +959,7 @@ export class ScheduleFaComponent implements OnInit {
 
       otherObjToSave.forEach((section) => {
         const accountsFormArray = (
-          this.scheduleFa.controls[section] as FormArray
+          this.scheduleFa.controls[section] as UntypedFormArray
         ).getRawValue();
         console.log(accountsFormArray);
 
@@ -1182,81 +1182,81 @@ export class ScheduleFaComponent implements OnInit {
 
   // GET FUNCTIONS SECTION
   get getDepositoryAccounts() {
-    return this.scheduleFa.get('depositoryAccounts') as FormArray;
+    return this.scheduleFa.get('depositoryAccounts') as UntypedFormArray;
   }
 
   // TO-DO =================pass index of edit, allow one edit only
-  getAccountControls(i: number): FormArray {
+  getAccountControls(i: number): UntypedFormArray {
     const depositoryAccounts = this.scheduleFa.get(
       'depositoryAccounts'
-    ) as FormArray;
+    ) as UntypedFormArray;
 
-    if (depositoryAccounts.at(i) instanceof FormGroup) {
-      return (depositoryAccounts.at(i) as FormGroup).get(
+    if (depositoryAccounts.at(i) instanceof UntypedFormGroup) {
+      return (depositoryAccounts.at(i) as UntypedFormGroup).get(
         'account'
-      ) as FormArray;
+      ) as UntypedFormArray;
     } else {
       return this.fb.array([]); // or return an empty FormArray if needed
     }
   }
 
   get getEquityAndDebtInterest() {
-    return this.scheduleFa.get('equityAndDebtInterest') as FormArray;
+    return this.scheduleFa.get('equityAndDebtInterest') as UntypedFormArray;
   }
 
   get getCashValueInsurance() {
-    return this.scheduleFa.get('cashValueInsurance') as FormArray;
+    return this.scheduleFa.get('cashValueInsurance') as UntypedFormArray;
   }
 
   get getFinancialInterestDetails() {
-    return this.scheduleFa.get('financialInterestDetails') as FormArray;
+    return this.scheduleFa.get('financialInterestDetails') as UntypedFormArray;
   }
 
   get getImmovablePropertryDetails() {
-    return this.scheduleFa.get('immovablePropertryDetails') as FormArray;
+    return this.scheduleFa.get('immovablePropertryDetails') as UntypedFormArray;
   }
 
   get getCapitalAssetsDetails() {
-    return this.scheduleFa.get('capitalAssetsDetails') as FormArray;
+    return this.scheduleFa.get('capitalAssetsDetails') as UntypedFormArray;
   }
 
   get getTrustsDetails() {
-    return this.scheduleFa.get('trustsDetails') as FormArray;
+    return this.scheduleFa.get('trustsDetails') as UntypedFormArray;
   }
 
   get getOtherIncomeDetails() {
-    return this.scheduleFa.get('otherIncomeDetails') as FormArray;
+    return this.scheduleFa.get('otherIncomeDetails') as UntypedFormArray;
   }
 
   get getSigningAuthorityDetails() {
-    return this.scheduleFa.get('signingAuthorityDetails') as FormArray;
+    return this.scheduleFa.get('signingAuthorityDetails') as UntypedFormArray;
   }
 
-  getSigningAuthAccountControls(i: number): FormArray {
+  getSigningAuthAccountControls(i: number): UntypedFormArray {
     const signingAuthAccounts = this.scheduleFa.get(
       'signingAuthorityDetails'
-    ) as FormArray;
+    ) as UntypedFormArray;
 
-    if (signingAuthAccounts.at(i) instanceof FormGroup) {
-      return (signingAuthAccounts.at(i) as FormGroup).get(
+    if (signingAuthAccounts.at(i) instanceof UntypedFormGroup) {
+      return (signingAuthAccounts.at(i) as UntypedFormGroup).get(
         'account'
-      ) as FormArray;
+      ) as UntypedFormArray;
     } else {
       return this.fb.array([]); // or return an empty FormArray if needed
     }
   }
 
   get getCustodialAccounts() {
-    return this.scheduleFa?.get('custodialAccounts') as FormArray;
+    return this.scheduleFa?.get('custodialAccounts') as UntypedFormArray;
   }
 
-  getCustodialAccountControls(i: number): FormArray {
+  getCustodialAccountControls(i: number): UntypedFormArray {
     const custodialAccounts = this.scheduleFa.get(
       'custodialAccounts'
-    ) as FormArray;
+    ) as UntypedFormArray;
 
-    if (custodialAccounts.at(i) instanceof FormGroup) {
-      return (custodialAccounts.at(i) as FormGroup).get('account') as FormArray;
+    if (custodialAccounts.at(i) instanceof UntypedFormGroup) {
+      return (custodialAccounts.at(i) as UntypedFormGroup).get('account') as UntypedFormArray;
     } else {
       return this.fb.array([]); // or return an empty FormArray if needed
     }
@@ -1311,12 +1311,12 @@ export class ScheduleFaComponent implements OnInit {
     let formArrayOrAccountToDelete: any = '';
     if (type === 'account') {
       formArrayOrAccountToDelete = (
-        this.scheduleFa.get(formArrayName) as FormArray
-      ).controls[formIndex].get('account') as FormArray;
+        this.scheduleFa.get(formArrayName) as UntypedFormArray
+      ).controls[formIndex].get('account') as UntypedFormArray;
     } else {
       formArrayOrAccountToDelete = this.scheduleFa.get(
         formArrayName
-      ) as FormArray;
+      ) as UntypedFormArray;
     }
 
     const formAcctArrayToDltCntrls = formArrayOrAccountToDelete.controls;

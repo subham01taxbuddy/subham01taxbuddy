@@ -1,7 +1,7 @@
 import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit, Optional } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
@@ -33,7 +33,7 @@ declare function we_setAttribute(key: string, value: any);
 export class LoginComponent implements OnInit {
 
   component_link: string = 'login';
-  public form!: FormGroup;
+  public form!: UntypedFormGroup;
   public loading: boolean = false;
   public showPassword: boolean;
   userId: any;
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
   requestManagerSubscription = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public http: HttpClient,
     public router: Router,
     private _toastMessageService: ToastMessageService,

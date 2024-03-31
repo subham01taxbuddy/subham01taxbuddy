@@ -1,8 +1,8 @@
 
 import { map, Observable, startWith } from 'rxjs';
 
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -13,6 +13,8 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { ReportService } from 'src/app/services/report-service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { NameAlertComponent } from '../name-alert/name-alert.component';
 
 export interface User {
   name: string;
@@ -55,26 +57,28 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   ];
   boPartnersInfo: any;
   additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
-  languageForm: FormGroup;
+  languageForm: UntypedFormGroup;
   irtTypeCapability = [];
-  itrTypeForm: FormGroup;
+  itrTypeForm: UntypedFormGroup;
   itrPlanList: any;
   smeDetails: any;
   signedInRole:any;
   public panregex = AppConstants.panNumberRegex;
+  panName:any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
     private httpClient: HttpClient,
-    private reportService:ReportService
+    private reportService:ReportService,
+    private dialog: MatDialog,
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
-      this.languageForm.addControl(lang, new FormControl(false));
+      this.languageForm.addControl(lang, new UntypedFormControl(false));
     })
     this.itrTypeForm = this.fb.group({});
     this.getPlanDetails();
@@ -147,7 +151,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   openDocument(documentType: string ,url) {
     if(url){
-      debugger
       const parts = url.split('/');
       const lastPart = parts[parts.length - 1];
       const fileNameWithParams = lastPart.split('?')[0];
@@ -163,7 +166,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
     this.itrMsService.getMethod(param).subscribe(
       (result: any) => {
-        debugger
         if (result && result.data) {
           let signedUrl = result.data.s3SignedUrl;
           this.open(signedUrl);
@@ -190,12 +192,12 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  getLanguageControl(lang: string): FormControl {
-    return this.languageForm.get(lang) as FormControl;
+  getLanguageControl(lang: string): UntypedFormControl {
+    return this.languageForm.get(lang) as UntypedFormControl;
   }
 
-  getItrTypeControl(itrType: string): FormControl {
-    return this.itrTypeForm.get(itrType) as FormControl;
+  getItrTypeControl(itrType: string): UntypedFormControl {
+    return this.itrTypeForm.get(itrType) as UntypedFormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
@@ -236,7 +238,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.itrPlanList.forEach(element => {
             this.irtTypeCapability.push(element.name);
             this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType, new FormControl(false));
+              this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
             })
             this.setPlanDetails();
           });
@@ -260,7 +262,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
             if (element.planId === item) {
               this.irtTypeCapability.push(element.name);
               this.irtTypeCapability.forEach((itrType) => {
-                this.itrTypeForm.addControl(itrType, new FormControl(false));
+                this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
               })
             }
           });
@@ -276,7 +278,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         this.smeObj?.['skillSetPlanIdList'].forEach(element => {
           if (item.planId === element) {
             const name = item.name;
-            this.itrTypeForm.setControl(name, new FormControl(true));
+            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
           }
         })
       })
@@ -298,7 +300,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
   setFormValues(data) {
-    debugger
     this.mobileNumber.setValue(data.mobileNumber);
     this.pinCode.setValue(data?.partnerDetails?.pinCode);
     this.internal.setValue(data.internal)
@@ -422,6 +423,27 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.panInfo = result;
           if(result.isValid != "INVALID PAN"){
            console.log("inside valid");
+           if(this.panInfo?.firstName && this.panInfo?.lastName){
+            if (this.panInfo.middleName && this.panInfo.middleName.trim() !== '') {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.middleName + ' ' + this.panInfo.lastName;
+            } else {
+              this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
+            }
+            if (this.panName != this.smeFormGroup.controls['name'].value) {
+              const dialogRef = this.dialog.open(NameAlertComponent, {
+                width: '40%',
+                disableClose: true,
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+                if (this.utilsService.isNonEmpty(result) && result === 'PAN') {
+                  this.smeFormGroup.controls['name'].setValue(this.panName);
+                  return;
+                }
+
+              });
+            }
+           }
           }else{
             this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
             this.pan.setErrors({ 'invalidPan': true });
@@ -440,116 +462,116 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
 
-  smeFormGroup: FormGroup = this.fb.group({
-    mobileNumber: new FormControl(''),
-    name: new FormControl(''),
-    smeOriginalEmail: new FormControl(''),
-    languages: new FormControl(''),
-    referredBy: new FormControl(''),
-    callingNumber:new FormControl(''),
-    itrTypes: new FormControl(''),
-    qualification: new FormControl(''),
-    pinCode:new FormControl(''),
-    city:new FormControl(''),
-    state: new FormControl(''),
-    special: new FormControl(''),
-    accountNumber: new FormControl(''),
-    ifsCode: new FormControl(''),
-    pan: new FormControl('', [Validators.pattern(this.panregex)]),
-    gstin: new FormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
-    accountType: new FormControl(''),
-    additionalIdsCount: new FormControl(''),
-    interviewedBy: new FormControl(''),
-    additionalIdsRequired:new FormControl(''),
+  smeFormGroup: UntypedFormGroup = this.fb.group({
+    mobileNumber: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
+    smeOriginalEmail: new UntypedFormControl(''),
+    languages: new UntypedFormControl(''),
+    referredBy: new UntypedFormControl(''),
+    callingNumber:new UntypedFormControl(''),
+    itrTypes: new UntypedFormControl(''),
+    qualification: new UntypedFormControl(''),
+    pinCode:new UntypedFormControl(''),
+    city:new UntypedFormControl(''),
+    state: new UntypedFormControl(''),
+    special: new UntypedFormControl(''),
+    accountNumber: new UntypedFormControl(''),
+    ifsCode: new UntypedFormControl(''),
+    pan: new UntypedFormControl('', [Validators.pattern(this.panregex)]),
+    gstin: new UntypedFormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
+    accountType: new UntypedFormControl(''),
+    additionalIdsCount: new UntypedFormControl(''),
+    interviewedBy: new UntypedFormControl(''),
+    additionalIdsRequired:new UntypedFormControl(''),
   });
 
   get pan() {
-    return this.smeFormGroup.controls['pan'] as FormControl;
+    return this.smeFormGroup.controls['pan'] as UntypedFormControl;
   }
   get gstin() {
-    return this.smeFormGroup.controls['gstin'] as FormControl;
+    return this.smeFormGroup.controls['gstin'] as UntypedFormControl;
   }
   get additionalIdsRequired() {
-    return this.smeFormGroup.controls['additionalIdsRequired'] as FormControl;
+    return this.smeFormGroup.controls['additionalIdsRequired'] as UntypedFormControl;
   }
   get interviewedBy() {
-    return this.smeFormGroup.controls['interviewedBy'] as FormControl;
+    return this.smeFormGroup.controls['interviewedBy'] as UntypedFormControl;
   }
   get additionalIdsCount() {
-    return this.smeFormGroup.controls['additionalIdsCount'] as FormControl;
+    return this.smeFormGroup.controls['additionalIdsCount'] as UntypedFormControl;
   }
   get accountNumber() {
-    return this.smeFormGroup.controls['accountNumber'] as FormControl;
+    return this.smeFormGroup.controls['accountNumber'] as UntypedFormControl;
   }
   get ifsCode() {
-    return this.smeFormGroup.controls['ifsCode'] as FormControl;
+    return this.smeFormGroup.controls['ifsCode'] as UntypedFormControl;
   }
   get accountType() {
-    return this.smeFormGroup.controls['accountType'] as FormControl;
+    return this.smeFormGroup.controls['accountType'] as UntypedFormControl;
   }
   get mobileNumber() {
-    return this.smeFormGroup.controls['mobileNumber'] as FormControl;
+    return this.smeFormGroup.controls['mobileNumber'] as UntypedFormControl;
   }
   get name() {
-    return this.smeFormGroup.controls['name'] as FormControl;
+    return this.smeFormGroup.controls['name'] as UntypedFormControl;
   }
   get smeOriginalEmail() {
-    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
+    return this.smeFormGroup.controls['smeOriginalEmail'] as UntypedFormControl;
   }
   get languages() {
-    return this.smeFormGroup.controls['languages'] as FormControl;
+    return this.smeFormGroup.controls['languages'] as UntypedFormControl;
   }
   get referredBy() {
-    return this.smeFormGroup.controls['referredBy'] as FormControl;
+    return this.smeFormGroup.controls['referredBy'] as UntypedFormControl;
   }
   get itrTypes() {
-    return this.smeFormGroup.controls['itrTypes'] as FormControl;
+    return this.smeFormGroup.controls['itrTypes'] as UntypedFormControl;
   }
   get qualification() {
-    return this.smeFormGroup.controls['qualification'] as FormControl;
+    return this.smeFormGroup.controls['qualification'] as UntypedFormControl;
   }
   get state() {
-    return this.smeFormGroup.controls['state'] as FormControl;
+    return this.smeFormGroup.controls['state'] as UntypedFormControl;
   }
   get searchOwner() {
-    return this.smeFormGroup.controls['searchOwner'] as FormControl;
+    return this.smeFormGroup.controls['searchOwner'] as UntypedFormControl;
   }
   get searchLeader() {
-    return this.smeFormGroup.controls['searchLeader'] as FormControl;
+    return this.smeFormGroup.controls['searchLeader'] as UntypedFormControl;
   }
 
   get special() {
-    return this.smeFormGroup.controls['special'] as FormControl;
+    return this.smeFormGroup.controls['special'] as UntypedFormControl;
   }
   get callingNumber() {
-    return this.smeFormGroup.controls['callingNumber'] as FormControl;
+    return this.smeFormGroup.controls['callingNumber'] as UntypedFormControl;
   }
   get pinCode(){
-    return this.smeFormGroup.controls['pinCode'] as FormControl;
+    return this.smeFormGroup.controls['pinCode'] as UntypedFormControl;
   }
   get city(){
-    return this.smeFormGroup.controls['city'] as FormControl;
+    return this.smeFormGroup.controls['city'] as UntypedFormControl;
   }
 
-  roles: FormGroup = this.fb.group({
-    filerIndividual: new FormControl(''),
-    filerPrinciple: new FormControl(''),
-    internal: new FormControl(''),
-    external: new FormControl(true),
+  roles: UntypedFormGroup = this.fb.group({
+    filerIndividual: new UntypedFormControl(''),
+    filerPrinciple: new UntypedFormControl(''),
+    internal: new UntypedFormControl(''),
+    external: new UntypedFormControl(true),
 
   });
 
   get filerPrinciple() {
-    return this.roles.controls['filerPrinciple'] as FormControl
+    return this.roles.controls['filerPrinciple'] as UntypedFormControl
   }
   get filerIndividual() {
-    return this.roles.controls['filerIndividual'] as FormControl
+    return this.roles.controls['filerIndividual'] as UntypedFormControl
   }
   get internal() {
-    return this.roles.controls['internal'] as FormControl
+    return this.roles.controls['internal'] as UntypedFormControl
   }
   get external() {
-    return this.roles.controls['external'] as FormControl
+    return this.roles.controls['external'] as UntypedFormControl
   }
 
   onCheckboxChange(checkboxNumber: number) {
@@ -599,7 +621,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
       this.itrMsService.getMethod(param).subscribe(
         (result: any) => {
-          debugger
           if (result && result.data) {
             let signedUrl = result.data.s3SignedUrl;
             this.urls[inputId] = signedUrl;
@@ -693,7 +714,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         pinCode:this.pinCode.value,
         state: this.state.value,
         botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName,
+        displayName: this.smeObj.displayName || this.name.value,
         active: this.smeObj.active,
         joiningDate: formattedDate,
         internal: this.internal.value ? true : this.external.value ? false:null,
@@ -759,10 +780,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  markFormGroupTouched(formGroup: FormGroup) {
+  markFormGroupTouched(formGroup: UntypedFormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
-      if (control instanceof FormGroup) {
+      if (control instanceof UntypedFormGroup) {
         this.markFormGroupTouched(control);
       }
     });

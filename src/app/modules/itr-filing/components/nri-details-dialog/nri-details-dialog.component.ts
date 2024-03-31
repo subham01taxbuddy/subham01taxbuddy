@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'
 
 import { Component, Inject, OnInit } from '@angular/core'
 
@@ -17,7 +17,7 @@ import {forEach} from "lodash";
   styleUrls: ['./nri-details-dialog.component.scss']
 })
 export class NriDetailsDialogComponent implements OnInit {
-  nriDetailsForm: FormGroup
+  nriDetailsForm: UntypedFormGroup
 
   countryList = [{ value: '93', label: 'AFGHANISTAN' },
   { value: '1001', label: 'ÅLAND ISLANDS' },
@@ -274,7 +274,7 @@ export class NriDetailsDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<NriDetailsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
@@ -294,7 +294,7 @@ export class NriDetailsDialogComponent implements OnInit {
       this.addMore()
     }
   }
-  createJurisdictionsForm(obj: { jurisdictionResidence?: string, tin?: string } = {}): FormGroup {
+  createJurisdictionsForm(obj: { jurisdictionResidence?: string, tin?: string } = {}): UntypedFormGroup {
     return this.fb.group({
       jurisdictionResidence: [obj.jurisdictionResidence || '', [Validators.required]],
       tin: [obj.tin || '', [Validators.required]],
@@ -303,12 +303,12 @@ export class NriDetailsDialogComponent implements OnInit {
   }
 
   get geJurisdictionsArray() {
-    return <FormArray>this.nriDetailsForm.get('jurisdictions')
+    return <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
   }
 
   addMore(jur?) {
-    const jurisdictions = <FormArray>this.nriDetailsForm.get('jurisdictions')
+    const jurisdictions = <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
     if (jurisdictions.valid) {
       jurisdictions.push(this.createJurisdictionsForm(jur))
@@ -322,7 +322,7 @@ export class NriDetailsDialogComponent implements OnInit {
   removeData(index) {
     console.log('Remove Index', index)
 
-    const jurisdictions = <FormArray>this.nriDetailsForm.get('jurisdictions')
+    const jurisdictions = <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
     if (jurisdictions.length > 1) {
       jurisdictions.removeAt(index)

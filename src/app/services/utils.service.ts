@@ -13,7 +13,7 @@ import { ItrActionsComponent } from '../modules/shared/components/itr-actions/it
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import { FormArray, FormControl, FormGroup, ValidationErrors, } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, } from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -91,183 +91,9 @@ export class UtilsService {
     });
   }
 
-  async getITRByUserIdAndAssesmentYear(
-    profile: any,
-    ref?: any,
-    filingTeamMemberId?: any
-  ) {
-    console.log('filingTeamMemberId====', filingTeamMemberId);
-    this.loading = true;
-    // this.isLoggedIn = this.encrDecrService.get(AppConstants.IS_USER_LOGGED_IN);
-    // let list = []
-    const fyList = await this.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-      this.showSnackBar('There is no any active filing year available');
-      return;
-    }
-    // const currentAy = (currentFyDetails.length > 0 ? currentFyDetails[0].assessmentYear : AppConstants.ayYear)
-    // const currentFy = (currentFyDetails.length > 0 ? currentFyDetails[0].financialYear : AppConstants.ayYear)
-    const param = `/itr?userId=${profile.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
-    this.itrMsService.getMethod(param).subscribe(
-      (result: any) => {
-        console.log('My ITR by user Id and Assesment Years=', result);
-        if (result.length !== 0) {
-          let isWIP_ITRFound = true;
-          for (let i = 0; i < result.length; i++) {
-            let currentFiledITR = result.filter(
-              (item: any) =>
-                item.assessmentYear === currentFyDetails[0].assessmentYear &&
-                item.eFillingCompleted
-            );
-            if (
-              result[i].eFillingCompleted ||
-              result[i].ackStatus === 'SUCCESS' ||
-              result[i].ackStatus === 'DELAY'
-            ) {
-              //   return "REVIEW"
-            } else {
-              //   return "CONTINUE"
-              isWIP_ITRFound = false;
-              this.ITR_JSON = result[i];
-              if (currentFiledITR.length > 0) {
-                currentFiledITR = currentFiledITR.filter(
-                  (item: any) => item.isRevised === 'N'
-                );
-                if (currentFiledITR.length > 0) {
-                  this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
-                  this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
-                }
-              }
-              Object.entries(this.ITR_JSON).forEach((key, value) => {
-                console.log(key, value);
-                if (key[1] === null) {
-                  delete this.ITR_JSON[key[0]];
-                }
-                // if(key )
-                // delete this.ITR_JSON[key];
-              });
-              console.log('this.ITR_JSON after deleted keys:', this.ITR_JSON);
-
-              break;
-            }
-          }
-
-          if (!isWIP_ITRFound) {
-            this.loading = false;
-            let obj = this.createEmptyJson(
-              profile,
-              currentFyDetails[0].assessmentYear,
-              currentFyDetails[0].financialYear
-            );
-            Object.assign(obj, this.ITR_JSON);
-            console.log('obj:', obj);
-            this.ITR_JSON = JSON.parse(JSON.stringify(obj));
-            this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-            console.log('this.ITR_JSON in utils', this.ITR_JSON);
-            console.log('profile', profile);
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_JSON)
-            );
-            this.router.navigate(['/itr-filing/itr'], {
-              state: {
-                userId: this.ITR_JSON.userId,
-                panNumber: profile.panNumber,
-                eriClientValidUpto: profile.eriClientValidUpto,
-                name: profile.fName + ' ' + profile.lName,
-              },
-            });
-          } else {
-            this.loading = false;
-            if (ref === 'ITR') {
-              let disposable = this.dialog.open(ItrActionsComponent, {
-                width: '50%',
-                height: 'auto',
-                data: {
-                  itrObjects: result,
-                },
-              });
-              disposable.afterClosed().subscribe((result) => {
-                console.log('The dialog was closed');
-              });
-              return;
-            }
-            alert('ITR Filed/Acknowledgement not received');
-          }
-        } else {
-          this.ITR_JSON = this.createEmptyJson(
-            profile,
-            currentFyDetails[0].assessmentYear,
-            currentFyDetails[0].financialYear
-          );
-          this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-          const param = '/itr';
-          this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-            (result: any) => {
-              console.log('My iTR Json successfully created-==', result);
-              this.ITR_JSON = result;
-              this.loading = false;
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_JSON)
-              );
-              this.router.navigate(['/itr-filing/itr'], {
-                state: {
-                  userId: this.ITR_JSON.userId,
-                  panNumber: profile.panNumber,
-                  eriClientValidUpto: profile.eriClientValidUpto,
-                  name: profile.fName + ' ' + profile.lName,
-                },
-              });
-            },
-            (error) => {
-              this.loading = false;
-            }
-          );
-        }
-      },
-      (error) => {
-        if (error.status === 404) {
-          this.ITR_JSON = this.createEmptyJson(
-            profile,
-            currentFyDetails[0].assessmentYear,
-            currentFyDetails[0].financialYear
-          );
-          this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-          const param = '/itr';
-          this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-            (result: any) => {
-              console.log('My iTR Json successfully created-==', result);
-              this.loading = false;
-              this.ITR_JSON = result;
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_JSON)
-              );
-              this.router.navigate(['/itr-filing/itr'], {
-                state: {
-                  userId: this.ITR_JSON.userId,
-                  panNumber: profile.panNumber,
-                  eriClientValidUpto: profile.eriClientValidUpto,
-                  name: profile.fName + ' ' + profile.lName,
-                },
-              });
-            },
-            (error) => {
-              this.loading = false;
-            }
-          );
-        } else {
-          // Handle another error conditions like 500 etc.
-          this.loading = false;
-        }
-      }
-    );
-  }
-
   createEmptyJson(
     profile: any,
+    serviceType:string,
     assessmentYear: any,
     financialYear: any,
     itrId?: any,
@@ -520,7 +346,7 @@ export class UtilsService {
       acknowledgementDate91: null,
       portugeseCC5AFlag: 'N',
       schedule5a: undefined,
-      isITRU: this.getIsITRU(),
+      isITRU: this.getIsITRU(serviceType),
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
       liableSection44AAflag: 'Y',
@@ -568,8 +394,8 @@ export class UtilsService {
     return ITR_JSON;
   }
 
-  getIsITRU() {
-    return new Date().getTime() <= new Date("2024-03-31").getTime();
+  getIsITRU(serviceType) {
+    return serviceType === 'ITRU';
   }
 
   setUploadedJson(data: any) {
@@ -838,113 +664,6 @@ export class UtilsService {
     return await this.reportService.getMethod(param).toPromise();
   }
 
-  async getCurrentItr(userId: any, ay: any, filingTeamMemberId?: any) {
-    console.log('filingTeamMemberId====', filingTeamMemberId);
-    this.loading = true;
-    const fyList = await this.getStoredFyList();
-    const currentFyDetails = fyList.filter(
-      (item: any) => item.assessmentYear === ay
-    );
-    let result: any = await this.getItr(userId, ay).catch((error) => {
-      console.log('ITR list error=>', error);
-      return error;
-    });
-    if (result && result.error) {
-      if (result.error.status === 404) {
-        let res: any = await this.postFreshItr(
-          userId,
-          ay,
-          currentFyDetails[0].financialYear,
-          filingTeamMemberId
-        ).catch((error) => { });
-        this.loading = false;
-        if (res && res.itrId) {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(res));
-          return res;
-        }
-      }
-    } else if (result && result instanceof Array) {
-      console.log('ITR list success=>', result);
-      if (result.length !== 0) {
-        let isWIP_ITRFound = true;
-        for (let i = 0; i < result.length; i++) {
-          let currentFiledITR = result.filter(
-            (item: any) => item.assessmentYear === ay && item.eFillingCompleted
-          );
-          if (
-            result[i].eFillingCompleted ||
-            result[i].ackStatus === 'SUCCESS' ||
-            result[i].ackStatus === 'DELAY'
-          ) {
-            //   return "REVIEW"
-          } else {
-            //   return "CONTINUE"
-            isWIP_ITRFound = false;
-            this.ITR_JSON = result[i];
-            if (currentFiledITR.length > 0) {
-              currentFiledITR = currentFiledITR.filter(
-                (item: any) => item.isRevised === 'N'
-              );
-              if (currentFiledITR.length > 0) {
-                this.ITR_JSON.orgITRAckNum = currentFiledITR[0].ackNumber;
-                this.ITR_JSON.orgITRDate = currentFiledITR[0].eFillingDate;
-              }
-            }
-            Object.entries(this.ITR_JSON).forEach((key, value) => {
-              if (key[1] === null) {
-                delete this.ITR_JSON[key[0]];
-              }
-              // if(key )
-              // delete this.ITR_JSON[key];
-            });
-
-            break;
-          }
-        }
-
-        if (!isWIP_ITRFound) {
-          this.loading = false;
-          let profile = {
-            userId: userId,
-          };
-          let obj = this.createEmptyJson(
-            profile,
-            ay,
-            currentFyDetails[0].financialYear
-          );
-          Object.assign(obj, this.ITR_JSON);
-          console.log('obj:', obj);
-          this.ITR_JSON = JSON.parse(JSON.stringify(obj));
-          this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-          console.log('this.ITR_JSONthis.ITR_JSONthis.ITR_JSON', this.ITR_JSON);
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
-          // this.router.navigate(['/pages/itr-filing/customer-profile']);
-          return this.ITR_JSON;
-        } else {
-          this.loading = false;
-
-          alert('ITR Filed/Acknowledgement not received');
-        }
-      } else {
-        let result: any = await this.postFreshItr(
-          userId,
-          ay,
-          currentFyDetails[0].financialYear,
-          filingTeamMemberId
-        ).catch((error) => { });
-        this.loading = false;
-        if (result && result.itrId) {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
-          return result;
-        }
-
-      }
-    }
-  }
-
   async getUserProfile(userId) {
     const param = `/profile/${userId}`;
     return await this.userMsService.getMethod(param).toPromise();
@@ -952,21 +671,6 @@ export class UtilsService {
   async getItr(userId: any, ay: string) {
     const param = `/itr?userId=${userId}&assessmentYear=${ay}`;
     return await this.itrMsService.getMethod(param).toPromise();
-  }
-
-  async postFreshItr(
-    userId: any,
-    ay: string,
-    fy: string,
-    filingTeamMemberId: any
-  ) {
-    let profile = {
-      userId: userId,
-    };
-    this.ITR_JSON = this.createEmptyJson(profile, ay, fy);
-    this.ITR_JSON.filingTeamMemberId = filingTeamMemberId;
-    const param = '/itr';
-    return await this.itrMsService.postMethod(param, this.ITR_JSON).toPromise();
   }
 
   async getAllBankByIfsc() {
@@ -1353,9 +1057,9 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup, accordionBtnId) {
+  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId) {
     Object.keys(formGroup.controls).forEach((key) => {
-      if (formGroup.get(key) instanceof FormControl) {
+      if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
         if (controlErrors != null) {
           console.log(formGroup);
@@ -1378,12 +1082,12 @@ export class UtilsService {
             return;
           });
         }
-      } else if (formGroup.get(key) instanceof FormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup, accordionBtnId);
-      } else if (formGroup.get(key) instanceof FormArray) {
-        let formArray = formGroup.get(key) as FormArray;
+      } else if (formGroup.get(key) instanceof UntypedFormGroup) {
+        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId);
+      } else if (formGroup.get(key) instanceof UntypedFormArray) {
+        let formArray = formGroup.get(key) as UntypedFormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as FormGroup, accordionBtnId);
+          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId);
         });
       }
     });

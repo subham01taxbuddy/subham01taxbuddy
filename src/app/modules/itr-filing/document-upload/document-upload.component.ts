@@ -7,12 +7,9 @@ import {
   MatTreeFlattener
 } from '@angular/material/tree';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Node for to-do item
@@ -2330,13 +2327,21 @@ export class DocumentUploadComponent implements OnInit {
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<CloudFlatNode>(true /* multiple */);
+  serviceType: any;
 
   /// Filtering
   // myControl = new FormControl();
   // options: string[] = ['One', 'Two', 'Three'];
   // filteredOptions: Observable<string[]>;
 
-  constructor(private _database: ChecklistDatabase, private userMsService: UserMsService, private utilsService: UtilsService) {
+  constructor(private _database: ChecklistDatabase,
+    private userMsService: UserMsService,
+    private utilsService: UtilsService,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    if (this.activatedRoute.snapshot.queryParams['serviceType']) {
+      this.serviceType = this.activatedRoute.snapshot.queryParams['serviceType'];
+    }
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,
@@ -2632,6 +2637,7 @@ export class DocumentUploadComponent implements OnInit {
     const formData = new FormData();
     formData.append("file", document);
     formData.append("cloudFileMetaData", cloudFileMetaData);
+    formData.append("serviceType", this.serviceType);
     console.log("formData ===> ", formData);
     let param = '/itr/cloud/upload'
     this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {

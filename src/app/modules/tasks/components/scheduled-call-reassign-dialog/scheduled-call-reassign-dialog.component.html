@@ -6,7 +6,7 @@ font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</lab
 <div class="row spsTp bdrTp">
   <div class="col-sm-6">
     <mat-label> Search By Leader </mat-label>
-    <mat-form-field appearance="outline" class="customBg">
+    <mat-form-field appearance="outline" class="small-inp no-height">
       <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
       <mat-autocomplete #auto>
         <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
