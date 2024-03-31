@@ -66,14 +66,17 @@
                     <button class="clrLnk-1" (click)="this.resetFilters()">
                       Clear form
                     </button>
-                    <button *ngIf="isAllowed" class="srch-btn-1"  (click)="createSub()"> Create
-                      Subscription </button>
+
                   </div>
                   <div class="row">
-                    <div class="col-sm-12 mt-3 ">
+                    <div class="col-sm-8 mt-3 ">
                       <span class="new-note1 note">
                         Note : Please select required filters above and click on search to get information
                       </span>
+                    </div>
+                    <div class="col-sm-3 mt-2">
+                      <button *ngIf="isAllowed" class="srch-btn-1" (click)="createSub()"> Create
+                        Subscription </button>
                     </div>
                   </div>
                 </div>
@@ -104,7 +107,7 @@
         </div>
         <div class="col-sm-6">
           <div class="boxCont">
-          <b>Update or Revise Subscription means-</b>
+            <b>Update or Revise Subscription means-</b>
             Use this to upgrade or downgrade plan or to make changes in promo code. If invoice paid and plan downgraded
             before filing ITR partial refund request will generate.
           </div>
@@ -124,5 +127,3 @@
   </div>
 
 </div>
-
-
