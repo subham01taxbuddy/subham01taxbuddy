@@ -5757,7 +5757,7 @@
                         <div class="font80" style="width: 100%" cellpadding="0" cellspacing="0">
                           <div class="nav nav-stacked">
                             <div class="counter col-lg-8 col-md-8 col-sm-8 whieTx">
-                              Total Tax (A+B-C)
+                              Total Tax (A+B-C-D)
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                               <div class="AdjAr1">
@@ -5812,6 +5812,17 @@
                                 utilsService.currencyFormatter(
                                 finalCalculations?.totalTax
                                 ?.rebateOnAgricultureIncome
+                                )
+                                }}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Marginal Relief - D</td>
+                              <td>
+                                <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;-{{
+                                utilsService.currencyFormatter(
+                                        finalCalculations?.totalTax
+                                                ?.marginalRelief
                                 )
                                 }}
                               </td>
