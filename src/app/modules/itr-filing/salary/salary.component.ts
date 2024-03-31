@@ -308,7 +308,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
-      this.hasBifurcation();
       this.bifurcation();
     } else {
       this.markActive(-1, false);
@@ -380,7 +379,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.editEmployerDetails(this.currentIndex);
       this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     }
-    this.hasBifurcation();
     this.bifurcation();
   }
 
@@ -485,7 +483,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   createAllowanceArray() {
     const data = [];
-    debugger
     data.push(
       this.fb.group({
         label: this.allowanceDropdown[0].label,
@@ -927,7 +924,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           });
           const BASIC_SALARY = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'BASIC_SALARY')[0]?.taxableAmount);
           const HOUSE_RENT = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'HOUSE_RENT')[0]?.taxableAmount);
-          debugger
           let lowerOf = Math.min(BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY, HOUSE_RENT);
 
           this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
@@ -1114,7 +1110,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
             });
           }
-
           console.log(this.localEmployer);
           if (
             this.bifurcationResult?.SEC17_2?.total ||
@@ -1272,7 +1267,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }
     this.checkGrossSalary();
     if (totalAllowExempt > this.grossSalary) {
-      debugger
       this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed gross salary'
@@ -1581,7 +1575,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
       //check allowances total is not exceeding the gross salary
       if (totalAllowExempt > this.grossSalary) {
-        debugger
         this.invalid = true;
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
@@ -2066,19 +2059,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.saveAndNext.emit(true);
   }
 
-  hasBifurcation() {
-    // switch (i){
-    //   case 0:{
-    Object.keys(this.bifurcationResult.SEC17_1.value).length > 0;
-    // }
-    // case 1:{
-    Object.keys(this.bifurcationResult.SEC17_2.value).length > 0;
-    // }
-    // case 2:{
-    Object.keys(this.bifurcationResult.SEC17_3.value).length > 0;
-    // }
-    // }
-  }
+
 
   isFormGroupValid(event) {
     if (event) {
@@ -2113,7 +2094,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
     let employer = JSON.parse(sessionStorage.getItem('localEmployer'));
     if (employer) {
-      this.localEmployer = employer;
+      // this.localEmployer = employer;
     }
 
 
@@ -2340,7 +2321,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.checkGrossSalary();
     //check allowances total is not exceeding the gross salary
     if (totalAllowExempt > this.grossSalary) {
-      debugger
       this.invalid = true;
       this.utilsService.showSnackBar(
         'Allowances total cannot exceed gross salary'

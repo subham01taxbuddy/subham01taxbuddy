@@ -259,7 +259,6 @@ export class PartnerManagementComponent implements OnInit {
 
 
   private populatePartnerForm(partnerInfo: any) {
-    debugger
     this.partnerForm.patchValue({
       mobileNumber: partnerInfo.mobileNumber,
       name: partnerInfo.name,

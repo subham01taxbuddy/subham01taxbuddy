@@ -7,7 +7,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secOneTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_1')" />
         </mat-form-field>
       </div>
@@ -73,7 +73,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secTwoTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_2')" />
         </mat-form-field>
       </div>
@@ -141,7 +141,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secThreeTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_3')" />
         </mat-form-field>
       </div>
