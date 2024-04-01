@@ -186,6 +186,7 @@ export class AddSubscriptionComponent implements OnInit {
         })];
         if (smeSelectedPlan.length) {
           let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+          this.disableItrSubPlan = itrPlanDetails.length > 0;
           this.service = itrPlanDetails[0]?.servicesType;
           this.serviceDetails = itrPlanDetails[0]?.name;
           let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
