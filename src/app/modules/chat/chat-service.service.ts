@@ -2,14 +2,12 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LocalStorageService,SessionStorageService } from "src/app/services/storage.service";
 import { AppConstants } from "../shared/constants";
 import { Injectable } from '@angular/core';
-
-@Injectable({
+  @Injectable({
   providedIn: 'root'
 })
 export class ChatServiceService {
-
  
-  mqtt = require("./mqtt.min.js");
+   mqtt = require("./mqtt.min.js");
   _CLIENTADDED = "/clientadded"
   _CLIENTUPDATED = "/clientupdated"
   _CLIENTDELETED = "/clientdeleted"
@@ -18,12 +16,11 @@ export class ChatServiceService {
 
   private TILEDESK_TOKEN_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token";
   private CHAT21_TOKEN_URL = "https://sravqc6xvv6dalsjuu66wyhtvi0iojcy.lambda-url.ap-south-1.on.aws/chat21-authentication";
+  private CONVERSATION_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat/659f70587e6a8d00122fb149/conversations";
   private DEPT_DTLS_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/departments?projectId=";
   private CHAT_API_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat";
   private WEBSOCKET_URL = "wss://tiledesk.taxbuddy.com/mqws/ws";
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
-
-   
 
   presenceTopic;
   topicInbox;
@@ -81,25 +78,39 @@ export class ChatServiceService {
       this.setHeaders("auth")).subscribe((result: any) => {
       console.log(result);
       if (result.success) {
-        this.sessionStorageService.setItem("TILEDESK_TOKEN", result.data.token);
+        this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
         console.log("tiledesk token: ", result.data.token);
-        if (result.data.requestId) {
-          this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
-        }
+        // if (result.data.requestId) {
+        //   this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
+        // }
         let chat21Request = {
           tiledeskToken: result.data.token
         };
         this.httpClient.post(this.CHAT21_TOKEN_URL,
           chat21Request, this.setHeaders("auth")
         ).subscribe((chat21Result: any) => {
-          console.log(chat21Result);
+          console.log('chat21Token: ',chat21Result);
           if (chat21Result.success) {
-            this.sessionStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
-            this.sessionStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+            this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
+            this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+
+            // let chat21Token = {
+            //   chat21token: chat21Result.data.token
+            // };
+            this.httpClient.get(this.CONVERSATION_URL,this.setHeaders("chat21")).subscribe((conversationResult: any) => {
+              console.log(conversationResult);
+              const newarrays = this.conversationList(conversationResult.result);
+              for(const conversation of newarrays){
+                console.log('request_id ',conversation.request_id);
+                this.fetchMessages(chat21Result.data.userid,conversation.request_id)
+              }
+              console.log('newarray',newarrays);
+            })
+
             if(service) {
               this.initChatVariables(chat21Result.data, result.data);
               this.websocketConnection(chat21Result.data.token, chat21Result.data.userid, result.data.requestId);
-              this.fetchMessages(chat21Result.data.userid, result.data.requestId);
+              // this.fetchMessages(chat21Result.data.userid, result.data.requestId);
             }
           }
         });
@@ -110,8 +121,10 @@ export class ChatServiceService {
 
   setHeaders(type: any = "auth") {
     let httpOptions: any = {};
-    if (type == "auth") {
-      let TOKEN = this.sessionStorageService.getItem(AppConstants.TOKEN);
+
+     if (type == "auth") {
+      const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
+      let TOKEN = UMDtoken.id_token
       httpOptions = {
         headers: new HttpHeaders({
           "Content-Type": "application/json",
@@ -122,7 +135,7 @@ export class ChatServiceService {
       return httpOptions;
     }
     if (type == "chat21") {
-      let TOKEN = this.sessionStorageService.getItem("CHAT21_TOKEN");
+      let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
       httpOptions = {
         headers: new HttpHeaders({
           "Content-Type": "application/json",
@@ -150,6 +163,22 @@ export class ChatServiceService {
       }
     });
   }
+
+  conversationList(data: any){
+  
+     const transformedData = data.map(message => ({
+    
+      new: message.is_new,
+      name: message.recipient_fullname,
+      text: message.last_message_text,
+      timestamp: message.timestamp,
+      request_id: message.conversWith
+      
+     }))
+     this.localStorageService.setItem('conversationList',JSON.stringify(transformedData),true)
+     return transformedData;
+  }
+
 
   clearMessagesDB(){
     this.sessionStorageService.removeItem('fetchedMessages');

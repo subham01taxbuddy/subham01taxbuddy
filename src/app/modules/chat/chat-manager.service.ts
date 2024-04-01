@@ -61,7 +61,6 @@ export class ChatManagerService {
       this.registerCallbacks();
     }
     this.fireEvents(ChatEvents.TOKEN_GENERATED);
-
   }
 
   fireEvents(eventType: ChatEvents, serviceType?:string){

@@ -26,13 +26,13 @@
   </div>
 
   <div class="user-list">
-      <div class="user-box" *ngFor="let user of users">
-        <img [src]="user.image" alt="User Icon">
+      <div class="user-box" *ngFor="let conversation of conversationList">
+        <img [src]="conversation.image" alt="User Icon">
         <div class="user-info">
-          <span class="user-name">{{ user.name }}</span>
-          <span class="chat-snippet">{{ user.snippet }}</span>
-          <span class="user-time">{{ user.showTime ? getCurrentTime() : '' }}</span>
-          <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div>
+          <span class="user-name">{{ conversation.name }}</span>
+          <span class="chat-snippet">{{ conversation.text }}</span>
+          <span class="user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
+          <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
 
         </div>
 

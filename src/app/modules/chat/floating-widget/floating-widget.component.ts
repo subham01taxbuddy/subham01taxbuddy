@@ -1,6 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { widgetVisibility } from './animation';
- 
+import { ChatManagerService } from '../chat-manager.service';
+import { LocalStorageService } from 'src/app/services/storage.service';
+import { UserChatComponent } from '../user-chat/user-chat.component';
 
 @Component({
   selector: 'app-floating-widget',
@@ -10,15 +12,16 @@ import { widgetVisibility } from './animation';
 })
 export class FloatingWidgetComponent implements OnInit {
 
-  constructor(){}
+ 
+  constructor(private chatManagerService: ChatManagerService, private localStorage: LocalStorageService){}
 
   showWidget = 'visible';
   selectedUser: any = null;
+  conversationList: any[] = []
 
-  // openUserChat(user: any){
-  //   this.selectedUser = user;
-  //   this.router.navigate(['/user-chat']);
-  // }
+  openUserChat(user: any){
+    this.selectedUser = user;
+   }
 
   closeWidget(){
     this.showWidget = 'hidden';
@@ -36,8 +39,8 @@ export class FloatingWidgetComponent implements OnInit {
     {id: 3,name: 'Akash',snippet: "can't talk now. Will message you later...",image: 'assets/img/warren.webp',showTime: true,notificationCount: 1}
   ];
 
-  getCurrentTime(): string{
-      const now = new Date()
+  getCurrentTime(timestamp: any): string{
+      const now = new Date(timestamp)
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -45,10 +48,33 @@ export class FloatingWidgetComponent implements OnInit {
       return formattedTime;
   }
 
-
-
   ngOnInit(): void {
+   this.chatManagerService.initChat();
+   const convdata = this.localStorage.getItem('conversationList',true);
+   console.log('conv data',convdata);
+   if(convdata){
+      const conversations = JSON.parse(convdata);
+      this.conversationList = conversations.map((conversation: any) => {
+        const user = this.users.find(u => u.name === conversation.name);
+        if(user){
+          return {
+            image: user.image,
+            name: conversation.name,
+            text: conversation.text,
+            timestamp: conversation.timestamp
+          }
+        }else{
+          return {
+            image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+            name: conversation.name,
+            text: conversation.text,
+            timestamp: conversation.timestamp
+          }
+        }
+      })
+      
+    }
+    }
 
-  }
+   }
 
-}
