@@ -45,8 +45,9 @@ export class ChatService {
     this.onMessageUpdatedCallbacks.set(0, messageReceivedCallback);
   }
 
-  initDeptDetails(serviceType:string){
-    let url = `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`;
+  initDeptDetails(serviceType?:string){
+    let url = serviceType ? `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`
+        : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
     let deptList = [];
     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
       console.log('fetch departments result', result);

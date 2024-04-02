@@ -54,6 +54,10 @@ export class ChatManager {
     }
   }
 
+  getDepartmentList(){
+    this.chatService.initDeptDetails();
+  }
+
   async initChat(serviceType?:string){
     await this.chatService.initTokens(serviceType);
     this.registerCallbacks();
