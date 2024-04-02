@@ -1,17 +1,17 @@
-import { ChatEvents } from './chat-events';
-import { ChatServiceService } from './chat-service.service';
-import { Injectable } from '@angular/core';
+import { ChatService } from "./chat.service";
+import { ChatEvents } from "./chat-events";
+import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ChatManagerService {
+export class ChatManager {
 
   private subscriptions: {
     [key: string]: Array<(...args: Array<any>) => void>;
   } = {};
 
-  constructor(private chatService: ChatServiceService) {
+  constructor(private chatService: ChatService) {
     Object.values(ChatEvents).forEach((eventName) => {
       this.subscriptions[eventName] = [];
     });
@@ -61,6 +61,7 @@ export class ChatManagerService {
       this.registerCallbacks();
     }
     this.fireEvents(ChatEvents.TOKEN_GENERATED);
+
   }
 
   fireEvents(eventType: ChatEvents, serviceType?:string){
@@ -76,8 +77,11 @@ export class ChatManagerService {
 
   }
 
+  openConversation(conversationId: string){
+
+  }
+
   closeChat(){
     this.chatService.closeWebSocket();
   }
- 
 }

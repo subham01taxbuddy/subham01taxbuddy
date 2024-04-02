@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
   @Injectable({
   providedIn: 'root'
 })
-export class ChatServiceService {
- 
-   mqtt = require("./mqtt.min.js");
+export class ChatService {
+
+  mqtt = require("./mqtt.min.js");
   _CLIENTADDED = "/clientadded"
   _CLIENTUPDATED = "/clientupdated"
   _CLIENTDELETED = "/clientdeleted"
@@ -80,9 +80,9 @@ export class ChatServiceService {
       if (result.success) {
         this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
         console.log("tiledesk token: ", result.data.token);
-        // if (result.data.requestId) {
-        //   this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
-        // }
+        if (result.data.requestId) {
+          this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
+        }
         let chat21Request = {
           tiledeskToken: result.data.token
         };

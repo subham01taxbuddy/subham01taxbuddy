@@ -1,8 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { widgetVisibility } from './animation';
-import { ChatManagerService } from '../chat-manager.service';
 import { LocalStorageService } from 'src/app/services/storage.service';
-import { UserChatComponent } from '../user-chat/user-chat.component';
+import { ChatManager } from '../chat-manager';
 
 @Component({
   selector: 'app-floating-widget',
@@ -13,7 +12,8 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 export class FloatingWidgetComponent implements OnInit {
 
  
-  constructor(private chatManagerService: ChatManagerService, private localStorage: LocalStorageService){}
+  constructor(private chatManager: ChatManager,
+              private localStorage: LocalStorageService){}
 
   showWidget = 'visible';
   selectedUser: any = null;
@@ -49,7 +49,6 @@ export class FloatingWidgetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   this.chatManagerService.initChat();
    const convdata = this.localStorage.getItem('conversationList',true);
    console.log('conv data',convdata);
    if(convdata){

@@ -16,9 +16,8 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
-import { environment } from 'src/environments/environment';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import {ChatManager} from "../../../chat/chat-manager";
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -55,7 +54,7 @@ export class LoginComponent implements OnInit {
     private speedTestService: SpeedTestService,
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
-    private kommunicateSsoService: KommunicateSsoService
+    private chatManager: ChatManager
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -78,6 +77,7 @@ export class LoginComponent implements OnInit {
         this.getFyList();
         this.getAgentList();
         this.utilsService.getFilersList();
+        this.chatManager.initChat();
         break;
       }
     }
@@ -99,7 +99,6 @@ export class LoginComponent implements OnInit {
       this.registerLogin(userId);
       this.utilsService.getStoredSmeList();
       this.getAgentList();
-      this.generateKmAuthToken();
       let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
@@ -418,29 +417,6 @@ export class LoginComponent implements OnInit {
     let param = '/v2/assign-unassigned-users?filerUserId=' + filerDetails.userId;
     this.userMsService.getMethod(param).subscribe(
       (response: any) => {
-      });
-  }
-
-  generateKmAuthToken() {
-    //'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/sme-authtoken'
-    this.loading = true;
-    let param = `kommunicate/sme-authtoken`;
-    this.reviewService.postMethod(param, '').subscribe(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          // this.utilsService.showSnackBar(response.message);
-          sessionStorage.setItem('kmAuthToken', response?.data?.token);
-          if (response?.data?.token) {
-            this.kommunicateSsoService.loginKommunicateSdk(response?.data?.token);
-          }
-        } else {
-          this.utilsService.showSnackBar(response.message);
-        }
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar('Failed to generate the kommunicate auth token');
       });
   }
 
