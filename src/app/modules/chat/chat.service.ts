@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LocalStorageService,SessionStorageService } from "src/app/services/storage.service";
 import { AppConstants } from "../shared/constants";
 import { Injectable } from '@angular/core';
+import {ChatEvents} from "./chat-events";
   @Injectable({
   providedIn: 'root'
 })
@@ -46,12 +47,17 @@ export class ChatService {
 
   initDeptDetails(serviceType:string){
     let url = `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`;
+    let deptList = [];
     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
       console.log('fetch departments result', result);
       if (result.success && result.data.length > 0) {
         this.deptName = result.data[0].name;
         this.deptID = result.data[0]._id;
+        deptList = result.data;
       }
+    });
+    this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+      callback(ChatEvents.DEPT_RECEIVED, deptList);
     });
   }
 
@@ -97,15 +103,7 @@ export class ChatService {
             // let chat21Token = {
             //   chat21token: chat21Result.data.token
             // };
-            this.httpClient.get(this.CONVERSATION_URL,this.setHeaders("chat21")).subscribe((conversationResult: any) => {
-              console.log(conversationResult);
-              const newarrays = this.conversationList(conversationResult.result);
-              for(const conversation of newarrays){
-                console.log('request_id ',conversation.request_id);
-                this.fetchMessages(chat21Result.data.userid,conversation.request_id)
-              }
-              console.log('newarray',newarrays);
-            })
+            this.fetchConversationList(chat21Result.data.userid);
 
             if(service) {
               this.initChatVariables(chat21Result.data, result.data);
@@ -147,6 +145,21 @@ export class ChatService {
     }
   }
 
+  fetchConversationList(userId) {
+    this.httpClient.get(this.CONVERSATION_URL,this.setHeaders("chat21")).subscribe((conversationResult: any) => {
+      console.log(conversationResult);
+      const newarrays = this.conversationList(conversationResult.result);
+      // for(const conversation of newarrays){
+      //   console.log('request_id ',conversation.request_id);
+      //   this.fetchMessages(userId, conversation.request_id);
+      // }
+      this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+        callback(ChatEvents.CONVERSATION_UPDATED);
+      });
+      console.log('newarray',newarrays);
+    });
+  }
+
   fetchMessages(userId, requestId) {
     let url = `${this.CHAT_API_URL}/${userId}/conversations/${requestId}/messages?pageSize=30`;
     this.httpClient.get(url, this.setHeaders("chat21")
@@ -158,7 +171,7 @@ export class ChatService {
         let transformedMessages = this.updateMessagesDB(chat21Result.result);
 
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(transformedMessages)
+          callback(ChatEvents.MESSAGE_RECEIVED);
         });
       }
     });
