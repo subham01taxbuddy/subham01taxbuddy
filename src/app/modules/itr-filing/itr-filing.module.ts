@@ -150,7 +150,6 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
     MyAssignedItrsComponent,
     BusinessComponent,
     // WhatsAppDialogComponent,
-    // KommunicateDialogComponent,
     // FilingStatusDialogComponent,
     DocumentUploadComponent,
     ReviseReturnDialogComponent,
