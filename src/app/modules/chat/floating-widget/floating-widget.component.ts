@@ -3,12 +3,13 @@ import { widgetVisibility } from './animation';
 import { ChatManagerService } from '../chat-manager.service';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { UserChatComponent } from '../user-chat/user-chat.component';
-
+ 
 @Component({
   selector: 'app-floating-widget',
   templateUrl: './floating-widget.component.html',
   styleUrls: ['./floating-widget.component.scss'],
   animations: [widgetVisibility],
+  entryComponents: [UserChatComponent]
 })
 export class FloatingWidgetComponent implements OnInit {
 
