@@ -66,7 +66,7 @@ export class GenericCsvService {
   }
 
   mapFiledItrDetails() {
-    this.allResignedActiveSmeList.forEach((item) => {
+    this.allResignedActiveSmeList?.forEach((item) => {
       this.data.forEach((element) => {
         if (item.userId === element.leaderUserId)
           element['leaderUserId'] = item.name;
