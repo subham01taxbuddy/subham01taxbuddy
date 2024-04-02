@@ -1,0 +1,31 @@
+<div class="modal-header header-common-style">
+  <h4 class="modal-title">Resend OTP</h4>
+  <button type="button" class="close" style="cursor: pointer" (click)="dialogRef.close()">&times;</button>
+</div>
+
+
+<ng-container>
+  <mat-dialog-content>
+    <div class="dialog-min-height">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 inpTx">
+          <mat-form-field appearance="outline">
+            <mat-label style="color:#108fa8!important;">Email Address</mat-label>
+            <input matInput type="text" placeholder="Enter email address" [formControl]="emailAddress" name="email"
+              pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50" trim required>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-xs-12 BtTpTst">
+        <div class="sub_btn ">
+          <button type="button" class="btn cancel float-left" (click)="dialogRef.close()">Cancel</button>
+          <button type="submit" class="btn save btSav" (click)="getEmailAddress()">Send</button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</ng-container>

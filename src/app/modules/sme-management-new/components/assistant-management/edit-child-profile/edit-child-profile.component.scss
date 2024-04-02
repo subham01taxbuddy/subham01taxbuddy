@@ -70,7 +70,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 10px;
+      // margin-top: 10px;
     }
 
     .verify-button:disabled{
@@ -123,4 +123,42 @@
 
     .countContainer{
       background-color: white;
+    }
+
+    .otpTx {
+      float: left;
+      margin-top: -15px;
+      color:#292929;
+    }
+
+    .customDisabled {
+      cursor: not-allowed !important;
+      opacity: 0.65;
+    }
+
+    .opt-button {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      background-color: transparent !important;
+      button {
+        padding: 0 0;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        float: none !important ;
+        background-color: transparent !important;
+      }
+    }
+    .resent{
+      margin-top: 30px;
+    }
+    .resend-enable {
+      color: #00aeca !important;
+      cursor: pointer !important;
+      float: left !important;
+      font-style: italic !important;
+      font-weight: 500 !important;
+      margin-left: -166px;
+      margin-top: 10px;
     }
