@@ -18,6 +18,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
+        this.handleConversationList();
     }
 
     showWidget = 'visible';
@@ -74,14 +75,14 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.chatManager.getDepartmentList();
     }
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
     }
 
-    handleConversationList = (data: any) => {
+    handleConversationList = () => {
         const convdata = this.localStorage.getItem('conversationList', true);
         console.log('conv data', convdata);
         if (convdata) {
