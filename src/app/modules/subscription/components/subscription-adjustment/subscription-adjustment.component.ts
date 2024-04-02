@@ -175,7 +175,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    this.searchParam.asseessmentYear = this.assessmentYear.value.assessmentYear;
+    this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     var param = `/bo/subscription-adjustment?${data}${userFilter}`;

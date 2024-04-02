@@ -350,12 +350,13 @@ export class MoreOptionsDialogComponent implements OnInit {
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + this.data?.mobileNumber;
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
+    let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter;
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.data instanceof Array && response.data.length > 0) {
+      if (response.data.content instanceof Array && response.data.content.length > 0) {
         console.log(response);
-        response.data.forEach((item: any) => {
+        response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
           if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {

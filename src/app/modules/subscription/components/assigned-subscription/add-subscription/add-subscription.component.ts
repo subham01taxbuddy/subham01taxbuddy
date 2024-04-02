@@ -158,12 +158,6 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
     }
-    
-    this.loading = true;
-    this.reportService.getMethod('/bo/future-year-subscription-exists?mobileNumber='+number).subscribe((response: any) => {
-      this.disableItrSubPlan = response.data.itrSubscriptionExists;
-      this.loading = false;
-    });
 
     this.loading = true;
     let futureParam
@@ -174,33 +168,32 @@ export class AddSubscriptionComponent implements OnInit {
     }
     this.reportService.getMethod(futureParam).subscribe((response: any) => {
       this.disableItrSubPlan = response.data.itrSubscriptionExists;
-      this.loading = false;
-    });
 
-    this.loading = true;
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      this.allSubscriptions = response.data.content
-      if (this.allSubscriptions && this.allSubscriptions.length) {
-        let smeSelectedPlan = [];
-        smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
-          if (data) return data;
-        })];
-        smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
-          if (data) return data;
-        })];
-        if (smeSelectedPlan.length) {
-          let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
-          this.disableItrSubPlan = itrPlanDetails.length > 0;
-          this.service = itrPlanDetails[0]?.servicesType;
-          this.serviceDetails = itrPlanDetails[0]?.name;
-          let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
-          this.tpaService = TpaPlanDetails[0]?.servicesType;
-          this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+      this.loading = true;
+      let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
+      this.reportService.getMethod(param).subscribe((response: any) => {
+        this.loading = false;
+        this.allSubscriptions = response.data.content
+        if (this.allSubscriptions && this.allSubscriptions.length) {
+          let smeSelectedPlan = [];
+          smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
+            if (data) return data;
+          })];
+          smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
+            if (data) return data;
+          })];
+          if (smeSelectedPlan.length) {
+            let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+            this.disableItrSubPlan = itrPlanDetails.length > 0;
+            this.service = itrPlanDetails[0]?.servicesType;
+            this.serviceDetails = itrPlanDetails[0]?.name;
+            let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
+            this.tpaService = TpaPlanDetails[0]?.servicesType;
+            this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+          }
         }
-      }
-    })
+      })
+    });
   }
 
   // disable(){
@@ -342,10 +335,6 @@ export class AddSubscriptionComponent implements OnInit {
                   this.selectedPlanInfo?.name,
               });
               this.dialogRef.close({ event: 'close', data: res });
-              this.toastMessage.alert(
-                'success',
-                'Subscription created successfully.'
-              );
               // this.toastMessage.alert(
               //   'success',
               //   'Subscription created successfully.'

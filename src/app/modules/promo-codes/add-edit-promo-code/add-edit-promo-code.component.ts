@@ -37,7 +37,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   statusList: any = [{ label: 'Active', value: true }, { label: 'InActive', value: false }]
   promoCodeForm!: UntypedFormGroup;
   minEndDate: any = new Date();
-  maxEndDate: any = new Date('2024-03-31');
+  maxEndDate: any = new Date('2025-03-31');
   allPlans: any[] = [];
   promoCodeInfo: any;
   today: Date;

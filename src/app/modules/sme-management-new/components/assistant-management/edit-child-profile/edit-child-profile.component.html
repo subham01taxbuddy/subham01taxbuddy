@@ -85,6 +85,13 @@
                     (click)="otpValidationMethod()">Submit OTP
                   </button>
             </div>
+            <div class="col-sm-4 resent">
+              <div class="otpTx"> Didn't receive an OTP?</div>
+              <div class="opt-button">
+                <button (click)="resendOTP('EMAIL')" [class.customDisabled]="disableButton"  [disabled]="disableButton" mat-button class="notMbr resend-enable"
+                style="font-size: 14px"> Resend OTP on Email</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
