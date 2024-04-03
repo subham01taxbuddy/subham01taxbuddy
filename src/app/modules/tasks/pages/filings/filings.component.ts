@@ -511,6 +511,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         leaderUserId: data[i].leaderUserId,
         filingSource: data[i].filingSource,
         itrSummaryJson: data[i].itrSummaryJson,
+        itru : data[i].itru,
       });
     }
     return newData;
@@ -624,6 +625,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params.data.isRevised === 'Y') {
             return 'Revised';
+          }else if(params.data.isRevised === 'N' && params.data.itru === true ){
+            return 'Updated'
           }
           return 'Original';
         },
