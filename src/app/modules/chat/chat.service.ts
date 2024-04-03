@@ -6,7 +6,7 @@ import {ChatEvents} from "./chat-events";
   @Injectable({
   providedIn: 'root'
 })
-export class ChatService {
+  export class ChatService {
 
   mqtt = require("./mqtt.min.js");
   _CLIENTADDED = "/clientadded"
@@ -31,7 +31,7 @@ export class ChatService {
   userFullName = '';
   deptName = '';
   deptID = '';
-
+  departmentNames: string[] = [];
 
   constructor(public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
@@ -53,8 +53,11 @@ export class ChatService {
       console.log('fetch departments result', result);
       if (result.success && result.data.length > 0) {
         this.deptName = result.data[0].name;
+        console.log('names',this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
+        this.departmentNames = result.data.map((dept: any) => dept.name);
+        console.log(this.departmentNames);
       }
     });
     this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {

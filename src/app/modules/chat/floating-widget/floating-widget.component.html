@@ -14,10 +14,7 @@
   </div>
 
   <div class="options">
-      <div class="option-box">ITR</div>
-      <div class="option-box">TPA</div>
-      <div class="option-box">Notices</div>
-      <div class="option-box">GST</div>
+     <div class="option-box" *ngFor="let deptName of departmentNames">{{ deptName }}</div>
   </div>
 
   <div class="search-bar">

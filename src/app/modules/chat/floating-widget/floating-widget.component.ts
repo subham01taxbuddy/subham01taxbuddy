@@ -24,6 +24,7 @@ export class FloatingWidgetComponent implements OnInit {
     showWidget = 'visible';
     selectedUser: any = null;
     conversationList: any[] = []
+    departmentNames: string[] = [];
 
     openUserChat(user: any) {
         this.selectedUser = user;
@@ -76,6 +77,8 @@ export class FloatingWidgetComponent implements OnInit {
 
     ngOnInit(): void {
         this.chatManager.getDepartmentList();
+        this.departmentNames = this.chatManager.getDepartmentNames();
+        console.log('departmentNames',this.departmentNames);
     }
 
     handleReceivedMessages = (data: any) => {

@@ -7,6 +7,8 @@ import {Injectable} from "@angular/core";
 })
 export class ChatManager {
 
+  departmentNames: string[] = [];
+
   private subscriptions: {
     [key: string]: Array<(...args: Array<any>) => void>;
   } = {};
@@ -56,6 +58,10 @@ export class ChatManager {
 
   getDepartmentList(){
     this.chatService.initDeptDetails();
+  }
+
+  getDepartmentNames(){
+    return this.departmentNames;
   }
 
   async initChat(serviceType?:string){
