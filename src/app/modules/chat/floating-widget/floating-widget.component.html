@@ -6,7 +6,7 @@
 
 
   <div class="header">
-      <span class="icon menu-icon">&#9776;</span>
+      <!-- <span class="icon menu-icon">&#9776;</span> -->
       <span class="glyphicon glyphicon-new-window"></span>        
       <span class="widget-title">Chat</span>
       <span class="glyphicon glyphicon-remove" (click)="closeWidget()"></span>
@@ -17,10 +17,10 @@
      <div class="option-box" *ngFor="let deptName of departmentNames">{{ deptName }}</div>
   </div>
 
-  <div class="search-bar">
+  <!-- <div class="search-bar">
       <span class="glyphicon glyphicon-search"></span>
       <input type="text" placeholder="Search messages or users">
-  </div>
+  </div> -->
 
   <div class="user-list">
       <div class="user-box" *ngFor="let conversation of conversationList">
