@@ -390,7 +390,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
 
-    // return [
+      // return [
       {
         headerName: 'Name',
         field: 'name',
@@ -608,7 +608,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -652,7 +652,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -674,7 +674,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 85,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -713,42 +713,41 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  call(data) {
+  async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
-    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
-      (res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilsService.showSnackBar(res.error);
-          this.search();
-          return;
-        } else {
-          this.loading = true;
-          const param = `tts/outbound-call`;
-          const reqBody = {
-            "agent_number": data.callerAgentNumber,
-            "customer_number": data.mobileNumber
-          }
-          this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-            this.loading = false;
-            if (result.success == false) {
-              this.loading = false;
-              this.utilsService.showSnackBar('Error while making call, Please try again.');
-            }
-            if (result.success) {
-              we_track('Call', {
-                'User Name': data?.name,
-                'User Phone number ': data.callerAgentNumber,
-              });
-              this._toastMessageService.alert("success", result.message)
-            }
-          }, error => {
-            this.utilsService.showSnackBar('Error while making call, Please try again.');
-            this.loading = false;
-          })
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        this.loading = true;
+        const param = `tts/outbound-call`;
+        const reqBody = {
+          "agent_number": await this.utilsService.getMyCallingNumber(),
+          "customer_number": data.mobileNumber
         }
-      },
+        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success == false) {
+            this.loading = false;
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
+          }
+          if (result.success) {
+            we_track('Call', {
+              'User Name': data?.name,
+              'User Phone number ': data.callerAgentNumber,
+            });
+            this._toastMessageService.alert("success", result.message)
+          }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+        })
+      }
+    },
       (error) => {
         this.loading = false;
         if (error.error && error.error.error) {
