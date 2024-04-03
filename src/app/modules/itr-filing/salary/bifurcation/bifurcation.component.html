@@ -32,6 +32,9 @@
                   <button type="button" class="addBtn" (click)="addItem()" [disabled]="salary.invalid"> + Add
                     Another</button>
                 </div>
+                <div class="deleteBtn">
+                  <button type="button" (click)="calculate()"> <i class="fa-solid fa-calculator"></i> </button>
+                </div>
               </div>
               <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
                 <mat-form-field appearance="outline">
