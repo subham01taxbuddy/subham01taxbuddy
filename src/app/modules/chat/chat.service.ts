@@ -164,8 +164,8 @@ import {ChatEvents} from "./chat-events";
     });
   }
 
-  fetchMessages(userId, requestId) {
-    let url = `${this.CHAT_API_URL}/${userId}/conversations/${requestId}/messages?pageSize=30`;
+  fetchMessages(requestId) {
+    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=30`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
