@@ -56,13 +56,13 @@ import {ChatEvents} from "./chat-events";
         console.log('names',this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
-        this.departmentNames = result.data.map((dept: any) => dept.name);
-        console.log(this.departmentNames);
+
+        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+          callback(ChatEvents.DEPT_RECEIVED, deptList);
+        });
       }
     });
-    this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-      callback(ChatEvents.DEPT_RECEIVED, deptList);
-    });
+
   }
 
   initChatVariables(chat21Result, tiledeskResult){
