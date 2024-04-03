@@ -55,11 +55,13 @@ export class ChatService {
         this.deptName = result.data[0].name;
         this.deptID = result.data[0]._id;
         deptList = result.data;
+
+        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+          callback(ChatEvents.DEPT_RECEIVED, deptList);
+        });
       }
     });
-    this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-      callback(ChatEvents.DEPT_RECEIVED, deptList);
-    });
+
   }
 
   initChatVariables(chat21Result, tiledeskResult){
