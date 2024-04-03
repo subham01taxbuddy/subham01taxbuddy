@@ -299,6 +299,14 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   checkFilerAssignment(data: any) {
+    this.loading = true;
+    const notAllowedStatuses = [18,15,16,32,45,33];
+    if(notAllowedStatuses.includes(data.statusId)){
+      this.loading = false;
+      this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to start preparing on ITR');
+      return;
+    }
+
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
     let serviceType = '';
     if (data.serviceType === 'ITRU') {
@@ -740,7 +748,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
             const isITRU = params.data.serviceType === 'ITRU';
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
-            if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
+            if (!params.data.itrObjectStatus || params.data.itrObjectStatus === null) { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
               cursor:pointer; background-color:#FBEED3; color:#A36543;" >
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="yetToStart"></i> Yet to Start
@@ -1056,6 +1064,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
+        id: userData[i].id,
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
@@ -1187,6 +1196,12 @@ export class ItrAssignedUsersComponent implements OnInit {
       } else {
         // this.start(data);
         console.log(data);
+        
+        if(data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)){
+          this.userMsService.patchMethod("/customer/"+ data.id, {itrObjectStatus: 'PREPARING_ITR'}).subscribe(res =>{
+            console.log("update itr object status", res);
+         });
+        }
 
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
