@@ -28,9 +28,8 @@ export class ChangeStatusComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.data.userInfo.statusId == '39' ){
-      this.hideUndoButton =true;
-    }else if(this.data.serviceType == 'ITRU' && this.data.userInfo?.statusId == '14' ){
+    
+    if((this.data.serviceType === 'ITRU' || this.data.serviceType === 'ITR') && this.data.userInfo?.statusId === 14 ){
       this.hideUndoButton =true;
     }else{
       this.hideUndoButton =false;

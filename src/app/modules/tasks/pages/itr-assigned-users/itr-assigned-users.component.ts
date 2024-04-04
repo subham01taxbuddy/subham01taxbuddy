@@ -300,11 +300,13 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     this.loading = true;
-    const notAllowedStatuses = [18,15,16,32,45,33];
-    if(notAllowedStatuses.includes(data.statusId)){
-      this.loading = false;
-      this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to start preparing on ITR');
-      return;
+    if('ITR' === data.serviceType){
+      const notAllowedStatuses = [18,15,16,32,45,33];
+      if(notAllowedStatuses.includes(data.statusId)){
+       this.loading = false;
+        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to start preparing on ITR');
+        return;
+      }
     }
 
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
@@ -418,6 +420,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
+          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
