@@ -117,7 +117,7 @@ export class SidebarComponent {
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: [] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
-      ]
+      ] 
     },
     {
       name: 'Subscription',
