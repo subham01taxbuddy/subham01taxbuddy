@@ -347,13 +347,14 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   checkSubscription(action: string) {
     this.loading = true;
-    const notAllowedStatuses = [18,15,16,32,45,33];
-    if(notAllowedStatuses.includes(this.data.statusId)){
-      this.loading = false;
-      this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow');
-      return;
+    if('ITR' === this.data.serviceType){
+      const notAllowedStatuses = [18,15,16,32,45,33];
+      if(notAllowedStatuses.includes(this.data.statusId)){
+        this.loading = false;
+        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow');
+        return;
+      }
     }
-
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
