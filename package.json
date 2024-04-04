@@ -41,10 +41,11 @@
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.43",
     "ng-speed-test": "2.6.1",
-    "ng2-pdf-viewer": "^8.0.1",
     "ngx-bootstrap": "^11.0.0",
     "ngx-doc-viewer": "2.1.2",
+    "ngx-extended-pdf-viewer": "^19.6.1",
     "ngx-image-zoom": "~1.0.1",
     "ngx-loading": "^16.0.0",
     "ngx-material-timepicker": "^13.1.1",
@@ -52,8 +53,7 @@
     "pdfjs-dist": "~2.11.338",
     "rxjs": "~7.8.1",
     "tslib": "^2.3.0",
-    "zone.js": "~0.13.3",
-    "moment-timezone": "^0.5.43"
+    "zone.js": "~0.13.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.12",
