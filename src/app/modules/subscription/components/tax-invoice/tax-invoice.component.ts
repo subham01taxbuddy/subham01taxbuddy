@@ -263,6 +263,11 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }  else {
       this.minStartDate = moment('2023-04-01').toDate();
       this.startDate.setValue(this.minStartDate);
+      this.minDate = moment.min(moment(), moment('2023-04-01')).toDate();
+      this.maxStartDate = moment.min(moment(), moment('2024-03-31')).toDate();
+      this.toDateMin = this.minDate;
+      this.maxEndDate = this.maxStartDate;
+      this.endDate.setValue(this.maxEndDate)
     }
   }
 
@@ -333,14 +338,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   }
   financialYear = [
-    {
-      assessmentYear : "2025-2026",
-      financialYear : "2024-2025"
-    },
-    {
-      assessmentYear : "2024-2025",
-      financialYear : "2023-2024"
-    }];
+    {assessmentYear : "2025-2026",financialYear : "2024-2025", startDate: new Date('2024-04-01'), endDate: new Date('2025-03-31')},
+    {assessmentYear : "2024-2025",financialYear : "2023-2024",startDate: new Date('2023-04-01'), endDate: new Date('2024-03-31')}
+  ];
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
     assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
     startDate: new UntypedFormControl('', [Validators.required]),
