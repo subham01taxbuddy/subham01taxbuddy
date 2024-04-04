@@ -886,6 +886,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       }
     }
 
+    if (this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL"){
+     this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
+    }
+
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
