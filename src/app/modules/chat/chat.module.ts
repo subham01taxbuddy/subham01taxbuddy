@@ -10,5 +10,6 @@ import { UserChatComponent } from './user-chat/user-chat.component';
   imports: [
     CommonModule
   ],
+  exports: [UserChatComponent]
 })
 export class ChatModule { }

@@ -14,7 +14,7 @@
   </div>
 
   <div class="options">
-     <div class="option-box" *ngFor="let deptName of departmentNames">{{ deptName }}</div>
+     <div class="option-box" *ngFor="let deptName of departmentNames" [ngClass]="{'font-size-class': true}">{{ deptName }}</div>
   </div>
 
   <!-- <div class="search-bar">
@@ -23,19 +23,25 @@
   </div> -->
 
   <div class="user-list">
-      <div class="user-box" *ngFor="let conversation of conversationList">
+      <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
         <img [src]="conversation.image" alt="User Icon">
         <div class="user-info">
           <span class="user-name">{{ conversation.name }}</span>
           <span class="chat-snippet">{{ conversation.text }}</span>
           <span class="user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
-          <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
-
+           <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
+          
         </div>
 
       </div>
   </div>
 
+
+  <app-user-chat  *ngIf="isUserChatVisible"
+   [image]="selectedUser.image" 
+   [username]="selectedUser.name"
+   [requestId]="selectedUser.request_id"
+   ></app-user-chat> 
 
 
 </div>

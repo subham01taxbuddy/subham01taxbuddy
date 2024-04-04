@@ -1,22 +1,39 @@
 <div class="floating-widget">
     <div class="header">
         <span class="glyphicon glyphicon-chevron-left" (click)="goBack()"></span>
-        <span class="glyphicon glyphicon-new-window"></span>        
-        <span class="file-type-option">{{ filetype }}</span>
+        <span class="glyphicon glyphicon-new-window"></span>
+        <span class="file-type-option">ITR</span>
         <span class="glyphicon glyphicon-earphone"></span>
     </div>
 
     <div class="user-info">
-        <img [src]="user.image" alt="user-image">
-        <span class="username">{{ user.name }}</span>
+        <img [src]="image" alt="user-image">
+        <span class="username">{{ username }}</span>
     </div>
 
     <div class="chat-messages">
-      
+        <h1>hello</h1>
     </div>
 
+    <!-- <div *ngIf="fileToUpload" class="file-upload-box">
+        <div class="file-details">
+            <div class="file-icon">
+                <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
+                <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+            </div>
+            <div class="file-name">{{ fileToUpload.name }}</div>
+        </div> -->
+
+        <!-- <div class="remove-file" (click)="removeFile()">
+          <span class="bi bi-x"></span>
+        </div> -->
+        <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
+     <button class="btn btn-primary" (click)="sendFile()">Send</button> -->
+
+
     <div class="user-input">
-        <span class="glyphicon glyphicon-paperclip"></span>
+        <label for="fileInput" class="bi bi-paperclip"></label>
+        <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
         <input type="text" placeholder="Type your message">
         <span class=""></span>
         <span></span>

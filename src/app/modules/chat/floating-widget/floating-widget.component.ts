@@ -22,22 +22,31 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     showWidget = 'visible';
-    selectedUser: any = null;
+    selectedUser: any;
     conversationList: any[] = []
     departmentNames: string[] = [];
+    isUserChatVisible: boolean = false;
+
+    
 
     openUserChat(user: any) {
         this.selectedUser = user;
-    }
+        this.isUserChatVisible = true;
+      }
 
     closeWidget() {
         this.showWidget = 'hidden';
+        this.isUserChatVisible = false;
+
     }
 
     // goBack(){
     //   this.router.navigate(['']);
     // }
 
+    // selectedUsers(user: any){
+    //   this.selectedUser = user 
+    // }
 
     users = [
         {
@@ -97,23 +106,29 @@ export class FloatingWidgetComponent implements OnInit {
                         image: user.image,
                         name: conversation.name,
                         text: conversation.text,
-                        timestamp: conversation.timestamp
+                        timestamp: conversation.timestamp,
+                        request_id: conversation.request_id
                     }
                 } else {
                     return {
                         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
                         name: conversation.name,
                         text: conversation.text,
-                        timestamp: conversation.timestamp
+                        timestamp: conversation.timestamp,
+                        request_id: conversation.request_id
                     }
                 }
             })
+            console.log('new list',this.conversationList);
 
         }
     }
 
     handleDeptList = (data: any) => {
         console.log('received message', data);
+        this.departmentNames = data.map((dept: any) => dept.name)
+        console.log('list',this.departmentNames);
     }
 }
 
+    

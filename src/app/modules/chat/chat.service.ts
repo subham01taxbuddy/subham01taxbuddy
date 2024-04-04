@@ -151,7 +151,7 @@ import {ChatEvents} from "./chat-events";
 
   fetchConversationList(userId) {
     this.httpClient.get(this.CONVERSATION_URL,this.setHeaders("chat21")).subscribe((conversationResult: any) => {
-      console.log(conversationResult);
+      console.log('conversation result',conversationResult);
       const newarrays = this.conversationList(conversationResult.result);
       // for(const conversation of newarrays){
       //   console.log('request_id ',conversation.request_id);
@@ -162,6 +162,18 @@ import {ChatEvents} from "./chat-events";
       });
       console.log('newarray',newarrays);
     });
+  }
+
+
+  uploadFile(file: File,requestId: string){
+    const url = 'https://6d4ugfehdlpibmogor7ou6ncli0vxoee.lambda-url.ap-south-1.on.aws/tiledesk-file-uplod';
+    const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
+    let TOKEN = UMDtoken.id_token
+    const formData = new FormData();
+    formData.append('file',file);
+    formData.append('requestId',requestId);
+
+    return this.httpClient.post<any>(url,formData,{headers: {Authorization: `Bearer ${TOKEN}`}})
   }
 
   fetchMessages(requestId) {
