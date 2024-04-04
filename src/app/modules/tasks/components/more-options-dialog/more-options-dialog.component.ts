@@ -347,6 +347,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   checkSubscription(action: string) {
     this.loading = true;
+    
     if('ITR' === this.data.serviceType){
       const notAllowedStatuses = [18,15,16,32,45,33];
       if(notAllowedStatuses.includes(this.data.statusId)){
