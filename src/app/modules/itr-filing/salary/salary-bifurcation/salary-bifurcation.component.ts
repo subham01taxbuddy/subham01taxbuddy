@@ -8,6 +8,7 @@ import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import {CalculatorModalComponent} from "../../../shared/components/calculator-modal/calculator-modal.component";
 
 @Component({
   selector: 'app-salary-bifurcation',
@@ -323,6 +324,16 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       (item) => item?.salaryType == 'SEC17_3')
     this.salaryFormGroup.controls['secThreeTotal'].setValue(secThreeTotal.length > 0 ? secThreeTotal[0].taxableAmount : 0)
     this.formValuesChanged();
+  }
+
+  calculate(){
+    const dialogRef = this.dialog.open(CalculatorModalComponent, {
+      width: '80%',
+      height: '80%',
+      data: {
+        url: 'https://www.taxbuddy.com/allcalculators/pension?inUtility=true&embedded=true'
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
