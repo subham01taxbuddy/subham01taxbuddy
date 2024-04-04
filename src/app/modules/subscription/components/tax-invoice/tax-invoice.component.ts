@@ -58,8 +58,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
-  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  minDate = moment.min(moment(), moment('2023-04-01')).toDate();
+  minStartDate = moment.min(moment(), moment('2023-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
