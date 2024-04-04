@@ -237,9 +237,15 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       //current year
       this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
       this.startDate.setValue(this.minStartDate);
+      this.endDate.setValue(moment());
     } else {
       this.minStartDate = moment('2023-04-01').toDate();
       this.startDate.setValue(this.minStartDate);
+      this.minStartDate = moment.min(moment(), moment('2023-04-01')).toDate();
+      this.maxStartDate = moment.min(moment(), moment('2024-03-31')).toDate();
+      this.minEndDate = this.minStartDate.toDateString();
+      this.maxEndDate = this.maxStartDate;
+      this.endDate.setValue(this.maxEndDate)
     }
   }
 
