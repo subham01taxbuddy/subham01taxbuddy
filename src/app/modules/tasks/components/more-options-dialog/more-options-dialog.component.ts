@@ -346,10 +346,17 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   checkSubscription(action: string) {
-    
+    this.loading = true;
+    if('ITR' === this.data.serviceType){
+      const notAllowedStatuses = [18,15,16,32,45,33];
+      if(notAllowedStatuses.includes(this.data.statusId)){
+        this.loading = false;
+        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow');
+        return;
+      }
+    }
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
-    this.loading = true;
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter;
     this.reportService.getMethod(param).subscribe((response: any) => {

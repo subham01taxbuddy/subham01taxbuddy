@@ -93,7 +93,7 @@ export class UtilsService {
 
   createEmptyJson(
     profile: any,
-    serviceType:string,
+    serviceType: string,
     assessmentYear: any,
     financialYear: any,
     itrId?: any,
@@ -860,6 +860,8 @@ export class UtilsService {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
     if (ITR && mobile) {
@@ -890,6 +892,8 @@ export class UtilsService {
     if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
+    } else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 

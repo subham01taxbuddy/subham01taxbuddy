@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject, ElementRef, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import { Employer, ITR_JSON, salarySevOne, salarySevThree, salarySevTwo, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
+import { CalculatorModalComponent } from 'src/app/modules/shared/components/calculator-modal/calculator-modal.component';
 
 @Component({
   selector: 'app-bifurcation',
@@ -237,7 +238,8 @@ export class BifurcationComponent implements OnInit, OnChanges {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private overlay: Overlay,
     private elementRef: ElementRef,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -695,6 +697,16 @@ export class BifurcationComponent implements OnInit, OnChanges {
       profitsInLieu.push(this.createSevThreeForm(item));
       this.changeSectionOne('profitsInLieu');
     }
+  }
+
+  calculate(){
+    const dialogRef = this.dialog.open(CalculatorModalComponent, {
+      width: '80%',
+      height: '80%',
+      data: {
+        url: 'https://www.taxbuddy.com/allcalculators/pension?inUtility=true&embedded=true'
+      }
+    });
   }
 
   //  BREAKUP MONTHLY WISE
