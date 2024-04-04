@@ -420,6 +420,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
+          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }

@@ -8,7 +8,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 import { PersonalInformationComponent } from './itr-wizard/components/personal-information/personal-information.component';
@@ -107,6 +107,7 @@ import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @NgModule({
     imports: [
@@ -115,13 +116,13 @@ import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-det
         ReactiveFormsModule,
         ItrFilingRoutingModule,
         NgxImageZoomModule,
-        PdfViewerModule,
+        // PdfViewerModule,
         SharedModule,
         PagesModule,
         NgxDocViewerModule,
         NgxPaginationModule,
         ItrSharedModule,
-        // NgxExtendedPdfViewerModule
+        NgxExtendedPdfViewerModule
     ],
     providers: [
         DatePipe,
