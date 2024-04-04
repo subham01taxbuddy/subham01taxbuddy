@@ -44,7 +44,7 @@ export class SidebarComponent {
         if (state) {
           this.openSidebar = true;
         } else {
-          this.openSidebar = false;
+          this.openSidebar =  false;
         }
       });
   }
