@@ -45,7 +45,7 @@
                   <div class="col-sm-3 dtTp">
                     <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height">
                       <mat-label>To Date</mat-label>
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="startDate.value"
                         [max]="maxEndDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                       <mat-datepicker #picker2></mat-datepicker>
