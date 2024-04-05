@@ -204,6 +204,14 @@ export class AssistantManagementComponent implements OnInit {
 
 
   addAssistant(){
+    let loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    let Ids = loggedInSme[0]?.partnerDetails?.additionalIdsCount;
+    if(Ids <= this.childInfoCount){
+      return this._toastMessageService.alert(
+        'error',
+        'You have reached the maximum limit of Add Assistant'
+      );
+    }
     this.router.navigate(['/sme-management-new/edit-child']);
   }
 

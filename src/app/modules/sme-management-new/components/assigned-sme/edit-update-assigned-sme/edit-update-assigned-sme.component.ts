@@ -293,6 +293,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.bankDetailsFormGroup.controls['ifsCode'].setValue(this.smeObj?.['partnerDetails'].bankDetails.ifsCode);
         this.bankDetailsFormGroup.controls['accountType'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountType);
       }
+      if (this.smeObj?.['partnerDetails'].additionalIdsRequired) {
+        this.smeFormGroup.controls['additionalIdsCount'].setValidators([Validators.required]);
+      } else {
+        this.smeFormGroup.controls['additionalIdsCount'].clearValidators();
+      }
+      this.smeFormGroup.controls['additionalIdsCount'].updateValueAndValidity();
     }
 
     this.allSmeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -884,6 +890,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar('Please select at least one ITR type');
         return;
       }
+    }
+
+    if (this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL"){
+     this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
     }
 
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
