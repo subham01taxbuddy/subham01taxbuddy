@@ -1,10 +1,15 @@
-<!--<div class="floating-widget">-->
-<!--    <div class="header">-->
-<!--        <span class="bi bi-chevron-left" (click)="goBack()"></span>-->
-<!--        <span class="bi bi-window-dock"></span>-->
-<!--        <span class="file-type-option">ITR</span>-->
-<!--        <span class="bi bi-earphone"></span>-->
-<!--    </div>-->
+<div class="floating-widget">
+    <div class="header">
+        <!-- <span class="bi bi-chevron-left" (click)="goBack()"></span> -->
+        <button (click)="goBack()">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <i class="fa fa-window-maximize" aria-hidden="true"></i>
+        <div>
+        <span class="file-type-option">ITR</span>
+        </div>
+        <!-- <span class="bi bi-earphone"></span> -->
+    </div>
 
     <div class="user-info">
         <img [src]="image" alt="user-image">
@@ -32,11 +37,13 @@
 
 
     <div class="user-input">
-        <label for="fileInput" class="bi bi-paperclip"></label>
+        <i class="fa fa-paperclip" aria-hidden="true"></i>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
         <input type="text" placeholder="Type your message">
         <span class=""></span>
         <span></span>
-        <button (Click)="sendMessage()" class="bi bi-send"></button>
+        <button (Click)="sendMessage()">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        </button>
     </div>
-<!--</div>-->
+</div>
