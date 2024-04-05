@@ -576,14 +576,27 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
-            'Open': { background: '#D3FBDA', color: '#43A352' },
-            'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
-            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Follow Up': { background: '#DCDCDC', color: '#808080' },
-            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+            'Not Interested': { background: '#DCDCDC', color: '#808080' }, //gray
+            'TPA completed': { background: '#DCDCDC', color: '#808080' },
+            'Notice Response filed': { background: '#DCDCDC', color: '#808080' },
+            'Notice Closed': { background: '#DCDCDC', color: '#808080' },
+            'GST Cancelled': { background: '#DCDCDC', color: '#808080' },
+            'Registration Done': { background: '#DCDCDC', color: '#808080' },
             'Backed Out': { background: '#DCDCDC', color: '#808080' },
+
+            'Open': { background: '#D3FBDA', color: '#43A352' }, //green
+            'Interested': { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up': { background: '#D3FBDA', color: '#43A352' },
+            'Converted': { background: '#D3FBDA', color: '#43A352' },
+            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+            'Part Response Filed': { background: '#D3FBDA', color: '#43A352' },
+            'Notice WIP': { background: '#D3FBDA', color: '#43A352' },
+            'Active Client for Return': { background: '#D3FBDA', color: '#43A352' },
+            'Notice Reopen': { background: '#D3FBDA', color: '#43A352' },
+
+            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
           };
           const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 

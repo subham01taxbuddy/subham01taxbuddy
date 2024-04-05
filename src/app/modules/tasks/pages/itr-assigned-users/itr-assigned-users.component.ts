@@ -300,10 +300,10 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     this.loading = true;
-    if('ITR' === data.serviceType){
-      const notAllowedStatuses = [18,15,16,32,45,33];
-      if(notAllowedStatuses.includes(data.statusId)){
-       this.loading = false;
+    if ('ITR' === data.serviceType) {
+      const notAllowedStatuses = [18, 15, 16, 32, 45, 33];
+      if (notAllowedStatuses.includes(data.statusId)) {
+        this.loading = false;
         this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to start preparing on ITR');
         return;
       }
@@ -420,7 +420,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
-          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
+          this.itrStatus.sort((a, b) => a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
@@ -870,24 +870,29 @@ export class ItrAssignedUsersComponent implements OnInit {
           cellRenderer: function (params: any) {
             const statusName = params.data.statusName;
             const statusColors = {
-              'Open': { background: '#D3FBDA', color: '#43A352' },
-              'Not Interested': { background: '#DCDCDC', color: '#808080' },
-              'Payment Received': { background: '#D3FBDA', color: '#43A352' },
-              'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-              'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-              'Follow Up': { background: '#DCDCDC', color: '#808080' },
-              'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
-              'Interested': { background: '#D3FBDA', color: '#43A352' },
-              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
-              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
-              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
-              'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              'Open': { background: '#D3FBDA', color: '#43A352' }, //green
               'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
-              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'Documents Incomplete': { background: '#D3FBDA', color: '#43A352' },
+              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+              'Plan Confirmed': { background: '#D3FBDA', color: '#43A352' },
+              'Waiting for Confirmation': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+
+              'Interested': { background: '#DCDCDC', color: '#808080' }, //gray
+              'Backed Out': { background: '#DCDCDC', color: '#808080' },
+              'Not Interested': { background: '#DCDCDC', color: '#808080' },
               'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
-              'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
-              'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
-              'Pay Later': { background: '#DCDCDC', color: '#808080' },
+              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+
+              // 'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+              // 'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              // 'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              // 'Follow Up': { background: '#DCDCDC', color: '#808080' },
+              // 'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' }, 
+              // 'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              // 'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
+              // 'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
+              // 'Pay Later': { background: '#DCDCDC', color: '#808080' },
             };
             const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 
@@ -1199,11 +1204,11 @@ export class ItrAssignedUsersComponent implements OnInit {
       } else {
         // this.start(data);
         console.log(data);
-        
-        if(data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)){
-          this.userMsService.patchMethod("/customer/"+ data.id, {itrObjectStatus: 'PREPARING_ITR'}).subscribe(res =>{
+
+        if (data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)) {
+          this.userMsService.patchMethod("/customer/" + data.id, { itrObjectStatus: 'PREPARING_ITR' }).subscribe(res => {
             console.log("update itr object status", res);
-         });
+          });
         }
 
         const fyList = await this.utilsService.getStoredFyList();
