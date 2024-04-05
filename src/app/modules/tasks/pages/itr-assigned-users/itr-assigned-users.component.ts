@@ -877,20 +877,20 @@ export class ItrAssignedUsersComponent implements OnInit {
               'Plan Confirmed': { background: '#D3FBDA', color: '#43A352' },
               'Waiting for Confirmation': { background: '#D3FBDA', color: '#43A352' },
               'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+              'Interested': { background: '#D3FBDA', color: '#43A352' }, 
 
-              'Interested': { background: '#DCDCDC', color: '#808080' }, //gray
-              'Backed Out': { background: '#DCDCDC', color: '#808080' },
+              'Backed Out': { background: '#DCDCDC', color: '#808080' },//gray
               'Not Interested': { background: '#DCDCDC', color: '#808080' },
               'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
               'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'ITR Filed - E Verification Completed': { background: '#DCDCDC;', color: '#808080' },
+              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' }, 
 
               // 'Payment Received': { background: '#D3FBDA', color: '#43A352' },
               // 'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
               // 'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
               // 'Follow Up': { background: '#DCDCDC', color: '#808080' },
-              // 'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' }, 
               // 'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
-              // 'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
               // 'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
               // 'Pay Later': { background: '#DCDCDC', color: '#808080' },
             };
