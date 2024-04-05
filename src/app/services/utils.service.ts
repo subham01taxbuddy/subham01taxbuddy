@@ -75,6 +75,11 @@ export class UtilsService {
     return result;
   }
 
+  getFYFromAY(assessmentYear: string){
+    const years = assessmentYear.split('-');
+    return (Number(years[0])-1) +'-'+(Number(years[1])-1);
+  }
+
   //scroll to specific div
   smoothScrollToDiv(divId: any) {
     console.log(divId);

@@ -177,7 +177,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
             "aadharNumber": "",
             "assesseeType": "INDIVIDUAL",
             assessmentYear: this.data.assessmentYear,
-            financialYear: "2022-2023",
+            financialYear: this.utilsService.getFYFromAY(this.data.assessmentYear),
             isRevised: this.returnType.value,
             "eFillingCompleted": true,
             eFillingDate: this.eFillingDate.value,
