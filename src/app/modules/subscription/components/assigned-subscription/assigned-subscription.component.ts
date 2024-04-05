@@ -1198,7 +1198,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           if (res.data.content[0].active === false) {
             this._toastMessageService.alert(
               'error',
-              'This customer is currently inactive, please activate customer first and then create subscription'
+              'The Customer is in potential Users, please activate from there and then create subscription'
             );
             return;
           }
@@ -1215,7 +1215,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           if (res.data.content[0].active === false) {
             this._toastMessageService.alert(
               'error',
-              'This customer is currently inactive, please activate customer first and then create subscription'
+              'The Customer is in potential Users, please activate from there and then create subscription'
             );
             return;
           }
