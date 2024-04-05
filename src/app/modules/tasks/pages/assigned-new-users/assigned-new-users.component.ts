@@ -598,7 +598,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
             'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
           };
-          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
+          const statusStyle = statusColors[statusName] || { background: '#D3FBDA', color: '#43A352' };
 
           return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
