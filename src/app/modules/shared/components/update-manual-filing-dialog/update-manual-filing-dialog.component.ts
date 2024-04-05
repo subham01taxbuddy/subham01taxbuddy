@@ -85,7 +85,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
             aadharNumber: this.data.aadharNumber,
             assesseeType: 'INDIVIDUAL',
             assessmentYear: this.data.assessmentYear,
-            financialYear: '2022-2023',
+            financialYear: this.utilsService.getFYFromAY(this.data.assessmentYear),
             isRevised: this.data.isRevised,
             eFillingCompleted: true,
             eFillingDate: this.eFillingDate.value,
