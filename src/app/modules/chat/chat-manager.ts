@@ -43,6 +43,7 @@ export class ChatManager {
   }
 
   public subscribe(eventName: string, fn: (...args: Array<any>) => void) {
+    this.registerCallbacks();
     if (this.subscriptions[eventName]) {
       this.subscriptions[eventName].push(fn);
     } else {

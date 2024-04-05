@@ -1,15 +1,15 @@
-<div class="floating-widget">
-    <div class="header">
-        <!-- <span class="bi bi-chevron-left" (click)="goBack()"></span> -->
-        <button (click)="goBack()">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        </button>
-        <i class="fa fa-window-maximize" aria-hidden="true"></i>
-        <div>
-        <span class="file-type-option">ITR</span>
-        </div>
-        <!-- <span class="bi bi-earphone"></span> -->
-    </div>
+<!--<div class="floating-widget">-->
+<!--    <div class="header">-->
+<!--        &lt;!&ndash; <span class="bi bi-chevron-left" (click)="goBack()"></span> &ndash;&gt;-->
+<!--        <button (click)="goBack()">-->
+<!--            <i class="fa fa-chevron-left" aria-hidden="true"></i>-->
+<!--        </button>-->
+<!--        <i class="fa fa-window-maximize" aria-hidden="true"></i>-->
+<!--        <div>-->
+<!--        <span class="file-type-option">ITR</span>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; <span class="bi bi-earphone"></span> &ndash;&gt;-->
+<!--    </div>-->
 
     <div class="user-info">
         <img [src]="image" alt="user-image">
@@ -17,7 +17,22 @@
     </div>
 
     <div class="chat-messages">
-        <h1>hello</h1>
+        <ng-container *ngFor="let message of fetchedMessages">
+            <div [ngClass]="{
+              'system-messages': message.sender === 'system',
+              'user-messages': message.sender === chat21UserId,
+              'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId
+            }">
+                <div class="message-container">
+                    <div class="message-and-timestamp">
+                        <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
+                        <div *ngIf="message.type === 'html'" [innerHTML]="message.content"></div>
+                        <span *ngIf="message.sender !== 'system'" class="timestamp">{{ formatTimestamp(message.timestamp) }}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
     </div>
 
     <!-- <div *ngIf="fileToUpload" class="file-upload-box">
@@ -46,4 +61,4 @@
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
     </div>
-</div>
+<!--</div>-->

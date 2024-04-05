@@ -32,7 +32,7 @@ export class FloatingWidgetComponent implements OnInit {
     openUserChat(user: any) {
         this.selectedUser = user;
         this.isUserChatVisible = true;
-        this.chatManager.openConversation(user.request_id);
+        // this.chatManager.openConversation(user.request_id);
     }
 
     closeWidget() {
