@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { LocalStorageService,SessionStorageService } from "src/app/services/storage.service";
+import { LocalStorageService, SessionStorageService } from "src/app/services/storage.service";
 import { AppConstants } from "../shared/constants";
 import { Injectable } from '@angular/core';
-import {ChatEvents} from "./chat-events";
-  @Injectable({
+import { ChatEvents } from "./chat-events";
+@Injectable({
   providedIn: 'root'
 })
-  export class ChatService {
+export class ChatService {
 
   mqtt = require("./mqtt.min.js");
   _CLIENTADDED = "/clientadded"
@@ -39,21 +39,21 @@ import {ChatEvents} from "./chat-events";
   ) {
   }
 
-  registerMessageReceived(messageReceivedCallback){
+  registerMessageReceived(messageReceivedCallback) {
     this.onConversationUpdatedCallbacks.set(0, messageReceivedCallback);
     this.onMessageAddedCallbacks.set(0, messageReceivedCallback);
     this.onMessageUpdatedCallbacks.set(0, messageReceivedCallback);
   }
 
-  initDeptDetails(serviceType?:string){
+  initDeptDetails(serviceType?: string) {
     let url = serviceType ? `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`
-        : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
+      : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
     let deptList = [];
     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
       console.log('fetch departments result', result);
       if (result.success && result.data.length > 0) {
         this.deptName = result.data[0].name;
-        console.log('names',this.deptName)
+        console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
 
@@ -65,7 +65,7 @@ import {ChatEvents} from "./chat-events";
 
   }
 
-  initChatVariables(chat21Result, tiledeskResult){
+  initChatVariables(chat21Result, tiledeskResult) {
     this.chat21UserID = chat21Result.userid;
     this.clientId = this.uuidv4();
     this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
@@ -86,45 +86,47 @@ import {ChatEvents} from "./chat-events";
     this.httpClient.post(this.TILEDESK_TOKEN_URL,
       request,
       this.setHeaders("auth")).subscribe((result: any) => {
-      console.log(result);
-      if (result.success) {
-        this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
-        console.log("tiledesk token: ", result.data.token);
-        if (result.data.requestId) {
-          this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
-        }
-        let chat21Request = {
-          tiledeskToken: result.data.token
-        };
-        this.httpClient.post(this.CHAT21_TOKEN_URL,
-          chat21Request, this.setHeaders("auth")
-        ).subscribe((chat21Result: any) => {
-          console.log('chat21Token: ',chat21Result);
-          if (chat21Result.success) {
-            this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
-            this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
-
-            // let chat21Token = {
-            //   chat21token: chat21Result.data.token
-            // };
-            this.fetchConversationList(chat21Result.data.userid);
-
-            if(service) {
-              this.initChatVariables(chat21Result.data, result.data);
-              this.websocketConnection(chat21Result.data.token, chat21Result.data.userid, result.data.requestId);
-              // this.fetchMessages(chat21Result.data.userid, result.data.requestId);
-            }
+        console.log(result);
+        if (result.success) {
+          this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
+          console.log("tiledesk token: ", result.data.token);
+          if (result.data.requestId) {
+            this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
-        });
-      }
-    });
+          let chat21Request = {
+            tiledeskToken: result.data.token
+          };
+          this.httpClient.post(this.CHAT21_TOKEN_URL,
+            chat21Request, this.setHeaders("auth")
+          ).subscribe((chat21Result: any) => {
+            console.log('chat21Token: ', chat21Result);
+            if (chat21Result.success) {
+              this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
+              this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+
+              // let chat21Token = {
+              //   chat21token: chat21Result.data.token
+              // };
+              this.fetchConversationList(chat21Result.data.userid);
+
+              if (service) {
+                this.initChatVariables(chat21Result.data, result.data);
+                this.websocketConnection(chat21Result.data.token, chat21Result.data.userid, result.data.requestId);
+                this.fetchConversationList(chat21Result.data.userid);
+
+                // this.fetchMessages(result.data.requestId);
+              }
+            }
+          });
+        }
+      });
   }
 
 
   setHeaders(type: any = "auth") {
     let httpOptions: any = {};
 
-     if (type == "auth") {
+    if (type == "auth") {
       const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
       let TOKEN = UMDtoken.id_token
       httpOptions = {
@@ -149,35 +151,38 @@ import {ChatEvents} from "./chat-events";
     }
   }
 
-  fetchConversationList(userId) {
-    this.httpClient.get(this.CONVERSATION_URL,this.setHeaders("chat21")).subscribe((conversationResult: any) => {
-      console.log('conversation result',conversationResult);
+  fetchConversationList(userId: any) {
+    const CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
+    this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
+      console.log('conversation result', conversationResult);
       const newarrays = this.conversationList(conversationResult.result);
-      // for(const conversation of newarrays){
-      //   console.log('request_id ',conversation.request_id);
-      //   this.fetchMessages(userId, conversation.request_id);
+      // for (const conversation of newarrays) {
+      //   console.log('request_id ', conversation.request_id);
+      //   this.fetchMessages(conversation.request_id);
       // }
       this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
         callback(ChatEvents.CONVERSATION_UPDATED);
       });
-      console.log('newarray',newarrays);
+      console.log('newarray', newarrays);
     });
   }
 
 
-  uploadFile(file: File,requestId: string){
+  uploadFile(file: File, requestId: string) {
     const url = 'https://6d4ugfehdlpibmogor7ou6ncli0vxoee.lambda-url.ap-south-1.on.aws/tiledesk-file-uplod';
     const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
     let TOKEN = UMDtoken.id_token
     const formData = new FormData();
-    formData.append('file',file);
-    formData.append('requestId',requestId);
+    formData.append('file', file);
+    formData.append('requestId', requestId);
 
-    return this.httpClient.post<any>(url,formData,{headers: {Authorization: `Bearer ${TOKEN}`}})
+    return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}` } })
   }
 
   fetchMessages(requestId) {
-    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=30`;
+    let CHAT21USERID = this.localStorageService.getItem('CHAT21_USER_ID');
+    console.log('chat21',CHAT21USERID);
+    let url = `${this.CHAT_API_URL}/${CHAT21USERID}/conversations/${requestId}/messages?pageSize=30`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -193,27 +198,27 @@ import {ChatEvents} from "./chat-events";
     });
   }
 
-  conversationList(data: any){
-  
-     const transformedData = data.map(message => ({
-    
+  conversationList(data: any) {
+
+    const transformedData = data.map(message => ({
+
       new: message.is_new,
       name: message.recipient_fullname,
       text: message.last_message_text,
       timestamp: message.timestamp,
       request_id: message.conversWith
-      
-     }))
-     this.localStorageService.setItem('conversationList',JSON.stringify(transformedData),true)
-     return transformedData;
+
+    }))
+    this.localStorageService.setItem('conversationList', JSON.stringify(transformedData), true)
+    return transformedData;
   }
 
 
-  clearMessagesDB(){
+  clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');
   }
 
-  updateMessagesDB(messages:any){
+  updateMessagesDB(messages: any) {
     const transformedMessages = messages.map(message => ({
       content: message.text,
       sender: message.sender,
@@ -226,7 +231,7 @@ import {ChatEvents} from "./chat-events";
     return transformedMessages;
   }
 
-  addMessageToDB(message:any){
+  addMessageToDB(message: any) {
     const messagesString = sessionStorage.getItem("fetchedMessages");
 
     if (messagesString) {
@@ -250,7 +255,7 @@ import {ChatEvents} from "./chat-events";
   }
 
   uuidv4() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
@@ -312,7 +317,7 @@ import {ChatEvents} from "./chat-events";
           if (this.log) {
             console.log("subscribing to:", userId, "topic", this.topicInbox);
           }
-          if(!this.chatSubscription){
+          if (!this.chatSubscription) {
             this.chatSubscription = this.chatClient.subscribe(this.topicInbox, (err) => {
               if (err) {
                 console.error("An error occurred while subscribing user", userId, "on topic:", this.topicInbox, "Error:", err);
@@ -570,8 +575,8 @@ import {ChatEvents} from "./chat-events";
 
   closeWebSocket() {
     if (this.topicInbox) {
-      this.chatClient.unsubscribe(this.topicInbox, (err)  => {
-        if (this.log) {console.log("unsubscribed from", this.topicInbox);}
+      this.chatClient.unsubscribe(this.topicInbox, (err) => {
+        if (this.log) { console.log("unsubscribed from", this.topicInbox); }
         this.chatClient.end(() => {
           this.connected = false
           // reset all subscriptions

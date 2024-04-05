@@ -11,8 +11,8 @@ export class UserChatComponent implements OnInit {
 
   @Input() filetype: string;
   @Input() user: string;
-  @Input() image: any; // Property to receive user image URL from parent
-  @Input() username: string; // Property to receive username from parent
+  @Input() image: any; 
+  @Input() username: string; 
   @Input() requestId: string;
 
   fileToUpload: File | null = null;
@@ -48,7 +48,9 @@ export class UserChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    if(this.requestId){
+      this.chatService.fetchMessages(this.requestId);
+    }
   }
 
 }

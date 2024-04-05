@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {widgetVisibility} from './animation';
-import {LocalStorageService} from 'src/app/services/storage.service';
-import {ChatManager} from '../chat-manager';
-import {ChatEvents} from '../chat-events';
+import { Component, OnInit } from '@angular/core';
+import { widgetVisibility } from './animation';
+import { LocalStorageService } from 'src/app/services/storage.service';
+import { ChatManager } from '../chat-manager';
+import { ChatEvents } from '../chat-events';
 
 @Component({
     selector: 'app-floating-widget',
@@ -14,7 +14,7 @@ export class FloatingWidgetComponent implements OnInit {
 
 
     constructor(private chatManager: ChatManager,
-                private localStorage: LocalStorageService) {
+        private localStorage: LocalStorageService) {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
@@ -27,12 +27,12 @@ export class FloatingWidgetComponent implements OnInit {
     departmentNames: string[] = [];
     isUserChatVisible: boolean = false;
 
-    
+
 
     openUserChat(user: any) {
         this.selectedUser = user;
         this.isUserChatVisible = true;
-      }
+    }
 
     closeWidget() {
         this.showWidget = 'hidden';
@@ -87,7 +87,7 @@ export class FloatingWidgetComponent implements OnInit {
     ngOnInit(): void {
         this.chatManager.getDepartmentList();
         this.departmentNames = this.chatManager.getDepartmentNames();
-        console.log('departmentNames',this.departmentNames);
+        console.log('departmentNames', this.departmentNames);
     }
 
     handleReceivedMessages = (data: any) => {
@@ -102,6 +102,7 @@ export class FloatingWidgetComponent implements OnInit {
             this.conversationList = conversations.map((conversation: any) => {
                 const user = this.users.find(u => u.name === conversation.name);
                 if (user) {
+                //   this.chatManager.openConversation(conversation.request_id)
                     return {
                         image: user.image,
                         name: conversation.name,
@@ -119,7 +120,7 @@ export class FloatingWidgetComponent implements OnInit {
                     }
                 }
             })
-            console.log('new list',this.conversationList);
+            console.log('new list', this.conversationList);
 
         }
     }
@@ -127,8 +128,7 @@ export class FloatingWidgetComponent implements OnInit {
     handleDeptList = (data: any) => {
         console.log('received message', data);
         this.departmentNames = data.map((dept: any) => dept.name)
-        console.log('list',this.departmentNames);
+        console.log('list', this.departmentNames);
     }
 }
 
-    
