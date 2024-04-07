@@ -16,6 +16,7 @@ export class UserChatComponent implements OnInit {
   @Input() image: any; 
   @Input() username: string; 
   @Input() requestId: string;
+  @Output() back: EventEmitter<void> = new EventEmitter<void>();
 
   fileToUpload: File | null = null;
   
@@ -28,7 +29,7 @@ export class UserChatComponent implements OnInit {
 
 
   goBack(){
-
+    this.back.emit();
   }
 
   sendMessage(){

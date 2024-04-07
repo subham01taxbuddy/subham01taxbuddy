@@ -21,24 +21,27 @@ export class FloatingWidgetComponent implements OnInit {
         this.handleConversationList();
     }
 
-    showWidget = 'visible';
+    showWidget = true;
     selectedUser: any;
     conversationList: any[] = []
     departmentNames: string[] = [];
     isUserChatVisible: boolean = false;
 
-
-
     openUserChat(user: any) {
         this.selectedUser = user;
         this.isUserChatVisible = true;
-        // this.chatManager.openConversation(user.request_id);
+        this.showWidget = false;
     }
 
     closeWidget() {
-        this.showWidget = 'hidden';
+        this.showWidget = false;
         this.isUserChatVisible = false;
 
+    }
+
+    closeUserChat() {
+        this.isUserChatVisible = false;
+        this.showWidget = true;
     }
 
     // goBack(){
@@ -103,7 +106,7 @@ export class FloatingWidgetComponent implements OnInit {
             this.conversationList = conversations.map((conversation: any) => {
                 const user = this.users.find(u => u.name === conversation.name);
                 if (user) {
-                //   this.chatManager.openConversation(conversation.request_id)
+                    //   this.chatManager.openConversation(conversation.request_id)
                     return {
                         image: user.image,
                         name: conversation.name,

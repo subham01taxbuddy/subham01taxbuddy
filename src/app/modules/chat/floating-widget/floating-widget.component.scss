@@ -1,18 +1,21 @@
-@import '~bootstrap-icons/font/bootstrap-icons.css';
-
 
 .floating-widget {
     position: fixed;
     bottom: 20px;
     right: 20px;
     width: 350px;
+    height: 517px;
+    top: 110px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
     color: #333;
     z-index: 9999;
+    border: 1px;
 }
+
+ 
 
 .header {
     background-color: #3498db;
@@ -110,9 +113,10 @@ input[type="text"] {
 }
 
 .user-list {
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
     padding: 10px;
+    box-sizing: border-box;
 }
 
 .user-list::-webkit-scrollbar{
