@@ -519,6 +519,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filingSource: data[i].filingSource,
         itrSummaryJson: data[i].itrSummaryJson,
         itru: data[i].itru,
+        paymentStatus: data[i].paymentStatus,
       });
     }
     return newData;
@@ -740,6 +741,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
+      },
+      {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        width: 150,
+        valueGetter: function (params) {
+          if (params?.data?.paymentStatus) {
+            return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Actions',
