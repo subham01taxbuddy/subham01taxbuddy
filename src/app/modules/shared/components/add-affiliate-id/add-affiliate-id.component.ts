@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 
@@ -10,7 +10,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 })
 export class AddAffiliateIdComponent implements OnInit {
   loginSMEInfo: any;
-  affiliateId = new UntypedFormControl('', [Validators.required,Validators.email])
+  affiliateId = new FormControl('', [Validators.required,Validators.email])
 
   constructor(
     public dialogRef: MatDialogRef<AddAffiliateIdComponent>,

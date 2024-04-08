@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, SimpleChanges, Output, EventEmitter, Inject} from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -17,7 +17,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   @Output() onSave = new EventEmitter();
 
   @Input() editIndex: any;
-  salaryForm: UntypedFormGroup;
+  salaryForm: FormGroup;
   COPY_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -44,7 +44,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   ];
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TdsOtherThanSalaryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -121,7 +121,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     });
   }
 
-  createForm(item?): UntypedFormGroup {
+  createForm(item?): FormGroup {
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
     }
@@ -150,20 +150,20 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
   activeIndex = 0;
   markActive(index){
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 
   changed() {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     if (this.showHeadOfIncome === 'TDTS') {
       this.headOfIncomeDropdownTDS2.forEach((type) => {
         type.disabled = false;
-        salaryArray.controls.forEach((element: UntypedFormGroup) => {
+        salaryArray.controls.forEach((element: FormGroup) => {
           if (element.controls['headOfIncome'].value == (type.code)) {
             type.disabled = true;
           }
@@ -172,7 +172,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     } else if (this.showHeadOfIncome === 'TDTSP') {
       this.headOfIncomeDropdownTDS3.forEach((type) => {
         type.disabled = false;
-        salaryArray.controls.forEach((element: UntypedFormGroup) => {
+        salaryArray.controls.forEach((element: FormGroup) => {
           if (element.controls['headOfIncome'].value == (type.code)) {
             type.disabled = true;
           }
@@ -182,7 +182,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   editSalaryForm(i) {
-    ((this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).enable();
+    ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
 
   goBack(){
@@ -203,7 +203,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     }
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
-        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as UntypedFormArray).getRawValue();
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
 
         let result = {
@@ -220,7 +220,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       } else if (this.showHeadOfIncome === 'TDTSP') {
-        this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB = (this.salaryForm.controls['salaryArray'] as UntypedFormArray).getRawValue();
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
 
         let result = {
@@ -246,19 +246,19 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <UntypedFormArray>this.salaryForm.get('salaryArray');
+    return <FormArray>this.salaryForm.get('salaryArray');
   }
 
 
   addMoreSalary(item?) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.insert(0, this.createForm(item));
     delay(0);
     this.changed();
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.removeAt(index);
     this.changed();
   }

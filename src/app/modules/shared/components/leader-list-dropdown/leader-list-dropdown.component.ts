@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { User } from 'src/app/modules/subscription/components/performa-invoice/performa-invoice.component';
 import { ReportService } from 'src/app/services/report-service';
@@ -22,8 +22,8 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   @Input() forGstServiceType: boolean =false;
 
   smeList: any[] = [];
-  searchOwner = new UntypedFormControl('');
-  searchLeader = new UntypedFormControl('');
+  searchOwner = new FormControl('');
+  searchLeader = new FormControl('');
   filteredOptions!: Observable<any[]>;
   filteredLeaders: Observable<any[]>;
   filteredOwners: Observable<any[]>;

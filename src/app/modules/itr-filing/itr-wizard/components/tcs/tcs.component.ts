@@ -7,7 +7,7 @@ import {
   Output,
   Inject,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -22,7 +22,7 @@ export class TcsComponent implements OnInit {
   @Input() isAddTcs: Number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
-  salaryForm: UntypedFormGroup;
+  salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -30,7 +30,7 @@ export class TcsComponent implements OnInit {
   config: any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TcsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -74,12 +74,12 @@ export class TcsComponent implements OnInit {
   }
 
   addSalary() {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     if (salaryArray.valid) {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
-        if ((element as UntypedFormGroup).invalid) {
+        if ((element as FormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -93,7 +93,7 @@ export class TcsComponent implements OnInit {
     });
   }
 
-  createForm(item?): UntypedFormGroup {
+  createForm(item?): FormGroup {
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
     }
@@ -122,8 +122,8 @@ export class TcsComponent implements OnInit {
   activeIndex = 0;
   markActive(index){
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 
@@ -176,17 +176,17 @@ export class TcsComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <UntypedFormArray>this.salaryForm.get('salaryArray');
+    return <FormArray>this.salaryForm.get('salaryArray');
   }
 
   addMoreSalary(item?) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
     this.activeIndex = salaryArray.length - 1;
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.removeAt(index);
   }
 

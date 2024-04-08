@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from '../../../../shared/constants';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
@@ -19,7 +19,7 @@ export class AllSalaryIncomeComponent
   implements OnInit
 {
   loading: boolean = false;
-  salaryIncomeFormGroup: UntypedFormGroup;
+  salaryIncomeFormGroup: FormGroup;
   taxableIncomes: any = [];
   showList: boolean;
   ITR_JSON: ITR_JSON;
@@ -28,7 +28,7 @@ export class AllSalaryIncomeComponent
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private router: Router,
-    private fb: UntypedFormBuilder
+    private fb: FormBuilder
   ) {
     super();
     this.showList = true;
@@ -96,19 +96,19 @@ export class AllSalaryIncomeComponent
   }
 
   get getEmployerArray() {
-    return <UntypedFormArray>this.salaryIncomeFormGroup.get('employersArray');
+    return <FormArray>this.salaryIncomeFormGroup.get('employersArray');
   }
 
   deleteEmployers() {
     let employersArray = this.salaryIncomeFormGroup.controls[
       'employersArray'
-    ] as UntypedFormArray;
+    ] as FormArray;
     let nonSelected = employersArray.controls.filter(
       (item: any) => item.controls['selected'].value === false
     );
 
     let employers = [];
-    nonSelected.forEach((employer: UntypedFormGroup) => {
+    nonSelected.forEach((employer: FormGroup) => {
       employers.push(
         this.Copy_ITR_JSON.employers.filter(
           (item: any) =>
@@ -174,7 +174,7 @@ export class AllSalaryIncomeComponent
   isEmployerSelected() {
     let employers = this.salaryIncomeFormGroup.controls[
       'employersArray'
-    ] as UntypedFormArray;
+    ] as FormArray;
     let selected = employers.controls.filter(
       (item: any) => item.controls['selected'].value === true
     );

@@ -1,7 +1,7 @@
 import { ToastMessageService } from '../../../../../../../services/toast-message.service';
 import { environment } from 'src/environments/environment';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -18,7 +18,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   @Input() data: any;
   loading = false;
   selectedOtpOption = 'A';
-  validateOtpForm: UntypedFormGroup;
+  validateOtpForm: FormGroup;
   uploadDoc: any;
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -33,8 +33,8 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
     private router: Router,
     public dialogRef: MatDialogRef<PrefillDataComponent>,
     @Inject(MAT_DIALOG_DATA) public datas: any,
-    private fb: UntypedFormBuilder,
-    private _formBuilder: UntypedFormBuilder
+    private fb: FormBuilder,
+    private _formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {

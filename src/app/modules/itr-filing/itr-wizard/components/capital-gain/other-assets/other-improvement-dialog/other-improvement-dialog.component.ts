@@ -6,10 +6,10 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { UntypedFormControl, UntypedFormArray } from '@angular/forms';
+import { FormControl, FormArray } from '@angular/forms';
 import { Input } from '@angular/core';
 import {
   Improvement,
@@ -24,15 +24,15 @@ import {
 export class OtherImprovementDialogComponent implements OnInit {
   financialyears = [];
   improvementYears = [];
-  improvementForm!: UntypedFormGroup;
-  improvements: UntypedFormArray;
-  isImprovement = new UntypedFormControl();
+  improvementForm!: FormGroup;
+  improvements: FormArray;
+  isImprovement = new FormControl();
 
   @Input() isAddOtherAssetsImprovement: Number;
   config: any;
 
   constructor(
-    public fb: UntypedFormBuilder,
+    public fb: FormBuilder,
     public dialogRef: MatDialogRef<OtherImprovementDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private itrMsService: ItrMsService
@@ -120,7 +120,7 @@ export class OtherImprovementDialogComponent implements OnInit {
 
   haveImprovement(item?) {
     console.log('improvement===', this.isImprovement.value);
-    const improvements = <UntypedFormArray>this.improvementForm.get('improvements');
+    const improvements = <FormArray>this.improvementForm.get('improvements');
     if (improvements.valid || improvements === null) {
       improvements.push(this.createImprovementForm());
     } else {
@@ -153,7 +153,7 @@ export class OtherImprovementDialogComponent implements OnInit {
       costOfImprovement?: number;
       indexCostOfImprovement?: number;
     } = {}
-  ): UntypedFormGroup {
+  ): FormGroup {
     return this.fb.group({
       isImprovement: [false, [Validators.required]],
       financialYearOfImprovement: [
@@ -169,6 +169,6 @@ export class OtherImprovementDialogComponent implements OnInit {
   }
 
   get getOtherAssetsImprovement() {
-    return <UntypedFormArray>this.improvementForm.get('improvements');
+    return <FormArray>this.improvementForm.get('improvements');
   }
 }

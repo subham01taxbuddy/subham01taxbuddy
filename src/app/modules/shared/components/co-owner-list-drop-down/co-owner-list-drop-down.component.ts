@@ -1,6 +1,6 @@
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -18,8 +18,8 @@ export class CoOwnerListDropDownComponent implements OnInit, OnChanges {
   @Input() disabled: any;
 
   smeList: any[] = [];
-  searchFiler = new UntypedFormControl('');
-  searchOwner = new UntypedFormControl('');
+  searchFiler = new FormControl('');
+  searchOwner = new FormControl('');
   filteredOptions!: Observable<any[]>;
   filteredFilers: Observable<any[]>;
   filteredOwners: Observable<any[]>;

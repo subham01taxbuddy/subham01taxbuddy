@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, ElementRef, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -26,7 +26,7 @@ export class PayProcessingComponent implements OnInit {
   downloadURL:any;
   hideDownload = false;
   showMessage ='';
-  accountType = new UntypedFormControl('razorpayX')
+  accountType = new FormControl('razorpayX')
   currentAccountNumber: string = '333005001704';
   razorpayXAccountNumber: string = '3434696314924813';
 

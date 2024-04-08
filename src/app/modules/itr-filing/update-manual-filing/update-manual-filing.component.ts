@@ -1,7 +1,7 @@
 import { UtilsService } from './../../../services/utils.service';
 import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -14,8 +14,8 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./update-manual-filing.component.css']
 })
 export class UpdateManualFilingComponent implements OnInit {
-  ackNumber = new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
-  eFillingDate = new UntypedFormControl('', Validators.required);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
+  eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   constructor(

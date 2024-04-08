@@ -1,6 +1,6 @@
 import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { HttpHeaders, HttpRequest, HttpEvent, HttpEventType, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -19,12 +19,12 @@ export class DirectUploadComponent implements OnInit {
 
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
-  personalForm: UntypedFormGroup;
-  incomeForm: UntypedFormGroup;
-  taxSavingForm: UntypedFormGroup;
-  insuranceForm: UntypedFormGroup;
-  tdsTcsForm: UntypedFormGroup;
-  declarationForm: UntypedFormGroup;
+  personalForm: FormGroup;
+  incomeForm: FormGroup;
+  taxSavingForm: FormGroup;
+  insuranceForm: FormGroup;
+  tdsTcsForm: FormGroup;
+  declarationForm: FormGroup;
   tabIndex = 0;
   viewer = 'DOC';
   docUrl = '';

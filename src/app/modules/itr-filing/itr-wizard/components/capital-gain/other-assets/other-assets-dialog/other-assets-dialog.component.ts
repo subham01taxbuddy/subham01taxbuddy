@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { inject } from '@angular/core/testing';
 import {
-  UntypedFormArray,
-  UntypedFormBuilder,
+  FormArray,
+  FormBuilder,
   FormControl,
-  UntypedFormGroup,
+  FormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -27,14 +27,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class OtherAssetsDialogComponent implements OnInit {
   @Input() isAddOtherAssets: Number;
-  assetDetailsForm!: UntypedFormGroup;
+  assetDetailsForm!: FormGroup;
   assetType = 'GOLD';
   config: any;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
 
   constructor(
-    public fb: UntypedFormBuilder,
+    public fb: FormBuilder,
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
     private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -51,8 +51,8 @@ export class OtherAssetsDialogComponent implements OnInit {
     this.addMoreOtherAssetsForm();
   }
 
-  get getOtherAssetsArray(): UntypedFormArray {
-    return this.assetDetailsForm.get('otherAssetsArrays') as UntypedFormArray;
+  get getOtherAssetsArray(): FormArray {
+    return this.assetDetailsForm.get('otherAssetsArrays') as FormArray;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,14 +64,14 @@ export class OtherAssetsDialogComponent implements OnInit {
   }
 
   isAddMoreOtherAssets() {
-    const otherAssetDetailsArray = <UntypedFormArray>(
+    const otherAssetDetailsArray = <FormArray>(
       this.assetDetailsForm.get('otherAssetsArrays')
     );
     if (otherAssetDetailsArray.valid) {
       this.addMoreOtherAssetsForm();
     } else {
       otherAssetDetailsArray.controls.forEach((element) => {
-        if ((element as UntypedFormGroup).invalid) {
+        if ((element as FormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -80,13 +80,13 @@ export class OtherAssetsDialogComponent implements OnInit {
   }
 
   addMoreOtherAssetsForm(item?) {
-    const otherAssetsArray = <UntypedFormArray>(
+    const otherAssetsArray = <FormArray>(
       this.assetDetailsForm.get('otherAssetsArrays')
     );
     otherAssetsArray.push(this.createOtherAssetsForm(item));
   }
 
-  createOtherAssetsForm(item?): UntypedFormGroup {
+  createOtherAssetsForm(item?): FormGroup {
     return this.fb.group({
       otherAssetsArrays: this.fb.array([
         {

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -15,14 +15,14 @@ export class ChangeStatusComponent implements OnInit {
   loading!: boolean;
   itrStatus: any = [];
   callers: any = [];
-  changeStatus!: UntypedFormGroup;
+  changeStatus!: FormGroup;
   hideUndoButton :boolean =false;
 
   constructor(
     public dialogRef: MatDialogRef<ChangeStatusComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private userService: UserMsService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService
   ) { }

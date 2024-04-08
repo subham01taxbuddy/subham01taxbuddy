@@ -1,7 +1,7 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -45,8 +45,8 @@ export const MY_FORMATS = {
 export class PromoCodesComponent implements OnInit, OnDestroy {
   config: any;
   loading!: boolean;
-  serviceType = new UntypedFormControl('');
-  searchValue = new UntypedFormControl('');
+  serviceType = new FormControl('');
+  searchValue = new FormControl('');
   promoCodeGridOptions: GridOptions;
   PromoCodeInfo: any;
   totalCount = 0
@@ -67,7 +67,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
 
   constructor(
     private datePipe: DatePipe,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private utileService: UtilsService,
     private dialog: MatDialog,
     private userMsService: UserMsService,

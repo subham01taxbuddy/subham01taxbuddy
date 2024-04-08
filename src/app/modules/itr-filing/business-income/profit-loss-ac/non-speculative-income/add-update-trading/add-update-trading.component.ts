@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProfitLossIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -15,11 +15,11 @@ export class AddUpdateTradingComponent implements OnInit {
   natureOfBusinessDropdownAll: any;
   natureOfProfessionDropdown: any;
   loading = false;
-  tradingForm: UntypedFormGroup;
+  tradingForm: FormGroup;
   constructor(
     public itrMsService: ItrMsService,
     public toastMsgService: ToastMessageService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddUpdateTradingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }

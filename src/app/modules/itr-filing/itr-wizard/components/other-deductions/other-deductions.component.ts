@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -15,14 +15,14 @@ export class OtherDeductionsComponent implements OnInit {
   @Output() ded80TTA = new EventEmitter();
   @Output() ded80TTB = new EventEmitter();
   loading: boolean = false;
-  otherDeductionForm: UntypedFormGroup;
+  otherDeductionForm: FormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   summaryIncome: any;
   finalSummary: any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private itrMsService: ItrMsService,
     private utilsService: UtilsService
   ) {}

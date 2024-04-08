@@ -128,7 +128,6 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     NgxImageZoomModule,
     NgxDocViewerModule,
     NgxLoadingModule.forRoot({}),
-    ShimmerModule,
     MatDialogModule,
     ChatModule
   ],
@@ -160,7 +159,6 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     KnowlarityNotificationComponent,
     UpdateManualFilingDialogComponent,
     CurrencyPipe,
-    ShimmerModule,
     DigitsOnlyDirective,
     AgTooltipComponent,
     NumbersOnlyDirective,

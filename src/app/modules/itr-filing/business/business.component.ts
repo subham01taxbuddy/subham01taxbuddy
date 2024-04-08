@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON, PresumptiveIncomes } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class BusinessComponent implements OnInit {
   loading: boolean = false;
-  employerDetailsFormGroup: UntypedFormGroup;
+  employerDetailsFormGroup: FormGroup;
   itrDocuments = [];
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -29,14 +29,14 @@ export class BusinessComponent implements OnInit {
     docType: ''
   };
   natureOfBusinessPlaceholder: String = 'Nature of Business';
-  natureOfBusinessForm = new UntypedFormControl('', Validators.required);
+  natureOfBusinessForm = new FormControl('', Validators.required);
   filteredOptions: Observable<any[]>;
-  tradeName = new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]);
-  businessType = new UntypedFormControl('BUSINESS', [Validators.required]);
-  businessIncomeCashForm: UntypedFormGroup;
-  businessIncomeBankForm: UntypedFormGroup;
-  professionIncomeForm: UntypedFormGroup;
-  commonForm: UntypedFormGroup;
+  tradeName = new FormControl('', [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]);
+  businessType = new FormControl('BUSINESS', [Validators.required]);
+  businessIncomeCashForm: FormGroup;
+  businessIncomeBankForm: FormGroup;
+  professionIncomeForm: FormGroup;
+  commonForm: FormGroup;
   localPresumptiveIncome: PresumptiveIncomes;
   CopyIncome = [];
   total1 = 0;
@@ -53,7 +53,7 @@ export class BusinessComponent implements OnInit {
   currentIndex: number = null;
   localIncomes = [];
   public businessGridOptions: GridOptions;
-  constructor(private fb: UntypedFormBuilder, public utilsService: UtilsService,
+  constructor(private fb: FormBuilder, public utilsService: UtilsService,
     private itrMsService: ItrMsService) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -72,39 +72,39 @@ export class BusinessComponent implements OnInit {
     this.getItrDocuments();
     this.getMastersData();
     this.businessIncomeBankForm = this.fb.group({
-      recieptRecievedInBank: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      presumptiveIncomeRecieveBank: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      minimumPresumptiveIncome: new UntypedFormControl('')
+      recieptRecievedInBank: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      presumptiveIncomeRecieveBank: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      minimumPresumptiveIncome: new FormControl('')
     });
 
     this.businessIncomeCashForm = this.fb.group({
-      recievedinCash: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      presumptiveIncomeRecievedCash: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      minimumPresumptiveIncome: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
+      recievedinCash: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      presumptiveIncomeRecievedCash: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      minimumPresumptiveIncome: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
     });
 
     this.professionIncomeForm = this.fb.group({
-      grossReciept: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      presumptiveIncome: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      minimumPresumptiveIncome: new UntypedFormControl('')
+      grossReciept: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      presumptiveIncome: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      minimumPresumptiveIncome: new FormControl('')
     });
     // Common Field Form Group
     this.commonForm = this.fb.group({
-      partnerOwnCapital: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      securedLoan: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      unsecuredLoan: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      advances: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      sundryCreditors: new UntypedFormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
-      otherLiabilities: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      fixedAssets: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      inventories: new UntypedFormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
-      sundryDeptors: new UntypedFormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
-      balanceWithBank: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      cashInHand: new UntypedFormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
-      loanandAdvance: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      otherAsset: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
-      gstrNumber: new UntypedFormControl('', Validators.pattern(AppConstants.gstrReg)),
-      turnOverAsPerGST: new UntypedFormControl('', Validators.pattern(AppConstants.numericRegex)),
+      partnerOwnCapital: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      securedLoan: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      unsecuredLoan: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      advances: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      sundryCreditors: new FormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
+      otherLiabilities: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      fixedAssets: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      inventories: new FormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
+      sundryDeptors: new FormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
+      balanceWithBank: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      cashInHand: new FormControl('', Validators.compose([Validators.required, Validators.pattern(AppConstants.numericRegex)])),
+      loanandAdvance: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      otherAsset: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
+      gstrNumber: new FormControl('', Validators.pattern(AppConstants.gstrReg)),
+      turnOverAsPerGST: new FormControl('', Validators.pattern(AppConstants.numericRegex)),
     });
 
     if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.financialParticulars)) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -14,8 +14,8 @@ export class BulkReAssignDialogComponent implements OnInit {
   itrStatus: any = [];
   isServiceType = true;
   isReassignmentOutsideTeam = false;
-  serviceType = new UntypedFormControl('', Validators.required);
-  status = new UntypedFormControl('', Validators.required);
+  serviceType = new FormControl('', Validators.required);
+  status = new FormControl('', Validators.required);
 
   ownerId1: any;
   ownerId2: any;

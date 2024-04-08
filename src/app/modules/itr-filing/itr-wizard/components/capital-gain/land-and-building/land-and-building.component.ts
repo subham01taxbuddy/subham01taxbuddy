@@ -16,7 +16,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { LabFormComponent } from './lab-form/lab-form.component';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 
@@ -42,7 +42,7 @@ export class LandAndBuildingComponent
   public investmentGridOptions: GridOptions;
   showInvestmentTable = false;
 
-  propertiesForm: UntypedFormGroup;
+  propertiesForm: FormGroup;
   properties = [];
   data: any;
   PREV_ITR_JSON: any;
@@ -50,7 +50,7 @@ export class LandAndBuildingComponent
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public matDialog: MatDialog,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private location: Location
   ) {
     super();
@@ -86,20 +86,20 @@ export class LandAndBuildingComponent
   }
 
   isPropertySelected() {
-    let array = this.propertiesForm.controls['propertiesArray'] as UntypedFormArray;
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
     let selected = array.controls.filter(
-      (control: UntypedFormGroup) => control.controls['selected'].value === true
+      (control: FormGroup) => control.controls['selected'].value === true
     );
     return selected.length > 0;
   }
 
   get getPropertiesArrayForForm() {
-    return <UntypedFormArray>this.propertiesForm.get('propertiesArray');
+    return <FormArray>this.propertiesForm.get('propertiesArray');
   }
   updatePropertySelection(event, id) {
-    let array = this.propertiesForm.controls['propertiesArray'] as UntypedFormArray;
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
     let selected = array.controls.filter(
-      (control: UntypedFormGroup) => control.controls['index'].value === id - 1
+      (control: FormGroup) => control.controls['index'].value === id - 1
     )[0];
   }
 
@@ -241,9 +241,9 @@ export class LandAndBuildingComponent
   }
 
   deleteCapitalGain() {
-    let array = this.propertiesForm.controls['propertiesArray'] as UntypedFormArray;
+    let array = this.propertiesForm.controls['propertiesArray'] as FormArray;
     let selected = array.controls.filter(
-      (control: UntypedFormGroup) => control.controls['selected'].value === true
+      (control: FormGroup) => control.controls['selected'].value === true
     );
 
     //re-intialise the ITR objects

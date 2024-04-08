@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -35,12 +35,12 @@ export class AddUpdateReviewComponent implements OnInit {
   sourceList: any = AppConstants.sourceList;
   reviewStatusList: any = AppConstants.reviewStatusList;
   ratingList: any = AppConstants.ratingList;
-  reviewForm: UntypedFormGroup;
+  reviewForm: FormGroup;
   loading: boolean;
   isError: boolean;
   apiSuccess: boolean;
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private reviewService: ReviewService,
     private _toastMessageService: ToastMessageService,

@@ -1,7 +1,7 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
 import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -62,7 +62,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   allFilerList: any;
   roles: any;
-  coOwnerToggle = new UntypedFormControl('');
+  coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
@@ -101,7 +101,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   searchedEmail:any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private dialog: MatDialog,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -239,16 +239,16 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   isAllowed = false;
 
-  subscriptionFormGroup: UntypedFormGroup = this.fb.group({
-    assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
-    serviceType: new UntypedFormControl(''),
+  subscriptionFormGroup: FormGroup = this.fb.group({
+    assessmentYear: new FormControl(this.financialYear[0].financialYear),
+    serviceType: new FormControl(''),
   });
 
   get assessmentYear() {
-    return this.subscriptionFormGroup.controls['assessmentYear'] as UntypedFormControl;
+    return this.subscriptionFormGroup.controls['assessmentYear'] as FormControl;
   }
   get serviceType() {
-    return this.subscriptionFormGroup.controls['serviceType'] as UntypedFormControl;
+    return this.subscriptionFormGroup.controls['serviceType'] as FormControl;
   }
 
   allSubscriptions = [];

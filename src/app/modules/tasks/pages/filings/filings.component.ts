@@ -20,7 +20,7 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -77,8 +77,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: '3,ITR-3', name: 'ITR-3' },
     { value: '4,ITR-4', name: 'ITR-4' },
   ];
-  itrType = new UntypedFormControl('');
-  returnType = new UntypedFormControl('');
+  itrType = new FormControl('');
+  returnType = new FormControl('');
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },

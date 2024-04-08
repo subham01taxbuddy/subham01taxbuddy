@@ -1,6 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -85,7 +85,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
   minEndDate = new Date().toISOString().slice(0, 10);
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private utilService: UtilsService,
     public datePipe: DatePipe,
     private reportService:ReportService,
@@ -124,24 +124,24 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     //  this.getInvoices()
   }
 
-  invoiceFormGroup: UntypedFormGroup = this.fb.group({
-    assessmentYear: new UntypedFormControl(''),
-    startDate: new UntypedFormControl(''),
-    endDate: new UntypedFormControl(''),
-    status: new UntypedFormControl(''),
+  invoiceFormGroup: FormGroup = this.fb.group({
+    assessmentYear: new FormControl(''),
+    startDate: new FormControl(''),
+    endDate: new FormControl(''),
+    status: new FormControl(''),
 
   })
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['startDate'] as FormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['endDate'] as FormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
   resetFilters(){

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -14,7 +14,7 @@ declare let $: any;
 })
 export class DirectorInCompanyComponent implements OnInit {
   loading = false;
-  directorForm: UntypedFormGroup;
+  directorForm: FormGroup;
   bankList: any;
   countryDropdown: any;
   bankTooltip: string;
@@ -28,7 +28,7 @@ export class DirectorInCompanyComponent implements OnInit {
     { value: 'D', label: 'Domestic' },
     { value: 'F', label: 'Foreign' }
   ];
-  constructor(private fb: UntypedFormBuilder,
+  constructor(private fb: FormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<DirectorInCompanyComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,

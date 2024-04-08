@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import Auth from '@aws-amplify/auth';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { NavbarService } from 'src/app/services/navbar.service';
@@ -15,9 +15,9 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 })
 export class ValidateOtpByWhatAppComponent implements OnInit {
 
-  whatAppOtpForm!: UntypedFormGroup;
+  whatAppOtpForm!: FormGroup;
   cognitoUser: any;
-  constructor(public dialogRef: MatDialogRef<ValidateOtpByWhatAppComponent>, private fb: UntypedFormBuilder,
+  constructor(public dialogRef: MatDialogRef<ValidateOtpByWhatAppComponent>, private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private _toastMessageService: ToastMessageService,
     private router: Router, private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     public http: HttpClient) { }

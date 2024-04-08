@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { AppConstants } from '../../constants';
 
 @Component({
@@ -9,7 +9,7 @@ import { AppConstants } from '../../constants';
 })
 export class GenericUserFilterComponent implements OnInit {
   @Output() onChange = new EventEmitter();
-  searchValue = new UntypedFormControl('');
+  searchValue = new FormControl('');
   searchKey: any;
   @Input() searchParameter: any[] = [];
 
@@ -83,7 +83,7 @@ export class GenericUserFilterComponent implements OnInit {
 
   clear() {
     this.searchKey = '';
-    this.searchValue = new UntypedFormControl('');
+    this.searchValue = new FormControl('');
     this.changeInput();
   }
 

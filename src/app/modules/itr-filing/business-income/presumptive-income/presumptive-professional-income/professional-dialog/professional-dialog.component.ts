@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -14,13 +14,13 @@ export class ProfessionalDialogComponent implements OnInit {
   natureOfBusinessDropdownAll: any;
   natureOfProfessionDropdown: any;
   loading = false;
-  professionForm: UntypedFormGroup;
+  professionForm: FormGroup;
   amountFifty: number = 0;
   amountFiftyMax: number = 0;
   constructor(
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ProfessionalDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}

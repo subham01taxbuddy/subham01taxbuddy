@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Auth } from '@aws-amplify/auth';
 import {UserMsService} from "../../../../services/user-ms.service";
 import {environment} from "../../../../../environments/environment";
@@ -16,7 +16,7 @@ declare let $: any;
 export class ForgotPasswordComponent implements OnInit {
   @Output() sendValue = new EventEmitter<any>();
 
-  forgotPasswordForm!: UntypedFormGroup;
+  forgotPasswordForm!: FormGroup;
   isError: Boolean = false;
   busy: Boolean = false;
   errorMessage = '';
@@ -24,17 +24,17 @@ export class ForgotPasswordComponent implements OnInit {
   mode = 'MOBILE';
 
   isSetPassword = false;
-  constructor(private fb: UntypedFormBuilder,
+  constructor(private fb: FormBuilder,
               private userService: UserMsService,
               private utilService: UtilsService,
               private activatedRoute: ActivatedRoute,) { }
 
   ngOnInit() {
     this.forgotPasswordForm = this.fb.group({
-      username: new UntypedFormControl('', [Validators.required, Validators.maxLength(10)]),
-      otp: new UntypedFormControl('', Validators.required),
-      password: new UntypedFormControl('', Validators.required),
-      confirmPassword: new UntypedFormControl('', Validators.required),
+      username: new FormControl('', [Validators.required, Validators.maxLength(10)]),
+      otp: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
+      confirmPassword: new FormControl('', Validators.required),
     });
 
     //check route params

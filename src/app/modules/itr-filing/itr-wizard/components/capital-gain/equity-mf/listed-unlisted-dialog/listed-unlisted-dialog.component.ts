@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -11,10 +11,10 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./listed-unlisted-dialog.component.scss']
 })
 export class ListedUnlistedDialogComponent implements OnInit {
-  assetDetailsForm!: UntypedFormGroup;
+  assetDetailsForm!: FormGroup;
   buyDateBefore31stJan = false;
   loading = false;
-  constructor(public fb: UntypedFormBuilder, public dialogRef: MatDialogRef<ListedUnlistedDialogComponent>,
+  constructor(public fb: FormBuilder, public dialogRef: MatDialogRef<ListedUnlistedDialogComponent>,
     private utilsService: UtilsService,
     private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any) { }

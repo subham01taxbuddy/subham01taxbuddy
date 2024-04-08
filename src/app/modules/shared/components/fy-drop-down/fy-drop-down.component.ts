@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ApiEndpoints } from '../../api-endpoint';
@@ -16,7 +16,7 @@ export class FyDropDownComponent implements OnInit {
 roles: any;
   currentFy: any;
   financialYear: any[] = [];
-  selectedFyYear = new UntypedFormControl('', Validators.required);
+  selectedFyYear = new FormControl('', Validators.required);
   constructor(public utilsService: UtilsService,
     private itrMsService: ItrMsService) { 
     let loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));

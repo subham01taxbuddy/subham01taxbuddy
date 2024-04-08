@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,11 +34,11 @@ export const MY_FORMATS = {
 })
 export class InvestmentDialogComponent implements OnInit {
   
-  constructor(public fb: UntypedFormBuilder, public utilsService: UtilsService, private itrMsService: ItrMsService,
+  constructor(public fb: FormBuilder, public utilsService: UtilsService, private itrMsService: ItrMsService,
     public dialogRef: MatDialogRef<InvestmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
-  investmentForm: UntypedFormGroup;
+  investmentForm: FormGroup;
   // assetType = '';
   ITR_JSON: ITR_JSON;
   loading = false;

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -80,15 +80,15 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
   searchVal: any;
   key: any;
   showError: boolean = false;
-  startDate = new UntypedFormControl('');
-  endDate = new UntypedFormControl('');
+  startDate = new FormControl('');
+  endDate = new FormControl('');
   minDate = moment.min(moment(), moment('2024-04-01')).toDate();
   minStartDate: string = '2024-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   toDateMin = this.minDate;
-  selectedStatus = new UntypedFormControl('');
+  selectedStatus = new FormControl('');
   statusList = [
     { value: 'SHORTLISTED', name: 'Shortlisted' },
     { value: 'FINALIZED', name: 'Finalized' },

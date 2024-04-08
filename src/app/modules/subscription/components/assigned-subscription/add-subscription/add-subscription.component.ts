@@ -1,6 +1,6 @@
 import { filter } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -27,7 +27,7 @@ export class AddSubscriptionComponent implements OnInit {
   filteredPlans: any = [];
   selectedBtn: any = '';
   servicesType: any = [{ value: 'ITR' }, { value: 'ITR-U' }, { value: 'NOTICE' }, { value: 'GST' }, { value: 'TPA' }, { value: 'ALL' }];
-  subscriptionPlan = new UntypedFormControl('', Validators.required);
+  subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
   roles: any;

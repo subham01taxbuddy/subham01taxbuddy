@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
-import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
+import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -18,8 +18,8 @@ import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 })
 export class RevenueReportComponent implements OnInit, OnDestroy {
   loading = false;
-  leaderView = new UntypedFormControl('');
-  ownerView = new UntypedFormControl('');
+  leaderView = new FormControl('');
+  ownerView = new FormControl('');
   loggedInSme: any;
   roles: any;
   revenueReport: any;
@@ -234,7 +234,7 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
   }
 
   reportsCodeColumnDef(view) {
-    let columnDefs: ColDef[] = [
+    let columnDefs = [
       // return [
       {
         headerName: (view === 'leader' ? 'Leader Name' : (view === 'owner' ? 'Owner Name And Team' : 'Filer Name')),
@@ -487,7 +487,7 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         }
       },
-    ] as (ColDef<object> | ColGroupDef<object>)[];
+    ];
     return columnDefs;
   }
 

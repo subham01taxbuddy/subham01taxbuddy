@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  UntypedFormBuilder,
+  FormGroup,
+  FormControl,
+  FormBuilder,
   Validators,
-  UntypedFormArray,
+  FormArray,
 } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -72,7 +72,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   labData: NewCapitalGain[] = [];
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public matDialog: MatDialog,
@@ -125,27 +125,27 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
   get getImprovementsArrayForImmovable() {
-    return <UntypedFormArray>this.immovableForm.get('improvement');
+    return <FormArray>this.immovableForm.get('improvement');
   }
 
   get getBuyersDetailsArrayForImmovable() {
-    return <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+    return <FormArray>this.immovableForm?.get('buyersDetails');
   }
 
   get getDeductionsArray() {
-    return <UntypedFormArray>this.immovableForm?.get('deductions');
+    return <FormArray>this.immovableForm?.get('deductions');
   }
 
   get getAssetDetailsArrayForImmovable() {
-    return <UntypedFormArray>this.immovableForm?.get('assetDetails');
+    return <FormArray>this.immovableForm?.get('assetDetails');
   }
 
-  assetType = new UntypedFormControl('PLOT_OF_LAND', Validators.required);
-  indexCostOfAcquisition = new UntypedFormControl('');
-  isImprovements = new UntypedFormControl(false);
-  isDeductions = new UntypedFormControl(false);
-  sharesDescriptionControl = new UntypedFormControl('', Validators.required);
-  immovableForm: UntypedFormGroup;
+  assetType = new FormControl('PLOT_OF_LAND', Validators.required);
+  indexCostOfAcquisition = new FormControl('');
+  isImprovements = new FormControl(false);
+  isDeductions = new FormControl(false);
+  sharesDescriptionControl = new FormControl('', Validators.required);
+  immovableForm: FormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   minSellDate: any;
@@ -241,11 +241,11 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
 
     this.immovableForm = this.createImmovableForm();
-    const buyersDetails = <UntypedFormArray>this.immovableForm.get('buyersDetails');
+    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     buyersDetails.push(this.createBuyersDetailsForm());
-    const assetDetails = <UntypedFormArray>this.immovableForm.get('assetDetails');
+    const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
     assetDetails.push(this.createAssetDetailsForm());
-    const deductions = <UntypedFormArray>this.immovableForm.get('deductions');
+    const deductions = <FormArray>this.immovableForm.get('deductions');
     // deductions.push(this.createDeductionForm());
 
     this.calMaxPurchaseDate(
@@ -261,7 +261,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     console.log('assets for ADD', assetDetails);
 
     this.cgArrayElement.assetDetails.push(
-        (assetDetails.controls[0] as UntypedFormGroup).getRawValue()
+        (assetDetails.controls[0] as FormGroup).getRawValue()
     );
     console.log('cgArrayElement', this.cgArrayElement);
   }
@@ -270,7 +270,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.addMissingKeys(this.cgArrayElement);
     this.investmentsCreateRowData();
     this.immovableForm = this.createImmovableForm();
-    const assetDetails = <UntypedFormArray>this.immovableForm.get('assetDetails');
+    const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
     assetDetails.push(
         this.createAssetDetailsForm(
             this.cgArrayElement.assetDetails[this.currentCgIndex]
@@ -301,7 +301,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           this.improvements.length > 0
       ) {
         this.isImprovements.setValue(true);
-        const improvement = <UntypedFormArray>this.immovableForm.get('improvement');
+        const improvement = <FormArray>this.immovableForm.get('improvement');
         this.improvements.forEach((obj) => {
           let improvementForm = this.createImprovementForm(obj);
           improvement.push(improvementForm);
@@ -319,7 +319,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
     if (this.deductions instanceof Array && this.deductions.length > 0) {
       this.isDeductions.setValue(true);
-      const deductions = <UntypedFormArray>this.immovableForm.get('deductions');
+      const deductions = <FormArray>this.immovableForm.get('deductions');
       this.deductions.forEach((obj) => {
         let deductionForm = this.createDeductionForm(obj);
         deductions.push(deductionForm);
@@ -337,7 +337,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     );
     if (this.buyers instanceof Array) {
       console.log('in buyer if', this.buyers);
-      const buyersDetails = <UntypedFormArray>(
+      const buyersDetails = <FormArray>(
           this.immovableForm.get('buyersDetails')
       );
       let index = 0;
@@ -435,7 +435,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.cgArrayElement.assetDetails[this.currentCgIndex] = assetDetails;
   }
 
-  createImmovableForm(): UntypedFormGroup {
+  createImmovableForm(): FormGroup {
     return this.fb.group({
       assetDetails: this.fb.array([]),
       improvement: this.fb.array([]),
@@ -444,7 +444,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  createAssetDetailsForm(obj?: AssetDetails): UntypedFormGroup {
+  createAssetDetailsForm(obj?: AssetDetails): FormGroup {
     console.log('assets obj', obj);
     let des = (Math.floor(Math.random() * (999999 - 100000)) + 2894).toString();
     if (obj && !this.utilsService.isNonEmpty(obj?.description)) {
@@ -496,7 +496,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
    * @author Ashish Hulwan
    */
   addMoreImprovements(formGroupName) {
-    const improve = <UntypedFormArray>formGroupName.get('improvement');
+    const improve = <FormArray>formGroupName.get('improvement');
     let srn = this.currentCgIndex;
     const obj = {
       id: Math.floor(Math.random() * (999999 - 100000)) + 2894,
@@ -514,33 +514,33 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   improvementSelected() {
-    const improve = <UntypedFormArray>this.immovableForm.controls['improvement'];
+    const improve = <FormArray>this.immovableForm.controls['improvement'];
     return (
       improve.controls.filter(
-        (item: UntypedFormGroup) => item.controls['selected'].value === true
+        (item: FormGroup) => item.controls['selected'].value === true
       ).length > 0
     );
   }
 
   deductionSelected() {
-    const improve = <UntypedFormArray>this.immovableForm.controls['deductions'];
+    const improve = <FormArray>this.immovableForm.controls['deductions'];
     return (
       improve.controls.filter(
-        (item: UntypedFormGroup) => item.controls['selected'].value === true
+        (item: FormGroup) => item.controls['selected'].value === true
       ).length > 0
     );
   }
 
   buyerSelected() {
-    const improve = <UntypedFormArray>this.immovableForm.controls['buyersDetails'];
+    const improve = <FormArray>this.immovableForm.controls['buyersDetails'];
     return (
       improve.controls.filter(
-        (item: UntypedFormGroup) => item.controls['selected'].value === true
+        (item: FormGroup) => item.controls['selected'].value === true
       ).length > 0
     );
   }
 
-  createImprovementForm(obj: Improvement): UntypedFormGroup {
+  createImprovementForm(obj: Improvement): FormGroup {
     return this.fb.group({
       selected: [false],
       id: [obj.id || this.currentCgIndex.toString()],
@@ -559,7 +559,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  createDeductionForm(obj?: any): UntypedFormGroup {
+  createDeductionForm(obj?: any): FormGroup {
     return this.fb.group({
       srn: [obj.srn || this.currentCgIndex.toString()],
       selected: [false],
@@ -572,7 +572,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   addMoreBuyersDetails() {
-    const buyersDetails = <UntypedFormArray>this.immovableForm.get('buyersDetails');
+    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     if (buyersDetails.valid) {
       let first = buyersDetails.controls[0].value;
       first.srn = '';
@@ -595,7 +595,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
    * @returns Boolean (True/False)
    */
   calPercentage() {
-    const buyersDetails = <UntypedFormArray>this.immovableForm.get('buyersDetails');
+    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     let sum = 0;
     buyersDetails.controls.forEach((controlName) => {
       sum = sum + Number(controlName.value.share);
@@ -621,7 +621,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
    * @see MethodLevelComments*
    */
   panValidation() {
-    const buyersDetails = <UntypedFormArray>this.immovableForm.get('buyersDetails');
+    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     // This method is written in utils service for common usablity.
     let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
       'pan',
@@ -658,7 +658,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   deductionValidation() {
-    const deduction = <UntypedFormArray>this.immovableForm.get('deductions');
+    const deduction = <FormArray>this.immovableForm.get('deductions');
     // This method is written in utils service for common usablity.
     let sectionRepeat: boolean = this.utilsService.checkDuplicateInObject(
       'underSection',
@@ -680,7 +680,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  createBuyersDetailsForm(obj?: BuyersDetails): UntypedFormGroup {
+  createBuyersDetailsForm(obj?: BuyersDetails): FormGroup {
     console.log('buyer form', obj);
     return this.fb.group({
       selected: [false],
@@ -735,9 +735,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   removeBuyersDetails() {
-    let buyersDetails = <UntypedFormArray>this.immovableForm.controls['buyersDetails'];
+    let buyersDetails = <FormArray>this.immovableForm.controls['buyersDetails'];
     let nonSelected = buyersDetails.controls.filter(
-      (item: UntypedFormGroup) => item.controls['selected'].value !== true
+      (item: FormGroup) => item.controls['selected'].value !== true
     );
     buyersDetails.controls = [];
 
@@ -753,8 +753,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   async updateDataByPincode(index) {
     const buyersDetails = (
-      this.immovableForm.controls['buyersDetails'] as UntypedFormArray
-    ).controls[index] as UntypedFormGroup;
+      this.immovableForm.controls['buyersDetails'] as FormArray
+    ).controls[index] as FormGroup;
     await this.utilsService
       .getPincodeData(buyersDetails.controls['pin'])
       .then((result) => {
@@ -769,11 +769,11 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   updateSaleValue(index) {
     if (typeof index === 'number') {
       const buyersDetails = (
-        this.immovableForm.controls['buyersDetails'] as UntypedFormArray
-      ).controls[index] as UntypedFormGroup;
+        this.immovableForm.controls['buyersDetails'] as FormArray
+      ).controls[index] as FormGroup;
       const assetDetails = (
-        this.immovableForm.controls['assetDetails'] as UntypedFormArray
-      ).controls[0] as UntypedFormGroup;
+        this.immovableForm.controls['assetDetails'] as FormArray
+      ).controls[0] as FormGroup;
 
       const shareValue = buyersDetails.controls['share'].value;
       if (shareValue >= 0 && shareValue <= 100) {
@@ -787,7 +787,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         );
       }
     } else {
-      const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+      const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
       buyersDetails?.controls?.forEach((element, i) => {
         this.updateSaleValue(i);
       });
@@ -837,11 +837,11 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     if (formGroupName.controls['improvement'].valid) {
       console.log('isImprovementValid', index, this.immovableForm);
       let assetDetails = (
-        this.immovableForm.controls['assetDetails'] as UntypedFormArray
-      ).controls[0] as UntypedFormGroup;
+        this.immovableForm.controls['assetDetails'] as FormArray
+      ).controls[0] as FormGroup;
       let improvementDetails = (
-        this.immovableForm.controls['improvement'] as UntypedFormArray
-      ).controls[index] as UntypedFormGroup;
+        this.immovableForm.controls['improvement'] as FormArray
+      ).controls[index] as FormGroup;
       let selectedYear = moment(assetDetails.controls['sellDate'].value);
       let sellFinancialYear =
         selectedYear.get('month') > 2
@@ -945,10 +945,10 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  removeImprovement(formGroupName: UntypedFormGroup) {
+  removeImprovement(formGroupName: FormGroup) {
     for (let i = this.selectedIndexes.length - 1; i >= 0; i--) {
       const index = this.selectedIndexes[i];
-      const improve = <UntypedFormArray>formGroupName.get('improvement');
+      const improve = <FormArray>formGroupName.get('improvement');
       if (improve && improve.at(index)) {
         let objToRemove = improve.at(index).value;
         improve.removeAt(index);
@@ -988,7 +988,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   haveImprovements(formGroupName) {
-    const improve = <UntypedFormArray>formGroupName.get('improvement');
+    const improve = <FormArray>formGroupName.get('improvement');
     let srn = this.currentCgIndex;
     if (this.isImprovements.value) {
       const obj = {
@@ -1012,7 +1012,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   haveDeductions(formGroupName) {
-    const deductions = <UntypedFormArray>formGroupName.get('deductions');
+    const deductions = <FormArray>formGroupName.get('deductions');
     let srn = this.currentCgIndex;
     if (this.isDeductions.value) {
       const obj = {
@@ -1043,12 +1043,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.maxPurchaseDate = new Date();
 
     const deductionForm = (
-      this.immovableForm.controls['deductions'] as UntypedFormArray
-    ).controls[index] as UntypedFormGroup;
+      this.immovableForm.controls['deductions'] as FormArray
+    ).controls[index] as FormGroup;
 
     const assetDetails = (
-      this.immovableForm.controls['assetDetails'] as UntypedFormArray
-    ).controls[0] as UntypedFormGroup;
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[0] as FormGroup;
 
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
@@ -1135,7 +1135,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         this.cgArrayElement.buyersDetails = otherBuyers.concat(
           formValue.buyersDetails
         );
-        const deductions = <UntypedFormArray>this.immovableForm.get('deductions');
+        const deductions = <FormArray>this.immovableForm.get('deductions');
         this.cgArrayElement.deduction = this.isDeductions
           ? deductions.getRawValue()
           : [];
@@ -1231,7 +1231,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   addInvestment(formGroupName) {
-    const deductions = <UntypedFormArray>formGroupName.get('deductions');
+    const deductions = <FormArray>formGroupName.get('deductions');
     let srn = this.currentCgIndex;
     const obj = {
       srn: srn,
@@ -1272,8 +1272,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         this.improvementYears = res.data;
         console.log(res);
 
-        const assetDetails = <UntypedFormArray>this.immovableForm.get('assetDetails');
-        let purchaseDate = (assetDetails.controls[0] as UntypedFormGroup).getRawValue()
+        const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
+        let purchaseDate = (assetDetails.controls[0] as FormGroup).getRawValue()
           .purchaseDate;
         let purchaseYear = new Date(purchaseDate).getFullYear();
         let purchaseMonth = new Date(purchaseDate).getMonth();
@@ -1315,8 +1315,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   deleteDeduction(index) {
     console.log('Remove Index', index);
-    let deductions = <UntypedFormArray>this.immovableForm.get('deductions');
-    deductions.controls = deductions.controls.filter((element:  UntypedFormGroup)=> !element.controls['selected'].value);
+    let deductions = <FormArray>this.immovableForm.get('deductions');
+    deductions.controls = deductions.controls.filter((element:  FormGroup)=> !element.controls['selected'].value);
     console.log(deductions.length);
 
     if (deductions.length === 0) {
@@ -1339,7 +1339,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     if (sdv > threshold) {
       // SDV is greater than 110% of Sale Consideration, so take it as FVOC
       const valueInConsideration = (
-        this.immovableForm.controls['assetDetails'] as UntypedFormGroup
+        this.immovableForm.controls['assetDetails'] as FormGroup
       ).controls[0].get('valueInConsideration');
 
       console.log(valueInConsideration);
@@ -1347,7 +1347,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     } else {
       // SDV is up to 110% of Sale Consideration, so take Sale Consideration as FVOC
       const valueInConsideration = (
-        this.immovableForm.controls['assetDetails'] as UntypedFormGroup
+        this.immovableForm.controls['assetDetails'] as FormGroup
       ).controls[0].get('valueInConsideration');
 
       console.log(valueInConsideration);
@@ -1358,9 +1358,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   changeAddress(event, inputField) {
     const value = inputField === 'state' ? event?.value : event?.target?.value;
 
-    const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+    const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
     buyersDetails?.controls?.forEach((element, i) => {
-      (element as UntypedFormGroup)?.controls[inputField]?.setValue(value);
+      (element as FormGroup)?.controls[inputField]?.setValue(value);
       if (inputField === 'pin') {
         this.updateDataByPincode(i);
       }
@@ -1373,8 +1373,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       index = 0;
     }
     let assetDetails = (
-      this.immovableForm.controls['assetDetails'] as UntypedFormArray
-    ).controls[index] as UntypedFormGroup;
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[index] as FormGroup;
     let selectedYear = moment(assetDetails.controls['sellDate'].value);
     let sellFinancialYear =
       selectedYear.get('month') > 2
@@ -1488,9 +1488,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       let tempImprovements = [];
 
       if (this.isImprovements.value) {
-        const improve = <UntypedFormArray>formGroupName.get('improvement');
+        const improve = <FormArray>formGroupName.get('improvement');
         let ded = [];
-        improve.controls.forEach((obj: UntypedFormGroup) => {
+        improve.controls.forEach((obj: FormGroup) => {
           ded.push(obj.getRawValue());
         });
         this.cgArrayElement.improvement = ded;
@@ -1502,9 +1502,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       // }
 
       if (this.isDeductions.value) {
-        const deductions = <UntypedFormArray>this.immovableForm.get('deductions');
+        const deductions = <FormArray>this.immovableForm.get('deductions');
         let ded = [];
-        deductions.controls.forEach((obj: UntypedFormGroup) => {
+        deductions.controls.forEach((obj: FormGroup) => {
           ded.push(obj.value);
         });
         this.cgArrayElement.deduction = ded;
@@ -1591,8 +1591,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       return;
     }
     const assetDetails = (
-      this.immovableForm.controls['assetDetails'] as UntypedFormArray
-    ).controls[0] as UntypedFormGroup;
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[0] as FormGroup;
     console.log(this.currentCgIndex);
 
     // const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
@@ -1606,7 +1606,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         : 0;
 
     let capitalGainDeductions = [];
-    (<UntypedFormArray>this.immovableForm.get('deductions')).controls.forEach((form: UntypedFormGroup) => {
+    (<FormArray>this.immovableForm.get('deductions')).controls.forEach((form: FormGroup) => {
       capitalGainDeductions.push({
         deductionSection: `SECTION_${form.controls['underSection'].value}`,
         costOfNewAsset: form.controls['costOfNewAssets'].value,
@@ -1628,7 +1628,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       (result: any) => {
         console.log('Deductions result=', result);
         if (result?.success) {
-          (<UntypedFormArray>this.immovableForm.get('deductions')).controls.forEach((form: UntypedFormGroup) => {
+          (<FormArray>this.immovableForm.get('deductions')).controls.forEach((form: FormGroup) => {
             let finalResult = result.data.filter(
                 (item) =>
                     item.deductionSection ===

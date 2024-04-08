@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class CryptoVdaComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  scheduleVda: UntypedFormGroup;
+  scheduleVda: FormGroup;
   headOfIncomes: any;
   capitalGainTotal: any;
   businessTotal: any;
@@ -20,7 +20,7 @@ export class CryptoVdaComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService) {}
+  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.scheduleVda = this.initForm();
@@ -80,7 +80,7 @@ export class CryptoVdaComponent implements OnInit {
     });
   }
 
-  createVdaForm(item?): UntypedFormGroup {
+  createVdaForm(item?): FormGroup {
     const formGroup = this.fb.group({
       hasEdit: [item ? item?.hasEdit : null],
       dateOfAcquisition: [item ? item?.dateOfAcquisition : null],
@@ -94,12 +94,12 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   updateValidations(vda){
-    this.minDate = (vda as UntypedFormGroup).controls['dateOfAcquisition'].value;
-    (vda as UntypedFormGroup).controls['dateOfTransfer'].updateValueAndValidity();
+    this.minDate = (vda as FormGroup).controls['dateOfAcquisition'].value;
+    (vda as FormGroup).controls['dateOfTransfer'].updateValueAndValidity();
   }
 
   add(item) {
-    const vdaArray = <UntypedFormArray>this.scheduleVda.get('vdaArray');
+    const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
     if (item === 'addEmpty') {
       const formGroup = this.fb.group({
         hasEdit: null,
@@ -119,8 +119,8 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   deleteVdaArray() {
-    const vdaArray = <UntypedFormArray>this.scheduleVda.get('vdaArray');
-    let filteredVdaArrayToDelete = vdaArray?.controls?.filter(item => (item as UntypedFormGroup)?.controls['hasEdit']?.value);
+    const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
+    let filteredVdaArrayToDelete = vdaArray?.controls?.filter(item => (item as FormGroup)?.controls['hasEdit']?.value);
     for (let i = filteredVdaArrayToDelete?.length - 1; i >= 0; i--) {
       vdaArray?.removeAt(vdaArray?.controls?.indexOf(filteredVdaArrayToDelete[i]));
     }
@@ -128,7 +128,7 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   getInputValue(index: number, controlName: string) {
-    let value = (this.scheduleVda.get('vdaArray') as UntypedFormArray)
+    let value = (this.scheduleVda.get('vdaArray') as FormArray)
       .at(index)
       .get(controlName).value;
     return value;
@@ -139,7 +139,7 @@ export class CryptoVdaComponent implements OnInit {
     const buyValue = this.getInputValue(index, 'costOfAcquisition');
 
     const income = saleValue - buyValue;
-    const incomeInput = (this.scheduleVda.get('vdaArray') as UntypedFormArray)
+    const incomeInput = (this.scheduleVda.get('vdaArray') as FormArray)
       .at(index)
       .get('income');
 
@@ -254,7 +254,7 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   get getVdaArray() {
-    return this.scheduleVda.get('vdaArray') as UntypedFormArray;
+    return this.scheduleVda.get('vdaArray') as FormArray;
   }
 
   goBack() {

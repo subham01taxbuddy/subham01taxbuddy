@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
@@ -45,10 +45,10 @@ export const MY_FORMATS = {
 })
 export class ItrFilingReportComponent implements OnInit, OnDestroy {
   loading = false;
-  startDate = new UntypedFormControl('');
-  endDate = new UntypedFormControl('');
-  leaderView = new UntypedFormControl('');
-  ownerView = new UntypedFormControl('');
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  leaderView = new FormControl('');
+  ownerView = new FormControl('');
   minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
@@ -73,7 +73,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     { value: '&roles=ROLE_FILER&partnerType=CHILD &internal=false', name: ' Filer Assistant- External' },
 
   ]
-  selectRole = new UntypedFormControl();
+  selectRole = new FormControl();
   searchVal: string = "";
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
@@ -318,7 +318,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
 
 
   reportsCodeColumnDef(view) {
-    let columnDefs: ColDef[] = [
+    let columnDefs = [
       {
         headerName: 'Sr. No.',
         width: 40,
@@ -615,7 +615,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         }
       },
-    ] as (ColDef<object> | ColGroupDef<object>)[];
+    ];
     return columnDefs;
   }
 

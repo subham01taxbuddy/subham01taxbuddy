@@ -3,7 +3,7 @@ import { concatMap, Observable } from 'rxjs';
 import { UtilsService } from './../../../services/utils.service';
 import { ItrMsService } from './../../../services/itr-ms.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { TitleCasePipe } from '@angular/common';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -20,10 +20,10 @@ export class DeclarationComponent implements OnInit {
 
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
-  declarationsForm: UntypedFormGroup;
+  declarationsForm: FormGroup;
   constructor(
     private titleCasePipe: TitleCasePipe,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private itrMsService: ItrMsService,
     private router: Router,
     public utilsService: UtilsService

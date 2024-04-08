@@ -1,6 +1,6 @@
 import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -33,10 +33,10 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class UpdateNoJsonFilingDialogComponent implements OnInit {
-  ackNumber = new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
-  eFillingDate = new UntypedFormControl('', Validators.required);
-  itrType = new UntypedFormControl('', Validators.required);
-  returnType = new UntypedFormControl('', Validators.required);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
+  eFillingDate = new FormControl('', Validators.required);
+  itrType = new FormControl('', Validators.required);
+  returnType = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   userProfile: any;

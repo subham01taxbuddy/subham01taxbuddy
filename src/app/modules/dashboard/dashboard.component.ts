@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
@@ -46,8 +46,8 @@ export class DashboardComponent implements OnInit {
   maxDate: string = '2024-03-31';
   maxStartDate = new Date().toISOString().slice(0, 10);
   minEndDate = new Date().toISOString().slice(0, 10);
-  startDate = new UntypedFormControl('');
-  endDate = new UntypedFormControl('');
+  startDate = new FormControl('');
+  endDate = new FormControl('');
   invoiceData: any;
   paymentReceivedData: any;
   summaryConfirmationData: any;
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
   totalRevised: number;
   statusWiseCountData: any;
   partnerType: any;
-  searchChild = new UntypedFormControl('');
+  searchChild = new FormControl('');
   filteredChild: Observable<any[]>;
   childOptions: User[] = [];
   childList: any;

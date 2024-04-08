@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ScheduleTrComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  scheduleTrForm: UntypedFormGroup;
+  scheduleTrForm: FormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   totalOutsideTaxPaid = 0;
@@ -20,7 +20,7 @@ export class ScheduleTrComponent implements OnInit {
   countryCodeList: any;
   section: any;
 
-  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService) {}
+  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -415,15 +415,15 @@ export class ScheduleTrComponent implements OnInit {
   }
 
   get getTrArray() {
-    return <UntypedFormArray>this.scheduleTrForm.get('trArray');
+    return <FormArray>this.scheduleTrForm.get('trArray');
   }
 
   add(item?) {
-    const trArray = <UntypedFormArray>this.scheduleTrForm.get('trArray');
+    const trArray = <FormArray>this.scheduleTrForm.get('trArray');
     trArray.push(this.createTrForm(item));
   }
 
-  createTrForm(item?): UntypedFormGroup {
+  createTrForm(item?): FormGroup {
     const formGroup = this.fb.group({
       countryCode: [item ? item.countryCode : null],
       tinNumber: [item ? item.tinNumber : null],

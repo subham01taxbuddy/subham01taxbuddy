@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {UntypedFormGroup, Validators, UntypedFormBuilder, ValidationErrors} from '@angular/forms';
+import {FormGroup, Validators, FormBuilder, ValidationErrors} from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -86,7 +86,7 @@ export class CustomerProfileComponent implements OnInit {
   @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
-  customerProfileForm: UntypedFormGroup;
+  customerProfileForm: FormGroup;
   statusId: any;
   // fillingStatus = new FormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
@@ -155,7 +155,7 @@ export class CustomerProfileComponent implements OnInit {
   @Output() customerProfileSaved = new EventEmitter<boolean>();
 
   constructor(
-    public fb: UntypedFormBuilder,
+    public fb: FormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
     private titlecasePipe: TitleCasePipe,

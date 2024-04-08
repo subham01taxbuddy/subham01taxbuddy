@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -78,7 +78,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   filteredOptions1: Observable<User[]>;
   allFilers: any;
 
-  coOwnerToggle = new UntypedFormControl('');
+  coOwnerToggle = new FormControl('');
   coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
@@ -134,7 +134,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   loginSmeDetails: any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private datePipe: DatePipe,
     private utilService: UtilsService,
     private userMsService: UserMsService,
@@ -341,43 +341,43 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       assessmentYear : "2024-2025",
       financialYear : "2023-2024"
     }];
-  invoiceFormGroup: UntypedFormGroup = this.fb.group({
-    assessmentYear: new UntypedFormControl('2023-24'),
-    startDate: new UntypedFormControl('', [Validators.required]),
-    endDate: new UntypedFormControl('', [Validators.required]),
-    status: new UntypedFormControl('Paid'),
-    mobile: new UntypedFormControl(''),
-    email: new UntypedFormControl(''),
-    invoiceNo: new UntypedFormControl(''),
-    name: new UntypedFormControl(''),
+  invoiceFormGroup: FormGroup = this.fb.group({
+    assessmentYear: new FormControl('2023-24'),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
+    status: new FormControl('Paid'),
+    mobile: new FormControl(''),
+    email: new FormControl(''),
+    invoiceNo: new FormControl(''),
+    name: new FormControl(''),
   });
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['startDate'] as FormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['endDate'] as FormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['mobile'] as FormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['email'] as FormControl;
   }
 
   get invoiceNo() {
-    return this.invoiceFormGroup.controls['invoiceNo'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
   get name() {
-    return this.invoiceFormGroup.controls['name'] as UntypedFormControl;
+    return this.invoiceFormGroup.controls['name'] as FormControl;
   }
 
 

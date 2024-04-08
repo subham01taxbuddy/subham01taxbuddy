@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ListedUnlistedDialogComponent } from '../listed-unlisted-dialog/listed-unlisted-dialog.component';
@@ -10,9 +10,9 @@ import { ListedUnlistedDialogComponent } from '../listed-unlisted-dialog/listed-
   styleUrls: ['./security-deduction.component.scss']
 })
 export class SecurityDeductionComponent implements OnInit {
-  deductionForm: UntypedFormGroup;
+  deductionForm: FormGroup;
   loading = false;
-  constructor(private fb: UntypedFormBuilder, public dialogRef: MatDialogRef<ListedUnlistedDialogComponent>) { }
+  constructor(private fb: FormBuilder, public dialogRef: MatDialogRef<ListedUnlistedDialogComponent>) { }
 
   ngOnInit() {
     this.deductionForm = this.fb.group({

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormGroup,
+  FormArray,
+  FormBuilder,
+  FormGroup,
   Validators,
 } from '@angular/forms';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
@@ -29,7 +29,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   pastYearLosses: PastYearLosses[];
-  cflForm: UntypedFormGroup;
+  cflForm: FormGroup;
   today: any;
   scheduleCflArray = [
     {
@@ -114,7 +114,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     },
   ];
   constructor(
-    public fb: UntypedFormBuilder,
+    public fb: FormBuilder,
     private utilsService: UtilsService,
     private itrMsService: ItrMsService
   ) {
@@ -145,19 +145,19 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   }
 
   disableSILoss() {
-    const cflArray = <UntypedFormArray>this.cflForm.get('cflArray');
+    const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.controls.forEach((element, index) => {
       if (
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        (element as FormGroup).controls['assessmentPastYear'].value ===
           '2015-16' ||
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        (element as FormGroup).controls['assessmentPastYear'].value ===
           '2016-17' ||
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        (element as FormGroup).controls['assessmentPastYear'].value ===
           '2017-18' ||
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        (element as FormGroup).controls['assessmentPastYear'].value ===
           '2018-19'
       ) {
-        (element as UntypedFormGroup).controls['speculativeBusinessLoss'].disable();
+        (element as FormGroup).controls['speculativeBusinessLoss'].disable();
       }
     });
   }
@@ -173,7 +173,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  createCflForm(item?): UntypedFormGroup {
+  createCflForm(item?): FormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       pastYear: [item ? item.pastYear : null],
@@ -220,26 +220,26 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
 
   editForm(i) {
     (
-      (this.cflForm.controls['cflArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup
+      (this.cflForm.controls['cflArray'] as FormGroup).controls[i] as FormGroup
     ).enable();
   }
 
   get getCflArray() {
-    return <UntypedFormArray>this.cflForm.get('cflArray');
+    return <FormArray>this.cflForm.get('cflArray');
   }
 
   getField(i, field) {
     return <AbstractControl>(
-      (<UntypedFormGroup>(
-        (<UntypedFormArray>this.cflForm.controls['cflArray']).controls[i]
+      (<FormGroup>(
+        (<FormArray>this.cflForm.controls['cflArray']).controls[i]
       )).get(field)
     );
   }
 
   getApperance(i, field): MatFormFieldAppearance {
     if (
-      (<UntypedFormGroup>(
-        (<UntypedFormArray>this.cflForm.controls['cflArray']).controls[i]
+      (<FormGroup>(
+        (<FormArray>this.cflForm.controls['cflArray']).controls[i]
       )).get(field).disabled
     ) {
       return 'fill';
@@ -248,19 +248,19 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   }
 
   addMore(item?) {
-    const cflArray = <UntypedFormArray>this.cflForm.get('cflArray');
+    const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.push(this.createCflForm(item));
   }
 
   deleteCflArray() {
-    const cflArray = <UntypedFormArray>this.cflForm.get('cflArray');
+    const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.controls.forEach((element, index) => {
-      if ((element as UntypedFormGroup).controls['hasEdit'].value) {
-        let assessmentPastYear = (element as UntypedFormGroup).controls[
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        let assessmentPastYear = (element as FormGroup).controls[
           'assessmentPastYear'
         ].value;
-        (element as UntypedFormGroup).reset();
-        (element as UntypedFormGroup).controls['assessmentPastYear'].setValue(
+        (element as FormGroup).reset();
+        (element as FormGroup).controls['assessmentPastYear'].setValue(
           assessmentPastYear
         );
       }
@@ -311,7 +311,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     let isError = false;
     let dateError = false;
 
-    const cflArrays = this.cflForm.get('cflArray') as UntypedFormArray;
+    const cflArrays = this.cflForm.get('cflArray') as FormArray;
     const cflArraysValue = this.cflForm.get('cflArray').value;
 
     cflArraysValue.forEach((element, index) => {
@@ -362,7 +362,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     }
 
     if (cflArrays?.valid) {
-      const cflArray = <UntypedFormArray>this.cflForm.get('cflArray');
+      const cflArray = <FormArray>this.cflForm.get('cflArray');
       this.Copy_ITR_JSON.pastYearLosses = [];
       this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
       this.loading = true;

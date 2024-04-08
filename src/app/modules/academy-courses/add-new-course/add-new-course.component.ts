@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, LOCALE_ID, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ConfirmModel } from '../../promo-codes/add-edit-promo-code/add-edit-promo-code.component';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import * as ɵngcc0 from '@angular/core';
 import { ReviewService } from '../../review/services/review.service';
@@ -40,14 +40,14 @@ export const MY_FORMATS = {
 export class AddNewCourseComponent implements OnInit {
   @ɵngcc0.ViewChild('timeInput') timeInput: ElementRef;
   loading!: boolean;
-  courseForm!: UntypedFormGroup;
+  courseForm!: FormGroup;
   today: Date = new Date();
 
   constructor(
     public dialogRef: MatDialogRef<AddNewCourseComponent>,
     private _toastMessageService: ToastMessageService,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private reviewService: ReviewService,
     public utilsService: UtilsService,
     @Inject(LOCALE_ID) private locale: string,

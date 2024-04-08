@@ -1,6 +1,6 @@
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -31,9 +31,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() parentId :any;
 
   smeList: any[] = [];
-  searchChild = new UntypedFormControl('');
-  searchPrincipleIndividual = new UntypedFormControl('');
-  searchLeader = new UntypedFormControl('');
+  searchChild = new FormControl('');
+  searchPrincipleIndividual = new FormControl('');
+  searchLeader = new FormControl('');
   filteredOptions!: Observable<any[]>;
   filteredChild: Observable<any[]>;
   filteredPrincipleIndividuals: Observable<any[]>;

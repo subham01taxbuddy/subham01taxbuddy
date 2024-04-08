@@ -1,6 +1,6 @@
 import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -41,13 +41,13 @@ export const MY_FORMATS = {
   ],
 })
 export class UpdateManualFilingDialogComponent implements OnInit {
-  ackNumber = new UntypedFormControl('', [
+  ackNumber = new FormControl('', [
     Validators.required,
     Validators.pattern(AppConstants.numericRegex),
     Validators.maxLength(16),
     Validators.minLength(15),
   ]);
-  eFillingDate = new UntypedFormControl('', Validators.required);
+  eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   itrobj: any;

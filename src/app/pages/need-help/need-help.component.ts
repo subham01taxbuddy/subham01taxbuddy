@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from 'src/app/modules/shared/components/navbar/navbar.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -11,7 +11,7 @@ import { AppConstants } from "../../modules/shared/constants";
   styleUrls: ['./need-help.component.scss']
 })
 export class NeedHelpComponent implements OnInit {
-  helpForm!: UntypedFormGroup;
+  helpForm!: FormGroup;
   isError: Boolean = false;
   apiSuccess: Boolean = false;
   btnDisabled: Boolean = false;
@@ -25,16 +25,16 @@ export class NeedHelpComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<NeedHelpComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private userMsService: UserMsService
   ) { }
   ngOnInit(): void {
     this.userData = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? "")[0];
     this.helpForm = this.fb.group({
-      description: new UntypedFormControl('', Validators.required),
-      details: new UntypedFormControl(''),
-      filename: new UntypedFormControl(''),
-      mobileNo: new UntypedFormControl(this.userData.email, Validators.required)
+      description: new FormControl('', Validators.required),
+      details: new FormControl(''),
+      filename: new FormControl(''),
+      mobileNo: new FormControl(this.userData.email, Validators.required)
     });
   }
   getURL() {

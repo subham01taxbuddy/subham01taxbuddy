@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -14,7 +14,7 @@ declare function we_track(key: string, value: any);
 })
 export class DirectCallingComponent implements OnInit {
   loading!: boolean;
-  mobileNo = new UntypedFormControl('', Validators.required);
+  mobileNo = new FormControl('', Validators.required);
   constructor(
     private reviewService: ReviewService,
     public dialogRef: MatDialogRef<DirectCallingComponent>,

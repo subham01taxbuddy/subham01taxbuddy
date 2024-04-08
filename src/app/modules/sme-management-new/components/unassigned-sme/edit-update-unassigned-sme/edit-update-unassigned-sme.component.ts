@@ -1,8 +1,8 @@
 
 import { map, Observable, startWith } from 'rxjs';
 
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { UntypedFormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -57,9 +57,9 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   ];
   boPartnersInfo: any;
   additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
-  languageForm: UntypedFormGroup;
+  languageForm: FormGroup;
   irtTypeCapability = [];
-  itrTypeForm: UntypedFormGroup;
+  itrTypeForm: FormGroup;
   itrPlanList: any;
   smeDetails: any;
   signedInRole:any;
@@ -67,7 +67,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   panName:any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
@@ -78,7 +78,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
-      this.languageForm.addControl(lang, new UntypedFormControl(false));
+      this.languageForm.addControl(lang, new FormControl(false));
     })
     this.itrTypeForm = this.fb.group({});
     this.getPlanDetails();
@@ -192,12 +192,12 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  getLanguageControl(lang: string): UntypedFormControl {
-    return this.languageForm.get(lang) as UntypedFormControl;
+  getLanguageControl(lang: string): FormControl {
+    return this.languageForm.get(lang) as FormControl;
   }
 
-  getItrTypeControl(itrType: string): UntypedFormControl {
-    return this.itrTypeForm.get(itrType) as UntypedFormControl;
+  getItrTypeControl(itrType: string): FormControl {
+    return this.itrTypeForm.get(itrType) as FormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
@@ -238,7 +238,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           this.itrPlanList.forEach(element => {
             this.irtTypeCapability.push(element.name);
             this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
+              this.itrTypeForm.addControl(itrType, new FormControl(false));
             })
             this.setPlanDetails();
           });
@@ -262,7 +262,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
             if (element.planId === item) {
               this.irtTypeCapability.push(element.name);
               this.irtTypeCapability.forEach((itrType) => {
-                this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
+                this.itrTypeForm.addControl(itrType, new FormControl(false));
               })
             }
           });
@@ -278,7 +278,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         this.smeObj?.['skillSetPlanIdList'].forEach(element => {
           if (item.planId === element) {
             const name = item.name;
-            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
+            this.itrTypeForm.setControl(name, new FormControl(true));
           }
         })
       })
@@ -462,116 +462,116 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
 
-  smeFormGroup: UntypedFormGroup = this.fb.group({
-    mobileNumber: new UntypedFormControl(''),
-    name: new UntypedFormControl(''),
-    smeOriginalEmail: new UntypedFormControl(''),
-    languages: new UntypedFormControl(''),
-    referredBy: new UntypedFormControl(''),
-    callingNumber:new UntypedFormControl(''),
-    itrTypes: new UntypedFormControl(''),
-    qualification: new UntypedFormControl(''),
-    pinCode:new UntypedFormControl(''),
-    city:new UntypedFormControl(''),
-    state: new UntypedFormControl(''),
-    special: new UntypedFormControl(''),
-    accountNumber: new UntypedFormControl(''),
-    ifsCode: new UntypedFormControl(''),
-    pan: new UntypedFormControl('', [Validators.pattern(this.panregex)]),
-    gstin: new UntypedFormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
-    accountType: new UntypedFormControl(''),
-    additionalIdsCount: new UntypedFormControl(''),
-    interviewedBy: new UntypedFormControl(''),
-    additionalIdsRequired:new UntypedFormControl(''),
+  smeFormGroup: FormGroup = this.fb.group({
+    mobileNumber: new FormControl(''),
+    name: new FormControl(''),
+    smeOriginalEmail: new FormControl(''),
+    languages: new FormControl(''),
+    referredBy: new FormControl(''),
+    callingNumber:new FormControl(''),
+    itrTypes: new FormControl(''),
+    qualification: new FormControl(''),
+    pinCode:new FormControl(''),
+    city:new FormControl(''),
+    state: new FormControl(''),
+    special: new FormControl(''),
+    accountNumber: new FormControl(''),
+    ifsCode: new FormControl(''),
+    pan: new FormControl('', [Validators.pattern(this.panregex)]),
+    gstin: new FormControl('', [Validators.pattern(AppConstants.GSTNRegex)]),
+    accountType: new FormControl(''),
+    additionalIdsCount: new FormControl(''),
+    interviewedBy: new FormControl(''),
+    additionalIdsRequired:new FormControl(''),
   });
 
   get pan() {
-    return this.smeFormGroup.controls['pan'] as UntypedFormControl;
+    return this.smeFormGroup.controls['pan'] as FormControl;
   }
   get gstin() {
-    return this.smeFormGroup.controls['gstin'] as UntypedFormControl;
+    return this.smeFormGroup.controls['gstin'] as FormControl;
   }
   get additionalIdsRequired() {
-    return this.smeFormGroup.controls['additionalIdsRequired'] as UntypedFormControl;
+    return this.smeFormGroup.controls['additionalIdsRequired'] as FormControl;
   }
   get interviewedBy() {
-    return this.smeFormGroup.controls['interviewedBy'] as UntypedFormControl;
+    return this.smeFormGroup.controls['interviewedBy'] as FormControl;
   }
   get additionalIdsCount() {
-    return this.smeFormGroup.controls['additionalIdsCount'] as UntypedFormControl;
+    return this.smeFormGroup.controls['additionalIdsCount'] as FormControl;
   }
   get accountNumber() {
-    return this.smeFormGroup.controls['accountNumber'] as UntypedFormControl;
+    return this.smeFormGroup.controls['accountNumber'] as FormControl;
   }
   get ifsCode() {
-    return this.smeFormGroup.controls['ifsCode'] as UntypedFormControl;
+    return this.smeFormGroup.controls['ifsCode'] as FormControl;
   }
   get accountType() {
-    return this.smeFormGroup.controls['accountType'] as UntypedFormControl;
+    return this.smeFormGroup.controls['accountType'] as FormControl;
   }
   get mobileNumber() {
-    return this.smeFormGroup.controls['mobileNumber'] as UntypedFormControl;
+    return this.smeFormGroup.controls['mobileNumber'] as FormControl;
   }
   get name() {
-    return this.smeFormGroup.controls['name'] as UntypedFormControl;
+    return this.smeFormGroup.controls['name'] as FormControl;
   }
   get smeOriginalEmail() {
-    return this.smeFormGroup.controls['smeOriginalEmail'] as UntypedFormControl;
+    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
   }
   get languages() {
-    return this.smeFormGroup.controls['languages'] as UntypedFormControl;
+    return this.smeFormGroup.controls['languages'] as FormControl;
   }
   get referredBy() {
-    return this.smeFormGroup.controls['referredBy'] as UntypedFormControl;
+    return this.smeFormGroup.controls['referredBy'] as FormControl;
   }
   get itrTypes() {
-    return this.smeFormGroup.controls['itrTypes'] as UntypedFormControl;
+    return this.smeFormGroup.controls['itrTypes'] as FormControl;
   }
   get qualification() {
-    return this.smeFormGroup.controls['qualification'] as UntypedFormControl;
+    return this.smeFormGroup.controls['qualification'] as FormControl;
   }
   get state() {
-    return this.smeFormGroup.controls['state'] as UntypedFormControl;
+    return this.smeFormGroup.controls['state'] as FormControl;
   }
   get searchOwner() {
-    return this.smeFormGroup.controls['searchOwner'] as UntypedFormControl;
+    return this.smeFormGroup.controls['searchOwner'] as FormControl;
   }
   get searchLeader() {
-    return this.smeFormGroup.controls['searchLeader'] as UntypedFormControl;
+    return this.smeFormGroup.controls['searchLeader'] as FormControl;
   }
 
   get special() {
-    return this.smeFormGroup.controls['special'] as UntypedFormControl;
+    return this.smeFormGroup.controls['special'] as FormControl;
   }
   get callingNumber() {
-    return this.smeFormGroup.controls['callingNumber'] as UntypedFormControl;
+    return this.smeFormGroup.controls['callingNumber'] as FormControl;
   }
   get pinCode(){
-    return this.smeFormGroup.controls['pinCode'] as UntypedFormControl;
+    return this.smeFormGroup.controls['pinCode'] as FormControl;
   }
   get city(){
-    return this.smeFormGroup.controls['city'] as UntypedFormControl;
+    return this.smeFormGroup.controls['city'] as FormControl;
   }
 
-  roles: UntypedFormGroup = this.fb.group({
-    filerIndividual: new UntypedFormControl(''),
-    filerPrinciple: new UntypedFormControl(''),
-    internal: new UntypedFormControl(''),
-    external: new UntypedFormControl(true),
+  roles: FormGroup = this.fb.group({
+    filerIndividual: new FormControl(''),
+    filerPrinciple: new FormControl(''),
+    internal: new FormControl(''),
+    external: new FormControl(true),
 
   });
 
   get filerPrinciple() {
-    return this.roles.controls['filerPrinciple'] as UntypedFormControl
+    return this.roles.controls['filerPrinciple'] as FormControl
   }
   get filerIndividual() {
-    return this.roles.controls['filerIndividual'] as UntypedFormControl
+    return this.roles.controls['filerIndividual'] as FormControl
   }
   get internal() {
-    return this.roles.controls['internal'] as UntypedFormControl
+    return this.roles.controls['internal'] as FormControl
   }
   get external() {
-    return this.roles.controls['external'] as UntypedFormControl
+    return this.roles.controls['external'] as FormControl
   }
 
   onCheckboxChange(checkboxNumber: number) {
@@ -780,10 +780,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  markFormGroupTouched(formGroup: UntypedFormGroup) {
+  markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
-      if (control instanceof UntypedFormGroup) {
+      if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
       }
     });

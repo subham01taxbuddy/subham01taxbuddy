@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -10,7 +10,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 })
 export class UpdateCapacityComponent implements OnInit {
   loading!: boolean;
-  caseLimitForm: UntypedFormGroup;
+  caseLimitForm: FormGroup;
   caseLimit = [
     { key: "5 Cases", checked: false, value: 5 },
     { key: "10 Cases", checked: false, value: 10 },
@@ -19,19 +19,19 @@ export class UpdateCapacityComponent implements OnInit {
     { key: "30 Cases", checked: false, value: 30 },
     { key: "50 Cases", checked: false, value: 50 }
   ];
-  activeCaseMaxCapacity = new UntypedFormControl('')
+  activeCaseMaxCapacity = new FormControl('')
   constructor(
     public dialogRef: MatDialogRef<UpdateCapacityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userService: UserMsService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private toastMessage: ToastMessageService
   ) {
     console.log('data', this.data)
     this.activeCaseMaxCapacity.setValue(this.data.data.activeCaseMaxCapacity || '');
     this.caseLimitForm = this.fb.group({});
     this.caseLimit.forEach((limit) => {
-      this.caseLimitForm.addControl(limit.key, new UntypedFormControl(false));
+      this.caseLimitForm.addControl(limit.key, new FormControl(false));
     });
   }
 
@@ -41,13 +41,13 @@ export class UpdateCapacityComponent implements OnInit {
       let allCases = [{ key: "5 Cases", value: 5 }, { key: "10 Cases", value: 10 }, { key: "15 Cases", value: 15 }, { key: "20 Cases", value: 20 }, { key: "30 Cases", value: 30 }, { key: "50 Cases", value: 50 },]
       allCases.forEach(item => {
         if (item.value === this.data.data?.['activeCaseMaxCapacity'])
-          this.caseLimitForm.setControl(item.key, new UntypedFormControl(true));
+          this.caseLimitForm.setControl(item.key, new FormControl(true));
       });
     }
   }
 
-  getCaseLimitControl(limit: string): UntypedFormControl {
-    return this.caseLimitForm.get(limit) as UntypedFormControl;
+  getCaseLimitControl(limit: string): FormControl {
+    return this.caseLimitForm.get(limit) as FormControl;
   }
 
   onCaseLimitCheckboxChange(event: any, selectedLimit: string) {

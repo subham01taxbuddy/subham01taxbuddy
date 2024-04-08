@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
@@ -40,8 +40,8 @@ export const MY_FORMATS = {
 })
 export class MissedChatListComponent implements OnInit, OnDestroy {
   loading = false;
-  startDate = new UntypedFormControl('');
-  endDate = new UntypedFormControl('');
+  startDate = new FormControl('');
+  endDate = new FormControl('');
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();

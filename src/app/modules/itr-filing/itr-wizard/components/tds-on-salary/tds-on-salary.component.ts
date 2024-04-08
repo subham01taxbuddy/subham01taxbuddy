@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input} from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ITR_JSON,
   OnSalary,
@@ -18,7 +18,7 @@ export class TdsOnSalaryComponent implements OnInit {
   @Output() onSave = new EventEmitter();
   @Output() formDataSubmitted = new EventEmitter<any>();
   @Input() editIndex: any;
-  salaryForm: UntypedFormGroup;
+  salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -26,7 +26,7 @@ export class TdsOnSalaryComponent implements OnInit {
   config: any;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TdsOnSalaryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -71,7 +71,7 @@ export class TdsOnSalaryComponent implements OnInit {
     });
   }
 
-  createForm(item?): UntypedFormGroup {
+  createForm(item?): FormGroup {
     let srn = 0;
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
@@ -128,7 +128,7 @@ export class TdsOnSalaryComponent implements OnInit {
       }
 
       const salaryArray = (
-        this.salaryForm.controls['salaryArray'] as UntypedFormArray
+        this.salaryForm.controls['salaryArray'] as FormArray
       ).getRawValue();
 
       this.Copy_ITR_JSON.taxPaid.onSalary = salaryArray;
@@ -171,23 +171,23 @@ export class TdsOnSalaryComponent implements OnInit {
   activeIndex = 0;
   markActive(index){
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 
   @ViewChild('paginator') paginator: MatPaginator;
   getTotalCount(){
-    return (<UntypedFormArray>this.salaryForm.get('salaryArray')).controls.length;
+    return (<FormArray>this.salaryForm.get('salaryArray')).controls.length;
   }
 
   get getSalaryArray() {
-    return <UntypedFormArray>this.salaryForm.get('salaryArray');
+    return <FormArray>this.salaryForm.get('salaryArray');
   }
 
   addMore(item?) {
     const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
 
     // if (salaryJsonArray?.length > 0) {
       salaryArray.push(this.createForm(item));
@@ -197,13 +197,13 @@ export class TdsOnSalaryComponent implements OnInit {
       this.paginator.pageIndex = this.activeIndex;
       this.paginator.length = salaryArray.length;
       this.paginator.lastPage();
-      (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-      (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+      (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+      (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     }
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.removeAt(index);
   }
 

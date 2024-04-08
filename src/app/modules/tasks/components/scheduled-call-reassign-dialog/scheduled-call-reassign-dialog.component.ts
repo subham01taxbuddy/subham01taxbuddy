@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable, map, startWith } from 'rxjs';
 import { User } from 'src/app/modules/subscription/components/assigned-subscription/assigned-subscription.component';
@@ -19,7 +19,7 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
   filerId: number;
   disableReAssign :boolean =true;
   smeBookedSlots: any[] = [];
-  searchLeader =new UntypedFormControl('');
+  searchLeader =new FormControl('');
   filteredLeaders : Observable<any[]>;
   leaderList :any;
   leaderNames : User[];

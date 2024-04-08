@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -18,8 +18,8 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  scheduleESOPForm: UntypedFormGroup;
-  selectedFormGroup: UntypedFormGroup;
+  scheduleESOPForm: FormGroup;
+  selectedFormGroup: FormGroup;
   hasEdit: boolean = false;
   currentIndex: number;
   showForm: boolean;
@@ -31,7 +31,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   disableDeleteScheduleESOPEventDetailButton: boolean;
   disableAddScheduleESOPEventDetail: boolean;
 
-  constructor(public fb: UntypedFormBuilder,
+  constructor(public fb: FormBuilder,
     public utilsService: UtilsService) {
     super();
   }
@@ -155,10 +155,10 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     this.utilsService.smoothScrollToTop();
   }
 
-  markFormGroupTouched(formGroup: UntypedFormGroup) {
+  markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
-      if (control instanceof UntypedFormGroup)
+      if (control instanceof FormGroup)
         this.markFormGroupTouched(control);
     });
   }
@@ -184,7 +184,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   editScheduleEsop(index: number) {
-    this.selectedFormGroup = this.scheduleESOPDetailsFormArray.at(index) as UntypedFormGroup;
+    this.selectedFormGroup = this.scheduleESOPDetailsFormArray.at(index) as FormGroup;
     this.currentIndex = index;
     this.hasEdit = true;
     this.showForm = true;
@@ -199,7 +199,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
 
   onBlurTaxDeferredBFEarlierAY() {
     if(this.selectedFormGroup?.get('securityType')?.value === 'FS')
-      this.setValue(this.scheduleESOPEventDetailsFormArray?.at(0) as UntypedFormGroup, 'taxAttributedAmount', this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value);
+      this.setValue(this.scheduleESOPEventDetailsFormArray?.at(0) as FormGroup, 'taxAttributedAmount', this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value);
 
     this.setBalanceCF();
    }
@@ -210,7 +210,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
       this.scheduleESOPEventDetailsFormArray.push(this.createScheduleESOPEventDetailsFormGroup());
     }
 
-    let scheduleESOPEventDetailsFormGroup = this.scheduleESOPEventDetailsFormArray.at(0) as UntypedFormGroup;
+    let scheduleESOPEventDetailsFormGroup = this.scheduleESOPEventDetailsFormArray.at(0) as FormGroup;
     const securityType = this.selectedFormGroup.get('securityType').value;
     if(securityType === 'FS') {
       this.disableDeleteScheduleESOPEventDetailButton = true;
@@ -318,11 +318,11 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   get scheduleESOPEventDetailsFormArray() {
-    return <UntypedFormArray>this.selectedFormGroup.get('scheduleESOPEventDetails');
+    return <FormArray>this.selectedFormGroup.get('scheduleESOPEventDetails');
   }
 
   get scheduleESOPDetailsFormArray() {
-    return <UntypedFormArray>this.scheduleESOPForm.get('scheduleESOPDetails');
+    return <FormArray>this.scheduleESOPForm.get('scheduleESOPDetails');
   }
 
   get addButtonName() {
@@ -339,7 +339,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     this.setValue(this.selectedFormGroup, 'balanceTaxCF', Math.max(0, taxDeferredBFEarlierAY - totalTaxAttributedAmount));
   }
 
-  setValue(formGroup: UntypedFormGroup, path: string, value: any){
+  setValue(formGroup: FormGroup, path: string, value: any){
     formGroup.get(path).setValue(value);
     formGroup.get(path).updateValueAndValidity();
   }
