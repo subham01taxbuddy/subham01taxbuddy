@@ -33,12 +33,12 @@ export class UserChatComponent implements OnInit {
   }
 
   sendMessage(){
+
    }
 
    onFileSelected(event: any) {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload) {
-     
       this.chatService.uploadFile(this.fileToUpload, this.requestId).subscribe((response: any) => {
         console.log('file upload response', response);
       })
@@ -93,9 +93,6 @@ export class UserChatComponent implements OnInit {
     //   this.newMessageReceived = false;
     //   // this.scrollChatToBottom();
     // }
-
-
-
   };
 
   formatTimestamp(timestamp: number): string {

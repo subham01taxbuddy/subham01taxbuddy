@@ -51,12 +51,10 @@
 
 
     <div class="user-input">
-        <i class="fa fa-paperclip" aria-hidden="true"></i>
+        <label for="fileInput" class="fa fa-paperclip"></label>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
         <input type="text" placeholder="Type your message">
-        <span class=""></span>
-        <span></span>
-        <button (Click)="sendMessage()">
+         <button (Click)="sendMessage()">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
     </div>
