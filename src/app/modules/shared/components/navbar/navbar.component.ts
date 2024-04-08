@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostListener, NgModule, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -12,12 +12,15 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from "../../../../services/toast-message.service";
 import { UserMsService } from "../../../../services/user-ms.service";
 import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
+import { FloatingWidgetComponent } from 'src/app/modules/chat/floating-widget/floating-widget.component';
+import {ChatManager} from "../../../chat/chat-manager";
+
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
+
 
 @Component({
   selector: 'app-navbar',
@@ -44,6 +47,13 @@ export class NavbarComponent implements DoCheck {
   showDropDown:boolean =false;
   partnerType :any;
 
+  floatingWidgetShow: boolean = false;
+
+
+  toggleWidget(){
+    this.floatingWidgetShow = !this.floatingWidgetShow;
+  }
+
   constructor(
     private router: Router,
     public dialog: MatDialog,
@@ -51,11 +61,11 @@ export class NavbarComponent implements DoCheck {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private userMsService: UserMsService,
-    private kommunicateSsoService: KommunicateSsoService,
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
     private renderer: Renderer2,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private chatManager: ChatManager
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -208,7 +218,7 @@ export class NavbarComponent implements DoCheck {
     this.loading = true;
     Auth.signOut()
       .then(data => {
-        this.kommunicateSsoService.logoutKommunicateChat();
+        this.chatManager.closeChat();
         this.smeLogout();
         this.loading = false;
         sessionStorage.clear();

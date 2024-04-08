@@ -15,7 +15,8 @@ import { environment } from 'src/environments/environment';
 import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
-import { KommunicateSsoService } from './services/kommunicate-sso.service';
+import { ChatManager } from './modules/chat/chat-manager';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -38,10 +39,10 @@ export class AppComponent {
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
     private idleService: IdleService,
-    private kommunicateSsoService: KommunicateSsoService,
     private http: HttpClient,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
+    private chatManager: ChatManager,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -185,7 +186,7 @@ export class AppComponent {
   logout() {
     Auth.signOut()
       .then(data => {
-        this.kommunicateSsoService.logoutKommunicateChat();
+        this.chatManager.closeChat();
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);

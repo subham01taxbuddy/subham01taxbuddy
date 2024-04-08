@@ -1,0 +1,63 @@
+<div class="floating">
+    <div class="header">
+        <button (click)="goBack()">
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <i class="fa fa-external-link" aria-hidden="true"></i>
+        <div>
+            <span class="file-type-option">ITR</span>
+        </div>
+     </div>
+
+    <div class="user-info">
+        <img [src]="image" alt="user-image">
+        <span class="username">{{ username }}</span>
+    </div>
+
+    <div class="chat-messages">
+        <ng-container *ngFor="let message of fetchedMessages">
+            <div [ngClass]="{
+              'system-messages': message.sender === 'system',
+              'user-messages': message.sender === chat21UserId,
+              'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId
+            }">
+                <div class="message-container">
+                    <div class="message-and-timestamp">
+                        <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
+                        <div *ngIf="message.type === 'html'" [innerHTML]="message.content"></div>
+                        <span *ngIf="message.sender !== 'system'" class="timestamp">{{
+                            formatTimestamp(message.timestamp) }}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+    </div>
+
+    <!-- <div *ngIf="fileToUpload" class="file-upload-box">
+        <div class="file-details">
+            <div class="file-icon">
+                <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
+                <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+            </div>
+            <div class="file-name">{{ fileToUpload.name }}</div>
+        </div> -->
+
+    <!-- <div class="remove-file" (click)="removeFile()">
+          <span class="bi bi-x"></span>
+        </div> -->
+    <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
+     <button class="btn btn-primary" (click)="sendFile()">Send</button> -->
+
+
+    <div class="user-input">
+        <i class="fa fa-paperclip" aria-hidden="true"></i>
+        <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
+        <input type="text" placeholder="Type your message">
+        <span class=""></span>
+        <span></span>
+        <button (Click)="sendMessage()">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>

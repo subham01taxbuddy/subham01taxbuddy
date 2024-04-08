@@ -29,8 +29,8 @@ import { ReAssignActionDialogComponent } from '../../components/re-assign-action
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
-import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
+import {ChatManager} from "../../../chat/chat-manager";
 
 declare function we_track(key: string, value: any);
 
@@ -98,8 +98,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     private userService: UserMsService,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private chatManager: ChatManager,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -1469,7 +1469,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
+        this.chatManager.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
     });

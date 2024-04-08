@@ -14,7 +14,6 @@ export const environment = {
     webportal_url: 'https://uat-itr.taxbuddy.com',
     lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
     lifecycleEnv: "dev",
-    validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
     // kmAppId: "5d1fff0257a39f9bb9699a129da55963",
     kmAppId: "3c45762181ce71ac72f5e8ffd90da16a8",
     idleTimeMins: 30,

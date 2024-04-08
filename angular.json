@@ -61,7 +61,8 @@
               "src/assets/styles/style.css",
               "src/assets/styles/icons.css",
               "src/assets/styles/main.less",
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
             "scripts": [],
             "serviceWorker": true,
