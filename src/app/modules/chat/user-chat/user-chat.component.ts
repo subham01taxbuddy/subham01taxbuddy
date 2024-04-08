@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChatService } from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-user-chat',
@@ -22,7 +23,8 @@ export class UserChatComponent implements OnInit {
   
   userInput: string = '';
 
-  constructor(private chatService: ChatService, private chatManager: ChatManager) {
+  constructor(private chatService: ChatService, private chatManager: ChatManager,
+              private sanitizer: DomSanitizer) {
     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
   }
@@ -106,4 +108,7 @@ export class UserChatComponent implements OnInit {
     return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
   }
 
+  getSanitizedHtml(html){
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 }
