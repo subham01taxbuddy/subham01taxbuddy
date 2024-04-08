@@ -62,7 +62,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
       }
 
       this.getCloudFilePath(this.serviceType);
-
       this.utilsService.getUserDetailsByUserId(this.userId).subscribe((res: any) => {
         console.log(res);
         if (res?.records) {
@@ -129,6 +128,9 @@ export class ShowUserDocumnetsComponent implements OnInit {
           if (!this.breadcrumbsPart.includes("Home")) {
             this.breadcrumbsPart.splice(0, 1, "Home");
             this.folders = result;
+            if (this.folders.length <= 2 && this.folders.includes('ITR')) {
+              this.getCloudFilePath('ITR');
+            }
           } else {
             this.folders = result;
           }

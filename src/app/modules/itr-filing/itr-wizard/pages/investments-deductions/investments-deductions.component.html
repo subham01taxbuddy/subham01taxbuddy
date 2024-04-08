@@ -1,226 +1,174 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="frameC">
   <h1 class="heading__title">Deductions</h1>
   <div class="space">
- 
-        <div class="frame-wrapper-2A">
-          <div class="accordion" id="myAccordion">
 
-            <form [formGroup]="investmentDeductionForm">
-              <div class="accordion-item">
-              <h2 class="accordion-header" id="heading1">
-                <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse1">Popular Deductions</button>
+    <div class="frame-wrapper-2A">
+      <div class="accordion" id="myAccordion">
 
-              </h2>
-              <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                <div class="accordion__item-body">
-                  <div class="gray_container">
-                    <div class="div-6 mb-20">
-                      <div class="form-field">
-                        <div><span class="normal_text">Under Section 8OC- Investment </span></div>
-                      </div>
-                      <div class="form-field">
-                        <mat-form-field appearance="outline">
-                          <input
-                                 matInput
-                                  placeholder="Under section 80C"
-                                  formControlName="ELSS"
-                                  maxlength="8"
-                                  autocomplete="off"
-                                  digitsOnly
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="div-6 mb-20">
-                      <div class="form-field">
-                        <div><span class="normal_text">Under Section 8OCCC- Contribution to Pension
-                                                                Plan
-                                                                /
-                                                                Annuity Fund </span></div>
-                      </div>
-                      <div class="form-field">
-                        <mat-form-field appearance="outline">
-                          <input
-                                  matInput
-                                  placeholder="Under sec. 80CCC"
-                                  formControlName="PENSION_FUND"
-                                  maxlength="8"
-                                  autocomplete="off"
-                                  digitsOnly
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="div-6 mb-20">
-                      <div class="form-field">
-                        <div><span class="normal_text">Under Section 8OCCD(1)- Employee Contribution
-                                                                to
-                                                                New
-                                                                Pension Scheme(NPS) </span>
-                        </div>
-                      </div>
-                      <div class="form-field">
-                        <mat-form-field appearance="outline">
-                          <input
-                                 matInput
-                                  placeholder="Under sec. 80CCD (1)"
-                                  formControlName="PS_EMPLOYEE"
-                                  maxlength="8"
-                                  autocomplete="off"
-                                  digitsOnly
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="div-6 mb-20">
-                      <div class="form-field">
-                        <div><span class="normal_text">Under Section 8OCCD(1B)-Employee Contribution
-                                                                to
-                                                                New
-                                                                Pension Scheme(NPS) </span>
-                        </div>
-                      </div>
-                      <div class="form-field">
-                        <mat-form-field appearance="outline">
-                          <input
-                                  matInput
-                                  placeholder="Under sec. 80CCD (1B)"
-                                  maxlength="8"
-                                  formControlName="PENSION_SCHEME"
-                                  autocomplete="off"
-                                  digitsOnly
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="div-6 mb-20">
-                      <div class="form-field">
-                        <div><span class="normal_text">Under Section 8OCCD(2)-Employer Contribution
-                                                                to
-                                                                NPS</span>
-                        </div>
-                      </div>
-                      <div class="form-field">
-                        <mat-form-field appearance="outline">
-                          <input
-                                 matInput
-                                  placeholder="Under sec. 80CCD (2)"
-                                  maxlength="8"
-                                  formControlName="PS_EMPLOYER"
-                                  autocomplete="off"
-                                  digitsOnly
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+        <form [formGroup]="investmentDeductionForm">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading1">
+              <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                data-bs-target="#collapse1">Popular Deductions</button>
 
-                    <!-- 80TTA -->
-                    <div class="div-6">
-                      <div class="gray_box">
-                        <p><span class="normal_text">Deduction for Interest earned on Savings Bank
-                                                                      Account
-                                                                  </span> </p>
-                        <div class="div-6 mb-20">
-                          <div class="form-field">
-                            <div><span class="normal_text">8OTTA</span></div>
-                            <span class="text_italic">This auto filed from IFOS</span>
-                          </div>
-                          <div class="form-field">
-                            <mat-form-field appearance="outline">
-                              <input
-                                      matInput
-                                      placeholder="Under sec. 80TTA"
-                                      maxlength="8"
-                                      formControlName="us80tta"
-                                      autocomplete="off"
-                                      digitsOnly
-                                      readonly/>
-                            </mat-form-field>
-                          </div>
-                        </div>
-
-                        <!-- 80TTB -->
-                        <div class="div-6">
-                          <div class="form-field">
-                            <div><span class="normal_text">8OTTB</span> </div>
-                            <span class="text_italic">This auto filed from IFOS</span>
-                          </div>
-                          <div class="form-field">
-                            <mat-form-field appearance="outline">
-                              <input
-                                      matInput
-                                      placeholder="Under sec. 80TTB"
-                                      maxlength="8"
-                                      formControlName="us80ttb"
-                                      autocomplete="off"
-                                      digitsOnly
-                                      readonly/>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </div>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div class="accordion__item-body">
+                <div class="gray_container">
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">Under Section 8OC- Investment </span></div>
                     </div>
-
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input matInput placeholder="Under section 80C" formControlName="ELSS" maxlength="8"
+                          autocomplete="off" digitsOnly />
+                      </mat-form-field>
+                    </div>
                   </div>
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">Under Section 8OCCC- Contribution to Pension
+                          Plan
+                          /
+                          Annuity Fund </span></div>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input matInput placeholder="Under sec. 80CCC" formControlName="PENSION_FUND" maxlength="8"
+                          autocomplete="off" digitsOnly />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">Under Section 8OCCD(1)- Employee Contribution
+                          to
+                          New
+                          Pension Scheme(NPS) </span>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input matInput placeholder="Under sec. 80CCD (1)" formControlName="PS_EMPLOYEE" maxlength="8"
+                          autocomplete="off" digitsOnly />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">Under Section 8OCCD(1B)-Employee Contribution
+                          to
+                          New
+                          Pension Scheme(NPS) </span>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input matInput placeholder="Under sec. 80CCD (1B)" maxlength="8"
+                          formControlName="PENSION_SCHEME" autocomplete="off" digitsOnly />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">Under Section 8OCCD(2)-Employer Contribution
+                          to
+                          NPS</span>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input matInput placeholder="Under sec. 80CCD (2)" maxlength="8" formControlName="PS_EMPLOYER"
+                          autocomplete="off" digitsOnly />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- 80TTA -->
+                  <div class="div-6">
+                    <div class="gray_box">
+                      <p><span class="normal_text">Deduction for Interest earned on Savings Bank
+                          Account
+                        </span> </p>
+                      <div class="div-6 mb-20">
+                        <div class="form-field">
+                          <div><span class="normal_text">8OTTA</span></div>
+                          <span class="text_italic">This auto filed from IFOS</span>
+                        </div>
+                        <div class="form-field">
+                          <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under sec. 80TTA" maxlength="8" formControlName="us80tta"
+                              autocomplete="off" digitsOnly readonly />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- 80TTB -->
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div><span class="normal_text">8OTTB</span> </div>
+                          <span class="text_italic">This auto filed from IFOS</span>
+                        </div>
+                        <div class="form-field">
+                          <mat-form-field appearance="outline">
+                            <input matInput placeholder="Under sec. 80TTB" maxlength="8" formControlName="us80ttb"
+                              autocomplete="off" digitsOnly readonly />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
-            </form>
+          </div>
+        </form>
 
 
-            <app-medical-expenses
-                    #medicalExpensesComponentRef>
-            </app-medical-expenses>
+        <app-medical-expenses #medicalExpensesComponentRef>
+        </app-medical-expenses>
 
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
-                <!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
-                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-                        aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
-              </h2>
-              <div id="donation" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
-                <div class="accordion__item-body">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
+            <!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
+            <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
+              data-bs-target="#donation">Deduction related to Donation</button>
+          </h2>
+          <div id="donation" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+            <div class="accordion__item-body">
 
-                  <app-donations
-                          #donationsComponentRef
-                          [type]="'80g'"
-                          [isAddDonation]="isAddDonation">
-                  </app-donations>
+              <app-donations #donationsComponentRef [type]="'80g'" [isAddDonation]="isAddDonation">
+              </app-donations>
 
-                  <app-donations
-                          #donations80ggaComponentRef
-                          [type]="'80gga'"
-                          [isAddDonation]="isAddDonation">
-                  </app-donations>
-
-                </div>
-              </div>
+              <app-donations #donations80ggaComponentRef [type]="'80gga'" [isAddDonation]="isAddDonation">
+              </app-donations>
+              <app-donations #donations80ggcComponentRef [type]="'80ggc'" [isAddDonation]="isAddDonation">
+              </app-donations>
             </div>
-
-            <app-other-deductions #otherDeductionsRef
-                                  (ded80TTA)="setValue('us80tta', $event)"
-                                  (ded80TTB)="setValue('us80ttb', $event)">
-            </app-other-deductions>
-
           </div>
         </div>
-     
 
-      <div class="out-box">
-        <div class="box-left">
-          <button class="btn btn__white" (click)="goBack()">Back</button>
-        </div>
-        <div class="box-right">
-          <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
-        </div>
+        <app-other-deductions #otherDeductionsRef (ded80TTA)="setValue('us80tta', $event)"
+          (ded80TTB)="setValue('us80ttb', $event)">
+        </app-other-deductions>
+
       </div>
-   
+    </div>
+
+
+    <div class="out-box">
+      <div class="box-left">
+        <button class="btn btn__white" (click)="goBack()">Back</button>
+      </div>
+      <div class="box-right">
+        <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+      </div>
+    </div>
+
   </div>
 </div>

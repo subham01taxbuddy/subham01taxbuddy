@@ -698,7 +698,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
-  description?:any
+  description?: any
 }
 export interface Perquisites {
   perquisiteType: string;
@@ -850,6 +850,7 @@ export interface BankDetails {
   hasRefund: boolean;
   swiftcode: string;
   countryName: string;
+  accountType?: any;
 }
 
 // flags
