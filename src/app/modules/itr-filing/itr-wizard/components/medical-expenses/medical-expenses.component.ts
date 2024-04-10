@@ -8,6 +8,7 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { MatDialog } from '@angular/material/dialog';
+import { values } from 'lodash';
 declare let $: any;
 
 @Component({
@@ -29,14 +30,17 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   maxLimit80ddb = 40000;
   selected80ddb = '';
   NatureOfDisability80E = [
+    { label: 'None', value: '' },
     { label: 'Self with disability', value: 'SELF_WITH_DISABILITY' },
     { label: 'Self with severe disability', value: 'SELF_WITH_SEVERE_DISABILITY' }
   ];
   NatureOfDisability80DD = [
+    { label: 'None', value: '' },
     { label: 'Dependent person with disability', value: 'DEPENDENT_PERSON_WITH_DISABILITY' },
     { label: 'Dependent person with severe disability', value: 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' }
   ];
   typeOfDependent = [
+    { label: 'None', value: '' },
     { label: 'Spouse', value: 'Spouse' },
     { label: 'Son', value: 'Son' },
     { label: 'Daughter', value: 'Daughter' },
@@ -317,6 +321,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80u = 125000;
     } else {
       this.maxLimit80u = 0;
+      this.investmentDeductionForm.controls['form10IADate'].setValue(null);
+      this.investmentDeductionForm.controls['form10IAAcknowledgement'].setValue(null);
+      this.investmentDeductionForm.controls['udidNumber'].setValue(null);
     }
     // if (setDefault)
     this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u);
@@ -330,6 +337,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80dd = 125000;
     } else {
       this.maxLimit80dd = 0;
+      this.investmentDeductionForm.controls['form10IADate80dd'].setValue(null);
+      this.investmentDeductionForm.controls['form10IAAcknowledgement80dd'].setValue(null);
+      this.investmentDeductionForm.controls['udidNumber80dd'].setValue(null);
+      this.investmentDeductionForm.controls['typeOfDependent'].setValue('');
+      this.investmentDeductionForm.controls['dependentPan'].setValue(null);
+      this.investmentDeductionForm.controls['dependentAadhar'].setValue(null);
     }
     // if (setDefault)
     this.investmentDeductionForm.controls['us80dd'].setValue(this.maxLimit80dd);
