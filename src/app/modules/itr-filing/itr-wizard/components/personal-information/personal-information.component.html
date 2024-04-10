@@ -539,16 +539,17 @@
                     {{ account.label }}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="bank.get('accountType').hasError('required')">
+                <mat-error
+                  *ngIf="bank.get('accountType').hasError('required') && (bank.get('accountType').dirty || bank.get('accountType').touched)">
                   Select the account type
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="form-field inl col-1">
+            <!-- <div class="form-field inl col-1">
               <div><span class="span">REFUND A/C*</span></div>
               <mat-checkbox color="primary" name="hasRefund[i]" formControlName="hasRefund">
               </mat-checkbox>
-            </div>
+            </div> -->
             <div class="form-field" *ngIf="false">
               <button mat-icon-button class="table-add-remove-button text-left"
                 (click)="deleteBank(i, this.customerProfileForm)">

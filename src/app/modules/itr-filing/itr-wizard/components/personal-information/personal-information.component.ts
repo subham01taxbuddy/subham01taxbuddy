@@ -2174,13 +2174,13 @@ export class PersonalInformationComponent implements OnInit {
       value: 3,
     },
   ];
-  accountTypeDropdown=[
-    {label:'Savings Account',value:'SB'},
-    {label:'Current Account',value:'CA'},
-    {label:'Cash Credit Account',value:'CC'},
-    {label:'Over draft account',value:'OD'},
-    {label:'Non Resident Account',value:'NRO'},
-    {label:'Other',value:'OTH'},
+  accountTypeDropdown = [
+    { label: 'Savings Account', value: 'SB' },
+    { label: 'Current Account', value: 'CA' },
+    { label: 'Cash Credit Account', value: 'CC' },
+    { label: 'Over draft account', value: 'OD' },
+    { label: 'Non Resident Account', value: 'NRO' },
+    { label: 'Other', value: 'OTH' },
   ];
 
   constructor(
@@ -2698,7 +2698,8 @@ export class PersonalInformationComponent implements OnInit {
     }
     this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
 
-    if (!this.isFormValid()) {
+    // if (!this.isFormValid()) {
+    if (this.customerProfileForm.invalid) {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
@@ -2706,6 +2707,7 @@ export class PersonalInformationComponent implements OnInit {
       this.personalInfoSaved.emit(false);
       return;
     }
+    // }
 
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
