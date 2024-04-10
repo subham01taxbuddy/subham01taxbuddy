@@ -37,6 +37,20 @@ const TREE_DATA: FoodNode[] = [
     value: 'Common',
   },
   {
+    item: 'ITRU',
+    value: 'ITRU',
+    children: [
+      {
+          "item" : "2022-23",
+          "value" : "2022-23"
+      },
+      {
+          "item" : "2022-23",
+          "value" : "2022-23"
+      }
+    ]
+  },
+  {
     item: 'ITR',
     value: 'ITR',
     children: [
