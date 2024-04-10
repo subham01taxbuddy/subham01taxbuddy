@@ -182,7 +182,7 @@
                 <div><span class="span">Acknowledgement Number</span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
                   <input formControlName="form10IAAcknowledgement" name="form10IAAcknowledgement" matInput
-                    placeholder="" required maxlength="16" digitsOnly />
+                    placeholder="" maxlength="16" digitsOnly />
                 </mat-form-field>
               </div>
               <div class="col-3">
@@ -292,11 +292,14 @@
                 <mat-form-field appearance="outline" class="no-height small-inp">
                   <input formControlName="dependentAadhar" name="dependentAadhar" matInput placeholder="" maxlength="16"
                     digitsOnly />
-                  <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('required')">
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('required')">
                     Enter aadhar number</mat-error>
-                  <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('maxlength')">
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('maxlength')">
                     Enter 12 digit aadhar number</mat-error>
-                  <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('minlength')">
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('minlength')">
                     Enter 12 digit aadhar number</mat-error>
                 </mat-form-field>
               </div>
