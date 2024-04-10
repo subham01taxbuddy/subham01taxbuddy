@@ -38,7 +38,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="salary['controls'].length>1">
                     <button type="button" (click)="deleteItem('salary',i,item)"> <i class="fa fa-trash-o delbt"></i>
                     </button>
                   </div>
@@ -107,7 +107,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="perquisites['controls'].length>1">
                     <button type="button" (click)="deleteItem('perquisites',i,item)"> <i
                         class="fa fa-trash-o delbt"></i>
                     </button>
@@ -176,7 +176,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="profitsInLieu['controls'].length>1">
                     <button type="button" (click)="deleteItem('profitsInLieu',i,item)"> <i
                         class="fa fa-trash-o delbt"></i>
                     </button>
