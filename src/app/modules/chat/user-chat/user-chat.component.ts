@@ -67,6 +67,7 @@ export class UserChatComponent implements OnInit {
   chat21UserId: string;
   fetchedMessages: any[] = [];
   newMessageCount: number = 0;
+  removefile: boolean = true;
 
   handleTokenEvent = (data: any) => {
     console.log("subscribed", data);
@@ -82,7 +83,7 @@ export class UserChatComponent implements OnInit {
     const messagesString = sessionStorage.getItem('fetchedMessages');
     if (messagesString) {
       this.fetchedMessages = JSON.parse(messagesString);
-      console.log(this.fetchedMessages);
+      console.log('fetch messages',this.fetchedMessages);
       // Sort messages based on timestamp
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
     }
@@ -110,5 +111,9 @@ export class UserChatComponent implements OnInit {
 
   getSanitizedHtml(html){
     return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  removeFile(){
+   this.fileToUpload = null;
   }
 }
