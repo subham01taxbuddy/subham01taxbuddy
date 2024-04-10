@@ -7007,26 +7007,26 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
-    this.itrMsService.getMethod(param).subscribe(
-      (res: any) => {
-        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+    // const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
+    // this.itrMsService.getMethod(param).subscribe(
+    //   (res: any) => {
+    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.checkFilerAssignment();
-          // console.log(res, 'Paid');
-        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-          this.utilsService.showSnackBar(
-            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure that the payment has been made by the user to proceed ahead'
-          );
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(error);
-      }
-    );
+    //       // console.log(res, 'Paid');
+    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+    //       this.utilsService.showSnackBar(
+    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+    //       );
+    //     } else {
+    //       this.utilsService.showSnackBar(
+    //         'Please make sure that the payment has been made by the user to proceed ahead'
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     this.utilsService.showSnackBar(error);
+    //   }
+    // );
   }
 
   checkFilerAssignment() {
@@ -7037,6 +7037,13 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
+            if(!this.checkIfEligibleToFileItr(this.ITR_JSON.userId, this.ITR_JSON.assessmentYear)){
+              this.utilsService.showSnackBar(
+                'You can only update the ITR file record when your status is "ITR confirmation received"'
+              );
+              return;
+            }
+
             if (confirm('Are you sure you want to file the ITR?')) {
               this.fileITR();
             }
@@ -7058,6 +7065,14 @@ export class SummaryComponent implements OnInit {
         );
       }
     );
+  }
+
+  checkIfEligibleToFileItr(userId:number, assessmentYear:string){
+    let param = '/eligible-to-file-itr?userId='+userId+'&&assessmentYear='+assessmentYear;
+    this.itrMsService.getMethod(param).subscribe(
+      (response: any) => response.success && response?.data?.eligibleToFileItr
+    );
+    return false;
   }
 
   fileITR() {

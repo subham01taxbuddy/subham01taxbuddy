@@ -355,6 +355,12 @@ export class MoreOptionsDialogComponent implements OnInit {
         return;
       }
     }
+
+    if(this.data.statusId !== 8){
+      this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
+      return;
+    }
+    
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';

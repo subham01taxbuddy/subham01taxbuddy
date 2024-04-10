@@ -65,6 +65,12 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
       this.utilsService.showSnackBar(`Ack Number must end with "${assessmentYearLastTwoDigits}" for the Assessment Year ${this.data.assessmentYear}`);
       return;
     }
+
+    if(this.data.statusId !== 8){
+      this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
+      return;
+    }
+      
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
 
