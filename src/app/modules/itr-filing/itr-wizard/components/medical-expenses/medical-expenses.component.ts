@@ -28,7 +28,25 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   selected80dd = '';
   maxLimit80ddb = 40000;
   selected80ddb = '';
-
+  NatureOfDisability80E = [
+    { label: 'Self with disability', value: 'SELF_WITH_DISABILITY' },
+    { label: 'Self with severe disability', value: 'SELF_WITH_SEVERE_DISABILITY' }
+  ];
+  NatureOfDisability80DD = [
+    { label: 'Dependent person with disability', value: 'DEPENDENT_PERSON_WITH_DISABILITY' },
+    { label: 'Dependent person with severe disability', value: 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' }
+  ];
+  typeOfDependent = [
+    { label: 'Spouse', value: 'Spouse' },
+    { label: 'Son', value: 'Son' },
+    { label: 'Daughter', value: 'Daughter' },
+    { label: 'Father', value: 'Father' },
+    { label: 'Mother', value: 'Mother' },
+    { label: 'Brother', value: 'Brother' },
+    { label: 'Sister', value: 'Sister' }
+  ]
+  minDate: Date;
+  maxDate: Date;
   constructor(
     public utilsService: UtilsService,
     private fb: UntypedFormBuilder,
@@ -68,6 +86,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       }
     }
     this.Copy_ITR_JSON = this.ITR_JSON;
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
   }
 
   ngOnInit(): void {
@@ -102,9 +126,20 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
       hasParentOverSixty: [this.Copy_ITR_JSON.systemFlags?.hasParentOverSixty],
+      form10IADate: [null,],
+      form10IAAcknowledgement: [null,],
+      udidNumber: [null,],
+      form10IADate80dd: [null,],
+      form10IAAcknowledgement80dd: [null,],
+      udidNumber80dd: [null,],
+      typeOfDependent: [null,],
+      dependentPan: [null, [Validators.pattern(AppConstants.panNumberRegex)]],
+      dependentAadhar: [null, [Validators.minLength(12), Validators.maxLength(12)]]
     });
   }
-
+  setToUpperCase() {
+    this.investmentDeductionForm.controls['dependentPan'].setValue(this.investmentDeductionForm.controls['dependentPan'].value.toUpperCase());
+  }
   max5000Limit(val) {
     if (
       val === 'SELF' &&
@@ -181,6 +216,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     if (sec80u?.length > 0) {
       this.selected80u = sec80u[0].typeOfDisability;
       this.investmentDeductionForm.controls['us80u'].setValue(sec80u[0].amount);
+      this.investmentDeductionForm.controls['form10IADate'].setValue(sec80u[0].form10IADate);
+      this.investmentDeductionForm.controls['form10IAAcknowledgement'].setValue(sec80u[0].form10IAAcknowledgement);
+      this.investmentDeductionForm.controls['udidNumber'].setValue(sec80u[0].udidNumber);
       this.radioChange80u(false);
     } else {
       this.selected80u = '';
@@ -193,9 +231,13 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     );
     if (sec80dd?.length > 0) {
       this.selected80dd = sec80dd[0].typeOfDisability;
-      this.investmentDeductionForm.controls['us80dd'].setValue(
-        sec80dd[0].amount
-      );
+      this.investmentDeductionForm.controls['us80dd'].setValue(sec80dd[0].amount);
+      this.investmentDeductionForm.controls['form10IADate80dd'].setValue(sec80dd[0].form10IADate);
+      this.investmentDeductionForm.controls['form10IAAcknowledgement80dd'].setValue(sec80dd[0].form10IAAcknowledgement);
+      this.investmentDeductionForm.controls['udidNumber80dd'].setValue(sec80dd[0].udidNumber);
+      this.investmentDeductionForm.controls['typeOfDependent'].setValue(sec80dd[0].typeOfDependent);
+      this.investmentDeductionForm.controls['dependentPan'].setValue(sec80dd[0].dependentPan);
+      this.investmentDeductionForm.controls['dependentAadhar'].setValue(sec80dd[0].dependentAadhar);
       this.radioChange80dd(false);
     } else {
       this.selected80dd = '';
@@ -208,9 +250,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     );
     if (sec80ddb?.length > 0) {
       this.selected80ddb = sec80ddb[0].typeOfDisability;
-      this.investmentDeductionForm.controls['us80ddb'].setValue(
-        sec80ddb[0].amount
-      );
+      this.investmentDeductionForm.controls['us80ddb'].setValue(sec80ddb[0].amount);
       this.radioChange80ddb(false);
     } else {
       this.selected80ddb = '';
@@ -382,10 +422,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     let parentExpenseLimit = isParentOverSixty ? 50000 : 25000;
 
     let fieldArray = [this.investmentDeductionForm.controls['premium'],
-      this.investmentDeductionForm.controls['preventiveCheckUp'],
-      this.investmentDeductionForm.controls['medicalExpenditure']];
+    this.investmentDeductionForm.controls['preventiveCheckUp'],
+    this.investmentDeductionForm.controls['medicalExpenditure']];
     let totalParentExpenses = 0;
-    fieldArray.forEach(element =>{
+    fieldArray.forEach(element => {
       totalParentExpenses += this.utilsService.getInt(element.value);
     });
     if (totalParentExpenses > parentExpenseLimit) {
@@ -394,7 +434,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       );
       fieldArray.forEach(element => {
         if (element.value > 0) {
-          element.setErrors({maxValueExceeded: true});
+          element.setErrors({ maxValueExceeded: true });
         }
       });
       return false;
@@ -404,12 +444,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       });
     }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
-    let userFieldArray =[this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
-      this.investmentDeductionForm.controls['selfPremium'],
-      this.investmentDeductionForm.controls['selfMedicalExpenditure']
+    let userFieldArray = [this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
+    this.investmentDeductionForm.controls['selfPremium'],
+    this.investmentDeductionForm.controls['selfMedicalExpenditure']
     ];
     let totalExpenses = 0;
-    userFieldArray.forEach(element =>{
+    userFieldArray.forEach(element => {
       totalExpenses += this.utilsService.getInt(element.value);
     });
 
@@ -419,11 +459,11 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       );
       userFieldArray.forEach(element => {
         if (element.value > 0) {
-          element.setErrors({maxValueExceeded: true});
+          element.setErrors({ maxValueExceeded: true });
         }
       });
       return false;
-    }else {
+    } else {
       userFieldArray.forEach(element => {
         element.setErrors(null);
       });
@@ -477,10 +517,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           medicalExpenditure:
             this.userAge >= 60
               ? Number(
-                  this.investmentDeductionForm.controls[
-                    'selfMedicalExpenditure'
-                  ].value
-                )
+                this.investmentDeductionForm.controls[
+                  'selfMedicalExpenditure'
+                ].value
+              )
               : 0,
           preventiveCheckUp: Number(
             this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
@@ -507,7 +547,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         )
       ) {
         this.Copy_ITR_JSON.systemFlags.hasParentOverSixty =
-            this.investmentDeductionForm.controls['hasParentOverSixty'].value;
+          this.investmentDeductionForm.controls['hasParentOverSixty'].value;
         this.Copy_ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,
@@ -535,6 +575,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.Copy_ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80u,
           amount: this.investmentDeductionForm.controls['us80u'].value,
+          form10IADate: this.investmentDeductionForm.controls['form10IADate'].value,
+          form10IAAcknowledgement: this.investmentDeductionForm.controls['form10IAAcknowledgement'].value,
+          udidNumber: this.investmentDeductionForm.controls['udidNumber'].value,
         });
       }
       if (
@@ -546,6 +589,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.Copy_ITR_JSON.disabilities?.push({
           typeOfDisability: this.selected80dd,
           amount: this.investmentDeductionForm.controls['us80dd'].value,
+          form10IADate: this.investmentDeductionForm.controls['form10IADate80dd'].value,
+          form10IAAcknowledgement: this.investmentDeductionForm.controls['form10IAAcknowledgement80dd'].value,
+          udidNumber: this.investmentDeductionForm.controls['udidNumber80dd'].value,
+          typeOfDependent: this.investmentDeductionForm.controls['typeOfDependent'].value,
+          dependentPan: this.investmentDeductionForm.controls['dependentPan'].value,
+          dependentAadhar: this.investmentDeductionForm.controls['dependentAadhar'].value,
         });
       }
       if (

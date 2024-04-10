@@ -517,6 +517,12 @@ export interface Disability {
 export interface Disabilities {
   typeOfDisability: string;
   amount: number;
+  form10IADate?: any;
+  form10IAAcknowledgement?: any;
+  udidNumber?: any;
+  typeOfDependent?: any;
+  dependentPan?: any;
+  dependentAadhar?: any;
 }
 export interface HouseProperties {
   propertyType: string;
