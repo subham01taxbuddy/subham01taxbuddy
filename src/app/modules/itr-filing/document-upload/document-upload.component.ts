@@ -45,8 +45,8 @@ const TREE_DATA: FoodNode[] = [
           "value" : "2022-23"
       },
       {
-          "item" : "2022-23",
-          "value" : "2022-23"
+          "item" : "2021-22",
+          "value" : "2021-22"
       }
     ]
   },
