@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { ChatService } from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
@@ -24,7 +24,8 @@ export class UserChatComponent implements OnInit {
   userInput: string = '';
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer, private elementRef: ElementRef,
+              private renderer: Renderer2) {
     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
   }
@@ -77,7 +78,7 @@ export class UserChatComponent implements OnInit {
     console.log('received message', data);
 
 
-    const chatMessagesContainer = document.querySelector('.chat-window');
+    const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-window');
     // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
 
     const messagesString = sessionStorage.getItem('fetchedMessages');
@@ -86,6 +87,14 @@ export class UserChatComponent implements OnInit {
       console.log('fetch messages',this.fetchedMessages);
       // Sort messages based on timestamp
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
+      this.fetchedMessages.forEach((message:any) =>{
+        if (message.type === 'html'){
+          setTimeout(()=>{
+            message.content = this.sanitizer.bypassSecurityTrustHtml(message.content);
+            this.addMessageEvents(message);
+          }, 3000);
+        }
+      });
     }
 
     // if (!isAtBottom && !this.isTyping) {
@@ -109,8 +118,52 @@ export class UserChatComponent implements OnInit {
     return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
   }
 
-  getSanitizedHtml(html){
-    return this.sanitizer.bypassSecurityTrustHtml(html);
+  getSanitizedHtml(message){
+    // this.renderer.setProperty(this.myDiv.nativeElement, 'innerHTML', htmlContent);
+
+    return this.sanitizer.bypassSecurityTrustHtml(message.content);
+  }
+
+  addMessageEvents(message:any){
+    var form = this.elementRef.nativeElement.querySelector('.tiledesk-form-container form');
+    if (form) {
+      form.addEventListener('submit', this.handleFormSubmit);
+    }
+    // var button = this.elementRef.nativeElement.querySelector('.tiledesk-btn');
+    // if(button) {
+    //   button.addEventListener('click', ()=>{
+    //     console.log('clicked here');
+    //   });
+    // }
+
+    const button = this.elementRef.nativeElement.querySelector('.tiledesk-btn');
+    if(button) {
+      this.renderer.listen(button, 'click', () => {
+        console.log('Button clicked');
+        // Your button click handling code here
+      });
+      console.log('added btn click event');
+    }
+    // this.elementRef.nativeElement.querySelectorAll('a').forEach(function(a) {
+    //   a.addEventListener('click', this.handleLinkClick);
+    // });
+
+  }
+
+  handleBtnClick() {
+    console.log('clicked');
+  }
+
+  handleLinkClick(){
+    console.log('link clicked');
+  }
+
+  handleFormSubmit() {
+    console.log('form submitted');
+  // event.preventDefault(); // Prevents the default form submission behavior
+  // var selectedServices = [];
+  // this.elementRef.nativeElement.querySelectorAll('input[type="checkbox"][name="gstServices"]:checked').forEach(function(checkbox) {
+  //   selectedServices.push(checkbox.value);
   }
 
   removeFile(){
