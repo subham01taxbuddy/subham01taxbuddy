@@ -2316,7 +2316,7 @@ export class PersonalInformationComponent implements OnInit {
       }),
       liableSection44AAflag: 'Y',
       incomeDeclaredUsFlag: 'N',
-      totalSalesExceedOneCr: null,
+      totalSalesExceedOneCr: 'N',
       aggregateOfAllAmountsReceivedFlag: null,
       aggregateOfAllPaymentsMadeFlag: null,
       liableSection44ABFlag: 'N',
@@ -2633,7 +2633,7 @@ export class PersonalInformationComponent implements OnInit {
       this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
 
       this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(
-        this.ITR_JSON.totalSalesExceedOneCr);
+        this.ITR_JSON.totalSalesExceedOneCr ? this.ITR_JSON.totalSalesExceedOneCr : 'N');
 
       this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
 
@@ -3216,9 +3216,11 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
     this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
 
-    if (this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N')
+    if (this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N') {
       this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
-    else
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValue('N');
+      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+    } else
       this.customerProfileForm.get('totalSalesExceedOneCr').clearValidators();
 
     this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
