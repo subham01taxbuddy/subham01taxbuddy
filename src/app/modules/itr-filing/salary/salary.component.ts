@@ -285,10 +285,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         });
       }
     });
-    if (this.ITR_JSON.regime === 'NEW') {
-      this.deductionsFormGroup.controls['professionalTax'].setValue(null);
-      this.deductionsFormGroup.controls['professionalTax'].disable();
-    }
+    // if (this.ITR_JSON.regime === 'NEW') {
+    //   this.deductionsFormGroup.controls['professionalTax'].setValue(null);
+    //   this.deductionsFormGroup.controls['professionalTax'].disable();
+    // }
     if (
       this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
       this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT'
@@ -1915,10 +1915,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           this.deductionsFormGroup.controls['professionalTax'].setValue(
             this.localEmployer.deductions[i].exemptAmount
           );
-          if (this.ITR_JSON.regime === 'NEW') {
-            this.deductionsFormGroup.controls['professionalTax'].setValue(null);
-            this.deductionsFormGroup.controls['professionalTax'].disable();
-          }
+          // if (this.ITR_JSON.regime === 'NEW') {
+          //   this.deductionsFormGroup.controls['professionalTax'].setValue(null);
+          //   this.deductionsFormGroup.controls['professionalTax'].disable();
+          // }
         }
       }
     }
