@@ -8,7 +8,7 @@ import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import {CalculatorModalComponent} from "../../../shared/components/calculator-modal/calculator-modal.component";
+import { CalculatorModalComponent } from "../../../shared/components/calculator-modal/calculator-modal.component";
 
 @Component({
   selector: 'app-salary-bifurcation',
@@ -326,7 +326,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     this.formValuesChanged();
   }
 
-  calculate(){
+  calculate() {
     const dialogRef = this.dialog.open(CalculatorModalComponent, {
       width: '80%',
       height: '80%',
@@ -604,15 +604,21 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     if (type === 'salary') {
       this.salary.removeAt(index);
       this.changeSectionOne('salary');
-      this.setDescriptionValidation(type, item, true);
+      if (item.controls.taxableAmount.value > 0) {
+        this.setDescriptionValidation(type, item, true);
+      }
     } else if (type === 'perquisites') {
       this.perquisites.removeAt(index);
       this.changeSectionOne('perquisites');
-      this.setDescriptionValidation(type, item, true);
+      if (item.controls.taxableAmount.value > 0) {
+        this.setDescriptionValidation(type, item, true);
+      }
     } else if (type === 'profitsInLieu') {
       this.profitsInLieu.removeAt(index);
       this.changeSectionOne('profitsInLieu');
-      this.setDescriptionValidation(type, item, true);
+      if (item.controls.taxableAmount.value > 0) {
+        this.setDescriptionValidation(type, item, true);
+      }
     }
 
     this.formValuesChanged();

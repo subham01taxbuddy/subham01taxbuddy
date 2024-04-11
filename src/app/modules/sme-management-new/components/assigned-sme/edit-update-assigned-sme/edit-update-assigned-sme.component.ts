@@ -751,6 +751,21 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     return this.otherSmeInfo.controls['external'] as UntypedFormControl
   }
 
+  existingCount
+  newCount
+  onAdditionalIdsCountChange(event: any) {
+    this.newCount = parseInt(event.target.value, 10);
+    this.existingCount = this.smeObj?.['partnerDetails'].additionalIdsCount;
+    const totalCount = this.existingCount + this.newCount;
+
+    if (totalCount > 5) {
+      this.additionalIdsCount.setValue(this.existingCount);
+      this.additionalIdsCount.setErrors({ 'totalCountExceeded': true });
+    }else {
+      this.additionalIdsCount.setErrors(null)
+    }
+  }
+
   updateResignedStatus() {
     console.log('updating resigned status');
     const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
@@ -937,6 +952,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.location.back();
         }
       }, 500);
+    }else{
+      this.utilsService.showSnackBar('Please Enter Valid Calling Number');
+        return;
     }
   }
 

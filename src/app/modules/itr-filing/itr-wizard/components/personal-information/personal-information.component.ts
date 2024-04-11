@@ -2174,6 +2174,14 @@ export class PersonalInformationComponent implements OnInit {
       value: 3,
     },
   ];
+  accountTypeDropdown = [
+    { label: 'Savings Account', value: 'SB' },
+    { label: 'Current Account', value: 'CA' },
+    { label: 'Cash Credit Account', value: 'CC' },
+    { label: 'Over draft account', value: 'OD' },
+    { label: 'Non Resident Account', value: 'NRO' },
+    { label: 'Other', value: 'OTH' },
+  ];
 
   constructor(
     public fb: UntypedFormBuilder,
@@ -2308,7 +2316,7 @@ export class PersonalInformationComponent implements OnInit {
       }),
       liableSection44AAflag: 'Y',
       incomeDeclaredUsFlag: 'N',
-      totalSalesExceedOneCr: null,
+      totalSalesExceedOneCr: 'N',
       aggregateOfAllAmountsReceivedFlag: null,
       aggregateOfAllPaymentsMadeFlag: null,
       liableSection44ABFlag: 'N',
@@ -2332,6 +2340,7 @@ export class PersonalInformationComponent implements OnInit {
       accountNumber?: string;
       hasRefund?: boolean;
       hasEdit?: boolean;
+      accountType?: boolean;
     } = {}
   ): UntypedFormGroup {
     return this.fb.group({
@@ -2343,24 +2352,11 @@ export class PersonalInformationComponent implements OnInit {
         ]),
       ],
       countryName: ['91', Validators.required],
-      name: [
-        obj.name || '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.charRegex),
-        ]),
-      ],
-      accountNumber: [
-        obj.accountNumber || '',
-        Validators.compose([
-          Validators.minLength(3),
-          Validators.maxLength(20),
-          Validators.required,
-          Validators.pattern(AppConstants.numericRegex),
-        ]),
-      ],
+      name: [obj.name || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex),]),],
+      accountNumber: [obj.accountNumber || '', Validators.compose([Validators.minLength(3), Validators.maxLength(20), Validators.required, Validators.pattern(AppConstants.numericRegex),]),],
       hasRefund: [obj.hasRefund || false],
       hasEdit: [obj.hasEdit || false],
+      accountType: [obj.accountType || '', Validators.required]
     });
   }
 
@@ -2387,7 +2383,7 @@ export class PersonalInformationComponent implements OnInit {
 
   deleteSelectedBanks(formGroupName) {
     const banks = <UntypedFormArray>formGroupName.get('bankDetails');
-    banks.controls = banks.controls.filter((element:UntypedFormGroup)=> !element.controls['hasEdit'].value);
+    banks.controls = banks.controls.filter((element: UntypedFormGroup) => !element.controls['hasEdit'].value);
     banks.updateValueAndValidity();
   }
 
@@ -2398,7 +2394,7 @@ export class PersonalInformationComponent implements OnInit {
         this.bankList = result;
         // this.encrDecrService.set(AppConstants.BANK_DATA, JSON.stringify(this.bankList));
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -2633,20 +2629,20 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.controls['incomeDeclaredUsFlag'].setValue(
       this.ITR_JSON.incomeDeclaredUsFlag);
 
-    if(this.ITR_JSON.incomeDeclaredUsFlag === 'N'){
+    if (this.ITR_JSON.incomeDeclaredUsFlag === 'N') {
       this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
 
       this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(
-        this.ITR_JSON.totalSalesExceedOneCr);
+        this.ITR_JSON.totalSalesExceedOneCr ? this.ITR_JSON.totalSalesExceedOneCr : 'N');
 
       this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
 
-      if(this.ITR_JSON.totalSalesExceedOneCr === 'Y'){
+      if (this.ITR_JSON.totalSalesExceedOneCr === 'Y') {
         this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
 
         this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(
           this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
-        
+
         this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
 
         this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
@@ -2657,7 +2653,7 @@ export class PersonalInformationComponent implements OnInit {
         this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
       }
     }
-    
+
     this.customerProfileForm.controls['liableSection44ABFlag'].setValue(
       this.ITR_JSON.liableSection44ABFlag);
 
@@ -2697,12 +2693,13 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.panNumber
     );
 
-    if(!this.ITR_JSON.declaration){
-      this.ITR_JSON.declaration = {capacity: "", childOf: "", name: "", panNumber: "", place: ""};
+    if (!this.ITR_JSON.declaration) {
+      this.ITR_JSON.declaration = { capacity: "", childOf: "", name: "", panNumber: "", place: "" };
     }
     this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
 
-    if (!this.isFormValid()) {
+    // if (!this.isFormValid()) {
+    if (this.customerProfileForm.invalid) {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
@@ -2710,6 +2707,7 @@ export class PersonalInformationComponent implements OnInit {
       this.personalInfoSaved.emit(false);
       return;
     }
+    // }
 
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
@@ -2768,10 +2766,10 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  openAcc(){
+  openAcc() {
     const accordionButton = document.getElementById('bankButtonId');
-    if(accordionButton){
-      if(accordionButton.getAttribute("aria-expanded") === "false")
+    if (accordionButton) {
+      if (accordionButton.getAttribute("aria-expanded") === "false")
         accordionButton.click();
     }
     // const accordion = document.getElementById('perDetailsId');
@@ -2787,6 +2785,7 @@ export class PersonalInformationComponent implements OnInit {
       const request = {
         bankAccount: this.ITR_JSON.bankDetails[i].accountNumber,
         ifsc: this.ITR_JSON.bankDetails[i].ifsCode,
+        accountType: this.ITR_JSON.bankDetails[i].accountType,
       };
       const t = await this.itrMsService.postMethod(param, request).toPromise();
       console.log('Bank Details verification response', t);
@@ -2795,8 +2794,8 @@ export class PersonalInformationComponent implements OnInit {
       } else {
         this.utilsService.showSnackBar(
           'Bank account is not valid with this ' +
-            this.ITR_JSON.bankDetails[i].accountNumber +
-            ' no.'
+          this.ITR_JSON.bankDetails[i].accountNumber +
+          ' no.'
         );
         this.loading = false;
         return false;
@@ -3212,21 +3211,23 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  onChangeIncomeDeclaredUsFlag(){
+  onChangeIncomeDeclaredUsFlag() {
     this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(null);
     this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
     this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
 
-    if(this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N')
+    if (this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N') {
       this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
-    else 
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValue('N');
+      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+    } else
       this.customerProfileForm.get('totalSalesExceedOneCr').clearValidators();
-    
+
     this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
   }
 
-  onChangeTotalSalesExceedOneCr(){
-    if(this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y'){
+  onChangeTotalSalesExceedOneCr() {
+    if (this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y') {
       this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
       this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
     } else {
@@ -3239,6 +3240,7 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
     this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
   }
+
 }
 
 function auditAplicableNotAllowedValidator(): ValidatorFn {
@@ -3246,7 +3248,7 @@ function auditAplicableNotAllowedValidator(): ValidatorFn {
     const value: string = control.value as string;
     if (value && value === 'N')
       return { auditAplicableNotAllowed: true };
-    else 
+    else
       return null;
   };
 }

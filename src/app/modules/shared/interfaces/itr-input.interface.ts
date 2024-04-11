@@ -517,6 +517,12 @@ export interface Disability {
 export interface Disabilities {
   typeOfDisability: string;
   amount: number;
+  form10IADate?: any;
+  form10IAAcknowledgement?: any;
+  udidNumber?: any;
+  typeOfDependent?: any;
+  dependentPan?: any;
+  dependentAadhar?: any;
 }
 export interface HouseProperties {
   propertyType: string;
@@ -698,7 +704,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
-  description?:any
+  description?: any
 }
 export interface Perquisites {
   perquisiteType: string;
@@ -850,6 +856,7 @@ export interface BankDetails {
   hasRefund: boolean;
   swiftcode: string;
   countryName: string;
+  accountType?: any;
 }
 
 // flags

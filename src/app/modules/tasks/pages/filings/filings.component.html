@@ -46,7 +46,17 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-6 ">
+                        <div class="col-sm-2">
+                          <label class="input__label" for="attr">Is-Everified</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                            <mat-select placeholder="" [formControl]="isEverified">
+                              <mat-option *ngFor="let item of isVerified" [value]="item.value">
+                                {{item.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-4 ">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
@@ -63,7 +73,8 @@
                     </div>
                     <!-- Table Sorting inside filter ends -->
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+                        Search
                       </button>
                       <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                         <i class="fa fa-download" aria-hidden="true"></i> Download File

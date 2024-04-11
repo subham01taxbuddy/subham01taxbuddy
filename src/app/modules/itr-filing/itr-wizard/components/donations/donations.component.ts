@@ -426,12 +426,22 @@ export class DonationsComponent implements OnInit {
     },
   ];
   config: any;
+  minDate: Date;
+  maxDate: Date;
 
   constructor(
     private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private userMsService: UserMsService
-  ) {}
+  ) {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
+  }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -454,6 +464,8 @@ export class DonationsComponent implements OnInit {
           this.addMoreDonations(item);
         }
         if (this.type === '80gga' && item.donationType === 'SCIENTIFIC') {
+          this.addMoreDonations(item);
+        } if (this.type === '80ggc' && item.donationType === 'POLITICAL') {
           this.addMoreDonations(item);
         }
       });
@@ -495,38 +507,19 @@ export class DonationsComponent implements OnInit {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : '', Validators.maxLength(25)],
-      donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
-      amountInCash: [
-        item ? item.amountInCash : 0,
-        this.type === '80gga'
-          ? [Validators.required]
-          : [Validators.required, Validators.max(2000)],
-      ],
-      amountOtherThanCash: [
-        item ? item.amountOtherThanCash : null,
-        Validators.required,
-      ],
-      schemeCode: [item ? item.schemeCode : '', Validators.required],
+      donationType: this.type === '80gga' ? 'SCIENTIFIC' : this.type === '80g' ? 'OTHER' : 'POLITICAL',
+      amountInCash: [item ? item.amountInCash : 0, this.type === '80ggc' ? [Validators.required] : [Validators.required, Validators.max(2000)],],
+      amountOtherThanCash: [item ? item.amountOtherThanCash : null, Validators.required,],
+      schemeCode: [item ? item.schemeCode : '', this.type != '80ggc' ? Validators.required : ''],
       details: [item ? item.details : ''],
-      name: [
-        item ? item.name : '',
-        [
-          Validators.required,
-          Validators.maxLength(25),
-          Validators.pattern(AppConstants.charAllSpecialRegex),
-        ],
-      ],
-      address: [item ? item.address : '', Validators.required],
-      city: [item ? item.city : '', Validators.required],
-      pinCode: [
-        item ? item.pinCode : '',
-        [Validators.required, Validators.pattern(AppConstants.PINCode)],
-      ],
-      state: [item ? item.state : '', Validators.required],
-      panNumber: [
-        item ? item.panNumber : '',
-        [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)],
-      ],
+      name: [item ? item.name : '', this.type != '80ggc' ? [Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex),] : '',],
+      address: [item ? item.address : '', this.type != '80ggc' ? Validators.required : ''],
+      city: [item ? item.city : '', this.type != '80ggc' ? Validators.required : ''],
+      pinCode: [item ? item.pinCode : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.PINCode)] : '',],
+      state: [item ? item.state : '', this.type != '80ggc' ? Validators.required : ''],
+      panNumber: [item ? item.panNumber : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)] : '',],
+      dateOfDonation: [item ? item.dateOfDonation : '',],
+      ifscBank: [item ? item.ifscBank : '', Validators.pattern(AppConstants.IFSCRegex)],
     });
   }
 
@@ -623,7 +616,16 @@ export class DonationsComponent implements OnInit {
       return false;
     }
     if (this.generalDonationForm.valid) {
-      if (this.type === '80gga') {
+      if (this.type === '80ggc') {
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
+          (item) => item.donationType !== 'POLITICAL'
+        );
+        if (this.generalDonationForm.value.donationArray?.length > 0) {
+          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
+            this.generalDonationForm.value.donationArray
+          );
+        }
+      } else if (this.type === '80gga') {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'SCIENTIFIC'
         );
@@ -642,10 +644,7 @@ export class DonationsComponent implements OnInit {
           );
         }
       }
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.Copy_ITR_JSON)
-      );
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
       this.loading = false;
       $('input.ng-invalid').first().focus();
@@ -715,16 +714,18 @@ export class DonationsComponent implements OnInit {
     this.changed();
   }
 
-  deleteDonationArray() {
+  deleteDonationArray(index) {
     const donationArray = <UntypedFormArray>(
       this.generalDonationForm.get('donationArray')
     );
-    donationArray.controls.forEach((element, index) => {
-      if ((element as UntypedFormGroup).controls['hasEdit'].value) {
-        donationArray.removeAt(index);
-        this.changed();
-      }
-    });
+    // donationArray.controls.forEach((element, index) => {
+    //   if ((element as UntypedFormGroup).controls['hasEdit'].value) {
+    //     donationArray.removeAt(index);
+    //     this.changed();
+    //   }
+    // });
+    donationArray.removeAt(index);
+    this.changed();
   }
 
   changed() {

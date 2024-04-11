@@ -29,7 +29,7 @@ export class PartnerManagementComponent implements OnInit {
   itrPlanList: any;
   lang=[];
   skillSetPlanIdList:any={}
-
+  isDisabled: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,

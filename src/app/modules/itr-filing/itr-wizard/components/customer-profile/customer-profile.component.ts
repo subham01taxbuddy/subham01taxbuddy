@@ -253,63 +253,17 @@ export class CustomerProfileComponent implements OnInit {
   charRegex = AppConstants.charRegex;
   createCustomerProfileForm() {
     return this.fb.group({
-      firstName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
-      middleName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
-      lastName: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.charRegex),
-        ]),
-      ],
-      fatherName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
+      firstName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
+      middleName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
+      lastName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex),]),],
+      fatherName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
       dateOfBirth: ['', Validators.required],
       gender: [''],
-      contactNumber: [
-        '',
-        Validators.compose([
-          Validators.minLength(10),
-          Validators.maxLength(10),
-          Validators.required,
-        ]),
-      ],
-      email: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.emailRegex),
-        ]),
-      ],
-      panNumber: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.panNumberRegex),
-        ]),
-      ],
-      aadharNumber: [
-        '',
-        Validators.compose([
-          Validators.minLength(12),
-          Validators.maxLength(12),
-        ]),
-      ],
-      aadhaarEnrolmentId: [
-        '',
-        Validators.compose([
-          Validators.minLength(14),
-          Validators.maxLength(14),
-        ]),
-      ],
+      contactNumber: ['', Validators.compose([Validators.minLength(10), Validators.maxLength(10), Validators.required,]),],
+      email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex),]),],
+      panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex),]),],
+      aadharNumber: ['', Validators.compose([Validators.minLength(12), Validators.maxLength(12),]),],
+      aadhaarEnrolmentId: ['', Validators.compose([Validators.minLength(14), Validators.maxLength(14),]),],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: ['', Validators.required],

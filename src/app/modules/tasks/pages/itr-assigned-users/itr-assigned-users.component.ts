@@ -666,6 +666,44 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
       },
       {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.paymentStatus) {
+            return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
+        headerName: 'AIS Password Status',
+        field: 'aisProvided',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.aisProvided) {
+            return 'Yes';
+          } else {
+            return 'No';
+          }
+        }
+      },
+      {
         headerName: 'ERI Client',
         field: 'eriClientValidUpto',
         width: 120,
@@ -877,14 +915,14 @@ export class ItrAssignedUsersComponent implements OnInit {
               'Plan Confirmed': { background: '#D3FBDA', color: '#43A352' },
               'Waiting for Confirmation': { background: '#D3FBDA', color: '#43A352' },
               'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
-              'Interested': { background: '#D3FBDA', color: '#43A352' }, 
+              'Interested': { background: '#D3FBDA', color: '#43A352' },
 
               'Backed Out': { background: '#DCDCDC', color: '#808080' },//gray
               'Not Interested': { background: '#DCDCDC', color: '#808080' },
               'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
               'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
               'ITR Filed - E Verification Completed': { background: '#DCDCDC;', color: '#808080' },
-              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' }, 
+              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
 
               // 'Payment Received': { background: '#D3FBDA', color: '#43A352' },
               // 'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
@@ -1099,6 +1137,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         ownerUserId: userData[i].ownerUserId,
         filerUserId: userData[i].filerUserId,
         leaderUserId: userData[i].leaderUserId,
+        paymentStatus: userData[i].paymentStatus,
+        aisProvided: userData[i].aisProvided,
       })
       userArray.push(userInfo);
     }

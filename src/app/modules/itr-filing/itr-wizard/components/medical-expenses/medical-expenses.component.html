@@ -1,145 +1,103 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="accordion" id="myAccordion">
   <form [formGroup]="investmentDeductionForm">
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading2">
         <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
-                data-bs-target="#collapse2">Deduction related to Medical expenses - 8OD</button>
+          data-bs-target="#collapse2">Deduction related to Medical expenses - 8OD</button>
 
       </h2>
       <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
         <div class="accordion__item-body">
           <div>
 
+            <div class="gray_container">
+              <div class="div-6">
+                <div class="form-field">
+                  <div><span class="span">Health Insurance for self/spouse/children </span>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <input matInput placeholder="Health insurance for self, spouse or children" maxlength="8"
+                      formControlName="selfPremium" autocomplete="off" digitsOnly />
+                    <mat-hint *ngIf="this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0">
+                      Note: You have claimed medical insurance
+                    </mat-hint>
+                  </mat-form-field>
+                </div>
+                <div class="form-field">
+                  <div><span class="span">Preventive Health Checkup</span></div>
+                  <mat-form-field appearance="outline">
+                    <input matInput placeholder="Preventive health Check-up" maxlength="8"
+                      formControlName="selfPreventiveCheckUp" autocomplete="off" digitsOnly
+                      (blur)="max5000Limit('SELF')" />
+                    <mat-error *ngIf="investmentDeductionForm.controls['selfPreventiveCheckUp'].hasError('max')">
+                      Max limit is 5k for both self and parents
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-field" *ngIf="userAge >= 60">
+                  <div><span class="span">Medical Expenditure for self, spouse or children</span></div>
+                  <mat-form-field appearance="outline">
+                    <input matInput placeholder="Medical Expenditure for self, spouse or children" maxlength="8"
+                      formControlName="selfMedicalExpenditure" autocomplete="off" digitsOnly />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="White_box">
+              <div class="row mb-10">
+                <div class="col-10 ">
+                  <p><span class="span">Does any of your parents exceeds age of 60? </span>
+                  </p>
+                </div>
+                <div class="col-2">
+                  <mat-radio-group class="radio_group" formControlName="hasParentOverSixty"
+                    (change)="isParentOverSixty()">
+                    <mat-radio-button type="radio" class="radio_input" [value]="true">Yes</mat-radio-button>
+                    <mat-radio-button type="radio" class="radio_input" [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
               <div class="gray_container">
                 <div class="div-6">
                   <div class="form-field">
-                    <div><span class="span">Health Insurance for self/spouse/children </span>
-                    </div>
+                    <div><span class="span">Health Insurance premium for parents </span></div>
                     <mat-form-field appearance="outline">
-                      <input
-                             matInput
-                             placeholder="Health insurance for self, spouse or children"
-                             maxlength="8"
-                             formControlName="selfPremium"
-                             autocomplete="off"
-                             digitsOnly
-                      />
-                      <mat-hint
-                              *ngIf="this.investmentDeductionForm.controls['selfMedicalExpenditure'].value > 0">
-                        Note: You have claimed medical insurance
-                      </mat-hint>
+                      <input matInput placeholder="Health insurance premium paid for parents" maxlength="8"
+                        formControlName="premium" autocomplete="off" digitsOnly />
                     </mat-form-field>
                   </div>
                   <div class="form-field">
                     <div><span class="span">Preventive Health Checkup</span></div>
                     <mat-form-field appearance="outline">
-                      <input
-                             matInput
-                             placeholder="Preventive health Check-up"
-                             maxlength="8"
-                             formControlName="selfPreventiveCheckUp"
-                             autocomplete="off"
-                             digitsOnly
-                             (blur)="max5000Limit('SELF')"
-                      />
-                      <mat-error
-                              *ngIf="investmentDeductionForm.controls['selfPreventiveCheckUp'].hasError('max')">
+                      <input matInput placeholder="Preventive Health Check-up" maxlength="8"
+                        formControlName="preventiveCheckUp" autocomplete="off" digitsOnly
+                        (blur)="max5000Limit('PARENTS')" />
+                      <mat-error *ngIf="investmentDeductionForm.controls['preventiveCheckUp'].hasError('max')">
                         Max limit is 5k for both self and parents
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="form-field" *ngIf="userAge >= 60">
-                    <div><span class="span">Medical Expenditure for self, spouse or children</span></div>
+                </div>
+              </div>
+              <div class="gray_container" *ngIf="investmentDeductionForm.controls['hasParentOverSixty'].value">
+                <div class="div-6">
+                  <div class="form-field">
+                    <div>
+                      <span class="span">Medical Expenditure for senior citizen</span>
+                    </div>
+                  </div>
+                  <div class="form-field">
                     <mat-form-field appearance="outline">
-                      <input
-                              matInput
-                              placeholder="Medical Expenditure for self, spouse or children"
-                              maxlength="8"
-                              formControlName="selfMedicalExpenditure"
-                              autocomplete="off"
-                              digitsOnly
-                      />
+                      <input matInput placeholder="Medical Expenditure for Senior Citizen" maxlength="8"
+                        formControlName="medicalExpenditure" autocomplete="off" digitsOnly />
                     </mat-form-field>
                   </div>
                 </div>
               </div>
-
-
-              <div class="White_box">
-                <div class="row mb-10">
-                  <div class="col-10 ">
-                    <p><span class="span">Does any of your parents exceeds age of 60? </span>
-                    </p>
-                  </div>
-                  <div class="col-2">
-                    <mat-radio-group class="radio_group" formControlName="hasParentOverSixty"
-                                     (change)="isParentOverSixty()">
-                      <mat-radio-button type="radio" class="radio_input" [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button type="radio" class="radio_input" [value]="false">No</mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-                </div>
-                <div class="gray_container">
-                  <div class="div-6">
-                    <div class="form-field">
-                      <div><span class="span">Health Insurance premium for parents </span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                matInput
-                                placeholder="Health insurance premium paid for parents"
-                                maxlength="8"
-                                formControlName="premium"
-                                autocomplete="off"
-                                digitsOnly
-                        />
-                      </mat-form-field>
-                    </div>
-                    <div class="form-field">
-                      <div><span class="span">Preventive Health Checkup</span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                matInput
-                                placeholder="Preventive Health Check-up"
-                                maxlength="8"
-                                formControlName="preventiveCheckUp"
-                                autocomplete="off"
-                                digitsOnly
-                                (blur)="max5000Limit('PARENTS')"
-                        />
-                        <mat-error
-                                *ngIf="investmentDeductionForm.controls['preventiveCheckUp'].hasError('max')">
-                          Max limit is 5k for both self and parents
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-                <div class="gray_container" *ngIf="investmentDeductionForm.controls['hasParentOverSixty'].value">
-                  <div class="div-6">
-                    <div class="form-field">
-                      <div>
-                        <span class="span">Medical Expenditure for senior citizen</span>
-                      </div>
-                    </div>
-                    <div class="form-field">
-                      <mat-form-field appearance="outline">
-                        <input
-                               matInput
-                               placeholder="Medical Expenditure for Senior Citizen"
-                               maxlength="8"
-                               formControlName="medicalExpenditure"
-                               autocomplete="off"
-                               digitsOnly
-                        />
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </div>
 
           </div>
         </div>
@@ -149,122 +107,239 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading3">
         <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
-                data-bs-target="#collapse3">Deduction related to Disability expenses -8OU/8ODD/8ODDB</button>
+          data-bs-target="#collapse3">Deduction related to Disability expenses -8OU/8ODD/8ODDB</button>
 
       </h2>
       <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
         <div class="accordion__item-body">
-          <h2 class="inner_accordion-title">
+          <h2 class="inner_accordion-title heading">
             Section 8OU - Self Disability
           </h2>
           <div class=" gray_container row">
-            <div class="col-9">
+            <!-- <div class="col-9">
               <div class="col-sm-6">
-                <mat-radio-group
-                        aria-label="Select an option"
-                        [(ngModel)]="selected80u"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="radioChange80u(true)"
-                >
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80u"
+                  [ngModelOptions]="{ standalone: true }" (change)="radioChange80u(true)">
                   <mat-radio-button value="">None</mat-radio-button><br /><br />
-                  <mat-radio-button value="SELF_WITH_DISABILITY"
-                  >Self with disability</mat-radio-button
-                  ><br /><br />
-                  <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY"
-                  >Self with severe disability
+                  <mat-radio-button value="SELF_WITH_DISABILITY">Self with disability</mat-radio-button><br /><br />
+                  <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY">Self with severe disability
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
             <div class="col-3 m-10">
               <mat-form-field appearance="outline">
-                <input
-                        matInput
-                        type="number"
-                        placeholder="{{ maxLimit80u }}"
-                        maxlength="8"
-                        formControlName="us80u"
-                        autocomplete="off"
-                        digitsOnly
-                        readonly
-                />
+                <input matInput type="number" placeholder="{{ maxLimit80u }}" maxlength="8" formControlName="us80u"
+                  autocomplete="off" digitsOnly readonly />
               </mat-form-field>
-            </div>
-          </div>
+            </div> -->
 
-          <h2 class="inner_accordion-title">
+            <!-- <div class="col-12"> -->
+            <!-- <div class="gray_box"> -->
+            <div class="col-12 row" style="gap: 20px 75px;">
+              <div class="col-3">
+                <div><span class="span">Nature of disability </span> </div>
+                <div class="form-control-wrapper">
+                  <mat-form-field appearance="outline" class="no-height small-inp">
+                    <mat-select placeholder="Nature of disability" [(ngModel)]="selected80u"
+                      [ngModelOptions]="{ standalone: true }" (selectionChange)="radioChange80u(true)"
+                      name="selected80u" required>
+                      <mat-option *ngFor="let dropdown of NatureOfDisability80E" [value]="dropdown.value"
+                        matTooltip="{{ dropdown.label }}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
+                        {{ dropdown.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Amount of deduction </span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="us80u" name="us80u" matInput placeholder="{{ maxLimit80u }}" required
+                    maxlength="8" digitsOnly readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Date of filing of from 10IA </span> <mat-icon class="info-icon"
+                    style="line-height: 2.2;" matTooltip="It is recommended to give 'Date of filing of Form 10IA' in schedule 80DD.
+                      However, if the form(certificate) is not readily available,
+                      return can be filed for the time being with the claims.
+                      Form 10IA can be filed later on followed by a revised return
+                      so that the claim of deduction can be considered by the department" matTooltipClass="tab-tooltip"
+                    #date="matTooltip" (click)="date.toggle()" matTooltipPosition="above">info</mat-icon></div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
+                    formControlName="form10IADate" name="form10IADate" readonly [matDatepicker]="form10IADate"
+                    placeholder="" />
+                  <mat-datepicker-toggle matSuffix [for]="form10IADate"></mat-datepicker-toggle>
+                  <mat-datepicker #form10IADate></mat-datepicker> <mat-error
+                    *ngIf="investmentDeductionForm.controls['form10IADate'].touched || investmentDeductionForm.controls['form10IADate'].dirty">
+                    Please select the valid date.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Acknowledgement Number</span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="form10IAAcknowledgement" name="form10IAAcknowledgement" matInput
+                    placeholder="" maxlength="16" digitsOnly />
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">UDID Number (If available) </span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="udidNumber" name="udidNumber" matInput placeholder="" maxlength="16"
+                    digitsOnly />
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- </div> -->
+            <!-- </div> -->
+          </div>
+          <h2 class="inner_accordion-title heading">
             Section 8ODD - Disabled dependent deduction
           </h2>
           <div class=" gray_container row">
-            <div class="col-9">
+            <!-- <div class="col-9">
               <div class="col-sm-6">
-                <mat-radio-group
-                    aria-label="Select an option"
-                    [(ngModel)]="selected80dd"
-                    [ngModelOptions]="{ standalone: true }"
-                    (change)="radioChange80dd(true)">
-              <mat-radio-button value="">None</mat-radio-button><br /><br />
-              <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY"
-              >Dependent person with disability </mat-radio-button
-              ><br /><br />
-              <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY"
-              >Dependent person with severe disability
-              </mat-radio-button>
-            </mat-radio-group>
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80dd"
+                  [ngModelOptions]="{ standalone: true }" (change)="radioChange80dd(true)">
+                  <mat-radio-button value="">None</mat-radio-button><br /><br />
+                  <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY">Dependent person with disability
+                  </mat-radio-button><br /><br />
+                  <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY">Dependent person with severe
+                    disability
+                  </mat-radio-button>
+                </mat-radio-group>
               </div>
             </div>
             <div class="col-3 m-10">
               <mat-form-field appearance="outline">
-                <input
-                        matInput
-                        type="number"
-                        placeholder="{{ maxLimit80dd }}"
-                        maxlength="8"
-                        formControlName="us80dd"
-                        autocomplete="off"
-                        digitsOnly
-                        readonly
-                />
+                <input matInput type="number" placeholder="{{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
+                  autocomplete="off" digitsOnly readonly />
 
               </mat-form-field>
+            </div> -->
+            <div class="col-12 row" style="gap: 20px 75px;">
+              <div class="col-3">
+                <div><span class="span">Nature of disability </span> </div>
+                <div class="form-control-wrapper">
+                  <mat-form-field appearance="outline" class="no-height small-inp">
+                    <mat-select placeholder="Nature of disability" [(ngModel)]="selected80dd"
+                      [ngModelOptions]="{ standalone: true }" (selectionChange)="radioChange80dd(true)"
+                      name="selected80dd" required>
+                      <mat-option *ngFor="let dropdown of NatureOfDisability80DD" [value]="dropdown.value"
+                        matTooltip="{{ dropdown.label }}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
+                        {{ dropdown.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Amount of deduction </span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="us80dd" name="us80dd" matInput placeholder="{{ maxLimit80dd }}" required
+                    maxlength="8" digitsOnly readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Date of filing of from 10IA </span> <mat-icon class="info-icon"
+                    style="line-height: 2.2;" matTooltip="It is recommended to give 'Date of filing of Form 10IA' in schedule 80DD.
+                      However, if the form(certificate) is not readily available,
+                      return can be filed for the time being with the claims.
+                      Form 10IA can be filed later on followed by a revised return
+                      so that the claim of deduction can be considered by the department" matTooltipClass="tab-tooltip"
+                    #date80dd="matTooltip" (click)="date80dd.toggle()" matTooltipPosition="above">info</mat-icon></div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
+                    formControlName="form10IADate80dd" name="form10IADate80dd" readonly
+                    [matDatepicker]="form10IADate80dd" placeholder="" />
+                  <mat-datepicker-toggle matSuffix [for]="form10IADate80dd"></mat-datepicker-toggle>
+                  <mat-datepicker #form10IADate80dd></mat-datepicker> <mat-error
+                    *ngIf="investmentDeductionForm.controls['form10IADate80dd'].touched || investmentDeductionForm.controls['form10IADate80dd'].dirty">
+                    Please select the valid date.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Type of dependent </span> </div>
+                <div class="form-control-wrapper">
+                  <mat-form-field appearance="outline" class="no-height small-inp">
+                    <mat-select placeholder="Type of Dependent" formControlName="typeOfDependent" name="selected80dd">
+                      <mat-option *ngFor="let dropdown of typeOfDependent" [value]="dropdown.value">
+                        {{ dropdown.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-3">
+                <div><span class="span">PAN of dependent</span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="dependentPan" upperCase name="dependentPan" matInput placeholder=""
+                    maxlength="10" (change)="setToUpperCase()" />
+                  <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentPan'].hasError('pattern')">
+                    Enter valid PAN (e.g XXXXX1234X)
+                  </mat-error>
+                  <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentPan'].hasError('required')">
+                    Enter PAN Number.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Aadhaar of the dependent</span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="dependentAadhar" name="dependentAadhar" matInput placeholder="" maxlength="16"
+                    digitsOnly />
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('required')">
+                    Enter aadhar number</mat-error>
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('maxlength')">
+                    Enter 12 digit aadhar number</mat-error>
+                  <mat-error class="ft12"
+                    *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('minlength')">
+                    Enter 12 digit aadhar number</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">Acknowledgement Number</span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="form10IAAcknowledgement80dd" name="form10IAAcknowledgement80dd" matInput
+                    placeholder="" maxlength="16" digitsOnly />
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <div><span class="span">UDID Number (If available) </span> </div>
+                <mat-form-field appearance="outline" class="no-height small-inp">
+                  <input formControlName="udidNumber80dd" name="udidNumber80dd" matInput placeholder="" maxlength="16"
+                    digitsOnly />
+                </mat-form-field>
+              </div>
             </div>
           </div>
-          <h2 class="inner_accordion-title">
+          <h2 class="inner_accordion-title heading">
             Section 8ODDB - deduction for treatment of specified diseas and alignments
           </h2>
           <div class=" gray_container row">
             <div class="col-9">
               <div class="col-sm-6">
-                <mat-radio-group
-                        aria-label="Select an option"
-                        [(ngModel)]="selected80ddb"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="radioChange80ddb(true)"
-                >
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80ddb"
+                  [ngModelOptions]="{ standalone: true }" (change)="radioChange80ddb(true)">
                   <mat-radio-button value="">None</mat-radio-button><br /><br />
-                  <mat-radio-button value="SELF_OR_DEPENDENT"
-                  >Self or dependent </mat-radio-button
-                  ><br /><br />
-                  <mat-radio-button value="SELF_OR_DEPENDENT_SENIOR_CITIZEN"
-                  >Self or dependent - Senior Citizen
+                  <mat-radio-button value="SELF_OR_DEPENDENT">Self or dependent </mat-radio-button><br /><br />
+                  <mat-radio-button value="SELF_OR_DEPENDENT_SENIOR_CITIZEN">Self or dependent - Senior Citizen
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
             <div class="col-3 m-10">
               <mat-form-field appearance="outline">
-                <input
-                        matInput
-                        type="number"
-                        placeholder=" {{ maxLimit80ddb > 0 ? 'Up to ' + maxLimit80ddb : '' }}"
-                        maxlength="8"
-                        formControlName="us80ddb"
-                        autocomplete="off"
-                        digitsOnly
-                />
+                <input matInput type="number" placeholder=" {{ maxLimit80ddb > 0 ? 'Up to ' + maxLimit80ddb : '' }}"
+                  maxlength="8" formControlName="us80ddb" autocomplete="off" digitsOnly />
                 <mat-hint>{{ maxLimit80ddb > 0 ? 'Up to ' + maxLimit80ddb : '' }}</mat-hint>
-                <mat-error
-                        *ngIf="investmentDeductionForm.controls['us80ddb'].hasError('max')">
+                <mat-error *ngIf="investmentDeductionForm.controls['us80ddb'].hasError('max')">
                   Max limit is {{ maxLimit80ddb }}
                 </mat-error>
               </mat-form-field>

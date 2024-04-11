@@ -60,6 +60,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
     { statusName: 'Follow-Up', statusId: '19' },
+    { statusName: 'Cancelled', statusId: '20' },
   ];
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];

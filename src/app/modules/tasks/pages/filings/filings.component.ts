@@ -79,11 +79,16 @@ export class FilingsComponent implements OnInit, OnDestroy {
   ];
   itrType = new UntypedFormControl('');
   returnType = new UntypedFormControl('');
+  isEverified = new UntypedFormControl('');
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
     { value: 'Updated', name: 'Updated' },
   ];
+  isVerified = [
+    { value: 'true', name: 'True' },
+    { value: 'false', name: 'False' },
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -345,7 +350,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
       if (this.utilsService.isNonEmpty(this.returnType.value)) {
         param = param + `&returnType=${this.returnType.value}`;
       }
-
+      if (this.utilsService.isNonEmpty(this.isEverified.value)) {
+        param = param + '&isEverified=' + this.isEverified.value;
+      }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
       this.reportService.getMethod(param).subscribe(
@@ -511,7 +518,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         leaderUserId: data[i].leaderUserId,
         filingSource: data[i].filingSource,
         itrSummaryJson: data[i].itrSummaryJson,
-        itru : data[i].itru,
+        itru: data[i].itru,
+        paymentStatus: data[i].paymentStatus,
       });
     }
     return newData;
@@ -625,7 +633,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params.data.isRevised === 'Y') {
             return 'Revised';
-          }else if(params.data.isRevised === 'N' && params.data.itru === true ){
+          } else if (params.data.isRevised === 'N' && params.data.itru === true) {
             return 'Updated'
           }
           return 'Original';
@@ -733,6 +741,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
+      },
+      {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        width: 150,
+        valueGetter: function (params) {
+          if (params?.data?.paymentStatus) {
+            return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Actions',
@@ -1454,6 +1476,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.cacheManager.clearCache();
     this.itrType.setValue(null);
     this.returnType.setValue(null);
+    this.isEverified.setValue(null);
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
     this.config.totalItems = 0;

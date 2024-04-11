@@ -233,12 +233,15 @@
             <div class="col-sm-6">
               <mat-label> No of additional Id's required </mat-label>
               <mat-form-field appearance="outline">
-                <input type="number" matInput placeholder="Additional ID" [formControl]="additionalIdsCount"
+                <input type="number" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
                   class="input-field" max="5" min="1" trim [numbersOnly]="true" />
                   <mat-error *ngIf="additionalIdsCount.hasError('required')">
                     Enter No of additional Id's required </mat-error>
                     <mat-error *ngIf="additionalIdsCount.value === 0 || additionalIdsCount.value > 5">
                       Number must be between 1 and 5 for additional IDs count .
+                    </mat-error>
+                    <mat-error *ngIf="additionalIdsCount.errors?.['totalCountExceeded']">
+                      The total count of additional IDs ({{ existingCount }} + {{ newCount }} = {{ existingCount + newCount }}) exceeds the limit of 5.
                     </mat-error>
               </mat-form-field>
             </div>
