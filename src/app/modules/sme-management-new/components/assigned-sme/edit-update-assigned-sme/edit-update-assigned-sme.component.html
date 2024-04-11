@@ -233,7 +233,7 @@
             <div class="col-sm-6">
               <mat-label> No of additional Id's required </mat-label>
               <mat-form-field appearance="outline">
-                <input type="number" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
+                <input type="number" [readonly]="isDisabled" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
                   class="input-field" max="5" min="1" trim [numbersOnly]="true" />
                   <mat-error *ngIf="additionalIdsCount.hasError('required')">
                     Enter No of additional Id's required </mat-error>
