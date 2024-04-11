@@ -24,7 +24,8 @@
                 <div class="message-container">
                     <div class="message-and-timestamp">
                         <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
-                        <div *ngIf="message.type === 'html'" [innerHTML]="getSanitizedHtml(message.content)"></div>
+                        <div *ngIf="message.type === 'html'" class="html" [innerHTML]="message.content"
+                         (loadeddata)="addMessageEvents(message)"></div>
                         <span *ngIf="message.sender !== 'system'" class="timestamp">{{
                             formatTimestamp(message.timestamp) }}</span>
                     </div>

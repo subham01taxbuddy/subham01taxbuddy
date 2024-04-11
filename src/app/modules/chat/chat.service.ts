@@ -111,7 +111,6 @@ export class ChatService {
 
               if (service) {
                 this.initChatVariables(chat21Result.data, result.data);
-                this.websocketConnection(chat21Result.data.token, chat21Result.data.userid, result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
 
                 // this.fetchMessages(result.data.requestId);
@@ -196,6 +195,8 @@ export class ChatService {
         });
       }
     });
+    let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
+    this.websocketConnection(TOKEN, CHAT21USERID, requestId);
   }
 
   conversationList(data: any) {
