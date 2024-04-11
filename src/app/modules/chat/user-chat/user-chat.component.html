@@ -7,7 +7,7 @@
         <div>
             <span class="file-type-option">ITR</span>
         </div>
-     </div>
+    </div>
 
     <div class="user-info">
         <img [src]="image" alt="user-image">
@@ -33,29 +33,30 @@
             </div>
         </ng-container>
 
-    </div>
+    
 
-    <!-- <div *ngIf="fileToUpload" class="file-upload-box">
+    <div *ngIf="fileToUpload" class="file-upload-box">
         <div class="file-details">
             <div class="file-icon">
                 <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
                 <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
             </div>
             <div class="file-name">{{ fileToUpload.name }}</div>
-        </div> -->
+        </div>
 
-    <!-- <div class="remove-file" (click)="removeFile()">
-          <span class="bi bi-x"></span>
-        </div> -->
-    <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
-     <button class="btn btn-primary" (click)="sendFile()">Send</button> -->
+        <div class="remove-file" (click)="removeFile()">
+            <span class="fa fa-times"></span>
+        </div>
+        <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
+     <button class="btn btn-primary" (click)="sendFile()">Send</button>  -->
 
-
+    </div>
+    </div>
     <div class="user-input">
         <label for="fileInput" class="fa fa-paperclip"></label>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
         <input type="text" placeholder="Type your message">
-         <button (Click)="sendMessage()">
+        <button (Click)="sendMessage()">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
     </div>

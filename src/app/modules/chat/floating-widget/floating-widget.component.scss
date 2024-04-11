@@ -163,6 +163,8 @@ input[type="text"] {
 .chat-snippet {
     color: #888;
     margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .user-time {
