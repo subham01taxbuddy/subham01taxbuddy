@@ -44,7 +44,7 @@
                     [disabled]="isSelectFileTypeAvailable()">
                     <mat-option> Clear Selection</mat-option>
                     <mat-option *ngFor="let doc of docType" [value]="doc.value"
-                        [disabled]="!(doc.tree === this.getSelectedItems().split('/')[0])">
+                    [disabled]="!(doc.tree === this.getSelectedItems().split('/')[0] || doc.newTree === this.getSelectedItems().split('/')[0])">
                         {{doc.label}}
                     </mat-option>
                 </mat-select>

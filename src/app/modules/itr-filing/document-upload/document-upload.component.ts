@@ -2922,17 +2922,17 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDoc: any;
   docType: any = [
-    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' },
+    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' ,newTree : 'ITRU' },
     { value: 'AADHAAR_FRONT', label: 'Aadhar front', tree: 'Common' },
     { value: 'AADHAAR_BACK', label: 'Aadhar back', tree: 'Common' },
     { value: 'PAN', label: 'Pan card', tree: 'Common' },
-    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR' },
-    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR' },
-    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR' },
-    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR' },
-    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' },
-    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' },
-    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' },
+    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' ,newTree : 'ITRU'},
+    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' ,newTree : 'ITRU'},
+    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' ,newTree : 'ITRU'},
     /* { value: null, label: 'Miscellaneous' } */];
   isPassProtected!: boolean;
   filePassword: any;
