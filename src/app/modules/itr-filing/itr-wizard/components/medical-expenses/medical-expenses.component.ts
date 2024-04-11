@@ -8,7 +8,6 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { values } from 'lodash';
 declare let $: any;
 
 @Component({
@@ -95,7 +94,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
 
     this.minDate = thisYearStartDate;
-    this.maxDate = nextYearEndDate;
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
