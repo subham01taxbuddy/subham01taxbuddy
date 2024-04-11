@@ -937,6 +937,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.location.back();
         }
       }, 500);
+    }else{
+      this.utilsService.showSnackBar('Please Enter Valid Calling Number');
+        return;
     }
   }
 

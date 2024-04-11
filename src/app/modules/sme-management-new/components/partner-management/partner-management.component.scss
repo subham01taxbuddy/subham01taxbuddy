@@ -122,3 +122,7 @@
     .countContainer{
       background-color: white;
     }
+
+    .user-data-container.disabled {
+      pointer-events: none;
+    }
