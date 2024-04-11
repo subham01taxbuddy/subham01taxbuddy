@@ -357,6 +357,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     }
 
     if(this.data.statusId !== 8){
+      this.loading = false;
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
     }
