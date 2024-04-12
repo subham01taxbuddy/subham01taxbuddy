@@ -220,7 +220,7 @@ export class ItrStatusDialogComponent implements OnInit {
     }
     if (response.data.itrRefundStatus.customAttributes) {
       this.refundProcessData = response?.data?.itrRefundStatus?.customAttributes?.itrLifecycle;
-      this.showRefundNote = this.refundProcessData.filter(element => element.statusDesc != 'Refund issued');
+      this.showRefundNote = this.refundProcessData?.filter(element => element.statusDesc != 'Refund issued');
     }
     const data = response.data;
     this.showSelectedSources(data.addIncomeSources);
