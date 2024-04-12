@@ -65,13 +65,13 @@ export class ChatService {
 
   }
 
-  initChatVariables(chat21Result, tiledeskResult) {
-    this.chat21UserID = chat21Result.userid;
+  initChatVariables(requestId) {
+    this.chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
     this.clientId = this.uuidv4();
     this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
     this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
-    this.chatRequestID = tiledeskResult.requestId;
-    this.userFullName = chat21Result.fullname;
+    this.chatRequestID = requestId;
+    this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
   }
   async initTokens(service?: string) {
     //curl --location 'https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token' \
@@ -103,18 +103,19 @@ export class ChatService {
             if (chat21Result.success) {
               this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
               this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+              this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.userid);
 
               // let chat21Token = {
               //   chat21token: chat21Result.data.token
               // };
               this.fetchConversationList(chat21Result.data.userid);
 
-              if (service) {
-                this.initChatVariables(chat21Result.data, result.data);
+              // if (service) {
+                this.initChatVariables(result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
 
                 // this.fetchMessages(result.data.requestId);
-              }
+              // }
             }
           });
         }
@@ -179,9 +180,7 @@ export class ChatService {
   }
 
   fetchMessages(requestId) {
-    let CHAT21USERID = this.localStorageService.getItem('CHAT21_USER_ID');
-    console.log('chat21',CHAT21USERID);
-    let url = `${this.CHAT_API_URL}/${CHAT21USERID}/conversations/${requestId}/messages?pageSize=30`;
+    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=30`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -196,7 +195,7 @@ export class ChatService {
       }
     });
     let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
-    this.websocketConnection(TOKEN, CHAT21USERID, requestId);
+    this.websocketConnection(TOKEN, requestId);
   }
 
   conversationList(data: any) {
@@ -276,7 +275,10 @@ export class ChatService {
   callbackHandlers = new Map();
 
   chatSubscription = null;
-  websocketConnection(chat21Token, userId, requestId) {
+  websocketConnection(chat21Token, requestId) {
+
+    this.initChatVariables(requestId);
+    // this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
 
     let options = {
       keepalive: 60,
@@ -310,18 +312,27 @@ export class ChatService {
         }
         if (!this.connected) {
           if (this.log) {
-            console.log("Chat client first connection for:" + userId);
+            console.log("Chat client first connection for:" + this.chat21UserID);
           }
           this.connected = true;
 
+          this.chatClient.publish(
+              this.presenceTopic,
+              JSON.stringify({ connected: true }),
+              null, (err) => {
+                if (err) {
+                  console.error("Error con presence publish:", err);
+                }
+              }
+          );
 
           if (this.log) {
-            console.log("subscribing to:", userId, "topic", this.topicInbox);
+            console.log("subscribing to:", this.chat21UserID, "topic", this.topicInbox);
           }
           if (!this.chatSubscription) {
             this.chatSubscription = this.chatClient.subscribe(this.topicInbox, (err) => {
               if (err) {
-                console.error("An error occurred while subscribing user", userId, "on topic:", this.topicInbox, "Error:", err);
+                console.error("An error occurred while subscribing user", this.chat21UserID, "on topic:", this.topicInbox, "Error:", err);
               }
               if (this.log) {
                 console.log("subscribed to:", this.topicInbox, " with err", err);
