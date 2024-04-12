@@ -313,6 +313,15 @@ export class ChatService {
             console.log("Chat client first connection for:" + userId);
           }
           this.connected = true;
+          this.chatClient.publish(
+            this.presenceTopic,
+            JSON.stringify({ connected: true }),
+            null, (err) => {
+              if (err) {
+                console.error("Error con presence publish:", err);
+              }
+            }
+          );
 
 
           if (this.log) {

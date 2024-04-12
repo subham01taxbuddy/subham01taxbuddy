@@ -26,6 +26,11 @@ export class FloatingWidgetComponent implements OnInit {
     conversationList: any[] = []
     departmentNames: string[] = [];
     isUserChatVisible: boolean = false;
+    fullChatScreen: boolean = false;
+
+    showFullScreen(){
+        this.fullChatScreen = !this.fullChatScreen;
+    }
 
     openUserChat(user: any) {
         this.selectedUser = user;
