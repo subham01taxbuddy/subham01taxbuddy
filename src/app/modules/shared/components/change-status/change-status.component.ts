@@ -28,7 +28,7 @@ export class ChangeStatusComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
     if((this.data.serviceType === 'ITRU' || this.data.serviceType === 'ITR') && this.data.userInfo?.statusId === 14 ){
       this.hideUndoButton =true;
     }else{
@@ -90,7 +90,12 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          this.itrStatus = response;
+          let loggedInRole = this.utilsService.getUserRoles();
+          if(loggedInRole.includes('ROLE_FILER')){
+            this.itrStatus = response.filter((item: any) => item.statusId !== 8);
+          }else{
+            this.itrStatus = response;
+          }
         } else {
           this.itrStatus = [];
         }
