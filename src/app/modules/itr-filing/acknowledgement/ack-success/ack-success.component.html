@@ -13,7 +13,7 @@
     <li>Assessment Year: {{ITR_JSON.assessmentYear}}</li>
     <li>Financial Year: {{ITR_JSON.financialYear}}</li>
     <li>ITR Form Type: {{ITR_JSON.itrType}}</li>
-    <li>Return Type: {{ITR_JSON.isRevised ? 'Revised' : 'Original' }}</li>
+    <li>Return Type: {{ITR_JSON.isRevised === 'Y' ? 'Revised' : 'Original' }}</li>
     <li>PAN: {{ITR_JSON.panNumber}}</li>
     <li>Acknowledgement No: {{data.acknowledgementNo}}</li>
   </ul>

@@ -32,7 +32,8 @@
               </div>
             </div>
             <!-- Mobile -->
-            <div class="txBt">
+            <div class="txBt"
+              *ngIf="this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')">
               <div>
                 <span class="txLf">Mobile Number:</span><span class="txMuLf">{{
                   finalCalculations?.personalInfo?.mobileNumber
@@ -5821,8 +5822,8 @@
                               <td>
                                 <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;-{{
                                 utilsService.currencyFormatter(
-                                        finalCalculations?.totalTax
-                                                ?.marginalRelief
+                                finalCalculations?.totalTax
+                                ?.marginalRelief
                                 )
                                 }}
                               </td>

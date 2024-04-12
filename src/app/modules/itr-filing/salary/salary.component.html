@@ -271,13 +271,13 @@
                                 under 17(1), 17(2) and 17(3)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === 'US_10_14II' && presPersonalExpError">
+                                *ngIf="income.value.allowType === 'US_10_14II' && (presPersonalExpError || getAllowanceArray.controls[i].get('allowValue').hasError('max'))">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === 'US_10_14I' && presProfExpError">
+                                *ngIf="income.value.allowType === 'US_10_14I' && (presProfExpError || getAllowanceArray.controls[i].get('allowValue').hasError('max'))">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)

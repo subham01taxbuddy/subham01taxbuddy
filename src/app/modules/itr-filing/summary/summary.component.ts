@@ -864,6 +864,7 @@ export class SummaryComponent implements OnInit {
   business44adDetails: any = [];
   countryCodeList: any;
   dialogRef: any;
+  loggedInUserRoles: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -894,6 +895,7 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.natureOfBusiness = JSON.parse(
       sessionStorage.getItem('NATURE_OF_BUSINESS')
     );
@@ -7037,12 +7039,7 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-            if(!this.checkIfEligibleToFileItr(this.ITR_JSON.userId, this.ITR_JSON.assessmentYear)){
-              this.utilsService.showSnackBar(
-                'You can only update the ITR file record when your status is "ITR confirmation received"'
-              );
-              return;
-            }
+           this.checkIfEligibleToFileItr(this.ITR_JSON.userId, this.ITR_JSON.assessmentYear);
 
             if (confirm('Are you sure you want to file the ITR?')) {
               this.fileITR();
@@ -7070,9 +7067,14 @@ export class SummaryComponent implements OnInit {
   checkIfEligibleToFileItr(userId:number, assessmentYear:string){
     let param = '/eligible-to-file-itr?userId='+userId+'&&assessmentYear='+assessmentYear;
     this.itrMsService.getMethod(param).subscribe(
-      (response: any) => response.success && response?.data?.eligibleToFileItr
-    );
-    return false;
+      (response: any) => {
+        if(!(response.success && response?.data?.eligibleToFileItr)){
+          this.utilsService.showSnackBar(
+            'You can only update the ITR file record when your status is "ITR confirmation received"'
+          );
+          return;
+        }
+      });
   }
 
   fileITR() {
