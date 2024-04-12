@@ -128,6 +128,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.updatePrincipleName()
     this.getAllPlanInfo();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.agentId = this.utilsService.getLoggedInUserID()
@@ -665,6 +666,11 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
 
+  }
+  updatePrincipleName(){
+    this.utilsService.getFilersList();
+    this.smeListGridOptions.api.setColumnDefs(
+      this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
   }
 
   smeCreateColumnDef(allFilerList, itrPlanList) {

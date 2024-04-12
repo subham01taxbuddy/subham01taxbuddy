@@ -220,7 +220,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if (this.rowData.itrObjectStatus === 'CREATE') {
+        if (this.rowData.openItrId === 0) {
           this.loading = true;
           let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
             this.loading = false;

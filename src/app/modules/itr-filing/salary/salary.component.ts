@@ -285,10 +285,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         });
       }
     });
-    if (this.ITR_JSON.regime === 'NEW') {
-      this.deductionsFormGroup.controls['professionalTax'].setValue(null);
-      this.deductionsFormGroup.controls['professionalTax'].disable();
-    }
+    // if (this.ITR_JSON.regime === 'NEW') {
+    //   this.deductionsFormGroup.controls['professionalTax'].setValue(null);
+    //   this.deductionsFormGroup.controls['professionalTax'].disable();
+    // }
     if (
       this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
       this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT'
@@ -934,6 +934,38 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           }
         }
 
+        // US_10_14II
+        {
+          const ten14II = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'US_10_14II';
+          });
+          const CONVEYANCE = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'CONVEYANCE')[0]?.taxableAmount);
+          const OTHER_ALLOWANCE = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'OTHER_ALLOWANCE')[0]?.taxableAmount);
+          const OTHER = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'OTHER')[0]?.taxableAmount);
+          let lowerOf = Number(CONVEYANCE ? CONVEYANCE : 0) + Number(OTHER_ALLOWANCE ? OTHER_ALLOWANCE : 0) + Number(OTHER ? OTHER : 0);
+          this.setValidator('US_10_14II', Validators.max(lowerOf));
+
+          if (ten14II?.get('allowValue')?.errors && ten14II?.get('allowValue')?.errors?.hasOwnProperty('max')) {
+          } else {
+            this.removeValidator('US_10_14II', Validators.max(lowerOf));
+          }
+        }
+        //US_10_14I
+        {
+          const ten14I = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'US_10_14I';
+          });
+          const CONVEYANCE = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'CONVEYANCE')[0]?.taxableAmount);
+          const OTHER_ALLOWANCE = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'OTHER_ALLOWANCE')[0]?.taxableAmount);
+          const OTHER = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'OTHER')[0]?.taxableAmount);
+          let lowerOf = Number(CONVEYANCE ? CONVEYANCE : 0) + Number(OTHER_ALLOWANCE ? OTHER_ALLOWANCE : 0) + Number(OTHER ? OTHER : 0);
+          this.setValidator('US_10_14I', Validators.max(lowerOf));
+
+          if (ten14I?.get('allowValue')?.errors && ten14I?.get('allowValue')?.errors?.hasOwnProperty('max')) {
+          } else {
+            this.removeValidator('US_10_14I', Validators.max(lowerOf));
+          }
+        }
         // Leave travel allowances
         {
           const ltaControl = allowance?.controls?.find((element) => {
@@ -1915,10 +1947,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           this.deductionsFormGroup.controls['professionalTax'].setValue(
             this.localEmployer.deductions[i].exemptAmount
           );
-          if (this.ITR_JSON.regime === 'NEW') {
-            this.deductionsFormGroup.controls['professionalTax'].setValue(null);
-            this.deductionsFormGroup.controls['professionalTax'].disable();
-          }
+          // if (this.ITR_JSON.regime === 'NEW') {
+          //   this.deductionsFormGroup.controls['professionalTax'].setValue(null);
+          //   this.deductionsFormGroup.controls['professionalTax'].disable();
+          // }
         }
       }
     }

@@ -162,7 +162,7 @@
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo">Gross Salary
                         <input type="number" class="form-control inpClr2" [value]="totalGrossSalary" readonly></button>
-                    
+
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
 
@@ -271,13 +271,13 @@
                                 under 17(1), 17(2) and 17(3)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === '10(14)(ii)' && presPersonalExpError">
+                                *ngIf="income.value.allowType === 'US_10_14II' && (presPersonalExpError || getAllowanceArray.controls[i].get('allowValue').hasError('max'))">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)
                               </mat-error>
                               <mat-error style="width: 70%"
-                                *ngIf="income.value.allowType === '10(14)(i)' && presProfExpError">
+                                *ngIf="income.value.allowType === 'US_10_14I' && (presProfExpError || getAllowanceArray.controls[i].get('allowValue').hasError('max'))">
                                 Deduction cannot be more than the value of Salary under
                                 Conveyance Allowance, Other Allowance & Others in Section
                                 17(1)
