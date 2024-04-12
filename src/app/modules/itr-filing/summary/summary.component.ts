@@ -864,6 +864,7 @@ export class SummaryComponent implements OnInit {
   business44adDetails: any = [];
   countryCodeList: any;
   dialogRef: any;
+  loggedInUserRoles: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -894,6 +895,7 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.natureOfBusiness = JSON.parse(
       sessionStorage.getItem('NATURE_OF_BUSINESS')
     );
