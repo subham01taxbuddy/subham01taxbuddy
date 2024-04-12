@@ -128,7 +128,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.updatePrincipleName()
     this.getAllPlanInfo();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.agentId = this.utilsService.getLoggedInUserID()
@@ -141,6 +140,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
+    this.updatePrincipleName()
   }
 
   formatToolTip(params: any) {
