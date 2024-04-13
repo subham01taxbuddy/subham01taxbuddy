@@ -16,7 +16,7 @@ export class CalculatorModalComponent implements OnInit {
   ngOnInit() {
     console.log('data from cal',this.data)
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.url);
-    window.addEventListener('message', this.receiveMessage, false);
+    window.addEventListener('message', this.receiveMessage.bind(this), false);
   }
 
   ngOnDestroy() {
@@ -25,7 +25,10 @@ export class CalculatorModalComponent implements OnInit {
 
   receiveMessage(event: MessageEvent) {
     console.log('Data received from iframe:', event.data);
-    this.dialogRef.close(event.data);
+    // this.dialogRef.close(event.data);
+    if (event.data.action === 'CopiedValue') {
+      this.dialogRef.close(event.data.hraValue);
+    }
   }
 
 }

@@ -353,6 +353,13 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     dialogRef.afterClosed().subscribe(copiedHRAValue => {
       if (copiedHRAValue) {
        console.log('HRA value ',copiedHRAValue);
+       const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+      if (selectedSalaryItem) {
+        selectedSalaryItem.get('taxableAmount').setValue(copiedHRAValue);
+      } else {
+        console.error('Salary item not found for selectedOption:', selectedOption);
+      }
       }
     });
   }
