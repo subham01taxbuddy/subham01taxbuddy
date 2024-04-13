@@ -47,7 +47,7 @@
                       Another</button>
                   </div>
                   <div class="deleteBtn">
-                    <button type="button" (click)="calculate()"> <i class="fas fa-calculator"></i></button>
+                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i class="fas fa-calculator"></i></button>
                   </div>
                 </div>
                 <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
