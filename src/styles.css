@@ -12894,3 +12894,19 @@ body[dir=rtl] .checkbox[checked=true] {
     }
   }
 }
+
+.customToggle .mdc-switch:enabled .mdc-switch__track::before {
+  background: #e0e0e0 !important;
+}
+
+.customToggle .mdc-switch:enabled .mdc-switch__track::after {
+  background: #f06292 !important;
+}
+
+.customToggle .mdc-switch .mdc-switch__handle::before {
+  background: #fff !important;
+}
+
+.customToggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
+  background: #d81b60 !important;
+}
