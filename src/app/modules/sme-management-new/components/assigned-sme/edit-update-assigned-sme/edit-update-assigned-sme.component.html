@@ -263,13 +263,14 @@
               </span>
               <div class="row">
                 <section class="example-section" [formGroup]="services">
-                  <p><mat-checkbox [formControl]="itr"
+                  <div><mat-checkbox [formControl]="itr"
                       [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
-                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
+                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox>
+                      <mat-slide-toggle class="customToggle"
                       *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
-                  </p>
+                  </div>
                   <hr>
 
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"

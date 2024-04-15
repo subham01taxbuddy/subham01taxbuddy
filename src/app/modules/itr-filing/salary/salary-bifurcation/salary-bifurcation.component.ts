@@ -326,12 +326,40 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     this.formValuesChanged();
   }
 
-  calculate() {
+  calculate(selectedOption: string) {
+    let queryParam
+    if(selectedOption === "HOUSE_RENT"){
+      queryParam ='hra'
+    }else if(selectedOption ==="PENSION"){
+      queryParam ='pension'
+    }else if(selectedOption ==="COMMUTED_PENSION"){
+      queryParam ='pension'
+    }else if(selectedOption === "GRATUITY"){
+      queryParam ='gratuity'
+    }else if(selectedOption === "LEAVE_ENCASHMENT"){
+      queryParam ='leaveencashment'
+    }else{
+       return this.utilsService.showSnackBar(`Invalid option selected,No Calculator Available for ${selectedOption} `);
+    }
     const dialogRef = this.dialog.open(CalculatorModalComponent, {
       width: '80%',
       height: '80%',
       data: {
-        url: 'https://www.taxbuddy.com/allcalculators/pension?inUtility=true&embedded=true'
+        selectedOption: selectedOption,
+        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(copiedHRAValue => {
+      if (copiedHRAValue) {
+       console.log('HRA value ',copiedHRAValue);
+       const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+      if (selectedSalaryItem) {
+        selectedSalaryItem.get('taxableAmount').setValue(copiedHRAValue);
+      } else {
+        console.error('Salary item not found for selectedOption:', selectedOption);
+      }
       }
     });
   }
