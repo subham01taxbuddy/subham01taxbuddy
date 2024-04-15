@@ -7,7 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import {GridApi, GridOptions, GridReadyEvent, RowNode, ValueSetterParams} from 'ag-grid-community';
+import { GridApi, GridOptions, GridReadyEvent, RowNode, ValueSetterParams } from 'ag-grid-community';
 import {
   ITR_JSON,
   OnSalary,
@@ -117,7 +117,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       isRowSelectable: (params) => {
         return !params.data.isFullWidth;
       },
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
       isFullWidthRow: (params) => {
         // return isFullWidth(params.rowNode.data);
         return params.rowNode.data.isFullWidth;
@@ -141,7 +141,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.allTdsDetails.api?.setRowData(this.assetList);
   }
 
-  initGridOptions(type, gridApi){
+  initGridOptions(type, gridApi) {
     return <GridOptions>{
       rowData: this.tdsDetailCreateRowData(type),
       columnDefs: this.tdsDetailCreateColumnDef(type),
@@ -218,14 +218,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       if (result !== undefined) {
         if (result.type === this.TDS_TYPE_CODE) {
           this.tdsMode = 'VIEW';
-          if(!this.taxPaid?.onSalary){
+          if (!this.taxPaid?.onSalary) {
             this.taxPaid.onSalary = [];
           }
           this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
           this.updateDataTables(this.TDS_TYPE_CODE);
         }
         if (result.type === this.TDS_OTHER_TYPE_CODE) {
-          if(!this.taxPaid?.otherThanSalary16A){
+          if (!this.taxPaid?.otherThanSalary16A) {
             this.taxPaid.otherThanSalary16A = [];
           }
           this.taxPaid?.otherThanSalary16A?.push(
@@ -234,7 +234,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           this.updateDataTables(this.TDS_OTHER_TYPE_CODE);
         }
         if (result.type === this.TDS_PAN_TYPE_CODE) {
-          if(!this.taxPaid?.otherThanSalary26QB){
+          if (!this.taxPaid?.otherThanSalary26QB) {
             this.taxPaid.otherThanSalary26QB = [];
           }
           this.taxPaid?.otherThanSalary26QB?.push(
@@ -243,14 +243,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           this.updateDataTables(this.TDS_PAN_TYPE_CODE);
         }
         if (result.type === this.TCS_TYPE_CODE) {
-          if(!this.taxPaid?.tcs){
+          if (!this.taxPaid?.tcs) {
             this.taxPaid.tcs = [];
           }
           this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
           this.updateDataTables(this.TCS_TYPE_CODE);
         }
         if (result.type === this.ADVANCE_TYPE_CODE) {
-          if(!this.taxPaid?.otherThanTDSTCS){
+          if (!this.taxPaid?.otherThanTDSTCS) {
             this.taxPaid.otherThanTDSTCS = [];
           }
           this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
@@ -262,11 +262,11 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     // this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
   }
 
-  updateDataTables(type){
+  updateDataTables(type) {
     this.Copy_ITR_JSON.taxPaid = this.taxPaid;
     sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.Copy_ITR_JSON)
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.Copy_ITR_JSON)
     );
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(type));
   }
@@ -281,7 +281,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     let counter = 0;
     this.totalEntries = 0;
     this.assetList = [];
-    if(type === this.TDS_TYPE_CODE) {
+    if (type === this.TDS_TYPE_CODE) {
       this.taxPaid?.onSalary?.forEach((asset) => {
         let copy: any = {};
         Object.assign(copy, asset);
@@ -298,7 +298,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
     }
 
-    if(type === this.TDS_OTHER_TYPE_CODE) {
+    if (type === this.TDS_OTHER_TYPE_CODE) {
       counter = 0;
       this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
         let copy: any = {};
@@ -314,7 +314,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.totalEntries += counter;
     }
 
-    if(type === this.TDS_PAN_TYPE_CODE) {
+    if (type === this.TDS_PAN_TYPE_CODE) {
       counter = 0;
       this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
         let copy: any = {};
@@ -336,7 +336,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.totalEntries += counter;
     }
 
-    if(type === this.ADVANCE_TYPE_CODE){
+    if (type === this.ADVANCE_TYPE_CODE) {
       counter = 0;
       this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
         let copy: any = {};
@@ -347,8 +347,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         copy.deductorName = copy.bsrCode;
         copy.deductorTAN = copy.challanNumber;
         copy.totalAmountCredited = this.datePipe.transform(
-            new Date(copy.dateOfDeposit),
-            'dd/MM/yyyy'
+          new Date(copy.dateOfDeposit),
+          'dd/MM/yyyy'
         );
         copy.totalTdsDeposited = copy.totalTax;
 
@@ -366,7 +366,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.totalEntries += counter;
     }
 
-    if(type === this.TCS_TYPE_CODE){
+    if (type === this.TCS_TYPE_CODE) {
       counter = 0;
       this.taxPaid?.tcs?.forEach((asset) => {
         let copy: any = {};
@@ -397,39 +397,39 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   salaryColNames = {
-    'deductorTAN' : 'TAN of the Employer',
-    'deductorName' : 'Name of the Employer',
-    'totalAmountCredited' : 'Income chargeable under salaries',
-    'totalTdsDeposited' : 'Total tax deducted'
+    'deductorTAN': 'TAN of the Employer',
+    'deductorName': 'Name of the Employer',
+    'totalAmountCredited': 'Income chargeable under salaries',
+    'totalTdsDeposited': 'Total tax deducted'
   }
   otherColNames = {
-    'deductorTAN' : 'TAN of Deductor',
-    'deductorName' : 'Name of Deductor',
-    'totalAmountCredited' : 'Total Amount credited',
-    'totalTdsDeposited' : 'Total tax deducted'
+    'deductorTAN': 'TAN of Deductor',
+    'deductorName': 'Name of Deductor',
+    'totalAmountCredited': 'Total Amount credited',
+    'totalTdsDeposited': 'Total tax deducted'
   }
 
   tcsColNames = {
-    'deductorTAN' : 'TAN of Collector',
-    'deductorName' : 'Name of Collector',
-    'totalAmountCredited' : 'Total Amount credited',
-    'totalTdsDeposited' : 'Total TCS deposited'
+    'deductorTAN': 'TAN of Collector',
+    'deductorName': 'Name of Collector',
+    'totalAmountCredited': 'Total Amount credited',
+    'totalTdsDeposited': 'Total TCS deposited'
   }
   advanceColNames = {
-    'deductorTAN' : 'Serial No of Challan',
-    'deductorName' : 'BSR Code',
-    'totalAmountCredited' : 'Date of Deposit',
-    'totalTdsDeposited' : 'Total Tax Paid'
+    'deductorTAN': 'Serial No of Challan',
+    'deductorName': 'BSR Code',
+    'totalAmountCredited': 'Date of Deposit',
+    'totalTdsDeposited': 'Total Tax Paid'
   }
 
-  getColumnName(type, column){
-    if(type === this.TDS_TYPE_CODE){
+  getColumnName(type, column) {
+    if (type === this.TDS_TYPE_CODE) {
       return this.salaryColNames[column];
     }
-    if(type === this.TCS_TYPE_CODE){
+    if (type === this.TCS_TYPE_CODE) {
       return this.tcsColNames[column];
     }
-    if(type === this.ADVANCE_TYPE_CODE){
+    if (type === this.ADVANCE_TYPE_CODE) {
       return this.advanceColNames[column];
     }
     return this.otherColNames[column];
@@ -484,7 +484,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
         hide: !(type === self.TDS_OTHER_TYPE_CODE || type === self.TDS_PAN_TYPE_CODE),
         valueGetter: function nameFromCode(params) {
-          if(type === self.TDS_OTHER_TYPE_CODE){
+          if (type === self.TDS_OTHER_TYPE_CODE) {
             return self.headOfIncomeDropdownTDS2.filter(element => element.code === params.data.headOfIncome)[0]?.name;
           } else {
             return self.headOfIncomeDropdownTDS3.filter(element => element.code === params.data.headOfIncome)[0]?.name;
@@ -534,8 +534,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     ];
   }
 
-  getIncomeHead(type, headOfIncome){
-    if(type === this.TDS_OTHER_TYPE_CODE){
+  getIncomeHead(type, headOfIncome) {
+    if (type === this.TDS_OTHER_TYPE_CODE) {
       return this.headOfIncomeDropdownTDS2.filter(element => element.code === headOfIncome)[0].name;
     } else {
       return this.headOfIncomeDropdownTDS3.filter(element => element.code === headOfIncome)[0].name;
@@ -548,7 +548,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       switch (actionType) {
         case 'remove': {
           console.log('DATA FOR DELETE Asset:', params.data);
-          this.deleteAsset(params.data, params.api, params.node);
+          this.deleteAsset(params.data);
           break;
         }
         case 'edit': {
@@ -563,33 +563,29 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
 
-  deleteAsset(data, gridapi:GridApi, rowNode:RowNode) {
-
-    // need to refresh grid
-    // gridapi?.removeItems([rowNode]);
-    if(data.tdsCode === this.TDS_TYPE_CODE){
+  deleteAsset(data) {
+    if (data.tdsCode === this.TDS_TYPE_CODE) {
       this.taxPaid?.onSalary?.splice(data.index, 1);
-    } else if(data.tdsCode === this.TDS_OTHER_TYPE_CODE){
+      this.onSalaryGridOptions.api?.setRowData(this.taxPaid?.onSalary);
+    } else if (data.tdsCode === this.TDS_OTHER_TYPE_CODE) {
       this.taxPaid?.otherThanSalary16A.splice(data.index, 1);
-    } else if(data.tdsCode === this.TDS_PAN_TYPE_CODE){
+      this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary16A);
+    } else if (data.tdsCode === this.TDS_PAN_TYPE_CODE) {
       this.taxPaid?.otherThanSalary26QB.splice(data.index, 1);
-    } else if(data.tdsCode === this.TCS_TYPE_CODE){
+      this.tdsOtherThanSalary26QBGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary26QB);
+    } else if (data.tdsCode === this.TCS_TYPE_CODE) {
       this.taxPaid?.tcs.splice(data.index, 1);
-    } else if(data.tdsCode === this.ADVANCE_TYPE_CODE){
+      this.tcsGridOptions.api?.setRowData(this.taxPaid?.tcs);
+    } else if (data.tdsCode === this.ADVANCE_TYPE_CODE) {
       this.taxPaid?.otherThanTDSTCS?.splice(data.index);
+      this.otherThanTdsTcsGridOptions.api?.setRowData(this.taxPaid?.otherThanTDSTCS);
     }
-
-    console.log(this.taxPaid);
     this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-    // sessionStorage.setItem(
-    //     AppConstants.ITR_JSON,
-    //     JSON.stringify(this.Copy_ITR_JSON)
-    // );
   }
 
   saveAll(save?) {
-    if(save && save.type === this.TDS_TYPE_CODE){
-      if(!save.saved){
+    if (save && save.type === this.TDS_TYPE_CODE) {
+      if (!save.saved) {
         this.tdsMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
@@ -604,11 +600,11 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       }
 
     }
-    if(save && (save.type === this.TDS_OTHER_TYPE_CODE || save.type === this.TDS_PAN_TYPE_CODE)){
-      if(!save.saved){
+    if (save && (save.type === this.TDS_OTHER_TYPE_CODE || save.type === this.TDS_PAN_TYPE_CODE)) {
+      if (!save.saved) {
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
-        if(save.type === this.TDS_OTHER_TYPE_CODE){
+        if (save.type === this.TDS_OTHER_TYPE_CODE) {
           this.tdsOtherMode = 'VIEW';
           this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
         } else {
@@ -620,7 +616,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       } else {
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
-        if(save.type === this.TDS_OTHER_TYPE_CODE){
+        if (save.type === this.TDS_OTHER_TYPE_CODE) {
           this.tdsOtherMode = 'VIEW';
           this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
         } else {
@@ -630,8 +626,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    if(save && save.type === this.TCS_TYPE_CODE){
-      if(!save.saved){
+    if (save && save.type === this.TCS_TYPE_CODE) {
+      if (!save.saved) {
         this.tcsMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
@@ -646,8 +642,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    if(save && save.type === this.ADVANCE_TYPE_CODE){
-      if(!save.saved){
+    if (save && save.type === this.ADVANCE_TYPE_CODE) {
+      if (!save.saved) {
         this.advanceMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
@@ -674,7 +670,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Tds updated successfully.');
-        if(!save) {
+        if (!save) {
           this.saveAndNext.emit(false);
         }
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
