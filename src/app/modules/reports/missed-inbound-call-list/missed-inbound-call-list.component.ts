@@ -299,6 +299,8 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       {
         headerName: 'Call',
         editable: false,
+        width: 80,
+        pinned: 'left',
         suppressMenu: true,
         cellStyle: { textAlign: 'center' },
         sortable: true,
@@ -309,8 +311,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
               <i class="fa-solid fa-phone" data-action-type="place-call"></i>
              </button>`;
         },
-        width: 70,
-        pinned: 'left',
       },
 
     ]
