@@ -25,32 +25,32 @@
                     <div class="message-and-timestamp">
                         <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
                         <div *ngIf="message.type === 'html'" class="html" [innerHTML]="message.content"
-                         (loadeddata)="addMessageEvents(message)"></div>
+                            (loadeddata)="addMessageEvents(message)"></div>
                         <span *ngIf="message.sender !== 'system'" class="timestamp">{{
                             formatTimestamp(message.timestamp) }}</span>
                     </div>
                 </div>
             </div>
         </ng-container>
-    
-    
 
-    <div *ngIf="fileToUpload" class="file-upload-box">
-        <div class="file-details">
-            <div class="file-icon">
-                <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
-                <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+
+
+        <div *ngIf="fileToUpload" class="file-upload-box">
+            <div class="file-details">
+                <div class="file-icon">
+                    <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
+                    <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+                </div>
+                <div class="file-name">{{ fileToUpload.name }}</div>
             </div>
-            <div class="file-name">{{ fileToUpload.name }}</div>
-        </div>
 
-        <div class="remove-file" (click)="removeFile()">
-            <span class="fa fa-times"></span>
-        </div>
-        <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
+            <div class="remove-file" (click)="removeFile()">
+                <span class="fa fa-times"></span>
+            </div>
+            <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
      <button class="btn btn-primary" (click)="sendFile()">Send</button>  -->
 
-    </div>
+        </div>
     </div>
     <div class="user-input">
         <label for="fileInput" class="fa fa-paperclip"></label>
