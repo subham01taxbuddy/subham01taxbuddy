@@ -83,7 +83,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Gross Receipts </div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="receipts" maxlength="7" placeholder="₹ Enter Amount"
                                         matInput name="receipts" class="input-field" required digitsOnly
                                         (change)="calculatePresumptive()" />
@@ -101,7 +101,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Minimum Income: 50%</div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="minimumPresumptiveIncome" matInput
                                         name="minimumPresumptiveIncome" class="input-field" required digitsOnly
                                         readonly />
@@ -125,7 +125,7 @@
                                     </span><span class="redAst">*</span>
                                   </div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="presumptiveIncome" placeholder="₹ Enter Amount" matInput
                                         name="presumptiveIncome" class="input-field"
                                         maxlength="{{selectedFormGroup.controls['receipts'].value?.length}}" required
