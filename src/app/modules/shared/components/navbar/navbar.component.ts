@@ -58,22 +58,29 @@ export class NavbarComponent implements DoCheck {
     private elementRef: ElementRef
 
   ) {
-    this.loggedInUserId = this.utilsService.getLoggedInUserID();
-    let role = this.utilsService.getUserRoles();
-    this.partnerType = this.utilsService.getPartnerType();
-    if(role.includes('ROLE_LEADER')){
-      this.showCopyLinkButton =true;
-    }else{
-      this.showCopyLinkButton = false;
-    }
-    this.fetchAffiliateId();
+    let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    console.log('smeInfoStr', smeInfoStr);
+    if (smeInfoStr) {
+      const loggedInSmeInfo = JSON.parse(smeInfoStr ?? '');
+      console.log('parsed', loggedInSmeInfo);
+      if(loggedInSmeInfo && loggedInSmeInfo[0]) {
+        this.loggedInUserId = loggedInSmeInfo[0].userId;
+        let role = loggedInSmeInfo[0].roles;
+        this.partnerType = loggedInSmeInfo[0].partnerType;
+        if (role.includes('ROLE_LEADER')) {
+          this.showCopyLinkButton = true;
+        } else {
+          this.showCopyLinkButton = false;
+        }
+        this.fetchAffiliateId();
 
-    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
-      this.showDropDown =true;
-    }else{
-      this.showDropDown=false;
+        if (role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType === 'INDIVIDUAL')) {
+          this.showDropDown = true;
+        } else {
+          this.showDropDown = false;
+        }
+      }
     }
-
     this.renderer.listen('window', 'click', (event: Event) => {
       if (!this.elementRef.nativeElement.contains(event.target)) {
         this.isDropdownOpen = false;
