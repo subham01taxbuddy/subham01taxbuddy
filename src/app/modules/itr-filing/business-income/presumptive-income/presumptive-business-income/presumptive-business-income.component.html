@@ -100,7 +100,9 @@
                                     <mat-error *ngIf="
                                         (selectedFormGroup.controls['bankReceipts'].touched || submitted) &&
                                         selectedFormGroup.controls['bankReceipts'].hasError('max')">
-                                      Turnover cannot be more than 2 crore</mat-error>
+                                      If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of
+                                      total receipts, it is mandatory to have a tax audit under 44AB. Please use the
+                                      regular ITR 3/5 form.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
@@ -142,13 +144,10 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['bankPreIncome'].touched ||submitted) &&
-                                        selectedFormGroup.controls['bankPreIncome'].hasError('min')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['bankPreIncome'].hasError('min')">
                                       Amount should be greater than {{ amountSix }}
                                     </mat-error>
-                                    <mat-error *ngIf="(selectedFormGroup.controls['bankPreIncome'].touched ||submitted) && 
-                                        selectedFormGroup.controls['bankPreIncome'].hasError('max')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['bankPreIncome'].hasError('max')">
                                       Amount cannot be greater than {{ maxSixAmt }}
                                     </mat-error>
                                   </div>
@@ -169,7 +168,9 @@
                                       Please enter the amount</mat-error>
                                     <mat-error *ngIf="(selectedFormGroup.controls['cashReceipts'].touched || submitted) &&
                                       selectedFormGroup.controls['cashReceipts'].hasError('max')">
-                                      Turnover cannot be more than 2 crore</mat-error>
+                                      If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of
+                                      total receipts, it is mandatory to have a tax audit under 44AB. Please use the
+                                      regular ITR 3/5 form.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
@@ -212,14 +213,10 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['cashPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['cashPreIncome'].hasError('min')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['cashPreIncome'].hasError('min')">
                                       Amount should be greater than {{ amountEight }}
                                     </mat-error>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['cashPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['cashPreIncome'].hasError('max')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['cashPreIncome'].hasError('max')">
                                       Amount cannot be greater than {{ maxEightAmt }}
                                     </mat-error>
                                   </div>
@@ -239,7 +236,9 @@
                                       Please enter the amount</mat-error>
                                     <mat-error *ngIf="(selectedFormGroup.controls['anyOtherMode'].touched || submitted) &&
                                       selectedFormGroup.controls['anyOtherMode'].hasError('max')">
-                                      Turnover cannot be more than 2 crore</mat-error>
+                                      If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of
+                                      total receipts, it is mandatory to have a tax audit under 44AB. Please use the
+                                      regular ITR 3/5 form.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
@@ -280,14 +279,10 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['anyOtherPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['anyOtherPreIncome'].hasError('min')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['anyOtherPreIncome'].hasError('min')">
                                       Amount should be greater than {{ amountEightAnyOther }}
                                     </mat-error>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['anyOtherPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['anyOtherPreIncome'].hasError('max')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['anyOtherPreIncome'].hasError('max')">
                                       Amount cannot be greater than {{ maxEightAnyOtherAmt }}
                                     </mat-error>
                                   </div>
