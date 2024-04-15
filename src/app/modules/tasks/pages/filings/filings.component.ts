@@ -195,7 +195,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
             JSON.stringify(this.allFilerList)
           );
           this.myItrsGridOptions.api?.setColumnDefs(
-            this.columnDef(this.allFilerList)
+            this.columnDef()
           );
         } else {
           this.allFilerList = [];
@@ -530,7 +530,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  columnDef(filerList?) {
+  columnDef() {
+    let self = this;
     let columnDefs: ColDef[] = [
       // return [
       {
@@ -677,7 +678,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.leaderUserId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             ?.filter((item) => {
               return item.userId === createdUserId;
@@ -701,7 +702,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.filingTeamMemberId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             .filter((item) => {
               return item.userId === createdUserId;
@@ -724,7 +725,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.filerUserId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             .filter((item) => {
               return item.userId === createdUserId;
