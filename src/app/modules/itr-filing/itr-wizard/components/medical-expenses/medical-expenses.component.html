@@ -182,13 +182,13 @@
                 <div><span class="span">Acknowledgement Number</span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
                   <input formControlName="form10IAAcknowledgement" name="form10IAAcknowledgement" matInput
-                    placeholder="" maxlength="16" digitsOnly />
+                    placeholder="" maxlength="15" digitsOnly />
                 </mat-form-field>
               </div>
               <div class="col-3">
                 <div><span class="span">UDID Number (If available) </span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input formControlName="udidNumber" name="udidNumber" matInput placeholder="" maxlength="16"
+                  <input formControlName="udidNumber" name="udidNumber" matInput placeholder="" maxlength="18"
                     digitsOnly />
                 </mat-form-field>
               </div>
@@ -280,7 +280,7 @@
                   <input formControlName="dependentPan" upperCase name="dependentPan" matInput placeholder=""
                     maxlength="10" (change)="setToUpperCase()" />
                   <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentPan'].hasError('pattern')">
-                    Enter valid PAN (e.g XXXXX1234X)
+                    Enter valid PAN (e.g XXXPX1234X)
                   </mat-error>
                   <mat-error class="ft12" *ngIf="investmentDeductionForm.controls['dependentPan'].hasError('required')">
                     Enter PAN Number.
@@ -290,7 +290,7 @@
               <div class="col-3">
                 <div><span class="span">Aadhaar of the dependent</span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input formControlName="dependentAadhar" name="dependentAadhar" matInput placeholder="" maxlength="16"
+                  <input formControlName="dependentAadhar" name="dependentAadhar" matInput placeholder="" maxlength="12"
                     digitsOnly />
                   <mat-error class="ft12"
                     *ngIf="investmentDeductionForm.controls['dependentAadhar'].hasError('required')">
@@ -307,13 +307,13 @@
                 <div><span class="span">Acknowledgement Number</span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
                   <input formControlName="form10IAAcknowledgement80dd" name="form10IAAcknowledgement80dd" matInput
-                    placeholder="" maxlength="16" digitsOnly />
+                    placeholder="" maxlength="15" digitsOnly />
                 </mat-form-field>
               </div>
               <div class="col-3">
                 <div><span class="span">UDID Number (If available) </span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input formControlName="udidNumber80dd" name="udidNumber80dd" matInput placeholder="" maxlength="16"
+                  <input formControlName="udidNumber80dd" name="udidNumber80dd" matInput placeholder="" maxlength="18"
                     digitsOnly />
                 </mat-form-field>
               </div>
