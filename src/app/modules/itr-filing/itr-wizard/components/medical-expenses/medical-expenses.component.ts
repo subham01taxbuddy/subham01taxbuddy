@@ -39,7 +39,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     { label: 'Dependent person with severe disability', value: 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY' }
   ];
   typeOfDependent = [
-    { label: 'None', value: '' },
+    // { label: 'None', value: '' },
     { label: 'Spouse', value: 'Spouse' },
     { label: 'Son', value: 'Son' },
     { label: 'Daughter', value: 'Daughter' },
@@ -339,7 +339,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.investmentDeductionForm.controls['form10IADate80dd'].setValue(null);
       this.investmentDeductionForm.controls['form10IAAcknowledgement80dd'].setValue(null);
       this.investmentDeductionForm.controls['udidNumber80dd'].setValue(null);
-      this.investmentDeductionForm.controls['typeOfDependent'].setValue('');
+      this.investmentDeductionForm.controls['typeOfDependent'].setValue(null);
       this.investmentDeductionForm.controls['dependentPan'].setValue(null);
       this.investmentDeductionForm.controls['dependentAadhar'].setValue(null);
     }
