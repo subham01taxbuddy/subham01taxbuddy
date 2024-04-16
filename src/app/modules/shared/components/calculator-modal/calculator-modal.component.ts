@@ -27,7 +27,7 @@ export class CalculatorModalComponent implements OnInit {
     console.log('Data received from iframe:', event.data);
     // this.dialogRef.close(event.data);
     if (event.data.action === 'CopiedValue') {
-      this.dialogRef.close(event.data.hraValue);
+      this.dialogRef.close(event.data.values);
     }
   }
 

@@ -2103,6 +2103,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   onBifurcationUpdated(result) {
     this.invalid = false;
+    if(result.type === 'exemptValue'){
+      const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
+        allowancesArray.controls.forEach((control: FormGroup, index: number) => {
+            const allowType = control.get('allowType').value;
+            if (allowType === 'HOUSE_RENT') {
+                control.get('allowValue').setValue(result.value);
+            }
+        });
+    }
     this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {
       if (element.get('salaryType').value === 'SEC17_1') {
@@ -2118,8 +2127,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.bifurcationResult[element.get('salaryType').value].total = element.get('salaryValue').value;
       }
     });
-
-
 
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
