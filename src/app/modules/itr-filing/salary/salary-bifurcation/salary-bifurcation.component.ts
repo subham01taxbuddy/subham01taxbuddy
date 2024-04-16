@@ -362,9 +362,36 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
         this.valueChanged.emit({ type: 'exemptValue', value: copiedValues.exemptValue });
-       }else if (copiedValues?.title === 'PENSION'){
 
+       }else if (copiedValues?.title === 'PENSION'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.totalPension);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+
+       }else if (copiedValues?.title === 'GRATUITY'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.gratuityValue);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
        }
+
+       else if (copiedValues?.title === 'LEAVE_ENCASHMENT'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.leaveCashValue);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+       }
+
 
       }
     });
