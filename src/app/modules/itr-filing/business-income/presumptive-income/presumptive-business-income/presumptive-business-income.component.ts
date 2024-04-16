@@ -284,17 +284,17 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     //   return;
     // }
     let total = bankReceiptsTotal + cashReceiptsTotal + anyOtherModeTotal;
-    if (total > 20000000) {
-      let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
-      cashReceipts = total / 100 * 5;
-      if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
-        this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+    if (total >= 20000000) {
+      let cashReceiptsInPercent = total / 100 * 5;
+      if (cashReceiptsTotal < cashReceiptsInPercent) {
+        if (total > 30000000)
+          this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
         return;
       } else {
-        this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+        if (total != 20000000)
+          this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
         return;
       }
-
     }
 
     this.loading = true;
@@ -485,6 +485,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.selectedFormGroup.reset();
     this.calculatePresumptiveIncome('cash', true);
     this.calculatePresumptiveIncome('bank', true);
+    this.calculatePresumptiveIncome('anyOther', true);
   }
 
   saveManualEntry() {
@@ -494,17 +495,17 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     }
 
     let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) + parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
-    if (total > 20000000) {
-      let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
-      cashReceipts = total / 100 * 5;
-      if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
-        this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+    if (total >= 20000000) {
+      let cashReceiptsInPercent = total / 100 * 5;
+      if (parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) < cashReceiptsInPercent) {
+        if (total > 30000000)
+          this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
         return;
       } else {
-        this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+        if (total != 20000000)
+          this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
         return;
       }
-
     }
     let result = this.selectedFormGroup.getRawValue();
 
