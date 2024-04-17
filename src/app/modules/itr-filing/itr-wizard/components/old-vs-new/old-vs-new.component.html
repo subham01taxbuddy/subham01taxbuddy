@@ -45,14 +45,15 @@
             </div>
 
             <div formGroupName="optionForCurrentAY" *ngIf="
-                this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '2'
+                this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '4'
               ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   1. Do you wish to exercise the option u/s 115 BAC(6) of Opting out of New tax regime ?
                 </div>
                 <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime">
+                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
+                                   (change)="updateCurrentAYOptions()">
                     <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before">
                       No
                     </mat-radio-button>
@@ -70,11 +71,11 @@
                   </mat-error>
                 </div>
               </div>
-              <hr />
+<!--              <hr />-->
             </div>
 
             <div formGroupName="everOptedNewRegime" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
+                this.ITR_JSON.itrType === '3'
               ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -172,7 +173,7 @@
             </div>
 
             <div formGroupName="everOptedOutOfNewRegime" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
+                this.ITR_JSON.itrType === '3'
               ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
@@ -272,33 +273,8 @@
               <hr />
             </div>
 
-            <div formGroupName="optionForCurrentAY" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              ">
-              <div class="card__row">
-                <div class="card__col-xs-9 question-label">
-                  3. Option for current Assessment year
-                </div>
-                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
-                    (change)="updateCurrentAYOptions()">
-                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before"
-                      [disabled]="dueDateOver">{{ newRegimeLabel }}
-                    </mat-radio-button>
-                    <mat-radio-button [value]="'OLD'" labelPosition="before">{{
-                      oldRegimeLabel
-                      }}</mat-radio-button>
-                  </mat-radio-group>
-                  <mat-error *ngIf="
-                      regimeSelectionForm.controls['optionForCurrentAY']
-                        .get('currentYearRegime')
-                        .hasError('required') && submitted
-                    ">
-                    Please select an option to continue
-                  </mat-error>
-                </div>
-              </div>
-              <div class="card__row" *ngIf="showCurrentAYOptions">
+            <div formGroupName="optionForCurrentAY">
+              <div class="card__row" *ngIf="this.ITR_JSON.itrType === '4' && showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
@@ -309,11 +285,8 @@
                       placeholder="Acknowledgement Number" digitsOnly
                       onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" />
 
-                    <mat-error *ngIf="
-                        this.ITR_JSON.itrType === '3' ||
-                        this.ITR_JSON.itrType === '4' ||
-                        showCurrentAYOptions
-                      ">
+                    <mat-error *ngIf="this.ITR_JSON.itrType === '4' ||
+                        showCurrentAYOptions">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->

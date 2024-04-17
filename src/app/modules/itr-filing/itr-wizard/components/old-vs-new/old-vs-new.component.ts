@@ -433,16 +433,15 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
     ).controls['currentYearRegime'];
     if (
-      this.newRegimeLabel === 'Opting in Now' &&
-      currAssmntYr.value === 'NEW'
+      currAssmntYr.value === 'OLD'
     ) {
       this.showCurrentAYOptions = true;
-    } else if (
+    } /*else if (
       this.oldRegimeLabel === 'Opt Out' &&
       currAssmntYr.value === 'OLD'
     ) {
       this.showCurrentAYOptions = true;
-    } else {
+    }*/ else {
       this.showCurrentAYOptions = false;
     }
 
@@ -555,7 +554,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Not eligible to opt';
       currAssmntYr.setValue('NEW');
       currAssmntYr.disable();
-      this.showCurrentAYOptions = false;
     }
 
     if (optIn && !optOut) {
