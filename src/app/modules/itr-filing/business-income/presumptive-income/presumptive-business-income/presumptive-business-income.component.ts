@@ -287,9 +287,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (total >= 20000000) {
       let cashReceiptsInPercent = total / 100 * 5;
       if (cashReceiptsTotal < cashReceiptsInPercent) {
-        if (total > 30000000)
+        if (total > 30000000) {
           this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
-        return;
+          return;
+        } else {
+
+        }
       } else {
         if (total != 20000000)
           this.utilsService.showSnackBar('If gross receipts are more than Rs.2 crore and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
