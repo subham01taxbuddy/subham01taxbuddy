@@ -203,9 +203,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
         }
       } else {
-        if (total != 5000000)
+        if (total != 5000000) {
           this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
-        return;
+          return;
+        }
       }
     }
 
@@ -446,9 +447,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
         }
       } else {
-        if (total != 5000000)
+        if (total != 5000000) {
           this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
-        return;
+          return;
+        }
       }
     }
 
