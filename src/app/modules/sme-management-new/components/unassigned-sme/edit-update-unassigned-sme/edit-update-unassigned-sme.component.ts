@@ -15,6 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { NameAlertComponent } from '../name-alert/name-alert.component';
+import { Location } from "@angular/common";
 
 export interface User {
   name: string;
@@ -75,6 +76,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private httpClient: HttpClient,
     private reportService:ReportService,
     private dialog: MatDialog,
+    private location: Location,
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
@@ -765,6 +767,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
               'success',
               'sme details updated successfully'
             );
+            setTimeout(() => {
+                this.loading = false;
+                this.location.back();
+            }, 1200);
           }
         },
         (error) => {
