@@ -8,13 +8,14 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { NameAlertComponent } from '../name-alert/name-alert.component';
+import { Location } from "@angular/common";
 
 export interface User {
   name: string;
@@ -75,6 +76,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private httpClient: HttpClient,
     private reportService:ReportService,
     private dialog: MatDialog,
+    private location: Location,
+    private router: Router,
   ) {
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
@@ -765,6 +768,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
               'success',
               'sme details updated successfully'
             );
+            setTimeout(() => {
+                this.loading = false;
+                this.location.back();
+            }, 1200);
           }
         },
         (error) => {
@@ -787,6 +794,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  cancelUpdate() {
+    this.router.navigate(['/sme-management-new/unassignedsme']);
   }
 
 }
