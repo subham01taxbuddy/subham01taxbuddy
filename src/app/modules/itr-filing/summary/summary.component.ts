@@ -7039,11 +7039,19 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-           this.checkIfEligibleToFileItr(this.ITR_JSON.userId, this.ITR_JSON.assessmentYear);
+            let param = '/eligible-to-file-itr?userId='+this.ITR_JSON.userId+'&&assessmentYear='+this.ITR_JSON.assessmentYear;
+            this.itrMsService.getMethod(param).subscribe(
+              (response: any) => {
+                if(!(response.success && response?.data?.eligibleToFileItr)){
+                  this.utilsService.showSnackBar(
+                    'You can only update the ITR file record when your status is "ITR confirmation received"'
+                  );
+                } else {
+                  if (confirm('Are you sure you want to file the ITR?'))
+                    this.fileITR();
+                }
+              });
 
-            if (confirm('Are you sure you want to file the ITR?')) {
-              this.fileITR();
-            }
           } else {
             this.utilsService.showSnackBar(
               'Please make sure that filer assignment should be done before ITR filing.'
@@ -7062,19 +7070,6 @@ export class SummaryComponent implements OnInit {
         );
       }
     );
-  }
-
-  checkIfEligibleToFileItr(userId:number, assessmentYear:string){
-    let param = '/eligible-to-file-itr?userId='+userId+'&&assessmentYear='+assessmentYear;
-    this.itrMsService.getMethod(param).subscribe(
-      (response: any) => {
-        if(!(response.success && response?.data?.eligibleToFileItr)){
-          this.utilsService.showSnackBar(
-            'You can only update the ITR file record when your status is "ITR confirmation received"'
-          );
-          return;
-        }
-      });
   }
 
   fileITR() {
