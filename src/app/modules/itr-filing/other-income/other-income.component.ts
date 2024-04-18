@@ -25,6 +25,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       label: 'Royalty Against Patent (80RRB)',
     },
     {
+      value: 'INCOME_US_56_2_XII',
+      label: 'Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)',
+    },
+    {
+      value: 'INCOME_US_56_2_XIII',
+      label: 'Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)',
+    },
+    {
       value: 'ANY_OTHER',
       label: 'Any Other Income',
     },
@@ -376,7 +384,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       this.winningsUS115BBFormGroup.get(quarter).setValue(null);
   }
 
-  
   onClick115BBJRemoveZero(quarter: string) {
     if (this.winningsUS115BBJFormGroup.get(quarter).value === 0)
       this.winningsUS115BBJFormGroup.get(quarter).setValue(null);
@@ -517,6 +524,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'FAMILY_PENSION' &&
         item.incomeType !== 'ROYALTY_US_80RRB' &&
         item.incomeType !== 'ROYALTY_US_80QQB' &&
+        item.incomeType !== 'INCOME_US_56_2_XII' &&
+        item.incomeType !== 'INCOME_US_56_2_XIII' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' &&
@@ -736,6 +745,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         (item) =>
           item.incomeType === 'ROYALTY_US_80RRB' ||
           item.incomeType === 'ROYALTY_US_80QQB' ||
+          item.incomeType === 'INCOME_US_56_2_XII' ||
+          item.incomeType === 'INCOME_US_56_2_XIII' ||
           item.incomeType === 'ANY_OTHER'
       );
       let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as UntypedFormArray;
