@@ -393,6 +393,7 @@ export class UtilsService {
       },
 
       winningsUS115BB: null,
+      winningsUS115BBJ: null,
       scheduleESOP: null,
     };
 

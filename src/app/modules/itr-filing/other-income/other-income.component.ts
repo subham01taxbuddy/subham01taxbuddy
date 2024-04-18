@@ -189,6 +189,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   ];
 
   winningsUS115BBFormGroup: UntypedFormGroup;
+  winningsUS115BBJFormGroup: UntypedFormGroup;
   otherIncomeFormGroup: UntypedFormGroup;
   otherIncomesFormArray: UntypedFormArray;
   anyOtherIncomesFormArray: UntypedFormArray;
@@ -216,11 +217,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
     this.createOrSetWinningsUS115BBForm(this.ITR_JSON.winningsUS115BB);
+    this.createOrSetWinningsUS115BBJForm(this.ITR_JSON.winningsUS115BBJ);
 
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
       anyOtherIncomes: this.anyOtherIncomesFormArray,
       winningsUS115BB: this.winningsUS115BBFormGroup,
+      winningsUS115BBJ: this.winningsUS115BBJFormGroup,
       providentFundValue: new UntypedFormControl(null),
       providentFundLabel: new UntypedFormControl(null),
       giftTax: this.fb.group({
@@ -357,19 +360,36 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.selectedIndexes = [];
   }
 
-  get winningsUS115BBTotal(){
-   return this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
-    this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value;
+  get winningsUS115BBTotal() {
+    return this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
+      this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value;
   }
 
-  onClickRemoveZero(quarter: string){
-    if(this.winningsUS115BBFormGroup.get(quarter).value === 0)
-    this.winningsUS115BBFormGroup.get(quarter).setValue(null);
+  get winningsUS115BBJTotal() {
+    return this.winningsUS115BBJFormGroup.get('quarter1').value + this.winningsUS115BBJFormGroup.get('quarter2').value +
+      this.winningsUS115BBJFormGroup.get('quarter3').value + this.winningsUS115BBJFormGroup.get('quarter4').value + this.winningsUS115BBJFormGroup.get('quarter5').value;
   }
 
-  onBlurAddZero(quarter: string){
-    if(!this.winningsUS115BBFormGroup.get(quarter).value || this.winningsUS115BBFormGroup.get(quarter).value === null)
-    this.winningsUS115BBFormGroup.get(quarter).setValue(0);
+
+  onClickRemoveZero(quarter: string) {
+    if (this.winningsUS115BBFormGroup.get(quarter).value === 0)
+      this.winningsUS115BBFormGroup.get(quarter).setValue(null);
+  }
+
+  
+  onClick115BBJRemoveZero(quarter: string) {
+    if (this.winningsUS115BBJFormGroup.get(quarter).value === 0)
+      this.winningsUS115BBJFormGroup.get(quarter).setValue(null);
+  }
+
+  onBlurAddZero(quarter: string) {
+    if (!this.winningsUS115BBFormGroup.get(quarter).value || this.winningsUS115BBFormGroup.get(quarter).value === null)
+      this.winningsUS115BBFormGroup.get(quarter).setValue(0);
+  }
+
+  onBlur115BBJAddZero(quarter: string) {
+    if (!this.winningsUS115BBJFormGroup.get(quarter).value || this.winningsUS115BBJFormGroup.get(quarter).value === null)
+      this.winningsUS115BBJFormGroup.get(quarter).setValue(0);
   }
 
   get getIncomeArray() {
@@ -535,10 +555,16 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     //save winningsUS115BB
     this.Copy_ITR_JSON.winningsUS115BB = null;
-    if(this.winningsUS115BBTotal > 0){
+    if (this.winningsUS115BBTotal > 0) {
       this.winningsUS115BBFormGroup.get('total').setValue(this.winningsUS115BBTotal);
       this.winningsUS115BBFormGroup.get('total').updateValueAndValidity();
       this.Copy_ITR_JSON.winningsUS115BB = this.winningsUS115BBFormGroup.getRawValue();
+    }
+
+    if (this.winningsUS115BBJTotal > 0) {
+      this.winningsUS115BBJFormGroup.get('total').setValue(this.winningsUS115BBJTotal);
+      this.winningsUS115BBJFormGroup.get('total').updateValueAndValidity();
+      this.Copy_ITR_JSON.winningsUS115BBJ = this.winningsUS115BBJFormGroup.getRawValue();
     }
 
     this.providentFundArray.forEach(element => {
@@ -946,7 +972,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     agriIncome?.get('incomeValue').setValue(total);
   }
 
-  createOrSetWinningsUS115BBForm(winningsUS115BB: any = {}){
+  createOrSetWinningsUS115BBForm(winningsUS115BB: any = {}) {
     this.winningsUS115BBFormGroup = this.fb.group({
       quarter1: winningsUS115BB?.quarter1,
       quarter2: winningsUS115BB?.quarter2,
@@ -954,6 +980,17 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       quarter4: winningsUS115BB?.quarter4,
       quarter5: winningsUS115BB?.quarter5,
       total: winningsUS115BB?.quarter1 + winningsUS115BB?.quarter2 + winningsUS115BB?.quarter3 + winningsUS115BB?.quarter4 + winningsUS115BB?.quarter5,
+    })
+  }
+
+  createOrSetWinningsUS115BBJForm(winningsUS115BBJ: any = {}) {
+    this.winningsUS115BBJFormGroup = this.fb.group({
+      quarter1: winningsUS115BBJ?.quarter1,
+      quarter2: winningsUS115BBJ?.quarter2,
+      quarter3: winningsUS115BBJ?.quarter3,
+      quarter4: winningsUS115BBJ?.quarter4,
+      quarter5: winningsUS115BBJ?.quarter5,
+      total: winningsUS115BBJ?.quarter1 + winningsUS115BBJ?.quarter2 + winningsUS115BBJ?.quarter3 + winningsUS115BBJ?.quarter4 + winningsUS115BBJ?.quarter5,
     })
   }
 
