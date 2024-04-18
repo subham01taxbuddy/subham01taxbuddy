@@ -69,14 +69,24 @@ export class UpdateManualFilingDialogComponent implements OnInit {
   updateManualDetails() {
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
-      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-      this.itrMsService.getMethod(param1).subscribe((res: any) => {
-        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          this.data.eFillingDate = this.eFillingDate.value;
-          this.data.ackNumber = this.ackNumber.value;
-          this.data.eFillingCompleted = true;
-          console.log('Updated Data:', this.data);
-          let req = {
+      // const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+      // this.itrMsService.getMethod(param1).subscribe((res: any) => {
+      //   if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+      let param = '/eligible-to-file-itr?userId='+this.data.userId+'&&assessmentYear='+this.data.assessmentYear;
+      this.itrMsService.getMethod(param).subscribe(
+        (response: any) => {
+          if(!(response.success && response?.data?.eligibleToFileItr)){
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'You can only update the ITR file record when your status is "ITR confirmation received"'
+              );
+          } else {
+            this.loading = false;
+            this.data.eFillingDate = this.eFillingDate.value;
+            this.data.ackNumber = this.ackNumber.value;
+            this.data.eFillingCompleted = true;
+            console.log('Updated Data:', this.data);
+            let req = {
             userId: this.data.userId,
             itrId: this.data.itrId,
             email: this.data.email,
@@ -122,14 +132,16 @@ export class UpdateManualFilingDialogComponent implements OnInit {
               this.loading = false;
             }
           );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure that the payment has been made by the user to proceed ahead'
-          );
-          this.dialogRef.close();
-          this.loading = false;
         }
       });
+      //   } else {
+      //     this.utilsService.showSnackBar(
+      //       'Please make sure that the payment has been made by the user to proceed ahead'
+      //     );
+      //     this.dialogRef.close();
+      //     this.loading = false;
+      //   }
+      // });
     }
   }
 
