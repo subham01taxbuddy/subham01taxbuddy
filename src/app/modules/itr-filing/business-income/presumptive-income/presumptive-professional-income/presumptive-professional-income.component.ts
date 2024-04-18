@@ -41,7 +41,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   cashPerWidth = 0;
   anyOtherPerWidth = 0;
   bankMinIncomePercentage = (50 / 100) * 6;
-  cashMinIncomePercentage = (50 / 100) * 8;
+  cashMinIncomePercentage = (50 / 100) * 50;
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
@@ -759,18 +759,18 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
       cashReceipts = total / 100 * 5;
       if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
-        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(30000000)]);
+        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(7500000)]);
         this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
-        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(30000000)]);
+        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(7500000)]);
         this.selectedFormGroup.controls['cashReceipts'].updateValueAndValidity();
-        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(30000000)]);
+        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(7500000)]);
         this.selectedFormGroup.controls['anyOtherMode'].updateValueAndValidity();
       } else {
-        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(20000000)]);
+        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(5000000)]);
         this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
-        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(20000000)]);
+        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(5000000)]);
         this.selectedFormGroup.controls['cashReceipts'].updateValueAndValidity();
-        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(20000000)]);
+        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(5000000)]);
         this.selectedFormGroup.controls['anyOtherMode'].updateValueAndValidity();
       }
 
@@ -779,7 +779,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     if (incomeType === 'cash') {
       this.amountEight = this.selectedFormGroup.controls['cashReceipts'].value;
       this.maxEightAmt = this.selectedFormGroup.controls['cashReceipts'].value;
-      this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
+      this.amountEight = Math.round(Number((this.amountEight / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['cashMinIncome'].setValue(this.amountEight);
@@ -796,7 +796,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     } else if (incomeType === 'bank') {
       this.amountSix = this.selectedFormGroup.controls['bankReceipts'].value;
       this.maxSixAmt = this.selectedFormGroup.controls['bankReceipts'].value;
-      this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
+      this.amountSix = Math.round(Number((this.amountSix / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['bankMinIncome'].setValue(this.amountSix);
@@ -813,7 +813,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     } else if (incomeType === 'anyOther') {
       this.amountEightAnyOther = this.selectedFormGroup.controls['anyOtherMode'].value;
       this.maxEightAnyOtherAmt = this.selectedFormGroup.controls['anyOtherMode'].value;
-      this.amountEightAnyOther = Math.round(Number((this.amountEightAnyOther / 100) * 8));
+      this.amountEightAnyOther = Math.round(Number((this.amountEightAnyOther / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['anyOtherMinIncome'].setValue(this.amountEightAnyOther);
