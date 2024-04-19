@@ -233,7 +233,7 @@
             <div class="col-sm-6">
               <mat-label> No of additional Id's required </mat-label>
               <mat-form-field appearance="outline">
-                <input type="number" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
+                <input type="number" [readonly]="isDisabled" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
                   class="input-field" max="5" min="1" trim [numbersOnly]="true" />
                   <mat-error *ngIf="additionalIdsCount.hasError('required')">
                     Enter No of additional Id's required </mat-error>
@@ -263,20 +263,21 @@
               </span>
               <div class="row">
                 <section class="example-section" [formGroup]="services">
-                  <p><mat-checkbox [formControl]="itr"
+                  <div><mat-checkbox [formControl]="itr"
                       [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
-                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
+                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox>
+                      <mat-slide-toggle class="customToggle"
                       *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
-                  </p>
+                  </div>
                   <hr>
 
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"
                       (change)="serviceUpdated('serviceEligibility_TPA', tpa)" [disabled]="disableTpaService">Tax
                       Planing
                       (TPA)/NPS </mat-checkbox>
-                    <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
                   </p>
@@ -285,7 +286,7 @@
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
                       [disabled]="disableNoticeService"
                       (change)="serviceUpdated('serviceEligibility_NOTICE', notice)">Notice</mat-checkbox>
-                    <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( noticeToggle)"></mat-slide-toggle>
                   </p>
@@ -293,7 +294,7 @@
 
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst" [disabled]="disableGstService"
                       (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
-                    <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
                   </p>
@@ -303,7 +304,7 @@
                   <div *ngIf="false">
                     <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb)">Wealth
                         Builder(WB)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="wb.value" [formControl]="wbToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( wbToggle)"></mat-slide-toggle>
                     </p>
@@ -311,7 +312,7 @@
 
                     <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd)">Portfolio
                         Doctor(PD)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="pd.value" [formControl]="pdToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated(pdToggle)"></mat-slide-toggle>
                     </p>
@@ -319,7 +320,7 @@
 
                     <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf)">Mutual Fund (MF)
                         Advisor</mat-checkbox>
-                      <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="mf.value" [formControl]="mfToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( mfToggle)"></mat-slide-toggle>
                     </p>
@@ -379,7 +380,7 @@
             <div class="row" style="margin-top: 10px;">
               <span>
                 <b style="font-size: 16px">Leader Assignment</b>
-                <mat-slide-toggle [formControl]="assignmentToggle" style="margin-left: 25px;"
+                <mat-slide-toggle class="customToggle" [formControl]="assignmentToggle" style="margin-left: 25px;"
                   (change)="laderAssignment( assignmentToggle)"></mat-slide-toggle>
               </span>
               <div class="col-sm-12 mt-3" *ngIf="assignmentToggle.value" [formGroup]="assignmentFormGroup">

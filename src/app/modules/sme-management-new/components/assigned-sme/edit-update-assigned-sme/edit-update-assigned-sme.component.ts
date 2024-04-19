@@ -99,6 +99,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   roundRobinData: any = {};
   isReadOnly:boolean =false;
   activeCaseMaxCapacity = new UntypedFormControl('')
+  isDisabled:boolean =false;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -140,6 +141,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.otherSmeInfo.patchValue(this.smeObj);
     this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
     this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : false;
+    this.loggedInSmeRoles.includes('ROLE_ADMIN') ? this.isDisabled  = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {

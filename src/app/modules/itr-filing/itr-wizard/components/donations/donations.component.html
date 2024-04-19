@@ -67,8 +67,8 @@
                             name="dateOfDonation[i]" readonly [matDatepicker]="dateOfDonation"
                             placeholder="Date of Donation" required />
                           <mat-datepicker-toggle matSuffix [for]="dateOfDonation"></mat-datepicker-toggle>
-                          <mat-datepicker #dateOfDonation></mat-datepicker> <mat-error *ngIf="donation.get('amountInCash').hasError('pattern') &&
-                                    (donation.get('amountInCash').touched || donation.get('amountInCash').dirty)">
+                          <mat-datepicker #dateOfDonation></mat-datepicker> <mat-error *ngIf="donation.get('dateOfDonation').hasError('pattern') &&
+                                    (donation.get('dateOfDonation').touched || donation.get('dateOfDonation').dirty)">
                             Please select the valid date.
                           </mat-error>
                         </mat-form-field>
@@ -105,7 +105,9 @@
                         </div>
                         <mat-form-field appearance="outline" class="no-height small-inp">
                           <input formControlName="amountInCash" name="amountInCash[i]" matInput
-                            placeholder="Amount in Cash" name="amount" required maxlength="14" digitsOnly />
+                            placeholder="Amount in Cash" name="amount"
+                            [required]="((type === '80ggc' && (donation.get('amountOtherThanCash').value < 1)) ||  (type === '80gga' || type === '80g'))"
+                            maxlength="14" digitsOnly />
                           <mat-error *ngIf="donation.get('amountInCash').hasError('pattern') &&
                                     (donation.get('amountInCash').touched || donation.get('amountInCash').dirty)">
                             Enter positive amount without decimal.
@@ -117,7 +119,9 @@
                         </div>
                         <mat-form-field appearance="outline" class="no-height small-inp">
                           <input formControlName="amountOtherThanCash" matInput placeholder="Amount Other Than Cash"
-                            name="amountOtherThanCash[i]" required maxlength="14" digitsOnly />
+                            name="amountOtherThanCash[i]"
+                            [required]="((type === '80ggc' && (donation.get('amountInCash').value < 1 )) ||  (type === '80gga' || type === '80g'))"
+                            maxlength="14" digitsOnly />
                           <mat-error *ngIf="donation.get('amountOtherThanCash').hasError('pattern')">
                             Enter positive amount without decimal.
                           </mat-error>
@@ -205,61 +209,12 @@
 
                     <div *ngIf="type === '80ggc'">
                       <div class="div-6">
-                        <!-- <div class="form-field">
-                          <div><span class="span">Total Donation Amount</span> <span class="text-wrapper-2">*</span>
-                          </div>
-                          <mat-form-field appearance="outline" class="no-height small-inp">
-                            <input formControlName="totalDonationAmount" matInput placeholder="Total donation amount"
-                              name="totalDonationAmount[i]" required maxlength="14" digitsOnly />
-                            <mat-error *ngIf="donation.get('totalDonationAmount').hasError('pattern')">
-                              Enter positive amount without decimal.
-                            </mat-error>
-                          </mat-form-field>
-                        </div> -->
-                      </div>
-                      <div class="div-6">
-                        <!-- <div class="form-field">
-                          <div><span class="span">Donation in Cash</span> <span class="text-wrapper-2">*</span>
-                          </div>
-                          <mat-form-field appearance="outline" class="no-height small-inp">
-                            <input formControlName="donationInCash" matInput placeholder="Donation in Cash"
-                              name="donationInCash[i]" required maxlength="14" digitsOnly />
-                            <mat-error *ngIf="donation.get('donationInCash').hasError('pattern')">
-                              Enter positive amount without decimal.
-                            </mat-error>
-                          </mat-form-field>
-                        </div> -->
-                        <!-- <div class="form-field">
-                          <div><span class="span">Donation in Other Mode</span> <span class="text-wrapper-2">*</span>
-                          </div>
-                          <mat-form-field appearance="outline" class="no-height small-inp">
-                            <input formControlName="donationInOtherMode" matInput placeholder="Donation in Other Mode"
-                              name="donationInOtherMode[i]" required maxlength="14" digitsOnly />
-                            <mat-error *ngIf="donation.get('donationInOtherMode').hasError('pattern')">
-                              Enter positive amount without decimal.
-                            </mat-error>
-                          </mat-form-field>
-                        </div> -->
-                      </div>
-                      <div class="div-6">
-                        <!-- <div class="form-field">
-                          <div><span class="span">Transaction Reference Number for UPI
-                              transfer/Cheque/IMPS/NEFT/RTGS</span> <span class="text-wrapper-2">*</span>
-                          </div>
-                          <mat-form-field appearance="outline" class="no-height small-inp">
-                            <input formControlName="referenceNo" matInput placeholder="Transaction Reference Number"
-                              name="referenceNo[i]" required maxlength="14" digitsOnly />
-                            <mat-error *ngIf="donation.get('referenceNo').hasError('pattern')">
-                              Enter positive amount without decimal.
-                            </mat-error>
-                          </mat-form-field>
-                        </div> -->
                         <div class="form-field">
-                          <div><span class="span">IFSC of Bank</span> <span class="text-wrapper-2">*</span>
+                          <div><span class="span">IFSC of Bank</span>
                           </div>
                           <mat-form-field appearance="outline" class="no-height small-inp">
                             <input formControlName="ifscBank" matInput placeholder="IFSC of Bank" name="ifscBank[i]"
-                              required maxlength="14"/>
+                              maxlength="14" />
                             <mat-error *ngIf="donation.get('ifscBank').hasError('required')">
                               Enter the IFSC code.
                             </mat-error>

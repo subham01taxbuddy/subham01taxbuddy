@@ -326,12 +326,74 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     this.formValuesChanged();
   }
 
-  calculate() {
+  calculate(selectedOption: string) {
+    let queryParam
+    if(selectedOption === "HOUSE_RENT"){
+      queryParam ='hra'
+    }else if(selectedOption ==="PENSION"){
+      queryParam ='pension'
+    }else if(selectedOption ==="COMMUTED_PENSION"){
+      queryParam ='pension'
+    }else if(selectedOption === "GRATUITY"){
+      queryParam ='gratuity'
+    }else if(selectedOption === "LEAVE_ENCASHMENT"){
+      queryParam ='leaveencashment'
+    }else{
+       return this.utilsService.showSnackBar(`Invalid option selected,No Calculator Available for ${selectedOption} `);
+    }
     const dialogRef = this.dialog.open(CalculatorModalComponent, {
       width: '80%',
       height: '80%',
       data: {
-        url: 'https://www.taxbuddy.com/allcalculators/pension?inUtility=true&embedded=true'
+        selectedOption: selectedOption,
+        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(copiedValues  => {
+      if (copiedValues ) {
+       console.log('HRA value ',copiedValues );
+       if(copiedValues?.title === 'HRA'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.hraValue);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+        this.valueChanged.emit({ type: 'HRAexemptValue', value: copiedValues.exemptValue });
+
+       }else if (copiedValues?.title === 'PENSION'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.totalPension);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+        this.valueChanged.emit({ type: 'PENSIONexemptValue', value: copiedValues.exemptValue });
+
+       }else if (copiedValues?.title === 'GRATUITY'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.gratuityValue);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+        this.valueChanged.emit({ type: 'GRATUITYexemptValue', value: copiedValues.exemptValue });
+       }
+
+       else if (copiedValues?.title === 'LEAVE_ENCASHMENT'){
+        const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
+        const selectedSalaryItem = salaryArray.controls.find(item => item.get('salaryType').value === selectedOption);
+        if (selectedSalaryItem) {
+          selectedSalaryItem.get('taxableAmount').setValue(copiedValues.leaveCashValue);
+        } else {
+          console.error('Salary item not found for selectedOption:', selectedOption);
+        }
+        this.valueChanged.emit({ type: 'leaveExemptValue', value: copiedValues.exemptValue });
+       }
       }
     });
   }
