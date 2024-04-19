@@ -12,6 +12,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { Location } from '@angular/common';
+import { ReportService } from 'src/app/services/report-service';
 
 
 export const MY_FORMATS = {
@@ -48,6 +49,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private itrMsService: ItrMsService,
+    private reportService: ReportService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router,
@@ -72,7 +74,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       // if (year === "2020-2021") {
       //   this.ay.setValue('2021-2022');
       // } else
-       if (year === "2021-2022") {
+      this.checkSubscriptionForSelectedFinancialYear(year);
+      if (year === "2021-2022") {
         this.ay.setValue('2022-2023');
       }
       else if (year === "2022-2023") {
@@ -85,6 +88,44 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     }
 
   }
+
+  checkSubscriptionForSelectedFinancialYear(financialYear:string) {
+    this.loading = true;
+    const query = JSON.stringify({
+      "and": {
+        "userId": this.data.userId,
+        "serviceType": "ITRU",
+        "item.financialYear":financialYear
+      },
+      "type": "exists"
+    });
+
+    const param1 = '/bo/query/subscription?query='+btoa(query);
+
+    this.reportService.getMethod(param1).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res?.data) {
+          this.loading = false;
+          this.hideYears = false;
+          this.showDetails = true;
+        } else {
+          this.loading = false;
+          this.hideYears = true;
+          this.showDetails = false;
+          this.utilsService.showSnackBar(
+            'Subscription not found'
+          );
+        }
+      }, error => {
+        this.hideYears = true;
+        this.showDetails = false;
+        this.utilsService.showSnackBar('Error while checking subscription, Please try again.');
+        this.loading = false;
+      })
+
+  }
+
 
   checkPaymentStatus() {
     this.loading = true;
