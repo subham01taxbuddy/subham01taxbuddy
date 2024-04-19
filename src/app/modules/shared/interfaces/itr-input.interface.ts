@@ -145,7 +145,7 @@ export interface ITR_JSON {
   };
 
   winningsUS115BB: WinningUS115BB;
-  winningsUS115BBJ:WinningUS115BBJ;
+  winningsUS115BBJ: WinningUS115BBJ;
   scheduleESOP: ScheduleESOP;
 
 }
@@ -153,6 +153,8 @@ export interface ITR_JSON {
 export interface ScheduleESOP {
   scheduleESOPDetails: ScheduleESOPDetail[];
   totalTaxAttributedAmount: number;
+  panOfStartup: any;
+  dpiitRegNo: any
 }
 
 export interface ScheduleESOPDetail {
