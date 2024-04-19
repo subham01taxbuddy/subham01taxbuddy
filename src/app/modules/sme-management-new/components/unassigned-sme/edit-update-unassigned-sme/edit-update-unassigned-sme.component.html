@@ -530,9 +530,14 @@
       </div>
 
 
-      <div class="mt-2" style="text-align: center;">
-        <button class="save-all" [disabled]="loading && smeFormGroup.invalid " (click)=" updateSmeDetails()">Save
-        </button>
+      <div class="row mt-2" >
+        <div style="flex: 1 0 0; text-align: left;">
+          <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
+        </div>
+        <div style=" flex: 1 0 0; text-align: right;">
+          <button class="save-all" [disabled]="loading && smeFormGroup.invalid " (click)=" updateSmeDetails()">Save & Go Back to Table
+          </button>
+        </div>
       </div>
     </div>
   </div>
