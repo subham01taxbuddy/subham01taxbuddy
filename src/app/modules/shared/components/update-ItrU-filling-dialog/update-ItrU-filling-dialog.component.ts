@@ -66,7 +66,9 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   selectedFy(year: any) {
     if (year) {
       this.fy.setValue(year);
-      this.checkPaymentStatus()
+      // this.checkPaymentStatus()
+      this.hideYears = false;
+      this.showDetails = true;
       if (year === "2020-2021") {
         this.ay.setValue('2021-2022');
       } else if (year === "2021-2022") {
