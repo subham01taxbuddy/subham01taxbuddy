@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { widgetVisibility } from './animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
 import { ChatEvents } from '../chat-events';
+import { UserChatComponent } from '../user-chat/user-chat.component';
 
 @Component({
     selector: 'app-floating-widget',
@@ -12,7 +13,8 @@ import { ChatEvents } from '../chat-events';
 })
 export class FloatingWidgetComponent implements OnInit {
 
-
+    @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
+ 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService) {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -20,6 +22,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
     }
+
 
     showWidget = true;
     selectedUser: any;
@@ -36,8 +39,15 @@ export class FloatingWidgetComponent implements OnInit {
         this.selectedUser = user;
         this.isUserChatVisible = true;
         this.showWidget = false;
-    }
+        setTimeout(() => {
+            if (this.userChatComponent) {
+              this.userChatComponent.scrollToBottom();
+            }
+          }, 1000);   
+        
+        }
 
+    
     closeWidget() {
         this.showWidget = false;
         this.isUserChatVisible = false;
@@ -139,5 +149,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.departmentNames = data.map((dept: any) => dept.name)
         console.log('list', this.departmentNames);
     }
+
+    
 }
 

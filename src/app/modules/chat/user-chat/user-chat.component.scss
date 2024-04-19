@@ -12,6 +12,8 @@
     margin-top: 1px;
     margin-bottom: 8px;
   }
+
+  
   
   .icon {
     font-size: 20px;
@@ -478,14 +480,9 @@
   border-radius: 50%;
 }
 
-.chat-window{
-  overflow-y: auto;
-  height: 309px;
-  border:1px solid #bcf8ff;
-  background-color:#f5feff;
-}
+ 
 
-.chat-window::-webkit-scrollbar {
+.chat-messages::-webkit-scrollbar {
   width: 0 !important;
 }
 
@@ -498,12 +495,13 @@
 }
 
 
-.chat-messages {
+.chat-messages{
   display: flex;
   flex-direction: column;
   max-height: 365px;
   overflow-y: auto;
- }
+}
+
 
  .chat-messages::-webkit-scrollbar {
   width: 0;
