@@ -314,7 +314,7 @@ export class ChatService {
           if (this.log) {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
-          this.connected = true;
+         
 
           this.chatClient.publish(
               this.presenceTopic,
@@ -399,7 +399,8 @@ export class ChatService {
                       this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                         // console.log("DEBUG: MESSAGE:", message)
                         let messages = this.addMessageToDB(JSON.parse(message.toString()));
-                        callback(messages);
+                        callback(ChatEvents.MESSAGE_RECEIVED);
+
                       });
                     }
                     // Observing conversations added from messages

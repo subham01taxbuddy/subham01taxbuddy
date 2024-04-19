@@ -168,7 +168,8 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     TwoDigitDecimaNumberDirective,
     ViewDocumentsDialogComponent,
     GenericSortingComponent,
-    GenericUserFilterComponent
+    GenericUserFilterComponent,
+    FloatingWidgetComponent
   ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [

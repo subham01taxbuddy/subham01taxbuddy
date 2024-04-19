@@ -1,5 +1,6 @@
-<div class="floating">
-    <div class="header">
+
+<div class="floating expanded" [ngClass]="{'active': isFloatingActive,'inactive': !isFloatingActive}">
+    <div class="header expanded" [ngClass]="{'active': isHeaderActive, 'inactive': !isHeaderActive}">
         <button (click)="goBack()">
             <i class="fa fa-chevron-left" aria-hidden="true"></i>
         </button>
@@ -9,12 +10,12 @@
         </div>
     </div>
 
-    <div class="user-info">
+    <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}">
         <img [src]="image" alt="user-image">
         <span class="username">{{ username }}</span>
     </div>
 
-    <div class="chat-messages">
+     <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" #chatWindow>
         <ng-container *ngFor="let message of fetchedMessages">
             <div [ngClass]="{
               'system-messages': message.sender === 'system',
@@ -25,7 +26,7 @@
                     <div class="message-and-timestamp">
                         <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
                         <div *ngIf="message.type === 'html'" class="html" [innerHTML]="message.content"
-                         (loadeddata)="addMessageEvents(message)"></div>
+                            (loadeddata)="addMessageEvents(message)"></div>
                         <span *ngIf="message.sender !== 'system'" class="timestamp">{{
                             formatTimestamp(message.timestamp) }}</span>
                     </div>
@@ -33,29 +34,32 @@
             </div>
         </ng-container>
 
-    
 
-    <div *ngIf="fileToUpload" class="file-upload-box">
-        <div class="file-details">
-            <div class="file-icon">
-                <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
-                <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+
+        <div *ngIf="fileToUpload" class="file-upload-box">
+            <div class="file-details">
+                <div class="file-icon">
+                    <img *ngIf="isPDFFile(fileToUpload)" src="assets/images2/pdfImage.png" alt="PDF Icon">
+                    <img *ngIf="isDOCFile(fileToUpload)" src="assets/images2/docsImage.png" alt="DOC Icon">
+                </div>
+                <div class="file-name">{{ fileToUpload.name }}</div>
             </div>
-            <div class="file-name">{{ fileToUpload.name }}</div>
-        </div>
 
-        <div class="remove-file" (click)="removeFile()">
-            <span class="fa fa-times"></span>
-        </div>
-        <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
+            <div class="remove-file" (click)="removeFile()">
+                <span class="fa fa-times"></span>
+            </div>
+            <!-- <input type="text" placeholder="Enter description" [(ngModel)]="fileDescription">
      <button class="btn btn-primary" (click)="sendFile()">Send</button>  -->
 
+        </div>
     </div>
-    </div>
-    <div class="user-input">
+ 
+
+
+    <div class="user-input" [ngClass]="{'active': userInputField,'inactive': !userInputField}">
         <label for="fileInput" class="fa fa-paperclip"></label>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
-        <input type="text" placeholder="Type your message">
+        <input type="text" placeholder="Type your message" class="fileInput">
         <button (Click)="sendMessage()">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>

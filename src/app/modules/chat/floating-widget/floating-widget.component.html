@@ -7,7 +7,9 @@
 
     <div class="header">
         <!-- <span class="icon menu-icon">&#9776;</span> -->
-        <i class="fa fa-external-link" aria-hidden="true"></i>
+        <button (click)="showFullScreen()">
+            <i class="fa fa-external-link" aria-hidden="true"></i>
+        </button>
         <span class="widget-title">Chat</span>
         <button (click)="closeWidget()">
             <i class="fa fa-times" aria-hidden="true"></i>
@@ -42,12 +44,13 @@
             </div>
 
         </div>
-        
+
     </div>
 
-   
+
 
 </div>
-<app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image" [username]="selectedUser.name"
-[requestId]="selectedUser.request_id"></app-user-chat>
+<app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
+    [username]="selectedUser.name" [requestId]="selectedUser.request_id"></app-user-chat>
 
+<app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>

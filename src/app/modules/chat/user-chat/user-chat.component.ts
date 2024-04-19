@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ChatService} from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
@@ -9,15 +9,25 @@ import {DomSanitizer} from "@angular/platform-browser";
     templateUrl: './user-chat.component.html',
     styleUrls: ['./user-chat.component.scss']
 })
+
+
 export class UserChatComponent implements OnInit {
 
-
+    @ViewChild('chatWindow') chatWindow: ElementRef;
     @Input() filetype: string;
     @Input() user: string;
     @Input() image: any;
     @Input() username: string;
     @Input() requestId: string;
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
+ 
+ 
+    isHeaderActive: boolean = true;
+    isFloatingActive: boolean = true;
+    chatMessages: boolean = true;
+    userInfo: boolean = true;
+    userInputField: boolean = true;
+
 
     fileToUpload: File | null = null;
 
@@ -37,8 +47,9 @@ export class UserChatComponent implements OnInit {
     }
 
     sendMessage() {
-      // add code to send message
-      //this.chatManager.sendMessage()
+     
+    //   const updatedData = {};
+    //   this.conversationUpdated.emit(updatedData);
     }
 
     onFileSelected(event: any) {
@@ -58,11 +69,27 @@ export class UserChatComponent implements OnInit {
         return file.type === 'application/msword';
     }
 
+    scrollToBottom(): void {
+        try {
+          const chatMessages = this.chatWindow.nativeElement;
+          const lastMessage = chatMessages.lastElementChild;
+          if (lastMessage) {
+            lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }
+        } catch (error) {
+          console.error('Error scrolling chat window:', error);
+        }
+      }
+
     ngOnInit(): void {
         if (this.requestId) {
+            console.log('request_id',this.requestId)
             this.chatManager.openConversation(this.requestId)
             // this.chatService.fetchMessages(this.requestId);
-        }
+         }
+
+        
+         
     }
 
     isTyping: boolean = false;
