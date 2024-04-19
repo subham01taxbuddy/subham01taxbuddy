@@ -373,10 +373,10 @@ export class MoreOptionsDialogComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
           }
