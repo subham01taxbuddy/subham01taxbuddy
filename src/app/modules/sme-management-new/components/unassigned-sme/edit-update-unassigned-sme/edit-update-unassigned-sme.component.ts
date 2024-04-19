@@ -637,8 +637,21 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     const fileInput: HTMLInputElement | null = document.getElementById(inputId) as HTMLInputElement;
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
       const file: File = fileInput.files[0];
+
+      let maxSizeInBytes = 1048576;
+      if (inputId === 'zipInput') {
+        maxSizeInBytes = 10485760;
+      }
+
+      if (file.size > maxSizeInBytes) {
+        this.utilsService.showSnackBar(`File size exceeds the maximum limit`);
+        fileInput.value = '';
+        return;
+      }
+
       const timestamp = new Date().getTime();
-      const fileNameWithTimestamp = `${timestamp}_${file.name}`;
+      const encodedFileName = encodeURIComponent(file.name);
+      const fileNameWithTimestamp = `${timestamp}_${encodedFileName}`;
 
       let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${fileNameWithTimestamp}`;
 
