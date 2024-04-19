@@ -419,6 +419,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   getUserInfoFromPan(panNum: any) {
     // https://uat-api.taxbuddy.com//itr/api/getPanDetail?panNumber=
     if (this.pan.value && this.pan.valid) {
+      const fourthLetter = panNum.substring(3, 4);
+      if (fourthLetter === 'F' || fourthLetter === 'C') {
+        this.panName=this.name.value;
+          return;
+      }
       let param = `/api/getPanDetail?panNumber=${panNum}`;
       this.itrMsService.getMethod(param).subscribe(
         (result: any) => {
@@ -432,20 +437,18 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
             } else {
               this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
             }
-            if (this.panName != this.smeFormGroup.controls['name'].value) {
-              const dialogRef = this.dialog.open(NameAlertComponent, {
-                width: '40%',
-                disableClose: true,
-              });
+            this.checkPanName();
 
-              dialogRef.afterClosed().subscribe(result => {
-                if (this.utilsService.isNonEmpty(result) && result === 'PAN') {
-                  this.smeFormGroup.controls['name'].setValue(this.panName);
-                  return;
-                }
-
-              });
+           }else{
+            if (!this.panInfo?.firstName && this.panInfo?.lastName) {
+              this.panName = this.panInfo.lastName;
+            } else if (this.panInfo?.firstName && !this.panInfo?.lastName) {
+              this.panName = this.panInfo.firstName;
+            } else {
+              this.utilsService.showSnackBar(`Not Found Name As Per PAN `);
+              return;
             }
+            this.checkPanName();
            }
           }else{
             this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
@@ -453,6 +456,23 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
           }
 
         });
+    }
+  }
+
+  checkPanName(){
+    if (this.panName != this.smeFormGroup.controls['name'].value) {
+      const dialogRef = this.dialog.open(NameAlertComponent, {
+        width: '40%',
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (this.utilsService.isNonEmpty(result) && result === 'PAN') {
+          this.smeFormGroup.controls['name'].setValue(this.panName);
+          return;
+        }
+
+      });
     }
   }
 
