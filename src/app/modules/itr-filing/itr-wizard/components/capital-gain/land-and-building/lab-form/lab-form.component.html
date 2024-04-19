@@ -46,7 +46,7 @@
                               <div class="field-label">
                                 <span class="span">Date of Sale </span> <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput [min]="minSellDate" [max]="maxSellDate" formControlName="sellDate"
                                   name="asset[i]" readonly [matDatepicker]="sellDate" placeholder="Date of Sale" (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)"
@@ -67,7 +67,7 @@
                               <div class="field-label">
                                 <span class="span">Date of Acquisition </span> <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput [max]="maxPurchaseDate" [min]="minPurchaseDate"
                                   formControlName="purchaseDate" name="asset[i]" readonly [matDatepicker]="purchaseDate"
                                   placeholder="Date of Acquisition" (blur)="calculateIndexCost(i);
@@ -100,7 +100,7 @@
                             <div class="lndBldg-L">Full Value of Sale received/receivable <span class="redAst">*</span>
                             </div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <input input matInput digitsOnly currencyMask
                                   placeholder="Full Value of Sale received/receivable" name="asset[i]"
                                   formControlName="sellValue" (blur)="updateSaleValue('saleValueChange');calculateIndexCost(i);
@@ -112,7 +112,7 @@
                             <div class="lndBldg-L">Value of property as per stamp duty <span class="redAst">*</span>
                             </div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <input input matInput digitsOnly currencyMask placeholder="Stamp duty value"
                                   name="asset[i]" formControlName="stampDutyValue" (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)" required />
@@ -122,7 +122,7 @@
                           <div class="lndBldg-box">
                             <div class="lndBldg-L">Full value of consideration as per 50C </div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <input input matInput digitsOnly currencyMask
                                   placeholder="Value of Sale Consideration u/s 50C" name="asset[i]"
                                   formControlName="valueInConsideration" (blur)="calculateIndexCost(i);
@@ -141,7 +141,7 @@
                           <div class="lndBldg-box">
                             <div class="lndBldg-L">Cost of Acquisition <span class="redAst">*</span></div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
                                 <input matInput currencyMask digitsOnly [pattern]="amountRegex"
                                   formControlName="purchaseCost" placeholder="Cost of Acquisition" name="asset[i]"
@@ -159,7 +159,7 @@
                             *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
                             <div class="lndBldg-L">Cost of Acquisition with Indexation</div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <input input matInput currencyMask digitsOnly
                                   placeholder="Cost of acquisition with indexation" name="asset[i]"
                                   formControlName="indexCostOfAcquisition" required [disabled]="true"
@@ -170,7 +170,7 @@
                           <div class="lndBldg-box">
                             <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
                             <div class="lndBldg-R">
-                              <mat-form-field class="input-field-width" appearance="outline">
+                              <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
                                 <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
                                 <input matInput currencyMask type="number" [pattern]="amountRegex"
@@ -231,7 +231,7 @@
                         <div class="field-label">
                           <span class="span">Year Of Improvement </span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field class="input-field-width">
+                        <mat-form-field class="input-field-width small-inp no-height">
                           <mat-select name="improve[i]" formControlName="dateOfImprovement" required (selectionChange)="
                       isImprovementValid(this.immovableForm, i)">
                             <mat-option [value]="year" *ngFor="let year of improvementYears">
@@ -247,7 +247,7 @@
                         <div class="field-label">
                           <span class="span">Cost of Improvement </span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field class="input-field-width">
+                        <mat-form-field class="input-field-width small-inp no-height">
                           <input matInput currencyMask type="number" [pattern]="amountRegex"
                             formControlName="costOfImprovement" name="improve[i]" class="input-field" maxlength="14"
                             (change)="isImprovementValid(this.immovableForm, i)"
@@ -265,9 +265,9 @@
                         <div class="field-label">
                           <span class="span">Index cost of improvement </span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field class="input-field-width">
-                          <input matInput class="input-field" name="improve[i]" formControlName="indexCostOfImprovement"
-                            maxlength="14" type="number" [disabled] />
+                        <mat-form-field class="input-field-width small-inp no-height">
+                          <input matInput class=" input-field" name="improve[i]"
+                          formControlName="indexCostOfImprovement" maxlength="14" type="number" [disabled] />
                         </mat-form-field>
                       </div>
                     </div>
@@ -319,7 +319,7 @@
                             formControlName="selected"></mat-checkbox>
                           <span class="span">Investment Under Section </span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field class="input-field-width">
+                        <mat-form-field class="input-field-width small-inp no-height">
                           <mat-select name="underSection" formControlName="underSection"
                             (selectionChange)="changeInvestmentSection('HTML', i)"
                             (blur)="calculateDeduction(i, 'singleCg')">
@@ -346,7 +346,7 @@
                         <div class="field-label">
                           <span class="span">Date Of purchase</span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="small-inp no-height">
                           <input (dateChange)="calculateDeduction(i, 'singleCg')" matInput
                             formControlName="purchaseDate" name="deductions[i]" class="input-field"
                             [matDatepicker]="purchaseDate" [matDatepickerFilter]="disableFutureDates" required />
@@ -366,7 +366,7 @@
                         <div class="field-label">
                           <span class="span">Cost Of New Asset </span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="small-inp no-height">
                           <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number"
                             class="input-field" required (blur)="calculateDeduction(i, 'singleCg')" />
                         </mat-form-field>
@@ -380,7 +380,7 @@
                         <div class="field-label">
                           <span class="span">CGAS Account</span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="small-inp no-height">
                           <input (blur)="calculateDeduction(i, 'singleCg')" matInput class="input-field"
                             name="deductions[i]" formControlName="investmentInCGAccount" maxlength="14" type="number"
                             required />
@@ -396,7 +396,7 @@
                         <div class="field-label">
                           <span class="span">Deduction Claimed</span> <span class="redAst">*</span>
                         </div>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="small-inp no-height">
                           <input matInput formControlName="totalDeductionClaimed" name="deductions[i]"
                             class="input-field" maxlength="6" type="number" readonly required />
                         </mat-form-field>

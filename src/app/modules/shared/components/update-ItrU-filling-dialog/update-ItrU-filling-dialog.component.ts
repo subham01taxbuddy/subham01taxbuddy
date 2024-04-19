@@ -166,30 +166,32 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
               isITRU: true,
             };
             console.log('Updated Data:', req);
-            const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
-            this.itrMsService.putMethod(param, req).subscribe(
-              (res: any) => {
-                console.log(res);
-                this.loading = false;
-                if (res.success) {
+            setTimeout(() => {
+              const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
+              this.itrMsService.putMethod(param, req).subscribe(
+                (res: any) => {
+                  console.log(res);
+                  this.loading = false;
+                  if (res.success) {
+                    this.utilsService.showSnackBar(
+                      'ITR-U Filing Details updated successfully'
+                    );
+                    this.dialogRef.close(true);
+                    // this.location.back();
+                  } else {
+                    this.utilsService.showSnackBar(res.message);
+                    this.dialogRef.close(true);
+                  }
+                },
+                (error) => {
                   this.utilsService.showSnackBar(
-                    'ITR-U Filing Details updated successfully'
+                    'Failed to update ITR-U Filing Details'
                   );
                   this.dialogRef.close(true);
-                  // this.location.back();
-                } else {
-                  this.utilsService.showSnackBar(res.message);
-                  this.dialogRef.close(true);
+                  this.loading = false;
                 }
-              },
-              (error) => {
-                this.utilsService.showSnackBar(
-                  'Failed to update ITR-U Filing Details'
-                );
-                this.dialogRef.close(true);
-                this.loading = false;
-              }
-            );
+              );
+            }, 7000)
           } else {
             this.utilsService.showSnackBar(
               'Please give E-Filling-Date and Acknowledgment Number'
@@ -202,12 +204,12 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         this.utilsService.showSnackBar(
           'error in api of user-reassignment-status'
         );
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
-          this.utilsService.showSnackBar( error.error.error);
+          this.utilsService.showSnackBar(error.error.error);
           this.dialogRef.close(true);
         } else {
-          this.utilsService.showSnackBar( "An unexpected error occurred.");
+          this.utilsService.showSnackBar("An unexpected error occurred.");
         }
       }
     );
