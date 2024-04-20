@@ -91,19 +91,18 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
 
   checkSubscriptionForSelectedFinancialYear(financialYear:string) {
     this.loading = true;
-    const query = {
+    const query = JSON.stringify({
       "and": {
-        "is": {
-          "userId": this.data.userId,
-          "serviceType": "ITRU",
-          "item.financialYear":financialYear
-         }
+        "userId": this.data.userId,
+        "serviceType": "ITRU",
+        "item.financialYear":financialYear
       },
-      "collectionName":"subscription",
-      "queryType": "EXISTS"
-    }
+      "type": "exists"
+    });
 
-    this.reportService.query(query).subscribe(
+    const param1 = '/bo/query/subscription?query='+btoa(query);
+
+    this.reportService.getMethod(param1).subscribe(
       (res: any) => {
         this.loading = false;
         if (res?.data) {
