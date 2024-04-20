@@ -382,7 +382,33 @@ export class MoreOptionsDialogComponent implements OnInit {
           }
         });
         if (itrSubscriptionFound) {
-          this.checkFilerAssignment(action);
+          if('ITR' === this.data.serviceType) 
+            this.checkFilerAssignment(action);
+          else if('ITRU' === this.data.serviceType){
+            const query = {
+            "and": {
+                "is": {
+                    "userId": this.data.userId,
+                    "isITRU": true,
+                    "eFillingCompleted": true
+                },
+                "in": {
+                    "assessmentYear":["2022-2023", "2023-2024"]
+                }
+            },
+            "includes": ["eFillingCompleted","assessmentYear"],
+            "collectionName": "itr",
+            "queryType": "FIND_ALL"
+          };
+          
+          this.reportService.query(query).subscribe(
+            (res: any) => {
+              if(res?.data?.length === 2)
+                this.utilsService.showSnackBar('All ITRU are filed.');
+              else
+                this.checkFilerAssignment(action);
+            });
+          }
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
         }
