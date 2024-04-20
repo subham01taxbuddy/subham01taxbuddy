@@ -117,6 +117,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
           this.utilsService.showSnackBar(
             'Please make sure the subscription is created for user.'
           );
+          this.dialogRef.close(true);
         }
       }, error => {
         this.hideYears = true;
