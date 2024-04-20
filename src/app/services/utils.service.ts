@@ -24,6 +24,7 @@ export class UtilsService {
   jsonData: any;
   value: any;
   salaryValues: any;
+  secretKey: 'cYDffVW+lRRd2BKa0ZTEpJwEmrsLme/t';
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -1478,4 +1479,31 @@ export class UtilsService {
     }
     return localEmployer;
   }
+
+  encrypt(text, iv) {
+    return CryptoJS.AES.encrypt(text, CryptoJS.enc.Utf8.parse(this.secretKey), {
+        iv: CryptoJS.enc.Utf8.parse(iv),
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    }).toString();
+  }
+
+  decrypt(ciphertext, iv) {
+    const bytes = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(this.secretKey), {
+        iv: CryptoJS.enc.Utf8.parse(iv),
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    });
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+
+  generateRandomAlphaNumeric(size) {
+    const chars = 'ABCDEF23dsdfsdfGHIJKsdfLMNOPQSDFRSTU43fasdVWXYZ3sdf4SDF5abcSDFdefghijklmnopqrsSDFtuvwDDSFxyzsdfsdfhy0123456789';
+    let result = '';
+    for (let i = 0; i < size; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
 }
