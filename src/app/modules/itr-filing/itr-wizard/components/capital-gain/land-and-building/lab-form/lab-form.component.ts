@@ -568,6 +568,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
       investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
+      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
@@ -1023,6 +1026,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         costOfNewAssets: null,
         investmentInCGAccount: null,
         totalDeductionClaimed: null,
+        accountNumber: null,
+        ifscCode: null,
+        dateOfDeposit: null,
       };
 
       deductions.push(this.createDeductionForm(obj));
@@ -1241,6 +1247,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       costOfNewAssets: null,
       investmentInCGAccount: null,
       totalDeductionClaimed: null,
+      accountNumber: null,
+      ifscCode: null,
+      dateOfDeposit: null
     };
     if (deductions.valid) {
       deductions.push(this.createDeductionForm(obj));
