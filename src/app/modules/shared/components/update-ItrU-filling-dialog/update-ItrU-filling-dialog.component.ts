@@ -115,7 +115,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
           this.hideYears = true;
           this.showDetails = false;
           this.utilsService.showSnackBar(
-            'Subscription not found'
+            'Please make sure the subscription is created for user.'
           );
         }
       }, error => {
