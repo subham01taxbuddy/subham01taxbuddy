@@ -60,7 +60,9 @@
                         <tr>
                             <td>Deduction u/s 16</td>
                             <td>₹
-                                {{utilsService.currencyFormatter(summary.summaryIncome.summarySalaryIncome.totalStandardDeduction + summary.summaryIncome.summarySalaryIncome.totalSummaryPTDeductionsExemptIncome + summary.summaryIncome.summarySalaryIncome.totalSummaryETDeductionsExemptIncome)}}
+                                {{utilsService.currencyFormatter(summary.summaryIncome.summarySalaryIncome.totalStandardDeduction
+                                + summary.summaryIncome.summarySalaryIncome.totalSummaryPTDeductionsExemptIncome +
+                                summary.summaryIncome.summarySalaryIncome.totalSummaryETDeductionsExemptIncome)}}
                             </td>
                         </tr>
                         <tr class="border-top">
@@ -133,6 +135,7 @@
 
             <div class="space" *ngIf="type === 'presumptiveIncome'">
                 <table class="table table-borderless f-size">
+                    <div style="font-weight: 800;">Note : To view the Show Summary, Click on 'save all'</div>
                     <tbody>
                         <tr class="border-bottom">
                             <th>Type Of Presumptive Income</th>
@@ -271,12 +274,16 @@
                         <tr>
                             <td>Buy Value</td>
                             <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetSTCGBuyValue)}}</td>
-                            <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetLTCGIndexCostOfAcquisition)}}</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(otherAssets.totalOtherAssetLTCGIndexCostOfAcquisition)}}
+                            </td>
                         </tr>
                         <tr>
                             <td>Cost of Improvement</td>
-                            <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetSTCGCostOfImprovement)}}</td>
-                            <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetLTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetSTCGCostOfImprovement)}}
+                            </td>
+                            <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetLTCGCostOfImprovement)}}
+                            </td>
                         </tr>
                         <tr>
                             <td>Expenses</td>
@@ -322,12 +329,16 @@
                         <tr>
                             <td>Buy Value</td>
                             <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGBuyValue)}}</td>
-                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGIndexCostOfAcquisition)}}</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGIndexCostOfAcquisition)}}
+                            </td>
                         </tr>
                         <tr>
                             <td>Cost of Improvement</td>
-                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGCostOfImprovement)}}</td>
-                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGCostOfImprovement)}}
+                            </td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGCostOfImprovement)}}
+                            </td>
                         </tr>
                         <tr>
                             <td>Expenses</td>
