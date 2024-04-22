@@ -548,11 +548,14 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (change)="calculateDeductionGain()" matInput readonly
+                              <input (change)="calculateDeductionGain()" matInput [readonly]="true"
                                 placeholder="Amount of deduction claimed" formControlName="totalDeductionClaimed"
                                 maxlength="14" />
                               <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
                     'required')">Please enter amount</mat-error>
+                              <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('max')">
+                                Amount against 54F shall be restricted to 10 Crore.
+                              </mat-error>
                             </mat-form-field>
                           </div>
                         </div>

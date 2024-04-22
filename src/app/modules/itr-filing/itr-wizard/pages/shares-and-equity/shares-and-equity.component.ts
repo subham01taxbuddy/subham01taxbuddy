@@ -350,7 +350,7 @@ export class SharesAndEquityComponent
         obj ? obj.investmentInCGAccount : null,
         Validators.required,
       ],
-      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
+      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null, [Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
       accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
@@ -1810,6 +1810,12 @@ export class SharesAndEquityComponent
   }
 
   saveAll() {
+    if (this.deductionForm.invalid && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
+      this.utilsService.showSnackBar(
+        'Amount against 54F shall be restricted to 10 Crore.'
+      );
+      return;
+    }
     this.save();
     this.saveAndNext.emit(false);
   }

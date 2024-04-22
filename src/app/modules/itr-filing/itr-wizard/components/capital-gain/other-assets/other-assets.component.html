@@ -252,6 +252,9 @@
                                     placeholder="Amount of Deduction Claimed" name="deductionClaimed"
                                     class="input-field" maxlength="14" readonly
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                                  <mat-error *ngIf="deduction.get('deductionClaimed').hasError('max')">
+                                    Amount against 54F shall be restricted to 10 Crore.
+                                  </mat-error>
                                 </mat-form-field>
                               </div>
                             </div>
