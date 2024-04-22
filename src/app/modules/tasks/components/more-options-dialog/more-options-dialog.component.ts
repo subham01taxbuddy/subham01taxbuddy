@@ -405,7 +405,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.reportService.query(query).subscribe(
             (res: any) => {
               if(res?.data?.length === 2)
-                this.utilsService.showSnackBar('All ITRU are filed.');
+                this.utilsService.showSnackBar('All ITR-U are filed.');
               else
                 this.checkFilerAssignment(action);
             });
