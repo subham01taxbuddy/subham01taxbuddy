@@ -6858,29 +6858,29 @@ export class SummaryComponent implements OnInit {
           this.utilsService.showSnackBar(res.message);
         } else {
           this.utilsService.showSnackBar(res.message);
-          //also update user status
-          let statusParam = '/itr-status';
-          let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
+          // //also update user status
+          // let statusParam = '/itr-status';
+          // let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
 
-          let param2 = {
-            statusId: 7, //waiting for confirmation
-            userId: this.ITR_JSON.userId,
-            assessmentYear: this.ITR_JSON.assessmentYear,
-            completed: false,
-            serviceType: sType,
-          };
-          console.log('param2: ', param2);
-          this.userMsService.postMethod(statusParam, param2).subscribe(
-            (res) => {
-              console.log('Status update response: ', res);
-              this.loading = false;
-              //this._toastMessageService.alert("success", "Status update successfully.");
-            },
-            (error) => {
-              this.loading = false;
-              //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-            }
-          );
+          // let param2 = {
+          //   statusId: 7, //waiting for confirmation
+          //   userId: this.ITR_JSON.userId,
+          //   assessmentYear: this.ITR_JSON.assessmentYear,
+          //   completed: false,
+          //   serviceType: sType,
+          // };
+          // console.log('param2: ', param2);
+          // this.userMsService.postMethod(statusParam, param2).subscribe(
+          //   (res) => {
+          //     console.log('Status update response: ', res);
+          //     this.loading = false;
+          //     //this._toastMessageService.alert("success", "Status update successfully.");
+          //   },
+          //   (error) => {
+          //     this.loading = false;
+          //     //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+          //   }
+          // );
         }
       },
       (error) => {
