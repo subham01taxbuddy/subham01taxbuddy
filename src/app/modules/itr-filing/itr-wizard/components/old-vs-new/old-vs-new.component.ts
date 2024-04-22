@@ -165,6 +165,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   initForm() {
+    let regimeRequired = !this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson);
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
         everOptedNewRegime: [''],
@@ -179,7 +180,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: ['', Validators.required],
+        currentYearRegime: ['', regimeRequired ? Validators.required : []],
         date: [],
         acknowledgementNumber: [],
       }),
