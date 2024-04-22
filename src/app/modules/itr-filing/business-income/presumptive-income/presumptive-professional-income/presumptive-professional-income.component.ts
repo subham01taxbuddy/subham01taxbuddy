@@ -197,14 +197,14 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       let cashReceiptsInPercent = total / 100 * 5;
       if (cashReceiptsTotal < cashReceiptsInPercent) {
         if (total > 7500000) {
-          this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
         } else {
 
         }
       } else {
         if (total != 5000000) {
-          this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
         }
       }
@@ -441,14 +441,14 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       let cashReceiptsInPercent = total / 100 * 5;
       if (parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) < cashReceiptsInPercent) {
         if (total > 7500000) {
-          this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
         } else {
 
         }
       } else {
         if (total != 5000000) {
-          this.utilsService.showSnackBar('If gross receipts are more than Rs.5000000 and cash receipts are more than 5% of total receipts, it is mandatory to have a tax audit under 44AB. Please use the regular ITR 3/5 form.');
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
         }
       }
