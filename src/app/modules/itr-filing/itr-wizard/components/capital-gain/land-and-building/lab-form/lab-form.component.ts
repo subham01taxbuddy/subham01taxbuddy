@@ -1055,14 +1055,23 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as UntypedFormArray
     ).controls[0] as UntypedFormGroup;
+    if (deductionForm.controls['underSection'].value === '54' ||
+      deductionForm.controls['underSection'].value === '54F') {
+      deductionForm.controls['totalDeductionClaimed'].setValidators(Validators.max(100000000));
+      deductionForm.controls['totalDeductionClaimed'].markAsDirty();
+      deductionForm.controls['totalDeductionClaimed'].markAllAsTouched();
+      deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
+    }else{
+      deductionForm.controls['totalDeductionClaimed'].setValidators(null);
+      deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
+    }
 
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC' ||
       deductionForm.controls['underSection'].value === '54F' ||
       deductionForm.controls['underSection'].value === '54B' ||
-      deductionForm.controls['underSection'].value === '54'
-    ) {
+      deductionForm.controls['underSection'].value === '54') {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
         Validators.required,

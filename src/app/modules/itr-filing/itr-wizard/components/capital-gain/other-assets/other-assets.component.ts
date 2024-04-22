@@ -170,7 +170,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       purchaseDate: obj ? obj?.purchaseDate : null,
       costOfNewAsset: obj ? obj?.costOfNewAssets : null,
       CGASAmount: obj ? obj?.investmentInCGAccount : null,
-      deductionClaimed: obj ? obj?.totalDeductionClaimed : null,
+      deductionClaimed: [obj ? obj?.totalDeductionClaimed : null, [Validators.max(100000000)]],
       accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
       dateOfDeposit: [obj?.dateOfDeposit || null],
@@ -254,6 +254,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   // saving the cg
   saveCg() {
+    if (this.deductionForm.invalid && this.deductionForm.controls['deductionClaimed'].errors['max']) {
+      this.utilsService.showSnackBar(
+        'Amount against 54F shall be restricted to 10 Crore.'
+      );
+      return;
+    }
     const deductionsArray = (
       (this.deductionForm.controls['deductions'] as UntypedFormArray)
         ?.controls[0] as UntypedFormGroup

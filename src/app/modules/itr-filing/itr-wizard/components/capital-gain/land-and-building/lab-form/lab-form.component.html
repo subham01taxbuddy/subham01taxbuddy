@@ -399,6 +399,9 @@
                         <mat-form-field appearance="outline" class="small-inp no-height">
                           <input matInput formControlName="totalDeductionClaimed" name="deductions[i]"
                             class="input-field" maxlength="6" type="number" readonly required />
+                          <mat-error *ngIf="deduction.get('totalDeductionClaimed').hasError('max')">
+                            Amount against 54 and 54F shall be restricted to 10 Crore.
+                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>

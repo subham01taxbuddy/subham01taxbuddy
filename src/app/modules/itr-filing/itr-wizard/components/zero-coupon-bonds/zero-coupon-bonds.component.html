@@ -309,6 +309,9 @@
                                 <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
                                                   'required')">Please enter amount
                                 </mat-error>
+                                <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('max')">
+                                  Amount against 54F shall be restricted to 10 Crore.
+                                </mat-error>
                               </mat-form-field>
                             </div>
                           </div>
