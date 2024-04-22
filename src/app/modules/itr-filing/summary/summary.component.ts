@@ -862,6 +862,7 @@ export class SummaryComponent implements OnInit {
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
+  business44ADADetails: any = [];
   countryCodeList: any;
   dialogRef: any;
   loggedInUserRoles: any;
@@ -5209,23 +5210,7 @@ export class SummaryComponent implements OnInit {
               businessIncome: {
                 businessIncomeDetails: {
                   business44AD: this.business44adDetails,
-
-                  business44ADA:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                      ?.filter(
-                        (element) => element?.businessType === 'PROFESSIONAL'
-                      )
-                      .map((element) => ({
-                        businessSection: element?.businessType,
-                        natureOfBusinessCode: this.natureOfBusiness?.find(
-                          (item) => {
-                            return item?.code === element?.natureOfBusinessCode;
-                          }
-                        )?.label,
-                        tradeName: element?.tradeName,
-                        grossTurnover: element?.receipts,
-                        TaxableIncome: element?.presumptiveIncome,
-                      })),
+                  business44ADA: this.business44ADADetails,
 
                   nonSpecIncome: {
                     businessSection: 'Non Speculative Income',
@@ -6528,6 +6513,24 @@ export class SummaryComponent implements OnInit {
     return gross + profit + perquisite;
   }
 
+  setBusiness44ADA(){
+    let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+      ?.filter(element => element?.businessType === 'PROFESSIONAL');
+    
+    let tradeNameSet = new Set(professionalIncomes.map(item => item.tradeName));
+
+    tradeNameSet.forEach(tradeName=>{
+      const profIncome = professionalIncomes.filter(income=>income.tradeName === tradeName);
+      this.business44ADADetails.push({
+        businessSection: profIncome[0]?.businessType,
+        natureOfBusinessCode: this.natureOfBusiness?.find(item => item?.code === profIncome[0]?.natureOfBusinessCode)?.label,
+        tradeName: tradeName,
+        grossTurnover: profIncome.reduce((total, element) => total+ element.receipts, 0),
+        TaxableIncome: profIncome.reduce((total, element) => total+ element.presumptiveIncome, 0),
+      });
+    });
+  }
+
   getUserName(type) {
     const self = this.ITR_JSON.family?.filter(
       (item: any) => item.relationShipCode === 'SELF'
@@ -6858,7 +6861,7 @@ export class SummaryComponent implements OnInit {
           this.utilsService.showSnackBar(res.message);
         } else {
           this.utilsService.showSnackBar(res.message);
-          // //also update user status
+          //also update user status
           // let statusParam = '/itr-status';
           // let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
 
@@ -7273,6 +7276,8 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
+    
+    this.setBusiness44ADA();
   }
 
   getCountry(code) {
