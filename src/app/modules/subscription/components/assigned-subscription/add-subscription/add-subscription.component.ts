@@ -20,6 +20,7 @@ export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
   service = '';
   disableItrSubPlan: boolean = false;
+  disableTpaSubPlan: boolean = false;
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -166,7 +167,16 @@ export class AddSubscriptionComponent implements OnInit {
     }else{
       futureParam = `/bo/future-year-subscription-exists?mobileNumber=${number}`
     }
-    this.reportService.getMethod(futureParam).subscribe((response: any) => {
+
+  let url = number ? '/bo/subscription/coupon-code-exists?mobileNumber='+number+'&serviceType=TPA':
+  '/bo/subscription/coupon-code-exists?userId='+userId+'&serviceType=TAP';
+
+  this.reportService.getMethod(url).subscribe(
+    (response: any) => {
+      if (response?.success && response?.data?.couponCodeExists)
+        this.disableTpaSubPlan = response.data;
+
+      this.reportService.getMethod(futureParam).subscribe((response: any) => {
       this.disableItrSubPlan = response.data.itrSubscriptionExists;
 
       this.loading = true;
@@ -194,7 +204,9 @@ export class AddSubscriptionComponent implements OnInit {
         }
       })
     });
+  });
   }
+
 
   // disable(){
   //   if(this.serviceDetails.includes('Schedule call')){
