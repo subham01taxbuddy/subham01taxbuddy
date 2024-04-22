@@ -519,6 +519,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         total: userInvoices[i].total,
         paymentLink: userInvoices[i].paymentLink,
         leaderName: userInvoices[i].leaderName,
+        subscriptionAdjustedAmount: userInvoices[i]?.subscriptionAdjustedAmount ? userInvoices[i]?.subscriptionAdjustedAmount : 0
       });
       invoices.push(updateInvoice);
     }
@@ -753,6 +754,13 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         headerName: 'Payable Amount',
         field: 'total',
         width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Adjusted subscription amount',
+        field: 'subscriptionAdjustedAmount',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
