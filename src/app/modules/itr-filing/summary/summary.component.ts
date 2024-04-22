@@ -1816,7 +1816,7 @@ export class SummaryComponent implements OnInit {
                 ]?.TotalTaxPayable,
               taxAtSpecialRate: 0,
               rebateOnAgricultureIncome: 0,
-              marginalRelief:0,
+              marginalRelief: 0,
               totalTax:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
@@ -6860,7 +6860,7 @@ export class SummaryComponent implements OnInit {
           this.utilsService.showSnackBar(res.message);
           //also update user status
           let statusParam = '/itr-status';
-          let sType = 'ITR';
+          let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
 
           let param2 = {
             statusId: 7, //waiting for confirmation
@@ -7013,7 +7013,7 @@ export class SummaryComponent implements OnInit {
     // this.itrMsService.getMethod(param).subscribe(
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          this.checkFilerAssignment();
+    this.checkFilerAssignment();
     //       // console.log(res, 'Paid');
     //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
     //       this.utilsService.showSnackBar(
@@ -7039,10 +7039,10 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-            let param = '/eligible-to-file-itr?userId='+this.ITR_JSON.userId+'&&assessmentYear='+this.ITR_JSON.assessmentYear;
+            let param = '/eligible-to-file-itr?userId=' + this.ITR_JSON.userId + '&&assessmentYear=' + this.ITR_JSON.assessmentYear;
             this.itrMsService.getMethod(param).subscribe(
               (response: any) => {
-                if(!(response.success && response?.data?.eligibleToFileItr)){
+                if (!(response.success && response?.data?.eligibleToFileItr)) {
                   this.utilsService.showSnackBar(
                     'You can only update the ITR file record when your status is "ITR confirmation received"'
                   );
