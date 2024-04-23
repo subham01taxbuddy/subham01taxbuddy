@@ -529,9 +529,17 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   openAccordion() {
-    const accordionButton = document.getElementsByClassName('accordion-button');
-    if (accordionButton) {
-      (accordionButton[0] as HTMLDivElement).click();
+    // const accordionButton = document.getElementsByClassName('accordion-button');
+    // if (accordionButton) {
+    //   (accordionButton[0] as HTMLDivElement).click();
+    // }
+
+    const accord = document.getElementById('accordBtn');
+    if(accord){
+      if (accord.getAttribute("aria-expanded") === "false"){
+        accord.click();
+      }
+
     }
   }
 
