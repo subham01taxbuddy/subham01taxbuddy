@@ -24,6 +24,11 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    
+    if(request.url.includes("/query?query=") && request.method === 'GET') {
+      return next.handle(request);
+    }
+
     if (request.headers.has(InterceptorSkipHeader)) {
       const headers = request.headers.delete(InterceptorSkipHeader);
       return next.handle(request.clone({ headers }));
@@ -49,6 +54,7 @@ export class TokenInterceptor implements HttpInterceptor {
     if (TOKEN && this.tokenExpired(TOKEN)) {
       console.log("this is expired token case");
     }
+    
     if ((request.url.startsWith(environment.url) || request.url.startsWith(environment.eri_url)) && TOKEN) {
       let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'));
       if (request.headers.has(InterceptorSkipHeader)) {

@@ -37,8 +37,8 @@
 
         <hr />
 
-        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()">
-          <div class="card__row flex flex-col">
+        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()" >
+          <div class="card__row flex flex-col" *ngIf="!this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)">
             <div class="card__col-xs-12 question-label" style="margin-bottom: 10px; background: #eaeaea">
               <strong> Tax Regime Selection </strong>
               <mat-label> Select the best suited Tax Regime </mat-label>

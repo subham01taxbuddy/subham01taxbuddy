@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -8,8 +8,8 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
-import {GridOptions} from "ag-grid-community";
-import {ActivatedRoute} from "@angular/router";
+import { GridOptions } from "ag-grid-community";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-bonds-debenture',
@@ -40,17 +40,17 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   activeIndex: number;
   constructor(
-      private fb: UntypedFormBuilder,
-      public utilsService: UtilsService,
-      private itrMsService: ItrMsService,
-      private toastMsgService: ToastMessageService,
-      private activateRoute: ActivatedRoute
+    private fb: UntypedFormBuilder,
+    public utilsService: UtilsService,
+    private itrMsService: ItrMsService,
+    private toastMsgService: ToastMessageService,
+    private activateRoute: ActivatedRoute
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
-        sessionStorage.getItem(AppConstants.ITR_JSON)
+      sessionStorage.getItem(AppConstants.ITR_JSON)
     );
     //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -68,7 +68,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       enableCellTextSelection: true,
       onGridReady: (params) => {
         params.api?.setRowData(
-            this.getBondsArray.controls
+          this.getBondsArray.controls
         );
       },
       onSelectionChanged: (event) => {
@@ -90,13 +90,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.maximumDate = new Date();
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
-      if(this.bondType === 'indexedBonds'){
+      if (this.bondType === 'indexedBonds') {
         this.title = 'Indexed Bonds & Debentures';
         this.assetType = 'INDEXED_BONDS';
-      } else if(this.bondType === 'listedBonds'){
+      } else if (this.bondType === 'listedBonds') {
         this.title = 'Listed Bonds & Debentures';
         this.assetType = 'LISTED_DEBENTURES';
-      } else if(this.bondType === 'unlistedBonds'){
+      } else if (this.bondType === 'unlistedBonds') {
         this.title = 'Unlisted Bonds & Debentures';
         this.assetType = 'BONDS';
       } else {
@@ -114,7 +114,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       let data;
 
       data = this.Copy_ITR_JSON.capitalGain.filter(
-          (item: any) => item.assetType === this.assetType
+        (item: any) => item.assetType === this.assetType
       );
 
 
@@ -125,13 +125,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           assetDetails = obj.assetDetails;
           assetDetails.forEach((element: any) => {
             const filterImp = obj.improvement.filter(
-                (data) => data.srn == element.srn
+              (data) => data.srn == element.srn
             );
             if (filterImp?.length > 0) {
               element.costOfImprovement = filterImp[0].indexCostOfImprovement;
               element['improvementCost'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
-                  filterImp[0].indexCostOfImprovement;
+                filterImp[0].indexCostOfImprovement;
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
 
             }
@@ -151,7 +151,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.isDisable = true;
 
     this.bondsGridOptions.api?.setRowData(
-        this.getBondsArray.controls
+      this.getBondsArray.controls
     );
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
@@ -175,21 +175,21 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   bondSelected() {
     const securitiesArray = <UntypedFormArray>this.bondsForm.controls['bondsArray'];
     return (
-        securitiesArray.controls.filter(
-            (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
-        ).length > 0
+      securitiesArray.controls.filter(
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
+      ).length > 0
     );
   }
 
   getPlaceholderImprovement(bonds) {
     return bonds.get('isIndexationBenefitAvailable').value
-        ? 'Cost of improvement with indexation'
-        : 'Cost of improvement without indexation';
+      ? 'Cost of improvement with indexation'
+      : 'Cost of improvement without indexation';
   }
   getPlaceholderPurchase(bonds) {
     return bonds.get('isIndexationBenefitAvailable').value
-        ? 'Cost of Acquisition with indexation (Purchase value)'
-        : 'Cost of Acquisition without indexation (Purchase value)';
+      ? 'Cost of Acquisition with indexation (Purchase value)'
+      : 'Cost of Acquisition without indexation (Purchase value)';
   }
 
   calMaxPurchaseDate(sellDate, formGroupName, index) {
@@ -260,7 +260,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
-  clearForm(){
+  clearForm() {
     this.selectedFormGroup.reset();
     this.selectedFormGroup.controls['isIndexationBenefitAvailable'].setValue(
       this.assetType === 'INDEXED_BONDS' ? true : false
@@ -274,7 +274,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   saveManualEntry() {
-    if(this.selectedFormGroup.invalid){
+    if (this.selectedFormGroup.invalid) {
       this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
       return;
     }
@@ -283,7 +283,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
     // result.costOfImprovement = result.indexCostOfImprovement;
 
-    if(this.activeIndex === -1){
+    if (this.activeIndex === -1) {
       let srn = (this.bondsForm.controls['bondsArray'] as UntypedFormArray).length;
       let form = this.createForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
@@ -301,7 +301,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   editBondsForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-        ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
+      ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
   }
 
@@ -317,9 +317,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   deleteBondsArray() {
     let bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls = bondsArray.controls.filter(
-        (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
+      (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
-    if(bondsArray.length == 0){
+    if (bondsArray.length == 0) {
       this.deductionForm.reset();
       this.deduction = false;
       this.isDisable = true;
@@ -399,13 +399,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['valueInConsideration'].value;
         },
@@ -444,13 +446,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
@@ -467,11 +471,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         valueGetter: function nameFromCode(params) {
           console.log(self, params.data);
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
-              params.data.controls['purchaseCost'].value;
+            params.data.controls['purchaseCost'].value;
         },
         valueFormatter: function (params) {
           let purchaseCost = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
-              params.data.controls['purchaseCost'].value;
+            params.data.controls['purchaseCost'].value;
           return `₹ ${purchaseCost}`;
         }
       },
@@ -482,11 +486,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
-              params.data.controls['improvementCost'].value;
+            params.data.controls['improvementCost'].value;
         },
         valueFormatter: function (params) {
           const costOfImprovement = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
-          params.data.controls['improvementCost'].value;
+            params.data.controls['improvementCost'].value;
           return `₹ ${costOfImprovement}`;
         }
       },
@@ -494,13 +498,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#33353F',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
@@ -519,12 +525,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         },
         cellRenderer: function (params: any) {
           const gainType = params.data.controls['gainType'].value;
-          if(gainType === 'LONG'){
+          if (gainType === 'LONG') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
              background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
              ${gainType}
             </button>`;
-          }else if(gainType === 'SHORT'){
+          } else if (gainType === 'SHORT') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
             background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
             ${gainType}
@@ -536,13 +542,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         headerName: 'Gain Amount',
         field: 'capitalGain',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#33353F',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
@@ -579,14 +587,14 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   getGainType(bonds) {
     if (
-        bonds.controls['purchaseDate'].value &&
-        bonds.controls['sellDate'].value
+      bonds.controls['purchaseDate'].value &&
+      bonds.controls['sellDate'].value
     ) {
       let param = '/calculate/indexed-cost';
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
       let type = this.assetType;
-      if(bonds.controls['isIndexationBenefitAvailable'].value === false){
+      if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
       }
@@ -597,28 +605,28 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       };
       this.loading = true;
       this.itrMsService.postMethod(param, request).subscribe(
-          (result: any) => {
-            if (result.success) {
-              bonds.controls['gainType'].setValue(result.data.capitalGainType);
-              this.calculateIndexCost(bonds);
-              this.calculateIndexCost(bonds, 'asset');
-              this.calculateTotalCG(bonds);
-              this.loading = false;
-            } else {
-              this.loading = false;
-              this.toastMsgService.alert(
-                  'error',
-                  'failed to calculate Type of gain.'
-              );
-            }
-          },
-          (error) => {
+        (result: any) => {
+          if (result.success) {
+            bonds.controls['gainType'].setValue(result.data.capitalGainType);
+            this.calculateIndexCost(bonds);
+            this.calculateIndexCost(bonds, 'asset');
+            this.calculateTotalCG(bonds);
+            this.loading = false;
+          } else {
             this.loading = false;
             this.toastMsgService.alert(
-                'error',
-                'failed to calculate Type of gain.'
+              'error',
+              'failed to calculate Type of gain.'
             );
           }
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate Type of gain.'
+          );
+        }
       );
     }
   }
@@ -639,33 +647,33 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             dateOfImprovement: bonds.controls['dateOfImprovement'].value,
             costOfImprovement: bonds.controls['improvementCost'].value,
             indexCostOfImprovement: bonds.controls[
-                'isIndexationBenefitAvailable'
-                ].value
-                ? bonds.controls['indexCostOfImprovement'].value
-                : 0,
+              'isIndexationBenefitAvailable'
+            ].value
+              ? bonds.controls['indexCostOfImprovement'].value
+              : 0,
           },
         ],
       };
       this.itrMsService.postMethod(param, request).subscribe(
-          (res: any) => {
-            this.loading = false;
-            if (res.assetDetails[0].capitalGain) {
-              bonds.controls['capitalGain'].setValue(
-                  res.assetDetails[0].capitalGain
-              );
-            } else {
-              bonds.controls['capitalGain'].setValue(0);
-            }
-            this.updateDeductionUI();
-            this.calculateDeductionGain();
-          },
-          (error) => {
-            this.loading = false;
-            this.toastMsgService.alert(
-                'error',
-                'failed to calculate total capital gain.'
+        (res: any) => {
+          this.loading = false;
+          if (res.assetDetails[0].capitalGain) {
+            bonds.controls['capitalGain'].setValue(
+              res.assetDetails[0].capitalGain
             );
+          } else {
+            bonds.controls['capitalGain'].setValue(0);
           }
+          this.updateDeductionUI();
+          this.calculateDeductionGain();
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
       );
     }
   }
@@ -681,13 +689,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
       ltcg +=
-          (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
-              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
-              : 0;
+        (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
+          : 0;
       stcg +=
-          (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
-              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
-              : 0;
+        (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
+          : 0;
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
@@ -712,7 +720,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       let bondIndex;
 
       bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-          (element) => element.assetType === this.assetType
+        (element) => element.assetType === this.assetType
       );
 
       let bondImprovement = [];
@@ -724,26 +732,26 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       //   bondsList = [];
       // }
       bondsArray.controls.forEach((element) => {
-          let costOfImprovement = (element as UntypedFormGroup).controls[
-              'improvementCost'
-              ].value;
-          let indexedValue = (element as UntypedFormGroup).controls['indexCostOfImprovement'].value;
-          bondImprovement.push({
-            srn: (element as UntypedFormGroup).controls['srn'].value,
-            dateOfImprovement: (element as UntypedFormGroup).controls[
-                'dateOfImprovement'
-                ].value,
-            indexCostOfImprovement: indexedValue,
-            costOfImprovement: costOfImprovement,
-          });
-          if(this.assetType === 'INDEXED_BONDS'){
-            if(indexedValue > 0){
-              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(indexedValue);
-            } else {
-              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
-            }
+        let costOfImprovement = (element as UntypedFormGroup).controls[
+          'improvementCost'
+        ].value;
+        let indexedValue = (element as UntypedFormGroup).controls['indexCostOfImprovement'].value;
+        bondImprovement.push({
+          srn: (element as UntypedFormGroup).controls['srn'].value,
+          dateOfImprovement: (element as UntypedFormGroup).controls[
+            'dateOfImprovement'
+          ].value,
+          indexCostOfImprovement: indexedValue,
+          costOfImprovement: costOfImprovement,
+        });
+        if (this.assetType === 'INDEXED_BONDS') {
+          if (indexedValue > 0) {
+            (element as UntypedFormGroup).controls['costOfImprovement'].setValue(indexedValue);
+          } else {
+            (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
           }
-          bondsList.push((element as UntypedFormGroup).getRawValue());
+        }
+        bondsList.push((element as UntypedFormGroup).getRawValue());
       });
 
       const bondData = {
@@ -752,9 +760,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: this.assetType,
         deduction:
-            this.deductionForm.invalid || !this.deduction
-                ? []
-                : [this.deductionForm.getRawValue()],
+          this.deductionForm.invalid || !this.deduction
+            ? []
+            : [this.deductionForm.getRawValue()],
         improvement: bondImprovement,
         buyersDetails: [],
         assetDetails: bondsList,
@@ -772,22 +780,22 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       }
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-          (result: any) => {
-            this.ITR_JSON = result;
-            this.loading = false;
-            sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-            this.utilsService.showSnackBar(
-                `Bonds data updated successfully`
-            );
-            this.utilsService.smoothScrollToTop();
-          },
-          (error) => {
-            this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-            this.utilsService.showSnackBar(
-                `Failed to update bonds data, please try again.`
-            );
-            this.utilsService.smoothScrollToTop();
-          }
+        (result: any) => {
+          this.ITR_JSON = result;
+          this.loading = false;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            `Bonds data updated successfully`
+          );
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            `Failed to update bonds data, please try again.`
+          );
+          this.utilsService.smoothScrollToTop();
+        }
       );
     }
   }
@@ -816,13 +824,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     if (purchaseMonth > 2) {
       if (yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0) {
         yearsList = yearsList.splice(
-            yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+          yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
       }
     } else {
       if (yearsList.indexOf(purchaseYear - 1 + '-' + purchaseYear) >= 0) {
         yearsList = yearsList.splice(
-            yearsList.indexOf(purchaseYear - 1 + '-' + purchaseYear)
+          yearsList.indexOf(purchaseYear - 1 + '-' + purchaseYear)
         );
       }
     }
@@ -840,7 +848,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
   calculateIndexCost(asset, type?) {
     if (!asset.controls['isIndexationBenefitAvailable'].value ||
-        (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
+      (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
       asset.controls['indexCostOfAcquisition'].setValue(0);
       asset.controls['indexCostOfImprovement'].setValue(0);
       this.calculateTotalCG(asset);
@@ -850,34 +858,34 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
     let selectedYear = moment(asset.controls['sellDate'].value);
     let sellFinancialYear =
-        selectedYear.get('month') > 2
-            ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-            : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+      selectedYear.get('month') > 2
+        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
 
     // for improvements indexation
     let costOfImprovement = parseFloat(
-        asset.controls['improvementCost'].value
+      asset.controls['improvementCost'].value
     );
     let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
 
     // for cost of acquisition index
     let selectedPurchaseYear = moment(asset.controls['purchaseDate'].value);
     let purchaseFinancialYear =
-        selectedPurchaseYear.get('month') > 2
-            ? selectedPurchaseYear.get('year') +
-            '-' +
-            (selectedPurchaseYear.get('year') + 1)
-            : selectedPurchaseYear.get('year') -
-            1 +
-            '-' +
-            selectedPurchaseYear.get('year');
+      selectedPurchaseYear.get('month') > 2
+        ? selectedPurchaseYear.get('year') +
+        '-' +
+        (selectedPurchaseYear.get('year') + 1)
+        : selectedPurchaseYear.get('year') -
+        1 +
+        '-' +
+        selectedPurchaseYear.get('year');
 
     let costOfAcquistion = parseFloat(asset.controls['purchaseCost'].value);
 
     let req = {
       cost: type === 'asset' ? costOfAcquistion : costOfImprovement,
       purchaseOrImprovementFinancialYear:
-          type === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
+        type === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
       assetType: this.assetType,
       buyDate: asset.controls['purchaseDate'].value,
       sellDate: asset.controls['sellDate'].value,
@@ -890,11 +898,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
       if (type === 'asset') {
         asset.controls['indexCostOfAcquisition']?.setValue(
-            res.data.costOfAcquisitionOrImprovement
+          res.data.costOfAcquisitionOrImprovement
         );
       } else {
         asset.controls['indexCostOfImprovement']?.setValue(
-            res.data.costOfAcquisitionOrImprovement
+          res.data.costOfAcquisitionOrImprovement
         );
       }
 
@@ -916,8 +924,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         obj ? obj.investmentInCGAccount : null,
         Validators.required,
       ],
-      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
+      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null,[Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
@@ -931,13 +942,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       bondsArray.controls.forEach((element) => {
         if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-              (element as UntypedFormGroup).controls['capitalGain'].value
+            (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-              (element as UntypedFormGroup).controls['valueInConsideration'].value
+            (element as UntypedFormGroup).controls['valueInConsideration'].value
           );
           expenses += parseInt(
-              (element as UntypedFormGroup).controls['sellExpense'].value
+            (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });
@@ -949,10 +960,10 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           {
             deductionSection: 'SECTION_54F',
             costOfNewAsset: parseInt(
-                this.deductionForm.controls['costOfNewAssets'].value
+              this.deductionForm.controls['costOfNewAssets'].value
             ),
             cgasDepositedAmount: parseInt(
-                this.deductionForm.controls['investmentInCGAccount'].value
+              this.deductionForm.controls['investmentInCGAccount'].value
             ),
             saleValue: saleValue,
             expenses: expenses,
@@ -960,25 +971,25 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         ],
       };
       this.itrMsService.postMethod(param, request).subscribe(
-          (result: any) => {
-            this.loading = false;
-            if (result.success) {
-              if (result.data.length > 0) {
-                this.deductionForm.controls['totalDeductionClaimed'].setValue(
-                    result.data[0].deductionAmount
-                );
-              } else {
-                this.deductionForm.controls['totalDeductionClaimed'].setValue(0);
-              }
+        (result: any) => {
+          this.loading = false;
+          if (result.success) {
+            if (result.data.length > 0) {
+              this.deductionForm.controls['totalDeductionClaimed'].setValue(
+                result.data[0].deductionAmount
+              );
+            } else {
+              this.deductionForm.controls['totalDeductionClaimed'].setValue(0);
             }
-          },
-          (error) => {
-            this.loading = false;
-            this.toastMsgService.alert(
-                'error',
-                'failed to calculate Deduction Gain.'
-            );
           }
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate Deduction Gain.'
+          );
+        }
       );
     }
   }
@@ -988,6 +999,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   saveAll() {
+    if (this.deductionForm.invalid && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
+      this.utilsService.showSnackBar(
+        'Amount against 54F shall be restricted to 10 Crore.'
+      );
+      return;
+    }
     this.save('bonds');
     this.saveAndNext.emit(false);
   }

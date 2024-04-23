@@ -356,7 +356,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       }
     }
 
-    if(this.data.statusId !== 8){
+    if(('ITR' === this.data.serviceType && this.data.statusId !== 8) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
       this.loading = false;
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
@@ -373,16 +373,42 @@ export class MoreOptionsDialogComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
           }
         });
         if (itrSubscriptionFound) {
-          this.checkFilerAssignment(action);
+          if('ITR' === this.data.serviceType) 
+            this.checkFilerAssignment(action);
+          else if('ITRU' === this.data.serviceType){
+            const query = {
+            "and": {
+                "is": {
+                    "userId": this.data.userId,
+                    "isITRU": true,
+                    "eFillingCompleted": true
+                },
+                "in": {
+                    "assessmentYear":["2022-2023", "2023-2024"]
+                }
+            },
+            "includes": ["eFillingCompleted","assessmentYear"],
+            "collectionName": "itr",
+            "queryType": "FIND_ALL"
+          };
+          
+          this.reportService.query(query).subscribe(
+            (res: any) => {
+              if(res?.data?.length === 2)
+                this.utilsService.showSnackBar('All ITR-U are filed.');
+              else
+                this.checkFilerAssignment(action);
+            });
+          }
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
         }

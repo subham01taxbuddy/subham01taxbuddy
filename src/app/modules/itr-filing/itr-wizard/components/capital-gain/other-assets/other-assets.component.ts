@@ -74,7 +74,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
       onSelectionChanged: (event) => {
         event.api.getSelectedRows().forEach((row) => {
           row.hasEdit = true;
@@ -170,7 +170,10 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       purchaseDate: obj ? obj?.purchaseDate : null,
       costOfNewAsset: obj ? obj?.costOfNewAssets : null,
       CGASAmount: obj ? obj?.investmentInCGAccount : null,
-      deductionClaimed: obj ? obj?.totalDeductionClaimed : null,
+      deductionClaimed: [obj ? obj?.totalDeductionClaimed : null, [Validators.max(100000000)]],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
@@ -251,6 +254,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   // saving the cg
   saveCg() {
+    if (this.deductionForm.invalid && this.deductionForm.controls['deductionClaimed'].errors['max']) {
+      this.utilsService.showSnackBar(
+        'Amount against 54F shall be restricted to 10 Crore.'
+      );
+      return;
+    }
     const deductionsArray = (
       (this.deductionForm.controls['deductions'] as UntypedFormArray)
         ?.controls[0] as UntypedFormGroup
@@ -306,6 +315,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           purchaseDatePlantMachine: null,
           totalDeductionClaimed: deductionDetails[0].deductionClaimed,
           usedDeduction: null,
+          accountNumber: deductionDetails[0].accountNumber,
+          ifscCode: deductionDetails[0].ifscCode,
+          dateOfDeposit: deductionDetails[0].dateOfDeposit,
         };
 
         this.ITR_JSON.capitalGain
@@ -393,13 +405,13 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     };
   }
 
-  assetSaved(result){
+  assetSaved(result) {
     if (result !== undefined) {
       this.ITR_JSON = JSON.parse(
-          sessionStorage.getItem(AppConstants.ITR_JSON)
+        sessionStorage.getItem(AppConstants.ITR_JSON)
       );
       let listedData = this.ITR_JSON.capitalGain?.filter(
-          (item) => item.assetType === 'GOLD'
+        (item) => item.assetType === 'GOLD'
       );
       if (listedData?.length > 0) {
         this.goldCg = listedData[0];
@@ -420,9 +432,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  editForm() {}
+  editForm() { }
 
-  closed() {}
+  closed() { }
 
   isAssetSelected() {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
@@ -492,14 +504,16 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
-        cellRenderer: function(params) {
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        cellRenderer: function (params) {
           const saleValue = params.value;
           const formattedValue = `₹${saleValue}`;
           return formattedValue;
@@ -514,7 +528,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         cellStyle: {
           textAlign: 'center',
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           const saleValue = params.value;
           const formattedValue = `₹${saleValue}`;
           return formattedValue;
@@ -570,14 +584,16 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
-        cellRenderer: function(params) {
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        cellRenderer: function (params) {
           const purchaseCost = params.value;
           const formattedValue = `₹${purchaseCost}`;
           return formattedValue;
@@ -589,14 +605,16 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center',
-        color: '#33353F',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        lineHeight: 'normal' },
-        cellRenderer: function(params) {
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
+        cellRenderer: function (params) {
           const sellExpense = params.value;
           const formattedValue = `₹${sellExpense}`;
           return formattedValue;
@@ -616,12 +634,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
         cellRenderer: function (params: any) {
           const gainType = params.data.gainType;
-          if(gainType === 'LONG'){
+          if (gainType === 'LONG') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
              background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
              ${gainType}
             </button>`;
-          }else if(gainType === 'SHORT'){
+          } else if (gainType === 'SHORT') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
             background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
             ${gainType}
