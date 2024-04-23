@@ -8,6 +8,7 @@ export const environment = {
 	ifsc_url: "https://ifsc.razorpay.com",
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
+	addClientThroughEportal: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/efiling/add-eri",
 	isValidItr: false,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment: 'UAT',

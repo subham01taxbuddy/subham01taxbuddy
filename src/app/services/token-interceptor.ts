@@ -24,8 +24,7 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    
-    if(request.url.includes("/query?query=") && request.method === 'GET') {
+    if (request.url.includes("/query?query=") && request.method === 'GET') {
       return next.handle(request);
     }
 
@@ -34,27 +33,27 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request.clone({ headers }));
     }
     this.userData = JSON.parse(localStorage.getItem('UMD'));
-    if(this.userData?.id_token){
+    if (this.userData?.id_token) {
       const TOKEN = this.userData ? this.userData.id_token : null;
-    }else{
+    } else {
       Auth.currentSession()
-      .then((data) => {
-        if (data.isValid()) {
-          this.userData.id_token = data.getAccessToken().getJwtToken();
-          localStorage.setItem('UMD', JSON.stringify(this.userData));
-        } else {
-          alert('Got expired session!!');
-          // data.getRefreshToken().getToken().
-        }
-      })
-      .catch((err) => console.log('Auth.currentSession err:', err));
+        .then((data) => {
+          if (data.isValid()) {
+            this.userData.id_token = data.getAccessToken().getJwtToken();
+            localStorage.setItem('UMD', JSON.stringify(this.userData));
+          } else {
+            alert('Got expired session!!');
+            // data.getRefreshToken().getToken().
+          }
+        })
+        .catch((err) => console.log('Auth.currentSession err:', err));
     }
 
     const TOKEN = this.userData ? this.userData.id_token : null;
     if (TOKEN && this.tokenExpired(TOKEN)) {
       console.log("this is expired token case");
     }
-    
+
     if ((request.url.startsWith(environment.url) || request.url.startsWith(environment.eri_url)) && TOKEN) {
       let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'));
       if (request.headers.has(InterceptorSkipHeader)) {
@@ -76,6 +75,12 @@ export class TokenInterceptor implements HttpInterceptor {
           },
         });
       }
+    } else if (request.url.startsWith(environment.addClientThroughEportal)) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ` + TOKEN,
+        },
+      });
     } else if ((request.url.startsWith(environment.reviewUrl)) || (request.url.startsWith(environment.update_id)) || (request.url.startsWith(environment.get_adjustment)) || (request.url.startsWith(environment.add_adjustment)) || (request.url.startsWith(environment.get_tds)) || (request.url.startsWith(environment.adjustment)) || (request.url.startsWith(environment.get_adjustment_csv))) {
       request = request.clone({
         setHeaders: {
