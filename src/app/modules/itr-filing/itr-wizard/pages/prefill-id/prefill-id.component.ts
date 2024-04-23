@@ -6824,9 +6824,18 @@ export class PrefillIdComponent implements OnInit {
       .subscribe(
         (result: any) => {
           this.loading = false;
-          this.utilsService.showSnackBar(result.message);
+          if (result.status === 'ok') {
+            this.utilsService.showSnackBar(result.message);
+          } else {
+            this.utilsService.showSnackBar('Error in updating ERI');
+            this.showEriView = true;
+            this.router.navigate(['/itr-filing/itr/eri']);
+          }
         }, (error) => {
           this.loading = false;
+          this.utilsService.showSnackBar('Error in updating ERI');
+          this.showEriView = true;
+          this.router.navigate(['/itr-filing/itr/eri']);
         }
       );
   }
