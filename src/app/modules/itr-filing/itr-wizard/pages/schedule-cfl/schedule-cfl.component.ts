@@ -34,16 +34,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   scheduleCflArray = [
     {
       hasEdit: '',
-      assessmentPastYear: '2015-16',
-      dateofFilling: '',
-      housePropertyLoss: 0,
-      broughtForwordBusinessLoss: 0,
-      STCGLoss: 0,
-      LTCGLoss: 0,
-      speculativeBusinessLoss: 0,
-    },
-    {
-      hasEdit: '',
       assessmentPastYear: '2016-17',
       dateofFilling: '',
       housePropertyLoss: 0,
@@ -112,6 +102,16 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       LTCGLoss: 0,
       speculativeBusinessLoss: 0,
     },
+    {
+      hasEdit: '',
+      assessmentPastYear: '2023-24',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
   ];
   constructor(
     public fb: UntypedFormBuilder,
@@ -129,6 +129,35 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.cflForm = this.initForm();
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
+    this.pastYearLosses = this.pastYearLosses.filter((item) => {
+      item.assessmentPastYear != '2015-16'
+      if (item.assessmentPastYear != '2023-24') {
+        this.pastYearLosses.push(
+          {
+            hasEdit: false,
+            dateofFilling: null,
+            pastYear: 0,
+            assessmentPastYear: '2023-24',
+            housePropertyLoss: 0,
+            LTCGLoss: 0,
+            STCGLoss: 0,
+            speculativeBusinessLoss: 0,
+            broughtForwordBusinessLoss: 0,
+            setOffWithCurrentYearSpeculativeBusinessIncome: 0,
+            setOffWithCurrentYearBroughtForwordBusinessIncome: 0,
+            setOffWithCurrentYearHPIncome: 0,
+            setOffWithCurrentYearSTCGIncome: 0,
+            setOffWithCurrentYearLTCGIncome: 0,
+            carryForwardAmountBusiness: 0,
+            carryForwardAmountSpeculative: 0,
+            carryForwardAmountHP: 0,
+            carryForwardAmountSTCGIncome: 0,
+            carryForwardAmountLTCGIncome: 0,
+            totalLoss: 0,
+          }
+        )
+      }
+    });
     if (this.pastYearLosses) {
       this.pastYearLosses.forEach((obj) => {
         this.addMore(obj);
@@ -149,13 +178,13 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     cflArray.controls.forEach((element, index) => {
       if (
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-          '2015-16' ||
+        '2015-16' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-          '2016-17' ||
+        '2016-17' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-          '2017-18' ||
+        '2017-18' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-          '2018-19'
+        '2018-19'
       ) {
         (element as UntypedFormGroup).controls['speculativeBusinessLoss'].disable();
       }
@@ -394,5 +423,5 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
 
   goBack() {
     this.saveAndNext.emit(false);
-  } 
+  }
 }
