@@ -1192,7 +1192,7 @@ export class PrefillIdComponent implements OnInit {
           );
           return;
         }
-        
+
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4') ||
@@ -1203,7 +1203,7 @@ export class PrefillIdComponent implements OnInit {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
-            let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4: undefined;
+            let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4 : undefined;
             // if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
             //   this.utilsService.showSnackBar(
             //     'AY is other than 2023-24'
@@ -4043,15 +4043,15 @@ export class PrefillIdComponent implements OnInit {
                 incomeType: 'ANY_OTHER',
                 details: null,
                 amount:
-                    IncChargeable - (IntrstFrmSavingBank +
-                        IntrstFrmTermDeposit +
-                        IntrstFrmIncmTaxRefund +
-                        FamilyPension +
-                        DividendGross +
-                        (pfInterest1011IP ? pfInterest1011IP : 0) +
-                        (pfInterest1011IIP ? pfInterest1011IIP : 0) +
-                        (pfInterest1012IP ? pfInterest1012IP : 0) +
-                        (pfInterest1012IIP ? pfInterest1012IIP : 0)),
+                  IncChargeable - (IntrstFrmSavingBank +
+                    IntrstFrmTermDeposit +
+                    IntrstFrmIncmTaxRefund +
+                    FamilyPension +
+                    DividendGross +
+                    (pfInterest1011IP ? pfInterest1011IP : 0) +
+                    (pfInterest1011IIP ? pfInterest1011IIP : 0) +
+                    (pfInterest1012IP ? pfInterest1012IP : 0) +
+                    (pfInterest1012IIP ? pfInterest1012IIP : 0)),
                 expenses: null,
               });
             }
@@ -6781,8 +6781,63 @@ export class PrefillIdComponent implements OnInit {
   }
 
   addClient() {
-    this.showEriView = true;
-    this.router.navigate(['/itr-filing/itr/eri']);
+    this.getUserCreds();
+  }
+
+  getUserCreds() {
+    let url = `/it-password/${this.data.userId}`;
+    this.userService.getMethod(url).subscribe((result: any) => {
+      console.log(result);
+      if (result.error === 'DATA_NOT_FOUND') {
+        this.showEriView = true;
+        this.router.navigate(['/itr-filing/itr/eri']);
+      } else {
+        if (result.data.password && result.data.passwordStatus === 'VALID') {
+          this.utilsService.showSnackBar('Validating add client through eportal is inprogress please wait.');
+          this.addClientThroughEportal(result.data.password);
+        } else {
+          this.showEriView = true;
+          this.router.navigate(['/itr-filing/itr/eri']);
+        }
+      }
+    }, (error) => {
+      console.error(error);
+      this.showEriView = true;
+      this.router.navigate(['/itr-filing/itr/eri']);
+    });
+  }
+
+  addClientThroughEportal(password) {
+    this.loading = true;
+    let reqData = {
+      userId: this.data.userId,
+      panNo: this.ITR_JSON?.panNumber,
+      password: password,
+      env: environment.lifecycleEnv,
+    };
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    this.httpClient
+      .post(environment.addClientThroughEportal, reqData, { headers: headers })
+      .subscribe(
+        (result: any) => {
+          this.loading = false;
+          if (result.status === 'ok') {
+            this.utilsService.showSnackBar(result.message);
+          } else {
+            this.utilsService.showSnackBar('Error in updating ERI');
+            this.showEriView = true;
+            this.router.navigate(['/itr-filing/itr/eri']);
+          }
+        }, (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar('Error in updating ERI');
+          this.showEriView = true;
+          this.router.navigate(['/itr-filing/itr/eri']);
+        }
+      );
   }
 
   downloadPrefillOpt() {
