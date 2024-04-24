@@ -133,7 +133,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
                   this.loading = false;
                 }
               );
-            },  7000)
+            },  10000)
           }
         });
       //   } else {

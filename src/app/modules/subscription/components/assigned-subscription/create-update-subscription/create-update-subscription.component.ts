@@ -130,7 +130,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     setTimeout(() => {
       this.onPersonalInfoFormChanges();
       this.onOtherInfoFormChange();
-    }, 7000);
+    }, 10000);
   }
 
   ngOnInit() {
