@@ -235,7 +235,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
                   this.loading = false;
                 }
               );
-            }, 7000)
+            }, 10000)
           } else {
             this.utilsService.showSnackBar(
               'Please give E-Filling-Date and Acknowledgment Number'

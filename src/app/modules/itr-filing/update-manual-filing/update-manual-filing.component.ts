@@ -60,7 +60,7 @@ export class UpdateManualFilingComponent implements OnInit {
                 this.utilsService.showSnackBar('Failed to update Manual Filing Details')
                 this.loading = false;
               });
-            }, 7000)
+            }, 10000)
           }
         });
       //   } else {

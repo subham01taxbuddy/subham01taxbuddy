@@ -288,7 +288,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               this.loading = false;
               this.dialogRef.close(true);
             })
-          }, 7000)
+          }, 10000)
         }
       }, error => {
         this.loading = false;
