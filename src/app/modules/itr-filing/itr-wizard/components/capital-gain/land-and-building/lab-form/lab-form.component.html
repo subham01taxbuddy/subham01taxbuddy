@@ -274,15 +274,15 @@
                       </div>
 
                     </div>
-                    <div class="col-sm-3 hp4-4" *ngIf="i === getImprovementsArrayForImmovable.controls.length-1">
+                    <div class="col-sm-3 hp4-4">
                       <div class="Bx4">
                         <div class="Bx4L">
-                          <button type="button" (click)="removeImprovement(this.immovableForm)"
-                            [disabled]="!improvementSelected()" *ngIf="isImprovements.value"> <i
+                          <button type="button" (click)="removeImprovement(this.immovableForm, i)"
+                                  *ngIf="isImprovements.value"> <i
                               class="fa fa-trash-o delbt"></i>
                           </button>
                         </div>
-                        <div class="Bx4R">
+                        <div class="Bx4R" *ngIf="i === getImprovementsArrayForImmovable.controls.length-1">
                           <button type="button" class="addAno" (click)="addMoreImprovements(this.immovableForm)"
                             *ngIf="isImprovements.value"> + Add Another </button>
                         </div>
@@ -311,9 +311,9 @@
                   </div>
                 </div>
                 <div class="mnBx-5 col-sm-12" formArrayName="deductions" *ngIf="isDeductions.value">
-                  <div class="row col-sm-12">
-                    <div class="Box5-L col-sm-9" *ngFor="let deduction of getDeductionsArray.controls;let i = index"
-                      (click)="active = i" [formGroupName]="fieldGlobalIndex(i)">
+                  <div class="row col-sm-12" *ngFor="let deduction of getDeductionsArray.controls;let i = index"
+                       (click)="active = i" [formGroupName]="fieldGlobalIndex(i)">
+                    <div class="Box5-L col-sm-9" >
 
                       <div class="Box5-1">
                         <div class="field">
@@ -463,10 +463,10 @@
                     <div class="Box5-R col-sm-3">
                     <div class="Bx4">
                       <div class="Bx4L">
-                        <button type="button" (click)="deleteDeduction(active)" [disabled]="!deductionSelected()"
+                        <button type="button" (click)="deleteDeduction(i)"
                           *ngIf="isDeductions.value"> <i class="fa fa-trash-o delbt"></i> </button>
                       </div>
-                      <div class="Bx4R">
+                      <div class="Bx4R" *ngIf="i === getDeductionsArray.controls.length-1">
                         <button type="button" class="addAno" [disabled]="totalCg <= 0"
                           (click)="addInvestment(this.immovableForm)" *ngIf="isDeductions.value"> + Add Another
                         </button>

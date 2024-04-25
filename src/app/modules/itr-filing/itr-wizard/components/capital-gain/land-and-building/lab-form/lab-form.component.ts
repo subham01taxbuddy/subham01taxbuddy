@@ -948,45 +948,42 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  removeImprovement(formGroupName: UntypedFormGroup) {
-    for (let i = this.selectedIndexes.length - 1; i >= 0; i--) {
-      const index = this.selectedIndexes[i];
-      const improve = <UntypedFormArray>formGroupName.get('improvement');
-      if (improve && improve.at(index)) {
-        let objToRemove = improve.at(index).value;
-        improve.removeAt(index);
+  removeImprovement(formGroupName: UntypedFormGroup, index: number) {
+    const improve = <UntypedFormArray>formGroupName.get('improvement');
+    if (improve && improve.at(index)) {
+      let objToRemove = improve.at(index).value;
+      improve.removeAt(index);
 
-        // Update the cg object
-        let filtered = this.cgArrayElement?.improvement?.filter(
-          (item) =>
-            item.srn == objToRemove?.srn &&
-            item.costOfImprovement === objToRemove?.costOfImprovement &&
-            item.dateOfImprovement == objToRemove?.dateOfImprovement
+      // Update the cg object
+      let filtered = this.cgArrayElement?.improvement?.filter(
+        (item) =>
+          item.srn == objToRemove?.srn &&
+          item.costOfImprovement === objToRemove?.costOfImprovement &&
+          item.dateOfImprovement == objToRemove?.dateOfImprovement
+      );
+      if (filtered.length > 0) {
+        this.cgArrayElement?.improvement.splice(
+          this.cgArrayElement?.improvement.indexOf(filtered[0]),
+          1
         );
-        if (filtered.length > 0) {
-          this.cgArrayElement?.improvement.splice(
-            this.cgArrayElement?.improvement.indexOf(filtered[0]),
-            1
-          );
-        }
-
-        // Remove from improvements list also
-        let toDelete = this.improvements?.filter(
-          (item) =>
-            item?.srn == objToRemove?.srn &&
-            item?.costOfImprovement === objToRemove?.costOfImprovement &&
-            item?.dateOfImprovement == objToRemove?.dateOfImprovement
-        );
-        if (toDelete.length > 0) {
-          this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
-        }
-
-        if (improve?.length === 0) {
-          this.isImprovements?.setValue(false);
-        }
-
-        this.calculateCapitalGain(formGroupName, '', index);
       }
+
+      // Remove from improvements list also
+      let toDelete = this.improvements?.filter(
+        (item) =>
+          item?.srn == objToRemove?.srn &&
+          item?.costOfImprovement === objToRemove?.costOfImprovement &&
+          item?.dateOfImprovement == objToRemove?.dateOfImprovement
+      );
+      if (toDelete.length > 0) {
+        this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
+      }
+
+      if (improve?.length === 0) {
+        this.isImprovements?.setValue(false);
+      }
+
+      this.calculateCapitalGain(formGroupName, '', index);
     }
   }
 
@@ -1333,8 +1330,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   deleteDeduction(index) {
     console.log('Remove Index', index);
+
     let deductions = <UntypedFormArray>this.immovableForm.get('deductions');
-    deductions.controls = deductions.controls.filter((element: UntypedFormGroup) => !element.controls['selected'].value);
+    if (deductions && deductions.at(index)) {
+      let objToRemove = deductions.at(index).value;
+      deductions.removeAt(index);
+    }
     console.log(deductions.length);
 
     if (deductions.length === 0) {
