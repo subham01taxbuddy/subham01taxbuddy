@@ -357,7 +357,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].name,
-        mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
+        customerNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
@@ -405,7 +405,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Mobile No',
-        field: 'mobileNumber',
+        field: 'customerNumber',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
@@ -727,7 +727,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         const param = `tts/outbound-call`;
         const reqBody = {
           "agent_number": await this.utilsService.getMyCallingNumber(),
-          "customer_number": data.mobileNumber
+          "customer_number": data.customerNumber
         }
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
@@ -792,7 +792,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
             userId: client.userId,
             clientName: client.name,
             serviceType: client.serviceType,
-            clientMobileNumber: client.mobileNumber
+            clientMobileNumber: client.customerNumber
           }
         })
 
@@ -831,7 +831,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               this.loading = false;
               if (result.success == true) {
                 we_track('Active', {
-                  'User number ': data.mobileNumber,
+                  'User number ': data.customerNumber,
                 });
                 this.utilsService.showSnackBar('user activated successfully.');
               } else {
