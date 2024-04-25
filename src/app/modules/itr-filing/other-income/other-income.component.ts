@@ -570,6 +570,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       this.Copy_ITR_JSON.winningsUS115BB = this.winningsUS115BBFormGroup.getRawValue();
     }
 
+    this.Copy_ITR_JSON.winningsUS115BBJ = null;
     if (this.winningsUS115BBJTotal > 0) {
       this.winningsUS115BBJFormGroup.get('total').setValue(this.winningsUS115BBJTotal);
       this.winningsUS115BBJFormGroup.get('total').updateValueAndValidity();
