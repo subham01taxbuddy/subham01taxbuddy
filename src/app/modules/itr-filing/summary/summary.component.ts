@@ -259,6 +259,7 @@ export class SummaryComponent implements OnInit {
         anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
         winningFromLotteries: any;
+        winningFromGaming: any;
         incFromOwnAndMaintHorses?: any;
         NOT89A?: any;
         OTHNOT89A?: any;
@@ -269,6 +270,8 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
+        SumRecdPrYrBusTRU562xii?: any;
+        SumRecdPrYrBusTRU562xiii?: any;
       };
       otherIncomeTotal: number;
     };
@@ -1236,6 +1239,7 @@ export class SummaryComponent implements OnInit {
             otherIncome: {
               otherIncomes: {
                 winningFromLotteries: 0,
+                winningFromGaming: 0,
                 saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
@@ -3044,6 +3048,21 @@ export class SummaryComponent implements OnInit {
                     0
                   )
                   : null,
+                winningFromGaming: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFrmOnGames?.DateRange
+                  ? Object.values(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleOS.IncFrmOnGames.DateRange
+                  ).reduce(
+                    (total: any, value: any) =>
+                      total +
+                      (typeof value === 'number'
+                        ? value
+                        : (parseFloat(value) as number) || 0),
+                    0
+                  )
+                  : null,
 
                 incFromOwnAndMaintHorses: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -3082,6 +3101,13 @@ export class SummaryComponent implements OnInit {
                 pfInterest1012IIP:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso,
+
+                SumRecdPrYrBusTRU562xii:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
+                SumRecdPrYrBusTRU562xiii:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
 
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -5118,6 +5144,7 @@ export class SummaryComponent implements OnInit {
               otherIncome: {
                 otherIncomes: {
                   winningFromLotteries: this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
+                  winningFromGaming: this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BBJ,
                   saving:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'SAVING_INTEREST'
@@ -5162,6 +5189,14 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
                     )?.amount,
+                  SumRecdPrYrBusTRU562xii:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INCOME_US_56_2_XII'
+                    )?.amount,
+                  SumRecdPrYrBusTRU562xiii:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INCOME_US_56_2_XIII'
+                    )?.amount,
 
                   aggregateValueWithoutConsideration:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
@@ -5205,7 +5240,8 @@ export class SummaryComponent implements OnInit {
                 },
 
                 otherIncomeTotal:
-                  this.finalSummary?.assessment?.taxSummary.otherIncome + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
+                  this.finalSummary?.assessment?.taxSummary.otherIncome + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB
+                  + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BBJ,
               },
               businessIncome: {
                 businessIncomeDetails: {
