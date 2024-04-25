@@ -326,6 +326,10 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     this.formValuesChanged();
   }
 
+  shouldShowCalculator(salaryType: string): boolean {
+    return ['HOUSE_RENT', 'PENSION', 'COMMUTED_PENSION', 'GRATUITY', 'LEAVE_ENCASHMENT'].includes(salaryType);
+  }
+
   calculate(selectedOption: string) {
     let queryParam
     if(selectedOption === "HOUSE_RENT"){
