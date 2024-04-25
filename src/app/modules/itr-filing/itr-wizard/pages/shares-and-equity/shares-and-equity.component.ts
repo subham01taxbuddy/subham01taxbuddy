@@ -337,6 +337,12 @@ export class SharesAndEquityComponent
   }
 
   initDeductionForm(obj?): UntypedFormGroup {
+    let accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]
+    let ifscValidators = [Validators.pattern(AppConstants.IFSCRegex)];
+    if(this.bondType === 'listed'){
+      accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex), Validators.required]
+      ifscValidators = [Validators.pattern(AppConstants.IFSCRegex), Validators.required];
+    }
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -352,8 +358,8 @@ export class SharesAndEquityComponent
       ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null, [Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
-      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
-      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      accountNumber: [obj?.accountNumber || null, accountValidators],
+      ifscCode: [obj?.ifscCode || null, ifscValidators],
       dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
