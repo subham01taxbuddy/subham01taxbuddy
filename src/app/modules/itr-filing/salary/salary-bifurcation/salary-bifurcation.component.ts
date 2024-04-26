@@ -332,12 +332,15 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
 
   calculate(selectedOption: string) {
     let queryParam
+    let fromCommuted
     if(selectedOption === "HOUSE_RENT"){
       queryParam ='hra'
     }else if(selectedOption ==="PENSION"){
       queryParam ='pension'
+      fromCommuted=`&uncommuted=true`;
     }else if(selectedOption ==="COMMUTED_PENSION"){
       queryParam ='pension'
+      fromCommuted=`&commuted=true`;
     }else if(selectedOption === "GRATUITY"){
       queryParam ='gratuity'
     }else if(selectedOption === "LEAVE_ENCASHMENT"){
@@ -350,7 +353,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       height: '80%',
       data: {
         selectedOption: selectedOption,
-        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true`
+        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true${fromCommuted}`
       }
     });
 
