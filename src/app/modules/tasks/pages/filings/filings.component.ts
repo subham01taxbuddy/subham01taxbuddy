@@ -1195,6 +1195,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.utilsService.showSnackBar(
                 'E-Verification status updated successfully'
               );
+              this.selectedPageNo = 0;
               this.myItrsList(this.selectedPageNo);
             } else if (result?.data === 'MANUAL') {
               this.markAsEverified(data);
@@ -1248,6 +1249,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(
           'E-Verification status updated successfully'
         );
+        this.selectedPageNo = 0;
         this.myItrsList(this.selectedPageNo);
       },
       (error) => {
