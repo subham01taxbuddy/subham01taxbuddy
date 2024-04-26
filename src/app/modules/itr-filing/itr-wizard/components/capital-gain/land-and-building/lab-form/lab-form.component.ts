@@ -881,7 +881,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           this.improvements.push(improvementDetails.getRawValue());
         }
         this.mergeImprovements();
-        this.calculateIndexCost(index);
+        this.calculateIndexCost(0);
         this.calculateCapitalGain(formGroupName, '', index);
       });
     }
