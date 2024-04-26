@@ -1302,7 +1302,7 @@ export class ZeroCouponBondsComponent
   }
 
   saveAll() {
-    if (this.deductionForm.invalid && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
+    if (this.deductionForm.controls['totalDeductionClaimed'].errors && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
       this.utilsService.showSnackBar(
         'Amount against 54F shall be restricted to 10 Crore.'
       );
