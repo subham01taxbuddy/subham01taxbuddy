@@ -933,7 +933,10 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   calculateDeductionGain() {
-    if (this.deductionForm.valid) {
+    let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
+        this.deductionForm.controls['costOfNewAssets'].valid &&
+        this.deductionForm.controls['investmentInCGAccount'].valid;
+    if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
       let saleValue = 0;
@@ -991,6 +994,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           );
         }
       );
+    } else {
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
     }
   }
 
