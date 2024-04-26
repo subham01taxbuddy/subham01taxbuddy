@@ -56,6 +56,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
+    itrObjectStatus:null,
   };
   agentId = null;
   loggedInUserRoles: any;
@@ -83,6 +84,16 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'ITRU',
     },
   ]
+  fillingStatus=[
+    {
+      label: 'Yet to Start',
+      value: 'CREATE',
+    },
+    {
+      label: 'Resume Filing',
+      value: 'PREPARING_ITR',
+    },
+  ];
 
   constructor(
     private reviewService: ReviewService,
@@ -1578,6 +1589,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.searchParam.itrObjectStatus=null;
     this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
