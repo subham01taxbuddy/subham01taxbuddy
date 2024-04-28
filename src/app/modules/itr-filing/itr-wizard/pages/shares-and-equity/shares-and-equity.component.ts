@@ -574,9 +574,9 @@ export class SharesAndEquityComponent
   }
 
   calculateDeductionGain() {
-    let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
+    let isFormValid = this.deduction ? this.deductionForm.controls['purchaseDate'].valid &&
         this.deductionForm.controls['costOfNewAssets'].valid &&
-        this.deductionForm.controls['investmentInCGAccount'].valid;
+        this.deductionForm.controls['investmentInCGAccount'].valid : true;
     if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
@@ -1828,7 +1828,8 @@ export class SharesAndEquityComponent
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
-    } else if(this.deductionForm.invalid){
+    } else if(this.deduction && this.deductionForm.invalid){
+      this.utilsService.showErrorMsg('Please fill all mandatory details.');
       return;
     }
     this.save();
