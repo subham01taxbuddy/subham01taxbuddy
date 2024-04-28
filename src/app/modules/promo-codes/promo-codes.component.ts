@@ -119,7 +119,8 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
       // param = '&code=' + this.searchValue.value;
       this.searchParam.page = 0
       data = this.utileService.createUrlParams(this.searchParam);
-      searchFilter += `&code=${this.searchValue.value}`;
+      const encodedSearchValue = encodeURIComponent(this.searchValue.value);
+      searchFilter += `&code=${encodedSearchValue}`;
     }
     let serviceFilter = '';
     if (this.serviceType.value) {

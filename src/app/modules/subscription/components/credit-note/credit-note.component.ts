@@ -46,9 +46,9 @@ export class CreditNoteComponent implements OnInit {
   dataOnLoad = true;
   creditNoteGridOptions: GridOptions;
   loggedInUserRoles: any;
-  maxDate = new Date(2024, 2, 31);
-  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
-  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  maxDate = new Date(2025, 2, 31);
+  minDate = moment.min(moment(), moment('2023-04-01')).toDate();
+  minStartDate = moment.min(moment(), moment('2023-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -118,7 +118,7 @@ export class CreditNoteComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string
   ) {
 
-    this.startDate.setValue(this.minDate);
+    this.startDate.setValue(moment('2024-04-01'));
     this.endDate.setValue(new Date());
     this.minEndDate = this.startDate.value;
 

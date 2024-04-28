@@ -75,6 +75,11 @@ export class UtilsService {
     return result;
   }
 
+  getFYFromAY(assessmentYear: string){
+    const years = assessmentYear.split('-');
+    return (Number(years[0])-1) +'-'+(Number(years[1])-1);
+  }
+
   //scroll to specific div
   smoothScrollToDiv(divId: any) {
     console.log(divId);
@@ -93,7 +98,7 @@ export class UtilsService {
 
   createEmptyJson(
     profile: any,
-    serviceType:string,
+    serviceType: string,
     assessmentYear: any,
     financialYear: any,
     itrId?: any,
@@ -388,6 +393,7 @@ export class UtilsService {
       },
 
       winningsUS115BB: null,
+      winningsUS115BBJ: null,
       scheduleESOP: null,
     };
 
@@ -860,6 +866,8 @@ export class UtilsService {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
     if (ITR && mobile) {
@@ -890,6 +898,8 @@ export class UtilsService {
     if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
+    } else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 

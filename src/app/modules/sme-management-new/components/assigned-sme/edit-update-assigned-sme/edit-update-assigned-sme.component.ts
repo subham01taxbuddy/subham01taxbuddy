@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment';
@@ -62,10 +62,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     { value: 4, display: 'ITR 4' },
 
   ];
-  languageForm: FormGroup;
+  languageForm: UntypedFormGroup;
   irtTypeCapability = [];
-  itrTypeForm: FormGroup;
-  inactivityTimeForm: FormGroup;
+  itrTypeForm: UntypedFormGroup;
+  inactivityTimeForm: UntypedFormGroup;
   inactivityTimeDuration = [
     { key: "15 Min", checked: false, value: 15 },
     { key: "30 Min", checked: false, value: 30 },
@@ -81,7 +81,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     { key: "50 Cases", checked: false, value: 50 }
   ];
   additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
-  caseLimitForm: FormGroup;
+  caseLimitForm: UntypedFormGroup;
   itrPlanList: any;
   allSmeList: any;
   accountTypeDropdown: any;
@@ -98,10 +98,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   isBankDetailsFormChange: boolean;
   roundRobinData: any = {};
   isReadOnly:boolean =false;
-  activeCaseMaxCapacity = new FormControl('')
+  activeCaseMaxCapacity = new UntypedFormControl('')
+  isDisabled:boolean =false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -115,17 +116,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
-      this.languageForm.addControl(lang, new FormControl(false));
+      this.languageForm.addControl(lang, new UntypedFormControl(false));
     })
     this.itrTypeForm = this.fb.group({});
 
     this.inactivityTimeForm = this.fb.group({});
     this.inactivityTimeDuration.forEach((duration) => {
-      this.inactivityTimeForm.addControl(duration.key, new FormControl(false));
+      this.inactivityTimeForm.addControl(duration.key, new UntypedFormControl(false));
     });
     this.caseLimitForm = this.fb.group({});
     this.caseLimit.forEach((limit) => {
-      this.caseLimitForm.addControl(limit.key, new FormControl(false));
+      this.caseLimitForm.addControl(limit.key, new UntypedFormControl(false));
     });
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       this.getPlanDetails();
@@ -140,6 +141,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.otherSmeInfo.patchValue(this.smeObj);
     this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
     this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : false;
+    this.loggedInSmeRoles.includes('ROLE_ADMIN') ? this.isDisabled  = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
@@ -156,7 +158,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   }
 
-  assignmentFormGroup: FormGroup = this.fb.group({
+  assignmentFormGroup: UntypedFormGroup = this.fb.group({
     itrCount: ['', [Validators.required, Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_ITR),
       Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_ITR),]],
 
@@ -216,7 +218,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.itrPlanList.forEach(element => {
             this.irtTypeCapability.push(element.name);
             this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType, new FormControl(false));
+              this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
             })
             this.setPlanDetails();
           });
@@ -240,7 +242,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
             if (element.planId === item) {
               this.irtTypeCapability.push(element.name);
               this.irtTypeCapability.forEach((itrType) => {
-                this.itrTypeForm.addControl(itrType, new FormControl(false));
+                this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
               })
             }
           });
@@ -293,6 +295,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.bankDetailsFormGroup.controls['ifsCode'].setValue(this.smeObj?.['partnerDetails'].bankDetails.ifsCode);
         this.bankDetailsFormGroup.controls['accountType'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountType);
       }
+      if (this.smeObj?.['partnerDetails'].additionalIdsRequired) {
+        this.smeFormGroup.controls['additionalIdsCount'].setValidators([Validators.required]);
+      } else {
+        this.smeFormGroup.controls['additionalIdsCount'].clearValidators();
+      }
+      this.smeFormGroup.controls['additionalIdsCount'].updateValueAndValidity();
     }
 
     this.allSmeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -328,7 +336,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.langList.forEach(item => {
         this.smeObj?.languages.forEach(element => {
           if (item === element) {
-            this.languageForm.setControl(element, new FormControl(true));
+            this.languageForm.setControl(element, new UntypedFormControl(true));
           }
         })
       })
@@ -341,7 +349,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let timeDuration = [{ key: "15 Min", value: 15 }, { key: "30 Min", value: 30 }, { key: "45 Min", value: 45 }, { key: "60 Min", value: 60 },]
       timeDuration.forEach(item => {
         if (item.value === this.smeObj?.['inactivityTimeInMinutes'])
-          this.inactivityTimeForm.setControl(item.key, new FormControl(true));
+          this.inactivityTimeForm.setControl(item.key, new UntypedFormControl(true));
       });
     }
 
@@ -349,7 +357,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let allCases = [{ key: "5 Cases", value: 5 }, { key: "10 Cases", value: 10 }, { key: "15 Cases", value: 15 }, { key: "20 Cases", value: 20 }, { key: "30 Cases", value: 30 }, { key: "50 Cases", value: 50 },]
       allCases.forEach(item => {
         if (item.value === this.smeObj?.['activeCaseMaxCapacity'])
-          this.caseLimitForm.setControl(item.key, new FormControl(true));
+          this.caseLimitForm.setControl(item.key, new UntypedFormControl(true));
       });
     }
     this.joiningDate.setValue(moment(this.smeObj?.joiningDate, 'DD/MM/YYYY').toDate())
@@ -363,7 +371,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.smeObj?.['skillSetPlanIdList'].forEach(element => {
           if (item.planId === element) {
             const name = item.name;
-            this.itrTypeForm.setControl(name, new FormControl(true));
+            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
           }
         })
       })
@@ -396,108 +404,108 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
   }
 
-  roles: FormGroup = this.fb.group({
-    admin: new FormControl(''),
-    leader: new FormControl(''),
-    filerIndividual: new FormControl(''),
-    filerPrinciple: new FormControl(''),
-    filerChild: new FormControl(''),
+  roles: UntypedFormGroup = this.fb.group({
+    admin: new UntypedFormControl(''),
+    leader: new UntypedFormControl(''),
+    filerIndividual: new UntypedFormControl(''),
+    filerPrinciple: new UntypedFormControl(''),
+    filerChild: new UntypedFormControl(''),
   });
 
   get admin() {
-    return this.roles.controls['admin'] as FormControl
+    return this.roles.controls['admin'] as UntypedFormControl
   }
   get leader() {
-    return this.roles.controls['leader'] as FormControl
+    return this.roles.controls['leader'] as UntypedFormControl
   }
   get filerIndividual() {
-    return this.roles.controls['filerIndividual'] as FormControl
+    return this.roles.controls['filerIndividual'] as UntypedFormControl
   }
   get filerPrinciple() {
-    return this.roles.controls['filerPrinciple'] as FormControl
+    return this.roles.controls['filerPrinciple'] as UntypedFormControl
   }
   get filerChild() {
-    return this.roles.controls['filerChild'] as FormControl
+    return this.roles.controls['filerChild'] as UntypedFormControl
   }
 
-  services: FormGroup = this.fb.group({
-    itr: new FormControl(''),
-    nri: new FormControl(''),
-    tpa: new FormControl(''),
-    gst: new FormControl(''),
-    notice: new FormControl(''),
-    wb: new FormControl(''),
-    pd: new FormControl(''),
-    mf: new FormControl(''),
-    other: new FormControl(''),
-    itrToggle: new FormControl(''),
-    nriToggle: new FormControl(''),
-    tpaToggle: new FormControl(''),
-    gstToggle: new FormControl(''),
-    noticeToggle: new FormControl(''),
-    wbToggle: new FormControl(''),
-    pdToggle: new FormControl(''),
-    mfToggle: new FormControl(''),
-    otherToggle: new FormControl(''),
-    assignmentToggle :new FormControl('')
+  services: UntypedFormGroup = this.fb.group({
+    itr: new UntypedFormControl(''),
+    nri: new UntypedFormControl(''),
+    tpa: new UntypedFormControl(''),
+    gst: new UntypedFormControl(''),
+    notice: new UntypedFormControl(''),
+    wb: new UntypedFormControl(''),
+    pd: new UntypedFormControl(''),
+    mf: new UntypedFormControl(''),
+    other: new UntypedFormControl(''),
+    itrToggle: new UntypedFormControl(''),
+    nriToggle: new UntypedFormControl(''),
+    tpaToggle: new UntypedFormControl(''),
+    gstToggle: new UntypedFormControl(''),
+    noticeToggle: new UntypedFormControl(''),
+    wbToggle: new UntypedFormControl(''),
+    pdToggle: new UntypedFormControl(''),
+    mfToggle: new UntypedFormControl(''),
+    otherToggle: new UntypedFormControl(''),
+    assignmentToggle :new UntypedFormControl('')
   })
 
   get itr() {
-    return this.services.controls['itr'] as FormControl
+    return this.services.controls['itr'] as UntypedFormControl
   }
   get nri() {
-    return this.services.controls['nri'] as FormControl
+    return this.services.controls['nri'] as UntypedFormControl
   }
   get tpa() {
-    return this.services.controls['tpa'] as FormControl
+    return this.services.controls['tpa'] as UntypedFormControl
   }
   get gst() {
-    return this.services.controls['gst'] as FormControl
+    return this.services.controls['gst'] as UntypedFormControl
   }
   get notice() {
-    return this.services.controls['notice'] as FormControl
+    return this.services.controls['notice'] as UntypedFormControl
   }
   get wb() {
-    return this.services.controls['wb'] as FormControl
+    return this.services.controls['wb'] as UntypedFormControl
   }
   get pd() {
-    return this.services.controls['pd'] as FormControl
+    return this.services.controls['pd'] as UntypedFormControl
   }
   get mf() {
-    return this.services.controls['mf'] as FormControl
+    return this.services.controls['mf'] as UntypedFormControl
   }
   get other() {
-    return this.services.controls['other'] as FormControl
+    return this.services.controls['other'] as UntypedFormControl
   }
   get itrToggle() {
-    return this.services.controls['itrToggle'] as FormControl
+    return this.services.controls['itrToggle'] as UntypedFormControl
   }
   get nriToggle() {
-    return this.services.controls['nriToggle'] as FormControl
+    return this.services.controls['nriToggle'] as UntypedFormControl
   }
   get tpaToggle() {
-    return this.services.controls['tpaToggle'] as FormControl
+    return this.services.controls['tpaToggle'] as UntypedFormControl
   }
   get gstToggle() {
-    return this.services.controls['gstToggle'] as FormControl
+    return this.services.controls['gstToggle'] as UntypedFormControl
   }
   get noticeToggle() {
-    return this.services.controls['noticeToggle'] as FormControl
+    return this.services.controls['noticeToggle'] as UntypedFormControl
   }
   get wbToggle() {
-    return this.services.controls['wbToggle'] as FormControl
+    return this.services.controls['wbToggle'] as UntypedFormControl
   }
   get pdToggle() {
-    return this.services.controls['pdToggle'] as FormControl
+    return this.services.controls['pdToggle'] as UntypedFormControl
   }
   get mfToggle() {
-    return this.services.controls['mfToggle'] as FormControl
+    return this.services.controls['mfToggle'] as UntypedFormControl
   }
   get otherToggle() {
-    return this.services.controls['otherToggle'] as FormControl
+    return this.services.controls['otherToggle'] as UntypedFormControl
   }
   get assignmentToggle(){
-    return this.services.controls['assignmentToggle'] as FormControl
+    return this.services.controls['assignmentToggle'] as UntypedFormControl
   }
 
   onLanguageCheckboxChange(language: string) {
@@ -513,12 +521,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  getLanguageControl(lang: string): FormControl {
-    return this.languageForm.get(lang) as FormControl;
+  getLanguageControl(lang: string): UntypedFormControl {
+    return this.languageForm.get(lang) as UntypedFormControl;
   }
 
-  getItrTypeControl(itrType: string): FormControl {
-    return this.itrTypeForm.get(itrType) as FormControl;
+  getItrTypeControl(itrType: string): UntypedFormControl {
+    return this.itrTypeForm.get(itrType) as UntypedFormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
@@ -545,8 +553,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  getDurationControl(duration: string): FormControl {
-    return this.inactivityTimeForm.get(duration) as FormControl;
+  getDurationControl(duration: string): UntypedFormControl {
+    return this.inactivityTimeForm.get(duration) as UntypedFormControl;
   }
 
   onDurationCheckboxChange(event: any, selectedDuration: string) {
@@ -568,8 +576,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  getCaseLimitControl(limit: string): FormControl {
-    return this.caseLimitForm.get(limit) as FormControl;
+  getCaseLimitControl(limit: string): UntypedFormControl {
+    return this.caseLimitForm.get(limit) as UntypedFormControl;
   }
 
   onCaseLimitCheckboxChange(event: any, selectedLimit: string) {
@@ -591,85 +599,85 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  smeFormGroup: FormGroup = this.fb.group({
-    mobileNumber: new FormControl(''),
-    name: new FormControl("", [Validators.required]),
-    smeOriginalEmail: new FormControl(''),
-    languages: new FormControl(''),
-    referredBy: new FormControl(''),
-    itrTypes: new FormControl(''),
-    qualification: new FormControl(''),
-    state: new FormControl(''),
-    parentName: new FormControl(''),
-    principalName: new FormControl(''),
-    pin: new FormControl(''),
-    city: new FormControl(''),
-    additionalIdsCount: new FormControl(''),
-    pan: new FormControl(''),
-    gstin: new FormControl('')
+  smeFormGroup: UntypedFormGroup = this.fb.group({
+    mobileNumber: new UntypedFormControl(''),
+    name: new UntypedFormControl("", [Validators.required]),
+    smeOriginalEmail: new UntypedFormControl(''),
+    languages: new UntypedFormControl(''),
+    referredBy: new UntypedFormControl(''),
+    itrTypes: new UntypedFormControl(''),
+    qualification: new UntypedFormControl(''),
+    state: new UntypedFormControl(''),
+    parentName: new UntypedFormControl(''),
+    principalName: new UntypedFormControl(''),
+    pin: new UntypedFormControl(''),
+    city: new UntypedFormControl(''),
+    additionalIdsCount: new UntypedFormControl(''),
+    pan: new UntypedFormControl(''),
+    gstin: new UntypedFormControl('')
   })
 
-  bankDetailsFormGroup: FormGroup = this.fb.group({
+  bankDetailsFormGroup: UntypedFormGroup = this.fb.group({
     accountType: ['', [Validators.required]],
     ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
     accountNumber: ['', [Validators.required]],
   })
 
   get additionalIdsCount() {
-    return this.smeFormGroup.controls['additionalIdsCount'] as FormControl
+    return this.smeFormGroup.controls['additionalIdsCount'] as UntypedFormControl
   }
 
   get pan() {
-    return this.smeFormGroup.controls['pan'] as FormControl
+    return this.smeFormGroup.controls['pan'] as UntypedFormControl
   }
   get gstin() {
-    return this.smeFormGroup.controls['gstin'] as FormControl
+    return this.smeFormGroup.controls['gstin'] as UntypedFormControl
   }
 
   get mobileNumber() {
-    return this.smeFormGroup.controls['mobileNumber'] as FormControl
+    return this.smeFormGroup.controls['mobileNumber'] as UntypedFormControl
   }
   get name() {
-    return this.smeFormGroup.controls['name'] as FormControl
+    return this.smeFormGroup.controls['name'] as UntypedFormControl
   }
   get smeOriginalEmail() {
-    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl
+    return this.smeFormGroup.controls['smeOriginalEmail'] as UntypedFormControl
   }
   get languages() {
-    return this.smeFormGroup.controls['languages'] as FormControl
+    return this.smeFormGroup.controls['languages'] as UntypedFormControl
   }
   get referredBy() {
-    return this.smeFormGroup.controls['referredBy'] as FormControl
+    return this.smeFormGroup.controls['referredBy'] as UntypedFormControl
   }
   get itrTypes() {
-    return this.smeFormGroup.controls['itrTypes'] as FormControl
+    return this.smeFormGroup.controls['itrTypes'] as UntypedFormControl
   }
   get qualification() {
-    return this.smeFormGroup.controls['qualification'] as FormControl
+    return this.smeFormGroup.controls['qualification'] as UntypedFormControl
   }
   get state() {
-    return this.smeFormGroup.controls['state'] as FormControl
+    return this.smeFormGroup.controls['state'] as UntypedFormControl
   }
   get parentName() {
-    return this.smeFormGroup.controls['parentName'] as FormControl
+    return this.smeFormGroup.controls['parentName'] as UntypedFormControl
   }
 
   get principalName() {
-    return this.smeFormGroup.controls['principalName'] as FormControl
+    return this.smeFormGroup.controls['principalName'] as UntypedFormControl
   }
 
   get pin() {
-    return this.smeFormGroup.controls['pin'] as FormControl
+    return this.smeFormGroup.controls['pin'] as UntypedFormControl
   }
   get city() {
-    return this.smeFormGroup.controls['city'] as FormControl
+    return this.smeFormGroup.controls['city'] as UntypedFormControl
   }
 
-  assignmentUpdated(assignment: FormControl) {
+  assignmentUpdated(assignment: UntypedFormControl) {
     this.smeObj['assignmentOffByLeader'] = !assignment.value;
   }
 
-  laderAssignment(leaderAssignment : FormControl){
+  laderAssignment(leaderAssignment : UntypedFormControl){
     if(leaderAssignment.value === true){
       this.getRoundRobinCount();
     }
@@ -677,7 +685,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   serviceRecords: any[] = [];
 
-  serviceUpdated(serviceType, service: FormControl) {
+  serviceUpdated(serviceType, service: UntypedFormControl) {
     if (service.value) {
       if (!this.smeObj[serviceType]) {
         this.smeObj[serviceType] = {
@@ -693,56 +701,71 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  otherSmeInfo: FormGroup = this.fb.group({
-    coOwner: new FormControl(''),
-    callingNumber: new FormControl('', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex)]),
-    smeOfficialEmail: new FormControl(''),
-    email: new FormControl(''),
-    displayName: new FormControl(''),
-    internal: new FormControl(''),
-    leaveStartDate: new FormControl(''),
-    leaveEndDate: new FormControl(''),
-    joiningDate: new FormControl(''),
-    resigningDate: new FormControl(''),
-    external: new FormControl(''),
+  otherSmeInfo: UntypedFormGroup = this.fb.group({
+    coOwner: new UntypedFormControl(''),
+    callingNumber: new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex)]),
+    smeOfficialEmail: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    displayName: new UntypedFormControl(''),
+    internal: new UntypedFormControl(''),
+    leaveStartDate: new UntypedFormControl(''),
+    leaveEndDate: new UntypedFormControl(''),
+    joiningDate: new UntypedFormControl(''),
+    resigningDate: new UntypedFormControl(''),
+    external: new UntypedFormControl(''),
   })
 
   get coOwner() {
-    return this.otherSmeInfo.controls['coOwner'] as FormControl
+    return this.otherSmeInfo.controls['coOwner'] as UntypedFormControl
   }
   get callingNumber() {
-    return this.otherSmeInfo.controls['callingNumber'] as FormControl
+    return this.otherSmeInfo.controls['callingNumber'] as UntypedFormControl
   }
   get smeOfficialEmail() {
-    return this.otherSmeInfo.controls['smeOfficialEmail'] as FormControl
+    return this.otherSmeInfo.controls['smeOfficialEmail'] as UntypedFormControl
   }
 
   get email() {
-    return this.otherSmeInfo.controls['email'] as FormControl
+    return this.otherSmeInfo.controls['email'] as UntypedFormControl
   }
   get displayName() {
-    return this.otherSmeInfo.controls['displayName'] as FormControl
+    return this.otherSmeInfo.controls['displayName'] as UntypedFormControl
   }
   get internal() {
-    return this.otherSmeInfo.controls['internal'] as FormControl
+    return this.otherSmeInfo.controls['internal'] as UntypedFormControl
   }
   get kommId() {
-    return this.otherSmeInfo.controls['email'] as FormControl
+    return this.otherSmeInfo.controls['email'] as UntypedFormControl
   }
   get leaveStartDate() {
-    return this.otherSmeInfo.controls['leaveStartDate'] as FormControl
+    return this.otherSmeInfo.controls['leaveStartDate'] as UntypedFormControl
   }
   get leaveEndDate() {
-    return this.otherSmeInfo.controls['leaveEndDate'] as FormControl
+    return this.otherSmeInfo.controls['leaveEndDate'] as UntypedFormControl
   }
   get joiningDate() {
-    return this.otherSmeInfo.controls['joiningDate'] as FormControl
+    return this.otherSmeInfo.controls['joiningDate'] as UntypedFormControl
   }
   get resigningDate() {
-    return this.otherSmeInfo.controls['resigningDate'] as FormControl
+    return this.otherSmeInfo.controls['resigningDate'] as UntypedFormControl
   }
   get external() {
-    return this.otherSmeInfo.controls['external'] as FormControl
+    return this.otherSmeInfo.controls['external'] as UntypedFormControl
+  }
+
+  existingCount
+  newCount
+  onAdditionalIdsCountChange(event: any) {
+    this.newCount = parseInt(event.target.value, 10);
+    this.existingCount = this.smeObj?.['partnerDetails'].additionalIdsCount;
+    const totalCount = this.existingCount + this.newCount;
+
+    if (totalCount > 5) {
+      this.additionalIdsCount.setValue(this.existingCount);
+      this.additionalIdsCount.setErrors({ 'totalCountExceeded': true });
+    }else {
+      this.additionalIdsCount.setErrors(null)
+    }
   }
 
   updateResignedStatus() {
@@ -886,6 +909,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       }
     }
 
+    if (this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL"){
+     this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
+    }
+
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
@@ -927,6 +954,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.location.back();
         }
       }, 500);
+    }else{
+      this.utilsService.showSnackBar('Please Enter Valid Calling Number');
+        return;
     }
   }
 

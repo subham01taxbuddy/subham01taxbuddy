@@ -65,97 +65,179 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
       this.utilsService.showSnackBar(`Ack Number must end with "${assessmentYearLastTwoDigits}" for the Assessment Year ${this.data.assessmentYear}`);
       return;
     }
+
+    if (this.data.statusId !== 8) {
+      this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
+      return;
+    }
+
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
 
-      let itrType = `ITR${this.itrType.value}`;
+      if (this.data.itrObjectStatus === 'CREATE') {
+        //no ITR object found, create a new ITR object
+        this.loading = true;
+        let objITR = this.utilsService.createEmptyJson(
+          this.userProfile, this.data.serviceType,
+          this.data?.assessmentYear,
+          '2022-2023'
+        );
+        objITR.filingTeamMemberId = this.data.callerAgentUserId;
+        objITR.userId = this.data.userId;
+        objITR.assessmentYear = this.data.assessmentYear;
+        objITR.isRevised = this.returnType.value;
+        console.log('obj:', objITR);
 
-      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-      this.itrMsService.getMethod(param1).subscribe(
-        (res: any) => {
-          if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-            if (this.data.itrObjectStatus === 'CREATE') {
-              //no ITR object found, create a new ITR object
-              this.loading = true;
-              let objITR = this.utilsService.createEmptyJson(
-                this.userProfile, this.data.serviceType,
-                this.data?.assessmentYear,
+        const param = '/itr';
+        this.itrMsService.postMethod(param, objITR).subscribe(
+          (result: any) => {
+            console.log('My iTR Json successfully created-==', result);
+            this.loading = false;
+            objITR = result;
+            this.serviceCall(objITR);
+          },
+          (error) => {
+            this.loading = false;
+          }
+        );
+        this.loading = false;
+        console.log('end');
+      } else {
+        //one more ITR objects in place, use existing ITR object
+        let itrFilter =
+          this.data.itrObjectStatus !== 'MULTIPLE_ITR'
+            ? `&itrId=${this.data.openItrId}`
+            : '';
+        const param =
+          `/itr?userId=${this.data.userId}&assessmentYear=${this.data.assessmentYear}` +
+          itrFilter;
+        this.itrMsService.getMethod(param).subscribe(
+          async (result: any) => {
+            console.log(`My ITR by ${param}`, result);
+            if (result == null || result.length == 0) {
+              //no ITR found, error case
+              this.loading = false;
+              this.utilsService.showErrorMsg(
+                'Something went wrong. Please try again'
+              );
+            } else if (result.length == 1) {
+
+              let workingItr = result[0];
+              let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
+              let obj = this.utilsService.createEmptyJson(
+                null, serviceType,
+                this.data.assessmentYear,
                 '2022-2023'
               );
-              objITR.filingTeamMemberId = this.data.callerAgentUserId;
-              objITR.userId = this.data.userId;
-              objITR.assessmentYear = this.data.assessmentYear;
-              objITR.isRevised = this.returnType.value;
-              console.log('obj:', objITR);
-
-              const param = '/itr';
-              this.itrMsService.postMethod(param, objITR).subscribe(
-                (result: any) => {
-                  console.log('My iTR Json successfully created-==', result);
-                  this.loading = false;
-                  objITR = result;
-                  this.serviceCall(objITR);
-                },
-                (error) => {
-                  this.loading = false;
-                }
-              );
-              this.loading = false;
-              console.log('end');
+              Object.assign(obj, workingItr);
+              workingItr.filingTeamMemberId = this.data.callerAgentUserId;
+              console.log('obj:', obj);
+              workingItr = JSON.parse(JSON.stringify(obj));
+              this.serviceCall(workingItr);
             } else {
-              //one more ITR objects in place, use existing ITR object
-              let itrFilter =
-                this.data.itrObjectStatus !== 'MULTIPLE_ITR'
-                  ? `&itrId=${this.data.openItrId}`
-                  : '';
-              const param =
-                `/itr?userId=${this.data.userId}&assessmentYear=${this.data.assessmentYear}` +
-                itrFilter;
-              this.itrMsService.getMethod(param).subscribe(
-                async (result: any) => {
-                  console.log(`My ITR by ${param}`, result);
-                  if (result == null || result.length == 0) {
-                    //no ITR found, error case
-                    this.loading = false;
-                    this.utilsService.showErrorMsg(
-                      'Something went wrong. Please try again'
-                    );
-                  } else if (result.length == 1) {
-
-                    let workingItr = result[0];
-                    let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
-                    let obj = this.utilsService.createEmptyJson(
-                      null, serviceType,
-                      this.data.assessmentYear,
-                      '2022-2023'
-                    );
-                    Object.assign(obj, workingItr);
-                    workingItr.filingTeamMemberId = this.data.callerAgentUserId;
-                    console.log('obj:', obj);
-                    workingItr = JSON.parse(JSON.stringify(obj));
-                    this.serviceCall(workingItr);
-                  } else {
-                    //multiple ITRs found, navigate to ITR tab with the results
-                    this.router.navigateByUrl('/tasks/filings', {
-                      state: { mobileNumber: this.data?.mobileNumber },
-                    });
-                  }
-                },
-                async (error: any) => {
-                  console.log('Error:', error);
-                  this.utilsService.showErrorMsg(
-                    'Something went wrong. Please try again'
-                  );
-                }
-              );
+              //multiple ITRs found, navigate to ITR tab with the results
+              this.router.navigateByUrl('/tasks/filings', {
+                state: { mobileNumber: this.data?.mobileNumber },
+              });
             }
-          } else {
-            this.loading = false;
-            this.utilsService.showSnackBar(
-              'Please make sure all the invoices are paid before updating the filing status.'
+          },
+          async (error: any) => {
+            console.log('Error:', error);
+            this.utilsService.showErrorMsg(
+              'Something went wrong. Please try again'
             );
           }
-        });
+        );
+      }
+
+      // let itrType = `ITR${this.itrType.value}`;
+
+      // const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+      // this.itrMsService.getMethod(param1).subscribe(
+      //   (res: any) => {
+      //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+      //       if (this.data.itrObjectStatus === 'CREATE') {
+      //         //no ITR object found, create a new ITR object
+      //         this.loading = true;
+      //         let objITR = this.utilsService.createEmptyJson(
+      //           this.userProfile, this.data.serviceType,
+      //           this.data?.assessmentYear,
+      //           '2022-2023'
+      //         );
+      //         objITR.filingTeamMemberId = this.data.callerAgentUserId;
+      //         objITR.userId = this.data.userId;
+      //         objITR.assessmentYear = this.data.assessmentYear;
+      //         objITR.isRevised = this.returnType.value;
+      //         console.log('obj:', objITR);
+
+      //         const param = '/itr';
+      //         this.itrMsService.postMethod(param, objITR).subscribe(
+      //           (result: any) => {
+      //             console.log('My iTR Json successfully created-==', result);
+      //             this.loading = false;
+      //             objITR = result;
+      //             this.serviceCall(objITR);
+      //           },
+      //           (error) => {
+      //             this.loading = false;
+      //           }
+      //         );
+      //         this.loading = false;
+      //         console.log('end');
+      //       } else {
+      //         //one more ITR objects in place, use existing ITR object
+      //         let itrFilter =
+      //           this.data.itrObjectStatus !== 'MULTIPLE_ITR'
+      //             ? `&itrId=${this.data.openItrId}`
+      //             : '';
+      //         const param =
+      //           `/itr?userId=${this.data.userId}&assessmentYear=${this.data.assessmentYear}` +
+      //           itrFilter;
+      //         this.itrMsService.getMethod(param).subscribe(
+      //           async (result: any) => {
+      //             console.log(`My ITR by ${param}`, result);
+      //             if (result == null || result.length == 0) {
+      //               //no ITR found, error case
+      //               this.loading = false;
+      //               this.utilsService.showErrorMsg(
+      //                 'Something went wrong. Please try again'
+      //               );
+      //             } else if (result.length == 1) {
+
+      //               let workingItr = result[0];
+      //               let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
+      //               let obj = this.utilsService.createEmptyJson(
+      //                 null, serviceType,
+      //                 this.data.assessmentYear,
+      //                 '2022-2023'
+      //               );
+      //               Object.assign(obj, workingItr);
+      //               workingItr.filingTeamMemberId = this.data.callerAgentUserId;
+      //               console.log('obj:', obj);
+      //               workingItr = JSON.parse(JSON.stringify(obj));
+      //               this.serviceCall(workingItr);
+      //             } else {
+      //               //multiple ITRs found, navigate to ITR tab with the results
+      //               this.router.navigateByUrl('/tasks/filings', {
+      //                 state: { mobileNumber: this.data?.mobileNumber },
+      //               });
+      //             }
+      //           },
+      //           async (error: any) => {
+      //             console.log('Error:', error);
+      //             this.utilsService.showErrorMsg(
+      //               'Something went wrong. Please try again'
+      //             );
+      //           }
+      //         );
+      //       }
+      //     } else {
+      //       this.loading = false;
+      //       this.utilsService.showSnackBar(
+      //         'Please make sure all the invoices are paid before updating the filing status.'
+      //       );
+      //     }
+      //   });
     }
   }
 
@@ -177,7 +259,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
             "aadharNumber": "",
             "assesseeType": "INDIVIDUAL",
             assessmentYear: this.data.assessmentYear,
-            financialYear: "2022-2023",
+            financialYear: this.utilsService.getFYFromAY(this.data.assessmentYear),
             isRevised: this.returnType.value,
             "eFillingCompleted": true,
             eFillingDate: this.eFillingDate.value,
@@ -188,31 +270,33 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
             filingSource: "MANUALLY"
           }
           console.log('Updated Data:', req)
-          const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-          this.itrMsService.putMethod(param, req).subscribe((res: any) => {
-            console.log(res);
-            this.loading = false;
-            if (res.success) {
-              this.updateStatus();
-              this.utilsService.showSnackBar('Manual Filing Details updated successfully');
-              this.location.back();
-            } else {
-              this.utilsService.showSnackBar(res.message);
+          setTimeout(() => {
+            const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+            this.itrMsService.putMethod(param, req).subscribe((res: any) => {
+              console.log(res);
+              this.loading = false;
+              if (res.success) {
+                this.updateStatus();
+                this.utilsService.showSnackBar('Manual Filing Details updated successfully');
+                this.location.back();
+              } else {
+                this.utilsService.showSnackBar(res.message);
+                this.dialogRef.close(true);
+              }
+            }, error => {
+              this.utilsService.showSnackBar('Failed to update Manual Filing Details')
+              this.loading = false;
               this.dialogRef.close(true);
-            }
-          }, error => {
-            this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-            this.loading = false;
-            this.dialogRef.close(true);
-          })
+            })
+          }, 10000)
         }
-      },error => {
-        this.loading=false;
+      }, error => {
+        this.loading = false;
         if (error.error && error.error.error) {
-          this.utilsService.showSnackBar( error.error.error);
+          this.utilsService.showSnackBar(error.error.error);
           this.dialogRef.close(true);
         } else {
-          this.utilsService.showSnackBar( "An unexpected error occurred.");
+          this.utilsService.showSnackBar("An unexpected error occurred.");
         }
       });
 

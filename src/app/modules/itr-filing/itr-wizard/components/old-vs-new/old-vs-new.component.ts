@@ -71,7 +71,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   showCurrentAYOptions = false;
   submitted: boolean = false;
   dueDateOver: boolean = false;
-  allowNewRegime = false;
+  allowNewRegime = true;
   isITRU: boolean;
   PREV_ITR_JSON: any;
   pySummary: any;
@@ -165,6 +165,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   initForm() {
+    let regimeRequired = !this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson);
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
         everOptedNewRegime: [''],
@@ -179,7 +180,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: ['', Validators.required],
+        currentYearRegime: ['', regimeRequired ? Validators.required : []],
         date: [],
         acknowledgementNumber: [],
       }),
@@ -433,16 +434,15 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
     ).controls['currentYearRegime'];
     if (
-      this.newRegimeLabel === 'Opting in Now' &&
-      currAssmntYr.value === 'NEW'
+      currAssmntYr.value === 'OLD'
     ) {
       this.showCurrentAYOptions = true;
-    } else if (
+    } /*else if (
       this.oldRegimeLabel === 'Opt Out' &&
       currAssmntYr.value === 'OLD'
     ) {
       this.showCurrentAYOptions = true;
-    } else {
+    }*/ else {
       this.showCurrentAYOptions = false;
     }
 
@@ -555,7 +555,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Not eligible to opt';
       currAssmntYr.setValue('NEW');
       currAssmntYr.disable();
-      this.showCurrentAYOptions = false;
     }
 
     if (optIn && !optOut) {

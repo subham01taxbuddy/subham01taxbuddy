@@ -63,6 +63,7 @@ import { UpdateCapacityComponent } from './components/update-capacity/update-cap
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { ChatModule } from '../chat/chat.module';
 import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget.component';
+import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -107,7 +108,8 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     UpdateItrUFillingDialogComponent,
     ValidationErrorScreenComponent,
     GenericSortingComponent,
-    GenericUserFilterComponent
+    GenericUserFilterComponent,
+    CalculatorModalComponent
   ],
   imports: [
     CommonModule,
@@ -170,6 +172,8 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     GenericSortingComponent,
     GenericUserFilterComponent,
     FloatingWidgetComponent
+        UpdateNoJsonFilingDialogComponent,
+    CalculatorModalComponent
   ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [

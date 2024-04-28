@@ -29,7 +29,7 @@ export class PartnerManagementComponent implements OnInit {
   itrPlanList: any;
   lang=[];
   skillSetPlanIdList:any={}
-
+  isDisabled: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -259,7 +259,6 @@ export class PartnerManagementComponent implements OnInit {
 
 
   private populatePartnerForm(partnerInfo: any) {
-    debugger
     this.partnerForm.patchValue({
       mobileNumber: partnerInfo.mobileNumber,
       name: partnerInfo.name,

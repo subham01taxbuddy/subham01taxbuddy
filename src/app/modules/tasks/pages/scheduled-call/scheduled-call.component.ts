@@ -60,6 +60,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
     { statusName: 'Follow-Up', statusId: '19' },
+    { statusName: 'Cancelled', statusId: '20' },
   ];
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
@@ -381,8 +382,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           } else if (params.data.statusId == 19) {
             return 'Follow-Up';
           }
-          else {
+          else if(params.data.statusId == 17) {
             return 'Open';
+          } else if(params.data.statusId == 20) {
+            return 'Cancelled';
           }
         },
         filterParams: {

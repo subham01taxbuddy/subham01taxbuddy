@@ -9,11 +9,11 @@
   <p class="pTxSu1"><strong>Please find below your e-filling details:</strong></p>
   <ul class="pTxSu1">
     <li>Name: {{userName}}</li>
-    <li>Phone No.: {{ITR_JSON.contactNumber}}</li>
+    <li *ngIf="this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')">Phone No.: {{ITR_JSON.contactNumber}}</li>
     <li>Assessment Year: {{ITR_JSON.assessmentYear}}</li>
     <li>Financial Year: {{ITR_JSON.financialYear}}</li>
     <li>ITR Form Type: {{ITR_JSON.itrType}}</li>
-    <li>Return Type: {{ITR_JSON.isRevised ? 'Revised' : 'Original' }}</li>
+    <li>Return Type: {{ITR_JSON.isRevised === 'Y' ? 'Revised' : 'Original' }}</li>
     <li>PAN: {{ITR_JSON.panNumber}}</li>
     <li>Acknowledgement No: {{data.acknowledgementNo}}</li>
   </ul>

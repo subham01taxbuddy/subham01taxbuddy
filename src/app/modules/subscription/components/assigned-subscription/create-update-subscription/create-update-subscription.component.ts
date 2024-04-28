@@ -130,7 +130,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     setTimeout(() => {
       this.onPersonalInfoFormChanges();
       this.onOtherInfoFormChange();
-    }, 7000);
+    }, 10000);
   }
 
   ngOnInit() {
@@ -1079,7 +1079,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   changeService() {
     if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
-        (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
+        (year) => year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
       );
 
     } else if(this.service === 'ITR')

@@ -1192,7 +1192,7 @@ export class PrefillIdComponent implements OnInit {
           );
           return;
         }
-        
+
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4') ||
@@ -1203,7 +1203,7 @@ export class PrefillIdComponent implements OnInit {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
-            let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4: undefined;
+            let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4 : undefined;
             // if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
             //   this.utilsService.showSnackBar(
             //     'AY is other than 2023-24'
@@ -4043,15 +4043,15 @@ export class PrefillIdComponent implements OnInit {
                 incomeType: 'ANY_OTHER',
                 details: null,
                 amount:
-                    IncChargeable - (IntrstFrmSavingBank +
-                        IntrstFrmTermDeposit +
-                        IntrstFrmIncmTaxRefund +
-                        FamilyPension +
-                        DividendGross +
-                        (pfInterest1011IP ? pfInterest1011IP : 0) +
-                        (pfInterest1011IIP ? pfInterest1011IIP : 0) +
-                        (pfInterest1012IP ? pfInterest1012IP : 0) +
-                        (pfInterest1012IIP ? pfInterest1012IIP : 0)),
+                  IncChargeable - (IntrstFrmSavingBank +
+                    IntrstFrmTermDeposit +
+                    IntrstFrmIncmTaxRefund +
+                    FamilyPension +
+                    DividendGross +
+                    (pfInterest1011IP ? pfInterest1011IP : 0) +
+                    (pfInterest1011IIP ? pfInterest1011IIP : 0) +
+                    (pfInterest1012IP ? pfInterest1012IP : 0) +
+                    (pfInterest1012IIP ? pfInterest1012IIP : 0)),
                 expenses: null,
               });
             }
@@ -6781,8 +6781,63 @@ export class PrefillIdComponent implements OnInit {
   }
 
   addClient() {
-    this.showEriView = true;
-    this.router.navigate(['/itr-filing/itr/eri']);
+    this.getUserCreds();
+  }
+
+  getUserCreds() {
+    let url = `/it-password/${this.data.userId}`;
+    this.userService.getMethod(url).subscribe((result: any) => {
+      console.log(result);
+      if (result.error === 'DATA_NOT_FOUND') {
+        this.showEriView = true;
+        this.router.navigate(['/itr-filing/itr/eri']);
+      } else {
+        if (result.data.password && result.data.passwordStatus === 'VALID') {
+          this.utilsService.showSnackBar('Validating add client through eportal is inprogress please wait.');
+          this.addClientThroughEportal(result.data.password);
+        } else {
+          this.showEriView = true;
+          this.router.navigate(['/itr-filing/itr/eri']);
+        }
+      }
+    }, (error) => {
+      console.error(error);
+      this.showEriView = true;
+      this.router.navigate(['/itr-filing/itr/eri']);
+    });
+  }
+
+  addClientThroughEportal(password) {
+    this.loading = true;
+    let reqData = {
+      userId: this.data.userId,
+      panNo: this.ITR_JSON?.panNumber,
+      password: password,
+      env: environment.lifecycleEnv,
+    };
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    this.httpClient
+      .post(environment.addClientThroughEportal, reqData, { headers: headers })
+      .subscribe(
+        (result: any) => {
+          this.loading = false;
+          if (result.status === 'ok') {
+            this.utilsService.showSnackBar(result.message);
+          } else {
+            this.utilsService.showSnackBar('Error in updating ERI');
+            this.showEriView = true;
+            this.router.navigate(['/itr-filing/itr/eri']);
+          }
+        }, (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar('Error in updating ERI');
+          this.showEriView = true;
+          this.router.navigate(['/itr-filing/itr/eri']);
+        }
+      );
   }
 
   downloadPrefillOpt() {
@@ -6932,70 +6987,13 @@ export class PrefillIdComponent implements OnInit {
     this.loading = true;
 
     var data = new FormData();
-    data.append('from', 'support@taxbuddy.com');
-    data.append('subject', 'Summary Json Parsing Failed!!!');
-    data.append(
-      'body',
-      `<!DOCTYPE html>
-<html>
-
-<head>
-    <title></title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-</head>
-
-<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
-    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
-        <tr>
-            <td align="center">
-                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
-                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
-                        <td>
-                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
-                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
-                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
-                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0px 15px 0px 15px">
-                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
-                                <tr>
-                                    <td style="font-size: 14px;color: #333;"> <br> <br> <br>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Summary JSON parsing has failed for user: ${this.data.name} PAN:${this.data.panNumber} itrId:${this.data.itrId} userId:${this.data.userId}</p> <br>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please check attachment for json. </p> <br>
-
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Regards, </p>
-                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Taxbuddy Dev Team </p> <br>
-
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="background-color: #1c3550;padding: 20px 15px;">
-                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-
-</html>`
-    );
-    data.append('cc', 'divya@taxbuddy.com');
-    data.append('isHtml', 'true');
+    data.append('userId', this.data.userId);
+    data.append('itrId', this.data.itrId);
+    data.append('panNumber', this.data.panNumber);
+    data.append('name', this.data.name);
     data.append('file', this.uploadDoc);
-    data.append('to', 'gitanjali.kakade@taxbuddy.com, pratik.bharda@taxbuddy.com');
 
-    let param = '/send-mail';
+    let param = '/json-failed-send-mail-alert';
     this.userService.postMethod(param, data).subscribe(
       (res: any) => {
         console.log(res);

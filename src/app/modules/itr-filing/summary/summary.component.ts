@@ -259,6 +259,7 @@ export class SummaryComponent implements OnInit {
         anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
         winningFromLotteries: any;
+        winningFromGaming: any;
         incFromOwnAndMaintHorses?: any;
         NOT89A?: any;
         OTHNOT89A?: any;
@@ -269,6 +270,8 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
+        SumRecdPrYrBusTRU562xii?: any;
+        SumRecdPrYrBusTRU562xiii?: any;
       };
       otherIncomeTotal: number;
     };
@@ -670,6 +673,7 @@ export class SummaryComponent implements OnInit {
       taxAtNormalRate: Number;
       taxAtSpecialRate: Number;
       rebateOnAgricultureIncome: Number;
+      marginalRelief: Number;
       totalTax: Number;
     };
     rebateUnderSection87A: Number;
@@ -861,8 +865,10 @@ export class SummaryComponent implements OnInit {
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
+  business44ADADetails: any = [];
   countryCodeList: any;
   dialogRef: any;
+  loggedInUserRoles: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -893,6 +899,7 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.natureOfBusiness = JSON.parse(
       sessionStorage.getItem('NATURE_OF_BUSINESS')
     );
@@ -1232,6 +1239,7 @@ export class SummaryComponent implements OnInit {
             otherIncome: {
               otherIncomes: {
                 winningFromLotteries: 0,
+                winningFromGaming: 0,
                 saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
@@ -1813,6 +1821,7 @@ export class SummaryComponent implements OnInit {
                 ]?.TotalTaxPayable,
               taxAtSpecialRate: 0,
               rebateOnAgricultureIncome: 0,
+              marginalRelief: 0,
               totalTax:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.taxComputation
@@ -3039,6 +3048,21 @@ export class SummaryComponent implements OnInit {
                     0
                   )
                   : null,
+                winningFromGaming: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFrmOnGames?.DateRange
+                  ? Object.values(
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleOS.IncFrmOnGames.DateRange
+                  ).reduce(
+                    (total: any, value: any) =>
+                      total +
+                      (typeof value === 'number'
+                        ? value
+                        : (parseFloat(value) as number) || 0),
+                    0
+                  )
+                  : null,
 
                 incFromOwnAndMaintHorses: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -3077,6 +3101,13 @@ export class SummaryComponent implements OnInit {
                 pfInterest1012IIP:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso,
+
+                SumRecdPrYrBusTRU562xii:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
+                SumRecdPrYrBusTRU562xiii:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
 
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -4225,6 +4256,8 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI?.RebateOnAgriInc,
 
+              marginalRelief: 0, //need to add correct key from schema
+
               totalTax:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI
@@ -5111,6 +5144,7 @@ export class SummaryComponent implements OnInit {
               otherIncome: {
                 otherIncomes: {
                   winningFromLotteries: this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
+                  winningFromGaming: this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BBJ,
                   saving:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'SAVING_INTEREST'
@@ -5155,6 +5189,14 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
                     )?.amount,
+                  SumRecdPrYrBusTRU562xii:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INCOME_US_56_2_XII'
+                    )?.amount,
+                  SumRecdPrYrBusTRU562xiii:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INCOME_US_56_2_XIII'
+                    )?.amount,
 
                   aggregateValueWithoutConsideration:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
@@ -5198,28 +5240,13 @@ export class SummaryComponent implements OnInit {
                 },
 
                 otherIncomeTotal:
-                  this.finalSummary?.assessment?.taxSummary.otherIncome + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
+                  this.finalSummary?.assessment?.taxSummary.otherIncome + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB
+                  + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BBJ,
               },
               businessIncome: {
                 businessIncomeDetails: {
                   business44AD: this.business44adDetails,
-
-                  business44ADA:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                      ?.filter(
-                        (element) => element?.businessType === 'PROFESSIONAL'
-                      )
-                      .map((element) => ({
-                        businessSection: element?.businessType,
-                        natureOfBusinessCode: this.natureOfBusiness?.find(
-                          (item) => {
-                            return item?.code === element?.natureOfBusinessCode;
-                          }
-                        )?.label,
-                        tradeName: element?.tradeName,
-                        grossTurnover: element?.receipts,
-                        TaxableIncome: element?.presumptiveIncome,
-                      })),
+                  business44ADA: this.business44ADADetails,
 
                   nonSpecIncome: {
                     businessSection: 'Non Speculative Income',
@@ -6044,6 +6071,7 @@ export class SummaryComponent implements OnInit {
                 rebateOnAgricultureIncome:
                   this.finalSummary?.assessment?.taxSummary
                     ?.rebateOnAgricultureIncome,
+                marginalRelief: this.finalSummary?.assessment?.taxSummary?.surchargeMarginalRelif,
                 totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
               },
               rebateUnderSection87A:
@@ -6521,6 +6549,24 @@ export class SummaryComponent implements OnInit {
     return gross + profit + perquisite;
   }
 
+  setBusiness44ADA(){
+    let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
+      ?.filter(element => element?.businessType === 'PROFESSIONAL');
+    
+    let tradeNameSet = new Set(professionalIncomes.map(item => item.tradeName));
+
+    tradeNameSet.forEach(tradeName=>{
+      const profIncome = professionalIncomes.filter(income=>income.tradeName === tradeName);
+      this.business44ADADetails.push({
+        businessSection: profIncome[0]?.businessType,
+        natureOfBusinessCode: this.natureOfBusiness?.find(item => item?.code === profIncome[0]?.natureOfBusinessCode)?.label,
+        tradeName: tradeName,
+        grossTurnover: profIncome.reduce((total, element) => total+ element.receipts, 0),
+        TaxableIncome: profIncome.reduce((total, element) => total+ element.presumptiveIncome, 0),
+      });
+    });
+  }
+
   getUserName(type) {
     const self = this.ITR_JSON.family?.filter(
       (item: any) => item.relationShipCode === 'SELF'
@@ -6852,28 +6898,28 @@ export class SummaryComponent implements OnInit {
         } else {
           this.utilsService.showSnackBar(res.message);
           //also update user status
-          let statusParam = '/itr-status';
-          let sType = 'ITR';
+          // let statusParam = '/itr-status';
+          // let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
 
-          let param2 = {
-            statusId: 7, //waiting for confirmation
-            userId: this.ITR_JSON.userId,
-            assessmentYear: this.ITR_JSON.assessmentYear,
-            completed: false,
-            serviceType: sType,
-          };
-          console.log('param2: ', param2);
-          this.userMsService.postMethod(statusParam, param2).subscribe(
-            (res) => {
-              console.log('Status update response: ', res);
-              this.loading = false;
-              //this._toastMessageService.alert("success", "Status update successfully.");
-            },
-            (error) => {
-              this.loading = false;
-              //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-            }
-          );
+          // let param2 = {
+          //   statusId: 7, //waiting for confirmation
+          //   userId: this.ITR_JSON.userId,
+          //   assessmentYear: this.ITR_JSON.assessmentYear,
+          //   completed: false,
+          //   serviceType: sType,
+          // };
+          // console.log('param2: ', param2);
+          // this.userMsService.postMethod(statusParam, param2).subscribe(
+          //   (res) => {
+          //     console.log('Status update response: ', res);
+          //     this.loading = false;
+          //     //this._toastMessageService.alert("success", "Status update successfully.");
+          //   },
+          //   (error) => {
+          //     this.loading = false;
+          //     //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+          //   }
+          // );
         }
       },
       (error) => {
@@ -7002,26 +7048,26 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
-    this.itrMsService.getMethod(param).subscribe(
-      (res: any) => {
-        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          this.checkFilerAssignment();
-          // console.log(res, 'Paid');
-        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-          this.utilsService.showSnackBar(
-            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure that the payment has been made by the user to proceed ahead'
-          );
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(error);
-      }
-    );
+    // const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
+    // this.itrMsService.getMethod(param).subscribe(
+    //   (res: any) => {
+    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+    this.checkFilerAssignment();
+    //       // console.log(res, 'Paid');
+    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+    //       this.utilsService.showSnackBar(
+    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+    //       );
+    //     } else {
+    //       this.utilsService.showSnackBar(
+    //         'Please make sure that the payment has been made by the user to proceed ahead'
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     this.utilsService.showSnackBar(error);
+    //   }
+    // );
   }
 
   checkFilerAssignment() {
@@ -7032,9 +7078,19 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-            if (confirm('Are you sure you want to file the ITR?')) {
-              this.fileITR();
-            }
+            let param = '/eligible-to-file-itr?userId=' + this.ITR_JSON.userId + '&&assessmentYear=' + this.ITR_JSON.assessmentYear;
+            this.itrMsService.getMethod(param).subscribe(
+              (response: any) => {
+                if (!(response.success && response?.data?.eligibleToFileItr)) {
+                  this.utilsService.showSnackBar(
+                    'You can only update the ITR file record when your status is "ITR confirmation received"'
+                  );
+                } else {
+                  if (confirm('Are you sure you want to file the ITR?'))
+                    this.fileITR();
+                }
+              });
+
           } else {
             this.utilsService.showSnackBar(
               'Please make sure that filer assignment should be done before ITR filing.'
@@ -7256,6 +7312,8 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
+    
+    this.setBusiness44ADA();
   }
 
   getCountry(code) {

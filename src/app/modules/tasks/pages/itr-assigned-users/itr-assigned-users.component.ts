@@ -56,6 +56,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
+    itrObjectStatus:null,
   };
   agentId = null;
   loggedInUserRoles: any;
@@ -83,6 +84,16 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'ITRU',
     },
   ]
+  fillingStatus=[
+    {
+      label: 'Yet to Start',
+      value: 'CREATE',
+    },
+    {
+      label: 'Resume Filing',
+      value: 'PREPARING_ITR',
+    },
+  ];
 
   constructor(
     private reviewService: ReviewService,
@@ -220,7 +231,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if (this.rowData.itrObjectStatus === 'CREATE') {
+        if (this.rowData.openItrId === 0) {
           this.loading = true;
           let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
             this.loading = false;
@@ -299,6 +310,16 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   checkFilerAssignment(data: any) {
+    this.loading = true;
+    if ('ITR' === data.serviceType) {
+      const notAllowedStatuses = [18, 15, 16, 32, 45, 33];
+      if (notAllowedStatuses.includes(data.statusId)) {
+        this.loading = false;
+        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to start preparing on ITR');
+        return;
+      }
+    }
+
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
     let serviceType = '';
     if (data.serviceType === 'ITRU') {
@@ -410,6 +431,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
+          this.itrStatus.sort((a, b) => a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
@@ -655,6 +677,44 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
       },
       {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.paymentStatus) {
+            return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
+        headerName: 'AIS Password Status',
+        field: 'aisProvided',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.aisProvided) {
+            return 'Yes';
+          } else {
+            return 'No';
+          }
+        }
+      },
+      {
         headerName: 'ERI Client',
         field: 'eriClientValidUpto',
         width: 120,
@@ -740,7 +800,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
             const isITRU = params.data.serviceType === 'ITRU';
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
-            if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
+            if (!params.data.itrObjectStatus || params.data.itrObjectStatus === null) { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
               cursor:pointer; background-color:#FBEED3; color:#A36543;" >
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="yetToStart"></i> Yet to Start
@@ -859,24 +919,29 @@ export class ItrAssignedUsersComponent implements OnInit {
           cellRenderer: function (params: any) {
             const statusName = params.data.statusName;
             const statusColors = {
-              'Open': { background: '#D3FBDA', color: '#43A352' },
-              'Not Interested': { background: '#DCDCDC', color: '#808080' },
-              'Payment Received': { background: '#D3FBDA', color: '#43A352' },
-              'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-              'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-              'Follow Up': { background: '#DCDCDC', color: '#808080' },
-              'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
-              'Interested': { background: '#D3FBDA', color: '#43A352' },
-              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
-              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
-              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
-              'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              'Open': { background: '#D3FBDA', color: '#43A352' }, //green
               'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
-              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'Documents Incomplete': { background: '#D3FBDA', color: '#43A352' },
+              'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+              'Plan Confirmed': { background: '#D3FBDA', color: '#43A352' },
+              'Waiting for Confirmation': { background: '#D3FBDA', color: '#43A352' },
+              'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+              'Interested': { background: '#D3FBDA', color: '#43A352' },
+
+              'Backed Out': { background: '#DCDCDC', color: '#808080' },//gray
+              'Not Interested': { background: '#DCDCDC', color: '#808080' },
               'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
-              'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
-              'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
-              'Pay Later': { background: '#DCDCDC', color: '#808080' },
+              'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+              'ITR Filed - E Verification Completed': { background: '#DCDCDC;', color: '#808080' },
+              'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
+
+              // 'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+              // 'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              // 'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+              // 'Follow Up': { background: '#DCDCDC', color: '#808080' },
+              // 'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
+              // 'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
+              // 'Pay Later': { background: '#DCDCDC', color: '#808080' },
             };
             const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 
@@ -1056,6 +1121,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     var userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
+        id: userData[i].id,
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
@@ -1082,6 +1148,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         ownerUserId: userData[i].ownerUserId,
         filerUserId: userData[i].filerUserId,
         leaderUserId: userData[i].leaderUserId,
+        paymentStatus: userData[i].paymentStatus,
+        aisProvided: userData[i].aisProvided,
       })
       userArray.push(userInfo);
     }
@@ -1188,6 +1256,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         // this.start(data);
         console.log(data);
 
+        if (data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)) {
+          this.userMsService.patchMethod("/customer/" + data.id, { itrObjectStatus: 'PREPARING_ITR' }).subscribe(res => {
+            console.log("update itr object status", res);
+          });
+        }
+
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -1196,7 +1270,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           userId: data.userId,
           assessmentYear: currentFyDetails[0].assessmentYear,
           taskKeyName: 'itrFilingComences',
-          taskStatus: 'Completed'
+          taskStatus: 'Completed',
+          serviceType: data.serviceType
         };
         const userData = JSON.parse(localStorage.getItem('UMD') || '');
         const TOKEN = userData ? userData.id_token : null;
@@ -1514,6 +1589,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.searchParam.itrObjectStatus=null;
     this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();

@@ -335,7 +335,7 @@
                         <label for="promoCodeInput">Search & Select Promo Code</label>
                       </div>
                       <div class="col-sm-5">
-                        <mat-form-field appearance="outline" class="class1">
+                        <mat-form-field appearance="outline" class="class1 small-inp no-height">
                           <input id="promoCodeInput" type="text" placeholder="Start typing..." matInput
                             [disabled]="!smeSelectedPlanId" [formControl]="searchedPromoCode" [matAutocomplete]="auto"
                             (blur)="getCodeFromLabelOnBlur()" required />

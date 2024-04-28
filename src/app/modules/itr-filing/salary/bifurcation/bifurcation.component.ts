@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject, ElementRef, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import { Employer, ITR_JSON, salarySevOne, salarySevThree, salarySevTwo, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
+import { CalculatorModalComponent } from 'src/app/modules/shared/components/calculator-modal/calculator-modal.component';
 
 @Component({
   selector: 'app-bifurcation',
@@ -17,7 +18,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
   @Input() typeIndex: number;
   @ViewChild('breakUp') breakUp: ElementRef;
   ITR_JSON: ITR_JSON;
-  bifurcationFormGroup: FormGroup;
+  bifurcationFormGroup: UntypedFormGroup;
   @Input() localEmployer: Employer;
   total = {
     salary: 0,
@@ -233,18 +234,19 @@ export class BifurcationComponent implements OnInit, OnChanges {
     }
   ]
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private overlay: Overlay,
     private elementRef: ElementRef,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
 
-    const salaryForm = this.getControls as FormGroup;
+    const salaryForm = this.getControls as UntypedFormGroup;
     if (this.typeIndex === 0) {
       // Salary
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
@@ -392,16 +394,16 @@ export class BifurcationComponent implements OnInit, OnChanges {
   }
 
   get salary() {
-    return <FormArray>this.bifurcationFormGroup.get('salary');
+    return <UntypedFormArray>this.bifurcationFormGroup.get('salary');
   }
   get perquisites() {
-    return <FormArray>this.bifurcationFormGroup.get('perquisites');
+    return <UntypedFormArray>this.bifurcationFormGroup.get('perquisites');
   }
   get profitsInLieu() {
-    return <FormArray>this.bifurcationFormGroup.get('profitsInLieu');
+    return <UntypedFormArray>this.bifurcationFormGroup.get('profitsInLieu');
   }
 
-  createSevOneForm(obj?: salarySevOne): FormGroup {
+  createSevOneForm(obj?: salarySevOne): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       salaryType: [obj?.salaryType || null, Validators.required],
@@ -411,7 +413,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     })
   }
 
-  createSevTwoForm(obj: salarySevTwo): FormGroup {
+  createSevTwoForm(obj: salarySevTwo): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       perquisiteType: [obj?.perquisiteType || null, Validators.required],
@@ -421,7 +423,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     })
   }
 
-  createSevThreeForm(obj: salarySevThree): FormGroup {
+  createSevThreeForm(obj: salarySevThree): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       salaryType: [obj?.salaryType || null, Validators.required],
@@ -465,7 +467,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     } else if (this.typeIndex === 2) {
       type = 'profitsInLieu';
     }
-    let keys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
+    let keys = Object.keys((this.bifurcationFormGroup.controls[type] as UntypedFormGroup).controls);
     keys.every(key => {
       if (keys.filter(v => v === key).length > 1) {
         console.log('key repeated', key);
@@ -697,6 +699,16 @@ export class BifurcationComponent implements OnInit, OnChanges {
     }
   }
 
+  calculate(){
+    const dialogRef = this.dialog.open(CalculatorModalComponent, {
+      width: '80%',
+      height: '80%',
+      data: {
+        url: 'https://www.taxbuddy.com/allcalculators/pension?inUtility=true&embedded=true'
+      }
+    });
+  }
+
   //  BREAKUP MONTHLY WISE
   breakUpFn(i, component) {
     const positionStrategy = this.overlay
@@ -737,7 +749,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
   handleData(data: any) {
     const controlName = this.controlMappings[data?.component];
     if (controlName) {
-      (this.getControls as FormGroup)?.controls[
+      (this.getControls as UntypedFormGroup)?.controls[
         controlName
       ]?.setValue(Math.ceil(data?.data));
       this.overlayRef.dispose();
@@ -748,11 +760,11 @@ export class BifurcationComponent implements OnInit, OnChanges {
   get getControls() {
     // console.log('typeIndex', this.typeIndex);
     if (this.typeIndex === 2) {
-      return this.bifurcationFormGroup.get('profitsInLieu') as FormGroup;
+      return this.bifurcationFormGroup.get('profitsInLieu') as UntypedFormGroup;
     } else if (this.typeIndex === 1) {
-      return this.bifurcationFormGroup.get('perquisites') as FormGroup;
+      return this.bifurcationFormGroup.get('perquisites') as UntypedFormGroup;
     } else {
-      return this.bifurcationFormGroup.get('salary') as FormGroup;
+      return this.bifurcationFormGroup.get('salary') as UntypedFormGroup;
     }
   }
 
@@ -773,7 +785,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
       const salary = this.salary;
       this.salaryNames.forEach((type) => {
         type['disabled'] = false;
-        salary.controls.forEach((element: FormGroup) => {
+        salary.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['salaryType'].value == type.key) {
             type['disabled'] = true;
           }
@@ -783,7 +795,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
       const perquisites = this.perquisites;
       this.perquisiteNames.forEach((type) => {
         type['disabled'] = false;
-        perquisites.controls.forEach((element: FormGroup) => {
+        perquisites.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['perquisiteType'].value == type.key) {
             type['disabled'] = true;
           }
@@ -793,7 +805,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
       const profitsInLieu = this.profitsInLieu;
       this.profitInLieuNames.forEach((type) => {
         type['disabled'] = false;
-        profitsInLieu.controls.forEach((element: FormGroup) => {
+        profitsInLieu.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['salaryType'].value == type.key) {
             type['disabled'] = true;
           }

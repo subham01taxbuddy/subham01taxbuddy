@@ -6,7 +6,7 @@ import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 @Component({
   selector: 'app-presumptive-professional-income',
@@ -16,24 +16,37 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  profIncomeForm: FormGroup;
-  profIncomeFormArray: FormArray;
+  profIncomeForm: UntypedFormGroup;
+  profIncomeFormArray: UntypedFormArray;
   loading: boolean;
   amountFifty: number = 0;
   amountFiftyMax: number = 0;
   submitted = false;
   activeIndex: number;
   gridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
   percentage = 0;
   minGrossIncome = (50 / 100) * 50;
-
+  amountSix: number = 0;
+  maxSixAmt: number = 0;
+  amountEight: number = 0;
+  maxEightAmt: number = 0;
+  amountEightAnyOther: number = 0;
+  maxEightAnyOtherAmt: number = 0;
+  cashPercentage = 0;
+  bankPercentage = 0;
+  anyOtherPercentage = 0;
+  bankPerWidth = 0;
+  cashPerWidth = 0;
+  anyOtherPerWidth = 0;
+  bankMinIncomePercentage = (50 / 100) * 6;
+  cashMinIncomePercentage = (50 / 100) * 50;
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -53,7 +66,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.profIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+          this.profIncomeFormArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -78,7 +91,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ngOnInit(): void {
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
       (acIncome) => acIncome.businessType === 'PROFESSIONAL');
-    this.profIncomeFormArray = new FormArray([]);
+    this.profIncomeFormArray = new UntypedFormArray([]);
     let srn = this.profIncomeFormArray.controls.length > 0 ? this.profIncomeFormArray.controls.length : 0;
     this.selectedFormGroup = this.createProfIncomeForm(srn);
     this.activeIndex = -1;
@@ -94,41 +107,48 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   get getProfIncomeArray() {
-    return <FormArray>this.profIncomeForm.get('profIncomeFormArray');
+    return <UntypedFormArray>this.profIncomeForm.get('profIncomeFormArray');
   }
 
   createProfIncomeForm(index, income?) {
     console.log(income?.incomes[index]?.receipts);
     console.log(income?.incomes[index]?.presumptiveIncome);
-
+    let cash = income?.incomes?.filter((element) => element.incomeType === 'CASH')[0];
+    let bank = income?.incomes?.filter((element) => element.incomeType === 'BANK')[0];
+    let anyOther = income?.incomes?.filter((element) => element.incomeType === 'ANY_OTHER')[0];
     let form = this.fb.group({
       id: null,
       index: [index],
       hasEdit: [false],
       natureOfBusiness: [income?.natureOfBusiness || null, [Validators.required]],
       tradeName: [income?.tradeName || null, [Validators.required]],
-      description: [income?.description || null],
-      receipts: [income?.incomes[0]?.receipts || 0, [Validators.required, Validators.max(5000000)],],
-      presumptiveIncome: [income?.incomes[0]?.presumptiveIncome || 0, [Validators.required, Validators.min(this.amountFifty)]],
-      minimumPresumptiveIncome: [income?.incomes[0]?.minimumPresumptiveIncome || 0],
+      description: [income?.description || null], bankReceipts: [bank ? bank.receipts : 0, [Validators.required]],
+      bankMinIncome: [bank ? bank.minimumPresumptiveIncome : 0, [Validators.required],],
+      bankPreIncome: [bank ? bank.presumptiveIncome : 0],
+      cashReceipts: [cash ? cash.receipts : 0, [Validators.required]],
+      cashMinIncome: [cash ? cash.minimumPresumptiveIncome : 0, [Validators.required],],
+      cashPreIncome: [cash ? cash.presumptiveIncome : 0],
+      anyOtherMode: [anyOther ? anyOther.receipts : 0, [Validators.required]],
+      anyOtherMinIncome: [anyOther ? anyOther.minimumPresumptiveIncome : 0, [Validators.required],],
+      anyOtherPreIncome: [anyOther ? anyOther.presumptiveIncome : 0],
     });
     return form;
   }
 
   profSelected() {
-    const profIncomeFormArray = <FormArray>(
+    const profIncomeFormArray = <UntypedFormArray>(
       this.profIncomeForm?.get('profIncomeFormArray')
     );
     return (
       profIncomeFormArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
+        (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
       ).length > 0
     );
   }
 
   deleteArray() {
-    let array = <FormArray>this.profIncomeForm.get('profIncomeFormArray');
-    array.controls = array.controls.filter((element) => !(element as FormGroup).controls['hasEdit'].value);
+    let array = <UntypedFormArray>this.profIncomeForm.get('profIncomeFormArray');
+    array.controls = array.controls.filter((element) => !(element as UntypedFormGroup).controls['hasEdit'].value);
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -162,13 +182,34 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   selection = new SelectionModel<professionalIncome>(true, []);
 
   onContinue() {
-    let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
-    let receiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.receipts), 0);
+    let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).getRawValue();
+    // let receiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.receipts), 0);
 
-    if (receiptsTotal > 5000000) {
-      this.utilsService.showSnackBar('Please make sure that the receipts total in Professional details is within the specified limit');
-      return;
+    // if (receiptsTotal > 5000000) {
+    //   this.utilsService.showSnackBar('Please make sure that the receipts total in Professional details is within the specified limit');
+    //   return;
+    // }
+    let bankReceiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.bankReceipts), 0);
+    let cashReceiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.cashReceipts), 0);
+    let anyOtherModeTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.anyOtherMode), 0);
+    let total = bankReceiptsTotal + cashReceiptsTotal + anyOtherModeTotal;
+    if (total >= 5000000) {
+      let cashReceiptsInPercent = total / 100 * 5;
+      if (cashReceiptsTotal < cashReceiptsInPercent) {
+        if (total > 7500000) {
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
+          return;
+        } else {
+
+        }
+      } else {
+        if (total != 5000000) {
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
+          return;
+        }
+      }
     }
+
     this.loading = true;
     this.submitted = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -187,11 +228,34 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
             isAdded = true;
             data.incomes.push({
               id: null,
-              incomeType: 'PROFESSIONAL',
-              receipts: element.receipts,
-              presumptiveIncome: element.presumptiveIncome,
+              incomeType: 'BANK',
+              receipts: element.bankReceipts,
+              presumptiveIncome: element.bankPreIncome,
               periodOfHolding: null,
-              minimumPresumptiveIncome: element.minimumPresumptiveIncome,
+              minimumPresumptiveIncome: element.bankMinIncome,
+              registrationNo: null,
+              ownership: null,
+              tonnageCapacity: null,
+            });
+
+            data.incomes.push({
+              id: null,
+              incomeType: 'CASH',
+              receipts: element.cashReceipts,
+              presumptiveIncome: element.cashPreIncome,
+              periodOfHolding: null,
+              minimumPresumptiveIncome: element.cashMinIncome,
+              registrationNo: null,
+              ownership: null,
+              tonnageCapacity: null,
+            });
+            data.incomes.push({
+              id: null,
+              incomeType: 'ANY_OTHER',
+              receipts: element.anyOtherMode,
+              presumptiveIncome: element.anyOtherPreIncomePreIncome,
+              periodOfHolding: null,
+              minimumPresumptiveIncome: element.anyOtherMinIncome,
               registrationNo: null,
               ownership: null,
               tonnageCapacity: null,
@@ -200,6 +264,30 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         });
 
         if (!isAdded) {
+          // presBusinessIncome.push({
+          //   id: null,
+          //   businessType: 'PROFESSIONAL',
+          //   natureOfBusiness: element.natureOfBusiness,
+          //   label: null,
+          //   tradeName: element.tradeName,
+          //   description: element.description,
+          //   salaryInterestAmount: null,
+          //   taxableIncome: null,
+          //   exemptIncome: null,
+          //   incomes: [
+          //     {
+          //       id: null,
+          //       incomeType: 'PROFESSIONAL',
+          //       receipts: element.receipts,
+          //       presumptiveIncome: element.presumptiveIncome,
+          //       periodOfHolding: null,
+          //       minimumPresumptiveIncome: element.minimumPresumptiveIncome,
+          //       registrationNo: null,
+          //       ownership: null,
+          //       tonnageCapacity: null,
+          //     },
+          //   ],
+          // });
           presBusinessIncome.push({
             id: null,
             businessType: 'PROFESSIONAL',
@@ -213,11 +301,33 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
             incomes: [
               {
                 id: null,
-                incomeType: 'PROFESSIONAL',
-                receipts: element.receipts,
-                presumptiveIncome: element.presumptiveIncome,
+                incomeType: 'BANK',
+                receipts: element.bankReceipts,
+                presumptiveIncome: element.bankPreIncome,
                 periodOfHolding: null,
-                minimumPresumptiveIncome: element.minimumPresumptiveIncome,
+                minimumPresumptiveIncome: element.bankMinIncome,
+                registrationNo: null,
+                ownership: null,
+                tonnageCapacity: null,
+              },
+              {
+                id: null,
+                incomeType: 'CASH',
+                receipts: element.cashReceipts,
+                presumptiveIncome: element.cashPreIncome,
+                periodOfHolding: null,
+                minimumPresumptiveIncome: element.cashMinIncome,
+                registrationNo: null,
+                ownership: null,
+                tonnageCapacity: null,
+              },
+              {
+                id: null,
+                incomeType: 'ANY_OTHER',
+                receipts: element.anyOtherMode,
+                presumptiveIncome: element.anyOtherPreIncome,
+                periodOfHolding: null,
+                minimumPresumptiveIncome: element.anyOtherMinIncome,
                 registrationNo: null,
                 ownership: null,
                 tonnageCapacity: null,
@@ -277,11 +387,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
       // check if any recipt or presumptive income is 0 and remove that
       profIncomeArray.controls.forEach((element, index) => {
-        if (
-          (element.value.receipts === 0 || element.value.receipts === '0') &&
-          (element.value.presumptiveIncome === 0 ||
-            element.value.presumptiveIncome === '0')
-        ) {
+        if ((element.value.bankReceipts === 0 || element.value.bankReceipts === '0') &&
+          (element.value.bankPreIncome === 0 || element.value.bankPreIncome === '0') &&
+          (element.value.cashReceipts === 0 || element.value.cashReceipts === '0') &&
+          (element.value.cashPreIncome === 0 || element.value.cashPreIncome === '0') &&
+          (element.value.anyOtherMode === 0 || element.value.anyOtherMode === '0') &&
+          (element.value.anyOtherPreIncome === 0 || element.value.anyOtherPreIncome === '0')) {
           profIncomeArray.removeAt(index);
         }
       });
@@ -313,7 +424,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   clearForm() {
     this.selectedFormGroup.reset();
-    this.calculatePresumptive();
+    // this.calculatePresumptive();
+    this.calculatePresumptiveIncome('cash', true);
+    this.calculatePresumptiveIncome('bank', true);
+    this.calculatePresumptiveIncome('anyOther', true);
   }
 
   saveManualEntry() {
@@ -322,28 +436,55 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       return;
     }
 
+    let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) + parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
+    if (total >= 5000000) {
+      let cashReceiptsInPercent = total / 100 * 5;
+      if (parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) < cashReceiptsInPercent) {
+        if (total > 7500000) {
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
+          return;
+        } else {
+
+        }
+      } else {
+        if (total != 5000000) {
+          this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
+          return;
+        }
+      }
+    }
+
     let result = this.selectedFormGroup.getRawValue();
 
     if (this.activeIndex === -1) {
-      let srn = (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).length;
+      let srn = (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).length;
       let form = this.createProfIncomeForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).push(form);
+      (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).push(form);
     } else {
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+      (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }
     this.gridOptions.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
     this.clearForm();
-    this.percentage = 0;
+    // this.percentage = 0;
+    this.cashPercentage = 0;
+    this.bankPercentage = 0;
+    this.bankPerWidth = 0;
+    this.cashPerWidth = 0;
+    this.anyOtherPerWidth = 0;
+    this.anyOtherPerWidth = 0;
     this.utilsService.showSnackBar("Record saved successfully.");
   }
 
   editForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-      ((this.profIncomeForm.controls['profIncomeFormArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
-    this.calculatePresumptive();
+      ((this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
+    this.calculatePresumptiveIncome('cash', true);
+    this.calculatePresumptiveIncome('bank', true);
+    this.calculatePresumptiveIncome('anyOther', true);
+    // this.calculatePresumptive();
     this.activeIndex = i;
   }
 
@@ -434,44 +575,158 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         }
       },
       {
-        headerName: 'Gross Receipts',
-        field: 'receipts',
+        headerName: 'Bank Receipts',
+        field: 'bankReceipts',
         width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
-          let receipts = params.data.controls['receipts'].value;
-          return receipts;
+          let bankReceipts = params.data.controls['bankReceipts'].value;
+          return bankReceipts;
         },
         valueFormatter: function (params) {
-          let receipts = params.data.controls['receipts'].value;
-          return `₹ ${receipts}`;
+          let bankReceipts = params.data.controls['bankReceipts'].value;
+          return `₹ ${bankReceipts}`;
         }
       },
       {
-        headerName: 'Minimum Presumptive Income',
-        field: 'minimumPresumptiveIncome',
+        headerName: 'Bank Minimum Presumptive Income',
+        field: 'bankMinIncome',
         width: 180,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
-          const minimumPresumptiveIncome = Number(params.data.controls['minimumPresumptiveIncome'].value)
-          return minimumPresumptiveIncome;
+          const bankMinIncome = Number(params.data.controls['bankMinIncome'].value)
+          return bankMinIncome;
         },
         valueFormatter: function (params) {
-          const minimumPresumptiveIncome = Number(params.data.controls['minimumPresumptiveIncome'].value)
-          return `₹ ${minimumPresumptiveIncome}`;
+          const bankMinIncome = Number(params.data.controls['bankMinIncome'].value)
+          return `₹ ${bankMinIncome}`;
         }
       },
       {
-        headerName: 'Presumptive income',
-        field: 'presumptiveIncome',
+        headerName: 'Bank presumptive income',
+        field: 'bankPreIncome',
         width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['presumptiveIncome'].value;
+          return params.data.controls['bankPreIncome'].value;
         },
         valueFormatter: function (params) {
-          const presumptiveIncome = params.data.controls['presumptiveIncome'].value;
-          return `₹ ${presumptiveIncome}`;
+          const bankPreIncome = params.data.controls['bankPreIncome'].value;
+          return `₹ ${bankPreIncome}`;
+        }
+      },
+      {
+        headerName: 'Cash Receipts',
+        field: 'cashReceipts',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['cashReceipts'].value;
+        },
+        valueFormatter: function (params) {
+          const cashReceipts = params.data.controls['cashReceipts'].value;
+          return `₹ ${cashReceipts}`;
+        }
+      },
+      {
+        headerName: 'Cash Minimum Presumptive Income',
+        field: 'cashMinIncome',
+        width: 200,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let cashMinIncome = Number(params.data.controls['cashMinIncome'].value);
+          return cashMinIncome;
+        },
+        valueFormatter: function (params) {
+          let cashMinIncome = Number(params.data.controls['cashMinIncome'].value);
+          return `₹ ${cashMinIncome}`;
+        }
+      },
+      {
+        headerName: 'Cash Presumptive Income',
+        field: 'cashPreIncome',
+        width: 200,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let cashPreIncome = Number(params.data.controls['cashPreIncome'].value);
+          return cashPreIncome;
+        },
+        valueFormatter: function (params) {
+          let cashPreIncome = Number(params.data.controls['cashPreIncome'].value);
+          return `₹ ${cashPreIncome}`;
+        }
+      },
+      {
+        headerName: 'Any Other Mode',
+        field: 'anyOtherMode',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['anyOtherMode'].value;
+        },
+        valueFormatter: function (params) {
+          const anyOtherMode = params.data.controls['anyOtherMode'].value;
+          return `₹ ${anyOtherMode}`;
+        }
+      },
+      {
+        headerName: 'Any Other Min Presumptive Income',
+        field: 'anyOtherMinIncome',
+        width: 200,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let anyOtherMinIncome = Number(params.data.controls['anyOtherMinIncome'].value);
+          return anyOtherMinIncome;
+        },
+        valueFormatter: function (params) {
+          let anyOtherMinIncome = Number(params.data.controls['anyOtherMinIncome'].value);
+          return `₹ ${anyOtherMinIncome}`;
+        }
+      },
+      {
+        headerName: 'Any Other Presumptive Income',
+        field: 'anyOtherPreIncome',
+        width: 200,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
+        valueGetter: function nameFromCode(params) {
+          let anyOtherPreIncome = Number(params.data.controls['anyOtherPreIncome'].value);
+          return anyOtherPreIncome;
+        },
+        valueFormatter: function (params) {
+          let anyOtherPreIncome = Number(params.data.controls['anyOtherPreIncome'].value);
+          return `₹ ${anyOtherPreIncome}`;
         }
       },
       {
@@ -498,5 +753,112 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         },
       },
     ];
+  }
+
+  calculatePresumptiveIncome(incomeType, setValue?) {
+    let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) + parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
+    if (total > 20000000) {
+      let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
+      cashReceipts = total / 100 * 5;
+      if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
+        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(7500000)]);
+        this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
+        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(7500000)]);
+        this.selectedFormGroup.controls['cashReceipts'].updateValueAndValidity();
+        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(7500000)]);
+        this.selectedFormGroup.controls['anyOtherMode'].updateValueAndValidity();
+      } else {
+        this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(5000000)]);
+        this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
+        this.selectedFormGroup.controls['cashReceipts'].setValidators([Validators.max(5000000)]);
+        this.selectedFormGroup.controls['cashReceipts'].updateValueAndValidity();
+        this.selectedFormGroup.controls['anyOtherMode'].setValidators([Validators.max(5000000)]);
+        this.selectedFormGroup.controls['anyOtherMode'].updateValueAndValidity();
+      }
+
+    }
+
+    if (incomeType === 'cash') {
+      this.amountEight = this.selectedFormGroup.controls['cashReceipts'].value;
+      this.maxEightAmt = this.selectedFormGroup.controls['cashReceipts'].value;
+      this.amountEight = Math.round(Number((this.amountEight / 100) * 50));
+
+      if (setValue) {
+        this.selectedFormGroup.controls['cashMinIncome'].setValue(this.amountEight);
+      }
+
+      if (this.selectedFormGroup.controls['cashPreIncome'].value >= 0) {
+        this.selectedFormGroup.controls['cashPreIncome'].setValidators([
+          Validators.min(this.amountEight), Validators.max(this.maxEightAmt)]);
+        this.selectedFormGroup.controls['cashPreIncome'].updateValueAndValidity();
+      } else {
+        this.selectedFormGroup.controls['cashPreIncome'].clearValidators();
+        this.selectedFormGroup.controls['cashPreIncome'].updateValueAndValidity();
+      }
+    } else if (incomeType === 'bank') {
+      this.amountSix = this.selectedFormGroup.controls['bankReceipts'].value;
+      this.maxSixAmt = this.selectedFormGroup.controls['bankReceipts'].value;
+      this.amountSix = Math.round(Number((this.amountSix / 100) * 50));
+
+      if (setValue) {
+        this.selectedFormGroup.controls['bankMinIncome'].setValue(this.amountSix);
+      }
+
+      if (this.selectedFormGroup.controls['bankPreIncome'].value >= 0) {
+        this.selectedFormGroup.controls['bankPreIncome'].setValidators([
+          Validators.min(this.amountSix), Validators.max(this.maxSixAmt)]);
+        this.selectedFormGroup.controls['bankPreIncome'].updateValueAndValidity();
+      } else {
+        this.selectedFormGroup.controls['bankPreIncome'].clearValidators();
+        this.selectedFormGroup.controls['bankPreIncome'].updateValueAndValidity();
+      }
+    } else if (incomeType === 'anyOther') {
+      this.amountEightAnyOther = this.selectedFormGroup.controls['anyOtherMode'].value;
+      this.maxEightAnyOtherAmt = this.selectedFormGroup.controls['anyOtherMode'].value;
+      this.amountEightAnyOther = Math.round(Number((this.amountEightAnyOther / 100) * 50));
+
+      if (setValue) {
+        this.selectedFormGroup.controls['anyOtherMinIncome'].setValue(this.amountEightAnyOther);
+      }
+
+      if (this.selectedFormGroup.controls['anyOtherPreIncome'].value >= 0) {
+        this.selectedFormGroup.controls['anyOtherPreIncome'].setValidators([
+          Validators.min(this.amountEightAnyOther), Validators.max(this.maxEightAnyOtherAmt)]);
+        this.selectedFormGroup.controls['anyOtherPreIncome'].updateValueAndValidity();
+      } else {
+        this.selectedFormGroup.controls['anyOtherPreIncome'].clearValidators();
+        this.selectedFormGroup.controls['anyOtherPreIncome'].updateValueAndValidity();
+      }
+    }
+    const cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value);
+    const cashPreIncome = parseFloat(this.selectedFormGroup.controls['cashPreIncome'].value);
+    let cashPercentage = 0;
+    if (cashReceipts > 0) {
+      cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
+    }
+    this.cashPercentage = cashPercentage;
+    let cashPerWidth = (50 / 100) * cashPercentage
+    this.cashPerWidth = cashPerWidth;
+
+    const anyOtherMode = parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
+    const anyOtherPreIncome = parseFloat(this.selectedFormGroup.controls['anyOtherPreIncome'].value);
+    let anyOtherPercentage = 0;
+    if (anyOtherMode > 0) {
+      anyOtherPercentage = Math.ceil((anyOtherPreIncome * 100) / anyOtherMode);
+    }
+    this.anyOtherPercentage = anyOtherPercentage;
+    let anyOtherPerWidth = (50 / 100) * anyOtherPercentage
+    this.anyOtherPerWidth = anyOtherPerWidth;
+
+    const bankReceipts = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value);
+    const bankPreIncome = parseFloat(this.selectedFormGroup.controls['bankPreIncome'].value);
+
+    let bankPercentage = 0;
+    if (bankReceipts > 0) {
+      bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
+    }
+    this.bankPercentage = bankPercentage;
+    let bankPerWidth = (50 / 100) * bankPercentage
+    this.bankPerWidth = bankPerWidth;
   }
 }

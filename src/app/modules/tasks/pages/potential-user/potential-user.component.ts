@@ -45,7 +45,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     page: 0,
     pageSize: 20,
     mobileNumber: null,
-    emailId: null
+    emailId: null,
+    migrationSource:null
   }
   showCsvMessage: boolean;
   dataOnLoad = true;
@@ -60,6 +61,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   searchAsPrinciple: boolean = false;
   partnerType: any;
+  migrationList =[
+    { value: 'Registered', name: 'Registered' },
+    { value: 'ITR Filed', name: 'ITR Filed' }
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -357,7 +362,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].name,
-        mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
+        customerNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
@@ -374,7 +379,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
-        source: userData[i].source
+        source: userData[i].source,
+        statusName: userData[i].statusName,
+
       })
       userArray.push(userInfo);
     }
@@ -390,7 +397,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
 
-    // return [
+      // return [
       {
         headerName: 'Name',
         field: 'name',
@@ -405,7 +412,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Mobile No',
-        field: 'mobileNumber',
+        field: 'customerNumber',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
@@ -446,7 +453,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Status',
-        field: 'source',
+        field: 'statusName',
         width: 100,
         suppressMovable: true,
         sortable: true,
@@ -456,13 +463,13 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        valueGetter: function nameFromCode(params) {
-          if (params.data.source === 'Old Customer Migration Script') {
-            return 'ITR Filed'
-          } else if (params.data.source === 'Old Interested Customer Migration Script') {
-            return 'Interested'
-          } else 'NA'
-        }
+        // valueGetter: function nameFromCode(params) {
+        //   if (params.data.source === 'Old Customer Migration Script') {
+        //     return 'ITR Filed'
+        //   } else if (params.data.source === 'Old Interested Customer Migration Script') {
+        //     return 'Interested'
+        //   } else 'NA'
+        // }
       },
 
       {
@@ -608,7 +615,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -652,7 +659,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 80,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -674,7 +681,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 85,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -713,42 +720,41 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  call(data) {
+  async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
-    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
-      (res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilsService.showSnackBar(res.error);
-          this.search();
-          return;
-        } else {
-          this.loading = true;
-          const param = `tts/outbound-call`;
-          const reqBody = {
-            "agent_number": data.callerAgentNumber,
-            "customer_number": data.mobileNumber
-          }
-          this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-            this.loading = false;
-            if (result.success == false) {
-              this.loading = false;
-              this.utilsService.showSnackBar('Error while making call, Please try again.');
-            }
-            if (result.success) {
-              we_track('Call', {
-                'User Name': data?.name,
-                'User Phone number ': data.callerAgentNumber,
-              });
-              this._toastMessageService.alert("success", result.message)
-            }
-          }, error => {
-            this.utilsService.showSnackBar('Error while making call, Please try again.');
-            this.loading = false;
-          })
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.search();
+        return;
+      } else {
+        this.loading = true;
+        const param = `tts/outbound-call`;
+        const reqBody = {
+          "agent_number": await this.utilsService.getMyCallingNumber(),
+          "customer_number": data.customerNumber
         }
-      },
+        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success == false) {
+            this.loading = false;
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
+          }
+          if (result.success) {
+            we_track('Call', {
+              'User Name': data?.name,
+              'User Phone number ': data.callerAgentNumber,
+            });
+            this._toastMessageService.alert("success", result.message)
+          }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+        })
+      }
+    },
       (error) => {
         this.loading = false;
         if (error.error && error.error.error) {
@@ -793,7 +799,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
             userId: client.userId,
             clientName: client.name,
             serviceType: client.serviceType,
-            clientMobileNumber: client.mobileNumber
+            clientMobileNumber: client.customerNumber
           }
         })
 
@@ -832,7 +838,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               this.loading = false;
               if (result.success == true) {
                 we_track('Active', {
-                  'User number ': data.mobileNumber,
+                  'User number ': data.customerNumber,
                 });
                 this.utilsService.showSnackBar('user activated successfully.');
               } else {
@@ -889,6 +895,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
+    this.searchParam.migrationSource = null;
     this.usersGridOptions.api?.setRowData(this.createRowData([]));
     this.userInfoLength = 0;
     this.config.totalItems = 0;

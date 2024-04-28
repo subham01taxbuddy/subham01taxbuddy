@@ -20,6 +20,7 @@ export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
   service = '';
   disableItrSubPlan: boolean = false;
+  disableTpaSubPlan: boolean = false;
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -166,35 +167,46 @@ export class AddSubscriptionComponent implements OnInit {
     }else{
       futureParam = `/bo/future-year-subscription-exists?mobileNumber=${number}`
     }
-    this.reportService.getMethod(futureParam).subscribe((response: any) => {
-      this.disableItrSubPlan = response.data.itrSubscriptionExists;
-      this.loading = false;
-    });
 
-    this.loading = true;
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      this.allSubscriptions = response.data.content
-      if (this.allSubscriptions && this.allSubscriptions.length) {
-        let smeSelectedPlan = [];
-        smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
-          if (data) return data;
-        })];
-        smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
-          if (data) return data;
-        })];
-        if (smeSelectedPlan.length) {
-          let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
-          this.service = itrPlanDetails[0]?.servicesType;
-          this.serviceDetails = itrPlanDetails[0]?.name;
-          let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
-          this.tpaService = TpaPlanDetails[0]?.servicesType;
-          this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+  let url = number ? '/bo/subscription/coupon-code-exists?mobileNumber='+number+'&serviceType=TPA':
+  '/bo/subscription/coupon-code-exists?userId='+userId+'&serviceType=TAP';
+
+  this.reportService.getMethod(url).subscribe(
+    (response: any) => {
+      if (response?.success && response?.data?.couponCodeExists)
+        this.disableTpaSubPlan = response.data;
+
+      this.reportService.getMethod(futureParam).subscribe((response: any) => {
+      this.disableItrSubPlan = response.data.itrSubscriptionExists;
+
+      this.loading = true;
+      let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
+      this.reportService.getMethod(param).subscribe((response: any) => {
+        this.loading = false;
+        this.allSubscriptions = response.data.content
+        if (this.allSubscriptions && this.allSubscriptions.length) {
+          let smeSelectedPlan = [];
+          smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
+            if (data) return data;
+          })];
+          smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
+            if (data) return data;
+          })];
+          if (smeSelectedPlan.length) {
+            let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+            this.disableItrSubPlan = itrPlanDetails.length > 0;
+            this.service = itrPlanDetails[0]?.servicesType;
+            this.serviceDetails = itrPlanDetails[0]?.name;
+            let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
+            this.tpaService = TpaPlanDetails[0]?.servicesType;
+            this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+          }
         }
-      }
-    })
+      })
+    });
+  });
   }
+
 
   // disable(){
   //   if(this.serviceDetails.includes('Schedule call')){

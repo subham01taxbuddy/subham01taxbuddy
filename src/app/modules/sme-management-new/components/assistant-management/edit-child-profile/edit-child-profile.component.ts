@@ -13,6 +13,7 @@ import Auth from '@aws-amplify/auth';
 import { TitleCasePipe } from '@angular/common';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { InterceptorSkipHeader } from 'src/app/services/token-interceptor';
+import { AcceptEmailComponent } from '../accept-email/accept-email.component';
 
 @Component({
   selector: 'app-edit-child-profile',
@@ -57,6 +58,8 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   isReadOnly : boolean =false;
   loggedInSmeInfo :any;
   maxNumber:number;
+  disableButton: Boolean = false;
+  emailAccepted ='';
 
   constructor(
     private fb: FormBuilder,
@@ -575,6 +578,53 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       })
     }
 
+  }
+
+  resendOTP(sentOn: string) {
+    let param = `otp/mail?mobileNumber=${this.mobileNumber.value}`;
+    if (this.otpMode === 'SIGN_UP' && sentOn === 'EMAIL') {
+      param = `${param}&email=${this.emailAddress.value}`;
+    } else if (this.utilsService.isNonEmpty(this.emailAccepted)) {
+      param = `${param}&email=${this.emailAccepted}`;
+    }
+    const url = `${environment.url}/user/${param}`;
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'X-Skip-Interceptor': 'true'
+      });
+      this.loading=true;
+      this.http.get(url, { headers }).subscribe(
+        (response:any) => {
+          console.log('Email sent result on sign in:', response);
+          this.loading=false;
+          if (response['error'] === 'email not found') {
+            const dialogRef = this.matDialog.open(AcceptEmailComponent, {
+              width: '40%',
+              closeOnNavigation: true,
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              if (this.utilsService.isNonEmpty(result)) {
+                this.emailAccepted = result;
+                this.resendOTP('EMAIL');
+              }
+              console.log('The dialog was closed', result);
+            });
+
+            return;
+          }
+
+          Auth.signIn(`+91${this.mobileNumber.value}`).then(signInRes => {
+            this.signUpData = signInRes;
+            console.log('Sign In Result After Resend OTP email:', signInRes);
+          }).catch(signInErr => {
+            console.error('Sign In err After Resend OTP:', signInErr);
+          });
+        }, error => {
+          console.log('Error while sending email otp:', error);
+        });
   }
 
   createSignInObj() {

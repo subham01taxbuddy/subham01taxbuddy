@@ -140,6 +140,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
+    this.updatePrincipleName()
   }
 
   formatToolTip(params: any) {
@@ -665,6 +666,11 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
 
+  }
+  updatePrincipleName(){
+    this.utilsService.getFilersList();
+    this.smeListGridOptions.api.setColumnDefs(
+      this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
   }
 
   smeCreateColumnDef(allFilerList, itrPlanList) {

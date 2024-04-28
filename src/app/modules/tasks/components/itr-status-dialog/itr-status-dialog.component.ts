@@ -169,7 +169,7 @@ export class ItrStatusDialogComponent implements OnInit {
 
   getItrLifeCycleStatus() {
     this.loading = true;
-    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear;
+    let param = '/life-cycle-status?userId=' + this.data.userId + '&assessmentYear=' + this.assessmentYear + '&serviceType=' + this.data?.userInfo?.serviceType;
     this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false
@@ -220,7 +220,7 @@ export class ItrStatusDialogComponent implements OnInit {
     }
     if (response.data.itrRefundStatus.customAttributes) {
       this.refundProcessData = response?.data?.itrRefundStatus?.customAttributes?.itrLifecycle;
-      this.showRefundNote = this.refundProcessData.filter(element => element.statusDesc != 'Refund issued');
+      this.showRefundNote = this.refundProcessData?.filter(element => element.statusDesc != 'Refund issued');
     }
     const data = response.data;
     this.showSelectedSources(data.addIncomeSources);

@@ -1,6 +1,6 @@
 /* Import AG-Grid styles */
-/*@import "ag-grid-community/styles/ag-grid.css";*/
-/*@import "~ag-grid-community/styles/ag-theme-balham.css";*/
+@import "ag-grid-community/styles/ag-grid.css";
+@import "~ag-grid-community/styles/ag-theme-balham.css";
 @import './assets/styles/material.scss';
 
 
@@ -1624,7 +1624,7 @@ main {
 /* Land 5 Boxes */
 .mnBx-5 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
   padding: 24px;
@@ -1638,6 +1638,7 @@ main {
   gap: 50px;
   flex-wrap: wrap;
   flex: 3;
+  margin-bottom: 20px;
 }
 
 .Box5-R {
@@ -12872,4 +12873,41 @@ body[dir=rtl] .checkbox[checked=true] {
 .noBorder .accordion-item {
   border: 0 !important;
   margin-bottom: 10px;
+}
+
+.ag-cell-label-container{
+  padding: 0 !important;
+}
+
+.duration-checkbox{
+  .mat-mdc-checkbox{
+    .mdc-form-field{
+      .mdc-checkbox{
+        .mat-mdc-checkbox-touch-target {
+          position: absolute;
+          top: 0% !important;
+          height: 0px !important;
+          left: 0% !important;
+          width: 0px !important;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
+}
+
+.customToggle .mdc-switch:enabled .mdc-switch__track::before {
+  background: #e0e0e0 !important;
+}
+
+.customToggle .mdc-switch:enabled .mdc-switch__track::after {
+  background: #f06292 !important;
+}
+
+.customToggle .mdc-switch .mdc-switch__handle::before {
+  background: #fff !important;
+}
+
+.customToggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
+  background: #d81b60 !important;
 }

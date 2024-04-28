@@ -7,7 +7,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secOneTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_1')" />
         </mat-form-field>
       </div>
@@ -22,7 +22,7 @@
             <div formArrayName="salary">
               <div *ngFor="let item of salary['controls']; let i = index" [formGroupName]="i" class="row mb-2">
                 <div class="col-5">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <mat-select name="salaryType[i]" formControlName="salaryType"
                       (selectionChange)="changeSectionOne('salary');setDescriptionValidation('salary',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of salaryNames; let k = index" [value]="name.key"
@@ -32,13 +32,13 @@
                   </mat-form-field>
                 </div>
                 <div class="col-4 input-filed">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
                       (change)="setDescriptionValidation('salary',item, true);formValuesChanged()" />
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="salary['controls'].length>1">
                     <button type="button" (click)="deleteItem('salary',i,item)"> <i class="fa fa-trash-o delbt"></i>
                     </button>
                   </div>
@@ -46,9 +46,12 @@
                     <button type="button" class="addBtn" (click)="addItem('SEC17_1')" [disabled]="salary.invalid"> + Add
                       Another</button>
                   </div>
+                  <div class="deleteBtn" *ngIf="shouldShowCalculator(item.value.salaryType)">
+                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i class="fas fa-calculator"></i></button>
+                  </div>
                 </div>
                 <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('salary',item, true);formValuesChanged()"
                       [required]="item.value.salaryType==='OTHER' && item.value.taxableAmount > 0" />
@@ -73,7 +76,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secTwoTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_2')" />
         </mat-form-field>
       </div>
@@ -88,7 +91,7 @@
             <div formArrayName="perquisites">
               <div *ngFor="let item of perquisites['controls']; let i = index" [formGroupName]="i" class="row mb-2">
                 <div class="col-5">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <mat-select name="perquisiteType[i]" formControlName="perquisiteType"
                       (selectionChange)="changeSectionOne('perquisites');setDescriptionValidation('perquisites',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of perquisiteNames; let k = index" [value]="name.key"
@@ -98,13 +101,13 @@
                   </mat-form-field>
                 </div>
                 <div class="col-4 input-filed">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
                       (change)="setDescriptionValidation('perquisites',item, true);formValuesChanged()" />
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="perquisites['controls'].length>1">
                     <button type="button" (click)="deleteItem('perquisites',i,item)"> <i
                         class="fa fa-trash-o delbt"></i>
                     </button>
@@ -117,7 +120,7 @@
                   </div>
                 </div>
                 <div class="col-5 mt-2 input-filed" *ngIf="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('perquisites',item, true);formValuesChanged()"
                       [required]="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES' && item.value.taxableAmount > 0" />
@@ -141,7 +144,7 @@
       <div class="area-2">
         <mat-form-field appearance="outline" class="input-field-width">
           <input type="text" digitsOnly trim matInput placeholder="" formControlName="secThreeTotal"
-            (blur)="checkGrossSalary()" class="form-control inpClr1" maxlength="125" (change)="changed(true);"
+            class="form-control inpClr1" maxlength="125" (change)="formValuesChanged()"
             (beforeinput)="confirmChange($event, 'SEC17_3')" />
         </mat-form-field>
       </div>
@@ -156,7 +159,7 @@
             <div formArrayName="profitsInLieu">
               <div *ngFor="let item of profitsInLieu['controls']; let i = index" [formGroupName]="i" class="row mb-2">
                 <div class="col-5">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <mat-select name="salaryType[i]" formControlName="salaryType"
                       (selectionChange)="changeSectionOne('profitsInLieu');setDescriptionValidation('profitsInLieu',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of profitInLieuNames; let k = index" [value]="name.key"
@@ -167,13 +170,13 @@
                   </mat-form-field>
                 </div>
                 <div class="col-4 input-filed">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input digitsOnly matInput name="taxableAmount[i]" formControlName="taxableAmount"
                       (change)="setDescriptionValidation('profitsInLieu',item, true);formValuesChanged()" />
                   </mat-form-field>
                 </div>
                 <div class="col-3 addDeleteBtn">
-                  <div class="deleteBtn">
+                  <div class="deleteBtn" *ngIf="profitsInLieu['controls'].length>1">
                     <button type="button" (click)="deleteItem('profitsInLieu',i,item)"> <i
                         class="fa fa-trash-o delbt"></i>
                     </button>
@@ -185,7 +188,7 @@
                   </div>
                 </div>
                 <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='ANY_OTHER'">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('profitsInLieu',item, true);formValuesChanged()"
                       [required]="item.value.salaryType==='ANY_OTHER' && item.value.taxableAmount > 0" />

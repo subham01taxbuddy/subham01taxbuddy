@@ -33,38 +33,50 @@ export class UpdateManualFilingComponent implements OnInit {
   updateManualDetails() {
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
-      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-      this.itrMsService.getMethod(param1).subscribe(
-        (res: any) => {
-          if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+      // const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+      // this.itrMsService.getMethod(param1).subscribe(
+      //   (res: any) => {
+      //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+      let param = '/eligible-to-file-itr?userId=' + this.data.userId + '&&assessmentYear=' + this.data.assessmentYear;
+      this.itrMsService.getMethod(param).subscribe(
+        (response: any) => {
+          if (!(response.success && response?.data?.eligibleToFileItr)) {
+            this.utilsService.showSnackBar(
+              'You can only update the ITR file record when your status is "ITR confirmation received"'
+            );
+          } else {
             this.data.eFillingDate = this.eFillingDate.value;
             this.data.ackNumber = this.ackNumber.value;
             console.log('Updated Data:', this.data)
-            const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-            this.itrMsService.putMethod(param, this.data).subscribe((res: any) => {
-              console.log(res);
-              this.updateStatus();
-              this.loading = false;
-              this.utilsService.showSnackBar('Manual Filing Details updated successfully')
-              this.location.back();
-            }, error => {
-              this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-              this.loading = false;
-            });
-          } else {
-            this.loading = false;
-            this.utilsService.showSnackBar(
-              'Please make sure that the payment has been made by the user to proceed ahead'
-            );
+            setTimeout(() => {
+              const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+              this.itrMsService.putMethod(param, this.data).subscribe((res: any) => {
+                console.log(res);
+                this.updateStatus();
+                this.loading = false;
+                this.utilsService.showSnackBar('Manual Filing Details updated successfully')
+                this.location.back();
+              }, error => {
+                this.utilsService.showSnackBar('Failed to update Manual Filing Details')
+                this.loading = false;
+              });
+            }, 10000)
           }
         });
+      //   } else {
+      //     this.loading = false;
+      //     this.utilsService.showSnackBar(
+      //       'Please make sure that the payment has been made by the user to proceed ahead'
+      //     );
+      //   }
+      // });
 
     }
   }
 
   async updateStatus() {
     const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       // this.utilsService.showSnackBar('There is no any active filing year available')
       return;
