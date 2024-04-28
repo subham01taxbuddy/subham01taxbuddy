@@ -1828,6 +1828,8 @@ export class SharesAndEquityComponent
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
+    } else if(this.deductionForm.invalid){
+      return;
     }
     this.save();
     this.saveAndNext.emit(false);
