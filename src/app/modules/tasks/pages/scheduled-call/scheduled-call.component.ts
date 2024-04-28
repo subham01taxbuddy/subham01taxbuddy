@@ -382,8 +382,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           } else if (params.data.statusId == 19) {
             return 'Follow-Up';
           }
-          else {
+          else if(params.data.statusId == 17) {
             return 'Open';
+          } else if(params.data.statusId == 20) {
+            return 'Cancelled';
           }
         },
         filterParams: {
