@@ -23,7 +23,7 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-3 " style="margin-top: 10px;">
+                        <!-- <div class="col-sm-3 " style="margin-top: 10px;">
                           <mat-label class="mb-2">Select Status</mat-label>
                           <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
@@ -32,18 +32,18 @@
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
-                        </div>
+                        </div> -->
                         <div class="col-sm-3 " style="margin-top: 10px;">
-                          <mat-label class="mb-2">Migration Source</mat-label>
+                          <mat-label class="mb-2">Select Status</mat-label>
                           <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                            <mat-select placeholder="Select Migration Source" [(ngModel)]="searchParam.migrationSource">
+                            <mat-select placeholder="Select Status" [(ngModel)]="searchParam.migrationSource">
                               <mat-option *ngFor="let status of migrationList" [value]="status.value">
                                 {{ status.name }}
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-6 ">
+                        <div class="col-sm-9 ">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
