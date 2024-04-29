@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -18,8 +18,8 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  scheduleESOPForm: FormGroup;
-  selectedFormGroup: FormGroup;
+  scheduleESOPForm: UntypedFormGroup;
+  selectedFormGroup: UntypedFormGroup;
   hasEdit: boolean = false;
   currentIndex: number;
   showForm: boolean;
@@ -31,7 +31,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   disableDeleteScheduleESOPEventDetailButton: boolean;
   disableAddScheduleESOPEventDetail: boolean;
 
-  constructor(public fb: FormBuilder,
+  constructor(public fb: UntypedFormBuilder,
     public utilsService: UtilsService) {
     super();
   }
@@ -81,8 +81,8 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     ];
   }
 
-  createOrSetScheduleESOPForm(){
-    if (this.ITR_JSON.scheduleESOP){
+  createOrSetScheduleESOPForm() {
+    if (this.ITR_JSON.scheduleESOP) {
       this.scheduleESOPForm = this.createScheduleESOPForm(this.ITR_JSON.scheduleESOP.scheduleESOPDetails);
       this.selectionChangeAssessmentYears();
     } else
@@ -96,8 +96,14 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   createScheduleESOPForm(scheduleESOPDetails: any[] = []) {
     return this.fb.group({
       scheduleESOPDetails: this.createScheduleESOPDetailsFormArray(scheduleESOPDetails),
-      totalTaxAttributedAmount: 0
+      totalTaxAttributedAmount: 0,
+      panOfStartup: [this.ITR_JSON.scheduleESOP?.panOfStartup, [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],
+      dpiitRegNo: [this.ITR_JSON.scheduleESOP?.dpiitRegNo, [Validators.required, Validators.pattern(AppConstants.dipptNumberRegex)]],
     });
+  }
+
+  setToUpperCase(control) {
+    control.setValue(control.value.toUpperCase());
   }
 
   createScheduleESOPDetailsFormArray(scheduleESOPDetails: any[] = []) {
@@ -115,7 +121,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
       ceasedEmployee: [scheduleESOPDetail?.ceasedEmployee, Validators.required],
       dateOfCeasing: [scheduleESOPDetail?.dateOfCeasing],
       scheduleESOPEventDetails: this.createScheduleESOPEventDetailsFormArray(scheduleESOPDetail?.scheduleESOPEventDetails),
-      balanceTaxCF: [{value:scheduleESOPDetail?.balanceTaxCF, disabled: true}],
+      balanceTaxCF: [{ value: scheduleESOPDetail?.balanceTaxCF, disabled: true }],
     });
   }
 
@@ -155,10 +161,10 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     this.utilsService.smoothScrollToTop();
   }
 
-  markFormGroupTouched(formGroup: FormGroup) {
+  markFormGroupTouched(formGroup: UntypedFormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
-      if (control instanceof FormGroup)
+      if (control instanceof UntypedFormGroup)
         this.markFormGroupTouched(control);
     });
   }
@@ -177,14 +183,14 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
 
   addScheduleESOPEventDetail() {
     const securityType = this.selectedFormGroup.get('securityType').value;
-    if(securityType === 'PS')
+    if (securityType === 'PS')
       this.disableDeleteScheduleESOPEventDetailButton = false;
 
     this.scheduleESOPEventDetailsFormArray.push(this.createScheduleESOPEventDetailsFormGroup());
   }
 
   editScheduleEsop(index: number) {
-    this.selectedFormGroup = this.scheduleESOPDetailsFormArray.at(index) as FormGroup;
+    this.selectedFormGroup = this.scheduleESOPDetailsFormArray.at(index) as UntypedFormGroup;
     this.currentIndex = index;
     this.hasEdit = true;
     this.showForm = true;
@@ -198,31 +204,31 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   onBlurTaxDeferredBFEarlierAY() {
-    if(this.selectedFormGroup?.get('securityType')?.value === 'FS')
-      this.setValue(this.scheduleESOPEventDetailsFormArray?.at(0) as FormGroup, 'taxAttributedAmount', this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value);
+    if (this.selectedFormGroup?.get('securityType')?.value === 'FS')
+      this.setValue(this.scheduleESOPEventDetailsFormArray?.at(0) as UntypedFormGroup, 'taxAttributedAmount', this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value);
 
     this.setBalanceCF();
-   }
+  }
 
   selectionChangeSecurityType(clearScheduleESOPEventDetailsFormArray: boolean) {
-    if(clearScheduleESOPEventDetailsFormArray){
+    if (clearScheduleESOPEventDetailsFormArray) {
       this.scheduleESOPEventDetailsFormArray.clear();
       this.scheduleESOPEventDetailsFormArray.push(this.createScheduleESOPEventDetailsFormGroup());
     }
 
-    let scheduleESOPEventDetailsFormGroup = this.scheduleESOPEventDetailsFormArray.at(0) as FormGroup;
+    let scheduleESOPEventDetailsFormGroup = this.scheduleESOPEventDetailsFormArray.at(0) as UntypedFormGroup;
     const securityType = this.selectedFormGroup.get('securityType').value;
-    if(securityType === 'FS') {
+    if (securityType === 'FS') {
       this.disableDeleteScheduleESOPEventDetailButton = true;
       this.disableAddScheduleESOPEventDetail = true;
       scheduleESOPEventDetailsFormGroup?.get('taxAttributedAmount').disable();
       scheduleESOPEventDetailsFormGroup?.get('taxAttributedAmount').setValue(this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value)
       scheduleESOPEventDetailsFormGroup?.get('taxAttributedAmount').updateValueAndValidity();
-    } else if(securityType === 'PS') {
+    } else if (securityType === 'PS') {
       this.disableDeleteScheduleESOPEventDetailButton = false;
       this.disableAddScheduleESOPEventDetail = false;
       scheduleESOPEventDetailsFormGroup?.get('taxAttributedAmount').enable();
-    } else if(securityType === 'NS') {
+    } else if (securityType === 'NS') {
       this.disableDeleteScheduleESOPEventDetailButton = true;
       this.disableAddScheduleESOPEventDetail = true;
       scheduleESOPEventDetailsFormGroup?.get('dateOfSale').disable();
@@ -233,10 +239,10 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   deleteScheduleESOPEventDetail(index: number) {
-    if(this.scheduleESOPEventDetailsFormArray.length > 1)
+    if (this.scheduleESOPEventDetailsFormArray.length > 1)
       this.scheduleESOPEventDetailsFormArray.removeAt(index);
   }
-  
+
 
   selectionChangeAssessmentYears() {
     const assessmentYears = this.scheduleESOPDetailsFormArray.getRawValue().map(item => item.assessmentYear);
@@ -272,23 +278,24 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.Copy_ITR_JSON.scheduleESOP = null;
-
     if (this.scheduleESOPDetailsFormArray.length > 0) {
       let totalTaxAttributedAmount = this.scheduleESOPDetailsFormArray.getRawValue().reduce((total, item) => total + (item.scheduleESOPEventDetails?.reduce((total, element) => total + (element?.taxAttributedAmount || 0), 0) || 0), 0);
       this.scheduleESOPForm.get('totalTaxAttributedAmount').setValue(totalTaxAttributedAmount);
       this.Copy_ITR_JSON.scheduleESOP = this.scheduleESOPForm.getRawValue();
       this.Copy_ITR_JSON.scheduleESOP.scheduleESOPDetails
-      .forEach(esop => {
-        if(esop.dateOfCeasing)
-          esop.dateOfCeasing = moment(esop.dateOfCeasing).format('YYYY-MM-DD');
+        .forEach(esop => {
+          if (esop.dateOfCeasing)
+            esop.dateOfCeasing = moment(esop.dateOfCeasing).format('YYYY-MM-DD');
 
-        if(esop.securityType !== 'NS') {
-          esop.scheduleESOPEventDetails
-          .filter(esopEvent => esopEvent.dateOfSale)
-          .forEach(esop => esop.dateOfSale = moment(esop.dateOfSale).format('YYYY-MM-DD'));
-        } else 
+          if (esop.securityType !== 'NS') {
+            esop.scheduleESOPEventDetails
+              .filter(esopEvent => esopEvent.dateOfSale)
+              .forEach(esop => esop.dateOfSale = moment(esop.dateOfSale).format('YYYY-MM-DD'));
+          } else
             esop.scheduleESOPEventDetails = [];
-      });
+        });
+    } else {
+      this.Copy_ITR_JSON.scheduleESOP = this.scheduleESOPForm.getRawValue();
     }
 
     sessionStorage.setItem(
@@ -318,11 +325,11 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   get scheduleESOPEventDetailsFormArray() {
-    return <FormArray>this.selectedFormGroup.get('scheduleESOPEventDetails');
+    return <UntypedFormArray>this.selectedFormGroup.get('scheduleESOPEventDetails');
   }
 
   get scheduleESOPDetailsFormArray() {
-    return <FormArray>this.scheduleESOPForm.get('scheduleESOPDetails');
+    return <UntypedFormArray>this.scheduleESOPForm.get('scheduleESOPDetails');
   }
 
   get addButtonName() {
@@ -333,13 +340,13 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
     return this.years.every(item => item.disabled === true);
   }
 
-  setBalanceCF(){
+  setBalanceCF() {
     const totalTaxAttributedAmount = this.scheduleESOPEventDetailsFormArray.getRawValue()?.reduce((total, element) => total + (element?.taxAttributedAmount || 0), 0);
     const taxDeferredBFEarlierAY = this.selectedFormGroup?.get('taxDeferredBFEarlierAY')?.value;
     this.setValue(this.selectedFormGroup, 'balanceTaxCF', Math.max(0, taxDeferredBFEarlierAY - totalTaxAttributedAmount));
   }
 
-  setValue(formGroup: FormGroup, path: string, value: any){
+  setValue(formGroup: UntypedFormGroup, path: string, value: any) {
     formGroup.get(path).setValue(value);
     formGroup.get(path).updateValueAndValidity();
   }
@@ -349,6 +356,12 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
+    if (this.scheduleESOPForm.invalid) {
+      this.scheduleESOPForm.markAsDirty();
+      this.scheduleESOPForm.markAllAsTouched();
+      this.scheduleESOPForm.updateValueAndValidity();
+      return;
+    }
     this.saveScheduleESOP();
     this.saveAndNext.emit(true);
   }

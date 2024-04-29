@@ -9,9 +9,9 @@ import {
 import { inject } from '@angular/core/testing';
 import {
   FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -27,14 +27,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class OtherAssetsDialogComponent implements OnInit {
   @Input() isAddOtherAssets: Number;
-  assetDetailsForm!: FormGroup;
+  assetDetailsForm!: UntypedFormGroup;
   assetType = 'GOLD';
   config: any;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
 
   constructor(
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
     private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -71,7 +71,7 @@ export class OtherAssetsDialogComponent implements OnInit {
       this.addMoreOtherAssetsForm();
     } else {
       otherAssetDetailsArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -86,7 +86,7 @@ export class OtherAssetsDialogComponent implements OnInit {
     otherAssetsArray.push(this.createOtherAssetsForm(item));
   }
 
-  createOtherAssetsForm(item?): FormGroup {
+  createOtherAssetsForm(item?): UntypedFormGroup {
     return this.fb.group({
       otherAssetsArrays: this.fb.array([
         {

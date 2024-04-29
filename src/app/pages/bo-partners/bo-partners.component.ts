@@ -10,7 +10,7 @@ import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../pages.module';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
@@ -35,13 +35,13 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
   partnersGridOptions: GridOptions;
   totalCount = 0;
   boPartnersInfo: any;
-  boPartnerDateForm: FormGroup;
+  boPartnerDateForm: UntypedFormGroup;
   maxDate: any = new Date();
   minToDate: any;
-  searchMobileNumber = new FormControl('');
-  searchEmail = new FormControl('');
-  fromDateValue = new FormControl('2022-09-01', Validators.required);
-  toDateValue = new FormControl(new Date(), Validators.required);
+  searchMobileNumber = new UntypedFormControl('');
+  searchEmail = new UntypedFormControl('');
+  fromDateValue = new UntypedFormControl('2022-09-01', Validators.required);
+  toDateValue = new UntypedFormControl(new Date(), Validators.required);
   searchParam: any = {
     page: 0,
     size: 20,
@@ -49,7 +49,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
   };
   constructor(
     private datePipe: DatePipe,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private userMsService: UserMsService,
     private utileService: UtilsService,
     @Inject(LOCALE_ID) private locale: string,
@@ -347,7 +347,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
          </button>`;
         },
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -364,7 +364,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -387,7 +387,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Update Status"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -410,7 +410,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 100,
-        pinned: 'right',
+         pinned: 'right',
         cellRenderer: function (params: any) {
           //console.log(params);
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {

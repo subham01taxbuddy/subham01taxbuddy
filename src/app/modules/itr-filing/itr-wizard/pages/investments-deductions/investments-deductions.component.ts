@@ -1,6 +1,6 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -29,14 +29,15 @@ export class InvestmentsDeductionsComponent
   sec80gDonationsComponent!: DonationsComponent;
   @ViewChild('donations80ggaComponentRef', { static: false })
   sec80ggaDonationsComponent!: DonationsComponent;
-
+  @ViewChild('donations80ggcComponentRef', { static: false })
+  sec80ggcDonationsComponent!: DonationsComponent;
   @ViewChild('otherDeductionsRef', { static: false })
   otherDeductionComponent!: OtherDeductionsComponent;
 
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
-  investmentDeductionForm: FormGroup;
+  investmentDeductionForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   DonationGridOptions: GridOptions;
@@ -655,7 +656,7 @@ export class InvestmentsDeductionsComponent
   constructor(
     private router: Router,
     public utilsService: UtilsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
     public matDialog: MatDialog
   ) {
@@ -765,6 +766,7 @@ export class InvestmentsDeductionsComponent
     let medicalExpenses =
       this.MedicalExpensesComponent.saveInvestmentDeductions();
     this.otherDeductionComponent.saveInvestmentDeductions();
+    this.sec80ggcDonationsComponent.saveGeneralDonation();
     if (saved && medicalExpenses) {
       this.serviceCall();
     }

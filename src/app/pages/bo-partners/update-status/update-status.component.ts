@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewDocumentsComponent } from '../view-documents/view-documents.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstDailyReportService } from 'src/app/services/gst-daily-report.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 declare function we_track(key: string, value: any);
@@ -23,7 +23,7 @@ export class UpdateStatusComponent implements OnInit {
     { key: 'Document Pending', value: 'DOCUMENT_PENDING' },
     { key: 'Paid', value: 'PAID' },
   ];
-  myForm: FormGroup;
+  myForm: UntypedFormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<ViewDocumentsComponent>,
@@ -41,11 +41,11 @@ export class UpdateStatusComponent implements OnInit {
       this.getPartnerDetails();
     }
 
-    this.myForm = new FormGroup({
-      name: new FormControl(this.data.partnerName),
-      mobileNo: new FormControl(this.data.mobileNumber),
-      contactId: new FormControl('', [Validators.minLength(17), Validators.maxLength(19)]),
-      fundId: new FormControl('', [Validators.minLength(17), Validators.maxLength(17)])
+    this.myForm = new UntypedFormGroup({
+      name: new UntypedFormControl(this.data.partnerName),
+      mobileNo: new UntypedFormControl(this.data.mobileNumber),
+      contactId: new UntypedFormControl('', [Validators.minLength(17), Validators.maxLength(19)]),
+      fundId: new UntypedFormControl('', [Validators.minLength(17), Validators.maxLength(17)])
     });
   }
 

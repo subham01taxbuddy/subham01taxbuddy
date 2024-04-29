@@ -1,5 +1,5 @@
 import {Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ITR_JSON,
   OnSalary,
@@ -18,7 +18,7 @@ export class TdsOnSalaryComponent implements OnInit {
   @Output() onSave = new EventEmitter();
   @Output() formDataSubmitted = new EventEmitter<any>();
   @Input() editIndex: any;
-  salaryForm: FormGroup;
+  salaryForm: UntypedFormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -26,7 +26,7 @@ export class TdsOnSalaryComponent implements OnInit {
   config: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TdsOnSalaryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -71,7 +71,7 @@ export class TdsOnSalaryComponent implements OnInit {
     });
   }
 
-  createForm(item?): FormGroup {
+  createForm(item?): UntypedFormGroup {
     let srn = 0;
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
@@ -102,9 +102,9 @@ export class TdsOnSalaryComponent implements OnInit {
 
   // editDonationForm(i) {
   //   (
-  //     (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
+  //     (this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[
   //       i
-  //     ] as FormGroup
+  //     ] as UntypedFormGroup
   //   ).enable();
   // }
 

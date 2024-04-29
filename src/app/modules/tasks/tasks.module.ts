@@ -29,52 +29,44 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { SchCallCalenderComponent } from './pages/scheduled-call/sch-call-calender/sch-call-calender.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TasksRoutingModule,
-    NgxLoadingModule.forRoot({}),
-    SharedModule,
-    AgGridModule,
-    MaterialModule,
-    NgxPaginationModule,
-    OverlayModule
-  ],
-  declarations: [
-    TasksComponent,
-    AssignedNewUsersComponent,
-    ScheduledCallComponent,
-    ReAssignDialogComponent,
-    FilingsComponent,
-    MoreOptionsDialogComponent,
-    SignUpExceptionsComponent,
-    ExceptionsComponent,
-    EriExceptionsComponent,
-    EVerificationDialogComponent,
-    ItrLifecycleDialogComponent,
-    PotentialUserComponent,
-    BulkReAssignDialogComponent,
-    ItrStatusDialogComponent,
-    ChatOptionsDialogComponent,
-    ReAssignActionDialogComponent,
-    ScheduledCallReassignDialogComponent,
-    ItrAssignedUsersComponent,
-    SchCallCalenderComponent,
-  ],
-  entryComponents: [
-    ReAssignDialogComponent,
-    MoreOptionsDialogComponent,
-    EVerificationDialogComponent,
-    ItrLifecycleDialogComponent,
-    BulkReAssignDialogComponent
-  ],
-  exports: [
-    MoreOptionsDialogComponent
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
-
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        TasksRoutingModule,
+        NgxLoadingModule.forRoot({}),
+        SharedModule,
+        AgGridModule,
+        MaterialModule,
+        NgxPaginationModule,
+        OverlayModule
+    ],
+    declarations: [
+        TasksComponent,
+        AssignedNewUsersComponent,
+        ScheduledCallComponent,
+        ReAssignDialogComponent,
+        FilingsComponent,
+        MoreOptionsDialogComponent,
+        SignUpExceptionsComponent,
+        ExceptionsComponent,
+        EriExceptionsComponent,
+        EVerificationDialogComponent,
+        ItrLifecycleDialogComponent,
+        PotentialUserComponent,
+        BulkReAssignDialogComponent,
+        ItrStatusDialogComponent,
+        ChatOptionsDialogComponent,
+        ReAssignActionDialogComponent,
+        ScheduledCallReassignDialogComponent,
+        ItrAssignedUsersComponent,
+        SchCallCalenderComponent,
+    ],
+    exports: [
+        MoreOptionsDialogComponent
+    ],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ]
 })
 export class TasksModule { }

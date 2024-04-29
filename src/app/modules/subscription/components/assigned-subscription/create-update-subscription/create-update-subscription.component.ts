@@ -1,7 +1,7 @@
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -24,14 +24,14 @@ declare function we_track(key: string, value: any);
   styleUrls: ['./create-update-subscription.component.scss'],
 })
 export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, AfterViewInit {
-  searchedPromoCode = new FormControl('', Validators.required);
+  searchedPromoCode = new UntypedFormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
   service: string;
   serviceDetail: string = '';
   defaultFinancialYear: string;
   selectedPlanInfo: any;
-  invoiceForm: FormGroup;
+  invoiceForm: UntypedFormGroup;
   financialYear = AppConstants.subscriptionFyList;
   loading!: boolean;
   userSubscription: any;
@@ -53,14 +53,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   promoCodeInfo: any;
   serviceType = '';
   selectedUserInfo: any;
-  scheduleCallPay = new FormControl('', []);
-  tpaPaid = new FormControl('', []);
-  noOfMonths = new FormControl('', []);
-  subStartDate = new FormControl(new Date(), [Validators.required]);
-  subEndDate = new FormControl(new Date('Mar 31, 2023'), [Validators.required]);
-  gstType = new FormControl('', []);
-  frequency = new FormControl('', []);
-  subscriptionAssigneeId = new FormControl('');
+  scheduleCallPay = new UntypedFormControl('', []);
+  tpaPaid = new UntypedFormControl('', []);
+  noOfMonths = new UntypedFormControl('', []);
+  subStartDate = new UntypedFormControl(new Date(), [Validators.required]);
+  subEndDate = new UntypedFormControl(new Date('Mar 31, 2023'), [Validators.required]);
+  gstType = new UntypedFormControl('', []);
+  frequency = new UntypedFormControl('', []);
+  subscriptionAssigneeId = new UntypedFormControl('');
   finalPricing = {
     basePrice: null,
     cgst: null,
@@ -111,7 +111,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   showScheduledFields:boolean =false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
@@ -130,7 +130,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     setTimeout(() => {
       this.onPersonalInfoFormChanges();
       this.onOtherInfoFormChange();
-    }, 7000);
+    }, 10000);
   }
 
   ngOnInit() {
@@ -428,86 +428,86 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getAllPlanInfo(this?.userSubscription?.userSelectedPlan?.servicesType);
   }
 
-  personalInfoForm: FormGroup = this.fb.group({
-    userName: new FormControl(''),
-    mobileNumber: new FormControl(''),
-    emailAddress: new FormControl(''),
-    gstNo: new FormControl(''),
-    reminderMobileNumber: new FormControl(''),
-    reminderEmail: new FormControl(''),
-    pin: new FormControl(
+  personalInfoForm: UntypedFormGroup = this.fb.group({
+    userName: new UntypedFormControl(''),
+    mobileNumber: new UntypedFormControl(''),
+    emailAddress: new UntypedFormControl(''),
+    gstNo: new UntypedFormControl(''),
+    reminderMobileNumber: new UntypedFormControl(''),
+    reminderEmail: new UntypedFormControl(''),
+    pin: new UntypedFormControl(
       '',
       Validators.compose([
         Validators.maxLength(6),
         Validators.pattern(AppConstants.PINCode),
       ])
     ),
-    state: new FormControl(''),
-    city: new FormControl(''),
-    zipcode: new FormControl(''),
-    filerName: new FormControl(''),
-    assessmentYear: new FormControl(''),
-    leaderName: new FormControl(''),
+    state: new UntypedFormControl(''),
+    city: new UntypedFormControl(''),
+    zipcode: new UntypedFormControl(''),
+    filerName: new UntypedFormControl(''),
+    assessmentYear: new UntypedFormControl(''),
+    leaderName: new UntypedFormControl(''),
   });
 
   get mobileNumber() {
-    return this.personalInfoForm.controls['mobileNumber'] as FormControl;
+    return this.personalInfoForm.controls['mobileNumber'] as UntypedFormControl;
   }
   get userName() {
-    return this.personalInfoForm.controls['userName'] as FormControl;
+    return this.personalInfoForm.controls['userName'] as UntypedFormControl;
   }
   get emailAddress() {
-    return this.personalInfoForm.controls['emailAddress'] as FormControl;
+    return this.personalInfoForm.controls['emailAddress'] as UntypedFormControl;
   }
   get gstNo() {
-    return this.personalInfoForm.controls['gstNo'] as FormControl;
+    return this.personalInfoForm.controls['gstNo'] as UntypedFormControl;
   }
   get reminderMobileNumber() {
     return this.personalInfoForm.controls[
       'reminderMobileNumber'
-    ] as FormControl;
+    ] as UntypedFormControl;
   }
   get reminderEmail() {
-    return this.personalInfoForm.controls['reminderEmail'] as FormControl;
+    return this.personalInfoForm.controls['reminderEmail'] as UntypedFormControl;
   }
   get pin() {
-    return this.personalInfoForm.controls['pin'] as FormControl;
+    return this.personalInfoForm.controls['pin'] as UntypedFormControl;
   }
   get state() {
-    return this.personalInfoForm.controls['state'] as FormControl;
+    return this.personalInfoForm.controls['state'] as UntypedFormControl;
   }
   get city() {
-    return this.personalInfoForm.controls['city'] as FormControl;
+    return this.personalInfoForm.controls['city'] as UntypedFormControl;
   }
   get zipcode() {
-    return this.personalInfoForm.controls['zipcode'] as FormControl;
+    return this.personalInfoForm.controls['zipcode'] as UntypedFormControl;
   }
 
   get filerName() {
-    return this.personalInfoForm.controls['filerName'] as FormControl;
+    return this.personalInfoForm.controls['filerName'] as UntypedFormControl;
   }
   get assessmentYear() {
-    return this.personalInfoForm.controls['assessmentYear'] as FormControl;
+    return this.personalInfoForm.controls['assessmentYear'] as UntypedFormControl;
   }
 
   get leaderName() {
-    return this.personalInfoForm.controls['leaderName'] as FormControl;
+    return this.personalInfoForm.controls['leaderName'] as UntypedFormControl;
   }
 
-  otherInfoForm: FormGroup = this.fb.group({
-    sacNumber: new FormControl('998232'),
-    description: new FormControl(''),
-    scheduleCallService:new FormControl(''),
+  otherInfoForm: UntypedFormGroup = this.fb.group({
+    sacNumber: new UntypedFormControl('998232'),
+    description: new UntypedFormControl(''),
+    scheduleCallService:new UntypedFormControl(''),
   });
 
   get description() {
-    return this.otherInfoForm.controls['description'] as FormControl;
+    return this.otherInfoForm.controls['description'] as UntypedFormControl;
   }
   get sacNumber() {
-    return this.otherInfoForm.controls['sacNumber'] as FormControl;
+    return this.otherInfoForm.controls['sacNumber'] as UntypedFormControl;
   }
   get scheduleCallService() {
-    return this.otherInfoForm.controls['scheduleCallService'] as FormControl;
+    return this.otherInfoForm.controls['scheduleCallService'] as UntypedFormControl;
   }
 
   getAllPromoCode() {
@@ -1079,7 +1079,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   changeService() {
     if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
-        (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
+        (year) => year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
       );
 
     } else if(this.service === 'ITR')

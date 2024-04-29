@@ -5,7 +5,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
@@ -47,8 +47,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   allDetails: any;
   today: Date;
   data: any;
@@ -75,7 +75,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     },
 
   ];
-  selectedService = new FormControl('');
+  selectedService = new UntypedFormControl('');
 
   constructor(
     private userMsService: UserMsService,

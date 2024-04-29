@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -30,7 +30,7 @@ $(document).on('wheel', 'input[type=number]', function (e) {
 })
 export class UnlistedSharesComponent implements OnInit {
   loading = false;
-  sharesForm: FormGroup;
+  sharesForm: UntypedFormGroup;
   bankList: any;
   countryDropdown: any;
   bankTooltip: string;
@@ -42,7 +42,7 @@ export class UnlistedSharesComponent implements OnInit {
     { value: 'D', label: 'Domestic' },
     { value: 'F', label: 'Foreign' }
   ];
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     // private iTRService: ITRService,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<UnlistedSharesComponent>,

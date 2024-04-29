@@ -22,7 +22,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ValidateOtpByWhatAppComponent } from '../modules/auth/components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { SharedModule } from '../modules/shared/shared.module';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
 import { FormControlTypePipe } from "../pipes/formcontroltype.pipe";
 import { AisCredsDialogComponent } from './itr-filing/ais-creds-dialog/ais-creds-dialog.component';
@@ -49,47 +49,44 @@ export const MY_FORMATS = {
   }
 };
 @NgModule({
-  declarations: [
-    SelectObjectFilterPipe,
-    SelectFilterPipe,
-    SelectObjFilterPipe,
-    BacktipsDatePipe,
-    FormControlTypePipe,
-    ValidateOtpByWhatAppComponent,
-    NeedHelpComponent,
-    AisCredsDialogComponent,
-  ],
-  entryComponents: [
-    ValidateOtpByWhatAppComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(routes),
-    NgxLoadingModule.forRoot({}),
-    ModalModule.forRoot(),
-    PdfViewerModule,
-    SharedModule,
-  ],
-  providers: [
-    SelectObjectFilterPipe,
-    SelectFilterPipe,
-    SelectObjFilterPipe,
-    BacktipsDatePipe,
-    FormControlTypePipe,
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
-  ],
-  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-
-  exports: [
-    BacktipsDatePipe,
-    AgGridModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgxLoadingModule,
-    NeedHelpComponent,
-    FormControlTypePipe]
+    declarations: [
+        SelectObjectFilterPipe,
+        SelectFilterPipe,
+        SelectObjFilterPipe,
+        BacktipsDatePipe,
+        FormControlTypePipe,
+        ValidateOtpByWhatAppComponent,
+        NeedHelpComponent,
+        AisCredsDialogComponent,
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule.forChild(routes),
+        NgxLoadingModule.forRoot({}),
+        ModalModule.forRoot(),
+        // PdfViewerModule,
+        SharedModule,
+    ],
+    providers: [
+        SelectObjectFilterPipe,
+        SelectFilterPipe,
+        SelectObjFilterPipe,
+        BacktipsDatePipe,
+        FormControlTypePipe,
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
+    ],
+    schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+    exports: [
+        BacktipsDatePipe,
+        AgGridModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxLoadingModule,
+        NeedHelpComponent,
+        FormControlTypePipe
+    ]
 })
 export class PagesModule { }

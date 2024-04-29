@@ -23,7 +23,7 @@
                   <div class="col-sm-2 spsTp" >
                     <!-- <mat-label>Request Type </mat-label> -->
                     <label class="input__label" for="attr">Request Type </label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
+                    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                       <mat-select placeholder="Select Request Type" [formControl]="requestType">
                         <mat-option *ngFor="let item of Type" [value]="item.value">
                           {{ item.label }}
@@ -39,7 +39,7 @@
                   <div class="col-sm-3 spsTp" >
                     <!-- <mat-label>Status</mat-label> -->
                     <label class="input__label" for="attr">Refund Status </label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
+                    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                       <mat-select placeholder="Select status " [formControl]="status">
                         <mat-option *ngFor="let item of statusList" [value]="item.value">
                           {{ item.label }}

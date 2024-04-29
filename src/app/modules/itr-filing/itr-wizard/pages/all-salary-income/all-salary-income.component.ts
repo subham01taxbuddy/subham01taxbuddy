@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from '../../../../shared/constants';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
@@ -19,7 +19,7 @@ export class AllSalaryIncomeComponent
   implements OnInit
 {
   loading: boolean = false;
-  salaryIncomeFormGroup: FormGroup;
+  salaryIncomeFormGroup: UntypedFormGroup;
   taxableIncomes: any = [];
   showList: boolean;
   ITR_JSON: ITR_JSON;
@@ -28,7 +28,7 @@ export class AllSalaryIncomeComponent
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     super();
     this.showList = true;
@@ -108,7 +108,7 @@ export class AllSalaryIncomeComponent
     );
 
     let employers = [];
-    nonSelected.forEach((employer: FormGroup) => {
+    nonSelected.forEach((employer: UntypedFormGroup) => {
       employers.push(
         this.Copy_ITR_JSON.employers.filter(
           (item: any) =>

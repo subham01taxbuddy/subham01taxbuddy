@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -15,22 +15,21 @@ export class ChangeStatusComponent implements OnInit {
   loading!: boolean;
   itrStatus: any = [];
   callers: any = [];
-  changeStatus!: FormGroup;
+  changeStatus!: UntypedFormGroup;
   hideUndoButton :boolean =false;
 
   constructor(
     public dialogRef: MatDialogRef<ChangeStatusComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private userService: UserMsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService
   ) { }
 
   ngOnInit() {
-    if(this.data.userInfo.statusId == '39' ){
-      this.hideUndoButton =true;
-    }else if(this.data.serviceType == 'ITRU' && this.data.userInfo?.statusId == '14' ){
+
+    if((this.data.serviceType === 'ITRU' || this.data.serviceType === 'ITR') && this.data.userInfo?.statusId === 14 ){
       this.hideUndoButton =true;
     }else{
       this.hideUndoButton =false;
@@ -91,7 +90,12 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          this.itrStatus = response;
+          let loggedInRole = this.utilsService.getUserRoles();
+          if(loggedInRole.includes('ROLE_FILER')){
+            this.itrStatus = response.filter((item: any) => item.statusId !== 8);
+          }else{
+            this.itrStatus = response;
+          }
         } else {
           this.itrStatus = [];
         }

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   Validators,
   FormArray,
-  FormControl,
+  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,12 +26,12 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 })
 export class HousePropertyComponent implements OnInit {
   loading: boolean = false;
-  housePropertyForm: FormGroup;
+  housePropertyForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
-  isCoOwners = new FormControl(false);
+  isCoOwners = new UntypedFormControl(false);
   hpView: string = 'FORM';
   propertyTypeDropdown = [
     {
@@ -77,7 +77,7 @@ export class HousePropertyComponent implements OnInit {
   PREV_ITR_JSON: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
@@ -234,8 +234,8 @@ export class HousePropertyComponent implements OnInit {
     if (
       Number(
         (
-          (this.housePropertyForm.controls['loans'] as FormGroup)
-            .controls[0] as FormGroup
+          (this.housePropertyForm.controls['loans'] as UntypedFormGroup)
+            .controls[0] as UntypedFormGroup
         ).controls['interestAmount'].value
       ) <= 200000
     ) {
@@ -286,7 +286,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createHousePropertyForm(): FormGroup {
+  createHousePropertyForm(): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -430,7 +430,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string } = {}): FormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -472,7 +472,7 @@ export class HousePropertyComponent implements OnInit {
       panNumber?: string;
       percentage?: number;
     } = {}
-  ): FormGroup {
+  ): UntypedFormGroup {
     let formGroup =
       this.fb.group({
         name: [obj.name || '', [Validators.required]],
@@ -822,7 +822,7 @@ export class HousePropertyComponent implements OnInit {
       principalAmount?: number;
       interestAmount?: number;
     } = {}
-  ): FormGroup {
+  ): UntypedFormGroup {
     return this.fb.group({
       loanType: ['HOUSING'],
       principalAmount: [
@@ -1029,6 +1029,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
     }
   }
 

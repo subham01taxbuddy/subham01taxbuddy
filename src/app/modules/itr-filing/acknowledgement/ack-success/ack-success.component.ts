@@ -15,17 +15,20 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
   emailString: String = '';
   userName: String = '';
   DIRECT_UPLOAD_RES: any;
+  loggedInUserRoles: any;
   constructor(public utilsService: UtilsService, private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private dialogRef:MatDialogRef<AckSuccessComponent>,
-    ) { }
+    private dialogRef: MatDialogRef<AckSuccessComponent>,
+  ) {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+  }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.DIRECT_UPLOAD_RES = JSON.parse(sessionStorage.getItem('DIRECT_UPLOAD_RES'));
     console.log('DIRECT_UPLOAD_RES: ', this.DIRECT_UPLOAD_RES);
     this.emailString = 'mailto:' + this.ITR_JSON.email;
-    const self = this.ITR_JSON.family.filter((item:any) => item.relationShipCode === 'SELF');
+    const self = this.ITR_JSON.family.filter((item: any) => item.relationShipCode === 'SELF');
     if (self.length > 0) {
       this.userName = self[0].fName + " " + self[0].lName;
     }
@@ -48,8 +51,8 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
     this.router.navigate(['/pages/itr-filing/users']);
   }
 
-  
-  closeDialog(){
+
+  closeDialog() {
     this.dialogRef.close();
     this.router.navigate(['/tasks/filings']);
   }

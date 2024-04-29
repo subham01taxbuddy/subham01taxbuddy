@@ -11,10 +11,11 @@
     color: gray;
 }
 
-.mat-error {
+.mat-mdc-form-field-error {
     padding-top: 3px !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
 .mat-select-arrow {
     margin-top: -27px !important;
     color: #007bff !important;
@@ -77,7 +78,7 @@
     margin: 20px;
 }
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
     max-height: 75vh !important;
 }
 
@@ -86,7 +87,7 @@
     flex-wrap: wrap;
 
     .slot {
-        width: 162px;
+        width: 172px;
         padding: 2px;
         border: 1px solid #5592a9;
         border-radius: 5px;

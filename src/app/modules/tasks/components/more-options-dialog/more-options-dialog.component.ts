@@ -346,27 +346,69 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   checkSubscription(action: string) {
+    this.loading = true;
+    if('ITR' === this.data.serviceType){
+      const notAllowedStatuses = [18,15,16,32,45,33];
+      if(notAllowedStatuses.includes(this.data.statusId)){
+        this.loading = false;
+        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow');
+        return;
+      }
+    }
+
+    if(('ITR' === this.data.serviceType && this.data.statusId !== 8) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
+      this.loading = false;
+      this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
+      return;
+    }
+    
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
-    this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + this.data?.mobileNumber;
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
+    let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter;
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.data instanceof Array && response.data.length > 0) {
+      if (response.data.content instanceof Array && response.data.content.length > 0) {
         console.log(response);
-        response.data.forEach((item: any) => {
+        response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === this.data.serviceType)) {
             itrSubscriptionFound = true;
             return;
           }
         });
         if (itrSubscriptionFound) {
-          this.checkFilerAssignment(action);
+          if('ITR' === this.data.serviceType) 
+            this.checkFilerAssignment(action);
+          else if('ITRU' === this.data.serviceType){
+            const query = {
+            "and": {
+                "is": {
+                    "userId": this.data.userId,
+                    "isITRU": true,
+                    "eFillingCompleted": true
+                },
+                "in": {
+                    "assessmentYear":["2022-2023", "2023-2024"]
+                }
+            },
+            "includes": ["eFillingCompleted","assessmentYear"],
+            "collectionName": "itr",
+            "queryType": "FIND_ALL"
+          };
+          
+          this.reportService.query(query).subscribe(
+            (res: any) => {
+              if(res?.data?.length === 2)
+                this.utilsService.showSnackBar('All ITR-U are filed.');
+              else
+                this.checkFilerAssignment(action);
+            });
+          }
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
         }
@@ -621,10 +663,10 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   updateFilingNoJson() {
-    const param = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-    this.itrMsService.getMethod(param).subscribe(
-      (res: any) => {
-        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+    // const param = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+    // this.itrMsService.getMethod(param).subscribe(
+    //   (res: any) => {
+    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           if (this.data.statusId != 11) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
@@ -640,20 +682,20 @@ export class MoreOptionsDialogComponent implements OnInit {
             );
           }
 
-        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-          this.utilsService.showSnackBar(
-            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure that the payment has been made by the user to proceed ahead'
-          );
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(error);
-      }
-    );
+    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+    //       this.utilsService.showSnackBar(
+    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+    //       );
+    //     } else {
+    //       this.utilsService.showSnackBar(
+    //         'Please make sure that the payment has been made by the user to proceed ahead'
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     this.utilsService.showSnackBar(error);
+    //   }
+    // );
   }
 
   linkToFinbingo() {

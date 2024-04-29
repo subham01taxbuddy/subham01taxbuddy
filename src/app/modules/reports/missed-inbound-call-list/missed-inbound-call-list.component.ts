@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
@@ -41,8 +41,8 @@ export const MY_FORMATS = {
 })
 export class MissedInboundCallListComponent implements OnInit, OnDestroy {
   loading = false;
-  startDate = new FormControl('');
-  endDate = new FormControl('');
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
   minStartDate: string = '2023-04-01';
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
@@ -299,6 +299,8 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       {
         headerName: 'Call',
         editable: false,
+        width: 80,
+        pinned: 'left',
         suppressMenu: true,
         cellStyle: { textAlign: 'center' },
         sortable: true,
@@ -309,8 +311,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
               <i class="fa-solid fa-phone" data-action-type="place-call"></i>
              </button>`;
         },
-        width: 70,
-        pinned: 'right',
       },
 
     ]

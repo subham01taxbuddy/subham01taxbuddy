@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Form } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormArray, Form } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -90,14 +90,14 @@ export class ScheduleFaComponent implements OnInit {
   natureOfInterestOwnership = ['DIRECT', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
   status = ['Select', 'OWNER', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
   countryCodeList: any;
-  scheduleFa: FormGroup;
+  scheduleFa: UntypedFormGroup;
   isPanelOpen: boolean = false;
   maxPurchaseDate: any;
   selectedIndexes: number[] = [];
   selectedAccountIndexes: number[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private cd: ChangeDetectorRef
   ) { }
@@ -897,7 +897,7 @@ export class ScheduleFaComponent implements OnInit {
       const formArray = this.scheduleFa.get(formArrayName) as FormArray;
 
       for (let i = formArray.length - 1; i >= 0; i--) {
-        const control = formArray?.at(i) as FormGroup;
+        const control = formArray?.at(i) as UntypedFormGroup;
         const value = control?.get('countryCode');
 
         if (!value?.value) {
@@ -1191,8 +1191,8 @@ export class ScheduleFaComponent implements OnInit {
       'depositoryAccounts'
     ) as FormArray;
 
-    if (depositoryAccounts.at(i) instanceof FormGroup) {
-      return (depositoryAccounts.at(i) as FormGroup).get(
+    if (depositoryAccounts.at(i) instanceof UntypedFormGroup) {
+      return (depositoryAccounts.at(i) as UntypedFormGroup).get(
         'account'
       ) as FormArray;
     } else {
@@ -1237,8 +1237,8 @@ export class ScheduleFaComponent implements OnInit {
       'signingAuthorityDetails'
     ) as FormArray;
 
-    if (signingAuthAccounts.at(i) instanceof FormGroup) {
-      return (signingAuthAccounts.at(i) as FormGroup).get(
+    if (signingAuthAccounts.at(i) instanceof UntypedFormGroup) {
+      return (signingAuthAccounts.at(i) as UntypedFormGroup).get(
         'account'
       ) as FormArray;
     } else {
@@ -1255,8 +1255,8 @@ export class ScheduleFaComponent implements OnInit {
       'custodialAccounts'
     ) as FormArray;
 
-    if (custodialAccounts.at(i) instanceof FormGroup) {
-      return (custodialAccounts.at(i) as FormGroup).get('account') as FormArray;
+    if (custodialAccounts.at(i) instanceof UntypedFormGroup) {
+      return (custodialAccounts.at(i) as UntypedFormGroup).get('account') as FormArray;
     } else {
       return this.fb.array([]); // or return an empty FormArray if needed
     }

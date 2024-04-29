@@ -28,8 +28,8 @@
               <div class="col-sm-4">
                 <mat-label> Mobile Number </mat-label>
                 <mat-form-field appearance="outline">
-                  <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field"
-                    readonly />
+                  <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber"
+                    class="input-field" readonly />
                 </mat-form-field>
               </div>
               <div class="col-sm-4">
@@ -113,7 +113,8 @@
             </div>
             <div class="row mt-3" style="float: right;">
               <div style="text-align: center ;">
-                <button class="save-user-info" [disabled]="loading" (click)="updateUserDetails()">Save Information</button>
+                <button class="save-user-info" [disabled]="loading" (click)="updateUserDetails()">Save
+                  Information</button>
               </div>
             </div>
           </div>
@@ -151,7 +152,8 @@
                         <span class="plan-header">Base Price:</span>
                       </div>
                       <div class="col-sm-6 plan-values-container">
-                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.basePrice | currency : "INR"}}</span>
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.basePrice | currency :
+                          "INR"}}</span>
                       </div>
                     </div>
                     <div class="final-values-container mt-1" *ngIf="!showIgst">
@@ -184,7 +186,8 @@
                         <span class="plan-header">Total Tax:</span>
                       </div>
                       <div class="col-sm-6 plan-values-container">
-                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalTax | currency : "INR"}}</span>
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalTax | currency :
+                          "INR"}}</span>
                       </div>
                     </div>
                     <div class="final-values-container mt-1">
@@ -192,7 +195,8 @@
                         <span class="plan-header">Total Amount:</span>
                       </div>
                       <div class="col-sm-6 plan-values-container">
-                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalAmount | currency : "INR"}}</span>
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalAmount | currency :
+                          "INR"}}</span>
                       </div>
                     </div>
                   </div>
@@ -204,7 +208,8 @@
                   <div class="row">
                     <div class="row">
                       <div class="col-sm-8">
-                        <span style="font-weight: bold; font-size: small; margin-bottom: 10px;" *ngIf="showMessage">Note:
+                        <span style="font-weight: bold; font-size: small; margin-bottom: 10px;"
+                          *ngIf="showMessage">Note:
                           {{showMessage}}</span>
                         <mat-label class="plan-header">Select Plan</mat-label>
                         <mat-form-field appearance="outline" class="select-bg-color">
@@ -217,7 +222,8 @@
                         </mat-form-field>
                       </div>
                       <div class="col-sm-4" *ngIf="smeSelectedPlanId">
-                        <button class="save-user-info" [disabled]="loading" style="margin-top: 25px;" (click)="applySmeSelectedPlan(smeSelectedPlanId)">
+                        <button class="save-user-info" [disabled]="loading" style="margin-top: 25px;"
+                          (click)="applySmeSelectedPlan(smeSelectedPlanId)">
                           Apply
                         </button>
                         &nbsp;
@@ -245,7 +251,8 @@
                         <span class="plan-header">Plan Amount:</span>
                       </div>
                       <div class="col-sm-6 sme-value">
-                        <span class="sme-plan-value">{{userSubscription?.smeSelectedPlan?.totalAmount | currency : "INR"}}</span>
+                        <span class="sme-plan-value">{{userSubscription?.smeSelectedPlan?.totalAmount | currency :
+                          "INR"}}</span>
                       </div>
                     </div>
                   </div>
@@ -298,15 +305,15 @@
                         <td class="spcTd">Promo Code:</td>
                         <td class="spcTd"><span class="head" *ngIf="
                           this?.userSubscription && this?.userSubscription?.promoCode">
-                          <b> {{ getExactPromoDiscount() | currency : "INR" }} </b>
-                        </span>
+                            <b> {{ getExactPromoDiscount() | currency : "INR" }} </b>
+                          </span>
                         </td>
                       </tr>
                       <tr>
                         <td class="bdrBtm2">Coupon Code:</td>
                         <td class="bdrBtm2">
                           <span class="head" *ngIf="couponCodeAmount > 0">
-                          <b> {{ couponCodeAmount | currency : "INR" }} </b>
+                            <b> {{ couponCodeAmount | currency : "INR" }} </b>
                           </span>
                         </td>
                       </tr>
@@ -316,7 +323,7 @@
                       </tr> -->
                     </tbody>
                   </table>
-                  <div class="col-sm-12" >
+                  <div class="col-sm-12">
                     <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
                       <span>Note:
                         &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
@@ -328,11 +335,11 @@
                         <label for="promoCodeInput">Search & Select Promo Code</label>
                       </div>
                       <div class="col-sm-5">
-                        <mat-form-field appearance="outline" class="class1">
+                        <mat-form-field appearance="outline" class="class1 small-inp no-height">
                           <input id="promoCodeInput" type="text" placeholder="Start typing..." matInput
                             [disabled]="!smeSelectedPlanId" [formControl]="searchedPromoCode" [matAutocomplete]="auto"
                             (blur)="getCodeFromLabelOnBlur()" required />
-                          <mat-error class="mt-3" *ngIf="searchedPromoCode.invalid">
+                          <mat-error *ngIf="searchedPromoCode.invalid">
                             Please select value from dropdown only.
                           </mat-error>
                           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
@@ -343,28 +350,33 @@
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">
-                          <button class="save-all" (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
-                            Apply Code
-                          </button>
+                        <button class="save-all" (click)="applyPromo(smeSelectedPlanId); onNgModelChange()"
+                          [disabled]="!smeSelectedPlanId">
+                          Apply Code
+                        </button>
                       </div>
                       <div class="col-sm-1">
-                      <button [disabled]="!selectedPromoCode" class="delete-icon-btn"
-                            (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
-                            <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
-                      </button>
+                        <button [disabled]="!selectedPromoCode" class="delete-icon-btn"
+                          (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
+                          <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-sm-12" *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
+                  <div class="col-sm-12"
+                    *ngIf="this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')">
                     <div class="row">
                       <div class="col-sm-3">
                         <label for="promoCodeInput">Select Coupon Code</label>
                       </div>
                       <div class="col-sm-5">
                         <mat-form-field appearance="outline" class="select-bg-color">
-                          <mat-select multiple (selectionChange)="printValue()" matInput placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionIds" (ngModelChange)="onNgModelChange()">
-                            <mat-option *ngFor="let couponCode of availableCouponCodes" [value]="couponCode.couponCodeSubscriptionId" [disabled]="!availableCouponCodes">
+                          <mat-select multiple (selectionChange)="printValue()" matInput
+                            placeholder="Select Coupon Code" [(ngModel)]="selectedCouponCodeSubscriptionIds"
+                            (ngModelChange)="onNgModelChange()">
+                            <mat-option *ngFor="let couponCode of availableCouponCodes"
+                              [value]="couponCode.couponCodeSubscriptionId" [disabled]="!availableCouponCodes">
                               {{ couponCode?.name }}
                             </mat-option>
                           </mat-select>
@@ -376,9 +388,8 @@
                         </button>
                       </div>
                       <div class="col-sm-1">
-                        <button class="delete-icon-btn"
-                        (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
-                        <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
+                        <button class="delete-icon-btn" (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
+                          <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
                         </button>
                       </div>
                     </div>
@@ -534,8 +545,10 @@
               <div class="col-sm-6" *ngIf="service !== 'TPA'">
                 <mat-label> Financial Year</mat-label>
                 <mat-form-field appearance="outline">
-                  <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
-                    <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">
+                  <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year"
+                    [formControl]="assessmentYear" autocomplete="off">
+                    <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear"
+                      [disabled]="isYearDisabled(year.financialYear)">
                       {{ year.financialYear }}
                     </mat-option>
                   </mat-select>
@@ -544,7 +557,7 @@
               <div class="col-sm-4 mt-3" *ngIf="showScheduledFields">
                 <mat-label>Select Service Type For Scheduled Call </mat-label>
                 <mat-form-field appearance="outline">
-                  <mat-select    [formControl]="scheduleCallService" >
+                  <mat-select [formControl]="scheduleCallService">
                     <mat-option *ngFor="let service of scheduledCallServiceTypes" [value]="service.value">
                       {{service.label}}
                     </mat-option>
@@ -562,7 +575,8 @@
             <div style=" flex: 1 0 0; text-align: right;">
               <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
                 *ngIf="userSubscription?.payableSubscriptionAmount >= 0">
-                <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate Invoice' : 'Save'}}
+                <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate
+                Invoice' : 'Save'}}
               </button>
               <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
                 *ngIf="userSubscription?.payableSubscriptionAmount < 0">
@@ -575,4 +589,3 @@
     </div>
   </div>
 </div>
-

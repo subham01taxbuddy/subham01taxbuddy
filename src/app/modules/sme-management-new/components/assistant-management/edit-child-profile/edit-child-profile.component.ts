@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -13,6 +13,7 @@ import Auth from '@aws-amplify/auth';
 import { TitleCasePipe } from '@angular/common';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { InterceptorSkipHeader } from 'src/app/services/token-interceptor';
+import { AcceptEmailComponent } from '../accept-email/accept-email.component';
 
 @Component({
   selector: 'app-edit-child-profile',
@@ -24,14 +25,14 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   childObj: any;
   fromEdit:boolean =false;
   langList = ['English', 'Hindi', 'Marathi', 'Tamil', 'Telugu', 'Oriya', 'Gujarati', 'Kannada', 'Malayalam', 'Bangla', 'Assamese',]
-  languageForm: FormGroup;
+  languageForm: UntypedFormGroup;
   irtTypeCapability = [];
-  itrTypeForm: FormGroup;
+  itrTypeForm: UntypedFormGroup;
   itrPlanList: any;
   lang=[];
   skillSetPlanIdList=[]
   smeDetails: any;
-  inactivityTimeForm: FormGroup;
+  inactivityTimeForm: UntypedFormGroup;
   inactivityTimeDuration = [
     { key: "15 Min", checked: false, value: 15 },
     { key: "30 Min", checked: false, value: 30 },
@@ -57,9 +58,11 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   isReadOnly : boolean =false;
   loggedInSmeInfo :any;
   maxNumber:number;
+  disableButton: Boolean = false;
+  emailAccepted ='';
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private matDialog: MatDialog,
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
@@ -105,7 +108,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   initLanguageForm() {
     const formControls = {};
     this.langList.forEach(lang => {
-      formControls[lang] = new FormControl(false);
+      formControls[lang] = new UntypedFormControl(false);
     });
     this.languageForm = this.fb.group(formControls);
   }
@@ -113,7 +116,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   initItrTypeForm() {
     const formControls = {};
     this.irtTypeCapability.forEach(itrType => {
-      formControls[itrType] = new FormControl(false);
+      formControls[itrType] = new UntypedFormControl(false);
     });
     this.itrTypeForm = this.fb.group(formControls);
   }
@@ -121,119 +124,123 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   initInactivityTimeForm() {
     const formControls = {};
     this.inactivityTimeDuration.forEach(duration => {
-      formControls[duration.key] = new FormControl(duration.checked);
+      formControls[duration.key] = new UntypedFormControl(duration.checked);
     });
     this.inactivityTimeForm = this.fb.group(formControls);
   }
 
-  smeFormGroup: FormGroup = this.fb.group({
-    mobileNumber: new FormControl(''),
-    name: new FormControl(''),
-    smeOriginalEmail: new FormControl(''),
-    languages: new FormControl(''),
-    callingNumber:new FormControl(''),
-    qualification:new FormControl(''),
-    pinCode:new FormControl('',Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])),
-    state:new FormControl(''),
-    city:new FormControl(''),
-    filerAssistant:new FormControl(true),
-    internal:new FormControl(''),
-    external:new FormControl(true),
-    activeCaseMaxCapacity:new FormControl(),
-    parentName:new FormControl(),
-    smeOfficialEmail:new FormControl(),
-    email:new FormControl(),
-    principalName:new FormControl(),
-    itr: new FormControl(''),
-    itrToggle: new FormControl(''),
-    middleName:new FormControl('')
+  smeFormGroup: UntypedFormGroup = this.fb.group({
+    mobileNumber: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
+    smeOriginalEmail: new UntypedFormControl(''),
+    languages: new UntypedFormControl(''),
+    callingNumber:new UntypedFormControl(''),
+    qualification:new UntypedFormControl(''),
+    pinCode:new UntypedFormControl('',Validators.compose([Validators.minLength(6), Validators.maxLength(6), Validators.pattern(AppConstants.PINCode)])),
+    state:new UntypedFormControl(''),
+    city:new UntypedFormControl(''),
+    filerAssistant:new UntypedFormControl(true),
+    internal:new UntypedFormControl(''),
+    external:new UntypedFormControl(true),
+    activeCaseMaxCapacity:new UntypedFormControl(),
+    parentName:new UntypedFormControl(),
+    smeOfficialEmail:new UntypedFormControl(),
+    email:new UntypedFormControl(),
+    principalName:new UntypedFormControl(),
+    itr: new UntypedFormControl(''),
+    itrToggle: new UntypedFormControl(''),
+    middleName:new UntypedFormControl('')
   })
 
   get mobileNumber() {
-    return this.smeFormGroup.controls['mobileNumber'] as FormControl;
+    return this.smeFormGroup.controls['mobileNumber'] as UntypedFormControl;
   }
 
   get name() {
-    return this.smeFormGroup.controls['name'] as FormControl;
+    return this.smeFormGroup.controls['name'] as UntypedFormControl;
   }
   get smeOriginalEmail() {
-    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
+    return this.smeFormGroup.controls['smeOriginalEmail'] as UntypedFormControl;
   }
 
   get qualification() {
-    return this.smeFormGroup.controls['qualification'] as FormControl;
+    return this.smeFormGroup.controls['qualification'] as UntypedFormControl;
   }
   get state() {
-    return this.smeFormGroup.controls['state'] as FormControl;
+    return this.smeFormGroup.controls['state'] as UntypedFormControl;
   }
 
   get callingNumber() {
-    return this.smeFormGroup.controls['callingNumber'] as FormControl;
+    return this.smeFormGroup.controls['callingNumber'] as UntypedFormControl;
   }
   get pinCode(){
-    return this.smeFormGroup.controls['pinCode'] as FormControl;
+    return this.smeFormGroup.controls['pinCode'] as UntypedFormControl;
   }
   get city(){
-    return this.smeFormGroup.controls['city'] as FormControl;
+    return this.smeFormGroup.controls['city'] as UntypedFormControl;
   }
   get filerAssistant(){
-    return this.smeFormGroup.controls['filerAssistant'] as FormControl;
+    return this.smeFormGroup.controls['filerAssistant'] as UntypedFormControl;
   }
   get internal() {
-    return this.smeFormGroup.controls['internal'] as FormControl
+    return this.smeFormGroup.controls['internal'] as UntypedFormControl
   }
   get external() {
-    return this.smeFormGroup.controls['external'] as FormControl
+    return this.smeFormGroup.controls['external'] as UntypedFormControl
   }
   get activeCaseMaxCapacity() {
-    return this.smeFormGroup.controls['activeCaseMaxCapacity'] as FormControl
+    return this.smeFormGroup.controls['activeCaseMaxCapacity'] as UntypedFormControl
   }
   get parentName() {
-    return this.smeFormGroup.controls['parentName'] as FormControl
+    return this.smeFormGroup.controls['parentName'] as UntypedFormControl
   }
   get smeOfficialEmail() {
-    return this.smeFormGroup.controls['smeOfficialEmail'] as FormControl
+    return this.smeFormGroup.controls['smeOfficialEmail'] as UntypedFormControl
   }
   get email() {
-    return this.smeFormGroup.controls['email'] as FormControl
+    return this.smeFormGroup.controls['email'] as UntypedFormControl
   }
   get principalName() {
-    return this.smeFormGroup.controls['principalName'] as FormControl
+    return this.smeFormGroup.controls['principalName'] as UntypedFormControl
   }
 
   get itr() {
-    return this.smeFormGroup.controls['itr'] as FormControl
+    return this.smeFormGroup.controls['itr'] as UntypedFormControl
   }
 
   get itrToggle() {
-    return this.smeFormGroup.controls['itrToggle'] as FormControl
+    return this.smeFormGroup.controls['itrToggle'] as UntypedFormControl
   }
   get middleName() {
-    return this.smeFormGroup.controls['middleName'] as FormControl
+    return this.smeFormGroup.controls['middleName'] as UntypedFormControl
   }
 
-  loginFormGroup: FormGroup = this.fb.group({
-    firstName:new FormControl(''),
-    lastName:new FormControl(''),
-    emailAddress:new FormControl(''),
+  loginFormGroup: UntypedFormGroup = this.fb.group({
+    firstName:new UntypedFormControl(''),
+    lastName:new UntypedFormControl(''),
+    emailAddress:new UntypedFormControl(''),
   })
 
   get firstName() {
-    return this.loginFormGroup.controls['firstName'] as FormControl
+    return this.loginFormGroup.controls['firstName'] as UntypedFormControl
   }
   get lastName() {
-    return this.loginFormGroup.controls['lastName'] as FormControl
+    return this.loginFormGroup.controls['lastName'] as UntypedFormControl
   }
   get emailAddress() {
-    return this.loginFormGroup.controls['emailAddress'] as FormControl
+    return this.loginFormGroup.controls['emailAddress'] as UntypedFormControl
   }
 
-  otpFormGroup :FormGroup = this.fb.group({
-    otp:new FormControl(''),
+  otpFormGroup :UntypedFormGroup = this.fb.group({
+    otp:new UntypedFormControl(''),
   })
 
   get otp() {
-    return this.otpFormGroup.controls['otp'] as FormControl
+    return this.otpFormGroup.controls['otp'] as UntypedFormControl
+  }
+
+  trimValue(controlName) {
+    controlName.setValue(controlName.value.trim());
   }
 
   getCityData() {
@@ -254,7 +261,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   }
 
 
-  serviceUpdated(serviceType, service: FormControl) {
+  serviceUpdated(serviceType, service: UntypedFormControl) {
     if (service.value) {
       if (!this.childObj.data[serviceType]) {
         this.childObj.data[serviceType] = {
@@ -270,7 +277,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  assignmentUpdated(assignment: FormControl) {
+  assignmentUpdated(assignment: UntypedFormControl) {
     if(this.childObj){
       this.childObj.data['assignmentOffByLeader'] = !assignment.value;
     }
@@ -303,7 +310,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       let timeDuration = [{ key: "15 Min", value: 15 }, { key: "30 Min", value: 30 }, { key: "45 Min", value: 45 }, { key: "60 Min", value: 60 },]
       timeDuration.forEach(item => {
         if (item.value === this.childObj?.data['inactivityTimeInMinutes'])
-          this.inactivityTimeForm.setControl(item.key, new FormControl(true));
+          this.inactivityTimeForm.setControl(item.key, new UntypedFormControl(true));
       });
     }
     let allSmeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -330,12 +337,12 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     }
   }
 
-  getLanguageControl(lang: string): FormControl {
-    return this.languageForm.get(lang) as FormControl;
+  getLanguageControl(lang: string): UntypedFormControl {
+    return this.languageForm.get(lang) as UntypedFormControl;
   }
 
-  getItrTypeControl(itrType: string): FormControl {
-    return this.itrTypeForm.get(itrType) as FormControl;
+  getItrTypeControl(itrType: string): UntypedFormControl {
+    return this.itrTypeForm.get(itrType) as UntypedFormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
@@ -385,7 +392,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
             if (element.planId === item) {
               this.irtTypeCapability.push(element.name);
               this.irtTypeCapability.forEach((itrType) => {
-                this.itrTypeForm.addControl(itrType, new FormControl(false));
+                this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
               })
             }
           });
@@ -450,15 +457,15 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
         this.childObj?.data['skillSetPlanIdList'].forEach(element => {
           if (item.planId === element) {
             const name = item.name;
-            this.itrTypeForm.setControl(name, new FormControl(true));
+            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
           }
         })
       })
     }
   }
 
-  getDurationControl(duration: string): FormControl {
-    return this.inactivityTimeForm.get(duration) as FormControl;
+  getDurationControl(duration: string): UntypedFormControl {
+    return this.inactivityTimeForm.get(duration) as UntypedFormControl;
   }
   checkedDuration:any;
   onDurationCheckboxChange(event: any, selectedDuration: string) {
@@ -571,6 +578,53 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       })
     }
 
+  }
+
+  resendOTP(sentOn: string) {
+    let param = `otp/mail?mobileNumber=${this.mobileNumber.value}`;
+    if (this.otpMode === 'SIGN_UP' && sentOn === 'EMAIL') {
+      param = `${param}&email=${this.emailAddress.value}`;
+    } else if (this.utilsService.isNonEmpty(this.emailAccepted)) {
+      param = `${param}&email=${this.emailAccepted}`;
+    }
+    const url = `${environment.url}/user/${param}`;
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`,
+        'X-Skip-Interceptor': 'true'
+      });
+      this.loading=true;
+      this.http.get(url, { headers }).subscribe(
+        (response:any) => {
+          console.log('Email sent result on sign in:', response);
+          this.loading=false;
+          if (response['error'] === 'email not found') {
+            const dialogRef = this.matDialog.open(AcceptEmailComponent, {
+              width: '40%',
+              closeOnNavigation: true,
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+              if (this.utilsService.isNonEmpty(result)) {
+                this.emailAccepted = result;
+                this.resendOTP('EMAIL');
+              }
+              console.log('The dialog was closed', result);
+            });
+
+            return;
+          }
+
+          Auth.signIn(`+91${this.mobileNumber.value}`).then(signInRes => {
+            this.signUpData = signInRes;
+            console.log('Sign In Result After Resend OTP email:', signInRes);
+          }).catch(signInErr => {
+            console.error('Sign In err After Resend OTP:', signInErr);
+          });
+        }, error => {
+          console.log('Error while sending email otp:', error);
+        });
   }
 
   createSignInObj() {
@@ -749,6 +803,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
   updateSmeDetails(){
     //'https://uat-api.taxbuddy.com/user/v2/assistant-details' \
+    this.markFormGroupTouched(this.smeFormGroup);
     if(this.smeFormGroup.valid){
 
       // let reqBody = this.partnerInfo;
@@ -836,6 +891,15 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       this._toastMessageService.alert('error', 'Please fill in all required details correctly.');
     }
 
+  }
+
+  markFormGroupTouched(formGroup: UntypedFormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof UntypedFormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   ngOnDestroy() {

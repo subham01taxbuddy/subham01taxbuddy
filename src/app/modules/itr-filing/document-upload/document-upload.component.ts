@@ -7,12 +7,9 @@ import {
   MatTreeFlattener
 } from '@angular/material/tree';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Node for to-do item
@@ -38,6 +35,20 @@ const TREE_DATA: FoodNode[] = [
   {
     item: 'Common',
     value: 'Common',
+  },
+  {
+    item: 'ITRU',
+    value: 'ITRU',
+    children: [
+      {
+          "item" : "2022-23",
+          "value" : "2022-23"
+      },
+      {
+          "item" : "2021-22",
+          "value" : "2021-22"
+      }
+    ]
   },
   {
     item: 'ITR',
@@ -147,6 +158,32 @@ const TREE_DATA: FoodNode[] = [
           }
         ]
       },
+      {
+        item: '2023-2024',
+        value: '2023-24',
+        children: [
+          {
+            item: 'Original',
+            value: 'Original',
+            children: [
+              {
+                item: 'ITR Filing Docs',
+                value: 'ITR Filing Docs'
+              }
+            ]
+          },
+          {
+            item: 'Revised',
+            value: 'Revised',
+            children: [
+              {
+                item: 'ITR Filing Docs',
+                value: 'ITR Filing Docs'
+              }
+            ]
+          }
+        ]
+      },
     ]
   },
   {
@@ -168,6 +205,10 @@ const TREE_DATA: FoodNode[] = [
       {
         item: '2022-2023',
         value: '2022-23',
+      },
+      {
+        item: '2023-2024',
+        value: '2023-24',
       },
     ]
   },
@@ -2215,6 +2256,516 @@ const TREE_DATA: FoodNode[] = [
           },
         ]
       },
+      {
+        item: '2023-2024',
+        value: '2023-24',
+        children: [
+          {
+            item: 'January',
+            value: 'Jan',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'February',
+            value: 'Feb',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'March',
+            value: 'Mar',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'April',
+            value: 'Apr',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'May',
+            value: 'May',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'June',
+            value: 'Jun',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'July',
+            value: 'July',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'August',
+            value: 'Aug',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'September',
+            value: 'Sep',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'October',
+            value: 'Oct',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'November',
+            value: 'Nov',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+          {
+            item: 'December',
+            value: 'Dec',
+            children: [
+              {
+                item: 'Invoice',
+                value: 'Invoice',
+                children: [
+                  {
+                    item: 'Sales',
+                    value: 'Sales',
+                  },
+                  {
+                    item: 'Purchase',
+                    value: 'Purchase',
+                  },
+                  {
+                    item: 'Debit Note',
+                    value: 'Debit Note',
+                  },
+                  {
+                    item: 'Credit Note',
+                    value: 'Credit Note',
+                  },
+                ]
+              },
+              {
+                item: 'Report',
+                value: 'Report',
+                children: [
+                  {
+                    item: 'CSV Files',
+                    value: 'CSV Files',
+                  }
+                ]
+              },
+              {
+                item: 'Document',
+                value: 'Document',
+              }
+            ]
+          },
+        ]
+      },
     ]
   },
   {
@@ -2236,6 +2787,10 @@ const TREE_DATA: FoodNode[] = [
       {
         item: '2022-2023',
         value: '2022-23',
+      },
+      {
+        item: '2023-2024',
+        value: '2023-24',
       },
     ]
   },
@@ -2330,13 +2885,21 @@ export class DocumentUploadComponent implements OnInit {
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<CloudFlatNode>(true /* multiple */);
+  serviceType: any;
 
   /// Filtering
-  // myControl = new FormControl();
+  // myControl = new UntypedFormControl();
   // options: string[] = ['One', 'Two', 'Three'];
   // filteredOptions: Observable<string[]>;
 
-  constructor(private _database: ChecklistDatabase, private userMsService: UserMsService, private utilsService: UtilsService) {
+  constructor(private _database: ChecklistDatabase,
+    private userMsService: UserMsService,
+    private utilsService: UtilsService,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    if (this.activatedRoute.snapshot.queryParams['serviceType']) {
+      this.serviceType = this.activatedRoute.snapshot.queryParams['serviceType'];
+    }
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,
@@ -2359,17 +2922,17 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDoc: any;
   docType: any = [
-    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' },
+    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' ,newTree : 'ITRU' },
     { value: 'AADHAAR_FRONT', label: 'Aadhar front', tree: 'Common' },
     { value: 'AADHAAR_BACK', label: 'Aadhar back', tree: 'Common' },
     { value: 'PAN', label: 'Pan card', tree: 'Common' },
-    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR' },
-    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR' },
-    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR' },
-    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR' },
-    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' },
-    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' },
-    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' },
+    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR',newTree : 'ITRU' },
+    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' ,newTree : 'ITRU'},
+    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' ,newTree : 'ITRU'},
+    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' ,newTree : 'ITRU'},
     /* { value: null, label: 'Miscellaneous' } */];
   isPassProtected!: boolean;
   filePassword: any;
@@ -2632,6 +3195,7 @@ export class DocumentUploadComponent implements OnInit {
     const formData = new FormData();
     formData.append("file", document);
     formData.append("cloudFileMetaData", cloudFileMetaData);
+    formData.append("serviceType", this.serviceType);
     console.log("formData ===> ", formData);
     let param = '/itr/cloud/upload'
     this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {

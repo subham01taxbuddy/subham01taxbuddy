@@ -1,6 +1,6 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
-import {ITR_JSON, Jurisdictions} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {FormGroup, Validators, FormBuilder, ValidationErrors} from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormBuilder, ValidationErrors } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -39,7 +39,7 @@ import { PrefillDataComponent } from '../../pages/prefill-id/components/prefill-
 import * as moment from 'moment';
 import { PersonalInformationComponent } from '../personal-information/personal-information.component';
 import { RequestManager } from '../../../../shared/services/request-manager';
-import {NorDetailsDialogComponent} from "../../../components/nor-details-dialog/nor-details-dialog.component";
+import { NorDetailsDialogComponent } from "../../../components/nor-details-dialog/nor-details-dialog.component";
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -86,9 +86,9 @@ export class CustomerProfileComponent implements OnInit {
   @Input() navigationData: any;
   loading: boolean = false;
   imageLoader: boolean = false;
-  customerProfileForm: FormGroup;
+  customerProfileForm: UntypedFormGroup;
   statusId: any;
-  // fillingStatus = new FormControl('', Validators.required);
+  // fillingStatus = new UntypedFormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
   viewer = 'DOC';
   docUrl = '';
@@ -155,7 +155,7 @@ export class CustomerProfileComponent implements OnInit {
   @Output() customerProfileSaved = new EventEmitter<boolean>();
 
   constructor(
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public httpClient: HttpClient,
     private titlecasePipe: TitleCasePipe,
@@ -253,63 +253,17 @@ export class CustomerProfileComponent implements OnInit {
   charRegex = AppConstants.charRegex;
   createCustomerProfileForm() {
     return this.fb.group({
-      firstName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
-      middleName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
-      lastName: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.charRegex),
-        ]),
-      ],
-      fatherName: [
-        '',
-        Validators.compose([Validators.pattern(AppConstants.charRegex)]),
-      ],
+      firstName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
+      middleName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
+      lastName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex),]),],
+      fatherName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
       dateOfBirth: ['', Validators.required],
       gender: [''],
-      contactNumber: [
-        '',
-        Validators.compose([
-          Validators.minLength(10),
-          Validators.maxLength(10),
-          Validators.required,
-        ]),
-      ],
-      email: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.emailRegex),
-        ]),
-      ],
-      panNumber: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.panNumberRegex),
-        ]),
-      ],
-      aadharNumber: [
-        '',
-        Validators.compose([
-          Validators.minLength(12),
-          Validators.maxLength(12),
-        ]),
-      ],
-      aadhaarEnrolmentId: [
-        '',
-        Validators.compose([
-          Validators.minLength(14),
-          Validators.maxLength(14),
-        ]),
-      ],
+      contactNumber: ['', Validators.compose([Validators.minLength(10), Validators.maxLength(10), Validators.required,]),],
+      email: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.emailRegex),]),],
+      panNumber: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.panNumberRegex),]),],
+      aadharNumber: ['', Validators.compose([Validators.minLength(12), Validators.maxLength(12),]),],
+      aadhaarEnrolmentId: ['', Validators.compose([Validators.minLength(14), Validators.maxLength(14),]),],
       assesseeType: ['', Validators.required],
       residentialStatus: ['RESIDENT', Validators.required],
       employerCategory: ['', Validators.required],
@@ -475,7 +429,7 @@ export class CustomerProfileComponent implements OnInit {
 
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
 
-      if(this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT'){
+      if (this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT') {
         this.ITR_JSON.jurisdictions = this.jurisdictions;
         this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
         this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
@@ -547,7 +501,7 @@ export class CustomerProfileComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn');
 
-      if(gender?.status === 'INVALID'){
+      if (gender?.status === 'INVALID') {
         gender?.setValidators(Validators.required);
         gender?.updateValueAndValidity();
       } else {
@@ -574,10 +528,18 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  openAccordion(){
-    const accordionButton = document.getElementsByClassName('accordion-button');
-    if(accordionButton){
-     ( accordionButton[0] as HTMLDivElement).click();
+  openAccordion() {
+    // const accordionButton = document.getElementsByClassName('accordion-button');
+    // if (accordionButton) {
+    //   (accordionButton[0] as HTMLDivElement).click();
+    // }
+
+    const accord = document.getElementById('accordBtn');
+    if(accord){
+      if (accord.getAttribute("aria-expanded") === "false"){
+        accord.click();
+      }
+
     }
   }
 
@@ -876,11 +838,11 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   uploadDoc: any;
+  //This method call not in used
   uploadDocument(document) {
     this.loading = true;
-    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${
-      document.name
-    }`;
+    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${document.name
+      }`;
     let cloudFileMetaData =
       '{"fileName":"' +
       document.name +
@@ -974,7 +936,7 @@ export class CustomerProfileComponent implements OnInit {
           this.conditionsNorStatus = result.data.conditionsNorStatus;
         } else {
           this.customerProfileForm.controls['residentialStatus'].setValue(
-              this.ITR_JSON.residentialStatus
+            this.ITR_JSON.residentialStatus
           );
         }
       });
@@ -991,11 +953,10 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   getFilePath() {
-    return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${
-      this.customerProfileForm.controls['isRevised'].value === 'Y'
-        ? 'Revised'
-        : 'Original'
-    }/ITR Filing Docs`;
+    return `ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/${this.customerProfileForm.controls['isRevised'].value === 'Y'
+      ? 'Revised'
+      : 'Original'
+      }/ITR Filing Docs`;
   }
 
   addClient() {

@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -66,17 +66,26 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    status: new FormControl(''),
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    txbdyInvoiceId: new FormControl(''),
-    name: new FormControl(''),
+  financialYear = [
+    {
+      assessmentYear: "2025-2026",
+      financialYear: "2024-2025"
+    },
+    {
+      assessmentYear: "2024-2025",
+      financialYear: "2023-2024"
+    }];
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
+    startDate: new UntypedFormControl('', [Validators.required]),
+    endDate: new UntypedFormControl('', [Validators.required]),
+    status: new UntypedFormControl(''),
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    txbdyInvoiceId: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
   });
-  minStartDate: string = '2023-04-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -135,7 +144,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   constructor(
     private reviewService: ReviewService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public datePipe: DatePipe,
     private utilService: UtilsService,
     private reportService: ReportService,
@@ -150,7 +159,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   ) {
     // this.getAgentList();
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.minEndDate = this.invoiceFormGroup.controls['startDate'].value;
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
@@ -221,6 +230,23 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  updateDates() {
+    if (this.assessmentYear.value === this.financialYear[0].financialYear) {
+      //current year
+      this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
+      this.startDate.setValue(this.minStartDate);
+      this.endDate.setValue(moment());
+    } else {
+      this.minStartDate = moment('2023-04-01').toDate();
+      this.startDate.setValue(this.minStartDate);
+      this.minStartDate = moment.min(moment(), moment('2023-04-01')).toDate();
+      this.maxStartDate = moment.min(moment(), moment('2024-03-31')).toDate();
+      this.minEndDate = this.minStartDate.toDateString();
+      this.maxEndDate = this.maxStartDate;
+      this.endDate.setValue(this.maxEndDate)
+    }
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {
@@ -299,30 +325,30 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
 
   get assessmentYear() {
-    return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
+    return this.invoiceFormGroup.controls['assessmentYear'] as UntypedFormControl;
   }
   get startDate() {
-    return this.invoiceFormGroup.controls['startDate'] as FormControl;
+    return this.invoiceFormGroup.controls['startDate'] as UntypedFormControl;
   }
   get endDate() {
-    return this.invoiceFormGroup.controls['endDate'] as FormControl;
+    return this.invoiceFormGroup.controls['endDate'] as UntypedFormControl;
   }
   get status() {
-    return this.invoiceFormGroup.controls['status'] as FormControl;
+    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
   }
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as FormControl;
+    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
   }
 
   get txbdyInvoiceId() {
-    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as FormControl;
+    return this.invoiceFormGroup.controls['txbdyInvoiceId'] as UntypedFormControl;
   }
   get name() {
-    return this.invoiceFormGroup.controls['name'] as FormControl;
+    return this.invoiceFormGroup.controls['name'] as UntypedFormControl;
   }
 
 
@@ -493,6 +519,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         total: userInvoices[i].total,
         paymentLink: userInvoices[i].paymentLink,
         leaderName: userInvoices[i].leaderName,
+        subscriptionAdjustedAmount: userInvoices[i]?.subscriptionAdjustedAmount ? userInvoices[i]?.subscriptionAdjustedAmount : 0
       });
       invoices.push(updateInvoice);
     }
@@ -727,6 +754,13 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         headerName: 'Payable Amount',
         field: 'total',
         width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Adjusted subscription amount',
+        field: 'subscriptionAdjustedAmount',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
@@ -1104,14 +1138,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
             }
           );
         }
-      },(error) => {
-        this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilService.showSnackBar(error.error.error);
-        this.getInvoice();
-      } else {
-        this.utilService.showSnackBar("An unexpected error occurred.");
-      }
+      }, (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilService.showSnackBar(error.error.error);
+          this.getInvoice();
+        } else {
+          this.utilService.showSnackBar("An unexpected error occurred.");
+        }
       }
     );
   }
@@ -1138,15 +1172,15 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           console.log('The dialog was closed');
         });
       }
-    },(error) => {
-      this.loading=false;
+    }, (error) => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilService.showSnackBar(error.error.error);
         this.getInvoice();
       } else {
         this.utilService.showSnackBar("An unexpected error occurred.");
       }
-      }
+    }
     );
 
   }

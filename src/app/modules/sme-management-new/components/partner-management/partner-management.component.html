@@ -207,9 +207,9 @@
                 <b style="font-size: 18px">Additional ID's Required?</b>
                 <div class="row col-8">
                   <section class="example-section add-id">
-                    <mat-radio-group [formControl]="additionalIdsRequired" readonly [disabled]="true"  (change)="onAdditionalIdsRequiredChange()" >
-                      <mat-radio-button [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-group [disabled]="true" [formControl]="additionalIdsRequired" readonly   (change)="onAdditionalIdsRequiredChange()" >
+                      <mat-radio-button [disabled]="true" [value]="true">Yes</mat-radio-button>
+                      <mat-radio-button [disabled]="true" [value]="false">No</mat-radio-button>
                     </mat-radio-group>
                   </section>
                 </div>
@@ -235,7 +235,7 @@
             <span class="header-text-1">Expertise & Availability</span>
           </div>
         </div>
-        <div class="user-data-container">
+        <div class="user-data-container" [ngClass]="{ 'disabled': isDisabled }">
           <div class="row">
             <div class="col-sm-3">
               <div class="card" style="margin-top: 10px;">
@@ -244,7 +244,7 @@
                   <section class="example-section">
                     <div *ngFor="let lang of langList" class="lang-checkbox">
                       <p>
-                        <mat-checkbox [disabled]="true" [formControl]="getLanguageControl(lang)"
+                        <mat-checkbox [disabled]="isDisabled" [formControl]="getLanguageControl(lang)"
                           (change)="onLanguageCheckboxChange(lang)">
                           <span class="spacer">{{ lang }}</span></mat-checkbox>
                       </p>
@@ -260,7 +260,7 @@
                   <section class="example-section">
                     <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
                       <p>
-                        <mat-checkbox [disabled]="true" [formControl]="getItrTypeControl(itrType)"
+                        <mat-checkbox [disabled]="isDisabled"  [formControl]="getItrTypeControl(itrType)"
                           (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
                             }}</span></mat-checkbox>
                       </p>

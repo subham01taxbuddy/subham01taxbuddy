@@ -37,28 +37,28 @@
 
         <hr />
 
-        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()">
-          <div class="card__row flex flex-col">
+        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()" >
+          <div class="card__row flex flex-col" *ngIf="!this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)">
             <div class="card__col-xs-12 question-label" style="margin-bottom: 10px; background: #eaeaea">
               <strong> Tax Regime Selection </strong>
               <mat-label> Select the best suited Tax Regime </mat-label>
             </div>
 
             <div formGroupName="optionForCurrentAY" *ngIf="
-                this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '2'
+                this.ITR_JSON.itrType === '1' || this.ITR_JSON.itrType === '4' || this.ITR_JSON.itrType === '2'
               ">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
-                  1. Are you opting for New Tax Regime?
+                  1. Do you wish to exercise the option u/s 115 BAC(6) of Opting out of New tax regime ?
                 </div>
                 <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime">
-                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before"
-                      [disabled]="!allowNewRegime">
-                      Yes
+                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
+                                   (change)="updateCurrentAYOptions()">
+                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before">
+                      No
                     </mat-radio-button>
                     <mat-radio-button [value]="'OLD'" labelPosition="before">
-                      No
+                      Yes
                     </mat-radio-button>
                   </mat-radio-group>
 
@@ -71,12 +71,10 @@
                   </mat-error>
                 </div>
               </div>
-              <hr />
+<!--              <hr />-->
             </div>
 
-            <div formGroupName="everOptedNewRegime" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              ">
+            <div formGroupName="everOptedNewRegime" *ngIf="false">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   1. Have you ever opted for New Regimes in earlier Years
@@ -172,9 +170,7 @@
               <hr />
             </div>
 
-            <div formGroupName="everOptedOutOfNewRegime" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              ">
+            <div formGroupName="everOptedOutOfNewRegime" *ngIf="false">
               <div class="card__row">
                 <div class="card__col-xs-9 question-label">
                   2. Have you ever opted out of New Regime in earlier Years
@@ -273,33 +269,8 @@
               <hr />
             </div>
 
-            <div formGroupName="optionForCurrentAY" *ngIf="
-                this.ITR_JSON.itrType === '3' || this.ITR_JSON.itrType === '4'
-              ">
-              <div class="card__row">
-                <div class="card__col-xs-9 question-label">
-                  3. Option for current Assessment year
-                </div>
-                <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
-                  <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
-                    (change)="updateCurrentAYOptions()">
-                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before"
-                      [disabled]="dueDateOver">{{ newRegimeLabel }}
-                    </mat-radio-button>
-                    <mat-radio-button [value]="'OLD'" labelPosition="before">{{
-                      oldRegimeLabel
-                      }}</mat-radio-button>
-                  </mat-radio-group>
-                  <mat-error *ngIf="
-                      regimeSelectionForm.controls['optionForCurrentAY']
-                        .get('currentYearRegime')
-                        .hasError('required') && submitted
-                    ">
-                    Please select an option to continue
-                  </mat-error>
-                </div>
-              </div>
-              <div class="card__row" *ngIf="showCurrentAYOptions">
+            <div formGroupName="optionForCurrentAY">
+              <div class="card__row" *ngIf="this.ITR_JSON.itrType === '4' && showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
@@ -310,11 +281,8 @@
                       placeholder="Acknowledgement Number" digitsOnly
                       onkeypress=" event.charCode >= 48 && event.charCode <= 57" autocomplete="off" />
 
-                    <mat-error *ngIf="
-                        this.ITR_JSON.itrType === '3' ||
-                        this.ITR_JSON.itrType === '4' ||
-                        showCurrentAYOptions
-                      ">
+                    <mat-error *ngIf="this.ITR_JSON.itrType === '4' ||
+                        showCurrentAYOptions">
                       This field is required
                     </mat-error>
                     <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->

@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import {
   Component,
   Inject,
@@ -46,8 +46,8 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     },
   ];
   // userId: number;
-  noteDetails = new FormControl('', Validators.required);
-  serviceType = new FormControl('', Validators.required);
+  noteDetails = new UntypedFormControl('', Validators.required);
+  serviceType = new UntypedFormControl('', Validators.required);
   loggedInUserRoles: any;
 
   dataSource = new MatTableDataSource<any>(this.notes);

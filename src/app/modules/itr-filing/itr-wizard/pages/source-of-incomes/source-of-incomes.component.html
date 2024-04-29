@@ -1,56 +1,42 @@
-<div
-  class="mx-auto text-gray-900 font-normal grid grid-rows-[auto,1fr] scrollbar-hide"
-  id="layout"
->
+<div class="mx-auto text-gray-900 font-normal grid grid-rows-[auto,1fr] scrollbar-hide" id="layout">
   <!-- main-body  -->
-  <div
-    class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pb-[28px] h-screen"
-  >
+  <div class="overflow-x-scroll scrollbar-hide flex flex-col justify-between pb-[28px] h-screen">
     <div class="box-background rounded-2x1">
       <!-- sourcesOfIncome-content  -->
       <div class="txHd alTxH">
         Select at least 1 sources of income:
       </div>
-      <div
-        class="flex items-center justify-between align-center p-[25px] mt-[25px]"
-      >
+      <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
         <div class="sources-back">
           <!-- sources-of-income options  -->
-          <mat-chip-list
-            class="sources-chip"
-            multiple
-            (change)="sourcesUpdated($event)"
-          >
-            <mat-chip
-              disableRipple
-              *ngFor="let source of sourcesList"
-              (click)="sourcesUpdated(source)"
-              [selected]="source.selected"
-            >
+<!--          <mat-chip-listbox class="sources-chip" multiple (change)="sourcesUpdated($event)">-->
+<!--            <mat-chip-option disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"-->
+<!--              selected="source.selected">-->
 
-              {{ source.name }}
+<!--              {{ source.name }}-->
 
-              <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
-              <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
-            </mat-chip>
-          </mat-chip-list>
+<!--              <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="mr-2 fa fa-user-circle-o"-->
+<!--                aria-hidden="true" data-action-type="updateStatus"></i>-->
+<!--              <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o"-->
+<!--                aria-hidden="true" data-action-type="updateStatus"></i>-->
+<!--            </mat-chip-option>-->
+<!--          </mat-chip-listbox>-->
         </div>
       </div>
       <div>
-        <div class="card__col-xs-12 card__col-sm-5 txHd alTxH"
-             *ngIf="ITR_JSON?.prefillDate !== null"
-             style="font-size: 12px"
-        >
+        <div class="card__col-xs-12 card__col-sm-5 txHd alTxH" *ngIf="ITR_JSON?.prefillDate !== null"
+          style="font-size: 12px">
           <!--  -->
           Prefill last
           {{
           this.ITR_JSON?.prefillDataSource === "UPLOAD"
-            ? "uploaded"
-            : "generated"
+          ? "uploaded"
+          : "generated"
           }}
           on {{ this.ITR_JSON?.prefillDate | date }}
         </div>
-        <div *ngIf="eriClientValidUpto" class="card__col-xs-12 card__col-sm-5 txHd alTxH" style="font-size: 12px; text-align: right">
+        <div *ngIf="eriClientValidUpto" class="card__col-xs-12 card__col-sm-5 txHd alTxH"
+          style="font-size: 12px; text-align: right">
           Client added, valid upto
           {{ eriClientValidUpto | date }}
         </div>

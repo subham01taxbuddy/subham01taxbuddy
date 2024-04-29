@@ -78,7 +78,7 @@
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" trim
                 [formControl]="callingNumber" class="input-field" />
-              <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
+              <mat-error class=""> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
                   enter mobile no.</span>
                 <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('pattern')">Please enter valid mobile
                   no.</span>
@@ -144,7 +144,7 @@
                 <input type="text" matInput (blur)="trimValue(smeFormGroup.controls['gstin']);checkGstin()"
                   (change)="changeToUpper(smeFormGroup.controls['gstin'])" placeholder="GSTN" [formControl]="gstin"
                   class="input-field" trim [disabled]="smeFormGroup.controls['gstin'].value" />
-                <mat-error class="mt-3" *ngIf="smeFormGroup.controls['gstin'].invalid">
+                <mat-error class="" *ngIf="smeFormGroup.controls['gstin'].invalid">
                   Enter valid GSTIN</mat-error>
               </mat-form-field>
             </div>
@@ -157,10 +157,10 @@
                       class="input-field" trim [numbersOnly]="true" required maxlength="20" minlength="3"
                       (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])"
                       (change)="updateBankDetailsForm()" />
-                    <mat-error class="mt-3"
+                    <mat-error class=""
                       *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('pattern') || bankDetailsFormGroup.controls['accountNumber'].hasError('minlength') || bankDetailsFormGroup.controls['accountNumber'].hasError('maxlength')">
                       Account number should be 3-20 digits.</mat-error>
-                    <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('required')">
+                    <mat-error class="" *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('required')">
                       Enter Account number</mat-error>
                   </mat-form-field>
                 </div>
@@ -172,10 +172,10 @@
                       (blur)="trimValue(bankDetailsFormGroup.controls['ifsCode'])"
                       (keyup)="changeToUpper(bankDetailsFormGroup.controls['ifsCode'])" formControlName="ifsCode"
                       class="input-field" maxLength="11" trim required (change)="updateBankDetailsForm()" />
-                    <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
+                    <mat-error class="" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
                       valid
                       IFSC.</mat-error>
-                    <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('required')">Enter
+                    <mat-error class="" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('required')">Enter
                       valid
                       IFSC.</mat-error>
                   </mat-form-field>
@@ -190,7 +190,7 @@
                         {{ account.label }}
                       </mat-option>
                     </mat-select>
-                    <mat-error class="mt-3"
+                    <mat-error class=""
                       *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
                       account type</mat-error>
                   </mat-form-field>
@@ -233,8 +233,16 @@
             <div class="col-sm-6">
               <mat-label> No of additional Id's required </mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="Mobile No" [formControl]="additionalIdsCount"
-                  class="input-field" maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
+                <input type="number" [readonly]="isDisabled" matInput placeholder="Additional ID" [formControl]="additionalIdsCount" (change)="onAdditionalIdsCountChange($event)"
+                  class="input-field" max="5" min="1" trim [numbersOnly]="true" />
+                  <mat-error *ngIf="additionalIdsCount.hasError('required')">
+                    Enter No of additional Id's required </mat-error>
+                    <mat-error *ngIf="additionalIdsCount.value === 0 || additionalIdsCount.value > 5">
+                      Number must be between 1 and 5 for additional IDs count .
+                    </mat-error>
+                    <mat-error *ngIf="additionalIdsCount.errors?.['totalCountExceeded']">
+                      The total count of additional IDs ({{ existingCount }} + {{ newCount }} = {{ existingCount + newCount }}) exceeds the limit of 5.
+                    </mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -255,20 +263,21 @@
               </span>
               <div class="row">
                 <section class="example-section" [formGroup]="services">
-                  <p><mat-checkbox [formControl]="itr"
+                  <div><mat-checkbox [formControl]="itr"
                       [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
-                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
+                      (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox>
+                      <mat-slide-toggle class="customToggle"
                       *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
-                  </p>
+                  </div>
                   <hr>
 
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"
                       (change)="serviceUpdated('serviceEligibility_TPA', tpa)" [disabled]="disableTpaService">Tax
                       Planing
                       (TPA)/NPS </mat-checkbox>
-                    <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
                   </p>
@@ -277,7 +286,7 @@
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
                       [disabled]="disableNoticeService"
                       (change)="serviceUpdated('serviceEligibility_NOTICE', notice)">Notice</mat-checkbox>
-                    <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( noticeToggle)"></mat-slide-toggle>
                   </p>
@@ -285,7 +294,7 @@
 
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst" [disabled]="disableGstService"
                       (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
-                    <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
+                    <mat-slide-toggle class="customToggle" *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
                       style="float:right ; margin-right: 10px;"
                       (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
                   </p>
@@ -295,7 +304,7 @@
                   <div *ngIf="false">
                     <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb)">Wealth
                         Builder(WB)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="wb.value" [formControl]="wbToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( wbToggle)"></mat-slide-toggle>
                     </p>
@@ -303,7 +312,7 @@
 
                     <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd)">Portfolio
                         Doctor(PD)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="pd.value" [formControl]="pdToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated(pdToggle)"></mat-slide-toggle>
                     </p>
@@ -311,7 +320,7 @@
 
                     <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf)">Mutual Fund (MF)
                         Advisor</mat-checkbox>
-                      <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle"
+                      <mat-slide-toggle class="customToggle" *ngIf="mf.value" [formControl]="mfToggle"
                         style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( mfToggle)"></mat-slide-toggle>
                     </p>
@@ -371,7 +380,7 @@
             <div class="row" style="margin-top: 10px;">
               <span>
                 <b style="font-size: 16px">Leader Assignment</b>
-                <mat-slide-toggle [formControl]="assignmentToggle" style="margin-left: 25px;"
+                <mat-slide-toggle class="customToggle" [formControl]="assignmentToggle" style="margin-left: 25px;"
                   (change)="laderAssignment( assignmentToggle)"></mat-slide-toggle>
               </span>
               <div class="col-sm-12 mt-3" *ngIf="assignmentToggle.value" [formGroup]="assignmentFormGroup">
@@ -400,11 +409,11 @@
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_ITR"
                         [max]="roundRobinData?.highestRoundRobinLeaderCount_ITR" [readonly]="isReadOnly" />
 
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('required')">This field is required.</mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('min')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('required')">This field is required.</mat-error>
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('min')">
                         Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_ITR }}
                       </mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('max')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('max')">
                         Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_ITR }}
                       </mat-error>
                     </mat-form-field>
@@ -436,11 +445,11 @@
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_TPA"
                         [max]="roundRobinData?.highestRoundRobinLeaderCount_TPA" [readonly]="isReadOnly" />
 
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('required')">This field is required.</mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('min')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('required')">This field is required.</mat-error>
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('min')">
                         Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_TPA }}
                       </mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('max')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('max')">
                         Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_TPA }}
                       </mat-error>
                     </mat-form-field>
@@ -472,11 +481,11 @@
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_NOTICE"
                         [max]="roundRobinData?.highestRoundRobinLeaderCount_NOTICE" [readonly]="isReadOnly" />
 
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('required')">This field is required.</mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('min')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('required')">This field is required.</mat-error>
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('min')">
                         Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_NOTICE }}
                       </mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('max')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('max')">
                         Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_NOTICE }}
                       </mat-error>
                     </mat-form-field>
@@ -508,11 +517,11 @@
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_GST"
                         [max]="roundRobinData?.highestRoundRobinLeaderCount_GST" [readonly]="isReadOnly" />
 
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('required')">This field is required.</mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('min')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('required')">This field is required.</mat-error>
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('min')">
                         Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_GST }}
                       </mat-error>
-                      <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('max')">
+                      <mat-error class="" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('max')">
                         Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_GST }}
                       </mat-error>
                     </mat-form-field>
@@ -628,7 +637,7 @@
               </mat-hint>
               <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
               <mat-datepicker #picker4></mat-datepicker>
-              <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['resigningDate'].hasError">Resignation date
+              <mat-error class=""> <span *ngIf="otherSmeInfo.controls['resigningDate'].hasError">Resignation date
                   should be from joining date to today's date.</span>
               </mat-error>
             </mat-form-field>

@@ -1,7 +1,7 @@
 import { ItrLifecycleDialogComponent } from './../../components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy, } from '@angular/core';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -77,13 +77,18 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: '3,ITR-3', name: 'ITR-3' },
     { value: '4,ITR-4', name: 'ITR-4' },
   ];
-  itrType = new FormControl('');
-  returnType = new FormControl('');
+  itrType = new UntypedFormControl('');
+  returnType = new UntypedFormControl('');
+  isEverified = new UntypedFormControl('');
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
     { value: 'Updated', name: 'Updated' },
   ];
+  isVerified = [
+    { value: 'true', name: 'True' },
+    { value: 'false', name: 'False' },
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -113,7 +118,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     };
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
 
-    if (this.router.getCurrentNavigation().extras.state) {
+    if (this.router.getCurrentNavigation()?.extras?.state) {
       this.searchParams.mobileNumber =
         this.router.getCurrentNavigation().extras.state['mobileNumber'];
       console.log(this.router.getCurrentNavigation().extras.state);
@@ -189,8 +194,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
             AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
             JSON.stringify(this.allFilerList)
           );
-          this.myItrsGridOptions.api.setColumnDefs(
-            this.columnDef(this.allFilerList)
+          this.myItrsGridOptions.api?.setColumnDefs(
+            this.columnDef()
           );
         } else {
           this.allFilerList = [];
@@ -345,7 +350,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
       if (this.utilsService.isNonEmpty(this.returnType.value)) {
         param = param + `&returnType=${this.returnType.value}`;
       }
-
+      if (this.utilsService.isNonEmpty(this.isEverified.value)) {
+        param = param + '&isEverified=' + this.isEverified.value;
+      }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
       this.reportService.getMethod(param).subscribe(
@@ -511,6 +518,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         leaderUserId: data[i].leaderUserId,
         filingSource: data[i].filingSource,
         itrSummaryJson: data[i].itrSummaryJson,
+        itru: data[i].itru,
+        paymentStatus: data[i].paymentStatus,
       });
     }
     return newData;
@@ -521,8 +530,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  columnDef(filerList?) {
-    return [
+  columnDef() {
+    let self = this;
+    let columnDefs: ColDef[] = [
+      // return [
       {
         headerName: 'Client Name',
         sortable: true,
@@ -623,6 +634,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params.data.isRevised === 'Y') {
             return 'Revised';
+          } else if (params.data.isRevised === 'N' && params.data.itru === true) {
+            return 'Updated'
           }
           return 'Original';
         },
@@ -665,7 +678,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.leaderUserId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             ?.filter((item) => {
               return item.userId === createdUserId;
@@ -689,7 +702,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.filingTeamMemberId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             .filter((item) => {
               return item.userId === createdUserId;
@@ -712,7 +725,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let createdUserId = parseInt(params?.data?.filerUserId);
-          let filer1 = filerList;
+          let filer1 = self.allFilerList;
           let filer = filer1
             .filter((item) => {
               return item.userId === createdUserId;
@@ -729,6 +742,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center' },
         sortable: true,
         width: 70,
+      },
+      {
+        headerName: 'Payment Status',
+        field: 'paymentStatus',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        width: 150,
+        valueGetter: function (params) {
+          if (params?.data?.paymentStatus) {
+            return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Actions',
@@ -887,6 +914,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    return columnDefs;
   }
   public onRowClicked(params) {
     if (params.event.target !== undefined) {
@@ -1167,6 +1195,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.utilsService.showSnackBar(
                 'E-Verification status updated successfully'
               );
+              this.selectedPageNo = 0;
               this.myItrsList(this.selectedPageNo);
             } else if (result?.data === 'MANUAL') {
               this.markAsEverified(data);
@@ -1220,6 +1249,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.utilsService.showSnackBar(
           'E-Verification status updated successfully'
         );
+        this.selectedPageNo = 0;
         this.myItrsList(this.selectedPageNo);
       },
       (error) => {
@@ -1243,6 +1273,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       uiAction: 'NotRequired',
       taskStatus: 'Completed',
       assessmentYear: workingItr.assessmentYear,
+      serviceType: workingItr.itru ? 'ITRU' : 'ITR'
     };
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
@@ -1448,6 +1479,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.cacheManager.clearCache();
     this.itrType.setValue(null);
     this.returnType.setValue(null);
+    this.isEverified.setValue(null);
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
     this.config.totalItems = 0;

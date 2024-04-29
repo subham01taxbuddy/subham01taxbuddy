@@ -33,9 +33,9 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-3 spsTp">
+                        <div class="col-sm-2 spsTp">
                           <label class="input__label" for="attr">Select Service </label>
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [(ngModel)]="searchParam.serviceType"
                               (selectionChange)="getStatus(searchParam.serviceType)">
                               <mat-option *ngFor="let service of serviceTypes" [value]="service.value">
@@ -46,7 +46,7 @@
                         </div>
                         <div *ngIf="itrStatus" class="col-sm-3 spsTp">
                           <label class="input__label" for="attr">Select Status </label>
-                          <mat-form-field appearance="outline" class="custom-bg-new">
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
                               <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                                 {{ status.statusName }}
@@ -54,7 +54,18 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-6 spsTp">
+                        <div class="col-sm-2 spsTp">
+                          <label class="input__label" for="attr">Filing Status </label>
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                            <mat-select placeholder="" [(ngModel)]="searchParam.itrObjectStatus">
+                              <mat-option *ngFor="let service of fillingStatus" [value]="service.value">
+                                {{service.label}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-5 spsTp">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -12,8 +12,8 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 })
 export class ProfileDialogComponent implements OnInit {
 
-  bankForm: FormGroup;
-  addressForm: FormGroup;
+  bankForm: UntypedFormGroup;
+  addressForm: UntypedFormGroup;
   addressTypeData: any = [{ label: 'Home', value: 'HOME' }, { label: 'Business', value: 'BUSINESS' }];
   state_list: any = [{
     "id": "5b4599c9c15a76370a3424c2",
@@ -278,7 +278,7 @@ export class ProfileDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ProfileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private thirdPartyService: ThirdPartyService,
     private _toastMessageService: ToastMessageService,
     private userService: UserMsService,

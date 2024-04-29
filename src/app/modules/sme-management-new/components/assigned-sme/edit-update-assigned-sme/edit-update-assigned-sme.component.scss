@@ -17,7 +17,7 @@ ul {
   margin-top: 4px;
 }
 
-.select-chip .mat-chip {
+.select-chip .mat-mdc-chip {
   background-color: #FFFFFF;
   border: 1.94547px solid #E3E3E3;
   border-radius: 8px;
@@ -259,4 +259,20 @@ line-height: 28px; /* 233.333% */
 
 .countContainer{
   background-color: white;
+}
+
+.customToggle{
+  .mdc-switch:enabled .mdc-switch__track::before {
+    background: #e0e0e0 !important;
+  }
+  .mdc-switch:enabled .mdc-switch__track::after {
+    background: #f06292 !important;
+  }
+  .mdc-switch .mdc-switch__handle::before {
+    background: #fff !important;
+  }
+
+  .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
+    background: #d81b60 !important;
+  }
 }

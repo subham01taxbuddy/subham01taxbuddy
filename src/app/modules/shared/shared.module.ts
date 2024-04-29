@@ -39,7 +39,6 @@ import { KnowlarityNotificationComponent } from './components/knowlarity-notific
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { UpdateManualFilingDialogComponent } from './components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
-import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
@@ -64,6 +63,7 @@ import { UpdateCapacityComponent } from './components/update-capacity/update-cap
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { ChatModule } from '../chat/chat.module';
 import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget.component';
+import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -88,7 +88,7 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     LayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    FloatingWidgetComponent,
+    //FloatingWidgetComponent,
     DirectCallingComponent,
     KnowlarityNotificationComponent,
     UpdateManualFilingDialogComponent,
@@ -108,7 +108,8 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     UpdateItrUFillingDialogComponent,
     ValidationErrorScreenComponent,
     GenericSortingComponent,
-    GenericUserFilterComponent
+    GenericUserFilterComponent,
+    CalculatorModalComponent
   ],
   imports: [
     CommonModule,
@@ -118,20 +119,13 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    AgGridModule.withComponents([
-      CustomDateComponent,
-      AgGridMaterialSelectEditorComponent,
-      MatInputComponent,
-      AgTooltipComponent,
-      /* CheckboxRenderer */
-    ]), //MatSelectComponent,
+    AgGridModule,
     NgxPaginationModule,
     NgxImageZoomModule,
     NgxDocViewerModule,
     NgxLoadingModule.forRoot({}),
-    ShimmerModule,
     MatDialogModule,
-    ChatModule
+    ChatModule,
   ],
   exports: [
     CommonModule,
@@ -161,7 +155,6 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     KnowlarityNotificationComponent,
     UpdateManualFilingDialogComponent,
     CurrencyPipe,
-    ShimmerModule,
     DigitsOnlyDirective,
     AgTooltipComponent,
     NumbersOnlyDirective,
@@ -172,21 +165,11 @@ import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget
     ViewDocumentsDialogComponent,
     GenericSortingComponent,
     GenericUserFilterComponent,
-    FloatingWidgetComponent
+    FloatingWidgetComponent,
+    UpdateNoJsonFilingDialogComponent,
+    CalculatorModalComponent
   ],
-  providers: [StorageService, Schedules, RequestManager],
-  entryComponents: [
-    WhatsAppDialogComponent,
-    UserNotesComponent,
-    FilingStatusDialogComponent,
-    KommunicateDialogComponent,
-    ItrActionsComponent,
-    ChangeStatusComponent,
-    CallReassignmentComponent,
-    UpdateManualFilingDialogComponent,
-    AgTooltipComponent,
-    UpdateCapacityComponent
-  ],
+  providers: [StorageService, Schedules, RequestManager]
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

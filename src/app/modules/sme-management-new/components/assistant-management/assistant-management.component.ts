@@ -20,6 +20,7 @@ export class AssistantManagementComponent implements OnInit {
     page: 0,
     pageSize: 10,
   };
+  childInfoCount: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -68,12 +69,14 @@ export class AssistantManagementComponent implements OnInit {
           this.loading = false;
           this.childInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
+          this.childInfoCount = result.data.content.length;
           this.childListGridOptions.api?.setRowData(this.createRowData(this.childInfo));
         }else {
           this.loading = false;
           this._toastMessageService.alert('error','no child data found');
           this.childListGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this.childInfoCount = 0;
         }
       },
       (error) => {
@@ -201,7 +204,23 @@ export class AssistantManagementComponent implements OnInit {
 
 
   addAssistant(){
-    this.router.navigate(['/sme-management-new/edit-child']);
+    let loggedInUserId = this.utilsService.getLoggedInUserID();
+    console.log('logged in sme id ', loggedInUserId);
+    const param = `/bo/sme-details-new/${loggedInUserId}`;
+    this.reportService.getMethod(param).subscribe((res: any) => {
+      console.log('filer List Result', res);
+      if (res.success && res.data instanceof Array) {
+        let loggedInSme = res.data;
+        let Ids = loggedInSme[0]?.partnerDetails?.additionalIdsCount;
+        if(Ids <= this.childInfoCount){
+          return this._toastMessageService.alert(
+            'error',
+            'You have reached the maximum limit of Add Assistant'
+          );
+        }
+        this.router.navigate(['/sme-management-new/edit-child']);
+      }
+    })
   }
 
 }

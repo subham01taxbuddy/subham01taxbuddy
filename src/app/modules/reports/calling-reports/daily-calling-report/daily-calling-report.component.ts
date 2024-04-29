@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
@@ -46,9 +46,9 @@ export const MY_FORMATS = {
 })
 export class DailyCallingReportComponent implements OnInit, OnDestroy {
   loading = false;
-  startDate = new FormControl('');
-  endDate = new FormControl('');
-  minStartDate: string = '2023-04-01';
+  startDate = new UntypedFormControl('');
+  endDate = new UntypedFormControl('');
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
@@ -81,7 +81,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   sortBy: any = {};
   searchAsPrinciple: boolean = false;
   partnerType: any;
-  selectRole = new FormControl();
+  selectRole = new UntypedFormControl();
   searchVal: string = "";
   showError: boolean = false;
   constructor(

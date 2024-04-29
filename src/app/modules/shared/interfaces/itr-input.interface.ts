@@ -145,6 +145,7 @@ export interface ITR_JSON {
   };
 
   winningsUS115BB: WinningUS115BB;
+  winningsUS115BBJ: WinningUS115BBJ;
   scheduleESOP: ScheduleESOP;
 
 }
@@ -152,6 +153,8 @@ export interface ITR_JSON {
 export interface ScheduleESOP {
   scheduleESOPDetails: ScheduleESOPDetail[];
   totalTaxAttributedAmount: number;
+  panOfStartup: any;
+  dpiitRegNo: any
 }
 
 export interface ScheduleESOPDetail {
@@ -172,6 +175,15 @@ export interface ScheduleESOPEventDetail {
 }
 
 export interface WinningUS115BB {
+  quarter1: number;
+  quarter2: number;
+  quarter3: number;
+  quarter4: number;
+  quarter5: number;
+  total: number;
+}
+
+export interface WinningUS115BBJ {
   quarter1: number;
   quarter2: number;
   quarter3: number;
@@ -517,6 +529,12 @@ export interface Disability {
 export interface Disabilities {
   typeOfDisability: string;
   amount: number;
+  form10IADate?: any;
+  form10IAAcknowledgement?: any;
+  udidNumber?: any;
+  typeOfDependent?: any;
+  dependentPan?: any;
+  dependentAadhar?: any;
 }
 export interface HouseProperties {
   propertyType: string;
@@ -698,7 +716,7 @@ export interface Allowance {
   allowanceType: string;
   taxableAmount: number;
   exemptAmount: number;
-  description?:any
+  description?: any
 }
 export interface Perquisites {
   perquisiteType: string;
@@ -850,6 +868,7 @@ export interface BankDetails {
   hasRefund: boolean;
   swiftcode: string;
   countryName: string;
+  accountType?: any;
 }
 
 // flags

@@ -1,5 +1,5 @@
-th.mat-header-cell,
-td.mat-cell {
+th.mat-mdc-header-cell,
+td.mat-mdc-cell {
   text-align: center;
   border: 1px solid #ccc;
   padding: 0 !important;
@@ -27,7 +27,7 @@ table {
   width: 25%;
   min-height: 25px;
   background-color: #CEE5FF;
-  top: 2px;
+  top: 6px;
   display: flex;
   justify-content: flex-end;
   align-items: center;

@@ -44,7 +44,7 @@ export class SidebarComponent {
         if (state) {
           this.openSidebar = true;
         } else {
-          this.openSidebar = false;
+          this.openSidebar =  false;
         }
       });
   }
@@ -117,7 +117,7 @@ export class SidebarComponent {
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: [] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
-      ]
+      ] 
     },
     {
       name: 'Subscription',

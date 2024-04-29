@@ -21,6 +21,7 @@ import { AssistantManagementComponent } from './components/assistant-management/
 import { PartnerManagementComponent } from './components/partner-management/partner-management.component';
 import { EditChildProfileComponent } from './components/assistant-management/edit-child-profile/edit-child-profile.component';
 import { NameAlertComponent } from './components/unassigned-sme/name-alert/name-alert.component';
+import { AcceptEmailComponent } from './components/assistant-management/accept-email/accept-email.component';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { NameAlertComponent } from './components/unassigned-sme/name-alert/name-
     PartnerManagementComponent,
     AssistantManagementComponent,
     EditChildProfileComponent,
-    NameAlertComponent
+    NameAlertComponent,
+    AcceptEmailComponent
   ],
   providers: [TitleCasePipe]
 })

@@ -88,7 +88,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Bank Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankReceipts" matInput name="bankReceipts"
                                         class="input-field" maxlength="8" required digitsOnly
                                         placeholder="₹ Enter Amount" (change)="
@@ -100,14 +100,14 @@
                                     <mat-error *ngIf="
                                         (selectedFormGroup.controls['bankReceipts'].touched || submitted) &&
                                         selectedFormGroup.controls['bankReceipts'].hasError('max')">
-                                      Turnover cannot be more than 2 crore</mat-error>
+                                      The overall turnover limit u/s 44AD exceeds.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Minimum Presumptive Income <span class="redAst">*</span>
                                   </div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankMinIncome" matInput name="bankMinIncome"
                                         class="input-field" required digitsOnly readonly />
                                       <div class="percentage-head" style="width: 50px;">
@@ -127,7 +127,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Presumptive income <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankPreIncome" placeholder="₹ Enter Amount" matInput
                                         name="bankPreIncome" class="input-field"
                                         maxlength="{{selectedFormGroup.controls['bankReceipts'].value?.length}}"
@@ -142,13 +142,10 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['bankPreIncome'].touched ||submitted) &&
-                                        selectedFormGroup.controls['bankPreIncome'].hasError('min')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['bankPreIncome'].hasError('min')">
                                       Amount should be greater than {{ amountSix }}
                                     </mat-error>
-                                    <mat-error *ngIf="(selectedFormGroup.controls['bankPreIncome'].touched ||submitted) && 
-                                        selectedFormGroup.controls['bankPreIncome'].hasError('max')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['bankPreIncome'].hasError('max')">
                                       Amount cannot be greater than {{ maxSixAmt }}
                                     </mat-error>
                                   </div>
@@ -159,7 +156,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Cash Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashReceipts" placeholder="₹ Enter Amount" matInput
                                         name="cashReceipts" maxlength="8" class="input-field" required digitsOnly
                                         (change)="calculatePresumptiveIncome('cash', true)" />
@@ -169,14 +166,14 @@
                                       Please enter the amount</mat-error>
                                     <mat-error *ngIf="(selectedFormGroup.controls['cashReceipts'].touched || submitted) &&
                                       selectedFormGroup.controls['cashReceipts'].hasError('max')">
-                                      Turnover cannot be more than 2 crore</mat-error>
+                                      The overall turnover limit u/s 44AD exceeds.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Minimum Presumptive Income <span class="redAst">*</span>
                                   </div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashMinIncome" matInput name="cashMinIncome"
                                         class="input-field" required digitsOnly readonly />
                                       <div class="percentage-head" style="width: 50px;">
@@ -196,7 +193,7 @@
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Presumptive income <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashPreIncome" placeholder="₹ Enter Amount" matInput
                                         name="cashPreIncome" class="input-field"
                                         maxlength="{{selectedFormGroup.controls['cashReceipts'].value?.length}}"
@@ -212,15 +209,75 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['cashPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['cashPreIncome'].hasError('min')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['cashPreIncome'].hasError('min')">
                                       Amount should be greater than {{ amountEight }}
                                     </mat-error>
-                                    <mat-error *ngIf="
-                                        (selectedFormGroup.controls['cashPreIncome'].touched || submitted) &&
-                                        selectedFormGroup.controls['cashPreIncome'].hasError('max')">
+                                    <mat-error *ngIf="selectedFormGroup.controls['cashPreIncome'].hasError('max')">
                                       Amount cannot be greater than {{ maxEightAmt }}
+                                    </mat-error>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="PreBxDwn">
+                                <div class="pre-box">
+                                  <div class="lndBldg-L">Any Other Mode <span class="redAst">*</span></div>
+                                  <div class="lndBldg-R">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
+                                      <input formControlName="anyOtherMode" placeholder="₹ Enter Amount" matInput
+                                        name="anyOtherMode" maxlength="8" class="input-field" required digitsOnly
+                                        (change)="calculatePresumptiveIncome('anyOther', true)" />
+                                    </mat-form-field>
+                                    <mat-error *ngIf="(selectedFormGroup.controls['anyOtherMode'].touched || submitted) &&
+                                          selectedFormGroup.controls['anyOtherMode'].hasError('required')">
+                                      Please enter the amount</mat-error>
+                                    <mat-error *ngIf="(selectedFormGroup.controls['anyOtherMode'].touched || submitted) &&
+                                      selectedFormGroup.controls['anyOtherMode'].hasError('max')">
+                                      The overall turnover limit u/s 44AD exceeds.</mat-error>
+                                  </div>
+                                </div>
+                                <div class="pre-box">
+                                  <div class="lndBldg-L">Minimum Presumptive Income <span class="redAst">*</span>
+                                  </div>
+                                  <div class="lndBldg-R">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
+                                      <input formControlName="anyOtherMinIncome" matInput name="anyOtherMinIncome"
+                                        class="input-field" required digitsOnly readonly />
+                                      <div class="percentage-head" style="width: 50px;">
+                                        <span class="percentage">
+                                          8% </span>
+                                        <div class="bar"
+                                          [ngStyle]="{'width': cashMinIncomePercentage+'px','background-color': '#2D8EF9'}">
+                                        </div>
+                                      </div>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="
+                                        (selectedFormGroup.controls['anyOtherMinIncome'].touched || submitted) &&
+                                        selectedFormGroup.controls['anyOtherMinIncome'].hasError('required')">Please
+                                      enter the amount</mat-error>
+                                  </div>
+                                </div>
+                                <div class="pre-box">
+                                  <div class="lndBldg-L">Presumptive income <span class="redAst">*</span></div>
+                                  <div class="lndBldg-R">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
+                                      <input formControlName="anyOtherPreIncome" placeholder="₹ Enter Amount" matInput
+                                        name="anyOtherPreIncome" class="input-field"
+                                        maxlength="{{selectedFormGroup.controls['anyOtherMode'].value?.length}}"
+                                        required digitsOnly (change)="calculatePresumptiveIncome('anyOther', true)" />
+                                      <div class="percentage-head" style="width: 50px;">
+                                        <span class="percentage">
+                                          {{anyOtherPercentage?anyOtherPercentage:0}}%
+                                        </span>
+                                        <div class="bar"
+                                          [ngStyle]="{'width': anyOtherPerWidth?anyOtherPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                        </div>
+                                      </div>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="selectedFormGroup.controls['anyOtherPreIncome'].hasError('min')">
+                                      Amount should be greater than {{ amountEightAnyOther }}
+                                    </mat-error>
+                                    <mat-error *ngIf="selectedFormGroup.controls['anyOtherPreIncome'].hasError('max')">
+                                      Amount cannot be greater than {{ maxEightAnyOtherAmt }}
                                     </mat-error>
                                   </div>
                                 </div>

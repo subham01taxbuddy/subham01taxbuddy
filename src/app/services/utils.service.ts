@@ -13,7 +13,7 @@ import { ItrActionsComponent } from '../modules/shared/components/itr-actions/it
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import { FormArray, FormControl, FormGroup, ValidationErrors, } from '@angular/forms';
+import {FormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors} from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -75,6 +75,11 @@ export class UtilsService {
     return result;
   }
 
+  getFYFromAY(assessmentYear: string){
+    const years = assessmentYear.split('-');
+    return (Number(years[0])-1) +'-'+(Number(years[1])-1);
+  }
+
   //scroll to specific div
   smoothScrollToDiv(divId: any) {
     console.log(divId);
@@ -93,7 +98,7 @@ export class UtilsService {
 
   createEmptyJson(
     profile: any,
-    serviceType:string,
+    serviceType: string,
     assessmentYear: any,
     financialYear: any,
     itrId?: any,
@@ -388,6 +393,7 @@ export class UtilsService {
       },
 
       winningsUS115BB: null,
+      winningsUS115BBJ: null,
       scheduleESOP: null,
     };
 
@@ -860,6 +866,8 @@ export class UtilsService {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
+    }else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
     if (ITR && mobile) {
@@ -890,6 +898,8 @@ export class UtilsService {
     if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
     } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
+      userFilter += `&filerUserId=${loggedInSmeId}`;
+    } else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
@@ -1057,9 +1067,9 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup, accordionBtnId) {
+  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId) {
     Object.keys(formGroup.controls).forEach((key) => {
-      if (formGroup.get(key) instanceof FormControl) {
+      if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
         if (controlErrors != null) {
           console.log(formGroup);
@@ -1082,12 +1092,12 @@ export class UtilsService {
             return;
           });
         }
-      } else if (formGroup.get(key) instanceof FormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup, accordionBtnId);
+      } else if (formGroup.get(key) instanceof UntypedFormGroup) {
+        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId);
       } else if (formGroup.get(key) instanceof FormArray) {
         let formArray = formGroup.get(key) as FormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as FormGroup, accordionBtnId);
+          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId);
         });
       }
     });

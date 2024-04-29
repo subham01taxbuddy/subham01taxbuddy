@@ -8,12 +8,13 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
      UserChatComponent,
-     ChatUIComponent
+     ChatUIComponent,
+      FloatingWidgetComponent
    ],
   imports: [
     CommonModule,
     FormsModule
   ],
-  exports: [UserChatComponent,ChatUIComponent]
+  exports: [UserChatComponent,ChatUIComponent, FloatingWidgetComponent]
 })
 export class ChatModule { }

@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
@@ -24,7 +24,16 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   searchAsPrinciple: boolean = false;
   ogStatusList: any = [];
   itrStatus: any = [];
-  assessmentYear = new FormControl('2023-24');
+  financialYear = [
+    {
+      assessmentYear : "2024-2025",
+      financialYear : "2023-2024"
+    },
+    {
+      assessmentYear : "2023-2024",
+      financialYear : "2022-2023"
+    }];
+  assessmentYear = new UntypedFormControl(this.financialYear[0]);
   clearUserFilter: number;
   roles: any;
   allSubAdjustData: any;
@@ -43,6 +52,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
     page: 0,
     pageSize: 20,
     serviceType: null,
+    assessmentYear: null
   };
   searchMenus = [
     { value: 'name', name: 'User Name' },
@@ -165,6 +175,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     var param = `/bo/subscription-adjustment?${data}${userFilter}`;
@@ -473,7 +484,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
         headerName: 'Revert Coupon',
         field: '',
         width: 120,
-        pinned: 'right',
+         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },

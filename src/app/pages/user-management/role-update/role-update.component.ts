@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -24,8 +24,8 @@ export class RoleUpdateComponent implements OnInit {
     { label: 'GST Caller', value: 'ROLE_GST_CALLER' },
     { label: 'Notice Caller', value: 'ROLE_NOTICE_CALLER' },
   ];
-  noteDetails = new FormControl('', Validators.required);
-  userRole: any = new FormControl([], Validators.required);
+  noteDetails = new UntypedFormControl('', Validators.required);
+  userRole: any = new UntypedFormControl([], Validators.required);
   loading = false;
   constructor(
     public dialogRef: MatDialogRef<RoleUpdateComponent>,

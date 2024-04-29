@@ -274,7 +274,7 @@ export class ReviewListComponent implements OnInit,OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -297,7 +297,7 @@ export class ReviewListComponent implements OnInit,OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -320,7 +320,7 @@ export class ReviewListComponent implements OnInit,OnDestroy {
            </button>`;
         },
         width: 80,
-        pinned: 'right',
+         pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',

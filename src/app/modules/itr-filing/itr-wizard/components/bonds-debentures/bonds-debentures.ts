@@ -6,7 +6,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -25,12 +25,11 @@ import { TotalCg } from '../../../../../services/itr-json-helper-service';
 //TODO: needs to be removed after confirming it is unused
 export class BondsDebentures
   extends WizardNavigation
-  implements OnInit
-{
+  implements OnInit {
   step = 1;
   @Output() onSave = new EventEmitter();
-  bondsForm: FormGroup;
-  deductionForm: FormGroup;
+  bondsForm: UntypedFormGroup;
+  deductionForm: UntypedFormGroup;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -49,7 +48,7 @@ export class BondsDebentures
   bondType: any;
   title: string;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
@@ -58,7 +57,7 @@ export class BondsDebentures
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
-        sessionStorage.getItem(AppConstants.ITR_JSON)
+      sessionStorage.getItem(AppConstants.ITR_JSON)
     );
     //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -144,7 +143,7 @@ export class BondsDebentures
             }
             if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
-            } else if(this.bondType === 'bonds' && element.whetherDebenturesAreListed){
+            } else if (this.bondType === 'bonds' && element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -164,7 +163,7 @@ export class BondsDebentures
             }
             if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
-            } else if(this.bondType === 'bonds' && !element.whetherDebenturesAreListed){
+            } else if (this.bondType === 'bonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -201,7 +200,7 @@ export class BondsDebentures
     const securitiesArray = <FormArray>this.bondsForm.controls['bondsArray'];
     return (
       securitiesArray.controls.filter(
-        (item: FormGroup) => item.controls['hasEdit'].value === true
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -229,7 +228,7 @@ export class BondsDebentures
       this.addMoreBondsData();
     } else {
       bondsArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -243,7 +242,7 @@ export class BondsDebentures
     });
   }
 
-  createForm(srn, item?): FormGroup {
+  createForm(srn, item?): UntypedFormGroup {
     return this.fb.group({
       isIndexationBenefitAvailable: [
         item ? item.isIndexationBenefitAvailable : false,
@@ -299,14 +298,14 @@ export class BondsDebentures
 
   editBondsForm(i) {
     (
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
-        i
-      ] as FormGroup
+      (this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[
+      i
+      ] as UntypedFormGroup
     ).enable();
     (
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
-        i
-      ] as FormGroup
+      (this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[
+      i
+      ] as UntypedFormGroup
     ).controls['gainType'].disable();
   }
 
@@ -322,9 +321,9 @@ export class BondsDebentures
   deleteBondsArray() {
     let bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls = bondsArray.controls.filter(
-      (element) => !(element as FormGroup).controls['hasEdit'].value
+      (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
-    if(bondsArray.length == 0){
+    if (bondsArray.length == 0) {
       this.deductionForm.reset();
       this.deduction = false;
       this.isDisable = true;
@@ -353,7 +352,7 @@ export class BondsDebentures
           : this.bondType === 'zeroCouponBonds'
             ? 'ZERO_COUPON_BONDS'
             : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
-      if(bonds.controls['isIndexationBenefitAvailable'].value === false){
+      if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
       }
@@ -397,8 +396,8 @@ export class BondsDebentures
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
           : this.bondType === 'zeroCouponBonds'
-          ? 'ZERO_COUPON_BONDS'
-          : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+            ? 'ZERO_COUPON_BONDS'
+            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',
@@ -453,12 +452,12 @@ export class BondsDebentures
     const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
       ltcg +=
-        (element as FormGroup).controls['gainType'].value === 'LONG'
-          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+        (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
       stcg +=
-        (element as FormGroup).controls['gainType'].value === 'SHORT'
-          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+        (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
     });
     this.totalCg.ltcg = ltcg;
@@ -494,35 +493,35 @@ export class BondsDebentures
       let bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
-      if(this.bondType !== 'bonds'){
-        if(this.bondType === 'zeroCouponBonds'){
+      if (this.bondType !== 'bonds') {
+        if (this.bondType === 'zeroCouponBonds') {
           bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
-              e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
+            e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
         } else {
           bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails : [];
         }
       }
       bondsArray.controls.forEach((element) => {
         if (
-          !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
-          && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
+          !(element as UntypedFormGroup).controls['isIndexationBenefitAvailable'].value
+          && !(element as UntypedFormGroup).controls['whetherDebenturesAreListed'].value
         ) {
-          let costOfImprovement = (element as FormGroup).controls[
+          let costOfImprovement = (element as UntypedFormGroup).controls[
             'improvementCost'
           ].value;
           bondImprovement.push({
-            srn: (element as FormGroup).controls['srn'].value,
-            dateOfImprovement: (element as FormGroup).controls[
+            srn: (element as UntypedFormGroup).controls['srn'].value,
+            dateOfImprovement: (element as UntypedFormGroup).controls[
               'dateOfImprovement'
             ].value,
-            indexCostOfImprovement: (element as FormGroup).controls[
+            indexCostOfImprovement: (element as UntypedFormGroup).controls[
               'indexCostOfImprovement'
             ].value,
-            costOfImprovement: (element as FormGroup).controls[
+            costOfImprovement: (element as UntypedFormGroup).controls[
               'improvementCost'
             ].value,
           });
-          bondsList.push((element as FormGroup).getRawValue());
+          bondsList.push((element as UntypedFormGroup).getRawValue());
         }
       });
 
@@ -552,7 +551,7 @@ export class BondsDebentures
         }
       } else {
         // if (bondData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain?.push(bondData);
+        this.Copy_ITR_JSON.capitalGain?.push(bondData);
         // }
       }
 
@@ -572,13 +571,13 @@ export class BondsDebentures
         bondImprovement = [];
 
         let debsList = goldIndex >= 0 ?
-            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => !e.isIndexationBenefitAvailable) : [];
 
         //persist the gold asset improvements
-        if(debsList?.length > 0){
+        if (debsList?.length > 0) {
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
-            if(srnList.includes(improvment.srn)){
+            if (srnList.includes(improvment.srn)) {
               bondImprovement.push(improvment);
             }
           });
@@ -597,14 +596,14 @@ export class BondsDebentures
         }
         bondsArray.controls.forEach((element) => {
           if (
-            (element as FormGroup).controls['isIndexationBenefitAvailable']
+            (element as UntypedFormGroup).controls['isIndexationBenefitAvailable']
               .value === true
           ) {
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[
               goldIndex
             ]?.assetDetails.filter(
-              (e) => e.srn === (element as FormGroup).controls['srn'].value
+              (e) => e.srn === (element as UntypedFormGroup).controls['srn'].value
             );
 
             if (srnCheck && srnCheck?.length > 0) {
@@ -613,28 +612,28 @@ export class BondsDebentures
                 maxGold + 1,
                 debsList?.length
               );
-              (element as FormGroup).controls['srn'].setValue(newSrn);
+              (element as UntypedFormGroup).controls['srn'].setValue(newSrn);
             }
 
-            let costOfImprovement = (element as FormGroup).controls[
+            let costOfImprovement = (element as UntypedFormGroup).controls[
               'improvementCost'
             ].value;
             bondImprovement.push({
-              srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: (element as FormGroup).controls[
+              srn: (element as UntypedFormGroup).controls['srn'].value,
+              dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
               ].value,
-              indexCostOfImprovement: (element as FormGroup).controls[
+              indexCostOfImprovement: (element as UntypedFormGroup).controls[
                 'indexCostOfImprovement'
               ].value,
               costOfImprovement: costOfImprovement,
             });
 
             //Ashwini: This adjustment is done to persist indexed cost of improvement for backend cg calculations
-            (element as FormGroup).controls['improvementCost'].setValue(
-              (element as FormGroup).controls['indexCostOfImprovement'].value);
+            (element as UntypedFormGroup).controls['improvementCost'].setValue(
+              (element as UntypedFormGroup).controls['indexCostOfImprovement'].value);
 
-            debsList.push((element as FormGroup).getRawValue());
+            debsList.push((element as UntypedFormGroup).getRawValue());
           }
         });
 
@@ -666,19 +665,19 @@ export class BondsDebentures
       } else {
         //indexation entries to be removed with their improvement
         let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-            (element) => element.assetType === 'GOLD'
+          (element) => element.assetType === 'GOLD'
         );
 
         bondImprovement = [];
 
         let debsList = goldIndex >= 0 ?
-            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => !e.isIndexationBenefitAvailable) : [];
 
         //persist the gold asset improvements
-        if(debsList?.length > 0){
+        if (debsList?.length > 0) {
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
-            if(srnList.includes(improvment.srn)){
+            if (srnList.includes(improvment.srn)) {
               bondImprovement.push(improvment);
             }
           });
@@ -705,7 +704,7 @@ export class BondsDebentures
           }
         }
       }
-      if(zcbDebList?.length > 0){
+      if (zcbDebList?.length > 0) {
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
@@ -717,7 +716,7 @@ export class BondsDebentures
           zcbList = this.bondType === 'bonds' ? this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails.filter(e => !e.whetherDebenturesAreListed) : [];
           let tempArray = this.Copy_ITR_JSON.capitalGain[
             zcbIndex
-            ].assetDetails.map((element) => element.srn);
+          ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
               previousValue > currentValue ? previousValue : currentValue
@@ -726,14 +725,14 @@ export class BondsDebentures
         }
         bondsArray.controls.forEach((element) => {
           if (
-            (element as FormGroup).controls['whetherDebenturesAreListed']
+            (element as UntypedFormGroup).controls['whetherDebenturesAreListed']
               .value === true
           ) {
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[
               zcbIndex
-              ]?.assetDetails.filter(
-              (e) => e.srn === (element as FormGroup).controls['srn'].value
+            ]?.assetDetails.filter(
+              (e) => e.srn === (element as UntypedFormGroup).controls['srn'].value
             );
 
             if (srnCheck && srnCheck?.length > 0) {
@@ -742,24 +741,24 @@ export class BondsDebentures
                 maxZcb + 1,
                 zcbList?.length
               );
-              (element as FormGroup).controls['srn'].setValue(newSrn);
+              (element as UntypedFormGroup).controls['srn'].setValue(newSrn);
             }
 
-            let costOfImprovement = (element as FormGroup).controls[
+            let costOfImprovement = (element as UntypedFormGroup).controls[
               'improvementCost'
-              ].value;
+            ].value;
             bondImprovement.push({
-              srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: (element as FormGroup).controls[
+              srn: (element as UntypedFormGroup).controls['srn'].value,
+              dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
-                ].value,
-              indexCostOfImprovement: (element as FormGroup).controls[
+              ].value,
+              indexCostOfImprovement: (element as UntypedFormGroup).controls[
                 'indexCostOfImprovement'
-                ].value,
+              ].value,
               costOfImprovement: costOfImprovement,
             });
 
-            zcbList.push((element as FormGroup).getRawValue());
+            zcbList.push((element as UntypedFormGroup).getRawValue());
           }
         });
 
@@ -769,7 +768,7 @@ export class BondsDebentures
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'ZERO_COUPON_BONDS',
           deduction: zcbIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[zcbIndex].deduction
-              : [],
+            : [],
           improvement: bondImprovement,
           buyersDetails: [],
           assetDetails: zcbList,
@@ -799,9 +798,9 @@ export class BondsDebentures
               (element) => !element?.isIndexationBenefitAvailable
             ) : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails;
         }
-        if(this.bondType === 'bonds' && zcbDebList?.length === 0){
+        if (this.bondType === 'bonds' && zcbDebList?.length === 0) {
           let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-              (element) => element.assetType === 'ZERO_COUPON_BONDS'
+            (element) => element.assetType === 'ZERO_COUPON_BONDS'
           );
           if (zcbIndex !== -1) {
             this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
@@ -852,7 +851,7 @@ export class BondsDebentures
   getYearsList(bonds) {
     let yearsList = [];
     yearsList = yearsList.concat(this.improvementYears);
-    let purchaseDate = (bonds as FormGroup).controls['purchaseDate'].value;
+    let purchaseDate = (bonds as UntypedFormGroup).controls['purchaseDate'].value;
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
@@ -885,7 +884,7 @@ export class BondsDebentures
   }
   calculateIndexCost(asset, type?) {
     if (!asset.controls['isIndexationBenefitAvailable'].value ||
-        (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
+      (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
       asset.controls['indexCostOfAcquisition'].setValue(0);
       asset.controls['indexCostOfImprovement'].setValue(0);
       this.calculateTotalCG(asset);
@@ -910,12 +909,12 @@ export class BondsDebentures
     let purchaseFinancialYear =
       selectedPurchaseYear.get('month') > 2
         ? selectedPurchaseYear.get('year') +
-          '-' +
-          (selectedPurchaseYear.get('year') + 1)
+        '-' +
+        (selectedPurchaseYear.get('year') + 1)
         : selectedPurchaseYear.get('year') -
-          1 +
-          '-' +
-          selectedPurchaseYear.get('year');
+        1 +
+        '-' +
+        selectedPurchaseYear.get('year');
 
     let costOfAcquistion = parseFloat(asset.controls['purchaseCost'].value);
 
@@ -947,7 +946,7 @@ export class BondsDebentures
     });
   }
 
-  initDeductionForm(obj?): FormGroup {
+  initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -967,22 +966,25 @@ export class BondsDebentures
   }
 
   calculateDeductionGain() {
-    if (this.deductionForm.valid) {
+    let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
+        this.deductionForm.controls['costOfNewAssets'].valid &&
+        this.deductionForm.controls['investmentInCGAccount'].valid;
+    if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
       let saleValue = 0;
       let expenses = 0;
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+        if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-            (element as FormGroup).controls['capitalGain'].value
+            (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-            (element as FormGroup).controls['valueInConsideration'].value
+            (element as UntypedFormGroup).controls['valueInConsideration'].value
           );
           expenses += parseInt(
-            (element as FormGroup).controls['sellExpense'].value
+            (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });
@@ -1025,6 +1027,8 @@ export class BondsDebentures
           );
         }
       );
+    } else {
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction");
     }
   }
 

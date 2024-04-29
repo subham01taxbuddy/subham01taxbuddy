@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormArray, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ScheduleTrComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-  scheduleTrForm: FormGroup;
+  scheduleTrForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   totalOutsideTaxPaid = 0;
@@ -20,7 +20,7 @@ export class ScheduleTrComponent implements OnInit {
   countryCodeList: any;
   section: any;
 
-  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
+  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -423,7 +423,7 @@ export class ScheduleTrComponent implements OnInit {
     trArray.push(this.createTrForm(item));
   }
 
-  createTrForm(item?): FormGroup {
+  createTrForm(item?): UntypedFormGroup {
     const formGroup = this.fb.group({
       countryCode: [item ? item.countryCode : null],
       tinNumber: [item ? item.tinNumber : null],

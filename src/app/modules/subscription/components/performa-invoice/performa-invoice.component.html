@@ -22,12 +22,18 @@
                   </div>
                   <div class="col-sm-3 spsTp">
                     <mat-label> Select FY </mat-label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
-                      <input type="text" matInput [formControl]="assessmentYear" readonly />
+                    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                      <mat-select [formControl]="assessmentYear" required (selectionChange)="updateDates()">
+                        <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                          {{year.financialYear}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="assessmentYear.hasError('required')">Select Financial
+                        Year</mat-error>
                     </mat-form-field>
                   </div>
                   <div class="col-sm-3 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height">
                       <mat-label>From Date</mat-label>
                       <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
                         [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
@@ -37,9 +43,9 @@
                     </mat-form-field>
                   </div>
                   <div class="col-sm-3 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new small-inp no-height">
                       <mat-label>To Date</mat-label>
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="startDate.value"
                         [max]="maxEndDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                       <mat-datepicker #picker2></mat-datepicker>
@@ -49,7 +55,7 @@
                   </div>
                   <div class="col-sm-3 spsTp">
                     <mat-label>Select Status </mat-label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
+                    <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                       <mat-select placeholder="Select Status" [formControl]="status">
                         <mat-option *ngFor="let item of Status" [value]="item.value">
                           {{ item.label }}

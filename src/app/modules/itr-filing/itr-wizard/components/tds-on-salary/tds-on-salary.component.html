@@ -138,9 +138,7 @@
         <div class="box-left">
           <button class="btn btn__white" (click)="goBack()">Back</button>
         </div>
-        <mat-paginator #paginator *ngIf="true"
-        [pageIndex]="activeIndex" [length]="getTotalCount()"
-               [pageSize]="1"></mat-paginator>
+
         <div class="box-right">
           <button class="btn btn__primary" (click)="save()">Save</button>
         </div>

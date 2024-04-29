@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -17,7 +17,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
@@ -44,7 +44,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   itrStatus: any = [];
   filerUserId: any;
   ogStatusList: any = [];
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;
@@ -318,6 +318,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
+          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
@@ -375,7 +376,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    return [
+    let columnDefs: ColDef[] = [
+
+      // return [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
@@ -414,7 +417,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         filter: 'agTextColumnFilter',
@@ -480,7 +482,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'Service Type',
         field: 'serviceType',
         width: 100,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -493,7 +494,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         headerName: 'PAN Number',
         field: 'panNumber',
         width: 120,
-        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -575,16 +575,29 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
-            'Open': { background: '#D3FBDA', color: '#43A352' },
-            'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
-            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Follow Up': { background: '#DCDCDC', color: '#808080' },
-            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+            'Not Interested': { background: '#DCDCDC', color: '#808080' }, //gray
+            'TPA completed': { background: '#DCDCDC', color: '#808080' },
+            'Notice Response filed': { background: '#DCDCDC', color: '#808080' },
+            'Notice Closed': { background: '#DCDCDC', color: '#808080' },
+            'GST Cancelled': { background: '#DCDCDC', color: '#808080' },
+            'Registration Done': { background: '#DCDCDC', color: '#808080' },
             'Backed Out': { background: '#DCDCDC', color: '#808080' },
+
+            'Open': { background: '#D3FBDA', color: '#43A352' }, //green
+            'Interested': { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up': { background: '#D3FBDA', color: '#43A352' },
+            'Converted': { background: '#D3FBDA', color: '#43A352' },
+            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
+            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
+            'Part Response Filed': { background: '#D3FBDA', color: '#43A352' },
+            'Notice WIP': { background: '#D3FBDA', color: '#43A352' },
+            'Active Client for Return': { background: '#D3FBDA', color: '#43A352' },
+            'Notice Reopen': { background: '#D3FBDA', color: '#43A352' },
+
+            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
           };
-          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
+          const statusStyle = statusColors[statusName] || { background: '#D3FBDA', color: '#43A352' };
 
           return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
@@ -716,6 +729,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    return columnDefs;
   }
 
   reassignmentForLeader() {
@@ -958,7 +972,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       userId: data.userId,
       assessmentYear: currentFyDetails[0].assessmentYear,
       taskKeyName: 'itrFilingComences',
-      taskStatus: 'Completed'
+      taskStatus: 'Completed',
+      serviceType: data.serviceType
     };
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;

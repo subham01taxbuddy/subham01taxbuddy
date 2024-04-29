@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GridOptions } from "ag-grid-community";
+import { ColDef, GridOptions } from "ag-grid-community";
 import { UserMsService } from "../../services/user-ms.service";
 import { ToastMessageService } from "../../services/toast-message.service";
 import { UtilsService } from "../../services/utils.service";
@@ -17,7 +17,7 @@ import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/conf
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
@@ -84,17 +84,17 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   dataOnLoad = true;
   showCsvMessage: boolean;
   searchAsPrinciple: boolean = false;
-  startDate = new FormControl('', [Validators.required]);
-  endDate = new FormControl('', [Validators.required]);
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 1, 1);
+  startDate = new UntypedFormControl('', [Validators.required]);
+  endDate = new UntypedFormControl('', [Validators.required]);
+  maxDate = new Date(2025, 2, 31);
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
   toDateMin: any;
   partnerType: any;
-  minStartDate: string = '2023-01-01';
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
-  serviceType = new FormControl('');
+  serviceType = new UntypedFormControl('');
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -109,7 +109,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     public datePipe: DatePipe,
     @Inject(LOCALE_ID) private locale: string) {
-    this.startDate.setValue('2023-01-01');
+    this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -357,7 +357,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   usersCreateColumnDef(list: any, leaderList: any) {
-    return [
+    let columnDefs: ColDef[] = [
+      // return [
       {
         headerName: 'Sr. No.',
         width: 50,
@@ -793,14 +794,17 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         checkboxSelection: (params) => {
           return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
         },
-        showDisabledCheckboxes: (params) => {
-          return params.data.commissionPaymentApprovalStatus === 'APPROVED'
-        },
+        // showDisabledCheckboxes: true
+        // method not allowed
+        // showDisabledCheckboxes: (params) => {
+        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        // },
         // valueGetter: function (params:any){
         //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
         // }
       },
     ]
+    return columnDefs;
   }
 
   createRowData(userData: any) {

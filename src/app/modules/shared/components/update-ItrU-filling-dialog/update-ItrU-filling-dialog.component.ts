@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -12,6 +12,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { Location } from '@angular/common';
+import { ReportService } from 'src/app/services/report-service';
 
 
 export const MY_FORMATS = {
@@ -34,11 +35,11 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class UpdateItrUFillingDialogComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
-  eFillingDate = new FormControl('', Validators.required);
-  itrType = new FormControl('', Validators.required);
-  fy = new FormControl('');
-  ay = new FormControl('');
+  ackNumber = new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
+  eFillingDate = new UntypedFormControl('', Validators.required);
+  itrType = new UntypedFormControl('', Validators.required);
+  fy = new UntypedFormControl('');
+  ay = new UntypedFormControl('');
   maxDate = new Date();
   loading = false;
   userProfile: any;
@@ -48,6 +49,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private itrMsService: ItrMsService,
+    private reportService: ReportService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router,
@@ -66,10 +68,14 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   selectedFy(year: any) {
     if (year) {
       this.fy.setValue(year);
-      this.checkPaymentStatus()
-      if (year === "2020-2021") {
-        this.ay.setValue('2021-2022');
-      } else if (year === "2021-2022") {
+      // this.checkPaymentStatus()
+      this.hideYears = false;
+      this.showDetails = true;
+      // if (year === "2020-2021") {
+      //   this.ay.setValue('2021-2022');
+      // } else
+      this.checkSubscriptionForSelectedFinancialYear(year);
+      if (year === "2021-2022") {
         this.ay.setValue('2022-2023');
       }
       else if (year === "2022-2023") {
@@ -82,6 +88,46 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     }
 
   }
+
+  checkSubscriptionForSelectedFinancialYear(financialYear:string) {
+    this.loading = true;
+    const query = {
+      "and": {
+        "is": {
+          "userId": this.data.userId,
+          "serviceType": "ITRU",
+          "item.financialYear":financialYear
+         }
+      },
+      "collectionName":"subscription",
+      "queryType": "EXISTS"
+    }
+
+    this.reportService.query(query).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res?.data) {
+          this.loading = false;
+          this.hideYears = false;
+          this.showDetails = true;
+        } else {
+          this.loading = false;
+          this.hideYears = true;
+          this.showDetails = false;
+          this.utilsService.showSnackBar(
+            'Please make sure the subscription is created for user.'
+          );
+          this.dialogRef.close(true);
+        }
+      }, error => {
+        this.hideYears = true;
+        this.showDetails = false;
+        this.utilsService.showSnackBar('Error while checking subscription, Please try again.');
+        this.loading = false;
+      })
+
+  }
+
 
   checkPaymentStatus() {
     this.loading = true;
@@ -164,30 +210,32 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
               isITRU: true,
             };
             console.log('Updated Data:', req);
-            const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
-            this.itrMsService.putMethod(param, req).subscribe(
-              (res: any) => {
-                console.log(res);
-                this.loading = false;
-                if (res.success) {
+            setTimeout(() => {
+              const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
+              this.itrMsService.putMethod(param, req).subscribe(
+                (res: any) => {
+                  console.log(res);
+                  this.loading = false;
+                  if (res.success) {
+                    this.utilsService.showSnackBar(
+                      'ITR-U Filing Details updated successfully'
+                    );
+                    this.dialogRef.close(true);
+                    // this.location.back();
+                  } else {
+                    this.utilsService.showSnackBar(res.message);
+                    this.dialogRef.close(true);
+                  }
+                },
+                (error) => {
                   this.utilsService.showSnackBar(
-                    'ITR-U Filing Details updated successfully'
+                    'Failed to update ITR-U Filing Details'
                   );
                   this.dialogRef.close(true);
-                  // this.location.back();
-                } else {
-                  this.utilsService.showSnackBar(res.message);
-                  this.dialogRef.close(true);
+                  this.loading = false;
                 }
-              },
-              (error) => {
-                this.utilsService.showSnackBar(
-                  'Failed to update ITR-U Filing Details'
-                );
-                this.dialogRef.close(true);
-                this.loading = false;
-              }
-            );
+              );
+            }, 10000)
           } else {
             this.utilsService.showSnackBar(
               'Please give E-Filling-Date and Acknowledgment Number'
@@ -200,12 +248,12 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         this.utilsService.showSnackBar(
           'error in api of user-reassignment-status'
         );
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
-          this.utilsService.showSnackBar( error.error.error);
+          this.utilsService.showSnackBar(error.error.error);
           this.dialogRef.close(true);
         } else {
-          this.utilsService.showSnackBar( "An unexpected error occurred.");
+          this.utilsService.showSnackBar("An unexpected error occurred.");
         }
       }
     );

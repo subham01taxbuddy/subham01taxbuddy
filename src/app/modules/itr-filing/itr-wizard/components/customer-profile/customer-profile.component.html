@@ -24,21 +24,16 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="form-field">
+          <div class="form-field" *ngIf="this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')">
             <div><span class="span">Mobile Number </span> <span class="text-wrapper-2">*</span></div>
             <mat-form-field appearance="outline">
               <input matTooltip="Mobile number should be of 10 digit." matTooltipClass="tab-tooltip"
                 matTooltipPosition="above" maxlength="10" minlength="10" matInput placeholder="Mobile" name="mobile"
                 formControlName="contactNumber" class="input-field" digitsOnly required />
               <mat-error *ngIf="
-            customerProfileForm.controls['contactNumber'].hasError(
-              'required'
-            ) ||
-            customerProfileForm.controls['contactNumber'].hasError(
-              'minlength'
-            ) ||
-            customerProfileForm.controls['contactNumber'].hasError('maxlength')
-          ">
+            customerProfileForm.controls['contactNumber'].hasError(              'required'            ) ||
+            customerProfileForm.controls['contactNumber'].hasError(              'minlength'            ) ||
+            customerProfileForm.controls['contactNumber'].hasError('maxlength')          ">
                 Enter 10 digit mobile number</mat-error>
             </mat-form-field>
           </div>
@@ -114,7 +109,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <button *ngIf="customerProfileForm.controls['residentialStatus'].value === '`NON_RESIDENT`' ||
+              <button *ngIf="customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT' ||
             customerProfileForm.controls['residentialStatus'].value === 'NON_ORDINARY'"
                 (click)="onSelectResidential(customerProfileForm.controls['residentialStatus'].value)"
                 class="resident-btn">
