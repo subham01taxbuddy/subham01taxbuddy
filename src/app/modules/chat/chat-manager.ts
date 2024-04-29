@@ -89,7 +89,7 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: any, serviceType: string){
+  sendMessage(message: string, serviceType: string){
     this.chatService.sendMessage(message);
 
   }

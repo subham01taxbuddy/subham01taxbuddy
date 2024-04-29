@@ -1,8 +1,9 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ChatService} from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
 import {DomSanitizer} from "@angular/platform-browser";
+import { LocalStorageService } from 'src/app/services/storage.service';
 
 @Component({
     selector: 'app-user-chat',
@@ -20,6 +21,8 @@ export class UserChatComponent implements OnInit {
     @Input() username: string;
     @Input() requestId: string;
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
+
+    @Input() serviceType: string;
  
  
     isHeaderActive: boolean = true;
@@ -32,8 +35,20 @@ export class UserChatComponent implements OnInit {
     fileToUpload: File | null = null;
 
     userInput: string = '';
+    messageSent: string = '';
+
+    isTyping: boolean = false;
+    newMessageReceived: boolean = false;
+    chat21UserId: string;
+    fetchedMessages: any[] = [];
+    newMessageCount: number = 0;
+    isAtBottom: boolean = true;
+    removefile: boolean = true;
+
+    fullChatScreen: boolean = false;
 
     constructor(private chatService: ChatService, private chatManager: ChatManager,
+        private localStorage: LocalStorageService,
                 private sanitizer: DomSanitizer, private elementRef: ElementRef,
                 private renderer: Renderer2) {
         this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
@@ -46,20 +61,40 @@ export class UserChatComponent implements OnInit {
         this.back.emit();
     }
 
-    sendMessage() {
-     
-    //   const updatedData = {};
-    //   this.conversationUpdated.emit(updatedData);
+    showFullScreen(){
+        this.fullChatScreen = !this.fullChatScreen;
     }
 
-    onFileSelected(event: any) {
-        this.fileToUpload = event.target.files[0];
-        if (this.fileToUpload) {
+    sendMessage() {
+        if (this.messageSent) {
+            // const chatMessagesContainer = document.querySelector('.chat-window');
+            // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
+      
+            this.chatManager.sendMessage(this.messageSent, this.serviceType);
+            this.messageSent = '';
+            setTimeout(() => {
+                this.scrollToBottom()
+            })
+          }
+    }
+
+    sendFile() {
+        if(this.fileToUpload){
+            console.log('user reqid is ',this.requestId)
             this.chatService.uploadFile(this.fileToUpload, this.requestId).subscribe((response: any) => {
                 console.log('file upload response', response);
             })
         }
+        this.scrollToBottom();
     }
+
+    onFileSelected(event: any) {
+        const files = event.target.files;
+        if(files && files.length > 0){
+          this.fileToUpload = files[0];
+        }
+        this.scrollToBottom();
+      }
 
     isPDFFile(file: File): boolean {
         return file.type === 'application/pdf';
@@ -71,33 +106,29 @@ export class UserChatComponent implements OnInit {
 
     scrollToBottom(): void {
         try {
-          const chatMessages = this.chatWindow.nativeElement;
-          const lastMessage = chatMessages.lastElementChild;
-          if (lastMessage) {
-            lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
-          }
+          const chatWindow = this.chatWindow.nativeElement;
+          chatWindow.scrollTop = chatWindow.scrollHeight;  
         } catch (error) {
-          console.error('Error scrolling chat window:', error);
-        }
+            console.error('error scrolling chat window')
+         }
       }
 
+    
+    //   ngAfterViewInit(): void {
+    //       this.scrollToBottom();
+    //   }
     ngOnInit(): void {
         if (this.requestId) {
             console.log('request_id',this.requestId)
             this.chatManager.openConversation(this.requestId)
-            // this.chatService.fetchMessages(this.requestId);
-         }
+            // this.scrollToBottom()
+          }
 
-        
+        this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
          
     }
 
-    isTyping: boolean = false;
-    newMessageReceived: boolean = false;
-    chat21UserId: string;
-    fetchedMessages: any[] = [];
-    newMessageCount: number = 0;
-    removefile: boolean = true;
+   
 
     handleTokenEvent = (data: any) => {
         console.log("subscribed", data);
@@ -107,15 +138,21 @@ export class UserChatComponent implements OnInit {
         console.log('received message', data);
 
 
-        const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-window');
-        // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
-
+        const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
+        const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
+ 
         const messagesString = sessionStorage.getItem('fetchedMessages');
         if (messagesString) {
             this.fetchedMessages = JSON.parse(messagesString);
             console.log('fetch messages', this.fetchedMessages);
-            // Sort messages based on timestamp
             this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
+            const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId )
+            if(filteredMessage.length > 0){
+                this.newMessageCount += filteredMessage.length;
+             }
+            else{
+                this.scrollToBottom();
+             }
             this.fetchedMessages.forEach((message: any) => {
                 if (message.type === 'html') {
                     setTimeout(() => {
@@ -124,17 +161,17 @@ export class UserChatComponent implements OnInit {
                     }, 3000);
                 }
             });
+        
         }
-
-        // if (!isAtBottom && !this.isTyping) {
-        //   this.newMessageCount++;
-        //   this.newMessageReceived = true;
-        // } else {
-        //   this.newMessageCount = 0
-        //   this.newMessageReceived = false;
-        //   // this.scrollChatToBottom();
-        // }
+        this.isAtBottom = isAtBottom;
+        this.messageCountTo0();
+       
     };
+
+    messageCountTo0(){
+        this.scrollToBottom();
+        this.newMessageCount = 0;
+    }
 
     formatTimestamp(timestamp: number): string {
         const date = new Date(timestamp);

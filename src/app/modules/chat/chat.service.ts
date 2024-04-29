@@ -108,10 +108,11 @@ export class ChatService {
               // let chat21Token = {
               //   chat21token: chat21Result.data.token
               // };
-              this.fetchConversationList(chat21Result.data.userid);
+              // this.fetchConversationList(chat21Result.data.userid);
 
               // if (service) {
                 this.initChatVariables(result.data.requestId);
+                console.log('req',result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
 
                 // this.fetchMessages(result.data.requestId);
@@ -315,7 +316,7 @@ export class ChatService {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
          
-
+          this.connected = true;
           this.chatClient.publish(
               this.presenceTopic,
               JSON.stringify({ connected: true }),
@@ -568,6 +569,7 @@ export class ChatService {
   sendMessage(message: string) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
+    console.log(dest_topic);
     // console.log("dest_topic:", dest_topic)
     let outgoing_message = {
       text: message,
@@ -580,6 +582,7 @@ export class ChatService {
     };
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
+    console.log('payload',payload)
     this.chatClient.publish(dest_topic, payload, null, (err) => {
       // callback(err, outgoing_message)
       console.log(err);
