@@ -660,7 +660,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     return panRepeat;
   }
 
-  deductionValidation() {
+  deductionValidation(checkForm: boolean) {
     const deduction = <UntypedFormArray>this.immovableForm.get('deductions');
     // This method is written in utils service for common usablity.
     let sectionRepeat: boolean = this.utilsService.checkDuplicateInObject(
@@ -677,7 +677,10 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
     }
     console.log('Form + deduction=', this.immovableForm.valid);
-    return sectionRepeat || invalidForms.length > 0;
+    if(checkForm)
+      return sectionRepeat || invalidForms.length > 0;
+    else
+      return sectionRepeat;
   }
 
   makePanUppercase(control) {
@@ -1065,6 +1068,20 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       deductionForm.controls['totalDeductionClaimed'].setValidators(null);
       deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
     }
+    if(deductionForm.controls['underSection'].value === '54EE' ||
+        deductionForm.controls['underSection'].value === '54EC'){
+      deductionForm.controls['investmentInCGAccount'].setValue(null);
+      deductionForm.controls['investmentInCGAccount'].setValidators(null);
+      deductionForm.controls[
+          'investmentInCGAccount'
+          ].updateValueAndValidity();
+    } else{
+      deductionForm.controls['investmentInCGAccount'].setValue(null);
+      deductionForm.controls['investmentInCGAccount'].setValidators(Validators.required);
+      deductionForm.controls[
+          'investmentInCGAccount'
+          ].updateValueAndValidity();
+    }
 
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
@@ -1118,7 +1135,6 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    // this.setTotalDeductionValidation();
     this.calculateDeduction(index);
   }
 
@@ -1134,7 +1150,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
       !this.panValidation() &&
-      !this.deductionValidation() &&
+      !this.deductionValidation(true) &&
       !this.calPercentage())
     ) {
       this.saveBusy = true;
@@ -1609,7 +1625,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   calculateDeduction(index, singleCg?) {
-    if (this.deductionValidation()) {
+    if (this.deductionValidation(false)) {
       return;
     }
     const assetDetails = (
