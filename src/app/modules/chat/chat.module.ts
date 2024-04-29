@@ -7,11 +7,12 @@ import { FloatingWidgetComponent } from './floating-widget/floating-widget.compo
 @NgModule({
   declarations: [
      UserChatComponent,
-     ChatUIComponent
+     ChatUIComponent,
+      FloatingWidgetComponent
    ],
   imports: [
     CommonModule
   ],
-  exports: [UserChatComponent,ChatUIComponent]
+  exports: [UserChatComponent,ChatUIComponent, FloatingWidgetComponent]
 })
 export class ChatModule { }

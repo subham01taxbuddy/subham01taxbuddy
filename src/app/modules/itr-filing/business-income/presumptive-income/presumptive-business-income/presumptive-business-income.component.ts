@@ -6,7 +6,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 
 @Component({
@@ -21,7 +21,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   businessArray = [];
   businessData: any;
-  busIncomeForm: FormGroup;
+  busIncomeForm: UntypedFormGroup;
   busIncomeFormArray: FormArray;
   submitted: boolean = false;
   amountSix: number = 0;
@@ -42,13 +42,13 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   activeIndex: number;
   gridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -68,7 +68,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.busIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+          this.busIncomeFormArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -152,12 +152,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   busSelected() {
     const busIncomeFormArray = <FormArray>(this.busIncomeForm?.get('busIncomeFormArray'));
-    return (busIncomeFormArray.controls.filter((element) => (element as FormGroup).controls['hasEdit'].value === true).length > 0);
+    return (busIncomeFormArray.controls.filter((element) => (element as UntypedFormGroup).controls['hasEdit'].value === true).length > 0);
   }
 
   deleteArray() {
     let array = <FormArray>this.busIncomeForm.get('busIncomeFormArray');
-    array.controls = array.controls.filter((element) => !(element as FormGroup).controls['hasEdit'].value);
+    array.controls = array.controls.filter((element) => !(element as UntypedFormGroup).controls['hasEdit'].value);
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.busIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -523,7 +523,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       form.patchValue(this.selectedFormGroup.getRawValue());
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).push(form);
     } else {
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+      (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }
     this.gridOptions.api?.setRowData(this.busIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -540,7 +540,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   editForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-      ((this.busIncomeForm.controls['busIncomeFormArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+      ((this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculatePresumptiveIncome('cash', true);
     this.calculatePresumptiveIncome('bank', true);
     this.calculatePresumptiveIncome('anyOther', true);

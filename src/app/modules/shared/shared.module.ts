@@ -88,7 +88,7 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
     LayoutComponent,
     SidebarComponent,
     NavbarComponent,
-    FloatingWidgetComponent,
+    //FloatingWidgetComponent,
     DirectCallingComponent,
     KnowlarityNotificationComponent,
     UpdateManualFilingDialogComponent,
@@ -119,19 +119,13 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    AgGridModule.withComponents([
-      CustomDateComponent,
-      AgGridMaterialSelectEditorComponent,
-      MatInputComponent,
-      AgTooltipComponent,
-      /* CheckboxRenderer */
-    ]), //MatSelectComponent,
+    AgGridModule,
     NgxPaginationModule,
     NgxImageZoomModule,
     NgxDocViewerModule,
     NgxLoadingModule.forRoot({}),
     MatDialogModule,
-    ChatModule
+    ChatModule,
   ],
   exports: [
     CommonModule,
@@ -171,23 +165,11 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
     ViewDocumentsDialogComponent,
     GenericSortingComponent,
     GenericUserFilterComponent,
-    FloatingWidgetComponent
-        UpdateNoJsonFilingDialogComponent,
+    FloatingWidgetComponent,
+    UpdateNoJsonFilingDialogComponent,
     CalculatorModalComponent
   ],
-  providers: [StorageService, Schedules, RequestManager],
-  entryComponents: [
-    WhatsAppDialogComponent,
-    UserNotesComponent,
-    FilingStatusDialogComponent,
-    KommunicateDialogComponent,
-    ItrActionsComponent,
-    ChangeStatusComponent,
-    CallReassignmentComponent,
-    UpdateManualFilingDialogComponent,
-    AgTooltipComponent,
-    UpdateCapacityComponent
-  ],
+  providers: [StorageService, Schedules, RequestManager]
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

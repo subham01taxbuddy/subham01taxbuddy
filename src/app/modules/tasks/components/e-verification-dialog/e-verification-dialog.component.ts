@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -10,9 +10,9 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./e-verification-dialog.component.scss']
 })
 export class EVerificationDialogComponent implements OnInit {
-  eVerifyForm: FormGroup;
+  eVerifyForm: UntypedFormGroup;
   loading = false;
-  otpValue = new FormControl('');
+  otpValue = new UntypedFormControl('');
   otpSent = false;
   otpMessage = ''
   itrTypes: any[] = [
@@ -26,7 +26,7 @@ export class EVerificationDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<EVerificationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,) {
     console.log(this.data);

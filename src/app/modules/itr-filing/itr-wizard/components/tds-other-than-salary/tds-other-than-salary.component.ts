@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, SimpleChanges, Output, EventEmitter, Inject} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -17,7 +17,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   @Output() onSave = new EventEmitter();
 
   @Input() editIndex: any;
-  salaryForm: FormGroup;
+  salaryForm: UntypedFormGroup;
   COPY_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -44,7 +44,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   ];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TdsOtherThanSalaryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -107,7 +107,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     // }, 1000);
     // } else {
     //   salaryArray.controls.forEach(element => {
-    //     if ((element as FormGroup).invalid) {
+    //     if ((element as UntypedFormGroup).invalid) {
     //       element.markAsDirty();
     //       element.markAllAsTouched();
     //     }
@@ -121,7 +121,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     });
   }
 
-  createForm(item?): FormGroup {
+  createForm(item?): UntypedFormGroup {
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
     }
@@ -163,7 +163,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     if (this.showHeadOfIncome === 'TDTS') {
       this.headOfIncomeDropdownTDS2.forEach((type) => {
         type.disabled = false;
-        salaryArray.controls.forEach((element: FormGroup) => {
+        salaryArray.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['headOfIncome'].value == (type.code)) {
             type.disabled = true;
           }
@@ -172,7 +172,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     } else if (this.showHeadOfIncome === 'TDTSP') {
       this.headOfIncomeDropdownTDS3.forEach((type) => {
         type.disabled = false;
-        salaryArray.controls.forEach((element: FormGroup) => {
+        salaryArray.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['headOfIncome'].value == (type.code)) {
             type.disabled = true;
           }
@@ -182,7 +182,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   editSalaryForm(i) {
-    ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
+    ((this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).enable();
   }
 
   goBack(){

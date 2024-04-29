@@ -17,7 +17,7 @@ import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/conf
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
@@ -84,8 +84,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   dataOnLoad = true;
   showCsvMessage: boolean;
   searchAsPrinciple: boolean = false;
-  startDate = new FormControl('', [Validators.required]);
-  endDate = new FormControl('', [Validators.required]);
+  startDate = new UntypedFormControl('', [Validators.required]);
+  endDate = new UntypedFormControl('', [Validators.required]);
   maxDate = new Date(2025, 2, 31);
   minDate = moment.min(moment(), moment('2024-04-01')).toDate();
   toDateMin: any;
@@ -94,7 +94,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
-  serviceType = new FormControl('');
+  serviceType = new UntypedFormControl('');
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,

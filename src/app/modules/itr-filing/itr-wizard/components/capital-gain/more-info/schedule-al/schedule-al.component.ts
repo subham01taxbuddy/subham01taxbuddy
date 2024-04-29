@@ -9,7 +9,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import {
@@ -66,8 +66,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   loading: boolean = false;
   config: any;
   editConfig: any;
-  immovableAssetForm: FormGroup;
-  movableAssetsForm: FormGroup;
+  immovableAssetForm: UntypedFormGroup;
+  movableAssetsForm: UntypedFormGroup;
 
   countryDropdown = AppConstants.countriesDropdown;
   stateDropdown = [];
@@ -84,7 +84,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   PREV_ITR_JSON: any;
 
   constructor(
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private matDialog: MatDialog,
@@ -190,7 +190,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     });
   }
 
-  createImmovableAssetForm(srn, item?): FormGroup {
+  createImmovableAssetForm(srn, item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       srn: [item ? item.srn : srn],
@@ -250,7 +250,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       this.addMoreAssetsData();
     } else {
       immovableAssetArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -280,7 +280,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       let value = assetsArray.controls[index].value;
       assetsArray.controls[index].reset();
       assetsArray.controls[index].setValue(value);
-      (assetsArray.controls[index] as FormGroup).controls['amount'].setValue(value.amount);
+      (assetsArray.controls[index] as UntypedFormGroup).controls['amount'].setValue(value.amount);
       assetsArray.controls[index].markAsDirty();
       assetsArray.controls[index].updateValueAndValidity();
       this.immovableAssetForm.markAsTouched();
@@ -299,8 +299,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   editAssetForm(i, type) {
     if (type === 'immovable') {
       (
-        (this.immovableAssetForm?.controls['immovableAssetArray'] as FormGroup)
-          .controls[i] as FormGroup
+        (this.immovableAssetForm?.controls['immovableAssetArray'] as UntypedFormGroup)
+          .controls[i] as UntypedFormGroup
       ).enable();
     }
   }

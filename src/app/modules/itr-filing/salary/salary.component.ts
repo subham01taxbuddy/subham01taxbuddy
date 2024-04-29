@@ -11,7 +11,6 @@ import {
   AbstractControl,
   ValidatorFn,
   FormArray,
-  FormGroup,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -1113,7 +1112,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let profitsInLieuAmount = 0;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     for (let i = 0; i < salaryDetails?.controls.length; i++) {
-      let salary = salaryDetails?.controls[i] as FormGroup;
+      let salary = salaryDetails?.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
         if (salary?.controls['salaryType']?.value === 'SEC17_1') {
           basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
@@ -1214,7 +1213,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let totalAllowExempt = 0;
     let othTotalAllowExempt = 0;
     for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
+      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
         if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
           allowance?.controls['allowValue']?.value !== 0 &&
@@ -2117,7 +2116,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.invalid = false;
     if(result.type === 'HRAexemptValue'){
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-        allowancesArray.controls.forEach((control: FormGroup, index: number) => {
+        allowancesArray.controls.forEach((control: UntypedFormGroup, index: number) => {
             const allowType = control.get('allowType').value;
             if (allowType === 'HOUSE_RENT') {
                 control.get('allowValue').setValue(result.value);
@@ -2125,7 +2124,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         });
     }else if(result.type ==='leaveExemptValue'){
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-      allowancesArray.controls.forEach((control: FormGroup, index: number) => {
+      allowancesArray.controls.forEach((control: UntypedFormGroup, index: number) => {
           const allowType = control.get('allowType').value;
           if (allowType === 'LEAVE_ENCASHMENT') {
               control.get('allowValue').setValue(result.value);
@@ -2134,7 +2133,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }else if (result.type === 'GRATUITYexemptValue') {
       this.addExemptIncome('GRATUITY','fromEvent');
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-      allowancesArray.controls.forEach((control: FormGroup) => {
+      allowancesArray.controls.forEach((control: UntypedFormGroup) => {
           const allowType = control.get('allowType').value;
           if (allowType === 'GRATUITY') {
               control.get('allowValue').setValue(result.value);
@@ -2143,7 +2142,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   } else if (result.type === 'PENSIONexemptValue') {
       this.addExemptIncome('COMMUTED_PENSION' ,'fromEvent');
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-      allowancesArray.controls.forEach((control: FormGroup) => {
+      allowancesArray.controls.forEach((control: UntypedFormGroup) => {
           const allowType = control.get('allowType').value;
           if (allowType === 'COMMUTED_PENSION') {
               control.get('allowValue').setValue(result.value);
@@ -2200,7 +2199,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let profitsInLieuAmount = 0;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     for (let i = 0; i < salaryDetails?.controls.length; i++) {
-      let salary = salaryDetails?.controls[i] as FormGroup;
+      let salary = salaryDetails?.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
         if (salary?.controls['salaryType']?.value === 'SEC17_1') {
           basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
@@ -2300,7 +2299,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let totalAllowExempt = 0;
     let othTotalAllowExempt = 0;
     for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
+      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
         if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
           allowance?.controls['allowValue']?.value !== 0 &&

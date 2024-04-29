@@ -3,7 +3,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -14,8 +14,8 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
 export class PayoutAdjustmentComponent implements OnInit {
   loading = false;
   adjustmentDetails: any;
-  amtPending = new FormControl('');
-  reason = new FormControl('');
+  amtPending = new UntypedFormControl('');
+  reason = new UntypedFormControl('');
   dialogRef: any;
   name: any;
   showAdd = false;

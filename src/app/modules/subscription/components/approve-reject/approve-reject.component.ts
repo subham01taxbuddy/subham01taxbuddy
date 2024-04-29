@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -14,7 +14,7 @@ export class ApproveRejectComponent implements OnInit {
   loading!: boolean;
   itrStatus: any = [];
   callers: any = [];
-  changeStatus!: FormGroup;
+  changeStatus!: UntypedFormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<ApproveRejectComponent>,

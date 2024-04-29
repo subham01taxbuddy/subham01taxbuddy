@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -83,41 +83,41 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
-  invoiceFormGroup: FormGroup = this.fb.group({
-    requestType: new FormControl(''),
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    invoiceNo: new FormControl(''),
-    name: new FormControl(''),
-    status:new FormControl('')
+  invoiceFormGroup: UntypedFormGroup = this.fb.group({
+    requestType: new UntypedFormControl(''),
+    mobile: new UntypedFormControl(''),
+    email: new UntypedFormControl(''),
+    invoiceNo: new UntypedFormControl(''),
+    name: new UntypedFormControl(''),
+    status:new UntypedFormControl('')
   });
 
   get mobile() {
-    return this.invoiceFormGroup.controls['mobile'] as FormControl;
+    return this.invoiceFormGroup.controls['mobile'] as UntypedFormControl;
   }
 
   get email() {
-    return this.invoiceFormGroup.controls['email'] as FormControl;
+    return this.invoiceFormGroup.controls['email'] as UntypedFormControl;
   }
 
   get invoiceNo() {
-    return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
+    return this.invoiceFormGroup.controls['invoiceNo'] as UntypedFormControl;
   }
 
   get requestType() {
-    return this.invoiceFormGroup.controls['requestType'] as FormControl;
+    return this.invoiceFormGroup.controls['requestType'] as UntypedFormControl;
   }
 
   get name() {
-    return this.invoiceFormGroup.controls['name'] as FormControl;
+    return this.invoiceFormGroup.controls['name'] as UntypedFormControl;
   }
 
   get status() {
-    return this.invoiceFormGroup.controls['status'] as FormControl;
+    return this.invoiceFormGroup.controls['status'] as UntypedFormControl;
   }
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: MatDialog,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,

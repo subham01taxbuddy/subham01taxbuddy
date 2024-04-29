@@ -9,7 +9,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
@@ -27,7 +27,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   ITR_JSON: ITR_JSON;
   step = 0;
   isAddOtherAssetsImprovement: Number;
-  deductionForm!: FormGroup;
+  deductionForm!: UntypedFormGroup;
   config: any;
   index: number;
   gridOptions: GridOptions;
@@ -41,7 +41,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     public matDialog: MatDialog,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super();
@@ -210,9 +210,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       capitalGainDeductions: [
         {
           deductionSection: 'SECTION_54F',
-          costOfNewAsset: (this.getDeductions.controls[0] as FormGroup)
+          costOfNewAsset: (this.getDeductions.controls[0] as UntypedFormGroup)
             .controls['costOfNewAsset'].value,
-          cgasDepositedAmount: (this.getDeductions.controls[0] as FormGroup)
+          cgasDepositedAmount: (this.getDeductions.controls[0] as UntypedFormGroup)
             .controls['CGASAmount'].value,
           saleValue: saleValue,
           expenses: expenses,
@@ -227,7 +227,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         // this.goldCg.assetDetails = res.assetDetails;
         // this.goldCg.improvement = res.improvement;
         // this.goldCg.deduction = res.deduction;
-        (this.getDeductions.controls[0] as FormGroup).controls[
+        (this.getDeductions.controls[0] as UntypedFormGroup).controls[
           'deductionClaimed'
         ]?.setValue(res.data[0]?.deductionAmount);
 
@@ -237,7 +237,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           orgAssestTransferDate: '',
           costOfNewAssets: res.data[0]?.costOfNewAsset,
           investmentInCGAccount: res.data[0]?.cgasDepositedAmount,
-          purchaseDate: (this.getDeductions.controls[0] as FormGroup).controls[
+          purchaseDate: (this.getDeductions.controls[0] as UntypedFormGroup).controls[
             'purchaseDate'
           ].value,
           totalDeductionClaimed: res.data[0]?.deductionAmount,
@@ -262,7 +262,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     }
     const deductionsArray = (
       (this.deductionForm.controls['deductions'] as FormArray)
-        ?.controls[0] as FormGroup
+        ?.controls[0] as UntypedFormGroup
     )?.controls;
     const dednArray = [
       'typeOfDeduction',

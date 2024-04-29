@@ -88,7 +88,7 @@ export class CustomerProfileComponent implements OnInit {
   imageLoader: boolean = false;
   customerProfileForm: UntypedFormGroup;
   statusId: any;
-  // fillingStatus = new FormControl('', Validators.required);
+  // fillingStatus = new UntypedFormControl('', Validators.required);
   ITR_JSON: ITR_JSON;
   viewer = 'DOC';
   docUrl = '';

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./add-assets.component.scss'],
 })
 export class AddAssetsComponent implements OnInit {
-  immovableAssetForm: FormGroup;
+  immovableAssetForm: UntypedFormGroup;
   isEdit: boolean = false;
   rowIndex: number | undefined;
 
@@ -19,7 +19,7 @@ export class AddAssetsComponent implements OnInit {
   stateDropdownMaster = AppConstants.stateDropdown;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogRef: MatDialogRef<AddAssetsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private utilsService: UtilsService

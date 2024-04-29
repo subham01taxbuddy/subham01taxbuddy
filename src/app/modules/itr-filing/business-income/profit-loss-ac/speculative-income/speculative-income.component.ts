@@ -4,7 +4,7 @@ import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 
 @Component({
@@ -17,16 +17,16 @@ export class SpeculativeIncomeComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   specIncomeFormArray: FormArray;
-  specIncomeForm: FormGroup;
+  specIncomeForm: UntypedFormGroup;
   gridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
+  selectedFormGroup: UntypedFormGroup;
   activeIndex: number;
 
   constructor(
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -47,7 +47,7 @@ export class SpeculativeIncomeComponent implements OnInit {
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
-          this.specIncomeFormArray.controls.forEach((formGroup: FormGroup) => {
+          this.specIncomeFormArray.controls.forEach((formGroup: UntypedFormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
         }
@@ -176,7 +176,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
       (
         this.specIncomeForm?.controls['specIncomesArray'] as FormArray
-      )?.controls?.forEach((form: FormGroup) => {
+      )?.controls?.forEach((form: UntypedFormGroup) => {
         specBusiness[0]?.incomes?.push(form?.value);
       });
 
@@ -222,7 +222,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     const specIncomesArray = <FormArray>(this.specIncomeForm.get('specIncomesArray'));
     return (
       specIncomesArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
+        (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -230,7 +230,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   deleteArray() {
     let array = <FormArray>this.specIncomeForm.get('specIncomesArray');
     array.controls = array.controls.filter(
-      (element) => !(element as FormGroup).controls['hasEdit'].value
+      (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.specIncomeFormArray.controls);
@@ -255,7 +255,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       form.patchValue(this.selectedFormGroup.getRawValue());
       (this.specIncomeForm.controls['specIncomesArray'] as FormArray).push(form);
     } else {
-      (this.specIncomeForm.controls['specIncomesArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
+      (this.specIncomeForm.controls['specIncomesArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }
     this.gridOptions.api?.setRowData(this.specIncomeFormArray.controls);
     this.activeIndex = -1;
@@ -266,7 +266,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   editForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-      ((this.specIncomeForm.controls['specIncomesArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
+      ((this.specIncomeForm.controls['specIncomesArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculateNetIncome();
     this.activeIndex = i;
   }

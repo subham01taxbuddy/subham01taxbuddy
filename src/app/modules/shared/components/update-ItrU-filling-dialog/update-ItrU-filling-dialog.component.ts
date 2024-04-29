@@ -1,6 +1,6 @@
 /* eslint-disable @angular-eslint/component-selector */
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -35,11 +35,11 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class UpdateItrUFillingDialogComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
-  eFillingDate = new FormControl('', Validators.required);
-  itrType = new FormControl('', Validators.required);
-  fy = new FormControl('');
-  ay = new FormControl('');
+  ackNumber = new UntypedFormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
+  eFillingDate = new UntypedFormControl('', Validators.required);
+  itrType = new UntypedFormControl('', Validators.required);
+  fy = new UntypedFormControl('');
+  ay = new UntypedFormControl('');
   maxDate = new Date();
   loading = false;
   userProfile: any;

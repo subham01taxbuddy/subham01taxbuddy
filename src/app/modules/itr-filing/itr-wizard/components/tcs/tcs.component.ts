@@ -7,7 +7,7 @@ import {
   Output,
   Inject,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -22,7 +22,7 @@ export class TcsComponent implements OnInit {
   @Input() isAddTcs: Number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
-  salaryForm: FormGroup;
+  salaryForm: UntypedFormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -30,7 +30,7 @@ export class TcsComponent implements OnInit {
   config: any;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TcsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -79,7 +79,7 @@ export class TcsComponent implements OnInit {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -93,7 +93,7 @@ export class TcsComponent implements OnInit {
     });
   }
 
-  createForm(item?): FormGroup {
+  createForm(item?): UntypedFormGroup {
     if(this.data.assetIndex !== null && item){
       item.srNo = this.data.assetIndex;
     }
@@ -135,7 +135,7 @@ export class TcsComponent implements OnInit {
   }
 
   editSalaryForm(i) {
-    // ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
+    // ((this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).enable();
   }
 
   save() {

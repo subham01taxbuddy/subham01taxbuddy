@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
@@ -32,7 +32,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   config: any;
   loggedInSme: any;
   roles: any;
-  coOwnerToggle = new FormControl('');
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
@@ -76,10 +76,10 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
     'Santali', 'Sindhi', 'Urdu'
   ];
-  selectRole = new FormControl();
-  selectedLangControl = new FormControl('');
+  selectRole = new UntypedFormControl();
+  selectedLangControl = new UntypedFormControl('');
   itrCapabilities: any = [];
-  selectedITRCapabilityControl = new FormControl('');
+  selectedITRCapabilityControl = new UntypedFormControl('');
   allFilerList: any;
   itrPlanList: any;
   constructor(

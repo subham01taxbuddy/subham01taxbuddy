@@ -4,7 +4,7 @@ import {
   DoCheck,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ declare let $: any;
 export class MedicalExpensesComponent implements OnInit, DoCheck {
 
   loading: boolean = false;
-  investmentDeductionForm: FormGroup;
+  investmentDeductionForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   userAge: number = 0;
@@ -52,7 +52,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   maxDate: Date;
   constructor(
     public utilsService: UtilsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public matDialog: MatDialog
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

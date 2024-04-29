@@ -18,8 +18,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import {
   AbstractControl,
   FormArray,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { setTimeout } from 'timers';
@@ -39,10 +39,10 @@ export class OtherInformationComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
 
-  directorForm: FormGroup;
-  sharesForm: FormGroup;
-  firmForm: FormGroup;
-  schedule5AForm: FormGroup;
+  directorForm: UntypedFormGroup;
+  sharesForm: UntypedFormGroup;
+  firmForm: UntypedFormGroup;
+  schedule5AForm: UntypedFormGroup;
 
   config: any;
   loading = false;
@@ -63,7 +63,7 @@ export class OtherInformationComponent implements OnInit {
     public matDialog: MatDialog,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     this.config = {
       itemsPerPage: 2,
@@ -233,7 +233,7 @@ export class OtherInformationComponent implements OnInit {
             if (selectedIncome) {
               const incomeFormGroup = this.schedule5AForm.get(
                 selectedIncomeType
-              ) as FormGroup;
+              ) as UntypedFormGroup;
               incomeFormGroup.patchValue({
                 incomeReceived: selectedIncome.incomeReceived,
                 apportionedAmountOfSpouse:
@@ -538,7 +538,7 @@ export class OtherInformationComponent implements OnInit {
     const firmArray = <FormArray>this.firmForm.get('firmsArray');
     return (
       firmArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
+        (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -601,7 +601,7 @@ export class OtherInformationComponent implements OnInit {
   deleteDirectors() {
     let formArray = this.directorForm.controls['directorsArray'] as FormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -612,7 +612,7 @@ export class OtherInformationComponent implements OnInit {
   deleteShares() {
     let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }
@@ -623,7 +623,7 @@ export class OtherInformationComponent implements OnInit {
   deleteFirms() {
     let formArray = this.firmForm.controls['firmsArray'] as FormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }

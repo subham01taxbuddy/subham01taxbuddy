@@ -1,9 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -18,12 +18,12 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class PartnerInFirmsComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter();
   loading: boolean = false;
-  partnerInFirmForm: FormGroup;
+  partnerInFirmForm: UntypedFormGroup;
   config: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
 
-  constructor(public fb: FormBuilder, private utilsService: UtilsService) {
+  constructor(public fb: UntypedFormBuilder, private utilsService: UtilsService) {
 
   }
 
@@ -72,7 +72,7 @@ export class PartnerInFirmsComponent implements OnInit {
     console.log('array', firmArray);
   }
 
-  createFirmForm(srn?, item?): FormGroup {
+  createFirmForm(srn?, item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : 'N'],
       name: [item ? item.name : ''],
@@ -96,7 +96,7 @@ export class PartnerInFirmsComponent implements OnInit {
       this.addMoreFirmData();
     } else {
       firmArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -108,7 +108,7 @@ export class PartnerInFirmsComponent implements OnInit {
     const improve = <FormArray>this.partnerInFirmForm.controls['firmArray'];
     return (
       improve.controls.filter(
-        (item: FormGroup) => item.controls['hasEdit'].value === true
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -124,7 +124,7 @@ export class PartnerInFirmsComponent implements OnInit {
   deleteFirms() {
     let formArray = this.partnerInFirmForm.controls['firmArray'] as FormArray;
     let index = 0;
-    formArray.controls.forEach((form: FormGroup) => {
+    formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
       }

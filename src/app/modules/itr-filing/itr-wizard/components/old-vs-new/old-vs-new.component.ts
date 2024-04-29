@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import {
   FormArray,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   ValidationErrors,
   AbstractControl,
@@ -65,8 +65,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   newRegimeLabel = 'Opting in Now';
   oldRegimeLabel = 'Not Opting';
-  summaryToolReliefsForm: FormGroup;
-  regimeSelectionForm: FormGroup;
+  summaryToolReliefsForm: UntypedFormGroup;
+  regimeSelectionForm: UntypedFormGroup;
 
   showCurrentAYOptions = false;
   submitted: boolean = false;
@@ -80,7 +80,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: UntypedFormBuilder
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -431,7 +431,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   updateCurrentAYOptions() {
     console.log('here');
     let currAssmntYr = (
-      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+      this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
     ).controls['currentYearRegime'];
     if (
       currAssmntYr.value === 'OLD'
@@ -487,13 +487,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   updateRegimeLabels() {
     this.updateCurrentAYOptions();
     let optIn = (
-      this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+      this.regimeSelectionForm.controls['everOptedNewRegime'] as UntypedFormGroup
     ).controls['everOptedNewRegime'].value;
     let optOut = (
-      this.regimeSelectionForm.controls['everOptedOutOfNewRegime'] as FormGroup
+      this.regimeSelectionForm.controls['everOptedOutOfNewRegime'] as UntypedFormGroup
     ).controls['everOptedOutOfNewRegime'].value;
     let currAssmntYr = (
-      this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+      this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
     ).controls['currentYearRegime'];
 
     // setting values null if no is selected
@@ -518,12 +518,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     //   (
     //     this.regimeSelectionForm.controls[
     //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
+    //     ] as UntypedFormGroup
     //   ).controls['everOptedOutOfNewRegime'].setValue(false);
     //   (
     //     this.regimeSelectionForm.controls[
     //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
+    //     ] as UntypedFormGroup
     //   ).controls['everOptedOutOfNewRegime'].disable();
     // }
 
@@ -533,7 +533,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (
         this.regimeSelectionForm.controls[
         'everOptedOutOfNewRegime'
-        ] as FormGroup
+        ] as UntypedFormGroup
       ).controls['everOptedOutOfNewRegime'].enable();
     } else {
       this.newRegimeLabel = 'Opting in Now';
@@ -541,13 +541,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (
         this.regimeSelectionForm.controls[
         'everOptedOutOfNewRegime'
-        ] as FormGroup
+        ] as UntypedFormGroup
       ).controls['everOptedOutOfNewRegime'].setValue(false);
 
       (
         this.regimeSelectionForm.controls[
         'everOptedOutOfNewRegime'
-        ] as FormGroup
+        ] as UntypedFormGroup
       ).controls['everOptedOutOfNewRegime'].disable();
     }
 
@@ -582,13 +582,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     //   (
     //     this.regimeSelectionForm.controls[
     //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
+    //     ] as UntypedFormGroup
     //   ).controls['everOptedOutOfNewRegime'].setValue(false);
 
     //   (
     //     this.regimeSelectionForm.controls[
     //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
+    //     ] as UntypedFormGroup
     //   ).controls['everOptedOutOfNewRegime'].disable();
     // }
   }
@@ -1978,23 +1978,23 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       // everOptedNewRegime
       {
         (
-          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as UntypedFormGroup
         ).controls['assessmentYear']?.setValue(
           this.ITR_JSON.everOptedNewRegime?.assessmentYear
         );
 
         (
-          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as UntypedFormGroup
         ).controls['everOptedNewRegime']?.setValue(
           this.ITR_JSON.everOptedNewRegime?.everOptedNewRegime
         );
 
         (
-          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as UntypedFormGroup
         ).controls['date']?.setValue(this.ITR_JSON.everOptedNewRegime?.date);
 
         (
-          this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
+          this.regimeSelectionForm.controls['everOptedNewRegime'] as UntypedFormGroup
         ).controls['acknowledgementNumber']?.setValue(
           this.ITR_JSON.everOptedNewRegime?.acknowledgementNumber
         );
@@ -2005,7 +2005,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-          ] as FormGroup
+          ] as UntypedFormGroup
         ).controls['assessmentYear']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.assessmentYear
         );
@@ -2013,7 +2013,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-          ] as FormGroup
+          ] as UntypedFormGroup
         ).controls['everOptedOutOfNewRegime']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.everOptedOutOfNewRegime
         );
@@ -2021,7 +2021,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-          ] as FormGroup
+          ] as UntypedFormGroup
         ).controls['date']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.date
         );
@@ -2029,7 +2029,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         (
           this.regimeSelectionForm.controls[
           'everOptedOutOfNewRegime'
-          ] as FormGroup
+          ] as UntypedFormGroup
         ).controls['acknowledgementNumber']?.setValue(
           this.ITR_JSON.everOptedOutOfNewRegime?.acknowledgementNumber
         );
@@ -2038,23 +2038,23 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       // optionForCurrentAY
       {
         (
-          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
         ).controls['assessmentYear']?.setValue(
           this.ITR_JSON.optionForCurrentAY?.assessmentYear
         );
 
         (
-          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
         ).controls['currentYearRegime']?.setValue(
           this.ITR_JSON.optionForCurrentAY?.currentYearRegime
         );
 
         (
-          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
         ).controls['date']?.setValue(this.ITR_JSON.optionForCurrentAY?.date);
 
         (
-          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
         ).controls['acknowledgementNumber']?.setValue(
           this.ITR_JSON.optionForCurrentAY?.acknowledgementNumber
         );
@@ -2063,7 +2063,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       // optionForCurrentAY
       {
         (
-          this.regimeSelectionForm.controls['optionForCurrentAY'] as FormGroup
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
         ).controls['currentYearRegime'].setValue(
           this.ITR_JSON.optionForCurrentAY?.currentYearRegime
         );
@@ -2292,7 +2292,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
         const control = this.regimeSelectionForm.get(key);
 
-        if (control instanceof FormGroup) {
+        if (control instanceof UntypedFormGroup) {
           Object.keys(control.controls).forEach((nestedKey) => {
             const nestedControl = control.get(nestedKey);
             const controlErrors: ValidationErrors = nestedControl.errors;
@@ -2338,7 +2338,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   setFilingDate(formGroup: any) {
-    var id = (formGroup as FormGroup).controls['acknowledgementNumber'].value;
+    var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
     var lastSix = id.toString().substr(id.length - 6);
     var day = lastSix.slice(0, 2);
     var month = lastSix.slice(2, 4);
@@ -2346,7 +2346,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day);
 
-    (formGroup as FormGroup).controls['date'].setValue(moment(dateString).toDate());
+    (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
   }
 
   getCrypto(summary, type) {

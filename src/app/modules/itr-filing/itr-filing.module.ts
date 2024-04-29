@@ -235,20 +235,6 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     NorDetailsDialogComponent
   ],
 
-  exports: [CustomerProfileComponent],
-  entryComponents: [
-    ReviseReturnDialogComponent,
-    UpdateManualFilingComponent,
-    CoOwnerComponent,
-    DeleteConfirmationDialogComponent,
-    NriDetailsDialogComponent,
-    UnlistedSharesComponent,
-    DirectorInCompanyComponent,
-    AddInvestmentDialogComponent,
-    ListedUnlistedDialogComponent,
-    InvestmentDialogComponent,
-    OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent,
-  ],
+  exports: [CustomerProfileComponent]
 })
 export class ItrFilingModule {}

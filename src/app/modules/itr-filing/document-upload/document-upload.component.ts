@@ -2888,7 +2888,7 @@ export class DocumentUploadComponent implements OnInit {
   serviceType: any;
 
   /// Filtering
-  // myControl = new FormControl();
+  // myControl = new UntypedFormControl();
   // options: string[] = ['One', 'Two', 'Three'];
   // filteredOptions: Observable<string[]>;
 

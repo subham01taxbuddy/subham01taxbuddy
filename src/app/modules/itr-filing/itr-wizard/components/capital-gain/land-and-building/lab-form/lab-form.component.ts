@@ -492,7 +492,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   /**
    * @function addMoreImprovements()
    * @param none
-   * @description Add CoOwner FormGroup in FormArray if the already added formGroups from Form array is valid
+   * @description Add CoOwner UntypedFormGroup in FormArray if the already added formGroups from Form array is valid
    * @author Ashish Hulwan
    */
   addMoreImprovements(formGroupName) {
@@ -1615,7 +1615,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     console.log(this.currentCgIndex);
 
     // const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-    //   .controls[index] as FormGroup;
+    //   .controls[index] as UntypedFormGroup;
 
     let saleValue = assetDetails.controls['valueInConsideration'].value
       ? assetDetails.controls['valueInConsideration'].value
