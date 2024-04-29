@@ -1619,11 +1619,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                  .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
               },
               {
                 label: 'Total Headwise Income',
@@ -1792,11 +1795,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
+              + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+              + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+                  + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
             },
             {
               label: 'Total Headwise Income',
