@@ -668,13 +668,16 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       deduction.value
     );
 
+    let invalidForms = deduction.controls.filter(fg => !fg.valid);
     if (sectionRepeat) {
       this.utilsService.showSnackBar(
         'Deduction cannot be claimed under same section multiple times.'
       );
+    } else {
+
     }
     console.log('Form + deduction=', this.immovableForm.valid);
-    return sectionRepeat;
+    return sectionRepeat || invalidForms.length > 0;
   }
 
   makePanUppercase(control) {

@@ -1009,6 +1009,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
+    } else if(this.deduction && this.deductionForm.invalid){
+      this.utilsService.showErrorMsg('Please fill all mandatory details.');
+      return;
     }
     this.save('bonds');
     this.saveAndNext.emit(false);
