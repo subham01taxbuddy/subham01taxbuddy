@@ -181,7 +181,7 @@ export class SourceOfIncomesComponent implements OnInit {
           switch(clickedSource.schedule){
             case this.schedules.SALARY:
             {
-              this.ITR_JSON.employers = null;
+              this.ITR_JSON.employers = [];
               break;
             }
             case this.schedules.HOUSE_PROPERTY: 
