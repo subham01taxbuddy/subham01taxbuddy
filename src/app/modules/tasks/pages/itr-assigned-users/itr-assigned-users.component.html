@@ -20,9 +20,10 @@
                       <section class="example-section checkbox-right">
                         <div class="checkbox-group ">
                           <mat-checkbox class="ft-18 mb-4" [formControl]="unAssignedUsersView"
-                            [disabled]="disableCheckboxes"
                             *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
-                            (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
+                            (change)="onCheckBoxChange()">
+                            Unassigned Users
+                          </mat-checkbox>
                         </div>
                       </section>
                     </div>
