@@ -249,16 +249,24 @@ export class SourceOfIncomesComponent implements OnInit {
         } else{
           clickedSource.selected = true;
         }
+        let event = {
+          schedule: clickedSource,
+          sources: this.sourcesList,
+        };
+        this.scheduleSelected.emit(event);
+        sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
       });
       
+    } else {
+      let event = {
+        schedule: clickedSource,
+        sources: this.sourcesList,
+      };
+      this.scheduleSelected.emit(event);
+      sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
     }
 
-    let event = {
-      schedule: clickedSource,
-      sources: this.sourcesList,
-    };
-    this.scheduleSelected.emit(event);
-    sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
+
   }
 
   private getPrefillIncomeSources() {
