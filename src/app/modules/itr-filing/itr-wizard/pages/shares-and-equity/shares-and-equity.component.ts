@@ -300,7 +300,8 @@ export class SharesAndEquityComponent
         costOfImprovements = data[0].improvement;
         console.log(assetDetails);
         assetDetails.forEach((element: any) => {
-          if (element.brokerName == this.selectedBroker) {
+          if ((this.utilsService.isNonEmpty(this.selectedBroker) && element.brokerName == this.selectedBroker) ||
+           !this.utilsService.isNonEmpty(this.selectedBroker)) {
             const filterImp = obj.improvement?.filter(
               (data) => data.srn == element.srn
             );
