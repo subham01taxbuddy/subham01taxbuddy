@@ -1213,6 +1213,7 @@ export class ZeroCouponBondsComponent
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],

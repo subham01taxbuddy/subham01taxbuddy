@@ -502,7 +502,7 @@
                                                                 class="small-inp no-height">
                                                                 <input matInput formControlName="dateOfDeposit"
                                                                     placeholder="Date of Deposit" class="input-field"
-                                                                    [matDatepicker]="dateOfDeposit" />
+                                                                    [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                                                                 <mat-datepicker-toggle matSuffix
                                                                     [for]="dateOfDeposit"></mat-datepicker-toggle>
                                                                 <mat-datepicker #dateOfDeposit></mat-datepicker>

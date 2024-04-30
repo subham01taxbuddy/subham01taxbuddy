@@ -337,6 +337,8 @@ export class SharesAndEquityComponent
     }
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   initDeductionForm(obj?): UntypedFormGroup {
     let accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex), Validators.required]
     let ifscValidators = [Validators.pattern(AppConstants.IFSCRegex), Validators.required];

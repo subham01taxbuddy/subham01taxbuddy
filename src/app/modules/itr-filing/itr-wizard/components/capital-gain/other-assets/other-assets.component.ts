@@ -15,6 +15,7 @@ import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
 import { formatDate } from '@angular/common';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
+import * as moment from "moment/moment";
 
 @Component({
   selector: 'app-other-assets',
@@ -251,6 +252,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     // this.calculateCg();
     console.log(this.goldCg);
   }
+
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
 
   // saving the cg
   saveCg() {

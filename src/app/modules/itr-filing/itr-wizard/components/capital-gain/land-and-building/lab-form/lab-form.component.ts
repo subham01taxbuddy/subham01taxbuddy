@@ -559,6 +559,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   createDeductionForm(obj?: any): UntypedFormGroup {
     return this.fb.group({
       srn: [obj.srn || this.currentCgIndex.toString()],

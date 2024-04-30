@@ -433,7 +433,7 @@
                           </div>
                           <mat-form-field appearance="outline" class="small-inp no-height">
                             <input matInput formControlName="dateOfDeposit" name="dateOfDeposit[i]" class="input-field"
-                                   [matDatepicker]="dateOfDeposit" />
+                                   [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                             <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                             <mat-datepicker #dateOfDeposit></mat-datepicker>
                             <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">
