@@ -910,6 +910,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
@@ -926,9 +928,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null,[Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
-      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
-      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
-      dateOfDeposit: [obj?.dateOfDeposit || null],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
+      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
   }
 
@@ -1010,7 +1012,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       );
       return;
     } else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.showErrorMsg('Please fill all mandatory details.');
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2")
+      this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }
     this.save('bonds');

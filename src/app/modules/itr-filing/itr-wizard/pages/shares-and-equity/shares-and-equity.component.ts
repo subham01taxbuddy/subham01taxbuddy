@@ -300,7 +300,8 @@ export class SharesAndEquityComponent
         costOfImprovements = data[0].improvement;
         console.log(assetDetails);
         assetDetails.forEach((element: any) => {
-          if (element.brokerName == this.selectedBroker) {
+          if ((this.utilsService.isNonEmpty(this.selectedBroker) && element.brokerName == this.selectedBroker) ||
+           !this.utilsService.isNonEmpty(this.selectedBroker)) {
             const filterImp = obj.improvement?.filter(
               (data) => data.srn == element.srn
             );
@@ -336,13 +337,12 @@ export class SharesAndEquityComponent
     }
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   initDeductionForm(obj?): UntypedFormGroup {
-    let accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]
-    let ifscValidators = [Validators.pattern(AppConstants.IFSCRegex)];
-    if(this.bondType === 'listed'){
-      accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex), Validators.required]
-      ifscValidators = [Validators.pattern(AppConstants.IFSCRegex), Validators.required];
-    }
+    let accountValidators = [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex), Validators.required]
+    let ifscValidators = [Validators.pattern(AppConstants.IFSCRegex), Validators.required];
+
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -360,7 +360,7 @@ export class SharesAndEquityComponent
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
       accountNumber: [obj?.accountNumber || null, accountValidators],
       ifscCode: [obj?.ifscCode || null, ifscValidators],
-      dateOfDeposit: [obj?.dateOfDeposit || null],
+      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
   }
 
@@ -1829,7 +1829,8 @@ export class SharesAndEquityComponent
       );
       return;
     } else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.showErrorMsg('Please fill all mandatory details.');
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction");
+      this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }
     this.save();

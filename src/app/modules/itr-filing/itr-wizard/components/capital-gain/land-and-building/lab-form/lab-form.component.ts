@@ -559,6 +559,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   createDeductionForm(obj?: any): UntypedFormGroup {
     return this.fb.group({
       srn: [obj.srn || this.currentCgIndex.toString()],
@@ -568,9 +570,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
       investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
-      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
-      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
-      dateOfDeposit: [obj?.dateOfDeposit || null],
+      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
+      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
   }
 
