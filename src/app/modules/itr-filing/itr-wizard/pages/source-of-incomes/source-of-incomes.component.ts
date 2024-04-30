@@ -223,7 +223,7 @@ export class SourceOfIncomesComponent implements OnInit {
             }
             case this.schedules.CAPITAL_GAIN:
             {
-              this.ITR_JSON.capitalGain = null;
+              this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item=> item?.assetType === 'VDA');
               break;
             }
             case this.schedules.SPECULATIVE_INCOME:
