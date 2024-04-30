@@ -368,7 +368,8 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'HRAexemptValue', value: copiedValues.exemptValue });
+        this.setDescriptionValidation('salary',selectedSalaryItem, true);
+        this.formValuesChanged();
 
        }else if (copiedValues?.title === 'PENSION'){
         const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
@@ -378,7 +379,8 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'PENSIONexemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.formValuesChanged();
 
        }else if (copiedValues?.title === 'GRATUITY'){
         const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
@@ -388,7 +390,8 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'GRATUITYexemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.formValuesChanged();
        }
 
        else if (copiedValues?.title === 'LEAVE_ENCASHMENT'){
@@ -399,7 +402,8 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'leaveExemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.formValuesChanged();
        }
       }
     });

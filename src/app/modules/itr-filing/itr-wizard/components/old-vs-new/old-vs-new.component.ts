@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  BankDetails,
   ITR_JSON,
-  OptedInNewRegime,
-  OptedOutNewRegime,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
