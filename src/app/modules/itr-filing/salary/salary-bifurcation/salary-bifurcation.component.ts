@@ -369,6 +369,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+        this.valueChanged.emit({ type: 'HRAexemptValue', value: copiedValues.exemptValue });
         this.formValuesChanged();
 
        }else if (copiedValues?.title === 'PENSION'){
@@ -380,6 +381,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
          this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'PENSIONexemptValue', value: copiedValues.exemptValue });
          this.formValuesChanged();
 
        }else if (copiedValues?.title === 'GRATUITY'){
@@ -391,6 +393,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
          this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'GRATUITYexemptValue', value: copiedValues.exemptValue });
          this.formValuesChanged();
        }
 
@@ -403,6 +406,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
          this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'leaveExemptValue', value: copiedValues.exemptValue });
          this.formValuesChanged();
        }
       }
