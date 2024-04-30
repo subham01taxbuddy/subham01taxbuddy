@@ -45,7 +45,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     page: 0,
     pageSize: 20,
     mobileNumber: null,
-    emailId: null
+    emailId: null,
+    migrationSource:null
   }
   showCsvMessage: boolean;
   dataOnLoad = true;
@@ -60,6 +61,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   searchAsPrinciple: boolean = false;
   partnerType: any;
+  migrationList =[
+    { value: 'Registered', name: 'Registered' },
+    { value: 'ITR Filed', name: 'ITR Filed' }
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -374,7 +379,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
-        source: userData[i].source
+        source: userData[i].source,
+        statusName: userData[i].statusName,
+
       })
       userArray.push(userInfo);
     }
@@ -446,7 +453,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Status',
-        field: 'source',
+        field: 'statusName',
         width: 100,
         suppressMovable: true,
         sortable: true,
@@ -456,13 +463,13 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        valueGetter: function nameFromCode(params) {
-          if (params.data.source === 'Old Customer Migration Script') {
-            return 'ITR Filed'
-          } else if (params.data.source === 'Old Interested Customer Migration Script') {
-            return 'Interested'
-          } else 'NA'
-        }
+        // valueGetter: function nameFromCode(params) {
+        //   if (params.data.source === 'Old Customer Migration Script') {
+        //     return 'ITR Filed'
+        //   } else if (params.data.source === 'Old Interested Customer Migration Script') {
+        //     return 'Interested'
+        //   } else 'NA'
+        // }
       },
 
       {
@@ -888,6 +895,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
+    this.searchParam.migrationSource = null;
     this.usersGridOptions.api?.setRowData(this.createRowData([]));
     this.userInfoLength = 0;
     this.config.totalItems = 0;

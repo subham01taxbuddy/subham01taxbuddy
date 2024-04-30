@@ -16,7 +16,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../services/itr-json-helper-service';
-import {GridOptions} from "ag-grid-community";
+import { GridOptions } from "ag-grid-community";
 
 @Component({
   selector: 'app-zero-coupon-bonds',
@@ -25,8 +25,7 @@ import {GridOptions} from "ag-grid-community";
 })
 export class ZeroCouponBondsComponent
   extends WizardNavigation
-  implements OnInit
-{
+  implements OnInit {
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: UntypedFormGroup;
@@ -63,7 +62,7 @@ export class ZeroCouponBondsComponent
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
-        sessionStorage.getItem(AppConstants.ITR_JSON)
+      sessionStorage.getItem(AppConstants.ITR_JSON)
     );
     //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -81,7 +80,7 @@ export class ZeroCouponBondsComponent
       enableCellTextSelection: true,
       onGridReady: (params) => {
         params.api?.setRowData(
-            this.getBondsArray.controls
+          this.getBondsArray.controls
         );
       },
       onSelectionChanged: (event) => {
@@ -174,7 +173,7 @@ export class ZeroCouponBondsComponent
             }
             if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
-            } else if(this.bondType === 'bonds' && element.whetherDebenturesAreListed){
+            } else if (this.bondType === 'bonds' && element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -194,7 +193,7 @@ export class ZeroCouponBondsComponent
             }
             if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
-            } else if(this.bondType === 'bonds' && !element.whetherDebenturesAreListed){
+            } else if (this.bondType === 'bonds' && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -211,9 +210,9 @@ export class ZeroCouponBondsComponent
     this.isDisable = true;
 
     this.bondsGridOptions.api?.setRowData(
-        this.getBondsArray.controls
+      this.getBondsArray.controls
     );
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length -1 : 0;
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length - 1 : 0;
     this.selectedFormGroup = this.createForm(srn);
     this.activeIndex = -1;
 
@@ -318,19 +317,19 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  clearForm(){
+  clearForm() {
     this.selectedFormGroup.reset();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
   }
 
   saveManualEntry() {
-    if(this.selectedFormGroup.invalid){
+    if (this.selectedFormGroup.invalid) {
       this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
       return;
     }
 
     let result = this.selectedFormGroup.getRawValue();
-    if(this.activeIndex === -1){
+    if (this.activeIndex === -1) {
       let srn = (this.bondsForm.controls['bondsArray'] as UntypedFormArray).length - 1;
       let form = this.createForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
@@ -348,7 +347,7 @@ export class ZeroCouponBondsComponent
   editBondsForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-        ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
+      ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
   }
 
@@ -366,7 +365,7 @@ export class ZeroCouponBondsComponent
     bondsArray.controls = bondsArray.controls.filter(
       (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
-    if(bondsArray.length == 0){
+    if (bondsArray.length == 0) {
       this.deductionForm.reset();
       this.deduction = false;
       this.isDisable = true;
@@ -445,13 +444,15 @@ export class ZeroCouponBondsComponent
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['valueInConsideration'].value;
         },
@@ -490,13 +491,15 @@ export class ZeroCouponBondsComponent
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#7D8398',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 400,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#7D8398',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 400,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
@@ -522,13 +525,15 @@ export class ZeroCouponBondsComponent
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#33353F',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
@@ -547,12 +552,12 @@ export class ZeroCouponBondsComponent
         },
         cellRenderer: function (params: any) {
           const gainType = params.data.controls['gainType'].value;
-          if(gainType === 'LONG'){
+          if (gainType === 'LONG') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
              background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
              ${gainType}
             </button>`;
-          }else if(gainType === 'SHORT'){
+          } else if (gainType === 'SHORT') {
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
             background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
             ${gainType}
@@ -564,13 +569,15 @@ export class ZeroCouponBondsComponent
         headerName: 'Gain Amount',
         field: 'capitalGain',
         width: 150,
-        cellStyle: { textAlign: 'center',
-        color: '#33353F',
-        fontFamily: 'DM Sans',
-        fontSize: '14px',
-        fontStyle: 'normal',
-        fontWeight: 500,
-        lineHeight: 'normal' },
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
@@ -619,7 +626,7 @@ export class ZeroCouponBondsComponent
           : this.bondType === 'zeroCouponBonds'
             ? 'ZERO_COUPON_BONDS'
             : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
-      if(bonds.controls['isIndexationBenefitAvailable'].value === false){
+      if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
       }
@@ -663,8 +670,8 @@ export class ZeroCouponBondsComponent
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
           : this.bondType === 'zeroCouponBonds'
-          ? 'ZERO_COUPON_BONDS'
-          : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+            ? 'ZERO_COUPON_BONDS'
+            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',
@@ -757,9 +764,9 @@ export class ZeroCouponBondsComponent
       const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
 
-      if(this.bondType === 'zeroCouponBonds'){
+      if (this.bondType === 'zeroCouponBonds') {
         bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
-            e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
+          e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
       }
       bondsArray.controls.forEach((element) => {
         if (
@@ -811,7 +818,7 @@ export class ZeroCouponBondsComponent
         }
       } else {
         // if (bondData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain?.push(bondData);
+        this.Copy_ITR_JSON.capitalGain?.push(bondData);
         // }
       }
 
@@ -831,13 +838,13 @@ export class ZeroCouponBondsComponent
         bondImprovement = [];
 
         let debsList = goldIndex >= 0 ?
-            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => !e.isIndexationBenefitAvailable) : [];
 
         //persist the gold asset improvements
-        if(debsList?.length > 0){
+        if (debsList?.length > 0) {
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
-            if(srnList.includes(improvment.srn)){
+            if (srnList.includes(improvment.srn)) {
               bondImprovement.push(improvment);
             }
           });
@@ -925,19 +932,19 @@ export class ZeroCouponBondsComponent
       } else {
         //indexation entries to be removed with their improvement
         let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-            (element) => element.assetType === 'GOLD'
+          (element) => element.assetType === 'GOLD'
         );
 
         bondImprovement = [];
 
         let debsList = goldIndex >= 0 ?
-            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => !e.isIndexationBenefitAvailable) : [];
 
         //persist the gold asset improvements
-        if(debsList?.length > 0){
+        if (debsList?.length > 0) {
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
-            if(srnList.includes(improvment.srn)){
+            if (srnList.includes(improvment.srn)) {
               bondImprovement.push(improvment);
             }
           });
@@ -964,7 +971,7 @@ export class ZeroCouponBondsComponent
           }
         }
       }
-      if(zcbDebList?.length > 0){
+      if (zcbDebList?.length > 0) {
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
@@ -976,7 +983,7 @@ export class ZeroCouponBondsComponent
           zcbList = this.bondType === 'bonds' ? this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails.filter(e => !e.whetherDebenturesAreListed) : [];
           let tempArray = this.Copy_ITR_JSON.capitalGain[
             zcbIndex
-            ].assetDetails.map((element) => element.srn);
+          ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
               previousValue > currentValue ? previousValue : currentValue
@@ -991,7 +998,7 @@ export class ZeroCouponBondsComponent
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[
               zcbIndex
-              ]?.assetDetails.filter(
+            ]?.assetDetails.filter(
               (e) => e.srn === (element as UntypedFormGroup).controls['srn'].value
             );
 
@@ -1006,15 +1013,15 @@ export class ZeroCouponBondsComponent
 
             let costOfImprovement = (element as UntypedFormGroup).controls[
               'costOfImprovement'
-              ].value;
+            ].value;
             bondImprovement.push({
               srn: (element as UntypedFormGroup).controls['srn'].value,
               dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
-                ].value,
+              ].value,
               indexCostOfImprovement: (element as UntypedFormGroup).controls[
                 'indexCostOfImprovement'
-                ].value,
+              ].value,
               costOfImprovement: costOfImprovement,
             });
 
@@ -1028,7 +1035,7 @@ export class ZeroCouponBondsComponent
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'ZERO_COUPON_BONDS',
           deduction: zcbIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[zcbIndex].deduction
-              : [],
+            : [],
           improvement: bondImprovement,
           buyersDetails: [],
           assetDetails: zcbList,
@@ -1058,9 +1065,9 @@ export class ZeroCouponBondsComponent
               (element) => !element?.isIndexationBenefitAvailable
             ) : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails;
         }
-        if(this.bondType === 'bonds' && zcbDebList?.length === 0){
+        if (this.bondType === 'bonds' && zcbDebList?.length === 0) {
           let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-              (element) => element.assetType === 'ZERO_COUPON_BONDS'
+            (element) => element.assetType === 'ZERO_COUPON_BONDS'
           );
           if (zcbIndex !== -1) {
             this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
@@ -1144,7 +1151,7 @@ export class ZeroCouponBondsComponent
   }
   calculateIndexCost(asset, type?) {
     if (!asset.controls['isIndexationBenefitAvailable'].value ||
-        (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
+      (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
       asset.controls['indexCostOfAcquisition'].setValue(0);
       asset.controls['indexCostOfImprovement'].setValue(0);
       this.calculateTotalCG(asset);
@@ -1169,12 +1176,12 @@ export class ZeroCouponBondsComponent
     let purchaseFinancialYear =
       selectedPurchaseYear.get('month') > 2
         ? selectedPurchaseYear.get('year') +
-          '-' +
-          (selectedPurchaseYear.get('year') + 1)
+        '-' +
+        (selectedPurchaseYear.get('year') + 1)
         : selectedPurchaseYear.get('year') -
-          1 +
-          '-' +
-          selectedPurchaseYear.get('year');
+        1 +
+        '-' +
+        selectedPurchaseYear.get('year');
 
     let costOfAcquistion = parseFloat(asset.controls['purchaseCost'].value);
 
@@ -1206,6 +1213,7 @@ export class ZeroCouponBondsComponent
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
@@ -1220,13 +1228,19 @@ export class ZeroCouponBondsComponent
         obj ? obj.investmentInCGAccount : null,
         Validators.required,
       ],
-      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
+      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null, [Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
+      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
   }
 
   calculateDeductionGain() {
-    if (this.deductionForm.valid) {
+    let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
+        this.deductionForm.controls['costOfNewAssets'].valid &&
+        this.deductionForm.controls['investmentInCGAccount'].valid;
+    if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
       let saleValue = 0;
@@ -1284,6 +1298,8 @@ export class ZeroCouponBondsComponent
           );
         }
       );
+    } else {
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
     }
   }
 
@@ -1292,6 +1308,16 @@ export class ZeroCouponBondsComponent
   }
 
   saveAll() {
+    if (this.deductionForm.controls['totalDeductionClaimed'].errors && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
+      this.utilsService.showSnackBar(
+        'Amount against 54F shall be restricted to 10 Crore.'
+      );
+      return;
+    }else if(this.deduction && this.deductionForm.invalid){
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.showSnackBar('Please fill all mandatory details.');
+      return;
+    }
     this.save('bonds');
     this.saveAndNext.emit(false);
   }

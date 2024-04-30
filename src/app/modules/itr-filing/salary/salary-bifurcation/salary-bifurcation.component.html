@@ -46,9 +46,8 @@
                     <button type="button" class="addBtn" (click)="addItem('SEC17_1')" [disabled]="salary.invalid"> + Add
                       Another</button>
                   </div>
-                  <div class="deleteBtn" *ngIf="false">
-                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i
-                        class="fas fa-calculator"></i></button>
+                  <div class="deleteBtn" *ngIf="shouldShowCalculator(item.value.salaryType)">
+                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i class="fas fa-calculator"></i></button>
                   </div>
                 </div>
                 <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">

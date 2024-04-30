@@ -25,8 +25,8 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
-import {Location} from "@angular/common";
-import {WizardNavigation} from "../../../../../../itr-shared/WizardNavigation";
+import { Location } from "@angular/common";
+import { WizardNavigation } from "../../../../../../itr-shared/WizardNavigation";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -89,7 +89,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.labData = this.ITR_JSON.capitalGain?.filter(
-        (item) => item.assetType === 'PLOT_OF_LAND'
+      (item) => item.assetType === 'PLOT_OF_LAND'
     );
 
     //get financial year from ITR object
@@ -114,13 +114,13 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.getImprovementYears();
   }
 
-  getGainType(){
-      return this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
-          ? this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
-          : "NA"
+  getGainType() {
+    return this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
+      ? this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
+      : "NA"
   }
   reset(control) {
-    if(control.value === 0) {
+    if (control.value === 0) {
       control.setValue(null);
     }
   }
@@ -196,33 +196,33 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   STCGOutput: any = [];
   LTCGOutput: any = [];
-  mode:string;
+  mode: string;
 
   ngOnInit() {
-      const dataToPatch = this.ITR_JSON.capitalGain?.filter(
-        (item) => item.assetType === 'PLOT_OF_LAND'
-      );
-      dataToPatch[0]?.assetDetails.forEach((element, index) => {
-        if (element.srn === 0) {
-          this.currentCgIndex = index;
-        }
-      });
-
-      console.log('selected index=', this.currentCgIndex);
-      this.cgArrayElement = dataToPatch[0];
-      if(this.cgArrayElement?.assetDetails?.length > 0) {
-        this.editProperty(0);
-        this.mode = 'EDIT';
-      } else {
-        this.addNewProperty();
-        this.mode = 'ADD';
+    const dataToPatch = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'PLOT_OF_LAND'
+    );
+    dataToPatch[0]?.assetDetails.forEach((element, index) => {
+      if (element.srn === 0) {
+        this.currentCgIndex = index;
       }
+    });
+
+    console.log('selected index=', this.currentCgIndex);
+    this.cgArrayElement = dataToPatch[0];
+    if (this.cgArrayElement?.assetDetails?.length > 0) {
+      this.editProperty(0);
+      this.mode = 'EDIT';
+    } else {
+      this.addNewProperty();
+      this.mode = 'ADD';
+    }
   }
 
-  addNewProperty(){
+  addNewProperty() {
     this.amountRegex = AppConstants.amountWithoutDecimal;
     this.cgArrayElement = this.ITR_JSON.capitalGain?.filter(
-        (item) => item.assetType === 'PLOT_OF_LAND'
+      (item) => item.assetType === 'PLOT_OF_LAND'
     )[0];
     if (this.cgArrayElement?.assetDetails?.length > 0) {
       this.currentCgIndex = this.cgArrayElement.assetDetails.length;
@@ -249,32 +249,32 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     // deductions.push(this.createDeductionForm());
 
     this.calMaxPurchaseDate(
-        (assetDetails.getRawValue() as AssetDetails[])[0].sellDate,
-        this.immovableForm,
-        0
+      (assetDetails.getRawValue() as AssetDetails[])[0].sellDate,
+      this.immovableForm,
+      0
     );
     this.calMinImproveDate(
-        (assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate,
-        this.immovableForm,
-        0
+      (assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate,
+      this.immovableForm,
+      0
     );
     console.log('assets for ADD', assetDetails);
 
     this.cgArrayElement.assetDetails.push(
-        (assetDetails.controls[0] as UntypedFormGroup).getRawValue()
+      (assetDetails.controls[0] as UntypedFormGroup).getRawValue()
     );
     console.log('cgArrayElement', this.cgArrayElement);
   }
 
-  editProperty(editIndex){
+  editProperty(editIndex) {
     this.addMissingKeys(this.cgArrayElement);
     this.investmentsCreateRowData();
     this.immovableForm = this.createImmovableForm();
     const assetDetails = <UntypedFormArray>this.immovableForm.get('assetDetails');
     assetDetails.push(
-        this.createAssetDetailsForm(
-            this.cgArrayElement.assetDetails[this.currentCgIndex]
-        )
+      this.createAssetDetailsForm(
+        this.cgArrayElement.assetDetails[this.currentCgIndex]
+      )
     );
     this.calculateIndexCost(0);
 
@@ -282,9 +282,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
     // IMPROVEMENTS SECTION
     this.improvements = this.cgArrayElement.improvement?.filter(
-        (imp) =>
-            imp.srn == editIndex &&
-            this.utilsService.isNonEmpty(imp.dateOfImprovement)
+      (imp) =>
+        imp.srn == editIndex &&
+        this.utilsService.isNonEmpty(imp.dateOfImprovement)
     );
 
     let isCostOfImprovementPresent = false;
@@ -297,8 +297,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
     if (isCostOfImprovementPresent) {
       if (
-          this.improvements instanceof Array &&
-          this.improvements.length > 0
+        this.improvements instanceof Array &&
+        this.improvements.length > 0
       ) {
         this.isImprovements.setValue(true);
         const improvement = <UntypedFormArray>this.immovableForm.get('improvement');
@@ -306,8 +306,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           let improvementForm = this.createImprovementForm(obj);
           improvement.push(improvementForm);
           this.isImprovementValid(
-              this.immovableForm,
-              this.improvements.indexOf(obj)
+            this.immovableForm,
+            this.improvements.indexOf(obj)
           );
         });
         console.log('Immovable Form===', this.immovableForm);
@@ -324,8 +324,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         let deductionForm = this.createDeductionForm(obj);
         deductions.push(deductionForm);
         this.isDeductionsValid(
-            this.immovableForm,
-            this.deductions.indexOf(obj)
+          this.immovableForm,
+          this.deductions.indexOf(obj)
         );
       });
       console.log('Immovable Form===', this.immovableForm);
@@ -333,12 +333,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.isDeductions.setValue(false);
     }
     this.buyers = this.cgArrayElement.buyersDetails.filter(
-        (buyer) => buyer.srn == editIndex
+      (buyer) => buyer.srn == editIndex
     );
     if (this.buyers instanceof Array) {
       console.log('in buyer if', this.buyers);
       const buyersDetails = <UntypedFormArray>(
-          this.immovableForm.get('buyersDetails')
+        this.immovableForm.get('buyersDetails')
       );
       let index = 0;
       this.buyers.forEach((obj) => {
@@ -348,23 +348,23 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       });
     }
     this.calMaxPurchaseDate(
-        this.immovableForm.value.sellDate,
-        this.immovableForm,
-        0
+      this.immovableForm.value.sellDate,
+      this.immovableForm,
+      0
     );
     this.calMinImproveDate(
-        this.immovableForm.value.purchaseDate,
-        this.immovableForm,
-        0
+      this.immovableForm.value.purchaseDate,
+      this.immovableForm,
+      0
     );
     this.cgOutput = [];
   }
 
-  markActive(index){
-    if(this.currentCgIndex >= 0 && this.currentCgIndex >= this.labData?.length){
+  markActive(index) {
+    if (this.currentCgIndex >= 0 && this.currentCgIndex >= this.labData?.length) {
       this.saveImmovableCG(this.immovableForm, index, false);
     }
-    if(index === -1) {
+    if (index === -1) {
       this.addNewProperty();
       // this.cgArrayElement.assetDetails.push(this.cgArrayElement.assetDetails[this.currentCgIndex]);
       // this.editEmployerDetails(this.Copy_ITR_JSON.employers.length -1);
@@ -378,17 +378,17 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   }
 
-  deleteProperty(index){
-    if(index >= 0 && index < this.cgArrayElement.assetDetails?.length) {
+  deleteProperty(index) {
+    if (index >= 0 && index < this.cgArrayElement.assetDetails?.length) {
       this.cgArrayElement.assetDetails.splice(index, 1);
       let labData = this.Copy_ITR_JSON.capitalGain?.filter(
-          (item) => item.assetType === 'PLOT_OF_LAND'
+        (item) => item.assetType === 'PLOT_OF_LAND'
       )[0];
       if (labData) {
         this.Copy_ITR_JSON.capitalGain.splice(
-            this.Copy_ITR_JSON.capitalGain.indexOf(labData),
-            1,
-            this.cgArrayElement
+          this.Copy_ITR_JSON.capitalGain.indexOf(labData),
+          1,
+          this.cgArrayElement
         );
         //this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
       }
@@ -559,6 +559,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   createDeductionForm(obj?: any): UntypedFormGroup {
     return this.fb.group({
       srn: [obj.srn || this.currentCgIndex.toString()],
@@ -568,6 +570,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
       investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
+      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
+      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
   }
 
@@ -657,7 +662,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     return panRepeat;
   }
 
-  deductionValidation() {
+  deductionValidation(checkForm: boolean) {
     const deduction = <UntypedFormArray>this.immovableForm.get('deductions');
     // This method is written in utils service for common usablity.
     let sectionRepeat: boolean = this.utilsService.checkDuplicateInObject(
@@ -665,13 +670,19 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       deduction.value
     );
 
+    let invalidForms = deduction.controls.filter(fg => !fg.valid);
     if (sectionRepeat) {
       this.utilsService.showSnackBar(
         'Deduction cannot be claimed under same section multiple times.'
       );
+    } else {
+
     }
     console.log('Form + deduction=', this.immovableForm.valid);
-    return sectionRepeat;
+    if(checkForm)
+      return sectionRepeat || invalidForms.length > 0;
+    else
+      return sectionRepeat;
   }
 
   makePanUppercase(control) {
@@ -878,7 +889,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           this.improvements.push(improvementDetails.getRawValue());
         }
         this.mergeImprovements();
-        this.calculateIndexCost(index);
+        this.calculateIndexCost(0);
         this.calculateCapitalGain(formGroupName, '', index);
       });
     }
@@ -945,45 +956,42 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  removeImprovement(formGroupName: UntypedFormGroup) {
-    for (let i = this.selectedIndexes.length - 1; i >= 0; i--) {
-      const index = this.selectedIndexes[i];
-      const improve = <UntypedFormArray>formGroupName.get('improvement');
-      if (improve && improve.at(index)) {
-        let objToRemove = improve.at(index).value;
-        improve.removeAt(index);
+  removeImprovement(formGroupName: UntypedFormGroup, index: number) {
+    const improve = <UntypedFormArray>formGroupName.get('improvement');
+    if (improve && improve.at(index)) {
+      let objToRemove = improve.at(index).value;
+      improve.removeAt(index);
 
-        // Update the cg object
-        let filtered = this.cgArrayElement?.improvement?.filter(
-          (item) =>
-            item.srn == objToRemove?.srn &&
-            item.costOfImprovement === objToRemove?.costOfImprovement &&
-            item.dateOfImprovement == objToRemove?.dateOfImprovement
+      // Update the cg object
+      let filtered = this.cgArrayElement?.improvement?.filter(
+        (item) =>
+          item.srn == objToRemove?.srn &&
+          item.costOfImprovement === objToRemove?.costOfImprovement &&
+          item.dateOfImprovement == objToRemove?.dateOfImprovement
+      );
+      if (filtered.length > 0) {
+        this.cgArrayElement?.improvement.splice(
+          this.cgArrayElement?.improvement.indexOf(filtered[0]),
+          1
         );
-        if (filtered.length > 0) {
-          this.cgArrayElement?.improvement.splice(
-            this.cgArrayElement?.improvement.indexOf(filtered[0]),
-            1
-          );
-        }
-
-        // Remove from improvements list also
-        let toDelete = this.improvements?.filter(
-          (item) =>
-            item?.srn == objToRemove?.srn &&
-            item?.costOfImprovement === objToRemove?.costOfImprovement &&
-            item?.dateOfImprovement == objToRemove?.dateOfImprovement
-        );
-        if (toDelete.length > 0) {
-          this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
-        }
-
-        if (improve?.length === 0) {
-          this.isImprovements?.setValue(false);
-        }
-
-        this.calculateCapitalGain(formGroupName, '', index);
       }
+
+      // Remove from improvements list also
+      let toDelete = this.improvements?.filter(
+        (item) =>
+          item?.srn == objToRemove?.srn &&
+          item?.costOfImprovement === objToRemove?.costOfImprovement &&
+          item?.dateOfImprovement == objToRemove?.dateOfImprovement
+      );
+      if (toDelete.length > 0) {
+        this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
+      }
+
+      if (improve?.length === 0) {
+        this.isImprovements?.setValue(false);
+      }
+
+      this.calculateCapitalGain(formGroupName, '', index);
     }
   }
 
@@ -1004,7 +1012,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.isImprovements.setValue(false);
       formGroupName.controls['improvement'] = this.fb.array([]);
       let otherImprovements = this.cgArrayElement.improvement.filter(
-          (ded) => ded.srn != this.currentCgIndex
+        (ded) => ded.srn != this.currentCgIndex
       );
       this.cgArrayElement.improvement = otherImprovements;
       this.calculateCapitalGain(formGroupName, '', this.currentCgIndex);
@@ -1023,6 +1031,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         costOfNewAssets: null,
         investmentInCGAccount: null,
         totalDeductionClaimed: null,
+        accountNumber: null,
+        ifscCode: null,
+        dateOfDeposit: null,
       };
 
       deductions.push(this.createDeductionForm(obj));
@@ -1049,14 +1060,37 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as UntypedFormArray
     ).controls[0] as UntypedFormGroup;
+    if (deductionForm.controls['underSection'].value === '54' ||
+      deductionForm.controls['underSection'].value === '54F') {
+      deductionForm.controls['totalDeductionClaimed'].setValidators(Validators.max(100000000));
+      deductionForm.controls['totalDeductionClaimed'].markAsDirty();
+      deductionForm.controls['totalDeductionClaimed'].markAllAsTouched();
+      deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
+    }else{
+      deductionForm.controls['totalDeductionClaimed'].setValidators(null);
+      deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
+    }
+    if(deductionForm.controls['underSection'].value === '54EE' ||
+        deductionForm.controls['underSection'].value === '54EC'){
+      deductionForm.controls['investmentInCGAccount'].setValue(null);
+      deductionForm.controls['investmentInCGAccount'].setValidators(null);
+      deductionForm.controls[
+          'investmentInCGAccount'
+          ].updateValueAndValidity();
+    } else{
+      deductionForm.controls['investmentInCGAccount'].setValue(null);
+      deductionForm.controls['investmentInCGAccount'].setValidators(Validators.required);
+      deductionForm.controls[
+          'investmentInCGAccount'
+          ].updateValueAndValidity();
+    }
 
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC' ||
       deductionForm.controls['underSection'].value === '54F' ||
       deductionForm.controls['underSection'].value === '54B' ||
-      deductionForm.controls['underSection'].value === '54'
-    ) {
+      deductionForm.controls['underSection'].value === '54') {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
         Validators.required,
@@ -1103,11 +1137,10 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    // this.setTotalDeductionValidation();
     this.calculateDeduction(index);
   }
 
-  saveImmovableCG(formGroupName, index, apiCall:boolean) {
+  saveImmovableCG(formGroupName, index, apiCall: boolean) {
     //re-intialise the ITR objects
     // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1119,7 +1152,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
       !this.panValidation() &&
-      !this.deductionValidation() &&
+      !this.deductionValidation(true) &&
       !this.calPercentage())
     ) {
       this.saveBusy = true;
@@ -1185,7 +1218,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           console.log('copy', this.Copy_ITR_JSON);
         }
 
-        if(apiCall) {
+        if (apiCall) {
           this.saveCG();
         }
       } else {
@@ -1241,6 +1274,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       costOfNewAssets: null,
       investmentInCGAccount: null,
       totalDeductionClaimed: null,
+      accountNumber: null,
+      ifscCode: null,
+      dateOfDeposit: null
     };
     if (deductions.valid) {
       deductions.push(this.createDeductionForm(obj));
@@ -1315,8 +1351,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   deleteDeduction(index) {
     console.log('Remove Index', index);
+
     let deductions = <UntypedFormArray>this.immovableForm.get('deductions');
-    deductions.controls = deductions.controls.filter((element:  UntypedFormGroup)=> !element.controls['selected'].value);
+    if (deductions && deductions.at(index)) {
+      let objToRemove = deductions.at(index).value;
+      deductions.removeAt(index);
+    }
     console.log(deductions.length);
 
     if (deductions.length === 0) {
@@ -1435,7 +1475,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     });
   }
 
-   calculateCapitalGainOnceCalled:boolean = false;
+  calculateCapitalGainOnceCalled: boolean = false;
   calculateCapitalGain(formGroupName, val, index) {
     console.log(formGroupName, formGroupName.getRawValue(), index);
     if (!index) {
@@ -1587,7 +1627,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   calculateDeduction(index, singleCg?) {
-    if(this.deductionValidation()){
+    if (this.deductionValidation(false)) {
       return;
     }
     const assetDetails = (
@@ -1599,11 +1639,11 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     //   .controls[index] as FormGroup;
 
     let saleValue = assetDetails.controls['valueInConsideration'].value
-        ? assetDetails.controls['valueInConsideration'].value
-        : 0;
+      ? assetDetails.controls['valueInConsideration'].value
+      : 0;
     let expenses = assetDetails.controls['sellExpense'].value
-        ? assetDetails.controls['sellExpense'].value
-        : 0;
+      ? assetDetails.controls['sellExpense'].value
+      : 0;
 
     let capitalGainDeductions = [];
     (<UntypedFormArray>this.immovableForm.get('deductions')).controls.forEach((form: UntypedFormGroup) => {
@@ -1611,7 +1651,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         deductionSection: `SECTION_${form.controls['underSection'].value}`,
         costOfNewAsset: form.controls['costOfNewAssets'].value,
         cgasDepositedAmount:
-        form.controls['investmentInCGAccount'].value,
+          form.controls['investmentInCGAccount'].value,
         saleValue: saleValue,
         expenses: expenses,
       })
@@ -1630,12 +1670,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         if (result?.success) {
           (<UntypedFormArray>this.immovableForm.get('deductions')).controls.forEach((form: UntypedFormGroup) => {
             let finalResult = result.data.filter(
-                (item) =>
-                    item.deductionSection ===
-                    `SECTION_${form.controls['underSection'].value}`
+              (item) =>
+                item.deductionSection ===
+                `SECTION_${form.controls['underSection'].value}`
             )[0];
             form.controls['totalDeductionClaimed'].setValue(
-                finalResult?.deductionAmount
+              finalResult?.deductionAmount
             );
           });
 
@@ -1651,7 +1691,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         }
       },
       (error) => {
-        if(this.utilsService.isNonEmpty(error.error.message)){
+        if (this.utilsService.isNonEmpty(error.error.message)) {
           this.utilsService.showSnackBar(error.error.message);
         } else {
           this.utilsService.showSnackBar('Failed to get deductions.');
@@ -1660,7 +1700,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     );
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
     // this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
     this.saveAndNext.emit(false);

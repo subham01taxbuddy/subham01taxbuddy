@@ -326,14 +326,21 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     this.formValuesChanged();
   }
 
+  shouldShowCalculator(salaryType: string): boolean {
+    return ['HOUSE_RENT', 'PENSION', 'COMMUTED_PENSION', 'GRATUITY', 'LEAVE_ENCASHMENT'].includes(salaryType);
+  }
+
   calculate(selectedOption: string) {
     let queryParam
+    let fromCommuted
     if(selectedOption === "HOUSE_RENT"){
       queryParam ='hra'
     }else if(selectedOption ==="PENSION"){
       queryParam ='pension'
+      fromCommuted=`&uncommuted=true`;
     }else if(selectedOption ==="COMMUTED_PENSION"){
       queryParam ='pension'
+      fromCommuted=`&commuted=true`;
     }else if(selectedOption === "GRATUITY"){
       queryParam ='gratuity'
     }else if(selectedOption === "LEAVE_ENCASHMENT"){
@@ -346,7 +353,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       height: '80%',
       data: {
         selectedOption: selectedOption,
-        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true`
+        url: `https://www.taxbuddy.com/allcalculators/${queryParam}?inUtility=true${fromCommuted}`
       }
     });
 
@@ -361,7 +368,9 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
+        this.setDescriptionValidation('salary',selectedSalaryItem, true);
         this.valueChanged.emit({ type: 'HRAexemptValue', value: copiedValues.exemptValue });
+        this.formValuesChanged();
 
        }else if (copiedValues?.title === 'PENSION'){
         const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
@@ -371,7 +380,9 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'PENSIONexemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'PENSIONexemptValue', value: copiedValues.exemptValue });
+         this.formValuesChanged();
 
        }else if (copiedValues?.title === 'GRATUITY'){
         const salaryArray = this.salaryFormGroup.get('salary') as FormArray;
@@ -381,7 +392,9 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'GRATUITYexemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'GRATUITYexemptValue', value: copiedValues.exemptValue });
+         this.formValuesChanged();
        }
 
        else if (copiedValues?.title === 'LEAVE_ENCASHMENT'){
@@ -392,7 +405,9 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
         } else {
           console.error('Salary item not found for selectedOption:', selectedOption);
         }
-        this.valueChanged.emit({ type: 'leaveExemptValue', value: copiedValues.exemptValue });
+         this.setDescriptionValidation('salary',selectedSalaryItem, true);
+         this.valueChanged.emit({ type: 'leaveExemptValue', value: copiedValues.exemptValue });
+         this.formValuesChanged();
        }
       }
     });

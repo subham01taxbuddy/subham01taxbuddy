@@ -286,12 +286,12 @@ export class NriDetailsDialogComponent implements OnInit {
       jurisdictions: this.fb.array([]),
     });
 
-    if(this.ITR_JSON.jurisdictions){
+    if (!this.ITR_JSON.jurisdictions || this.ITR_JSON.jurisdictions.length === 0) {
+      this.addMore();
+    } else {
       this.ITR_JSON.jurisdictions.forEach(jur => {
         this.addMore(jur);
       });
-    } else {
-      this.addMore()
     }
   }
   createJurisdictionsForm(obj: { jurisdictionResidence?: string, tin?: string } = {}): UntypedFormGroup {

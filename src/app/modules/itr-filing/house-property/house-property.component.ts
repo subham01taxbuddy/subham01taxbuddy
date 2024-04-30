@@ -1029,6 +1029,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
     }
   }
 
