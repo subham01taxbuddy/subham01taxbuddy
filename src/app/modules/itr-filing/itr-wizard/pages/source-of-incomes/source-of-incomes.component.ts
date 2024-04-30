@@ -181,7 +181,7 @@ export class SourceOfIncomesComponent implements OnInit {
           switch(clickedSource.schedule){
             case this.schedules.SALARY:
             {
-              this.ITR_JSON.employers = null;
+              this.ITR_JSON.employers = [];
               break;
             }
             case this.schedules.HOUSE_PROPERTY: 
@@ -249,16 +249,24 @@ export class SourceOfIncomesComponent implements OnInit {
         } else{
           clickedSource.selected = true;
         }
+        let event = {
+          schedule: clickedSource,
+          sources: this.sourcesList,
+        };
+        this.scheduleSelected.emit(event);
+        sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
       });
       
+    } else {
+      let event = {
+        schedule: clickedSource,
+        sources: this.sourcesList,
+      };
+      this.scheduleSelected.emit(event);
+      sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
     }
 
-    let event = {
-      schedule: clickedSource,
-      sources: this.sourcesList,
-    };
-    this.scheduleSelected.emit(event);
-    sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
+
   }
 
   private getPrefillIncomeSources() {

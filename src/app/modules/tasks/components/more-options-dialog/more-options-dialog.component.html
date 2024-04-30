@@ -79,7 +79,7 @@
     </button>
   </span>
   <span
-    *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER'])">
+    *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER','ROLE_FILER'])" >
     <button type="button" title="update ITR-U filling" class="more-new-button"
       (click)="checkSubscription('itr-u-update')">
       <i class="fas fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;ITR-U Update

@@ -651,6 +651,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
         return;
       } else {
+        this.advanceMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
@@ -669,7 +670,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Tds updated successfully.');
+        let type = save && save.type === this.ADVANCE_TYPE_CODE ? 'Advance Tax' : 'TDS';
+        this.utilsService.showSnackBar(type + ' updated successfully.');
         if (!save) {
           this.saveAndNext.emit(false);
         }
