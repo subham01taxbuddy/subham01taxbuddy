@@ -65,116 +65,86 @@
     <div class="new-table-container">
       <div class="row">
         <div class="col-sm-12 mt-2">
-          <div class="TxHd-12">
-            <span class="TxHd"> Status Overview</span>
-          </div>
+            <div class="TxHd-12">
+                <span class="TxHd">Status Overview</span>
+            </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <div class="count-chips-container">
-            <div class="row">
-              <div class="col-sm-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.open || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Open</span>
+            <div class="count-chips-container">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.open || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Open</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.notInterested || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Not Interested</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.chatInitiated || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Chat Initiated</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.chatResolve || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Chat Resolve</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.interested || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Interested</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.documentsUploaded || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Documents Uploaded</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.proformaInvoiceSent || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Proforma Invoice Sent</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.paymentReceived || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Payment Received</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.waitingForConfirmation || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Waiting for Confirmation</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.itrConfirmationReceived || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">ITR Confirmation Received</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                        <div class="count-radius-1">
+                            <span class="numTxSm-11">{{statusWiseCountData?.backOutWithRefund || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">Back Out with refund</span>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="col-sm-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.notInterested || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Not Interested</span>
-                </div>
-              </div>
-              <div class="col-sm-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.chatInitiated || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Chat Initiated</span>
-                </div>
-              </div>
-              <div class="col-sm-2 ">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.chatResolve || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Chat Resolve</span>
-                </div>
-              </div>
-              <div class="col-sm-2 ">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.interested || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Interested</span>
-                </div>
-              </div>
-              <div class="col-sm-2 ">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.documentsUploaded || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Documents Uploaded</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.proformaInvoiceSent || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Proforma Invoice Sent</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.paymentReceived || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Payment Received</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.upgradedInvoiceSent || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Upgraded Invoice Sent</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.preparingItr || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Preparing ITR</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.waitingForConfirmation || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Waiting for Confirmation</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.itrConfirmationReceived || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">ITR Confirmation Received</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.itrFiledEverificationPending || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">ITR Filed E-verification pending</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.itrFiledEverificationCompleted || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">ITR Filed E-verification done</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.backOutWithoutRefund || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Back Out without refund</span>
-                </div>
-              </div>
-              <div class="col-sm-2 mt-2">
-                <div class="count-radius-1">
-                  <span class="numTxSm-11">{{statusWiseCountData?.backOutWithRefund || 'NA'}}</span><br>
-                  <span class="text-TxSm-1">Back Out with refund</span>
-                </div>
-              </div>
-
             </div>
-          </div>
         </div>
       </div>
+
 
       <div class="row spsTp1">
         <div class="col-sm-12 mt-3">
@@ -187,19 +157,19 @@
                 <div class="col-sm-6 mt-2">
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">{{ invoiceData.invoiceRaised || 'NA' }}</span><br>
+                      <span class="numTxSm-11">{{ invoiceData?.invoiceRaised || 'NA' }}</span><br>
                       <span class="text-TxSm-1">Invoice Raised</span>
                     </div>
                   </div>
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">{{ invoiceData.unpaidInvoiceCount || 'NA' }}</span><br>
+                      <span class="numTxSm-11">{{ invoiceData?.unpaidInvoiceCount || 'NA' }}</span><br>
                       <span class="text-TxSm-1">Unpaid Invoices</span>
                     </div>
                   </div>
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">{{ invoiceData.paidInvoiceCount || 'NA' }}</span><br>
+                      <span class="numTxSm-11">{{ invoiceData?.paidInvoiceCount || 'NA' }}</span><br>
                       <span class="text-TxSm-1">Paid Invoices</span>
                     </div>
                   </div>
@@ -207,19 +177,19 @@
                 <div class="col-sm-6 mt-2">
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">₹ {{invoiceData.invoiceAmount || 'NA'}}</span><br>
+                      <span class="numTxSm-11">₹ {{invoiceData?.invoiceAmount || 'NA'}}</span><br>
                       <span class="text-TxSm-1">Invoice Amount</span>
                     </div>
                   </div>
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">₹ {{invoiceData.unpaidAmount || 'NA'}}</span><br>
+                      <span class="numTxSm-11">₹ {{invoiceData?.unpaidAmount || 'NA'}}</span><br>
                       <span class="text-TxSm-1">Unpaid Amount</span>
                     </div>
                   </div>
                   <div class="col-sm-12 mt-3">
                     <div class="count-radius-1">
-                      <span class="numTxSm-11">₹ {{invoiceData.paidAmount || 'NA'}}</span><br>
+                      <span class="numTxSm-11">₹ {{invoiceData?.paidAmount || 'NA'}}</span><br>
                       <span class="text-TxSm-1">Paid Amount</span>
                     </div>
                   </div>
@@ -447,7 +417,7 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="col-sm-12 TxHd-12 mt-3">
-                <span class="header-text-1">Payment Received cases assigned but fling not yet started</span>
+                <span class="header-text-1">Documents received cases but fling not yet started</span>
               </div>
               <div class="row">
                 <div class="col-sm-12">
@@ -457,7 +427,7 @@
                         <tr class="table-header-row">
                           <th scope="col">Sr.No</th>
                           <th scope="col">User Name</th>
-                          <th scope="col">Payment Received Date</th>
+                          <th scope="col">Documents Received Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -465,7 +435,7 @@
                           *ngFor="let item of paymentReceivedData?.content | paginate:config.paymentReceived; let i = index">
                           <td>{{ i+1 }}</td>
                           <td>{{ item.userName }}</td>
-                          <td>{{ item.paymentRecivedDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
+                          <td>{{ item.docUploadDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
                         </tr>
                         <tr class="table-header-row" *ngIf="paymentReceivedData?.content?.length === 0">
                           <td colspan="5" class="text-center">
@@ -553,6 +523,41 @@
                     <pagination-controls *ngIf="eVerificationPendingData?.content?.length > 0" id="pagination3"
                       class="pagination"
                       (pageChange)="pageChanged($event,'eVerificationPending')"></pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="col-sm-12 TxHd-12 mt-3">
+                <span class="header-text-1">ITR Filed but payment not received</span>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="table-radiusTab-1">
+                    <table class="table">
+                      <thead>
+                        <tr class="table-header-row">
+                          <th scope="col">Sr.No</th>
+                          <th scope="col">User Name</th>
+                          <th scope="col">Contact Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table-header-row"
+                          *ngFor="let item of itrFiledButPaymentPendingData?.content | paginate:config.itrFiledButPaymentPending; let i = index">
+                          <td>{{ i+1 }}</td>
+                          <td>{{ item.userName }}</td>
+                          <td>{{ item.contactNumber }}</td>
+                        </tr>
+                        <tr class="table-header-row" *ngIf="itrFiledButPaymentPendingData?.content?.length === 0">
+                          <td colspan="3" class="text-center">
+                            No Records Found
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <pagination-controls *ngIf="itrFiledButPaymentPendingData?.content?.length > 0" id="pagination4"
+                      class="pagination" (pageChange)="pageChanged($event,'itrFiledButPaymentPending')"></pagination-controls>
                   </div>
                 </div>
               </div>

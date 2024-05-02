@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
   childList: any;
   callSummaryData: any;
   searchAsPrinciple: boolean = false;
+  itrFiledButPaymentPendingData:any;
 
   constructor(
     private userMsService: UserMsService,
@@ -101,6 +102,7 @@ export class DashboardComponent implements OnInit {
     this.getPaymentReceivedList('paymentReceived');
     this.getSummaryConfirmationList('summaryConfirmation');
     this.getItrFilledEVerificationPendingList('eVerificationPending');
+    this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
     this.getPartnerCommission();
     // this.getItrUserOverview();
   }
@@ -124,6 +126,12 @@ export class DashboardComponent implements OnInit {
       currentPage: 1,
       totalItems: null,
     },
+    itrFiledButPaymentPending:{
+      id: "pagination4",
+      itemsPerPage: 5,
+      currentPage: 1,
+      totalItems: null,
+    }
 
   };
   searchParam: any = {
@@ -139,10 +147,14 @@ export class DashboardComponent implements OnInit {
       page: 0,
       pageSize: 5,
     },
+    itrFiledButPaymentPending:{
+      page: 0,
+      pageSize: 5
+    },
     scheduleCall: {
       page: 0,
       size: 5
-    }
+    },
 
   };
 
@@ -153,7 +165,9 @@ export class DashboardComponent implements OnInit {
       this.getSummaryConfirmationList(searchType);
     } else if (searchType == 'eVerificationPending') {
       this.getItrFilledEVerificationPendingList(searchType);
-    } else {
+    } else if(searchType == 'itrFiledButPaymentPending'){
+      this.getITRFiledButPaymentPendingList(searchType);
+    } else{
       this.getCallingSummary();
       this.getStatuswiseCount();
       this.getInvoiceReports();
@@ -161,6 +175,7 @@ export class DashboardComponent implements OnInit {
       this.getPaymentReceivedList('paymentReceived');
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
+      this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
       // this.getItrUserOverview();
     }
 
@@ -313,7 +328,7 @@ export class DashboardComponent implements OnInit {
       (response: any) => {
         this.loading = false;
         if (response.success) {
-          this.invoiceData = response.data;
+          this.invoiceData = response.data[0];
 
         } else {
           this.loading = false;
@@ -326,8 +341,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getPaymentReceivedList(configType) {
-    // http://uat-api.taxbuddy.com/report/bo/dashboard/payment-received-but-filing-not-started
-    //?page=0&pageSize=20&fromDate=2023-11-20&toDate=2023-11-20&filerUserId=14321
+    // 'https://uat-api.taxbuddy.com/report/bo/dashboard/doc-uploaded-filing-not-started?fromDate=2024-04-01
+    // &toDate=2024-05-01&filerUserId=14211&page=0&pageSize=5' \
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam[configType]);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -348,7 +363,7 @@ export class DashboardComponent implements OnInit {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
-    let param = `/bo/dashboard/payment-received-but-filing-not-started?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
+    let param = `/bo/dashboard/doc-uploaded-filing-not-started?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       if (response.success) {
@@ -449,6 +464,44 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  getITRFiledButPaymentPendingList(configType) {
+    debugger
+    this.loading = true;
+    let data = this.utilsService.createUrlParams(this.searchParam[configType]);
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let filerUserId = '';
+    let userFilter = '';
+    if (this.filerId) {
+      if (this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+      } else {
+        userFilter += `&filerUserId=${this.filerId}`;
+      }
+    } else {
+      filerUserId = this.loggedInSmeUserId;
+      if (this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
+      } else {
+        userFilter += `&filerUserId=${filerUserId}`;
+      }
+    }
+    let param = `/bo/dashboard/itr-filed-but-payment-pending?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`;
+
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      if (response.success) {
+        this.itrFiledButPaymentPendingData = response?.data;
+        this.config.itrFiledButPaymentPending.totalItems = response?.data?.totalElements;
+
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Error");
+    })
+  }
 
   getPartnerCommission() {
     ///report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-30&filerUserId=61645

@@ -80,7 +80,7 @@
                   <td class="sticky-column" *ngFor="let key of dataKeys">{{ item[key] }}</td>
                 </tr>
                 <tr *ngIf="grandTotal">
-                  <td colspan="1" class="sticky-column"></td>
+                  <td colspan="3" class="sticky-column"></td>
                   <td class="text-bold sticky-column">Grand Total</td>
                   <td *ngFor="let key of grandTotalKeys" class="sticky-column">{{ grandTotal[key] }}</td>
                 </tr>
