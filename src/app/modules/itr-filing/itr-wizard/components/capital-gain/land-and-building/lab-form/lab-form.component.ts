@@ -315,6 +315,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         this.improvements = [];
         this.isImprovements.setValue(false);
       }
+    } else {
+      this.isImprovements.setValue(false);
     }
 
     if (this.deductions instanceof Array && this.deductions.length > 0) {
@@ -1193,6 +1195,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         }
 
         if (this.mode === 'ADD') {
+          this.isImprovements.setValue(false);
+          this.isDeductions.setValue(false);
           let labData = this.Copy_ITR_JSON.capitalGain?.filter(
             (item) => item.assetType === 'PLOT_OF_LAND'
           )[0];
