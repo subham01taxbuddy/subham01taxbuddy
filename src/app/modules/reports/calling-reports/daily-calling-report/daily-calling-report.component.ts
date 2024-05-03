@@ -287,6 +287,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         noOfMissedCall: callingData[i].noOfMissedCall,
         parentName: callingData[i].parentName,
         role: callingData[i].role,
+        averageTimeSpentOnCalling : callingData[i].averageTimeSpentOnCalling,
+        averageTimeSpentOnConnectedCall : callingData[i].averageTimeSpentOnConnectedCall,
         // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
       })
       callingRepoInfoArray.push(agentReportInfo);
@@ -407,6 +409,32 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         field: 'noOfMissedCall',
         sortable: true,
         width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Average time spent on calling (overall from dialing till end of call)',
+        field: 'averageTimeSpentOnCalling',
+        sortable: true,
+        width: 250,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Average time spent on connected call',
+        field: 'averageTimeSpentOnConnectedCall',
+        sortable: true,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",

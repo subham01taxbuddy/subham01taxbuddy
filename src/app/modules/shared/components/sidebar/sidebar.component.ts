@@ -117,7 +117,7 @@ export class SidebarComponent {
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: [] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
-      ] 
+      ]
     },
     {
       name: 'Subscription',
@@ -218,7 +218,7 @@ export class SidebarComponent {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
       icon: 'invoice.png',
       submenu: [
-        { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
+        // { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
       ]
