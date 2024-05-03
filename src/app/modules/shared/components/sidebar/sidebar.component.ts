@@ -178,7 +178,7 @@ export class SidebarComponent {
       icon: 'review.png',
       active: true,
       url: '/review',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
     {
@@ -186,7 +186,7 @@ export class SidebarComponent {
       icon: 'promocode.png',
       active: true,
       url: '/promo-code',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
     {
@@ -194,7 +194,7 @@ export class SidebarComponent {
       icon: 'academy.png',
       active: true,
       url: '/academy-courses',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
 
@@ -224,11 +224,19 @@ export class SidebarComponent {
       ]
     },
     {
+      name: 'All Users',
+      icon: 'all-users.png',
+      active: true,
+      url: '/pages/user-management/users',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
+    {
       name: 'Delete User Request',
       icon: 'sme-mgmt.png',
       active: false,
       url: '/delete-user',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
   ];
