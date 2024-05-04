@@ -1,6 +1,7 @@
 import {ChatService} from "./chat.service";
 import {ChatEvents} from "./chat-events";
 import {Injectable} from "@angular/core";
+import {LocalStorageService} from "../../services/storage.service";
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ export class ChatManager {
     [key: string]: Array<(...args: Array<any>) => void>;
   } = {};
 
-  constructor(private chatService: ChatService) {
+  constructor(private chatService: ChatService,
+              private localStorageService: LocalStorageService,) {
     Object.values(ChatEvents).forEach((eventName) => {
       this.subscriptions[eventName] = [];
     });
@@ -100,5 +102,26 @@ export class ChatManager {
 
   closeChat(){
     this.chatService.closeWebSocket();
+  }
+
+  getConversationList(){
+    const convdata = this.localStorageService.getItem('conversationList', true);
+    console.log('conv data', convdata);
+    if (convdata) {
+      const conversations = JSON.parse(convdata);
+      let conversationList = conversations.map((conversation: any) => {
+
+         return {
+           image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+           name: conversation.name,
+           text: conversation.text,
+           timestamp: conversation.timestamp,
+           request_id: conversation.request_id
+         }
+
+      })
+      console.log('new list', conversationList);
+      return conversationList
+    }
   }
 }

@@ -25,7 +25,7 @@ export class ChatUIComponent implements OnInit {
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
     this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
-    this.handleConversationList();
+    // this.handleConversationList();
 }
 
  
@@ -129,34 +129,7 @@ handleReceivedMessages = (data: any) => {
 }
 
 handleConversationList = () => {
-    const convdata = this.localStorage.getItem('conversationList', true);
-    console.log('conv data', convdata);
-    if (convdata) {
-        const conversations = JSON.parse(convdata);
-        this.conversationList = conversations.map((conversation: any) => {
-            const user = this.users.find(u => u.name === conversation.name);
-            if (user) {
-                //   this.chatManager.openConversation(conversation.request_id)
-                return {
-                    image: user.image,
-                    name: conversation.name,
-                    text: conversation.text,
-                    timestamp: conversation.timestamp,
-                    request_id: conversation.request_id
-                }
-            } else {
-                return {
-                    image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                    name: conversation.name,
-                    text: conversation.text,
-                    timestamp: conversation.timestamp,
-                    request_id: conversation.request_id
-                }
-            }
-        })
-        console.log('new list', this.conversationList);
-
-    }
+    this.conversationList = this.chatManager.getConversationList();
 }
 
 handleDeptList = (data: any) => {
