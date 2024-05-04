@@ -212,6 +212,9 @@ export class SidebarComponent {
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
+        { name: 'Filing Done But Unpaid', url: '/reports/filling-done-payment-not-received', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+
       ]
     },
     {

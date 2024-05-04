@@ -23,6 +23,8 @@ import { MissedInboundCallListComponent } from './missed-inbound-call-list/misse
 import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.component';
 import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up-report.component';
 import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
+import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
+import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 
 @NgModule({
     imports: [
@@ -53,6 +55,8 @@ import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.com
         MissedChatListComponent,
         DailySignUpReportComponent,
         CustomerSignUpComponent,
+        FillingDonePaymentNotReceivedComponent,
+        DocumentsUploadedFilingNotDoneComponent
     ],
     providers: [JsonToCsvService]
 })
