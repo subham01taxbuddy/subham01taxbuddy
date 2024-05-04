@@ -200,15 +200,16 @@ export class ChatService {
 
   conversationList(data: any) {
 
-    const transformedData = data.map(message => ({
+    const transformedData = data.map(message => (
+      {
+        new: message.is_new,
+        name: message.sender_fullname,
+        text: message.last_message_text,
+        timestamp: message.timestamp,
+        request_id: message.conversWith
 
-      new: message.is_new,
-      name: message.recipient_fullname,
-      text: message.last_message_text,
-      timestamp: message.timestamp,
-      request_id: message.conversWith
-
-    }))
+      })
+    );
     this.localStorageService.setItem('conversationList', JSON.stringify(transformedData), true)
     return transformedData;
   }
