@@ -399,11 +399,10 @@
                                                         <div class="form-field">
                                                             <mat-form-field appearance="outline"
                                                                 class="small-inp no-height">
-                                                                <input (change)="calculateDeductionGain()"
+                                                                <input (change)="updateValidations(deduction);calculateDeductionGain()"
                                                                     class="input-field" digitsOnly
                                                                     formControlName="costOfNewAssets" matInput
-                                                                    maxlength="14" placeholder="cost of new asset"
-                                                                    required />
+                                                                    maxlength="14" placeholder="cost of new asset"/>
                                                                 <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
                                                 'required')">Please enter cost of new assets
                                                                 </mat-error>
@@ -419,14 +418,13 @@
                                                         <div class="form-field">
                                                             <mat-form-field appearance="outline"
                                                                 class="small-inp no-height">
-                                                                <input (change)="calculateDeductionGain()"
+                                                                <input (change)="updateValidations(deduction);calculateDeductionGain()"
                                                                     class="input-field" digitsOnly
                                                                     formControlName="investmentInCGAccount" matInput
                                                                     matTooltip="Amount deposited on CGAS before due date"
                                                                     matTooltipClass="tab-tooltip"
                                                                     matTooltipPosition="above" maxlength="14"
-                                                                    placeholder="Amount deposited on CGAS before due date"
-                                                                    required />
+                                                                    placeholder="Amount deposited on CGAS before due date"/>
                                                                 <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
                             'required')">Please enter amount
                                                                 </mat-error>
