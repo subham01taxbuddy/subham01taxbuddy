@@ -1066,6 +1066,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.immovableForm.controls['deductions'] as UntypedFormArray
     ).controls[index] as UntypedFormGroup;
 
+    this.updateValidations(deductionForm);
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as UntypedFormArray
     ).controls[0] as UntypedFormGroup;
@@ -1301,6 +1302,32 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       deductions.push(this.createDeductionForm(obj));
     } else {
       console.log('add above details first');
+    }
+  }
+
+  updateValidations(formGroup){
+    if(formGroup.get('costOfNewAssets').value){
+      formGroup.get('purchaseDate').setValidators([Validators.required]);
+      formGroup.updateValueAndValidity();
+    } else {
+      formGroup.get('purchaseDate').setValidators([null]);
+      formGroup.updateValueAndValidity();
+    }
+
+    if(formGroup.get('investmentInCGAccount').value){
+      formGroup.get('accountNumber').setValidators([Validators.required]);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators([Validators.required]);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators([Validators.required]);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    } else {
+      formGroup.get('accountNumber').setValidators(null);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators(null);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators(null);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
     }
   }
 

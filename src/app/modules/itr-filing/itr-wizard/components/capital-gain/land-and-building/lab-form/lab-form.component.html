@@ -371,7 +371,7 @@
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number"
-                                  class="input-field" required (blur)="calculateDeduction(i, 'singleCg')" />
+                                  class="input-field" required (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -384,9 +384,9 @@
                                 <span class="span">CGAS Account</span> <span class="redAst">*</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input (blur)="calculateDeduction(i, 'singleCg')" matInput class="input-field"
+                                <input (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" matInput class="input-field"
                                   name="deductions[i]" formControlName="investmentInCGAccount" maxlength="14" type="number"
-                                  required />
+                                />
                                 <mat-error *ngIf="deduction.get('investmentInCGAccount').hasError('pattern')">
                                   Enter valid amount.
                                 </mat-error>
