@@ -45,6 +45,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   userProfile: any;
   showDetails = false;
   hideYears = true;
+  allYears = ['2021-2022', '2022-2023'];
+  enabledYears:any =[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -55,7 +57,9 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     private router: Router,
     public location: Location,
     private dialogRef: MatDialogRef<UpdateItrUFillingDialogComponent>
-  ) { }
+  ) {
+    this.checkIsFillingDone()
+   }
 
   ngOnInit() {
     console.log(this.data);
@@ -86,6 +90,27 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       this.showDetails = false;
       this.fy.setValue(null);
     }
+
+  }
+
+  checkIsFillingDone(){
+    //'https://uat-api.taxbuddy.com/itr/itr?userId=20231&eFillingCompleted=false&isITRU=true'
+    this.loading = true;
+    const param1 = `/itr?userId=${this.data.userId}&eFillingCompleted=false&isITRU=true`;
+    this.itrMsService.getMethod(param1).subscribe(
+      (res: any) => {
+        this.loading = false;
+        const filingNotDoneYears = res.map(itr => itr.financialYear);
+        this.enabledYears = this.allYears.filter(year => filingNotDoneYears.includes(year));
+      }, error => {
+        this.hideYears = true;
+        this.showDetails = false;
+        this.utilsService.showSnackBar('Error while checking ITRU filing status, Please try again.');
+        this.loading = false;
+      })
+  }
+
+  filterFilingYears(filingNotDoneYears: string[]) {
 
   }
 
