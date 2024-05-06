@@ -105,6 +105,8 @@ export class ChatManager {
   }
 
   getConversationList(){
+    let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
+    this.chatService.fetchConversationList(chat21UserID);
     const convdata = this.localStorageService.getItem('conversationList', true);
     console.log('conv data', convdata);
     if (convdata) {
