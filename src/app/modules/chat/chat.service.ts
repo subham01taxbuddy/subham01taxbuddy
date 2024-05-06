@@ -159,7 +159,7 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(userId: any) {
+  fetchConversationList(userId: any, removecallback?) {
     const CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
     this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
       console.log('conversation result', conversationResult);
@@ -168,9 +168,11 @@ export class ChatService {
       //   console.log('request_id ', conversation.request_id);
       //   this.fetchMessages(conversation.request_id);
       // }
-      this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-        callback(ChatEvents.CONVERSATION_UPDATED);
-      });
+      if (!removecallback) {
+        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+          callback(ChatEvents.CONVERSATION_UPDATED);
+        });
+      }
       console.log('newarray', newarrays);
     });
   }

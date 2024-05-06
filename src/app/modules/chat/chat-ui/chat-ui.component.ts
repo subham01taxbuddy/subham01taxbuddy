@@ -25,7 +25,7 @@ export class ChatUIComponent implements OnInit {
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
     this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
-    // this.handleConversationList();
+    this.handleConversationList();
 }
 
  
