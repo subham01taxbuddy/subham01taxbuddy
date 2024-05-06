@@ -123,6 +123,24 @@
                         </div>
                     </div>
                     <div class="col-sm-2 mt-2">
+                      <div class="count-radius-1">
+                          <span class="numTxSm-11">{{statusWiseCountData?.itrFiled || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR Filed</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                      <div class="count-radius-1">
+                          <span class="numTxSm-11">{{statusWiseCountData?.planConfirmed || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">Plan Confirmed</span>
+                      </div>
+                  </div>
+                  <div class="col-sm-2 mt-2">
+                    <div class="count-radius-1">
+                        <span class="numTxSm-11">{{statusWiseCountData?.documentsIncomplete || 'NA'}}</span><br>
+                        <span class="text-TxSm-1">Documents Incomplete</span>
+                    </div>
+                  </div>
+                    <div class="col-sm-2 mt-2">
                         <div class="count-radius-1">
                             <span class="numTxSm-11">{{statusWiseCountData?.waitingForConfirmation || 'NA'}}</span><br>
                             <span class="text-TxSm-1">Waiting for Confirmation</span>
@@ -140,6 +158,13 @@
                             <span class="text-TxSm-1">Back Out with refund</span>
                         </div>
                     </div>
+                <div class="col-sm-2 mt-2">
+                  <div class="count-radius-1">
+                      <span class="numTxSm-11">{{statusWiseCountData?.backOut || 'NA'}}</span><br>
+                      <span class="text-TxSm-1">Backed Out</span>
+                  </div>
+                </div>
+
                 </div>
             </div>
         </div>
