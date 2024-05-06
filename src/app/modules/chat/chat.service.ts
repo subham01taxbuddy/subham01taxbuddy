@@ -79,22 +79,30 @@ export class ChatService {
     // --header 'environment: qa' \
     // --header 'Content-Type: application/json' \
     // --data '{"serviceType":"ITR"}'
-    let request = null;
+    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
+    let request: any = {
+      tokenRequired: tokenPresent
+    };
     if (service) {
-      request = { serviceType: service };
+      request = {
+        serviceType: service,
+        tokenRequired: tokenPresent
+      };
     }
     this.httpClient.post(this.TILEDESK_TOKEN_URL,
       request,
       this.setHeaders("auth")).subscribe((result: any) => {
         console.log(result);
         if (result.success) {
-          this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
-          console.log("tiledesk token: ", result.data.token);
-          if (result.data.requestId) {
+          if (result?.data?.token) {
+            this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
+            console.log("tiledesk token: ", result.data.token);
+          }
+          if (result.data?.requestId) {
             this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
           let chat21Request = {
-            tiledeskToken: result.data.token
+            tiledeskToken: this.localStorageService.getItem('TILEDESK_TOKEN')
           };
           this.httpClient.post(this.CHAT21_TOKEN_URL,
             chat21Request, this.setHeaders("auth")
@@ -111,10 +119,10 @@ export class ChatService {
               this.fetchConversationList(chat21Result.data.userid);
 
               // if (service) {
-                this.initChatVariables(result.data.requestId);
-                this.fetchConversationList(chat21Result.data.userid);
+              this.initChatVariables(result.data.requestId);
+              this.fetchConversationList(chat21Result.data.userid);
 
-                // this.fetchMessages(result.data.requestId);
+              // this.fetchMessages(result.data.requestId);
               // }
             }
           });
@@ -315,16 +323,16 @@ export class ChatService {
           if (this.log) {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
-         
+
 
           this.chatClient.publish(
-              this.presenceTopic,
-              JSON.stringify({ connected: true }),
-              null, (err) => {
-                if (err) {
-                  console.error("Error con presence publish:", err);
-                }
+            this.presenceTopic,
+            JSON.stringify({ connected: true }),
+            null, (err) => {
+              if (err) {
+                console.error("Error con presence publish:", err);
               }
+            }
           );
 
           if (this.log) {
