@@ -9,14 +9,19 @@
           (presProfessionalSaved)="onPresProfessionalSaved($event)"></app-presumptive-professional-income>
       </mat-accordion>
 
-      <div class="flex justify-between p-[30px] back-foot">
-        <button class="lgtBtn" (click)="goBack()">
-          <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-          <span class="font-semibold">&nbsp;Back to Source Page</span>
-        </button>
-        <button class="saveBtnIn" (click)="saveAll()">
-          <span class="font-semibold">Save All</span>
-        </button>
+      <div class="back-foot">
+        <div class="note" style="margin-left: 100px;">
+          <b>Note:</b> Remember to click "Save all" after adding 44AD and 44ADA to ensure successful saving of changes.
+        </div>
+        <div class="flex justify-between p-[30px]">
+          <button class="lgtBtn" (click)="goBack()">
+            <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+            <span class="font-semibold">&nbsp;Back to Source Page</span>
+          </button>
+          <button class="saveBtnIn" (click)="saveAll()">
+            <span class="font-semibold">Save All</span>
+          </button>
+        </div>
       </div>
     </div>
   </main>
