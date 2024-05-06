@@ -1587,9 +1587,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       //   this.cgArrayElement.improvement = null;
       // }
 
+      let ded = [];
       if (this.isDeductions.value) {
         const deductions = <UntypedFormArray>this.immovableForm.get('deductions');
-        let ded = [];
         deductions.controls.forEach((obj: UntypedFormGroup) => {
           ded.push(obj.value);
         });
@@ -1597,6 +1597,10 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       } else {
         // this.cgArrayElement.deduction = [];
       }
+      this.cgArrayElement.deduction = this.cgArrayElement.deduction?.filter(
+          element => element.srn != this.cgArrayElement.assetDetails[this.currentCgIndex].srn);
+      this.cgArrayElement.deduction = this.cgArrayElement.deduction.concat(ded);
+
       // if (this.cgArrayElement.deduction?.length == 0) {
       //   this.cgArrayElement.deduction = null;
       // }
