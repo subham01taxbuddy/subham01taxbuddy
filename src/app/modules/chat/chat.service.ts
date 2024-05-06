@@ -611,9 +611,9 @@ export class ChatService {
           this.onMessageUpdatedCallbacks = new Map();
           this.onGroupUpdatedCallbacks = new Map();
           this.callbackHandlers = new Map();
+          this.chatSubscription = null;
           // this.on_message_handler = null
           this.topicInbox = null;
-          this.chatSubscription = null;
           // if (callback) {
           //   callback();
           // }
