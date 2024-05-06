@@ -14,7 +14,7 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 export class FloatingWidgetComponent implements OnInit {
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
- 
+
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService) {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -31,7 +31,7 @@ export class FloatingWidgetComponent implements OnInit {
     isUserChatVisible: boolean = false;
     fullChatScreen: boolean = false;
 
-    showFullScreen(){
+    showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
     }
 
@@ -41,13 +41,13 @@ export class FloatingWidgetComponent implements OnInit {
         this.showWidget = false;
         setTimeout(() => {
             if (this.userChatComponent) {
-              this.userChatComponent.scrollToBottom();
+                this.userChatComponent.scrollToBottom();
             }
-          }, 1000);   
-        
-        }
+        }, 1000);
 
-    
+    }
+
+
     closeWidget() {
         this.showWidget = false;
         this.isUserChatVisible = false;
@@ -123,6 +123,6 @@ export class FloatingWidgetComponent implements OnInit {
         console.log('list', this.departmentNames);
     }
 
-    
+
 }
 

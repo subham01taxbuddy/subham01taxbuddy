@@ -613,6 +613,7 @@ export class ChatService {
           this.callbackHandlers = new Map();
           // this.on_message_handler = null
           this.topicInbox = null;
+          this.chatSubscription = null;
           // if (callback) {
           //   callback();
           // }
