@@ -32,6 +32,7 @@ export class ChatService {
   deptName = '';
   deptID = '';
   departmentNames: string[] = [];
+  removecallback: boolean;
 
   constructor(public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
@@ -168,6 +169,9 @@ export class ChatService {
       //   console.log('request_id ', conversation.request_id);
       //   this.fetchMessages(conversation.request_id);
       // }
+      if (removecallback) {
+        this.removecallback = true;
+      }
       if (!removecallback) {
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.CONVERSATION_UPDATED);
