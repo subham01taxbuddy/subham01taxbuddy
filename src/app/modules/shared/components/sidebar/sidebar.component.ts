@@ -166,14 +166,6 @@ export class SidebarComponent {
       submenu: []
     },
     {
-      name: 'All Users',
-      icon: 'all-users.png',
-      active: true,
-      url: '/pages/user-management/users',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-      submenu: []
-    },
-    {
       name: 'Review',
       icon: 'review.png',
       active: true,
