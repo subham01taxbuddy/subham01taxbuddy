@@ -1,4 +1,3 @@
-
 <div class="floating expanded" [ngClass]="{'active': isFloatingActive,'inactive': !isFloatingActive}">
     <div class="header expanded" [ngClass]="{'active': isHeaderActive, 'inactive': !isHeaderActive}">
         <button (click)="goBack()">
@@ -15,19 +14,22 @@
         <span class="username">{{ username }}</span>
     </div>
 
-     <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" #chatWindow>
+    <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" #chatWindow>
         <ng-container *ngFor="let message of fetchedMessages">
             <div [ngClass]="{
-              'system-messages': message.sender === 'system',
+              'system-messages': message.sender === 'system' || message.sender==='metadata',
               'user-messages': message.sender === chat21UserId,
-              'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId
+              'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
             }">
+                <div class="senderFullName" *ngIf="message.sender!='system' && message.sender!='metadata'">{{
+                    message.sender_fullname }}</div>
                 <div class="message-container">
                     <div class="message-and-timestamp">
-                        <span *ngIf="message.type === 'text'" class="message">{{ message.content }}</span>
+                        <span *ngIf="message.type === 'text' || message.sender==='metadata'" class="message">{{
+                            message.content }}</span>
                         <div *ngIf="message.type === 'html'" class="html" [innerHTML]="message.content"
                             (loadeddata)="addMessageEvents(message)"></div>
-                        <span *ngIf="message.sender !== 'system'" class="timestamp">{{
+                        <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
                             formatTimestamp(message.timestamp) }}</span>
                     </div>
                 </div>
@@ -53,7 +55,7 @@
 
         </div>
     </div>
- 
+
 
 
     <div class="user-input" [ngClass]="{'active': userInputField,'inactive': !userInputField}">

@@ -194,7 +194,7 @@ export class ChatService {
   }
 
   fetchMessages(requestId) {
-    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=30`;
+    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=300`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -238,7 +238,8 @@ export class ChatService {
       content: message.text,
       sender: message.sender,
       timestamp: message.timestamp,
-      type: message.type
+      type: message.type,
+      sender_fullname:message.sender_fullname
     }));
 
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
@@ -261,7 +262,8 @@ export class ChatService {
         content: message.text,
         sender: message.sender,
         timestamp: message.timestamp,
-        type: message.type
+        type: message.type,
+        sender_fullname:message.sender_fullname
       };
       transformedMessages.push(m);
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
