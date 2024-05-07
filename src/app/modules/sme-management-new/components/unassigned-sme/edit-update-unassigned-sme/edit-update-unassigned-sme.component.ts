@@ -204,10 +204,17 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
   onItrTypeCheckboxChange(itrType: string) {
-    const itrTypeControl = this.getItrTypeControl(itrType);
+    let itrTypeControl
+    if(itrType === "Business and Profession with Balance sheet & PNL- Rs. 2712"){
+      itrTypeControl = { value: true };
+    }else{
+      itrTypeControl = this.getItrTypeControl(itrType);
+    }
+
     if (!this.smeObj['skillSetPlanIdList']) {
       this.smeObj['skillSetPlanIdList'] = [];
     }
+
     let planId = this.smeObj['skillSetPlanIdList'];
 
     if (itrTypeControl.value) {
@@ -279,10 +286,20 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
       this.itrPlanList.forEach(item => {
         this.smeObj?.['skillSetPlanIdList'].forEach(element => {
-          if (item.planId === element) {
-            const name = item.name;
-            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
+          if(element === 138){
+            console.log('form',this.itrTypeForm)
+            console.log(this.itrTypeForm.controls);
+            const businessAndProfessionControl =  this.itrTypeForm.controls['Business and Profession with Balance sheet & PNL- Rs. 2712']
+            if (businessAndProfessionControl) {
+              businessAndProfessionControl.setValue(true);
+            }
+          }else{
+            if (item.planId === element && element != 138) {
+              const name = item.name;
+              this.itrTypeForm.setControl(name, new UntypedFormControl(true));
+            }
           }
+
         })
       })
     }
