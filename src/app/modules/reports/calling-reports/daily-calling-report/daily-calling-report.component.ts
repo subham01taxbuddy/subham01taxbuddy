@@ -421,7 +421,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         headerName: 'Average time spent on calling (overall from dialing till end of call)',
         field: 'averageTimeSpentOnCalling',
         sortable: true,
-        width: 250,
+        width: 320,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
