@@ -94,14 +94,14 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   checkIsFillingDone(){
-    //'https://uat-api.taxbuddy.com/itr/itr?userId=20231&eFillingCompleted=false&isITRU=true'
+   //https://uat-api.taxbuddy.com/itr/filed-itru-financial-years?userId=20569'
     this.loading = true;
-    const param1 = `/itr?userId=${this.data.userId}&eFillingCompleted=false&isITRU=true`;
+    const param1 = `/filed-itru-financial-years?userId=${this.data.userId}`;
     this.itrMsService.getMethod(param1).subscribe(
       (res: any) => {
         this.loading = false;
-        const filingNotDoneYears = res.map(itr => itr.financialYear);
-        this.enabledYears = this.allYears.filter(year => filingNotDoneYears.includes(year));
+        const filingNotDoneYears = res;
+        this.enabledYears = this.allYears.map(year => filingNotDoneYears.includes(year) ? year : null);
       }, error => {
         this.hideYears = true;
         this.showDetails = false;
