@@ -112,7 +112,7 @@ export class ChatService {
             if (chat21Result.success) {
               this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
               this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
-              this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.userid);
+              this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
 
               // let chat21Token = {
               //   chat21token: chat21Result.data.token
@@ -239,7 +239,7 @@ export class ChatService {
       sender: message.sender,
       timestamp: message.timestamp,
       type: message.type,
-      sender_fullname:message.sender_fullname
+      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
     }));
 
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
@@ -263,7 +263,7 @@ export class ChatService {
         sender: message.sender,
         timestamp: message.timestamp,
         type: message.type,
-        sender_fullname:message.sender_fullname
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
       };
       transformedMessages.push(m);
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)

@@ -1,8 +1,8 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
-import {ChatService} from '../chat.service';
-import {ChatEvents} from "../chat-events";
-import {ChatManager} from "../chat-manager";
-import {DomSanitizer} from "@angular/platform-browser";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { ChatService } from '../chat.service';
+import { ChatEvents } from "../chat-events";
+import { ChatManager } from "../chat-manager";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
     selector: 'app-user-chat',
@@ -20,8 +20,8 @@ export class UserChatComponent implements OnInit {
     @Input() username: string;
     @Input() requestId: string;
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
- 
- 
+
+
     isHeaderActive: boolean = true;
     isFloatingActive: boolean = true;
     chatMessages: boolean = true;
@@ -34,8 +34,8 @@ export class UserChatComponent implements OnInit {
     userInput: string = '';
 
     constructor(private chatService: ChatService, private chatManager: ChatManager,
-                private sanitizer: DomSanitizer, private elementRef: ElementRef,
-                private renderer: Renderer2) {
+        private sanitizer: DomSanitizer, private elementRef: ElementRef,
+        private renderer: Renderer2) {
         this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     }
@@ -46,11 +46,6 @@ export class UserChatComponent implements OnInit {
         this.back.emit();
     }
 
-    sendMessage() {
-     
-    //   const updatedData = {};
-    //   this.conversationUpdated.emit(updatedData);
-    }
 
     onFileSelected(event: any) {
         this.fileToUpload = event.target.files[0];
@@ -71,25 +66,25 @@ export class UserChatComponent implements OnInit {
 
     scrollToBottom(): void {
         try {
-          const chatMessages = this.chatWindow.nativeElement;
-          const lastMessage = chatMessages.lastElementChild;
-          if (lastMessage) {
-            lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
-          }
+            const chatMessages = this.chatWindow.nativeElement;
+            const lastMessage = chatMessages.lastElementChild;
+            if (lastMessage) {
+                lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
         } catch (error) {
-          console.error('Error scrolling chat window:', error);
+            console.error('Error scrolling chat window:', error);
         }
-      }
+    }
 
     ngOnInit(): void {
         if (this.requestId) {
-            console.log('request_id',this.requestId)
+            console.log('request_id', this.requestId)
             this.chatManager.openConversation(this.requestId)
             // this.chatService.fetchMessages(this.requestId);
-         }
+        }
 
-        
-         
+
+
     }
 
     isTyping: boolean = false;
@@ -197,5 +192,20 @@ export class UserChatComponent implements OnInit {
 
     removeFile() {
         this.fileToUpload = null;
+    }
+
+    onTyping() {
+        this.isTyping = true;
+    }
+
+    onTypingStopped() {
+        this.isTyping = false;
+    }
+    messageSent: any;
+
+    sendMessage() {
+        this.chatManager.sendMessage(this.messageSent);
+        this.messageSent = "";
+
     }
 }

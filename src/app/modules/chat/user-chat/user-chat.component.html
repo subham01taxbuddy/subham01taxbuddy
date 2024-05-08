@@ -22,7 +22,7 @@
               'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
             }">
                 <div class="senderFullName" *ngIf="message.sender!='system' && message.sender!='metadata'">{{
-                    message.sender_fullname }}</div>
+                    message.senderFullName }}</div>
                 <div class="message-container">
                     <div class="message-and-timestamp">
                         <span *ngIf="message.type === 'text' || message.sender==='metadata'" class="message">{{
@@ -61,7 +61,8 @@
     <div class="user-input" [ngClass]="{'active': userInputField,'inactive': !userInputField}">
         <label for="fileInput" class="fa fa-paperclip"></label>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
-        <input type="text" placeholder="Type your message" class="fileInput">
+        <input type="text" placeholder="Type your message" class="fileInput" class="form-control inp"
+            [(ngModel)]="messageSent" (keyup.enter)="sendMessage()" (input)="onTyping()" (blur)="onTypingStopped()">
         <button (Click)="sendMessage()">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
