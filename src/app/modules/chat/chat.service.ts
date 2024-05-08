@@ -131,9 +131,9 @@ export class ChatService {
             });
           } else {
             let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
-            this.fetchConversationList(chat21Result.data.userid);
-            this.initChatVariables(result.data.requestId);
-            this.fetchConversationList(chat21Result.data.userid);
+            this.fetchConversationList(chat21Result.userid);
+            this.initChatVariables(result.requestId);
+            this.fetchConversationList(chat21Result.userid);
           }
         }
       });
