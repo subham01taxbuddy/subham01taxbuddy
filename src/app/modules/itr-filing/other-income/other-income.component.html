@@ -316,7 +316,7 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading5">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse4">Winnings from Online Games chargeable u/s 115BBJ
+                      data-bs-target="#collapse5">Winnings from Online Games chargeable u/s 115BBJ
                       <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBJTotal}}">
                     </button>
                   </h2>
@@ -425,6 +425,12 @@
                           <mat-form-field appearance="outline">
                             <input type="text" trim matInput placeholder="" name="incomeValue[i]"
                               formControlName="incomeValue" type="number" maxlength="125" />
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field" *ngIf="income.value.incomeType ==='ANY_OTHER'">
+                          <mat-form-field appearance="outline">
+                            <input type="text" trim matInput placeholder="" name="incomeDesc[i]"
+                              formControlName="incomeDesc" type="text" maxlength="125" />
                           </mat-form-field>
                         </div>
                       </div>
