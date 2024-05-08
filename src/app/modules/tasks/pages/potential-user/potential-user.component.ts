@@ -452,7 +452,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Status',
+        headerName: 'Source',
         field: 'source',
         width: 100,
         suppressMovable: true,
