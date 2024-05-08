@@ -306,6 +306,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           label: this.anyOtherIncomeDropdown[i].label,
           incomeType: this.anyOtherIncomeDropdown[i].value,
           incomeValue: [null, Validators.min(0)],
+          incomeDesc: [null],
         })
       );
     }
@@ -557,7 +558,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           expenses: 0,
           amount: anyOtherIncome.controls['incomeValue'].value,
           incomeType: anyOtherIncome.controls['incomeType'].value,
-          details: null,
+          details: anyOtherIncome.controls['incomeDesc'].value,
         });
       }
     }
@@ -758,6 +759,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
             item.controls['incomeType'].value === anyOtherIncomes[i].incomeType
         )[0] as UntypedFormGroup;
         control.controls['incomeValue'].setValue(anyOtherIncomes[i].amount);
+        control.controls['incomeDesc'].setValue(anyOtherIncomes[i].details);
       }
 
       let providentValues = this.ITR_JSON.incomes.filter(
@@ -885,6 +887,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         )[0] as UntypedFormGroup;
         formGroup.controls['incomeValue'].setValue(
           this.ITR_JSON.exemptIncomes[i].amount
+        );
+        formGroup.controls['incomeDesc'].setValue(
+          this.ITR_JSON.exemptIncomes[i].details
         );
       }
     }
