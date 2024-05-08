@@ -368,8 +368,8 @@
                   <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
                     <p>
                       <mat-checkbox [formControl]="getItrTypeControl(itrType)"
-                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
-                          }}</span></mat-checkbox>
+                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ getItrTypeName(itrType)}}</span>
+                      </mat-checkbox>
                     </p>
                   </div>
                 </section>
