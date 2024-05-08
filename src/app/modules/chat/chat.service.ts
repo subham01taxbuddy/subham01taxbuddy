@@ -102,31 +102,39 @@ export class ChatService {
           if (result.data?.requestId) {
             this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
-          let chat21Request = {
-            tiledeskToken: this.localStorageService.getItem('TILEDESK_TOKEN')
-          };
-          this.httpClient.post(this.CHAT21_TOKEN_URL,
-            chat21Request, this.setHeaders("auth")
-          ).subscribe((chat21Result: any) => {
-            console.log('chat21Token: ', chat21Result);
-            if (chat21Result.success) {
-              this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
-              this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
-              this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
+          if (tokenPresent) {
+            let chat21Request = {
+              tiledeskToken: this.localStorageService.getItem('TILEDESK_TOKEN')
+            };
+            this.httpClient.post(this.CHAT21_TOKEN_URL,
+              chat21Request, this.setHeaders("auth")
+            ).subscribe((chat21Result: any) => {
+              console.log('chat21Token: ', chat21Result);
+              if (chat21Result.success) {
+                this.localStorageService.setItem("CHAT21_RESULT", chat21Result.data, true);
+                this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
+                this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+                this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
 
-              // let chat21Token = {
-              //   chat21token: chat21Result.data.token
-              // };
-              this.fetchConversationList(chat21Result.data.userid);
+                // let chat21Token = {
+                //   chat21token: chat21Result.data.token
+                // };
+                this.fetchConversationList(chat21Result.data.userid);
 
-              // if (service) {
-              this.initChatVariables(result.data.requestId);
-              this.fetchConversationList(chat21Result.data.userid);
+                // if (service) {
+                this.initChatVariables(result.data.requestId);
+                this.fetchConversationList(chat21Result.data.userid);
 
-              // this.fetchMessages(result.data.requestId);
-              // }
-            }
-          });
+                // this.fetchMessages(result.data.requestId);
+                // }
+              }
+            });
+          } else {
+            let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
+            this.fetchConversationList(chat21Result.data.userid);
+            this.initChatVariables(result.data.requestId);
+            this.fetchConversationList(chat21Result.data.userid);
+          }
         }
       });
   }
