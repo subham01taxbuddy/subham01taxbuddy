@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 
 @Component({
-  selector: 'app-other-income',
+  selector: 'app-exempt-income',
   templateUrl: './exempt-income.component.html',
   styleUrls: ['./exempt-income.component.scss'],
 })

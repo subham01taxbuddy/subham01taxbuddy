@@ -73,7 +73,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   isButtonDisable: boolean;
   AssessmentYear: string;
   dialogRef: any;
-
+  filteredFinancialYears: any[]
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
   frequencyTypesMaster: any = [
@@ -207,6 +207,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
     if(this.smeSelectedPlanId === 120){
       this.showScheduledFields =true;
+    }
+
+    let gstServiceType = this.subscriptionObj?.servicesType ===  "GST" ? true : false;
+    if (this.serviceType === 'GST' || gstServiceType) {
+      this.filteredFinancialYears = [{ financialYear: '2024-2025' }, ...this.financialYear];
+      console.log('updated FY ',this.filteredFinancialYears)
+    }else{
+      this.filteredFinancialYears= this.financialYear;
     }
   }
 
@@ -1071,8 +1079,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
      })
   }
 
-  filteredFinancialYears: any[] = this.financialYear;
-
   isYearDisabled(year: string): boolean {
     return this.service === 'ITRU' && this.selectedITRUFy?.includes(year);
   }
@@ -1087,6 +1093,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.filteredFinancialYears = this.financialYear.slice(0, 1);
       else
         this.filteredFinancialYears = this.financialYear;
+
+
+    if (this.service === 'GST') {
+      this.filteredFinancialYears = [{ financialYear: '2024-2025' }, ...this.financialYear];
+    }
 
     const serviceArray = [
       { service: 'GST', details: 'GST Registration' },
@@ -1517,4 +1528,5 @@ export interface userInfo {
   subscriptionAssigneeId: number;
   smeSelectedPlan: any;
   item: any;
+  servicesType:any;
 }

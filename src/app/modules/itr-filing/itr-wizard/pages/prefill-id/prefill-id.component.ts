@@ -1383,12 +1383,14 @@ export class PrefillIdComponent implements OnInit {
                 : (this.ITR_Obj.orgITRDate = null);
 
               if (this.ITR_Type === 'ITR1') {
-                if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N') {
+                if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N' ||
+                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
                   this.regime = 'OLD';
                   this.ITR_Obj.regime = this.regime;
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y'
+                  ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y' ||
+                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.regime = 'NEW';
                   this.ITR_Obj.regime = this.regime;
@@ -2725,15 +2727,15 @@ export class PrefillIdComponent implements OnInit {
               // SETTING REGIME TYPE FOR ITR2
               if (this.ITR_Type === 'ITR2') {
                 if (
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.NewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegime === 'N' ||
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
                 ) {
                   this.regime = 'OLD';
                   this.ITR_Obj.regime = this.regime;
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    .NewTaxRegime === 'Y'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus.NewTaxRegime === 'Y' ||
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus.OptOutNewTaxRegime === 'N'
                 ) {
                   this.regime = 'NEW';
                   this.ITR_Obj.regime = this.regime;

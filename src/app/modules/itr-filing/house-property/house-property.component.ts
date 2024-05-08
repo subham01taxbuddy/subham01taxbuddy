@@ -154,7 +154,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   markActive(index) {
-    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.houseProperties.length) {
+    if (this.currentIndex >= 0 && this.currentIndex <= this.ITR_JSON.houseProperties.length) {
       this.saveHpDetails(false);
     }
     if (index === -1) {
@@ -689,6 +689,8 @@ export class HousePropertyComponent implements OnInit {
           this.createCoOwnerForm(obj)
         )
       });
+    } else {
+      this.isCoOwners.setValue(false);
     }
 
     if (itrJsonHp?.propertyType === 'SOP') {

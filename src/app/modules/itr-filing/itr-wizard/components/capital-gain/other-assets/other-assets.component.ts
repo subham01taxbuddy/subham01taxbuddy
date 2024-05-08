@@ -178,6 +178,32 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  updateValidations(formGroup){
+    if(formGroup.get('costOfNewAssets').value){
+      formGroup.get('purchaseDate').setValidators([Validators.required]);
+      formGroup.updateValueAndValidity();
+    } else {
+      formGroup.get('purchaseDate').setValidators([null]);
+      formGroup.updateValueAndValidity();
+    }
+
+    if(formGroup.get('investmentInCGAccount').value){
+      formGroup.get('accountNumber').setValidators([Validators.required]);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators([Validators.required]);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators([Validators.required]);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    } else {
+      formGroup.get('accountNumber').setValidators(null);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators(null);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators(null);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    }
+  }
+
   //getting the deductions Array
   get getDeductions() {
     return this.deductionForm?.get('deductions') as UntypedFormArray;

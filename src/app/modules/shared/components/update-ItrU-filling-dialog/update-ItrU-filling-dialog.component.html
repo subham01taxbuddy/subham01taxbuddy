@@ -12,11 +12,11 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
       </button>
     </span> -->
     <span>
-      <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2021-2022')">FY-2021-2022
+      <button type="button" title="Financial Year" class="tbd-btn-small" [class.disabled-button]="!enabledYears.includes('2021-2022')" [disabled]="!enabledYears.includes('2021-2022')" (click)="selectedFy('2021-2022')">FY-2021-2022
       </button>
     </span>
     <span>
-      <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2022-2023')">FY-2022-2023
+      <button type="button" title="Financial Year" class="tbd-btn-small" [class.disabled-button]="!enabledYears.includes('2022-2023')" [disabled]="!enabledYears.includes('2022-2023')" (click)="selectedFy('2022-2023')">FY-2022-2023
       </button>
     </span>
   </div>
@@ -71,6 +71,6 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
 
   </div>
   <div class="footer__buttons clearfix" style="margin-top: 25px;">
-    <button class="tbd-btn" [disabled]="eFillingDate.status!='VALID'" (click)="updateItrUDetails()">Update</button>
+    <button class="tbd-btn" [disabled]="eFillingDate.status !== 'VALID'" (click)="updateItrUDetails()">Update</button>
   </div>
 </div>

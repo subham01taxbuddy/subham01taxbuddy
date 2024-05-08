@@ -508,6 +508,10 @@
                 <mat-error *ngIf="bank.get('ifsCode').hasError('pattern')">
                   Enter valid IFSC Code.
                 </mat-error>
+                <mat-error
+                  *ngIf="bank.get('ifsCode').hasError('required') && (bank.get('ifsCode').dirty || bank.get('ifsCode').touched)">
+                  Please enter IFSC Code
+                </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-3">
@@ -517,6 +521,10 @@
                   class="input-field" maxlength="125" required />
                 <mat-error *ngIf="bank.get('name').hasError('pattern')">
                   Enter character only.
+                </mat-error>
+                <mat-error
+                  *ngIf="bank.get('name').hasError('required') && (bank.get('name').dirty || bank.get('name').touched)">
+                  Please enter name of the Bank
                 </mat-error>
               </mat-form-field>
             </div>
@@ -529,6 +537,10 @@
                       bank.get('accountNumber').hasError('minlength')">
                   Account number should be between 3-20 digit
                 </mat-error>
+                <mat-error
+                *ngIf="bank.get('accountNumber').hasError('required') && (bank.get('accountNumber').dirty || bank.get('accountNumber').touched)">
+                Please enter name of the Bank
+              </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-2">

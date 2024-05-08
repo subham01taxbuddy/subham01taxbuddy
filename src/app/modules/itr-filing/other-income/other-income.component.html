@@ -77,21 +77,21 @@
                         <div class="form-field">
                           <div><span class="span">Upto 15 June </span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput placeholder="Upto 15 June 2022" name="quarter1"
+                            <input digitsOnly trim matInput  name="quarter1"
                               formControlName="quarter1" maxlength="50" digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th June- 15th Sep</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput placeholder="16 June 2022 - 15 Sep 2022" name="quarter2"
+                            <input digitsOnly trim matInput name="quarter2"
                               formControlName="quarter2" maxlength="50" digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th Sep- 15th Dec </span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput placeholder="16 Sep 2022 - 15 Dec 2022" name="quarter3"
+                            <input digitsOnly trim matInput name="quarter3"
                               formControlName="quarter3" maxlength="50" digitsOnly />
                           </mat-form-field>
                         </div>
@@ -100,14 +100,14 @@
                         <div class="form-field">
                           <div> <span class="span">16th Dec- 15th Mar</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput placeholder="16 Dec 2022 - 15 March 2023" name="quarter4"
+                            <input digitsOnly trim matInput name="quarter4"
                               formControlName="quarter4" maxlength="50" digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th Mar- 31th Mar</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput placeholder="16 March 2023 - 31 March 2023" name="quarter5"
+                            <input digitsOnly trim matInput name="quarter5"
                               formControlName="quarter5" maxlength="50" digitsOnly />
                           </mat-form-field>
                         </div>
@@ -244,7 +244,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="Upto 15 June 2022" name="quarter1"
+                                <input type="number" matInput name="quarter1"
                                   formControlName="quarter1" maxlength="125" (mousedown)="onClickRemoveZero('quarter1')"
                                   (blur)="onBlurAddZero('quarter1')" />
                               </mat-form-field>
@@ -258,7 +258,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th June 2022 - 15th Sep 2022"
+                                <input type="number" matInput
                                   name="quarter2[i]" formControlName="quarter2" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter2')" (blur)="onBlurAddZero('quarter2')" />
                               </mat-form-field>
@@ -272,7 +272,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Sep 2022 - 15th Dec 2022"
+                                <input type="number" matInput
                                   name="quarter3[i]" formControlName="quarter3" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter3')" (blur)="onBlurAddZero('quarter3')" />
                               </mat-form-field>
@@ -287,7 +287,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Dec 2022 - 15th Mar 2023"
+                                <input type="number" matInput
                                   name="quarter4[i]" formControlName="quarter4" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter4')" (blur)="onBlurAddZero('quarter4')" />
                               </mat-form-field>
@@ -301,7 +301,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Mar 2023- 31th Mar 2023"
+                                <input type="number" matInput
                                   name="quarter5[i]" formControlName="quarter5" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter5')" (blur)="onBlurAddZero('quarter5')" />
                               </mat-form-field>
@@ -316,7 +316,7 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading5">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse4">Winnings from Online Games chargeable u/s 115BBJ
+                      data-bs-target="#collapse5">Winnings from Online Games chargeable u/s 115BBJ
                       <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBJTotal}}">
                     </button>
                   </h2>
@@ -331,7 +331,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="Upto 15 June 2022" name="quarter1"
+                                <input type="number" matInput name="quarter1"
                                   formControlName="quarter1" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter1')"
                                   (blur)="onBlur115BBJAddZero('quarter1')" />
@@ -346,7 +346,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th June 2022 - 15th Sep 2022"
+                                <input type="number" matInput
                                   name="quarter2[i]" formControlName="quarter2" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter2')"
                                   (blur)="onBlur115BBJAddZero('quarter2')" />
@@ -361,7 +361,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Sep 2022 - 15th Dec 2022"
+                                <input type="number" matInput
                                   name="quarter3[i]" formControlName="quarter3" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter3')"
                                   (blur)="onBlur115BBJAddZero('quarter3')" />
@@ -377,7 +377,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Dec 2022 - 15th Mar 2023"
+                                <input type="number" matInput
                                   name="quarter4[i]" formControlName="quarter4" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter4')"
                                   (blur)="onBlur115BBJAddZero('quarter4')" />
@@ -392,7 +392,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput placeholder="16th Mar 2023- 31th Mar 2023"
+                                <input type="number" matInput
                                   name="quarter5[i]" formControlName="quarter5" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter5')"
                                   (blur)="onBlur115BBJAddZero('quarter5')" />
@@ -425,6 +425,12 @@
                           <mat-form-field appearance="outline">
                             <input type="text" trim matInput placeholder="" name="incomeValue[i]"
                               formControlName="incomeValue" type="number" maxlength="125" />
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field" *ngIf="income.value.incomeType ==='ANY_OTHER'">
+                          <mat-form-field appearance="outline">
+                            <input type="text" trim matInput placeholder="" name="incomeDesc[i]"
+                              formControlName="incomeDesc" type="text" maxlength="125" />
                           </mat-form-field>
                         </div>
                       </div>

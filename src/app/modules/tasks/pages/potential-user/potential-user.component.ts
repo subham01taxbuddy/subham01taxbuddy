@@ -452,8 +452,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Status',
-        field: 'statusName',
+        headerName: 'Source',
+        field: 'source',
         width: 100,
         suppressMovable: true,
         sortable: true,
@@ -463,13 +463,20 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (params.data.source === 'Old Customer Migration Script') {
-        //     return 'ITR Filed'
-        //   } else if (params.data.source === 'Old Interested Customer Migration Script') {
-        //     return 'Interested'
-        //   } else 'NA'
-        // }
+        valueGetter: function nameFromCode(params) {
+          const source = params.data.source.toLowerCase();
+
+          if (source.includes("itr-filed")) {
+              return 'ITR Filed';
+          } else if (source.includes("itr-interested") ||
+                     source.includes("registered-users") ||
+                     source.includes("tpa-paid")) {
+              return 'Registered';
+          } else {
+              return 'NA';
+          }
+        }
+
       },
 
       {

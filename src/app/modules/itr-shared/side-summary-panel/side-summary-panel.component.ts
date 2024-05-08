@@ -146,6 +146,8 @@ export class SideSummaryPanelComponent implements OnInit {
       income.incomeType === "IMMOV_PROP_INADEQ_CONS" ||
       income.incomeType === "ANY_OTHER_PROP_WITHOUT_CONS" ||
       income.incomeType === "ANY_OTHER_PROP_INADEQ_CONS" ||
+      income.incomeType === "INCOME_US_56_2_XII" ||
+      income.incomeType === "INCOME_US_56_2_XIII" ||
       income.incomeType === "ROYALTY_US_80QQB" ||
       income.incomeType === "ROYALTY_US_80RRB" ||
       income.incomeType === "FAMILY_PENSION" ||
@@ -155,6 +157,9 @@ export class SideSummaryPanelComponent implements OnInit {
     this.otherIncome.totalDividendIncome = this.summary.summaryIncome.summaryOtherIncome?.incomes.find(income =>
       income.incomeType === "DIVIDEND"
     )?.taxableAmount;
+    let a = this.summary?.taxSummary?.totalWinningsUS115BB ? this.summary?.taxSummary?.totalWinningsUS115BB : 0;
+    let b = this.summary?.taxSummary?.totalWinningsUS115BBJ ? this.summary?.taxSummary?.totalWinningsUS115BBJ : 0;
+    this.otherIncome.winningsIncome = a + b;
 
   }
 

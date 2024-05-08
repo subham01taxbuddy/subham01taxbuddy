@@ -68,6 +68,17 @@ export class DashboardComponent implements OnInit {
   callSummaryData: any;
   searchAsPrinciple: boolean = false;
   itrFiledButPaymentPendingData:any;
+  serviceTypes = [
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    {
+      label: 'ITR-U',
+      value: 'ITRU',
+    },
+  ]
+  serviceType= new UntypedFormControl('ITR');
 
   constructor(
     private userMsService: UserMsService,
@@ -278,7 +289,13 @@ export class DashboardComponent implements OnInit {
         userFilter += `&filerUserId=${filerUserId}`;
       }
     }
-    let param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
+
+    let serviceTypeFilter='';
+    if(this.serviceType.value){
+      serviceTypeFilter += `&serviceType=${this.serviceType.value}`;
+    }
+
+    let param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceTypeFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -575,5 +592,6 @@ export class DashboardComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.search('all');
+    this.serviceType.setValue('ITR')
   }
 }

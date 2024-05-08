@@ -13,7 +13,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <div class="row">
-                    <div class="col-sm-4 " *ngIf="partnerType ==='PRINCIPAL'">
+                    <div class="col-sm-3 " *ngIf="partnerType ==='PRINCIPAL'">
                       <mat-label> Search By Child </mat-label>
                       <mat-form-field appearance="outline">
                         <input type="text" matInput [formControl]="searchChild" [matAutocomplete]="auto2" />
@@ -25,7 +25,7 @@
                         </mat-autocomplete>
                       </mat-form-field>
                     </div>
-                    <div class="col-sm-4 spsTp ">
+                    <div class="col-sm-3 spsTp ">
                       <mat-form-field appearance="outline">
                         <mat-label>Start Date:</mat-label>
                         <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
@@ -35,7 +35,7 @@
                         <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="col-sm-4 spsTp ">
+                    <div class="col-sm-3 spsTp ">
                       <mat-form-field appearance="outline">
                         <mat-label>End Date:</mat-label>
                         <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
@@ -44,6 +44,16 @@
                         <mat-datepicker #picker2></mat-datepicker>
                         <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
                         <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 spsTp">
+                      <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                        <mat-label>Select Service</mat-label>
+                        <mat-select placeholder="" [formControl]="serviceType">
+                          <mat-option *ngFor="let service of serviceTypes" [value]="service.value">
+                            {{service.label}}
+                          </mat-option>
+                        </mat-select>
                       </mat-form-field>
                     </div>
                   </div>
@@ -122,10 +132,28 @@
                             <span class="text-TxSm-1">Payment Received</span>
                         </div>
                     </div>
-                    <div class="col-sm-2 mt-2">
+                    <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value !== 'ITRU'">
                       <div class="count-radius-1">
                           <span class="numTxSm-11">{{statusWiseCountData?.itrFiled || 'NA'}}</span><br>
                           <span class="text-TxSm-1">ITR Filed</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value === 'ITRU'">
+                      <div class="count-radius-1">
+                          <span class="numTxSm-11">{{statusWiseCountData?.itrFiled20_21 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR Filed(2020-2021)</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value === 'ITRU'">
+                      <div class="count-radius-1">
+                          <span class="numTxSm-11">{{statusWiseCountData?.itrFiled21_22 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR Filed(2021-2022)</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value === 'ITRU'">
+                      <div class="count-radius-1">
+                          <span class="numTxSm-11">{{statusWiseCountData?.itrFiled22_23 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR Filed(2022-2023)</span>
                       </div>
                     </div>
                     <div class="col-sm-2 mt-2">
@@ -154,16 +182,23 @@
                     </div>
                     <div class="col-sm-2 mt-2">
                         <div class="count-radius-1">
-                            <span class="numTxSm-11">{{statusWiseCountData?.backOutWithRefund || 'NA'}}</span><br>
-                            <span class="text-TxSm-1">Back Out with refund</span>
+                  <span class="numTxSm-11">{{statusWiseCountData?.backOutWithRefund || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Back Out with refund</span>
                         </div>
                     </div>
-                <div class="col-sm-2 mt-2">
-                  <div class="count-radius-1">
+                  <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value !== 'ITRU'">
+                    <div class="count-radius-1">
                       <span class="numTxSm-11">{{statusWiseCountData?.backOut || 'NA'}}</span><br>
                       <span class="text-TxSm-1">Backed Out</span>
+                    </div>
                   </div>
-                </div>
+
+                  <div class="col-sm-2 mt-2" *ngIf="this.serviceType.value === 'ITRU'">
+                    <div class="count-radius-1">
+                        <span class="numTxSm-11">{{statusWiseCountData?.backedOut || 'NA'}}</span><br>
+                        <span class="text-TxSm-1">Backed Out</span>
+                    </div>
+                  </div>
 
                 </div>
             </div>

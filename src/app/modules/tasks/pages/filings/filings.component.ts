@@ -80,6 +80,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   itrType = new UntypedFormControl('');
   returnType = new UntypedFormControl('');
   isEverified = new UntypedFormControl('');
+  paymentStatus = new  UntypedFormControl();
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
@@ -88,6 +89,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
   isVerified = [
     { value: 'true', name: 'True' },
     { value: 'false', name: 'False' },
+  ];
+  paymentStatusValues=[
+    { value: 'Paid', name: 'Paid' },
+    { value: 'Unpaid', name: 'Unpaid' },
   ]
 
   constructor(
@@ -352,6 +357,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       if (this.utilsService.isNonEmpty(this.isEverified.value)) {
         param = param + '&isEverified=' + this.isEverified.value;
+      }
+      if (this.utilsService.isNonEmpty(this.paymentStatus.value)) {
+        param = param + '&paymentStatus=' + this.paymentStatus.value;
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
@@ -1480,8 +1488,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.itrType.setValue(null);
     this.returnType.setValue(null);
     this.isEverified.setValue(null);
+    this.paymentStatus.setValue(null);
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
+    this.config.currentPage = 1;
     this.config.totalItems = 0;
     this.config.itemsPerPage = 20;
     this.searchParams.mobileNumber = null;

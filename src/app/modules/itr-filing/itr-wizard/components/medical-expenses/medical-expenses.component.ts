@@ -625,11 +625,13 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
+      this.loading = false;
       return true;
     } else {
       $('input.ng-invalid').first().focus();
+      this.loading = false;
       return false;
     }
-    this.loading = false;
+
   }
 }

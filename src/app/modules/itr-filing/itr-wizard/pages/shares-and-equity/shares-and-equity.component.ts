@@ -351,10 +351,9 @@ export class SharesAndEquityComponent
       panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
       purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
       purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
-      costOfNewAssets: [obj ? obj.costOfNewAssets : null, Validators.required],
+      costOfNewAssets: [obj ? obj.costOfNewAssets : null],
       investmentInCGAccount: [
-        obj ? obj.investmentInCGAccount : null,
-        Validators.required,
+        obj ? obj.investmentInCGAccount : null
       ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null, [Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
@@ -362,6 +361,32 @@ export class SharesAndEquityComponent
       ifscCode: [obj?.ifscCode || null, ifscValidators],
       dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
     });
+  }
+
+  updateValidations(formGroup){
+    if(formGroup.get('costOfNewAssets').value){
+      formGroup.get('purchaseDate').setValidators([Validators.required]);
+      formGroup.updateValueAndValidity();
+    } else {
+      formGroup.get('purchaseDate').setValidators([null]);
+      formGroup.updateValueAndValidity();
+    }
+
+    if(formGroup.get('investmentInCGAccount').value){
+      formGroup.get('accountNumber').setValidators([Validators.required]);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators([Validators.required]);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators([Validators.required]);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    } else {
+      formGroup.get('accountNumber').setValidators(null);
+      formGroup.get('accountNumber').updateValueAndValidity();
+      formGroup.get('ifscCode').setValidators(null);
+      formGroup.get('ifscCode').updateValueAndValidity();
+      formGroup.get('dateOfDeposit').setValidators(null);
+      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    }
   }
 
   // ==================== ADD FUNCTIONS====================
