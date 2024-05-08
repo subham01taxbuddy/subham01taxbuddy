@@ -210,15 +210,17 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     const itrTypeControl = this.getItrTypeControl(plan.planId);
     if (!itrTypeControl) return;
 
-    if (itrTypeControl.value) {
+    const index = this.smeObj['skillSetPlanIdList'].indexOf(plan.planId);
+
+    if (itrTypeControl.value && index === -1) {
         this.smeObj['skillSetPlanIdList'].push(plan.planId);
-    } else {
-      const index = this.smeObj['skillSetPlanIdList'].indexOf(plan.planId);
-      if (index !== -1) {
-          this.smeObj['skillSetPlanIdList'].splice(index, 1);
-      }
+    } else if (!itrTypeControl.value && index !== -1) {
+        this.smeObj['skillSetPlanIdList'].splice(index, 1);
     }
-  }
+
+    console.log(this.smeObj['skillSetPlanIdList']);
+}
+
 
   planIdList:any = []
   getPlanDetails() {
