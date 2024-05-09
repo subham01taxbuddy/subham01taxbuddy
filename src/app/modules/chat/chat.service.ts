@@ -20,7 +20,7 @@ export class ChatService {
   private CONVERSATION_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat/659f70587e6a8d00122fb149/conversations";
   private DEPT_DTLS_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/departments?projectId=";
   private CHAT_API_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat";
-  private WEBSOCKET_URL = "wss://mq-tiledesk.taxbuddy.com/mqws/ws";
+  private WEBSOCKET_URL = "wss://tiledesk.taxbuddy.com/mqws/ws";
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
 
   presenceTopic;
