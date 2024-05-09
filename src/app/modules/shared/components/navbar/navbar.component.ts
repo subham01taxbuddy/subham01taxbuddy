@@ -43,6 +43,8 @@ export class NavbarComponent implements DoCheck {
   isDropdownOpen = false;
   showDropDown:boolean =false;
   partnerType :any;
+  userAffiliateID:any;
+  checkEnv= environment.environment;
 
   constructor(
     private router: Router,
@@ -139,6 +141,7 @@ export class NavbarComponent implements DoCheck {
       this.loading = false;
       if (response.success) {
         if (response.data.affiliateId) {
+          this.userAffiliateID = response.data.affiliateId
           return;
         } else {
           this.showAffiliateBtn = true;
