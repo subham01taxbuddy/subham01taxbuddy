@@ -264,7 +264,8 @@ export class ChatService {
         content: message.content,
         sender: message.sender,
         timestamp: message.timestamp,
-        type: message.type
+        type: message.type,
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
       }));
       let m = {
         content: message.text,
