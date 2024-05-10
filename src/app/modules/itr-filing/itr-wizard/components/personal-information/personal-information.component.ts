@@ -2711,6 +2711,19 @@ export class PersonalInformationComponent implements OnInit {
     }
     // }
 
+    const formArrayValid = this.getBankDetailsArray.controls.every(control => control.valid);
+    const formArrayHasValues = this.getBankDetailsArray.controls.length > 0;
+
+    if (!formArrayValid || !formArrayHasValues) {
+      this.loading = false;
+      this.personalInfoSaved.emit(false);
+      this.utilsService.showSnackBar(
+        'Please select at least one bank account in which you prefer to get refund'
+      );
+      this.openAcc();
+      return;
+    }
+
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
         this.customerProfileForm.get(key).errors;
