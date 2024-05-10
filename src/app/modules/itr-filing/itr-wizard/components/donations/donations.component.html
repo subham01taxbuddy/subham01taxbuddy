@@ -6,9 +6,9 @@
     <form [formGroup]="generalDonationForm">
       <div class="accordion-item">
         <h2 class="accordion-header" *ngIf="false">
-          <button *ngIf="type === '80g'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+          <button id="accordBtn1" *ngIf="type === '80g'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
             aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
-          <button *ngIf="type === '80gga'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+          <button id="accordBtn2" *ngIf="type === '80gga'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
             aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
         </h2>
         <div>
