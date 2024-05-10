@@ -398,11 +398,14 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
+    const formArrayValid = this.getAgriIncomeArray.controls.every(control => control.valid);
+    const formArrayHasValues = this.getAgriIncomeArray.controls.length > 0;
+
     if (
       this.exemptIncomeFormGroup.valid &&
       this.otherIncomeFormGroup.valid &&
       (agriIncome && agriIncome?.value > 500000
-        ? this.agriIncFormGroup.valid
+        ? formArrayValid && formArrayHasValues
         : true)
     ) {
       // this.saveOtherIncome();
