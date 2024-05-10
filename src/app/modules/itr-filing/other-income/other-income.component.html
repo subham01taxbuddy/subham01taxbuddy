@@ -29,7 +29,7 @@
                         </div>
                         <div class="form-field">
                           <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                            <input type="number" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
                               formControlName="incomeValue" type="number" maxlength="125"
                               (blur)="validateIncomeValueOnBlur()" />
                           </mat-form-field>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="form-field mt-4">
                           <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" formControlName="providentFundValue"
+                            <input type="text" digitsOnly trim matInput placeholder="" formControlName="providentFundValue"
                               type="number" maxlength="125" />
                           </mat-form-field>
                         </div>
@@ -146,7 +146,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="aggregateValueWithoutConsideration" type="number" class="input-field"
                                   maxlength="125" />
                               </mat-form-field>
@@ -163,7 +163,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="immovablePropertyWithoutConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -180,7 +180,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="immovablePropertyInadequateConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -197,7 +197,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="anyOtherPropertyWithoutConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -214,7 +214,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="anyOtherPropertyInadequateConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -244,7 +244,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput name="quarter1"
+                                <input type="number" digitsOnly matInput name="quarter1"
                                   formControlName="quarter1" maxlength="125" (mousedown)="onClickRemoveZero('quarter1')"
                                   (blur)="onBlurAddZero('quarter1')" />
                               </mat-form-field>
@@ -258,7 +258,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter2[i]" formControlName="quarter2" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter2')" (blur)="onBlurAddZero('quarter2')" />
                               </mat-form-field>
@@ -272,7 +272,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter3[i]" formControlName="quarter3" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter3')" (blur)="onBlurAddZero('quarter3')" />
                               </mat-form-field>
@@ -287,7 +287,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter4[i]" formControlName="quarter4" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter4')" (blur)="onBlurAddZero('quarter4')" />
                               </mat-form-field>
@@ -301,7 +301,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter5[i]" formControlName="quarter5" maxlength="125"
                                   (mousedown)="onClickRemoveZero('quarter5')" (blur)="onBlurAddZero('quarter5')" />
                               </mat-form-field>
@@ -331,7 +331,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput name="quarter1"
+                                <input type="number" digitsOnly matInput name="quarter1"
                                   formControlName="quarter1" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter1')"
                                   (blur)="onBlur115BBJAddZero('quarter1')" />
@@ -346,7 +346,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter2[i]" formControlName="quarter2" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter2')"
                                   (blur)="onBlur115BBJAddZero('quarter2')" />
@@ -361,7 +361,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter3[i]" formControlName="quarter3" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter3')"
                                   (blur)="onBlur115BBJAddZero('quarter3')" />
@@ -377,7 +377,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter4[i]" formControlName="quarter4" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter4')"
                                   (blur)="onBlur115BBJAddZero('quarter4')" />
@@ -392,7 +392,7 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
+                                <input type="number" digitsOnly matInput
                                   name="quarter5[i]" formControlName="quarter5" maxlength="125"
                                   (mousedown)="onClick115BBJRemoveZero('quarter5')"
                                   (blur)="onBlur115BBJAddZero('quarter5')" />
@@ -424,7 +424,7 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                              <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                              <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
                                      formControlName="incomeValue" type="number" maxlength="125" />
                             </mat-form-field>
                           </div>
