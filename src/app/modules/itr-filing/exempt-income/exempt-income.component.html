@@ -242,53 +242,77 @@
                             </div>
                           </div>
                         </div>
-                      <div class="hp4main1">
+                      <div class="hp4main2">
 
-                        <div class="col-8 extra-pad">
-                          <div class="field">
-                            <div class="field-label">
-                              <span class="span">Income Category </span>
-                            </div>
-                            <mat-form-field appearance="outline">
-                              <mat-select name="incomeType[i]"
-                                          formControlName="incomeType"
-                              (selectionChange)="validateExemptIncomes($event)">
-                                <mat-option *ngFor="let exempt of exemptIncomesDropdown; let k = index"
-                                matTooltip="{{exempt.label}}"
-                                        [value]="exempt.value">{{ exempt.label }}</mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                          </div>
-                        </div>
-
-                        <div class="col-3 extra-pad">
-                          <div class="field">
-                            <div class="field-label">
-                              <span class="span">Amount </span>
-                            </div>
-
-                            <mat-form-field appearance="outline">
-                              <input
-                                      type="number"
-                                      matInput
-                                      placeholder=""
-                                      name="incomeValue[i]"
-                                      formControlName="incomeValue"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-
-                          </div>
-                        </div>
-
-                        <div class="col-1 extra-pad">
-                          <div class="Bx4">
-                            <div class="Bx4L delete-align">
-                              <button type="button" (click)="deleteExemptIncome(i)"> <i class="fa fa-trash-o delbt"></i> </button>
+                        <div class="row col-12">
+                          <div class="col-8 extra-pad">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Income Category </span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <mat-select name="incomeType[i]"
+                                            formControlName="incomeType"
+                                (selectionChange)="validateExemptIncomes($event)">
+                                  <mat-option *ngFor="let exempt of exemptIncomesDropdown; let k = index"
+                                  matTooltip="{{exempt.label}}"
+                                          [value]="exempt.value">{{ exempt.label }}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
                             </div>
                           </div>
-                        </div>
 
+                          <div class="col-3 extra-pad">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Amount </span>
+                              </div>
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="number"
+                                        matInput
+                                        placeholder=""
+                                        name="incomeValue[i]"
+                                        formControlName="incomeValue"
+                                        maxlength="125"
+                                />
+                              </mat-form-field>
+
+                            </div>
+                          </div>
+
+                          <div class="col-1 extra-pad">
+                            <div class="Bx4">
+                              <div class="Bx4L delete-align">
+                                <button type="button" (click)="deleteExemptIncome(i)"> <i class="fa fa-trash-o delbt"></i> </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row col-12" *ngIf="income.value.incomeType === 'OTH'">
+                          <div class="col-8 extra-pad"></div>
+                          <div class="col-3 extra-pad">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Description </span>
+                              </div>
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        matInput
+                                        placeholder="Other"
+                                        name="incomeDesc[i]"
+                                        formControlName="incomeDesc"
+                                        maxlength="125"
+                                />
+                              </mat-form-field>
+
+                            </div>
+                          </div>
+                          <div class="col-1 extra-pad"></div>
+                        </div>
 
                       </div>
 

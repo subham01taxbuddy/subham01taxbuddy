@@ -416,22 +416,27 @@
                 <div id="collapseThree" class="accordion-collapse collapse show">
                   <div class="accordion__item-body">
                     <div class="" formArrayName="anyOtherIncomes">
-                      <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"
-                        [formGroupName]="i">
-                        <div class="form-field">
-                          <div><span class="span">{{ income.value.label }} </span></div>
+                      <div *ngFor="let income of getAnyIncomeArray.controls; let i = index"
+                           [formGroupName]="i">
+                        <div class="div-6">
+                          <div class="form-field">
+                            <div><span class="span">{{ income.value.label }} </span></div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                                     formControlName="incomeValue" type="number" maxlength="125" />
+                            </mat-form-field>
+                          </div>
                         </div>
-                        <div class="form-field">
-                          <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" name="incomeValue[i]"
-                              formControlName="incomeValue" type="number" maxlength="125" />
-                          </mat-form-field>
-                        </div>
-                        <div class="form-field" *ngIf="income.value.incomeType ==='ANY_OTHER'">
-                          <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" name="incomeDesc[i]"
-                              formControlName="incomeDesc" type="text" maxlength="125" />
-                          </mat-form-field>
+                        <div class="div-6" *ngIf="income.value.incomeType ==='ANY_OTHER'">
+                          <div class="form-field"></div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="Other" name="incomeDesc[i]"
+                                     formControlName="incomeDesc" type="text" maxlength="125" />
+                            </mat-form-field>
+                          </div>
                         </div>
                       </div>
                     </div>
