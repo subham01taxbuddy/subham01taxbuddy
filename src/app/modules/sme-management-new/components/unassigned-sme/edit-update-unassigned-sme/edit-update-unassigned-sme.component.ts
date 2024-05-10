@@ -204,6 +204,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   }
 
   onItrTypeCheckboxChange(itrType: string) {
+    if (!this.smeObj['skillSetPlanIdList']) {
+        this.smeObj['skillSetPlanIdList'] = [];
+    }
+
     const plan = this.itrPlanList.find(plan => plan.planId === itrType);
     if (!plan) return;
 
@@ -219,7 +223,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
 
     console.log(this.smeObj['skillSetPlanIdList']);
-}
+  }
 
 
   planIdList:any = []
