@@ -1584,7 +1584,8 @@ export class SharesAndEquityComponent
         },
         hide: self.bondType === 'listed',
         valueFormatter: function (params) {
-          const purchaseCost = params.data.controls['purchaseCost'].value;
+          const purchaseCost = self.bondType === 'unlisted' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
+              params.data.controls['purchaseCost'].value;
           return `₹ ${purchaseCost}`;
         }
       },
