@@ -364,6 +364,7 @@ export class SharesAndEquityComponent
   }
 
   updateValidations(formGroup){
+    console.log(formGroup);
     if(formGroup.get('costOfNewAssets').value){
       formGroup.get('purchaseDate').setValidators([Validators.required]);
       formGroup.updateValueAndValidity();

@@ -399,7 +399,7 @@
                                                         <div class="form-field">
                                                             <mat-form-field appearance="outline"
                                                                 class="small-inp no-height">
-                                                                <input (change)="updateValidations(deduction);calculateDeductionGain()"
+                                                                <input (change)="updateValidations(deductionForm);calculateDeductionGain()"
                                                                     class="input-field" digitsOnly
                                                                     formControlName="costOfNewAssets" matInput
                                                                     maxlength="14" placeholder="cost of new asset"/>
@@ -418,7 +418,7 @@
                                                         <div class="form-field">
                                                             <mat-form-field appearance="outline"
                                                                 class="small-inp no-height">
-                                                                <input (change)="updateValidations(deduction);calculateDeductionGain()"
+                                                                <input (change)="updateValidations(deductionForm);calculateDeductionGain()"
                                                                     class="input-field" digitsOnly
                                                                     formControlName="investmentInCGAccount" matInput
                                                                     matTooltip="Amount deposited on CGAS before due date"
