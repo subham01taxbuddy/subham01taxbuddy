@@ -647,6 +647,7 @@ export class DonationsComponent implements OnInit {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
       this.loading = false;
+      this.utilsService.highlightInvalidFormFields(this.generalDonationForm, 'accordBtn1');
       $('input.ng-invalid').first().focus();
       return false;
     }
