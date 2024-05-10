@@ -619,11 +619,12 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       })
     } else {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = false;
+      type = 'delete';
     }
 
     // setting agri land details
     if (type === 'delete') {
-      const agriLbValue = this.agriIncFormArray.value;
+      const agriLbValue = this.agriIncFormArray?.value;
       this.Copy_ITR_JSON.agriculturalLandDetails = agriLbValue;
     } else {
       const agriLbValue = this.getAgriIncomeArray.getRawValue();
