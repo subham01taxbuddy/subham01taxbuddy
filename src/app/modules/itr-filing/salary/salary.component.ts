@@ -338,7 +338,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   markActive(index, hasValidate) {
     if (hasValidate && (this.allowanceFormGroup.invalid || this.bifurcationFormGroup || this.invalid || this.employerDetailsFormGroup.invalid)) {
       this.utilsService.showSnackBar(
-        'This form has error. Please verify'
+        'Please fill in all the mandatory fields in the current form.'
       );
       return;
     }
