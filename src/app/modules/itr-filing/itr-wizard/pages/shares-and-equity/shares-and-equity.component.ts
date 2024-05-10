@@ -199,6 +199,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
@@ -326,6 +327,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
