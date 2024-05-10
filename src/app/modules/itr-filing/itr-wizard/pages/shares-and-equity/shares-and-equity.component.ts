@@ -199,6 +199,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
@@ -326,6 +327,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
@@ -364,6 +366,7 @@ export class SharesAndEquityComponent
   }
 
   updateValidations(formGroup){
+    console.log(formGroup);
     if(formGroup.get('costOfNewAssets').value){
       formGroup.get('purchaseDate').setValidators([Validators.required]);
       formGroup.updateValueAndValidity();

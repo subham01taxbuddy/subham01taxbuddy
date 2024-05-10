@@ -200,6 +200,7 @@ export class ZeroCouponBondsComponent
           if (obj.deduction && obj.deduction.length > 0) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
+              this.updateValidations(this.deductionForm);
             });
             this.deduction = true;
           }
