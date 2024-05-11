@@ -91,7 +91,7 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: string, serviceType: string){
+  sendMessage(message: any, serviceType?: string){
     this.chatService.sendMessage(message);
 
   }

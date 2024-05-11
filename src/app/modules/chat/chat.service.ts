@@ -93,32 +93,39 @@ export class ChatService {
           if (result.data.requestId) {
             this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
-          let chat21Request = {
-            tiledeskToken: result.data.token
-          };
-          this.httpClient.post(this.CHAT21_TOKEN_URL,
-            chat21Request, this.setHeaders("auth")
-          ).subscribe((chat21Result: any) => {
-            console.log('chat21Token: ', chat21Result);
-            if (chat21Result.success) {
-              this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
-              this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
-              this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.userid);
+          if (tokenPresent) {
+            let chat21Request = {
+              tiledeskToken: this.localStorageService.getItem('TILEDESK_TOKEN')
+            };
+            this.httpClient.post(this.CHAT21_TOKEN_URL,
+              chat21Request, this.setHeaders("auth")
+            ).subscribe((chat21Result: any) => {
+              console.log('chat21Token: ', chat21Result);
+              if (chat21Result.success) {
+                this.localStorageService.setItem("CHAT21_RESULT", chat21Result.data, true);
+                this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
+                this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
+                this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
 
-              // let chat21Token = {
-              //   chat21token: chat21Result.data.token
-              // };
-              // this.fetchConversationList(chat21Result.data.userid);
+                // let chat21Token = {
+                //   chat21token: chat21Result.data.token
+                // };
+                this.fetchConversationList(chat21Result.data.userid);
 
-              // if (service) {
+                // if (service) {
                 this.initChatVariables(result.data.requestId);
-                console.log('req',result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
 
                 // this.fetchMessages(result.data.requestId);
-              // }
-            }
-          });
+                // }
+              }
+            });
+          } else {
+            let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
+            this.fetchConversationList(chat21Result.userid);
+            this.initChatVariables(result.requestId);
+            this.fetchConversationList(chat21Result.userid);
+          }
         }
       });
   }
@@ -181,7 +188,7 @@ export class ChatService {
   }
 
   fetchMessages(requestId) {
-    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=30`;
+    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=300`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -224,7 +231,8 @@ export class ChatService {
       content: message.text,
       sender: message.sender,
       timestamp: message.timestamp,
-      type: message.type
+      type: message.type,
+      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
     }));
 
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
@@ -241,13 +249,15 @@ export class ChatService {
         content: message.content,
         sender: message.sender,
         timestamp: message.timestamp,
-        type: message.type
+        type: message.type,
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
       }));
       let m = {
         content: message.text,
         sender: message.sender,
         timestamp: message.timestamp,
-        type: message.type
+        type: message.type,
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
       };
       transformedMessages.push(m);
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
