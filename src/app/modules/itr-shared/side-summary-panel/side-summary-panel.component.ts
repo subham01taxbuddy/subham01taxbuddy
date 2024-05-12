@@ -163,6 +163,10 @@ export class SideSummaryPanelComponent implements OnInit {
 
   }
 
+  getTotalOtherIncome(){
+    return this.summary.summaryIncome.summaryOtherIncome.totalOtherTaxableIncome + this.otherIncome.winningsIncome;
+  }
+
   //Summary - Presumptive Income
   setPresumptiveIncome() {
     let businessPresumptiveIncomeValue = this.ITR_JSON?.business?.presumptiveIncomes?.filter(preIncome => preIncome.businessType === 'BUSINESS')
