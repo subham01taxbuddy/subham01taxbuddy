@@ -15,13 +15,13 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo">Interest Income
+                      data-bs-target="#collapse1">Interest Income
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalOtherIncome()}}">
                     </button>
 
                   </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse show">
-                    <div class="accordion__item-body" formArrayName="otherIncomes">
+                  <div id="collapse1" class="accordion-collapse collapse show">
+                    <div class="accordion__item-body" formArrayName="otherIncomes" style="padding: 0 24px;">
                       <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
                         [formGroupName]="i">
                         <div class="form-field">
@@ -29,14 +29,14 @@
                         </div>
                         <div class="form-field">
                           <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                            <input type="number" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
                               formControlName="incomeValue" type="number" maxlength="125"
                               (blur)="validateIncomeValueOnBlur()" />
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-                    <div class="accordion__item-body">
+                    <div class="accordion__item-body" style="padding: 0 24px;">
                       <div class="div-6">
                         <div class="form-field">
                           <div><span class="span mr-5">Interest accrued on contributions to a provident fund</span>
@@ -54,8 +54,8 @@
                         </div>
                         <div class="form-field mt-4">
                           <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" formControlName="providentFundValue"
-                              type="number" maxlength="125" />
+                            <input type="text" digitsOnly trim matInput placeholder=""
+                              formControlName="providentFundValue" type="number" maxlength="125" />
                           </mat-form-field>
                         </div>
                       </div>
@@ -71,28 +71,28 @@
                         id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
                     </button>
                   </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show">
+                  <div id="collapseOne" class="accordion-collapse collapse hide">
                     <div class="accordion__item-body" formGroupName="dividendIncomes">
                       <div class="div-6">
                         <div class="form-field">
                           <div><span class="span">Upto 15 June </span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput  name="quarter1"
-                              formControlName="quarter1" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="quarter1" formControlName="quarter1" maxlength="50"
+                              digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th June- 15th Sep</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput name="quarter2"
-                              formControlName="quarter2" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="quarter2" formControlName="quarter2" maxlength="50"
+                              digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th Sep- 15th Dec </span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput name="quarter3"
-                              formControlName="quarter3" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="quarter3" formControlName="quarter3" maxlength="50"
+                              digitsOnly />
                           </mat-form-field>
                         </div>
                       </div>
@@ -100,15 +100,15 @@
                         <div class="form-field">
                           <div> <span class="span">16th Dec- 15th Mar</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput name="quarter4"
-                              formControlName="quarter4" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="quarter4" formControlName="quarter4" maxlength="50"
+                              digitsOnly />
                           </mat-form-field>
                         </div>
                         <div class="form-field">
                           <div><span class="span">16th Mar- 31th Mar</span></div>
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput name="quarter5"
-                              formControlName="quarter5" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="quarter5" formControlName="quarter5" maxlength="50"
+                              digitsOnly />
                           </mat-form-field>
                         </div>
                       </div>
@@ -125,7 +125,7 @@
                       it's not part
                       of taxable income.</div>
                   </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse show">
+                  <div id="collapseTwo" class="accordion-collapse collapse hide">
                     <div class="accordion__item-body">
                       <table class="table table-bordered" style="width: 100%">
                         <thead style="background: #eaeaea">
@@ -146,7 +146,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="aggregateValueWithoutConsideration" type="number" class="input-field"
                                   maxlength="125" />
                               </mat-form-field>
@@ -163,7 +163,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="immovablePropertyWithoutConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -180,7 +180,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="immovablePropertyInadequateConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -197,7 +197,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="anyOtherPropertyWithoutConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -214,7 +214,7 @@
                             </td>
                             <td>
                               <mat-form-field class="input-field-width" style="width: 90% !important">
-                                <input type="text" trim matInput placeholder=""
+                                <input type="text" digitsOnly trim matInput placeholder=""
                                   formControlName="anyOtherPropertyInadequateConsideration" type="number"
                                   class="input-field" maxlength="125" />
                               </mat-form-field>
@@ -233,7 +233,7 @@
                       <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBTotal}}">
                     </button>
                   </h2>
-                  <div id="collapse4" class="accordion-collapse collapse show">
+                  <div id="collapse4" class="accordion-collapse collapse hide">
                     <div class="accordion__item-body" formGroupName="winningsUS115BB">
                       <div class="container px-4">
                         <div class="row">
@@ -244,8 +244,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput name="quarter1"
-                                  formControlName="quarter1" maxlength="125" (mousedown)="onClickRemoveZero('quarter1')"
+                                <input type="number" digitsOnly matInput name="quarter1" formControlName="quarter1"
+                                  maxlength="125" (mousedown)="onClickRemoveZero('quarter1')"
                                   (blur)="onBlurAddZero('quarter1')" />
                               </mat-form-field>
                             </div>
@@ -258,9 +258,9 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter2[i]" formControlName="quarter2" maxlength="125"
-                                  (mousedown)="onClickRemoveZero('quarter2')" (blur)="onBlurAddZero('quarter2')" />
+                                <input type="number" digitsOnly matInput name="quarter2[i]" formControlName="quarter2"
+                                  maxlength="125" (mousedown)="onClickRemoveZero('quarter2')"
+                                  (blur)="onBlurAddZero('quarter2')" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -272,9 +272,9 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter3[i]" formControlName="quarter3" maxlength="125"
-                                  (mousedown)="onClickRemoveZero('quarter3')" (blur)="onBlurAddZero('quarter3')" />
+                                <input type="number" digitsOnly matInput name="quarter3[i]" formControlName="quarter3"
+                                  maxlength="125" (mousedown)="onClickRemoveZero('quarter3')"
+                                  (blur)="onBlurAddZero('quarter3')" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -287,9 +287,9 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter4[i]" formControlName="quarter4" maxlength="125"
-                                  (mousedown)="onClickRemoveZero('quarter4')" (blur)="onBlurAddZero('quarter4')" />
+                                <input type="number" digitsOnly matInput name="quarter4[i]" formControlName="quarter4"
+                                  maxlength="125" (mousedown)="onClickRemoveZero('quarter4')"
+                                  (blur)="onBlurAddZero('quarter4')" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -301,9 +301,9 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter5[i]" formControlName="quarter5" maxlength="125"
-                                  (mousedown)="onClickRemoveZero('quarter5')" (blur)="onBlurAddZero('quarter5')" />
+                                <input type="number" digitsOnly matInput name="quarter5[i]" formControlName="quarter5"
+                                  maxlength="125" (mousedown)="onClickRemoveZero('quarter5')"
+                                  (blur)="onBlurAddZero('quarter5')" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -320,7 +320,7 @@
                       <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBJTotal}}">
                     </button>
                   </h2>
-                  <div id="collapse5" class="accordion-collapse collapse show">
+                  <div id="collapse5" class="accordion-collapse collapse hide">
                     <div class="accordion__item-body" formGroupName="winningsUS115BBJ">
                       <div class="container px-4">
                         <div class="row">
@@ -331,9 +331,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput name="quarter1"
-                                  formControlName="quarter1" maxlength="125"
-                                  (mousedown)="onClick115BBJRemoveZero('quarter1')"
+                                <input type="number" digitsOnly matInput name="quarter1" formControlName="quarter1"
+                                  maxlength="125" (mousedown)="onClick115BBJRemoveZero('quarter1')"
                                   (blur)="onBlur115BBJAddZero('quarter1')" />
                               </mat-form-field>
                             </div>
@@ -346,9 +345,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter2[i]" formControlName="quarter2" maxlength="125"
-                                  (mousedown)="onClick115BBJRemoveZero('quarter2')"
+                                <input type="number" digitsOnly matInput name="quarter2[i]" formControlName="quarter2"
+                                  maxlength="125" (mousedown)="onClick115BBJRemoveZero('quarter2')"
                                   (blur)="onBlur115BBJAddZero('quarter2')" />
                               </mat-form-field>
                             </div>
@@ -361,9 +359,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter3[i]" formControlName="quarter3" maxlength="125"
-                                  (mousedown)="onClick115BBJRemoveZero('quarter3')"
+                                <input type="number" digitsOnly matInput name="quarter3[i]" formControlName="quarter3"
+                                  maxlength="125" (mousedown)="onClick115BBJRemoveZero('quarter3')"
                                   (blur)="onBlur115BBJAddZero('quarter3')" />
                               </mat-form-field>
                             </div>
@@ -377,9 +374,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter4[i]" formControlName="quarter4" maxlength="125"
-                                  (mousedown)="onClick115BBJRemoveZero('quarter4')"
+                                <input type="number" digitsOnly matInput name="quarter4[i]" formControlName="quarter4"
+                                  maxlength="125" (mousedown)="onClick115BBJRemoveZero('quarter4')"
                                   (blur)="onBlur115BBJAddZero('quarter4')" />
                               </mat-form-field>
                             </div>
@@ -392,9 +388,8 @@
                                 </span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="number" matInput
-                                  name="quarter5[i]" formControlName="quarter5" maxlength="125"
-                                  (mousedown)="onClick115BBJRemoveZero('quarter5')"
+                                <input type="number" digitsOnly matInput name="quarter5[i]" formControlName="quarter5"
+                                  maxlength="125" (mousedown)="onClick115BBJRemoveZero('quarter5')"
                                   (blur)="onBlur115BBJAddZero('quarter5')" />
                               </mat-form-field>
                             </div>
@@ -416,23 +411,39 @@
                 <div id="collapseThree" class="accordion-collapse collapse show">
                   <div class="accordion__item-body">
                     <div class="" formArrayName="anyOtherIncomes">
-                      <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"
-                        [formGroupName]="i">
-                        <div class="form-field">
-                          <div><span class="span">{{ income.value.label }} </span></div>
+                      <div *ngFor="let income of getAnyIncomeArray.controls; let i = index" [formGroupName]="i">
+                        <div class="div-6">
+                          <div class="form-field">
+                            <div><span class="span" *ngIf="income.value.incomeType!='ANY_OTHER'">{{ income.value.label
+                                }} </span>
+                              <span class="span" style="font-weight: 700;"
+                                *ngIf="income.value.incomeType==='ANY_OTHER'">{{ income.value.label }} </span>
+                            </div>
+                          </div>
+                          <div class="form-field" *ngIf="income.value.incomeType!='ANY_OTHER'">
+                            <mat-form-field appearance="outline">
+                              <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
+                                formControlName="incomeValue" type="number" maxlength="125" />
+                            </mat-form-field>
+                          </div>
                         </div>
-                        <div class="form-field">
-                          <mat-form-field appearance="outline">
-                            <input type="text" trim matInput placeholder="" name="incomeValue[i]"
-                              formControlName="incomeValue" type="number" maxlength="125" />
-                          </mat-form-field>
+                        <div class="div-6" *ngIf="income.value.incomeType ==='ANY_OTHER'">
+                          <!-- <div class="form-field"></div> -->
+                          <div class="form-field">
+                            <div class="span">Description</div>
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="Other" name="incomeDesc[i]"
+                                formControlName="incomeDesc" type="text" maxlength="125" />
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-field mt-4">
+                            <mat-form-field appearance="outline">
+                              <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
+                                formControlName="incomeValue" type="number" maxlength="125" />
+                            </mat-form-field>
+                          </div>
                         </div>
-<!--                        <div class="form-field" *ngIf="income.value.incomeType ==='ANY_OTHER'">-->
-<!--                          <mat-form-field appearance="outline">-->
-<!--                            <input type="text" trim matInput placeholder="" name="incomeDesc[i]"-->
-<!--                              formControlName="incomeDesc" type="text" maxlength="125" />-->
-<!--                          </mat-form-field>-->
-<!--                        </div>-->
                       </div>
                     </div>
                     <div class="txHdg">Family Pension</div>

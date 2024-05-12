@@ -199,6 +199,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
@@ -326,6 +327,7 @@ export class SharesAndEquityComponent
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
+            this.updateValidations(this.deductionForm);
           });
         } else {
           this.deductionForm = this.initDeductionForm();
@@ -364,6 +366,7 @@ export class SharesAndEquityComponent
   }
 
   updateValidations(formGroup){
+    console.log(formGroup);
     if(formGroup.get('costOfNewAssets').value){
       formGroup.get('purchaseDate').setValidators([Validators.required]);
       formGroup.updateValueAndValidity();
@@ -1581,7 +1584,8 @@ export class SharesAndEquityComponent
         },
         hide: self.bondType === 'listed',
         valueFormatter: function (params) {
-          const purchaseCost = params.data.controls['purchaseCost'].value;
+          const purchaseCost = self.bondType === 'unlisted' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
+              params.data.controls['purchaseCost'].value;
           return `₹ ${purchaseCost}`;
         }
       },

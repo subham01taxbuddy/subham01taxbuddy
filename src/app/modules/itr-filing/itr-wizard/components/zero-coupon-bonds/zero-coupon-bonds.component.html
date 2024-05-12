@@ -271,7 +271,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
-                                  (change)="updateValidations(deduction);calculateDeductionGain()" formControlName="costOfNewAssets"
+                                  (change)="updateValidations(deductionForm);calculateDeductionGain()" formControlName="costOfNewAssets"
                                   maxlength="14" />
                                 <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
                                                   'required')">Please enter cost of new assets
@@ -289,7 +289,7 @@
                                   placeholder="Amount deposited on CGAS before due date"
                                   formControlName="investmentInCGAccount" maxlength="14"
                                   matTooltip="Amount deposited on CGAS before due date"
-                                  (change)="updateValidations(deduction);calculateDeductionGain()" matTooltipClass="tab-tooltip"
+                                  (change)="updateValidations(deductionForm);calculateDeductionGain()" matTooltipClass="tab-tooltip"
                                   matTooltipPosition="above" />
                                 <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
                               'required')">Please enter amount
@@ -317,7 +317,7 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">Account Number</span></div>
+                              <div><span class="span">Account Number*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
@@ -332,7 +332,7 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">IFSC Code</span></div>
+                              <div><span class="span">IFSC Code*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
@@ -345,7 +345,7 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">Date Of Deposit</span></div>
+                              <div><span class="span">Date Of Deposit*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">

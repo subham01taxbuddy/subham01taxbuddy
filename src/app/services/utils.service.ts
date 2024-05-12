@@ -784,6 +784,17 @@ export class UtilsService {
     return this.itrMsService.putMethod(param, itrObject);
   }
 
+  innerFunction(res: any, itrObject: ITR_JSON) {
+      if(res.error) {
+        this.showSnackBar(res.error);
+      } else {
+        itrObject.isItrSummaryJsonEdited = false;
+        const param = `/itr/itr-type`;
+        return this.itrMsService
+            .postMethod(param, itrObject)
+            .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+      }
+  }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {
@@ -797,11 +808,8 @@ export class UtilsService {
         itrObject.assessmentYear;
       return this.itrMsService.putMethod(param, itrObject);
     } else {
-      itrObject.isItrSummaryJsonEdited = false;
-      const param = `/itr/itr-type`;
-      return this.itrMsService
-        .postMethod(param, itrObject)
-        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+      return this.getUserCurrentStatus([itrObject.userId])
+          .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
     }
   }
 
