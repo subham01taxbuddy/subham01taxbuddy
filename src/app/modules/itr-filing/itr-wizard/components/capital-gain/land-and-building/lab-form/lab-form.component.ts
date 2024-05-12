@@ -575,13 +575,13 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       srn: [obj.srn || this.currentCgIndex.toString()],
       selected: [false],
       underSection: [obj?.underSection || null],
-      purchaseDate: [obj?.purchaseDate || null, [Validators.required]],
-      costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
+      purchaseDate: [obj?.purchaseDate || null],
+      costOfNewAssets: [obj?.costOfNewAssets || null],
       investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
-      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
-      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
-      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
+      accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
@@ -1080,33 +1080,32 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       deductionForm.controls['totalDeductionClaimed'].setValidators(null);
       deductionForm.controls['totalDeductionClaimed'].updateValueAndValidity();
     }
-    if(deductionForm.controls['underSection'].value === '54EE' ||
-        deductionForm.controls['underSection'].value === '54EC'){
-      deductionForm.controls['investmentInCGAccount'].setValue(null);
-      deductionForm.controls['investmentInCGAccount'].setValidators(null);
-      deductionForm.controls[
-          'investmentInCGAccount'
-          ].updateValueAndValidity();
-    } else{
-      deductionForm.controls['investmentInCGAccount'].setValue(null);
-      deductionForm.controls['investmentInCGAccount'].setValidators(Validators.required);
-      deductionForm.controls[
-          'investmentInCGAccount'
-          ].updateValueAndValidity();
-    }
+    // if(deductionForm.controls['underSection'].value === '54EE' ||
+    //     deductionForm.controls['underSection'].value === '54EC'){
+    //   deductionForm.controls['investmentInCGAccount'].setValue(null);
+    //   deductionForm.controls['investmentInCGAccount'].setValidators(null);
+    //   deductionForm.controls[
+    //       'investmentInCGAccount'
+    //       ].updateValueAndValidity();
+    // } else{
+    //   deductionForm.controls['investmentInCGAccount'].setValue(null);
+    //   deductionForm.controls['investmentInCGAccount'].setValidators(Validators.required);
+    //   deductionForm.controls[
+    //       'investmentInCGAccount'
+    //       ].updateValueAndValidity();
+    // }
 
-    if (
-      deductionForm.controls['underSection'].value === '54EE' ||
-      deductionForm.controls['underSection'].value === '54EC' ||
-      deductionForm.controls['underSection'].value === '54F' ||
-      deductionForm.controls['underSection'].value === '54B' ||
-      deductionForm.controls['underSection'].value === '54') {
-      console.log(deductionForm);
-      deductionForm.controls['costOfNewAssets'].setValidators([
-        Validators.required,
-        Validators.pattern(AppConstants.amountWithoutDecimal),
-      ]);
-      deductionForm.controls['costOfNewAssets'].updateValueAndValidity();
+    // if (
+    //   deductionForm.controls['underSection'].value === '54EE' ||
+    //   deductionForm.controls['underSection'].value === '54EC' ||
+    //   deductionForm.controls['underSection'].value === '54B' ||
+    //   deductionForm.controls['underSection'].value === '54') {
+    //   console.log(deductionForm);
+    //   deductionForm.controls['costOfNewAssets'].setValidators([
+    //     Validators.required,
+    //     Validators.pattern(AppConstants.amountWithoutDecimal),
+    //   ]);
+    //   deductionForm.controls['costOfNewAssets'].updateValueAndValidity();
       const disableFutureDates = (date: Date): boolean => {
         // Get the sell date from the assetDetails form group
         const sellDate = new Date(assetDetails.controls['sellDate'].value);
@@ -1137,15 +1136,15 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
       // Set the matDatepickerFilter to the disableFutureDates function
       this.disableFutureDates = disableFutureDates;
-    } else {
-      if (ref === 'HTML') {
-        deductionForm.controls['investmentInCGAccount'].setValue(null);
-        deductionForm.controls['investmentInCGAccount'].setValidators(null);
-        deductionForm.controls[
-          'investmentInCGAccount'
-        ].updateValueAndValidity();
-      }
-    }
+    // } else {
+    //   if (ref === 'HTML') {
+    //     deductionForm.controls['investmentInCGAccount'].setValue(null);
+    //     deductionForm.controls['investmentInCGAccount'].setValidators(null);
+    //     deductionForm.controls[
+    //       'investmentInCGAccount'
+    //     ].updateValueAndValidity();
+    //   }
+    // }
 
     this.calculateDeduction(index);
   }
@@ -1306,28 +1305,28 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   updateValidations(formGroup){
-    if(formGroup.get('costOfNewAssets').value){
-      formGroup.get('purchaseDate').setValidators([Validators.required]);
+    if(formGroup.controls['costOfNewAssets'].value){
+      formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.updateValueAndValidity();
     } else {
-      formGroup.get('purchaseDate').setValidators([null]);
+      formGroup.controls['purchaseDate'].setValidators(null);
       formGroup.updateValueAndValidity();
     }
 
-    if(formGroup.get('investmentInCGAccount').value){
-      formGroup.get('accountNumber').setValidators([Validators.required]);
-      formGroup.get('accountNumber').updateValueAndValidity();
-      formGroup.get('ifscCode').setValidators([Validators.required]);
-      formGroup.get('ifscCode').updateValueAndValidity();
-      formGroup.get('dateOfDeposit').setValidators([Validators.required]);
-      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    if(formGroup.controls['investmentInCGAccount'].value){
+      formGroup.controls['accountNumber'].setValidators([Validators.required]);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators([Validators.required]);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators([Validators.required]);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
     } else {
-      formGroup.get('accountNumber').setValidators(null);
-      formGroup.get('accountNumber').updateValueAndValidity();
-      formGroup.get('ifscCode').setValidators(null);
-      formGroup.get('ifscCode').updateValueAndValidity();
-      formGroup.get('dateOfDeposit').setValidators(null);
-      formGroup.get('dateOfDeposit').updateValueAndValidity();
+      formGroup.controls['accountNumber'].setValidators(null);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators(null);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators(null);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
     }
   }
 
