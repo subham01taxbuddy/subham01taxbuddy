@@ -128,7 +128,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       paginationPageSize: 15,
       rowSelection: this.isEditAllowed ? 'multiple' : 'none',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? this.isEditAllowed && rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+        return rowNode.data ? this.isEditAllowed && rowNode.data.slabwiseCommissionPaymentApprovalStatus !== 'APPROVED' : false;
       },
       onGridReady: params => {
       },
@@ -522,7 +522,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Invoice List',
-        field: 'invoiceNo',
+        field: 'invoiceNoList',
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -584,8 +584,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Commission %',
-        field: 'commissionPercentage',
-        width: 100,
+        field: 'slabwiseCommissionPercentage',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -596,8 +596,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Commission Earned',
-        field: 'commissionEarned',
-        width: 100,
+        field: 'slabwiseCommissionEarned',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -608,7 +608,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'TDS Amount',
-        field: 'tdsOnCommissionEarned',
+        field: 'tdsOnSlabwiseCommissionEarned',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -620,7 +620,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Final Amount To Pay',
-        field: 'commissionPayable',
+        field: 'slabwiseCommissionPayableAfterTds',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -632,7 +632,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Payout Status',
-        field: 'commissionPaymentStatus',
+        field: 'slabwiseCommissionPaymentStatus',
         width: 100,
         suppressMovable: true,
         pinned: 'right',
@@ -765,7 +765,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.commissionPaymentStatus == 'Unpaid' && params.data.commissionPaymentApprovalStatus == 'APPROVED') {
+          if (params.data.slabwiseCommissionPaymentStatus == 'Unpaid' && params.data.slabwiseCommissionPaymentApprovalStatus == 'APPROVED') {
             return `<button type="button" class="action_icon add_button" title="disapprove payout " style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fas fa-thumbs-down" style="color: #00ff00;" data-action-type="disapprove"></i>
@@ -786,21 +786,21 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         // headerName: "Approve",
-        field: "commissionPaymentApprovalStatus",
+        field: "slabwiseCommissionPaymentApprovalStatus",
         headerCheckboxSelection: this.isEditAllowed,
         width: 50,
         pinned: 'right',
         hide: !this.isEditAllowed,
         checkboxSelection: (params) => {
-          return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
+          return params.data.slabwiseCommissionPaymentApprovalStatus !== 'APPROVED'
         },
         showDisabledCheckboxes: true
         // method not allowed
         // showDisabledCheckboxes: (params) => {
-        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        //   return params.data.slabwiseCommissionPaymentApprovalStatus === 'APPROVED'
         // },
         // valueGetter: function (params:any){
-        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
+        //   return params.data.slabwiseCommissionPaymentApprovalStatus === 'APPROVED';
         // }
       },
     ]
@@ -837,18 +837,31 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   approveSelected() {
+    // new api for approval 13-5-24- 'https://uat-api.taxbuddy.com/itr/v2/partnerCommission' \
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
       this.utilsService.showSnackBar('Please select entries to approve');
       return;
     }
-    let invoices = selectedRows.flatMap(item => item.invoiceNo);
-    let param = '/dashboard/partner-commission';
+    let invoices = selectedRows.flatMap(item => item.invoiceNoList);
+    let commissionPercentages = selectedRows.map(item => item.slabwiseCommissionPercentage);
+
+    console.log('commissionPercentage',commissionPercentages)
+    console.log('invoices',invoices)
+
+    if (commissionPercentages.includes(25) && commissionPercentages.includes(75)) {
+      this.utilsService.showSnackBar('Please select either 25 or 75 commission percentage, not both');
+      return;
+    }
+
+    let commissionPercentage = commissionPercentages[0];
+
+    let param = '/v2/partnerCommission';
     let request = {
-      invoiceNoList: invoices,
+      subscriptionIdList: invoices,
       commissionPaymentApprovalStatus: 'APPROVED',
-      commissionPaymentApprovedBy: this.loggedInUserId
+      commissionPercentage: commissionPercentage
     };
     this.loading = true;
     this.itrMsService.putMethod(param, request).subscribe((result: any) => {
@@ -976,16 +989,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'filingSource', value: 'Filing Source' },
       { key: 'ackNumber', value: 'Ack No' },
       { key: 'ackNumber', value: 'Date of Filing' },
-      { key: 'invoiceNo', value: 'Invoice List' },
+      { key: 'invoiceNoList', value: 'Invoice List' },
       { key: 'invoiceDate', value: 'Tax Invoice Date' },
       { key: 'invoiceAmount', value: 'Invoice Amount' },
       { key: 'gstAmount', value: 'GST Amount' },
       { key: 'amountwithoutGST', value: 'Without GST Amount' },
-      { key: 'commissionPercentage', value: 'Commission %' },
-      { key: 'commissionEarned', value: 'Commission Earned' },
-      { key: 'tdsOnCommissionEarned', value: 'TDS Amount' },
-      { key: 'commissionPayable', value: 'Final Amount To Pay' },
-      { key: 'commissionPaymentStatus', value: 'Payout Status' },
+      { key: 'slabwiseCommissionPercentage', value: 'Commission %' },
+      { key: 'slabwiseCommissionEarned', value: 'Commission Earned' },
+      { key: 'tdsOnSlabwiseCommissionEarned', value: 'TDS Amount' },
+      { key: 'slabwiseCommissionPayableAfterTds', value: 'Final Amount To Pay' },
+      { key: 'slabwiseCommissionPaymentStatus', value: 'Payout Status' },
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
     ]
