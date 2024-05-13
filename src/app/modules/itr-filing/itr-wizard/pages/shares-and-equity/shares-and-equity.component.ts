@@ -352,7 +352,7 @@ export class SharesAndEquityComponent
       orgAssestTransferDate: [obj ? obj.orgAssestTransferDate : null],
       panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
       purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
-      purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
+      purchaseDate: [obj ? obj.purchaseDate : null],
       costOfNewAssets: [obj ? obj.costOfNewAssets : null],
       investmentInCGAccount: [
         obj ? obj.investmentInCGAccount : null
@@ -371,7 +371,7 @@ export class SharesAndEquityComponent
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.updateValueAndValidity();
     } else {
-      formGroup.controls['purchaseDate'].setValidators([null]);
+      formGroup.controls['purchaseDate'].setValidators(null);
       formGroup.updateValueAndValidity();
     }
 
