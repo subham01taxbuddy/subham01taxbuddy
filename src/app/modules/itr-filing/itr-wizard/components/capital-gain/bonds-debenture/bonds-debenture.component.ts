@@ -751,6 +751,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           } else {
             (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
           }
+        } else {
+          (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
         }
         bondsList.push((element as UntypedFormGroup).getRawValue());
       });
