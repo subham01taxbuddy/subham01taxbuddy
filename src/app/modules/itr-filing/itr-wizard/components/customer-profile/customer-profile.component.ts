@@ -433,7 +433,7 @@ export class CustomerProfileComponent implements OnInit {
         this.ITR_JSON.jurisdictions = this.jurisdictions;
         this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
         this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
-        if(this.customerProfileForm.controls['residentialStatus'].value !== 'NON_RESIDENT'){
+        if(this.customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT'){
           this.ITR_JSON.foreignIncome = null;
           this.ITR_JSON.section89 = 0;
           this.ITR_JSON.acknowledgement89 = null;
@@ -446,6 +446,10 @@ export class CustomerProfileComponent implements OnInit {
           this.ITR_JSON.acknowledgementDate91 = null;
 
         }
+      } else {
+        this.ITR_JSON.jurisdictions = null;
+        this.ITR_JSON.conditionsResStatus = null;
+        this.ITR_JSON.conditionsNorStatus = null;
       }
 
       this.ITR_JSON.family = [
