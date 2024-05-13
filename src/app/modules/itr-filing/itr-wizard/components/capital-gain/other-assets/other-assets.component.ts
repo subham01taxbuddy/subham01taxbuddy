@@ -183,7 +183,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.updateValueAndValidity();
     } else {
-      formGroup.controls['purchaseDate'].setValidators([null]);
+      formGroup.controls['purchaseDate'].setValidators(null);
       formGroup.updateValueAndValidity();
     }
 
