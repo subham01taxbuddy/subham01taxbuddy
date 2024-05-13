@@ -159,6 +159,9 @@
                             *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
                             <div class="lndBldg-L">Cost of Acquisition with Indexation</div>
                             <div class="lndBldg-R">
+                              <div class="note" >
+                                <b>Note:</b> Kindly tab to get the indexed cost
+                              </div>
                               <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                 <input input matInput currencyMask digitsOnly
                                   placeholder="Cost of acquisition with indexation" name="asset[i]"
@@ -260,8 +263,10 @@
                           </mat-form-field>
                         </div>
                       </div>
-
                       <div class="hp4-3">
+                        <div class="note mvrl" >
+                          <b>Note:</b> Kindly tab to get the indexed cost
+                        </div>
                         <div class="field">
                           <div class="field-label">
                             <span class="span">Index cost of improvement </span> <span class="redAst">*</span>
