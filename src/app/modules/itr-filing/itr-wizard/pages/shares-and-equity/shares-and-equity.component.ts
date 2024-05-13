@@ -1152,7 +1152,7 @@ export class SharesAndEquityComponent
             }
           }
 
-          sameData.improvement.forEach((element) => {
+          sameData.improvement?.forEach((element) => {
             sameData.assetDetails.forEach((item) => {
               if (element.srn === item.srn) {
                 item.costOfImprovement = element.indexCostOfImprovement;
@@ -1160,7 +1160,7 @@ export class SharesAndEquityComponent
             });
           });
 
-          sameData.assetDetails.forEach((element) => {
+          sameData.assetDetails?.forEach((element) => {
             if (element.gainType === 'SHORT') {
               element.indexCostOfAcquisition = 0;
             }
