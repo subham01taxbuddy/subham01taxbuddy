@@ -200,6 +200,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
+
     this.isButtonDisable = true;
     if(this.serviceType === 'ITR')
       this.defaultFinancialYear = this.financialYear[0].financialYear;
@@ -1274,7 +1275,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   updateSubscription() {
     this.loading =true;
     this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
-
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);

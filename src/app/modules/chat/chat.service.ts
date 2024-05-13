@@ -32,6 +32,7 @@ export class ChatService {
   deptName = '';
   deptID = '';
   departmentNames: string[] = [];
+  removecallback: boolean;
 
   constructor(public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
@@ -79,18 +80,26 @@ export class ChatService {
     // --header 'environment: qa' \
     // --header 'Content-Type: application/json' \
     // --data '{"serviceType":"ITR"}'
-    let request = null;
+    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
+    let request: any = {
+      tokenRequired: tokenPresent
+    };
     if (service) {
-      request = { serviceType: service };
+      request = {
+        serviceType: service,
+        tokenRequired: tokenPresent
+      };
     }
     this.httpClient.post(this.TILEDESK_TOKEN_URL,
       request,
       this.setHeaders("auth")).subscribe((result: any) => {
         console.log(result);
         if (result.success) {
-          this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
-          console.log("tiledesk token: ", result.data.token);
-          if (result.data.requestId) {
+          if (result?.data?.token) {
+            this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
+            console.log("tiledesk token: ", result.data.token);
+          }
+          if (result.data?.requestId) {
             this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
           if (tokenPresent) {
@@ -159,21 +168,32 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(userId: any) {
-    const CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
-    this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
+  fetchConversationList(userId: any,departmentId?: any, removecallback?) {
+    let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
+    if(departmentId){
+      CONVERSATION_URL += `?departmentId=${departmentId}`
+    }
+    console.log('conversation url',CONVERSATION_URL);
+     this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
       console.log('conversation result', conversationResult);
       const newarrays = this.conversationList(conversationResult.result);
       // for (const conversation of newarrays) {
       //   console.log('request_id ', conversation.request_id);
       //   this.fetchMessages(conversation.request_id);
       // }
-      this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-        callback(ChatEvents.CONVERSATION_UPDATED);
-      });
+      if (removecallback) {
+        this.removecallback = true;
+      }
+      if (!removecallback) {
+        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+          callback(ChatEvents.CONVERSATION_UPDATED);
+        });
+      }
       console.log('newarray', newarrays);
     });
   }
+
+
 
 
   uploadFile(file: File, requestId: string) {
@@ -208,15 +228,18 @@ export class ChatService {
 
   conversationList(data: any) {
 
-    const transformedData = data.map(message => ({
+    const transformedData = data.map(message => (
+      {
+        new: message.is_new,
+        name: message.sender_fullname,
+        text: message.last_message_text,
+        timestamp: message.timestamp,
+        request_id: message.conversWith,
+        departmentName: message.attributes.departmentName,
+        departmentId: message.attributes.departmentId
 
-      new: message.is_new,
-      name: message.recipient_fullname,
-      text: message.last_message_text,
-      timestamp: message.timestamp,
-      request_id: message.conversWith
-
-    }))
+      })
+    );
     this.localStorageService.setItem('conversationList', JSON.stringify(transformedData), true)
     return transformedData;
   }
@@ -325,16 +348,16 @@ export class ChatService {
           if (this.log) {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
-         
-          this.connected = true;
+
+
           this.chatClient.publish(
-              this.presenceTopic,
-              JSON.stringify({ connected: true }),
-              null, (err) => {
-                if (err) {
-                  console.error("Error con presence publish:", err);
-                }
+            this.presenceTopic,
+            JSON.stringify({ connected: true }),
+            null, (err) => {
+              if (err) {
+                console.error("Error con presence publish:", err);
               }
+            }
           );
 
           if (this.log) {
@@ -579,7 +602,6 @@ export class ChatService {
   sendMessage(message: string) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
-    console.log(dest_topic);
     // console.log("dest_topic:", dest_topic)
     let outgoing_message = {
       text: message,
@@ -592,7 +614,6 @@ export class ChatService {
     };
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
-    console.log('payload',payload)
     this.chatClient.publish(dest_topic, payload, null, (err) => {
       // callback(err, outgoing_message)
       console.log(err);
@@ -615,6 +636,7 @@ export class ChatService {
           this.onMessageUpdatedCallbacks = new Map();
           this.onGroupUpdatedCallbacks = new Map();
           this.callbackHandlers = new Map();
+          this.chatSubscription = null;
           // this.on_message_handler = null
           this.topicInbox = null;
           // if (callback) {

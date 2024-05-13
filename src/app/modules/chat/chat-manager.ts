@@ -104,9 +104,9 @@ export class ChatManager {
     this.chatService.closeWebSocket();
   }
 
-  getConversationList(){
+  getConversationList(departmentId: any){
     let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(chat21UserID,true);
+    this.chatService.fetchConversationList(chat21UserID,departmentId,true);
     const convdata = this.localStorageService.getItem('conversationList', true);
     console.log('conv data', convdata);
     if (convdata) {
@@ -122,8 +122,13 @@ export class ChatManager {
          }
 
       })
-      console.log('new list', conversationList);
+      console.log('new list 1', conversationList);
       return conversationList
     }
+  }
+
+  convList(departmentId?: any){
+    let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
+    this.chatService.fetchConversationList(chat21UserID,departmentId,true);
   }
 }

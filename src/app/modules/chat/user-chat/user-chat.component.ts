@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ChatService} from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
 import {DomSanitizer} from "@angular/platform-browser";
 import { LocalStorageService } from 'src/app/services/storage.service';
-=======
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { ChatService } from '../chat.service';
-import { ChatEvents } from "../chat-events";
-import { ChatManager } from "../chat-manager";
-import { DomSanitizer } from "@angular/platform-browser";
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
 
 @Component({
     selector: 'app-user-chat',
@@ -30,13 +22,9 @@ export class UserChatComponent implements OnInit {
     @Input() requestId: string;
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
 
-<<<<<<< HEAD
     @Input() serviceType: string;
  
  
-=======
-
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
     isHeaderActive: boolean = true;
     isFloatingActive: boolean = true;
     chatMessages: boolean = true;
@@ -60,14 +48,9 @@ export class UserChatComponent implements OnInit {
     fullChatScreen: boolean = false;
 
     constructor(private chatService: ChatService, private chatManager: ChatManager,
-<<<<<<< HEAD
         private localStorage: LocalStorageService,
                 private sanitizer: DomSanitizer, private elementRef: ElementRef,
                 private renderer: Renderer2) {
-=======
-        private sanitizer: DomSanitizer, private elementRef: ElementRef,
-        private renderer: Renderer2) {
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
         this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     }
@@ -78,12 +61,9 @@ export class UserChatComponent implements OnInit {
         this.back.emit();
     }
 
-<<<<<<< HEAD
     showFullScreen(){
         this.fullChatScreen = !this.fullChatScreen;
     }
-=======
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
 
     sendMessage() {
         if (this.messageSent) {
@@ -126,24 +106,12 @@ export class UserChatComponent implements OnInit {
 
     scrollToBottom(): void {
         try {
-<<<<<<< HEAD
           const chatWindow = this.chatWindow.nativeElement;
           chatWindow.scrollTop = chatWindow.scrollHeight;  
         } catch (error) {
             console.error('error scrolling chat window')
          }
       }
-=======
-            const chatMessages = this.chatWindow.nativeElement;
-            const lastMessage = chatMessages.lastElementChild;
-            if (lastMessage) {
-                lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }
-        } catch (error) {
-            console.error('Error scrolling chat window:', error);
-        }
-    }
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
 
     
     //   ngAfterViewInit(): void {
@@ -153,19 +121,11 @@ export class UserChatComponent implements OnInit {
         if (this.requestId) {
             console.log('request_id', this.requestId)
             this.chatManager.openConversation(this.requestId)
-<<<<<<< HEAD
             // this.scrollToBottom()
           }
 
         this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
          
-=======
-            // this.chatService.fetchMessages(this.requestId);
-        }
-
-
-
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
     }
 
    
@@ -283,11 +243,11 @@ export class UserChatComponent implements OnInit {
     onTypingStopped() {
         this.isTyping = false;
     }
-    messageSent: any;
+    // messageSent: any;
 
-    sendMessage() {
-        this.chatManager.sendMessage(this.messageSent);
-        this.messageSent = "";
+    // sendMessage() {
+    //     this.chatManager.sendMessage(this.messageSent);
+    //     this.messageSent = "";
 
-    }
+    // }
 }

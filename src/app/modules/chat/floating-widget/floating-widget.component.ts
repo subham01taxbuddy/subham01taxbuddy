@@ -5,6 +5,10 @@ import { ChatManager } from '../chat-manager';
 import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 
+interface Department {
+    name: string,
+    id: any
+}
 @Component({
     selector: 'app-floating-widget',
     templateUrl: './floating-widget.component.html',
@@ -14,7 +18,7 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 export class FloatingWidgetComponent implements OnInit {
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
- 
+
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService) {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -27,11 +31,12 @@ export class FloatingWidgetComponent implements OnInit {
     showWidget = true;
     selectedUser: any;
     conversationList: any[] = []
-    departmentNames: string[] = [];
+    departmentNames: Department[] = [];
     isUserChatVisible: boolean = false;
     fullChatScreen: boolean = false;
+    selectedDepartmentId: any;
 
-    showFullScreen(){
+    showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
     }
 
@@ -41,13 +46,13 @@ export class FloatingWidgetComponent implements OnInit {
         this.showWidget = false;
         setTimeout(() => {
             if (this.userChatComponent) {
-              this.userChatComponent.scrollToBottom();
+                this.userChatComponent.scrollToBottom();
             }
-          }, 1000);   
-        
-        }
+        }, 1000);
 
-    
+    }
+
+
     closeWidget() {
         this.showWidget = false;
         this.isUserChatVisible = false;
@@ -105,51 +110,70 @@ export class FloatingWidgetComponent implements OnInit {
 
     ngOnInit(): void {
         this.chatManager.getDepartmentList();
-        this.departmentNames = this.chatManager.getDepartmentNames();
-        console.log('departmentNames', this.departmentNames);
+
     }
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
     }
 
+    fetchList(departmentId: any) {
+        // const selectedDepartment = this.departmentNames.find(dept => dept.id === departmentId);
+        // if(selectedDepartment){
+        //     console.log('selected dept',selectedDepartment.name, selectedDepartment.id)
+        // }
+        this.selectedDepartmentId = departmentId;
+        if (departmentId) {
+            this.chatManager.convList(departmentId);
+        }
+        else {
+            this.chatManager.convList();
+        }
+        this.handleConversationList();
+    }
+
     handleConversationList = () => {
+        console.log('started')
         const convdata = this.localStorage.getItem('conversationList', true);
-        console.log('conv data', convdata);
         if (convdata) {
             const conversations = JSON.parse(convdata);
-            this.conversationList = conversations.map((conversation: any) => {
-                const user = this.users.find(u => u.name === conversation.name);
-                if (user) {
-                    //   this.chatManager.openConversation(conversation.request_id)
+            if(this.selectedDepartmentId){
+            this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                .map((conversation: any) => {
+                    const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: user.image,
+                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
                         name: conversation.name,
                         text: conversation.text,
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id
-                    }
-                } else {
+                    };
+                });
+            }
+            else{
+                this.conversationList = conversations.map((conversation: any) => {
+                    const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
                         name: conversation.name,
                         text: conversation.text,
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id
-                    }
-                }
-            })
-            console.log('new list', this.conversationList);
-
+                    };
+                });
+            }
+            // this.conversationList = [...this.conversationList]
         }
     }
 
     handleDeptList = (data: any) => {
         console.log('received message', data);
-        this.departmentNames = data.map((dept: any) => dept.name)
+        this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         console.log('list', this.departmentNames);
+        console.log('selected department name', this.departmentNames)
     }
 
-    
+   
+
 }
 

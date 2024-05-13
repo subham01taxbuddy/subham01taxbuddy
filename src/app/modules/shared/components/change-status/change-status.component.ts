@@ -204,6 +204,19 @@ export class ChangeStatusComponent implements OnInit {
                   'error',
                   'There is some issue to Update Status information.'
                 );
+              }
+            );
+          } else if (this.data.mode === 'Update Caller') {
+            let param = `/call-management/customers`;
+            let reqBody = Object.assign(
+              this.data.userInfo,
+              this.changeStatus.getRawValue()
+            );
+            console.log('reqBody: ', reqBody);
+            this.userService.putMethod(param, reqBody).subscribe(
+              (res) => {
+                console.log('Status update response: ', res);
+
                 this.dialogRef.close({
                   event: 'close',
                   data: 'statusChanged',

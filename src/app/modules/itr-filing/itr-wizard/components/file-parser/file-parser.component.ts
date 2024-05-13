@@ -44,6 +44,7 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download 5 Paisa.pdf',
       },
+        //not supported
       // {
       //   name: 'IIFL',
       //   label: 'IIFL',
@@ -51,13 +52,14 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      {
-        name: 'Angel',
-        label: 'Angel One',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download Angel One.pdf',
-      },
+      //commenting for this release
+      // {
+      //   name: 'Angel',
+      //   label: 'Angel One',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download Angel One.pdf',
+      // },
       {
         name: 'Paytm',
         label: 'PayTm',
@@ -65,13 +67,14 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download PayTM.pdf',
       },
-      {
-        name: 'Axis',
-        label: 'Axis Broker',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
+      //commenting for this release
+      // {
+      //   name: 'Axis',
+      //   label: 'Axis Broker',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
       {
         name: 'Upstox',
         label: 'Upstox',
@@ -93,13 +96,15 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download Zerodha statement.pdf',
       },
-      {
-        name: 'ICICI',
-        label: 'ICICI Bank',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download ICICI Statement.pdf',
-      },
+      //commenting for this release
+      // {
+      //   name: 'ICICI',
+      //   label: 'ICICI Bank',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download ICICI Statement.pdf',
+      // },
+        //not supported
       // {
       //   name: 'Jainam',
       //   label: 'Jainam',

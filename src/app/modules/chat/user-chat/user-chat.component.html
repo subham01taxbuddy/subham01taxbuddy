@@ -4,7 +4,7 @@
             <i class="fa fa-chevron-left" aria-hidden="true"></i>
         </button>
         <button (click)="showFullScreen()">
-        <i class="fa fa-external-link" aria-hidden="true"></i>
+            <i class="fa fa-external-link" aria-hidden="true"></i>
         </button>
         <div>
             <span class="file-type-option">ITR</span>
@@ -59,24 +59,14 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
 
 
 
     <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
         <label for="fileInput" class="fa fa-paperclip"></label>
         <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
-<<<<<<< HEAD
 
         <button type="button" (click)="sendMessage()">
-=======
-        <input type="text" placeholder="Type your message" class="fileInput" class="form-control inp"
-            [(ngModel)]="messageSent" (keyup.enter)="sendMessage()" (input)="onTyping()" (blur)="onTypingStopped()">
-        <button (Click)="sendMessage()">
->>>>>>> 624236082c69fd531ae482b4cd56fa5868c2f12e
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
         <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
