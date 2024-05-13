@@ -352,7 +352,7 @@
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input (dateChange)="calculateDeduction(i, 'singleCg')" matInput
                                   formControlName="purchaseDate" name="deductions[i]" class="input-field"
-                                  [matDatepicker]="purchaseDate" [matDatepickerFilter]="disableFutureDates" required />
+                                  [matDatepicker]="purchaseDate" [matDatepickerFilter]="disableFutureDates" />
                                 <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                                 <mat-datepicker #purchaseDate></mat-datepicker>
                                 <mat-error *ngIf="
@@ -371,7 +371,7 @@
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number"
-                                  class="input-field" required (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
+                                  class="input-field" (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
                               </mat-form-field>
                             </div>
                           </div>

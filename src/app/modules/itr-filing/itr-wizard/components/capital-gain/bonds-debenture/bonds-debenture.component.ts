@@ -921,42 +921,42 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       orgAssestTransferDate: [obj ? obj.orgAssestTransferDate : null],
       panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
       purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
-      purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
+      purchaseDate: [obj ? obj.purchaseDate : null],
       costOfNewAssets: [obj ? obj.costOfNewAssets : null],
       investmentInCGAccount: [
         obj ? obj.investmentInCGAccount : null,
       ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null,[Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
-      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),Validators.required]],
-      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex), Validators.required]],
-      dateOfDeposit: [obj?.dateOfDeposit || null, [Validators.required]],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
+      ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
+      dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
   updateValidations(formGroup){
-    if(formGroup.get('costOfNewAssets').value){
-      formGroup.get('purchaseDate').setValidators([Validators.required]);
+    if(formGroup.controls['costOfNewAssets'].value){
+      formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.updateValueAndValidity();
     } else {
-      formGroup.get('purchaseDate').setValidators([null]);
+      formGroup.controls['purchaseDate'].setValidators(null);
       formGroup.updateValueAndValidity();
     }
 
-    if(formGroup.get('investmentInCGAccount').value){
-      formGroup.get('accountNumber').setValidators([Validators.required]);
-      formGroup.get('accountNumber').updateValueAndValidity();
-      formGroup.get('ifscCode').setValidators([Validators.required]);
-      formGroup.get('ifscCode').updateValueAndValidity();
-      formGroup.get('dateOfDeposit').setValidators([Validators.required]);
-      formGroup.get('dateOfDeposit').updateValueAndValidity();
+    if(formGroup.controls['investmentInCGAccount'].value){
+      formGroup.controls['accountNumber'].setValidators([Validators.required]);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators([Validators.required]);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators([Validators.required]);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
     } else {
-      formGroup.get('accountNumber').setValidators(null);
-      formGroup.get('accountNumber').updateValueAndValidity();
-      formGroup.get('ifscCode').setValidators(null);
-      formGroup.get('ifscCode').updateValueAndValidity();
-      formGroup.get('dateOfDeposit').setValidators(null);
-      formGroup.get('dateOfDeposit').updateValueAndValidity();
+      formGroup.controls['accountNumber'].setValidators(null);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators(null);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators(null);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
     }
   }
   calculateDeductionGain() {
