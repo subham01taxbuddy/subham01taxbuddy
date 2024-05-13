@@ -808,8 +808,13 @@ export class UtilsService {
         itrObject.assessmentYear;
       return this.itrMsService.putMethod(param, itrObject);
     } else {
-      return this.getUserCurrentStatus([itrObject.userId])
-          .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
+      // return this.getUserCurrentStatus([itrObject.userId])
+      //     .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
+      itrObject.isItrSummaryJsonEdited = false;
+      const param = `/itr/itr-type`;
+      return this.itrMsService
+          .postMethod(param, itrObject)
+          .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
     }
   }
 

@@ -7508,6 +7508,18 @@ export class SummaryComponent implements OnInit {
 
     return arrayToBeReturned;
   }
+
+  isOtherIncome(){
+    return this.finalCalculations?.otherIncome?.otherIncomes?.dividendIncome ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.familyPension ||
+        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries &&
+            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries > 0) ||
+        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming &&
+            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
+        this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
+        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
+        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
+  }
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {

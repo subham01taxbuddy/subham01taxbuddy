@@ -611,7 +611,7 @@ export class DonationsComponent implements OnInit {
     );
     this.loading = true;
 
-    if (this.type === '80g' && this.panValidation()) {
+    if ((this.type === '80g' || this.type === '80ggc') && this.panValidation()) {
       this.loading = false;
       return false;
     }

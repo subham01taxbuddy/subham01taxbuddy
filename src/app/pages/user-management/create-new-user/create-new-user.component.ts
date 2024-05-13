@@ -263,7 +263,7 @@ export class CreateNewUserComponent implements OnInit {
         // }).catch(signInErr => {
         //   console.log('Sign In err After Sign Up:', signInErr);
         // });
-        this.userSignUp();
+        this.userSignUp(res);
       }).catch(err => {
         console.log('Sign Up err:', err);
         console.log('sign up error', err.message)
@@ -274,13 +274,15 @@ export class CreateNewUserComponent implements OnInit {
     }
   }
 
-  userSignUp() {
+  userSignUp(cognitoData) {
     if (this.signUpForm.valid) {
       let reqBody = this.signUpForm.getRawValue();
       let finalReq: any = {};
       Object.assign(finalReq, reqBody);
       //Ashwini: adding + in the country code since user facing app sends country code with +
       finalReq.countryCode = '+' + this.countryCode;
+      finalReq.cognitoId= cognitoData['userSub'],
+
       console.log("request body : ", finalReq);
       this.loading = true;
       let param = "/user_account";
