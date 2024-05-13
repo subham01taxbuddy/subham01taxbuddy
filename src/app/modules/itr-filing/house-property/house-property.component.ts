@@ -364,6 +364,7 @@ export class HousePropertyComponent implements OnInit {
       });
     } else {
       return this.fb.group({
+        isCoOwners:[false],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
