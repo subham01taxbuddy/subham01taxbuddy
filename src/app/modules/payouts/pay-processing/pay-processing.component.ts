@@ -318,6 +318,7 @@ export class PayProcessingComponent implements OnInit {
       userId: userId,
       accountNumber:accountNumber
     };
+    this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
 
     let param = 'partner/payout/generate-csv';
     this.itrMsService.downloadLambda(param,request).subscribe((response: any) => {
