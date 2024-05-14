@@ -350,6 +350,7 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.patchValue(
       ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
+    this.utilsService.smoothScrollToTop();
   }
 
   get getBondsArray() {

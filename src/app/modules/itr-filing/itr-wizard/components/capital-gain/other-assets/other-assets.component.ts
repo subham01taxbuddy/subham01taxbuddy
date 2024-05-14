@@ -738,6 +738,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         }
         case 'edit': {
           this.addOtherAssets('EDIT', params.rowIndex);
+          this.utilsService.smoothScrollToTop();
           break;
         }
       }

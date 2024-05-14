@@ -304,6 +304,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.selectedFormGroup.patchValue(
       ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
+    this.utilsService.smoothScrollToTop();
   }
 
   get getBondsArray() {
@@ -751,6 +752,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           } else {
             (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
           }
+        } else {
+          (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
         }
         bondsList.push((element as UntypedFormGroup).getRawValue());
       });
