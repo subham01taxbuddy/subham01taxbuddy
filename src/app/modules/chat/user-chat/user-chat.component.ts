@@ -47,6 +47,23 @@ export class UserChatComponent implements OnInit {
 
     fullChatScreen: boolean = false;
 
+
+  templateId: any;
+  formData: any = {};
+  formData2: any = {};
+  formData3: any = {};
+  formData4: any = {};
+
+  formValue: any;
+  payload: any;
+
+  selectedRadio: { [name: string]: string } = {};
+  selectedCheckBoxes: { [name: string]: string[] } = {};
+  selectedOptions: { [name: string]: string } = {};
+
+  isRequired: boolean = false;
+
+
     constructor(private chatService: ChatService, private chatManager: ChatManager,
         private localStorage: LocalStorageService,
                 private sanitizer: DomSanitizer, private elementRef: ElementRef,
@@ -54,6 +71,80 @@ export class UserChatComponent implements OnInit {
         this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     }
+
+    onRadioChange(name: string, value: string, message_id) {
+      this.selectedRadio[name] = value;
+      this.selectedRadio['message_id'] = message_id;
+      console.log(`Selected radio value for ${name}: ${value}`);
+    }
+  
+    onCheckBoxChange(name: string, value: string, message_id) {
+      if (!this.selectedCheckBoxes[name]) {
+        this.selectedCheckBoxes[name] = []; // Initialize the array if it doesn't exist
+      }
+  
+      const index = this.selectedCheckBoxes[name].indexOf(value);
+  
+      if (index === -1) {
+        this.selectedCheckBoxes[name].push(value);
+        this.selectedCheckBoxes['message_id'] = message_id;
+      } else {
+        this.selectedCheckBoxes[name].splice(index, 1);
+        this.selectedCheckBoxes['message_id'] = message_id;
+      }
+    }
+  
+    isChecked(name: string, value: string): boolean {
+      return this.selectedCheckBoxes[name]?.includes(value) || false;
+    }
+  
+  
+    onInputChange(event: any, label: string, message_id) {
+      const value = event.target.value;
+      this.formData3[label] = value;
+      this.formData3['message_id'] = message_id;
+  }
+  
+  
+    onDropdownChange(name: string, event: any, message_id) {
+      const value = event.target.value;
+      this.selectedOptions[name] = value;
+      this.selectedOptions['message_id'] = message_id;
+      console.log(`selected value: ${name} : ${value}`)
+    }
+  
+    isSelected(name: string, value: string): boolean {
+      return this.selectedOptions[name] === value;
+    }
+  
+    handleButtonEvent(message: string) {
+      this.messageSent = message;
+      this.sendMessage()
+    }
+  
+  
+    
+  
+    isInputValid(value: string, regex: string): boolean {
+       if (value === '') {
+        return true;
+      }
+      const pattern = new RegExp(regex);
+      return pattern.test(value);
+    }
+
+    onSubmit(message: string) {
+        this.messageSent = message;
+        if ((Object.keys(this.formData3).length != 0)) {
+          this.sendMessage(this.formData3);
+        } else if (Object.keys(this.selectedRadio).length != 0) {
+          this.sendMessage(this.selectedRadio)
+        } else if (Object.keys(this.selectedCheckBoxes).length != 0) {
+          this.sendMessage(this.selectedCheckBoxes)
+        } else if (Object.keys(this.selectedOptions).length != 0) {
+          this.sendMessage(this.selectedOptions)
+        }
+      }
 
 
     goBack() {
@@ -65,12 +156,12 @@ export class UserChatComponent implements OnInit {
         this.fullChatScreen = !this.fullChatScreen;
     }
 
-    sendMessage() {
+    sendMessage(payload?:any) {
         if (this.messageSent) {
             // const chatMessagesContainer = document.querySelector('.chat-window');
             // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
       
-            this.chatManager.sendMessage(this.messageSent, this.serviceType);
+            this.chatManager.sendMessage(this.messageSent,payload, this.serviceType);
             this.messageSent = '';
             setTimeout(() => {
                 this.scrollToBottom()
@@ -134,7 +225,7 @@ export class UserChatComponent implements OnInit {
         console.log("subscribed", data);
     };
 
-    handleReceivedMessages = (data: any) => {
+    handleReceivedMessages = (data?: any) => {
         console.log('received message', data);
 
 
@@ -153,20 +244,32 @@ export class UserChatComponent implements OnInit {
             else{
                 this.scrollToBottom();
              }
-            this.fetchedMessages.forEach((message: any) => {
-                if (message.type === 'html') {
-                    setTimeout(() => {
-                        message.content = this.sanitizer.bypassSecurityTrustHtml(message.content);
-                        this.addMessageEvents(message);
-                    }, 3000);
-                }
-            });
+            // this.fetchedMessages.forEach((message: any) => {
+            //     if (message.type === 'html') {
+            //         setTimeout(() => {
+            //             message.content = this.sanitizer.bypassSecurityTrustHtml(message.content);
+            //             this.addMessageEvents(message);
+            //         }, 3000);
+            //     }
+            // });
         
         }
         this.isAtBottom = isAtBottom;
         this.messageCountTo0();
        
     };
+
+    parsedContent(content) {
+        let parsedContent;
+        try {
+          const escapedContent = content.replace(/\\/g, '\\\\');
+           parsedContent = JSON.parse(escapedContent);
+          
+        } catch (err) {
+          console.log('Error parsing JSON:', err);
+        }
+        return parsedContent;
+      }
 
     messageCountTo0(){
         this.scrollToBottom();
@@ -187,7 +290,7 @@ export class UserChatComponent implements OnInit {
     getSanitizedHtml(message) {
         // this.renderer.setProperty(this.myDiv.nativeElement, 'innerHTML', htmlContent);
 
-        return this.sanitizer.bypassSecurityTrustHtml(message.content);
+        return this.sanitizer.bypassSecurityTrustHtml(message);
     }
 
     addMessageEvents(message: any) {

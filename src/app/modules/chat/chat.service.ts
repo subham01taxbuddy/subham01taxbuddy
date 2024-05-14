@@ -580,7 +580,7 @@ export class ChatService {
     return null;
   }
 
-  getMessageAttributes() {
+  getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
     return {
       "departmentId": this.deptID,
@@ -595,11 +595,12 @@ export class ChatService {
       "userFullname": this.userFullName,
       "requester_id": chatToken,
       "lang": "en",
-      "tempUID": this.uuidv4()
+      "tempUID": this.uuidv4(),
+      "action": payload
     }
   };
 
-  sendMessage(message: string) {
+  sendMessage(message: string,payloads?: any) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
     // console.log("dest_topic:", dest_topic)
@@ -608,7 +609,7 @@ export class ChatService {
       type: "text",
       recipient_fullname: 'Bot',
       sender_fullname: this.userFullName,
-      attributes: this.getMessageAttributes(),
+      attributes: this.getMessageAttributes(payloads),
       metadata: "",
       channel_type: "group"
     };
