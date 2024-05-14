@@ -844,8 +844,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.utilsService.showSnackBar('Please select entries to approve');
       return;
     }
-    let invoices = selectedRows.flatMap(item => item.invoiceNoList);
-    let commissionPercentages = selectedRows.map(item => item.slabwiseCommissionPercentage);
+    let invoices = selectedRows.map(item => Number(item.subscriptionId));
+    let commissionPercentages = selectedRows.map(item =>item.slabwiseCommissionPercentage);
 
     console.log('commissionPercentage',commissionPercentages)
     console.log('invoices',invoices)
