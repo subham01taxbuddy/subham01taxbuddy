@@ -129,7 +129,9 @@ export class FloatingWidgetComponent implements OnInit {
         else {
             this.chatManager.convList();
         }
-        this.handleConversationList();
+        setTimeout(() => {
+            this.handleConversationList();
+        }, 500);
     }
 
     handleConversationList = () => {
@@ -137,20 +139,20 @@ export class FloatingWidgetComponent implements OnInit {
         const convdata = this.localStorage.getItem('conversationList', true);
         if (convdata) {
             const conversations = JSON.parse(convdata);
-            if(this.selectedDepartmentId){
-            this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
-                .map((conversation: any) => {
-                    const user = this.users.find(u => u.name === conversation.name);
-                    return {
-                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                        name: conversation.name,
-                        text: conversation.text,
-                        timestamp: conversation.timestamp,
-                        request_id: conversation.request_id
-                    };
-                });
+            if (this.selectedDepartmentId) {
+                this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                    .map((conversation: any) => {
+                        const user = this.users.find(u => u.name === conversation.name);
+                        return {
+                            image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                            name: conversation.name,
+                            text: conversation.text,
+                            timestamp: conversation.timestamp,
+                            request_id: conversation.request_id
+                        };
+                    });
             }
-            else{
+            else {
                 this.conversationList = conversations.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
@@ -173,7 +175,7 @@ export class FloatingWidgetComponent implements OnInit {
         console.log('selected department name', this.departmentNames)
     }
 
-   
+
 
 }
 
