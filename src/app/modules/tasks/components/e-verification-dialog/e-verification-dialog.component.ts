@@ -47,6 +47,7 @@ export class EVerificationDialogComponent implements OnInit {
   }
 
   generateOtp() {
+    this.loading =true ;
     if (this.eVerifyForm.valid) {
       const param = `/eri/v1/api`;
       let headerObj = {
@@ -57,6 +58,7 @@ export class EVerificationDialogComponent implements OnInit {
       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
       this.itrMsService.postMethodForEri(param, this.eVerifyForm.value).subscribe((res: any) => {
         console.log(res);
+        this.loading =false ;
         if (res && res.successFlag) {
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
@@ -79,6 +81,7 @@ export class EVerificationDialogComponent implements OnInit {
   }
 
   validateOtp() {
+    this.loading =true ;
     let headerObj = {
       'panNumber': this.data.pan,
       'assessmentYear': this.data.assessmentYear,
@@ -101,6 +104,7 @@ export class EVerificationDialogComponent implements OnInit {
     const param = `/eri/v1/api`;
     this.itrMsService.postMethodForEri(param, request).subscribe((res: any) => {
       console.log(res);
+      this.loading =false
       if (res && res.successFlag) {
         if (res.hasOwnProperty('messages')) {
           if (res.messages instanceof Array && res.messages.length > 0) {
