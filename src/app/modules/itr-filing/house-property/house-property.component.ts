@@ -155,7 +155,14 @@ export class HousePropertyComponent implements OnInit {
 
   markActive(index) {
     if (this.currentIndex >= 0 && this.currentIndex <= this.ITR_JSON.houseProperties.length) {
-      this.saveHpDetails(false);
+      if(this.housePropertyForm.valid) {
+        this.saveHpDetails(false);
+      } else {
+        this.utilsService.showSnackBar(
+            'To Switch/Add new property Please fill in all the mandatory fields in the current property'
+        );
+        return;
+      }
     }
     if (index === -1) {
       this.addHousingIncome();

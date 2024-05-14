@@ -371,7 +371,14 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   markActive(index) {
     if (this.currentCgIndex >= 0 && this.currentCgIndex <= this.labData[0]?.assetDetails?.length) {
-      this.saveImmovableCG(this.immovableForm, index, false);
+      if(this.immovableForm.valid) {
+        this.saveImmovableCG(this.immovableForm, index, false);
+      } else {
+        this.utilsService.showSnackBar(
+            'To Switch/Add new property Please fill in all the mandatory fields in the current property'
+        );
+        return;
+      }
     }
     if (index === -1) {
       this.addNewProperty();
