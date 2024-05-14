@@ -410,6 +410,13 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 item === 'ROLE_FILER'
             );
             this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            if(!this.roles.includes("ROLE_FILER") && this.searchBy?.email){
+              this.isAllowed = false;
+              this._toastMessageService.alert(
+                'error',
+                'For Leader & Admin Please Create Subscription Using Mobile Number'
+              );
+            }
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
               this.createRowData([])
