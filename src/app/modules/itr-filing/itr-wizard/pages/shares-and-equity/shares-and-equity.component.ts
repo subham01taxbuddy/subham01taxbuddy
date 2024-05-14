@@ -566,6 +566,7 @@ export class SharesAndEquityComponent
             }
             this.selectedFormGroup = params.data;
           }
+          this.utilsService.smoothScrollToTop();
           break;
       }
     }
