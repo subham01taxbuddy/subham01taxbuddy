@@ -93,6 +93,10 @@ export class AdvanceTaxPaidComponent implements OnInit {
         if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
+          this.utilsService.showSnackBar(
+              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          );
+          return;
         }
       });
     }
@@ -179,6 +183,14 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   addMoreSalary(item?) {
+    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+        this.utilsService.showSnackBar(
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        );
+        return;
+      }
+    }
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
     this.activeIndex = salaryArray.length - 1;
@@ -197,6 +209,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
   activeIndex = 0;
   markActive(index){
+    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+      this.utilsService.showSnackBar(
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+      );
+      return;
+    }
     this.activeIndex = index;
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
