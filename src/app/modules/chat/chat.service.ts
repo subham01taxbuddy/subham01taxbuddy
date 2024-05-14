@@ -168,13 +168,13 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(userId: any,departmentId?: any, removecallback?) {
+  fetchConversationList(userId: any, departmentId?: any, removecallback?) {
     let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
-    if(departmentId){
+    if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
     }
-    console.log('conversation url',CONVERSATION_URL);
-     this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
+    console.log('conversation url', CONVERSATION_URL);
+    this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
       console.log('conversation result', conversationResult);
       const newarrays = this.conversationList(conversationResult.result);
       // for (const conversation of newarrays) {
