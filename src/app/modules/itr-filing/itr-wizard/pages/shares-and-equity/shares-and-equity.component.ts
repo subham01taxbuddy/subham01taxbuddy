@@ -171,7 +171,7 @@ export class SharesAndEquityComponent
     if (data.length > 0) {
       data.forEach((obj, index) => {
         obj.assetDetails.forEach((security: any) => {
-          let broker = security.brokerName;
+          let broker = security.brokerName ? security.brokerName : '';
           let gainType = security.gainType;
           let capitalGain = security.capitalGain;
           let deduction = data?.[index]?.deduction?.[0]?.totalDeductionClaimed;
