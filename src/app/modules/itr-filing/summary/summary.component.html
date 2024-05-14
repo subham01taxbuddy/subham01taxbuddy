@@ -2472,9 +2472,7 @@
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.intFromDeposit ||
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.taxRefund ||
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest
+                                ?.taxRefund
                             ">
                               <th colspan="2">Interest Income</th>
                             </tr>
@@ -2636,46 +2634,7 @@
                               </td>
                             </tr>
 
-                            <tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xii
-                            ">
-                              <td>
-                                Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                utilsService.currencyFormatter(
-                                finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xii
-                                )
-                                }}
-                              </td>
-                            </tr><tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xiii
-                            ">
-                              <td>
-                                Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                utilsService.currencyFormatter(
-                                finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xiii
-                                )
-                                }}
-                              </td>
-                            </tr>
-
-                            <tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.dividendIncome ||
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.familyPension
-                            ">
+                            <tr *ngIf="isOtherIncome()">
                               <th colspan="2">Other Income</th>
                             </tr>
                             <tr *ngIf="
@@ -2765,6 +2724,40 @@
                               </td>
                             </tr>
 
+                            <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.SumRecdPrYrBusTRU562xii
+                            ">
+                              <td>
+                                Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                utilsService.currencyFormatter(
+                                        finalCalculations?.otherIncome?.otherIncomes
+                                                ?.SumRecdPrYrBusTRU562xii
+                                )
+                                }}
+                              </td>
+                            </tr>
+                            <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.SumRecdPrYrBusTRU562xiii
+                            ">
+                              <td>
+                                Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                utilsService.currencyFormatter(
+                                        finalCalculations?.otherIncome?.otherIncomes
+                                                ?.SumRecdPrYrBusTRU562xiii
+                                )
+                                }}
+                              </td>
+                            </tr>
                             <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherInterest

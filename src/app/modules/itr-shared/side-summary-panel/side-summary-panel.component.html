@@ -127,6 +127,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Gift Income</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(otherIncome.giftIncome)}}
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Any Other Income</td>
                             <td>₹
                                 {{utilsService.currencyFormatter(otherIncome.totalAnyOtherIncome)}}
@@ -135,7 +141,7 @@
                         <tr class="border-top">
                             <th>Total income</th>
                             <th>₹
-                                {{utilsService.currencyFormatter(summary.summaryIncome.summaryOtherIncome.totalOtherTaxableIncome)}}
+                                {{utilsService.currencyFormatter(getTotalOtherIncome())}}
                             </th>
                         </tr>
                     </tbody>

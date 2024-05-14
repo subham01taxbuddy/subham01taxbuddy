@@ -761,12 +761,13 @@ export class InvestmentsDeductionsComponent
 
   saveAll() {
     this.saveInvestmentDeductions();
-    let saved = this.sec80gDonationsComponent.saveGeneralDonation();
-    this.sec80ggaDonationsComponent.saveGeneralDonation();
+    let g = this.sec80gDonationsComponent.saveGeneralDonation();
+    let gga = this.sec80ggaDonationsComponent.saveGeneralDonation();
     let medicalExpenses =
       this.MedicalExpensesComponent.saveInvestmentDeductions();
     this.otherDeductionComponent.saveInvestmentDeductions();
-    this.sec80ggcDonationsComponent.saveGeneralDonation();
+    let ggc = this.sec80ggcDonationsComponent.saveGeneralDonation();
+    let saved = g && gga && ggc;
     if (saved && medicalExpenses) {
       this.serviceCall();
     }

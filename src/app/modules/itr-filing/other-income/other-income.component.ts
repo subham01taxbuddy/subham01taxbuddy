@@ -889,9 +889,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         formGroup.controls['incomeValue'].setValue(
           this.ITR_JSON.exemptIncomes[i].amount
         );
-        formGroup.controls['incomeDesc'].setValue(
-          this.ITR_JSON.exemptIncomes[i].details
-        );
       }
     }
   }
