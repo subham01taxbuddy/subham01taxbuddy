@@ -23,7 +23,10 @@
               'user-messages': message.sender === chat21UserId,
               'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
             }">
-        <div class="senderFullName" *ngIf="message.sender!='system' && message.sender!='metadata'">{{
+        <div class="senderFullName"
+          *ngIf="message.sender!='system' && message.sender!='metadata' && message.sender != chat21UserId">{{
+          message.senderFullName }}</div>
+        <div class="senderFullName cht21FullName" *ngIf="message.sender === chat21UserId">{{
           message.senderFullName }}</div>
         <div class="message-container">
           <div class="message-and-timestamp">
