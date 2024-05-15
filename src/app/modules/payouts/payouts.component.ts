@@ -337,8 +337,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       }
     }, error => {
       this.loading = false;
-      // this.utilsService.showSnackBar('Please try again, Data not found');
-      this.utilsService.showSnackBar(error.error.message);
+      this.utilsService.showSnackBar('Data not found');
+      // this.utilsService.showSnackBar(error.error.message);
       this.usersGridOptions.api?.setRowData([]);
       this.userInfo = [];
       this.config.totalItems = 0;
