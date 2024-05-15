@@ -170,6 +170,12 @@ export class TdsOnSalaryComponent implements OnInit {
   }
   activeIndex = 0;
   markActive(index){
+    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+      this.utilsService.showSnackBar(
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+      );
+      return;
+    }
     this.activeIndex = index;
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
@@ -189,8 +195,16 @@ export class TdsOnSalaryComponent implements OnInit {
     const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
 
+    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+        this.utilsService.showSnackBar(
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        );
+        return;
+      }
+    }
     // if (salaryJsonArray?.length > 0) {
-      salaryArray.push(this.createForm(item));
+    salaryArray.push(this.createForm(item));
     // }
     if(!item) {
       this.activeIndex = salaryArray.length - 1;
@@ -200,6 +214,7 @@ export class TdsOnSalaryComponent implements OnInit {
       (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
       (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     }
+
   }
 
   deleteSalaryArray(index) {

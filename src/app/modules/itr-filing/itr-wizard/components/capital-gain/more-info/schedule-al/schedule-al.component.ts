@@ -253,6 +253,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
+          this.utilsService.showSnackBar(
+              'To Switch/Add New Asset Please fill in all the mandatory fields in the current Asset'
+          );
+          return;
         }
       });
     }

@@ -395,6 +395,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         });
       console.log('GOLD:', this.goldCg);
     } else {
+      $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
         'Please make sure all deduction details are entered correctly'
       );
@@ -738,6 +739,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         }
         case 'edit': {
           this.addOtherAssets('EDIT', params.rowIndex);
+          this.utilsService.smoothScrollToTop();
           break;
         }
       }

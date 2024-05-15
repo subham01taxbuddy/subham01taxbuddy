@@ -350,6 +350,7 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.patchValue(
       ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
+    this.utilsService.smoothScrollToTop();
   }
 
   get getBondsArray() {
@@ -751,7 +752,7 @@ export class ZeroCouponBondsComponent
     this.updateDeductionUI();
     this.bondsForm.enable();
     this.deductionForm.enable();
-    if (this.bondsForm.valid || this.deductionForm.valid) {
+    if (this.bondsForm.valid && this.deductionForm.valid) {
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];
       }
@@ -1100,6 +1101,12 @@ export class ZeroCouponBondsComponent
           );
           this.utilsService.smoothScrollToTop();
         }
+      );
+    } else{
+      this.loading = false;
+      $('input.ng-invalid').first().focus();
+      this.utilsService.showSnackBar(
+          'Please verify the form and try again.'
       );
     }
   }

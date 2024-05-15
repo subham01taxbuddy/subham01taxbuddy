@@ -150,6 +150,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
   activeIndex = 0;
   markActive(index){
+    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+      this.utilsService.showSnackBar(
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+      );
+      return;
+    }
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     this.activeIndex = index;
@@ -251,6 +257,14 @@ export class TdsOtherThanSalaryComponent implements OnInit {
 
 
   addMoreSalary(item?) {
+    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+        this.utilsService.showSnackBar(
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        );
+        return;
+      }
+    }
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.insert(0, this.createForm(item));
     delay(0);

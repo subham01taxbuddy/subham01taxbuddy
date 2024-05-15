@@ -171,7 +171,7 @@ export class SharesAndEquityComponent
     if (data.length > 0) {
       data.forEach((obj, index) => {
         obj.assetDetails.forEach((security: any) => {
-          let broker = security.brokerName;
+          let broker = security.brokerName ? security.brokerName : '';
           let gainType = security.gainType;
           let capitalGain = security.capitalGain;
           let deduction = data?.[index]?.deduction?.[0]?.totalDeductionClaimed;
@@ -369,10 +369,10 @@ export class SharesAndEquityComponent
     console.log(formGroup);
     if(formGroup.controls['costOfNewAssets'].value){
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
     } else {
       formGroup.controls['purchaseDate'].setValidators(null);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
     }
 
     if(formGroup.controls['investmentInCGAccount'].value){
@@ -566,6 +566,7 @@ export class SharesAndEquityComponent
             }
             this.selectedFormGroup = params.data;
           }
+          this.utilsService.smoothScrollToTop();
           break;
       }
     }
