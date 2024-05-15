@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ChatService} from '../chat.service';
 import {ChatEvents} from "../chat-events";
 import {ChatManager} from "../chat-manager";
@@ -8,11 +8,14 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 @Component({
     selector: 'app-user-chat',
     templateUrl: './user-chat.component.html',
-    styleUrls: ['./user-chat.component.scss']
+    styleUrls: ['./user-chat.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 
 export class UserChatComponent implements OnInit {
+
+    private cd: ChangeDetectorRef;
 
     @ViewChild('chatWindow') chatWindow: ElementRef;
     @Input() filetype: string;
@@ -67,9 +70,11 @@ export class UserChatComponent implements OnInit {
     constructor(private chatService: ChatService, private chatManager: ChatManager,
         private localStorage: LocalStorageService,
                 private sanitizer: DomSanitizer, private elementRef: ElementRef,
-                private renderer: Renderer2) {
+                private renderer: Renderer2,
+              cd: ChangeDetectorRef) {
         this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
+        this.cd = cd
     }
 
     onRadioChange(name: string, value: string, message_id) {
@@ -256,6 +261,7 @@ export class UserChatComponent implements OnInit {
         }
         this.isAtBottom = isAtBottom;
         this.messageCountTo0();
+        this.cd.detectChanges();
        
     };
 
