@@ -369,10 +369,10 @@ export class SharesAndEquityComponent
     console.log(formGroup);
     if(formGroup.controls['costOfNewAssets'].value){
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
     } else {
       formGroup.controls['purchaseDate'].setValidators(null);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
     }
 
     if(formGroup.controls['investmentInCGAccount'].value){
