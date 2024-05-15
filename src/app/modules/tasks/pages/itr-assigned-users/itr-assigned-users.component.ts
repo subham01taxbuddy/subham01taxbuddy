@@ -504,16 +504,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.disableCheckboxes = false;
         } else {
           this.disableCheckboxes = true;
-          this.utilsService.showSnackBar(" Please select a leader  before ticking the checkbox and searching");
-          this.unAssignedUsersView.setValue(false);
-          return;
-        }
-      } else if (this.loggedInUserRoles?.includes('ROLE_LEADER')) {
-        if (this.filerId) {
-          this.disableCheckboxes = true;
-        } else {
-          this.disableCheckboxes = false;
-          this.utilsService.showSnackBar(" Please filer before ticking the checkbox and searching");
+          this.utilsService.showSnackBar("Please select a leader  before ticking the checkbox and search");
           this.unAssignedUsersView.setValue(false);
           return;
         }
