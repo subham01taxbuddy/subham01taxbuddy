@@ -44,6 +44,10 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       label: 'TPA',
       value: 'TPA',
     },
+    {
+      label: 'OTHER',
+      value: 'OTHER',
+    },
   ];
   // userId: number;
   noteDetails = new UntypedFormControl('', Validators.required);
