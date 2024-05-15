@@ -153,6 +153,27 @@ export class HousePropertyComponent implements OnInit {
 
   }
 
+  usePersonalAddress = false;
+  toggleAddress(){
+    if(this.usePersonalAddress){
+      let address = this.ITR_JSON.address.flatNo + ' ' + this.ITR_JSON.address.premisesName + ' ' +
+          this.ITR_JSON.address.area;
+      this.housePropertyForm.controls['address'].setValue(address);
+      this.housePropertyForm.controls['city'].setValue(this.ITR_JSON.address.city);
+
+      this.housePropertyForm.controls['state'].setValue(this.ITR_JSON.address.state);
+      this.housePropertyForm.controls['country'].setValue(this.ITR_JSON.address.country);
+      this.housePropertyForm.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
+    } else {
+      // this.housePropertyForm.controls['address'].setValue(null);
+      // this.housePropertyForm.controls['city'].setValue(null);
+      //
+      // this.housePropertyForm.controls['state'].setValue(null);
+      // this.housePropertyForm.controls['country'].setValue(null);
+      // this.housePropertyForm.controls['pinCode'].setValue(null);
+    }
+  }
+
   markActive(index) {
     if (this.currentIndex >= 0 && this.currentIndex <= this.ITR_JSON.houseProperties.length) {
       if(this.housePropertyForm.valid) {
