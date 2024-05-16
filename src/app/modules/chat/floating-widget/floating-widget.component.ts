@@ -168,6 +168,15 @@ export class FloatingWidgetComponent implements OnInit {
         }
     }
 
+    isJsonString(str: string): boolean {
+        try {
+          JSON.parse(str);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
     handleDeptList = (data: any) => {
         console.log('received message', data);
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))

@@ -17,7 +17,8 @@
     </div>
 
     <div class="options">
-        <div class="option-box" *ngFor="let deptName of departmentNames" [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
+        <div class="option-box" *ngFor="let deptName of departmentNames"
+            [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
             (click)="fetchList(deptName.id)">{{
             deptName.name }}</div>
     </div>
@@ -37,8 +38,9 @@
                         <span class="col-lg-8 user-name">{{ conversation.name }}</span>
                         <span class="col-lg-4 user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
                     </div>
-                    <span class="chat-snippet">{{ conversation.text }}</span>
-
+                    <span *ngIf="isJsonString(conversation.text)"><em>rich message text</em></span>
+                    <span *ngIf="!isJsonString(conversation.text)">{{ conversation.text }}</span>
+ 
                     <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
 
                 </div>
