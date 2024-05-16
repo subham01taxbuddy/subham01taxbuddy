@@ -142,7 +142,8 @@ handleConversationList = () => {
                     name: conversation.name,
                     text: conversation.text,
                     timestamp: conversation.timestamp,
-                    request_id: conversation.request_id
+                    request_id: conversation.request_id,
+                    type: conversation.type
                 }
             } else {
                 return {
@@ -150,7 +151,8 @@ handleConversationList = () => {
                     name: conversation.name,
                     text: conversation.text,
                     timestamp: conversation.timestamp,
-                    request_id: conversation.request_id
+                    request_id: conversation.request_id,
+                    type: conversation.type
                 }
             }
         })
@@ -158,6 +160,15 @@ handleConversationList = () => {
 
     }
 }
+
+isJsonString(str: string): boolean {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
 handleDeptList = (data: any) => {
     console.log('received message', data);

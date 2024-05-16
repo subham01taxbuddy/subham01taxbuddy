@@ -36,8 +36,8 @@
                             <span class="col-lg-8 user-name">{{ conversation.name }}</span>
                             <span class="col-lg-4 user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
                         </div>
-                        <span class="chat-snippet">{{ conversation.text }}</span>
-    
+                        <span *ngIf="conversation.type === 'html'"><em>rich message text</em></span>
+                        <span *ngIf="conversation.type !== 'html'">{{ conversation.text }}</span>    
                         <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
     
                     </div>

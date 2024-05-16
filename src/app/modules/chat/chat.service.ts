@@ -236,7 +236,8 @@ export class ChatService {
         timestamp: message.timestamp,
         request_id: message.conversWith,
         departmentName: message.attributes.departmentName,
-        departmentId: message.attributes.departmentId
+        departmentId: message.attributes.departmentId,
+        type: message.type
 
       })
     );
