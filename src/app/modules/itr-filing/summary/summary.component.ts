@@ -155,6 +155,13 @@ export class SummaryComponent implements OnInit {
     },
     {
       id: null,
+      seqNum: 15,
+      value: 'OPERATING_DIVIDEND',
+      label: 'Dividend Income',
+      detailed: false,
+    },
+    {
+      id: null,
       seqNum: 10,
       value: 'OTH',
       label: 'Any other ',
