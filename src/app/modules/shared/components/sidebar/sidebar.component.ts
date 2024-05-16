@@ -227,6 +227,14 @@ export class SidebarComponent {
       submenu: []
     },
     {
+      name: 'PAN Exception',
+      icon: 'invoice.png',
+      active: false,
+      url: '/pages/user-management/pan-exception',
+      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      submenu: []
+    },
+    {
       name: 'Delete User Request',
       icon: 'sme-mgmt.png',
       active: false,
