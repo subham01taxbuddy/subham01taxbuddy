@@ -312,7 +312,7 @@
                         <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body">
                             <div class="div-5">
-                              <div class="div-6">
+                              <div class="div-6" *ngIf="housePropertyForm.controls['propertyType'].value === 'SOP' && currentIndex === firstSOPIndex">
                                 <input type="checkbox" class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                        color="primary" [ngModelOptions]="{ standalone: true }" (change)="toggleAddress()"
                                        [(ngModel)]="usePersonalAddress" /><span class="span">Use same address as profile</span>
