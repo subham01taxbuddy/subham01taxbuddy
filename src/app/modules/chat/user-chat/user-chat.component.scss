@@ -60,9 +60,8 @@
   align-items: center;
   padding: 0px;
   background-color: #f2f2f2;
-  border-radius: 20px;
   margin-top: 10px;
-  bottom: 10px;
+  bottom: 0px;
 }
 
 .user-input span {
@@ -87,7 +86,7 @@
   border-radius: 20px;
   background-color: #f2f2f2;
   margin-left: 5px;
-  width: 260px;
+  width: 261px;
 }
 
 
@@ -107,7 +106,7 @@
 
 .file-type-option {
   text-align: center;
-  margin-right: 90px;
+  margin-right: 153px;
 }
 
 // .bi-earphone{
@@ -115,7 +114,7 @@
 // }
 
 .fa-external-link {
-  margin-left: -49px;
+  margin-left: -18px;
 }
 
 .chat-container {
@@ -507,10 +506,9 @@
 .chat-messages {
   display: flex;
   flex-direction: column;
-  max-height: 365px;
+  max-height: 353px;
   overflow-y: auto;
 }
-
 
 .chat-messages::-webkit-scrollbar {
   width: 0;

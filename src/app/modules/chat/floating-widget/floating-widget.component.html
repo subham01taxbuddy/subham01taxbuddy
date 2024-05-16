@@ -29,26 +29,26 @@
   </div> -->
 
     <div class="user-list">
-
         <div class="user-box" *ngIf="!isUserChatVisible">
             <div *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
-                <img [src]="conversation.image" alt="User Icon">
                 <div class="user-info">
-                    <div class="card_row row col-lg-12">
-                        <span class="col-lg-8 user-name">{{ conversation.name }}</span>
-                        <span class="col-lg-4 user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
+                    <img [src]="conversation.image" alt="User Icon">
+
+                    <div class="user-details">
+                        <span class="user-name">{{ conversation.name }}</span>
+                        <span class="chat-snippet" *ngIf="conversation.type !== 'html'">{{ conversation.text }}</span>
+                        <span class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>rich message
+                                    text</strong></em></span>
+
                     </div>
-                    <span *ngIf="conversation.type === 'html'"><em>rich message text</em></span>
-                    <span *ngIf="conversation.type !== 'html'">{{ conversation.text }}</span>  
- 
-                    <!-- <div class="notification-badge" *ngIf="user.notificationCount > 0">{{ user.notificationCount }}</div> -->
+                    <span class="user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
 
                 </div>
+
             </div>
-
         </div>
-
     </div>
+
 
 
 

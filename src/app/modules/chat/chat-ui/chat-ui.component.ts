@@ -5,6 +5,10 @@ import { ChatManager } from '../chat-manager';
 import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 
+interface Department {
+    name: string,
+    id: any
+}
 
 @Component({
   selector: 'app-chat-ui',
@@ -33,11 +37,14 @@ export class ChatUIComponent implements OnInit {
 showWidget = true;
 selectedUser: any;
 conversationList: any[] = []
-departmentNames: string[] = [];
+departmentNames: Department[] = [];
 isUserChatVisible: boolean = false;
 fullChatScreen: boolean = false;
 isBlankScreenVisible: boolean = true;
 selectedConversation: any;
+selectedDepartmentId: any;
+
+
 
 showFullScreen(){
     this.fullChatScreen = !this.fullChatScreen;
@@ -119,8 +126,7 @@ getCurrentTime(timestamp: any): string {
 
 ngOnInit(): void {
     this.chatManager.getDepartmentList();
-    this.departmentNames = this.chatManager.getDepartmentNames();
-    console.log('departmentNames', this.departmentNames);
+    
  
 }
 
@@ -128,36 +134,56 @@ handleReceivedMessages = (data: any) => {
     console.log('received message', data);
 }
 
+fetchList(departmentId: any) {
+    // const selectedDepartment = this.departmentNames.find(dept => dept.id === departmentId);
+    // if(selectedDepartment){
+    //     console.log('selected dept',selectedDepartment.name, selectedDepartment.id)
+    // }
+    this.selectedDepartmentId = departmentId;
+    if (departmentId) {
+        this.chatManager.convList(departmentId);
+    }
+    else {
+        this.chatManager.convList();
+    }
+    setTimeout(() => {
+        this.handleConversationList();
+    }, 500);
+}
+
 handleConversationList = () => {
+    console.log('started')
     const convdata = this.localStorage.getItem('conversationList', true);
-    console.log('conv data', convdata);
     if (convdata) {
         const conversations = JSON.parse(convdata);
-        this.conversationList = conversations.map((conversation: any) => {
-            const user = this.users.find(u => u.name === conversation.name);
-            if (user) {
-                //   this.chatManager.openConversation(conversation.request_id)
+        if (this.selectedDepartmentId) {
+            this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                .map((conversation: any) => {
+                    const user = this.users.find(u => u.name === conversation.name);
+                    return {
+                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                        name: conversation.name,
+                        text: conversation.text,
+                        timestamp: conversation.timestamp,
+                        request_id: conversation.request_id,
+                        type: conversation.type
+                    };
+                });
+        }
+        else {
+            this.conversationList = conversations.map((conversation: any) => {
+                const user = this.users.find(u => u.name === conversation.name);
                 return {
-                    image: user.image,
+                    image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
                     name: conversation.name,
                     text: conversation.text,
                     timestamp: conversation.timestamp,
                     request_id: conversation.request_id,
                     type: conversation.type
-                }
-            } else {
-                return {
-                    image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                    name: conversation.name,
-                    text: conversation.text,
-                    timestamp: conversation.timestamp,
-                    request_id: conversation.request_id,
-                    type: conversation.type
-                }
-            }
-        })
-        console.log('new list', this.conversationList);
-
+                };
+            });
+        }
+        // this.conversationList = [...this.conversationList]
     }
 }
 
@@ -170,11 +196,13 @@ isJsonString(str: string): boolean {
     }
   }
 
-handleDeptList = (data: any) => {
+  handleDeptList = (data: any) => {
     console.log('received message', data);
-    this.departmentNames = data.map((dept: any) => dept.name)
+    this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
     console.log('list', this.departmentNames);
+    console.log('selected department name', this.departmentNames)
 }
+
 
 
 // updatedConversation(conversation: any){

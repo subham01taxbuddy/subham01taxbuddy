@@ -18,8 +18,10 @@
         </div>
     
         <div class="options">
-            <div class="option-box" *ngFor="let deptName of departmentNames" [ngClass]="{'font-size-class': true}">{{
-                deptName }}</div>
+            <div class="option-box" *ngFor="let deptName of departmentNames"
+                [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
+                (click)="fetchList(deptName.id)">{{
+                deptName.name }}</div>
         </div>
     
         <!-- <div class="search-bar">
