@@ -28,24 +28,25 @@
       <input type="text" placeholder="Search messages or users">
   </div> -->
 
-    <div class="user-list">
-        <div class="user-box" *ngIf="!isUserChatVisible">
-            <div *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
-                <div class="user-info">
+    <div class="user-list" *ngIf="!isUserChatVisible">
+        <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
+            <div class="row">
+                <div class="col-2">
                     <img [src]="conversation.image" alt="User Icon">
+                </div>
+                <div class="col-8">
+                    <div class="user-name">{{ conversation.name }}</div>
+                    <div class="chat-snippet" *ngIf="conversation.type !== 'html'">{{ conversation.text }}</div>
+                    <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>rich message
+                                text</strong></em></div>
 
-                    <div class="user-details">
-                        <span class="user-name">{{ conversation.name }}</span>
-                        <span class="chat-snippet" *ngIf="conversation.type !== 'html'">{{ conversation.text }}</span>
-                        <span class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>rich message
-                                    text</strong></em></span>
-
-                    </div>
-                    <span class="user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
-
+                </div>
+                <div class="col-2">
+                    <div>{{ getCurrentTime(conversation.timestamp) }}</div>
                 </div>
 
             </div>
+
         </div>
     </div>
 
