@@ -1454,21 +1454,18 @@ export class PrefillIdComponent implements OnInit {
                         ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                      ?.Form10IEDtls?.Form10IEDate
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                       ? (this.ITR_Obj.everOptedNewRegime.date =
                         this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].FilingStatus
-                            ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                          ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                         ))
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                      ?.Form10IEDtls?.Form10IEAckNo
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
                       ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ].FilingStatus?.Form10IEAAckNo)
                       : null;
                   }
 
@@ -1503,22 +1500,18 @@ export class PrefillIdComponent implements OnInit {
                         ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
                         this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].FilingStatus
-                            ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                            ?.Form10IEDate
+                          ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                         ))
                       : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ].FilingStatus?.Form10IEAAckNo)
                       : null;
                   }
 
@@ -1534,15 +1527,15 @@ export class PrefillIdComponent implements OnInit {
                 this.regime =
                   this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
+                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                   ? (this.ITR_Obj.optionForCurrentAY.date =
                     this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
+                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
                     ))
                   : null;
-                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo
+                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
                   ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)
                   : null;
 
                 sessionStorage.setItem(
@@ -2805,20 +2798,20 @@ export class PrefillIdComponent implements OnInit {
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                      ?.Form10IEADate
                       ? (this.ITR_Obj.everOptedNewRegime.date =
                         this.parseAndFormatDate(
                           ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                            ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                            ?.Form10IEADate
                         ))
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
+                      ?.Form10IEAAckNo
                       ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
+                        ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
                       : null;
                   }
 
@@ -2854,21 +2847,20 @@ export class PrefillIdComponent implements OnInit {
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                      ?.Form10IEADate
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
                         this.parseAndFormatDate(
                           ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                            ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                            ?.Form10IEDate
+                            ?.Form10IEADate
                         ))
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
+                      ?.Form10IEAAckNo
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
                         ItrJSON[
                           this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
                       : null;
                   }
 
@@ -2884,18 +2876,18 @@ export class PrefillIdComponent implements OnInit {
                 this.regime =
                   this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate
                   ? (this.ITR_Obj.optionForCurrentAY.date =
                     this.parseAndFormatDate(
                       ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                        ?.Form10IEDate
+                        ?.Form10IEADate
                     ))
                   : null;
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo
+                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo
                   ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
                     ItrJSON[
                       this.ITR_Type
-                    ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
+                    ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
                   : null;
 
                 sessionStorage.setItem(

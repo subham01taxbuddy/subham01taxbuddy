@@ -129,10 +129,12 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.cflForm = this.initForm();
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
-    this.pastYearLosses = this.pastYearLosses.filter((item) => {
-      item.assessmentPastYear != '2015-16'
-      if (item.assessmentPastYear != '2023-24') {
-        this.pastYearLosses.push(
+    this.pastYearLosses = this.pastYearLosses.filter((item) =>
+        item.assessmentPastYear != '2015-16');
+    let latestYear = this.pastYearLosses.map((item) => item.assessmentPastYear)
+        .filter((item:string) => item === '2023-24');
+    if (!latestYear || latestYear.length === 0) {
+      this.pastYearLosses.push(
           {
             hasEdit: false,
             dateofFilling: null,
@@ -155,9 +157,8 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
             carryForwardAmountLTCGIncome: 0,
             totalLoss: 0,
           }
-        )
-      }
-    });
+      )
+    }
     if (this.pastYearLosses) {
       this.pastYearLosses.forEach((obj) => {
         this.addMore(obj);
