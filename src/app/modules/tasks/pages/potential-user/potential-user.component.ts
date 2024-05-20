@@ -46,7 +46,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    migrationSource:null
+    migrationSource:null,
+    panNumber:null,
+    name:null,
   }
   showCsvMessage: boolean;
   dataOnLoad = true;
@@ -102,11 +104,15 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN Number'},
+        { value: 'name', name: 'Name'},
       ]
     } else {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
-        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'mobileNumber', name: 'Mobile No'},
+        { value: 'panNumber', name: 'PAN Number'},
+        { value: 'name', name: 'Name'},
       ]
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
@@ -224,6 +230,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (this.searchBy?.email) {
       this.searchParam.emailId = this.searchBy?.email
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+
+    if(this.searchBy?.panNumber){
+      this.searchParam.panNumber = this.searchBy?.panNumber
+    }
+
+    if(this.searchBy?.name){
+      this.searchParam.name = this.searchBy?.name
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
@@ -903,6 +917,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
     this.searchParam.migrationSource = null;
+    this.searchParam.panNumber = null;
+    this.searchParam.name = null;
     this.usersGridOptions.api?.setRowData(this.createRowData([]));
     this.userInfoLength = 0;
     this.config.totalItems = 0;
