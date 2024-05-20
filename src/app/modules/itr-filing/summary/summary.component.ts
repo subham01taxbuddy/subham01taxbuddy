@@ -155,6 +155,13 @@ export class SummaryComponent implements OnInit {
     },
     {
       id: null,
+      seqNum: 15,
+      value: 'OPERATING_DIVIDEND',
+      label: 'Dividend Income',
+      detailed: false,
+    },
+    {
+      id: null,
       seqNum: 10,
       value: 'OTH',
       label: 'Any other ',
@@ -6549,6 +6556,13 @@ export class SummaryComponent implements OnInit {
     return gross + profit + perquisite;
   }
 
+  getBusinessNatureLabel(businessCode) {
+    return this.natureOfBusiness?.find(
+        (item) => {
+          return item?.code === businessCode;
+        }
+    )?.label
+  }
   setBusiness44ADA(){
     let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
       ?.filter(element => element?.businessType === 'PROFESSIONAL');
@@ -6558,7 +6572,7 @@ export class SummaryComponent implements OnInit {
     tradeNameSet.forEach(tradeName=>{
       const profIncome = professionalIncomes.filter(income=>income.tradeName === tradeName);
       this.business44ADADetails.push({
-        businessSection: profIncome[0]?.businessType,
+        businessSection: profIncome[0]?.businessType + '(44ADA)',
         natureOfBusinessCode: this.natureOfBusiness?.find(item => item?.code === profIncome[0]?.natureOfBusinessCode)?.label,
         tradeName: tradeName,
         grossTurnover: profIncome.reduce((total, element) => total+ element.receipts, 0),
@@ -7297,7 +7311,7 @@ export class SummaryComponent implements OnInit {
     const combinedObjects = businessIncomes?.reduce((acc, curr) => {
       const key = curr?.tradeName;
       acc[key] = acc[key] || {
-        businessSection: curr?.businessType,
+        businessSection: curr?.businessType + '(44AD)',
         natureOfBusinessCode: this.natureOfBusiness?.find((item) => {
           return item?.code === curr?.natureOfBusinessCode;
         })?.label,

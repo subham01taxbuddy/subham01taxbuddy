@@ -170,6 +170,13 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
+      seqNum: 15,
+      value: 'OPERATING_DIVIDEND',
+      label: 'Dividend Income',
+      detailed: false,
+    },
+    {
+      id: null,
       seqNum: 10,
       value: 'OTH',
       label: 'Any other ',
@@ -529,7 +536,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
           expenses: 0,
           amount: otherIncome.controls['incomeValue'].value,
           incomeType: otherIncome.controls['incomeType'].value,
-          details: otherIncome.controls['incomeDesc'].value,
+          details: otherIncome.controls['incomeDesc']?.value,
         });
       }
     }
@@ -580,7 +587,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
           natureDesc: exempt.controls['incomeType'].value,
-          OthNatOfInc: exempt.controls['incomeDesc'].value,
+          OthNatOfInc: exempt.controls['incomeDesc']?.value,
           amount: exempt.controls['incomeValue'].value,
         });
         // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);

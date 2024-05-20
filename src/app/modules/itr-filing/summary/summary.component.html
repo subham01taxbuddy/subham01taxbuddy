@@ -885,6 +885,35 @@
 
                       <!-- spec non-spec -->
                       <div>
+                        <table class="table table-bordered table-striped table-hover" style="margin-top: 20px"
+                               *ngIf="ITR_JSON.business?.businessDescription?.length > 0">
+                          <tbody>
+                          <tr>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Description</th>
+                          </tr>
+                          </tbody>
+                          <!-- Non speculative Income  -->
+                          <tr *ngFor="let business of ITR_JSON.business?.businessDescription">
+                            <td>
+                              {{ business?.natureOfBusiness }} -
+                              {{ getBusinessNatureLabel(business?.natureOfBusiness) }}
+                            </td>
+                            <td>
+                              {{
+                              business.tradeName
+                              }}
+                            </td>
+                            <td>
+                              {{
+                              business.businessDescription
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <div>
                         <table class="table table-bordered table-striped table-hover" style="margin-top: 20px" *ngIf="
                           (finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncome
@@ -903,8 +932,8 @@
                           <tbody>
                             <tr>
                               <th>Business section</th>
-                              <th>Nature Of Business Code</th>
-                              <th>Trade Name</th>
+<!--                              <th>Nature Of Business Code</th>-->
+<!--                              <th>Trade Name</th>-->
                               <th>Gross Turnover/Receipt</th>
                               <th>Taxable Income</th>
                             </tr>
@@ -925,20 +954,20 @@
                               ?.businessSection
                               }}
                             </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.natureOfBusinessCode
-                              }}
-                            </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.tradeName
-                              }}
-                            </td>
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.nonSpecIncome-->
+<!--                              ?.natureOfBusinessCode-->
+<!--                              }}-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.nonSpecIncome-->
+<!--                              ?.tradeName-->
+<!--                              }}-->
+<!--                            </td>-->
                             <td>
                               {{
                               finalCalculations?.businessIncome
@@ -956,22 +985,7 @@
                               }}
                             </td>
                           </tr>
-                          <!-- <tr
-                          *ngIf="
-                            finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncomePl
-                          "
-                        >
-                          <td colspan="4">P&L details</td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.businessIncome
-                                  ?.businessIncomeDetails?.nonSpecIncomePl
-                              )
-                            }}
-                          </td>
-                        </tr> -->
+
 
                           <!-- speculative Income  -->
 
@@ -990,19 +1004,19 @@
                               ?.businessSection
                               }}
                             </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.specIncome
-                              ?.natureOfBusinessCode
-                              }}
-                            </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.specIncome?.tradeName
-                              }}
-                            </td>
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.specIncome-->
+<!--                              ?.natureOfBusinessCode-->
+<!--                              }}-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.specIncome?.tradeName-->
+<!--                              }}-->
+<!--                            </td>-->
                             <td>
                               Rs
                               {{

@@ -738,6 +738,8 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'annualRentReceived'
       ].updateValueAndValidity();
+      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+          ? this.currentIndex : this.firstSOPIndex;
     } else {
       const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -902,6 +904,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isDisable = false;
+  firstSOPIndex = -1;
   changePropType(type, mode?) {
     console.log(type);
     this.isDisable = false;
@@ -960,6 +963,9 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'interestAmount'
       ].updateValueAndValidity();
+
+      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+          ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
