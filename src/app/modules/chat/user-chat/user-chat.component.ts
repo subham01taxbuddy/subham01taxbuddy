@@ -209,6 +209,9 @@ export class UserChatComponent implements OnInit {
     }
   }
 
+  isBotSender(sender: string): boolean{
+    return sender.startsWith('bot_');
+  }
 
   //   ngAfterViewInit(): void {
   //       this.scrollToBottom();
