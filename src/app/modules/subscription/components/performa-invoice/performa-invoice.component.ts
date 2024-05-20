@@ -216,15 +216,18 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
 
     this.activatedRoute.queryParams.subscribe(params => {
-      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-') {
+      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo']) {
         let name = params['name'];
         let mobileNo = params['mobile'];
+        let invNo = params['invoiceNo'];
         if (name) {
           this.invoiceFormGroup.controls['name'].setValue(name);
         } else if (mobileNo) {
           this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        }else if (invNo) {
+          this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(invNo);
         }
-        if (name || mobileNo) {
+        if (name || mobileNo || invNo) {
           this.getInvoice();
         }
       }

@@ -22,6 +22,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const MY_FORMATS = {
   parse: {
@@ -108,6 +110,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public datePipe: DatePipe,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
     this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
@@ -685,6 +689,22 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
+        headerName: 'Realised/Unrealised',
+        field: 'invoicePaymentStatus',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          const value = data.value.toLowerCase();
+          return value === 'paid' ? 'Realised' : 'Unrealised';
+        }
+      },
+      {
         headerName: 'Approved By',
         field: 'commissionPaymentApprovedBy',
         width: 120,
@@ -914,6 +934,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     });
   }
 
+  isChatOpen = false;
+  kommChatLink = null;
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
       width: '50%',
@@ -926,12 +948,22 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
     });
 
   }
 
   redirectTowardInvoice(userInfo: any) {
-    this.router.navigate(['/subscription/tax-invoice'], { queryParams: { invoiceNo: userInfo.invoiceNo } });
+    let invoiceNo = userInfo.invoiceNoList[0]
+    if(userInfo.invoicePaymentStatus === 'Paid'){
+      this.router.navigate(['/subscription/tax-invoice'], { queryParams: { invoiceNo: invoiceNo } });
+    }else{
+      this.router.navigate(['/subscription/proforma-invoice'], { queryParams: { invoiceNo: invoiceNo } });
+    }
   }
 
   showNotes(client) {
@@ -1044,6 +1076,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'tdsOnSlabwiseCommissionEarned', value: 'TDS to be deducted' },
       { key: 'slabwiseCommissionPayableAfterTds', value: 'Commission Payable after TDS' },
       { key: 'slabwiseCommissionPaymentStatus', value: 'Payout Status' },
+      { key: 'invoicePaymentStatus', value: 'Realised/Unrealised' },
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
     ]
