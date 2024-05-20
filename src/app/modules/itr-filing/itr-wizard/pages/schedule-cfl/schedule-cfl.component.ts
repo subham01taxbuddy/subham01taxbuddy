@@ -315,7 +315,8 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         element.assessmentPastYear === '2019-20' ||
         element.assessmentPastYear === '2020-21' ||
         element.assessmentPastYear === '2021-22' ||
-        element.assessmentPastYear === '2022-23'
+        element.assessmentPastYear === '2022-23' ||
+        element.assessmentPastYear === '2023-24'
       ) {
         totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
       } else {
