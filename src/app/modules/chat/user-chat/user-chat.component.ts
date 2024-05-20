@@ -287,14 +287,24 @@ export class UserChatComponent implements OnInit {
 
   formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
-    let hours: number = date.getHours();
-    let minutes: number = date.getMinutes();
-    const ampm: string = hours >= 12 ? 'PM' : 'AM';
+    
+    // Get month and day
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    
+    // Get hours, minutes, and AM/PM
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? Number('0' + minutes) : minutes;
-    return hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    
+    // Return formatted string
+    return `${month} ${day}, ${hours}:${minutesStr} ${ampm}`;
   }
+  
 
   getSanitizedHtml(message) {
     // this.renderer.setProperty(this.myDiv.nativeElement, 'innerHTML', htmlContent);

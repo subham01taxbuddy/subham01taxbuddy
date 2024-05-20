@@ -28,6 +28,9 @@
           message.senderFullName }}</div>
         <div class="senderFullName cht21FullName" *ngIf="message.sender === chat21UserId">{{
           message.senderFullName }}</div>
+
+         
+
         <div class="message-container">
           <div class="message-and-timestamp">
             <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content" class="message">{{ message.content
@@ -203,10 +206,12 @@
 
 
             </div>
-            <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
-              formatTimestamp(message.timestamp) }}</span>
+          
           </div>
+          <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
+            formatTimestamp(message.timestamp) }}</span>
         </div>
+       
       </div>
     </ng-container>
 
