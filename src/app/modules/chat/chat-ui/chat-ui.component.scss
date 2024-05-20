@@ -202,7 +202,9 @@ input[type="text"] {
   border-radius: 50%;
 }
 
- 
+.selected-dept {
+  background-color: #3498db;
+}
 ::ng-deep app-user-chat.floating.expanded {
 
    .floating{
@@ -232,6 +234,9 @@ input[type="text"] {
    .user-input .fileInput{
      width: 900px;
    }
+
+  
+ 
 }
 
 

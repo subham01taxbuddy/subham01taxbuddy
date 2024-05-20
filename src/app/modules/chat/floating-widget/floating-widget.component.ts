@@ -38,6 +38,8 @@ export class FloatingWidgetComponent implements OnInit {
 
     showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
+        this.selectedDepartmentId = null;
+        this.chatManager.convList();
     }
 
     openUserChat(user: any) {
