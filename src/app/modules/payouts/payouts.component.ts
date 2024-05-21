@@ -720,7 +720,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           let filer1 = leaderList;
           if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
             return 'Admin';
-          } else if (environment.environment === 'PROD' && (params?.data?.commissionPaymentApprovedBy === 7002 || params?.data?.commissionPaymentApprovedBy === 21354)) {
+          } else if (environment.environment === 'PROD' && (params?.data?.commissionPaymentApprovedBy === 7002 || params?.data?.commissionPaymentApprovedBy === 21354 || params?.data?.commissionPaymentApprovedBy === 963757)) {
             return 'Admin';
           } else if (params?.data?.commissionPaymentApprovedBy === 0) {
             return '-'
