@@ -2,7 +2,7 @@
 <div class="page-wrapper">
   <main>
     <div class="mrgArd">
-      <app-file-parser></app-file-parser>
+      <app-file-parser (newDataAvailable)="getFileParserData()"></app-file-parser>
     </div>
     <mat-accordion class="headers-align spcArnd2">
       <app-non-speculative-income #NonSpeculativeIncomeComponentRef></app-non-speculative-income>

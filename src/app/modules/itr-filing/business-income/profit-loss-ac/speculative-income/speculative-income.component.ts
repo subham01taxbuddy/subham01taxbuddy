@@ -79,6 +79,21 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.calculateNetIncome();
   }
 
+  updateData(){
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
+    if (specBusiness?.incomes.length) {
+      let index = 0;
+      for (let income of specBusiness.incomes) {
+        let form = this.createSpecIncomeForm(index++, income);
+        this.specIncomeFormArray.push(form);
+      }
+    }
+    this.gridOptions.api?.setRowData(this.specIncomeFormArray.controls);
+    this.calculateNetIncome();
+  }
+
   get getIncomeArray() {
     return (this.specIncomeForm.get('specIncomesArray') as UntypedFormArray).controls;
   }

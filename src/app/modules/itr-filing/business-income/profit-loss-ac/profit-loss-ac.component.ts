@@ -64,6 +64,11 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  getFileParserData() {
+    this.SpeculativeIncomeComponent.updateData();
+    this.NonSpeculativeIncomeComponent.updateData();
+  }
+
   unsubscribe() {
     if (this.subscription) {
       this.subscription.unsubscribe();
