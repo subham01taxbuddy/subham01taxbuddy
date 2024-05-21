@@ -620,6 +620,9 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'POLITICAL'
         );
+        if(!this.Copy_ITR_JSON.donations){
+          this.Copy_ITR_JSON.donations = [];
+        }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
           this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
             this.generalDonationForm.value.donationArray

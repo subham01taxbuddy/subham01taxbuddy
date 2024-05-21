@@ -678,6 +678,11 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income balance sheet difference needs to be zero and select BOA as "Yes"',
     relatedSchedule: 'balanceSheet',
   },
+  NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES',
+    message: 'In case of Non Speculative Income select BOA as "Yes"',
+    relatedSchedule: 'personalInfo',
+  },
   FOREIGN_INCOME_TR_SECTION_NOT_FOUND: {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
     message: 'To claim tax relief against foreign income, please select tax relief section in schedule TR',
