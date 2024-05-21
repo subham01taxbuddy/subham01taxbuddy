@@ -428,7 +428,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       this.agriIncFormGroup.valid : true)) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
-      this.saveAndNext.emit(false);
     } else {
       $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
@@ -610,7 +609,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         this.utilsService.showSnackBar(
           'Other sources of Income updated successfully.'
         );
-        // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+        this.saveAndNext.emit(false);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -716,7 +715,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
             'Other sources of Income updated successfully.'
           );
         }
-        // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+        this.saveAndNext.emit(false);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

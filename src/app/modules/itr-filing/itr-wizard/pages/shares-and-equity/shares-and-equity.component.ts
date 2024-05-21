@@ -1048,6 +1048,7 @@ export class SharesAndEquityComponent
             'Securities data updated successfully'
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(false);
         },
         (error) => {
           this.loading = false;
@@ -1199,6 +1200,7 @@ export class SharesAndEquityComponent
 
           //close dialog and update UI
           this.dialog.closeAll();
+          this.saveAndNext.emit(false);
         },
         (error) => {
           this.loading = false;
@@ -1864,6 +1866,5 @@ export class SharesAndEquityComponent
       return;
     }
     this.save();
-    this.saveAndNext.emit(false);
   }
 }
