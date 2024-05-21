@@ -1100,6 +1100,7 @@ export class ZeroCouponBondsComponent
             `Failed to update ${bondType} data, please try again.`
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(false);
         }
       );
     } else{
@@ -1352,6 +1353,5 @@ export class ZeroCouponBondsComponent
       return;
     }
     this.save('bonds');
-    this.saveAndNext.emit(false);
   }
 }

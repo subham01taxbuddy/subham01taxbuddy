@@ -792,6 +792,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             `Bonds data updated successfully`
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(false);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1051,6 +1052,5 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       return;
     }
     this.save('bonds');
-    this.saveAndNext.emit(false);
   }
 }

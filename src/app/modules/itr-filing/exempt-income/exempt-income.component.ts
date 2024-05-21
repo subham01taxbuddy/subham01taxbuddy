@@ -417,7 +417,6 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     ) {
       // this.saveOtherIncome();
       this.saveExemptIncomes();
-      this.saveAndNext.emit(false);
     } else {
       $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
@@ -565,7 +564,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
         this.utilsService.showSnackBar(
           'Exempt income updated successfully.'
         );
-        // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+        this.saveAndNext.emit(false);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -674,7 +673,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
             'Other sources of Income updated successfully.'
           );
         }
-        // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
+        this.saveAndNext.emit(false);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
