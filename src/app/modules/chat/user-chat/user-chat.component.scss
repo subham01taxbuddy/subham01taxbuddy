@@ -495,6 +495,7 @@
 }
 
 .message {
+  background-color: #f2f2f2;
   margin-bottom: 10px;
 }
 
@@ -545,10 +546,10 @@
 }
 
 .user-messages .message-container .timestamp {
-  font-size: 10px;
+  font-size: 13px;
   position: absolute;
   right: 13px;
-  bottom: -7px;
+  bottom: -18px;
 }
 
 
@@ -573,7 +574,7 @@
   display: flex;
   justify-content: center;
   padding: 8px 12px;
-  background-color: #EFF6FC;
+ // background-color: #EFF6FC;
   color: #333333;
   border-radius: 12px;
 }
@@ -603,12 +604,13 @@
 }
 
 .agent-messages .message-container .message-and-timestamp {
-  background-color: #e3dac9;
+  //background-color: #f2f2f2;
   color: black;
   border-radius: 5px;
   padding: 8px 12px;
   margin-bottom: 4px;
   position: relative;
+  left: -11px;
 }
 
 .agent-messages .message-container .timestamp {
@@ -617,6 +619,38 @@
   left: 13px;
   bottom: -7px;
  }
+
+ .html-type{
+  // display: flex;
+  color: black;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 1px;
+  background-color: #f2f2f2;
+ }
+
+ .messaged{
+  display: flex;
+ }
+ .mt-5{
+    margin-top: 1rem !important;
+ }
+//  .other-sender-messages{
+//   background-color: white;
+//   border: 1px solid black;
+//  }
+
+.html{
+  left: 1px;
+}
+
+ .highlighted-message {
+  background-color: #f0f8ff; /* Example background color */
+  border: 1px solid #add8e6; /* Example border */
+  padding: 10px;
+  border-radius: 5px;
+}
 
 
 @media only screen and (max-width: 1199px) and (min-width: 320px) {
@@ -698,8 +732,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100px;
   /* Allow the file name to grow and take up available space */
 }
+
+   .doc-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 250px;
+  }
+
 
 .remove-file {
   cursor: pointer;

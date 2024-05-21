@@ -22,22 +22,23 @@
               'system-messages': message.sender === 'system' || message.sender==='metadata',
               'user-messages': message.sender === chat21UserId,
               'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
-            }">
+             }">
         <div class="senderFullName"
           *ngIf="message.sender!='system' && message.sender!='metadata' && message.sender != chat21UserId">{{
           message.senderFullName }}</div>
         <div class="senderFullName cht21FullName" *ngIf="message.sender === chat21UserId">{{
           message.senderFullName }}</div>
 
-         
+
 
         <div class="message-container">
           <div class="message-and-timestamp">
-            <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content" class="message">{{ message.content
-              }}</span>
+            <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content"
+              [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId}"
+              class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)"></span>
             <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
               (loadeddata)="addMessageEvents(message)">
-              <div [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)"></div>
+              <div [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
 
 
               <ng-container *ngIf="parsedContent(message.content).metadata">
@@ -45,7 +46,8 @@
                 <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '6'">
                   <ng-template #buttonTemplate>
                     <button *ngFor="let button of parsedContent(message.content).metadata.payload"
-                      (click)="handleButtonEvent(button.message)" class="btn btn-primary" [disabled]="isBotSender(message.sender)">{{button.title}}</button>
+                      (click)="handleButtonEvent(button.message)" class="btn btn-primary"
+                      [disabled]="isBotSender(message.sender)">{{button.title}}</button>
                   </ng-template>
                   <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
                 </ng-container>
@@ -59,10 +61,11 @@
                           <a [href]="element.action.url" target="_blank">
                             <img class="card-img-top"
                               [src]="parsedContent(message.content).metadata.payload.headerImgSrc" alt="card-image">
-                          </a>
+                          
                           <div class="card-body">
-                            <p class="card-text">{{ element.description }}</p>
+                            <p class="card-text doc-title">{{ element.description }}</p>
                           </div>
+                          </a>
                           <!-- <div class="card-footer">
                                         <button class="btn btn-primary" (click)="handleLinkAction(element.action)">View Document</button>
                                       </div> -->
@@ -95,7 +98,8 @@
                           </div>
                           <div class="card-footer">
                             <div *ngFor="let button of card.buttons" class="mb-2">
-                              <button class="btn btn-primary btn-block" [disabled]="isBotSender(message.sender)">{{ button.name }}</button>
+                              <button class="btn btn-primary btn-block" [disabled]="isBotSender(message.sender)">{{
+                                button.name }}</button>
                             </div>
                           </div>
                         </div>
@@ -136,18 +140,16 @@
                             <label>{{ item.data.label }}</label>
                             <input type="password" class="form-control"
                               [attr.disabled]="isBotSender(message.sender) ? true : null" name="{{ item.data.label }}"
-                              placeholder="{{ item.data?.placeholder }}"  
-                              [value]="formData3[item.data.label]"
+                              placeholder="{{ item.data?.placeholder }}" [value]="formData3[item.data.label]"
                               (input)="onInputChange($event, item.data.label,message.message_id)" required>
                           </div>
                         </ng-container>
                         <ng-container *ngIf="item.type === 'hidden'">
-                          <input type="hidden" [attr.disabled]="isBotSender(message.sender)"
-                            [name]="item.data.name" [value]="item.data.value">
+                          <input type="hidden" [attr.disabled]="isBotSender(message.sender)" [name]="item.data.name"
+                            [value]="item.data.value">
                         </ng-container>
                         <ng-container *ngIf="item.type === 'submit'">
-                          <button type="submit" class="btn btn-primary"
-                            [attr.disabled]="isBotSender(message.sender)">{{
+                          <button type="submit" class="btn btn-primary" [attr.disabled]="isBotSender(message.sender)">{{
                             item.data.name
                             }}</button>
                         </ng-container>
@@ -155,9 +157,8 @@
                           <div>{{ item.data.title }}</div>
                           <div *ngFor="let option of item.data.options">
                             <label>
-                              <input type="radio" [attr.disabled]="isBotSender(message.sender)"
-                                [value]="option.value" name="{{item.data.name}}"
-                                [checked]="selectedRadio[item.data.name] === option.value"
+                              <input type="radio" [attr.disabled]="isBotSender(message.sender)" [value]="option.value"
+                                name="{{item.data.name}}" [checked]="selectedRadio[item.data.name] === option.value"
                                 (change)="onRadioChange(item.data.name,option.value,message.message_id)">
                               {{ option.label }}
                             </label>
@@ -206,12 +207,12 @@
 
 
             </div>
-          
+
           </div>
           <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
             formatTimestamp(message.timestamp) }}</span>
         </div>
-       
+
       </div>
     </ng-container>
 

@@ -126,7 +126,9 @@ getCurrentTime(timestamp: any): string {
 
 ngOnInit(): void {
     this.chatManager.getDepartmentList();
-    this.chatManager.convList();
+    setTimeout(() => {
+        this.chatManager.convList();
+    },500)
     console.log('all conversation list');
  
 }
