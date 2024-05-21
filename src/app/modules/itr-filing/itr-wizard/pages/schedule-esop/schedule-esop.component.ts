@@ -314,6 +314,7 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
         );
         this.loading = false;
         this.utilsService.smoothScrollToTop();
+        this.saveAndNext.emit(true);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -363,6 +364,5 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
       return;
     }
     this.saveScheduleESOP();
-    this.saveAndNext.emit(true);
   }
 }
