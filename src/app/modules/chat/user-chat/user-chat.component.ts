@@ -60,19 +60,25 @@ export class UserChatComponent implements OnInit {
   formValue: any;
   payload: any;
 
+  invalid = false;
+
+
   selectedRadio: { [name: string]: string } = {};
   selectedCheckBoxes: { [name: string]: string[] } = {};
   selectedOptions: { [name: string]: string } = {};
+
+ 
 
   isRequired: boolean = false;
 
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
+    
     private localStorage: LocalStorageService,
     private sanitizer: DomSanitizer, private elementRef: ElementRef,
     private renderer: Renderer2,
     cd: ChangeDetectorRef) {
-    this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
+     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     this.cd = cd
   }
@@ -162,6 +168,7 @@ export class UserChatComponent implements OnInit {
   }
 
   sendMessage(payload?: any) {
+    this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
       // const chatMessagesContainer = document.querySelector('.chat-window');
       // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;

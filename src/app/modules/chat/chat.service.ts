@@ -208,7 +208,8 @@ export class ChatService {
   }
 
   fetchMessages(requestId) {
-    let url = `${this.CHAT_API_URL}/${this.chat21UserID}/conversations/${requestId}/messages?pageSize=300`;
+    let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
+    let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=300`;
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -237,7 +238,8 @@ export class ChatService {
         request_id: message.conversWith,
         departmentName: message.attributes.departmentName,
         departmentId: message.attributes.departmentId,
-        type: message.type
+        type: message.type,
+        recipientFullName: message.recipient_fullname
 
       })
     );

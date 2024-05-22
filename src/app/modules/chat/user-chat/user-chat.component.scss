@@ -495,11 +495,16 @@
 }
 
 .message {
+  background-color: #f2f2f2;
   margin-bottom: 10px;
 }
 
 .scroll-up {
   padding-bottom: 30px;
+}
+
+.card{
+  border: 1px solid black;
 }
 
 
@@ -535,20 +540,30 @@
 }
 
 .user-messages .message-container .message-and-timestamp {
-  background-color: #1B354D;
+  //background-color: #1B354D;
   color: white;
   border-radius: 4px 4px 0px 4px;
   padding: 12px;
   margin-bottom: -8px;
   position: relative;
-
+  right: -13px;
 }
 
 .user-messages .message-container .timestamp {
-  font-size: 10px;
+  font-size: 13px;
   position: absolute;
   right: 13px;
-  bottom: -7px;
+  bottom: -18px;
+}
+
+.text-type-user-messages {
+  display: flex;
+  flex-direction: column;
+  background-color: #1B354D !important;
+  color: white;
+  padding: 12px;
+  margin-bottom: -8px;
+  border-radius: 3px;
 }
 
 
@@ -558,22 +573,22 @@
   justify-content: center;
   margin-bottom: 10px;
   padding: 8px 12px 8px 12px;
-  margin-bottom: 11px;
+  margin-bottom: -10px;
 }
 
-.agent-messages{
-  margin-bottom: 11px;
+.agent-messages {
+  margin-bottom: 14px;
 }
 
-.user-messages{
-  margin-bottom: 11px;
+.user-messages {
+  margin-bottom: 18px;
 }
 
 .system-messages .message-container {
   display: flex;
   justify-content: center;
   padding: 8px 12px;
-  background-color: #EFF6FC;
+  // background-color: #EFF6FC;
   color: #333333;
   border-radius: 12px;
 }
@@ -603,12 +618,13 @@
 }
 
 .agent-messages .message-container .message-and-timestamp {
-  background-color: #e3dac9;
+  //background-color: #f2f2f2;
   color: black;
   border-radius: 5px;
   padding: 8px 12px;
   margin-bottom: 4px;
   position: relative;
+  left: -11px;
 }
 
 .agent-messages .message-container .timestamp {
@@ -616,8 +632,47 @@
   position: absolute;
   left: 13px;
   bottom: -7px;
- }
+}
 
+.html-type {
+  // display: flex;
+  color: black;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 1px;
+  background-color: #f2f2f2;
+}
+
+.messaged {
+  display: flex;
+}
+
+.mt-5 {
+  margin-top: 1rem !important;
+}
+
+//  .other-sender-messages{
+//   background-color: white;
+//   border: 1px solid black;
+//  }
+
+.html {
+  left: 1px;
+}
+
+.highlighted-message {
+  background-color: white;
+  /* Example background color */
+  border: 1px solid #ccc;
+  /* Example border */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.fileBorder{
+  border: 1px solid #ccc;
+}
 
 @media only screen and (max-width: 1199px) and (min-width: 320px) {
   .chat-card {
@@ -698,8 +753,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100px;
   /* Allow the file name to grow and take up available space */
 }
+
+.doc-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+}
+
 
 .remove-file {
   cursor: pointer;
@@ -721,4 +787,5 @@
 
 .cht21FullName {
   justify-content: flex-end;
+  margin-bottom: -17px;
 }

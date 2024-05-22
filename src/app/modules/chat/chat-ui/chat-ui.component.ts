@@ -126,7 +126,9 @@ getCurrentTime(timestamp: any): string {
 
 ngOnInit(): void {
     this.chatManager.getDepartmentList();
-    this.chatManager.convList();
+    setTimeout(() => {
+        this.chatManager.convList();
+    },500)
     console.log('all conversation list');
  
 }
@@ -163,7 +165,7 @@ handleConversationList = () => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
                         image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                        name: conversation.name,
+                        name: conversation.recipientFullName,
                         text: conversation.text,
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id,
@@ -176,7 +178,7 @@ handleConversationList = () => {
                 const user = this.users.find(u => u.name === conversation.name);
                 return {
                     image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                    name: conversation.name,
+                    name: conversation.recipientFullName,
                     text: conversation.text,
                     timestamp: conversation.timestamp,
                     request_id: conversation.request_id,
