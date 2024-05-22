@@ -14,8 +14,9 @@ import { UserMsService } from "../../../../services/user-ms.service";
 import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import { FloatingWidgetComponent } from 'src/app/modules/chat/floating-widget/floating-widget.component';
-import {ChatManager} from "../../../chat/chat-manager";
+import { ChatManager } from "../../../chat/chat-manager";
+import { PushNotificationComponent } from 'src/app/modules/chat/push-notification/push-notification.component';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -39,18 +40,19 @@ export class NavbarComponent implements DoCheck {
 
   loggedInUserId: number;
   showAffiliateBtn = false;
-  showCopyLinkButton =false;
+  showCopyLinkButton = false;
 
   loading: boolean = false;
   nav: boolean;
   isDropdownOpen = false;
-  showDropDown:boolean =false;
-  partnerType :any;
+  showDropDown: boolean = false;
+  partnerType: any;
 
   floatingWidgetShow: boolean = false;
+  disposable: any;
 
 
-  toggleWidget(){
+  toggleWidget() {
     this.floatingWidgetShow = !this.floatingWidgetShow;
   }
 
@@ -61,27 +63,28 @@ export class NavbarComponent implements DoCheck {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private userMsService: UserMsService,
-    private observer: BreakpointObserver,
     private sidebarService: SidebarService,
     private renderer: Renderer2,
     private elementRef: ElementRef,
-    private chatManager: ChatManager
+    private chatManager: ChatManager,
+    private chatService: ChatService
 
   ) {
+
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
     this.partnerType = this.utilsService.getPartnerType();
-    if(role.includes('ROLE_LEADER')){
-      this.showCopyLinkButton =true;
-    }else{
+    if (role.includes('ROLE_LEADER')) {
+      this.showCopyLinkButton = true;
+    } else {
       this.showCopyLinkButton = false;
     }
     this.fetchAffiliateId();
 
-    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
-      this.showDropDown =true;
-    }else{
-      this.showDropDown=false;
+    if (role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType === 'INDIVIDUAL')) {
+      this.showDropDown = true;
+    } else {
+      this.showDropDown = false;
     }
 
     this.renderer.listen('window', 'click', (event: Event) => {
@@ -89,6 +92,19 @@ export class NavbarComponent implements DoCheck {
         this.isDropdownOpen = false;
       }
     });
+
+    this.chatService.messageObservable.subscribe(data => {
+      if (!this.disposable) {
+        this.disposable = this.dialog.open(PushNotificationComponent, {
+          panelClass: 'notification',
+          data: data,
+        });
+        this.disposable.afterClosed().subscribe(result => {
+          this.disposable = null;
+        });
+      }
+    });
+
   }
 
 
@@ -97,10 +113,6 @@ export class NavbarComponent implements DoCheck {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
-    // if (NavbarService.getInstance().closeSideBar) {
-    //   this.sideBar();
-    //   NavbarService.getInstance().closeSideBar = false;
-    // }
   }
 
   sideBar() {
@@ -287,14 +299,14 @@ export class NavbarComponent implements DoCheck {
   }
 
 
-  navigateToProfile(){
+  navigateToProfile() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/partner-profile'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/partner-profile'], { queryParams: { userId: userId } },)
   }
 
-  navigateToAssistantManagement(){
+  navigateToAssistantManagement() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/assistant-management'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/assistant-management'], { queryParams: { userId: userId } },)
   }
 
   toggleDropdown() {

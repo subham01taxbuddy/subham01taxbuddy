@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
         this.getFyList();
         this.getAgentList();
         this.utilsService.getFilersList();
-        this.chatManager.initChat();
+        this.chatManager.initChat(true);
         break;
       }
     }

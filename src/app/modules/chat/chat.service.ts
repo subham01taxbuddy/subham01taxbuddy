@@ -1,21 +1,21 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LocalStorageService, SessionStorageService } from "src/app/services/storage.service";
-import { AppConstants } from "../shared/constants";
 import { Injectable } from '@angular/core';
 import { ChatEvents } from "./chat-events";
+import { Subject } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
   mqtt = require("./mqtt.min.js");
-  _CLIENTADDED = "/clientadded"
-  _CLIENTUPDATED = "/clientupdated"
-  _CLIENTDELETED = "/clientdeleted"
+  _CLIENT_ADDED = "/clientadded"
+  _CLIENT_UPDATED = "/clientupdated"
+  _CLIENT_DELETED = "/clientdeleted"
   _CALLBACK_TYPE_ON_MESSAGE_UPDATED_FOR_CONVERSATION = "onMessageUpdatedForConversation"
   _CALLBACK_TYPE_ON_MESSAGE_ADDED_FOR_CONVERSATION = "onMessageAddedForConversation"
 
-  private TILEDESK_TOKEN_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token";
+  private TILE_DESK_TOKEN_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token";
   private CHAT21_TOKEN_URL = "https://sravqc6xvv6dalsjuu66wyhtvi0iojcy.lambda-url.ap-south-1.on.aws/chat21-authentication";
   private CONVERSATION_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat/659f70587e6a8d00122fb149/conversations";
   private DEPT_DTLS_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/departments?projectId=";
@@ -32,7 +32,10 @@ export class ChatService {
   deptName = '';
   deptID = '';
   departmentNames: string[] = [];
-  removecallback: boolean;
+  removeCallback: boolean;
+
+
+  messageObservable = new Subject<any>();
 
   constructor(public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
@@ -74,12 +77,8 @@ export class ChatService {
     this.chatRequestID = requestId;
     this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
   }
-  async initTokens(service?: string) {
-    //curl --location 'https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token' \
-    // --header 'Authorization: Bearer eyJraWQiOiJHVHdqQ3RJXC9mOEg0R25YM1FWMU1VaE1hZWNFUFhSY1N5eFY1bWFUemJaST0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjNzY3NTkzYS0xZmQyLTQ0OGEtYjE5Mi1jZjA1NzcwZTQ3YTUiLCJldmVudF9pZCI6IjQwNTNmOTIzLWIxZGYtNGYxYy04NmJlLWE2ZWE3ZjAxZWQ3YiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MDkyODgyMjAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aC0xLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoLTFfN0dIRVNoOXJiIiwiZXhwIjoxNzA5Mzc0NjIwLCJpYXQiOjE3MDkyODgyMjAsImp0aSI6IjI4ZGY2MzZhLWIwY2UtNDgyNS1hZjNiLWE5ZGUyMDc0OGMwMSIsImNsaWVudF9pZCI6InBkdHBlb2duOGEydmlpbW9uZDF1MGRlYmkiLCJ1c2VybmFtZSI6ImM3Njc1OTNhLTFmZDItNDQ4YS1iMTkyLWNmMDU3NzBlNDdhNSJ9.KaQ0BNQtLKiona0GI0sIgto0u3FfVUsF--MWXQz7jedbACxsG9NX4GSr79TIjnrFwZLU5YBp73vJTP5oXi5JsbR37voKCGb5GgfrmdwEDOKpvPqbK2eUFXZ65c9pjWQ1-jNRVZ89QTA--E9FTWVVJF-nVRisVN7FIrGdl4wyZl14T9LrYBnunBiWoEygpwFZtaXwTXjl2GxXmysSngSqVg1HdMSXTGuHX4t7T5pNxTwp72ahBx7y8ofNbjH1liwYcC9HqGJ3HFlYu5IWhVkD16Tpn4UziaKa6iFN-pbsAcarMWzzsTPKzMX3zsy6QI98sfYt6WYlaMC_eS9S7llIuQ' \
-    // --header 'environment: qa' \
-    // --header 'Content-Type: application/json' \
-    // --data '{"serviceType":"ITR"}'
+  async initTokens(initializeSocket: boolean, service?: string) {
+
     let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
       tokenRequired: tokenPresent
@@ -90,7 +89,7 @@ export class ChatService {
         tokenRequired: tokenPresent
       };
     }
-    this.httpClient.post(this.TILEDESK_TOKEN_URL,
+    await this.httpClient.post(this.TILE_DESK_TOKEN_URL,
       request,
       this.setHeaders("auth")).subscribe((result: any) => {
         console.log(result);
@@ -115,18 +114,15 @@ export class ChatService {
                 this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
                 this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
                 this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
-
-                // let chat21Token = {
-                //   chat21token: chat21Result.data.token
-                // };
                 this.fetchConversationList(chat21Result.data.userid);
-
-                // if (service) {
                 this.initChatVariables(result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
+                if (initializeSocket) {
+                  if (initializeSocket) {
+                    this.websocketConnection(chat21Result.data.token, '');
+                  }
+                }
 
-                // this.fetchMessages(result.data.requestId);
-                // }
               }
             });
           } else {
@@ -168,7 +164,7 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(userId: any, departmentId?: any, removecallback?) {
+  fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
     let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
     if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
@@ -177,19 +173,14 @@ export class ChatService {
     this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
       console.log('conversation result', conversationResult);
       const newarrays = this.conversationList(conversationResult.result);
-      // for (const conversation of newarrays) {
-      //   console.log('request_id ', conversation.request_id);
-      //   this.fetchMessages(conversation.request_id);
-      // }
-      if (removecallback) {
-        this.removecallback = true;
+      if (removeCallback) {
+        this.removeCallback = true;
       }
-      if (!removecallback) {
+      if (!removeCallback) {
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.CONVERSATION_UPDATED);
         });
       }
-      console.log('newarray', newarrays);
     });
   }
 
@@ -313,7 +304,6 @@ export class ChatService {
   websocketConnection(chat21Token, requestId) {
 
     this.initChatVariables(requestId);
-    // this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
 
     let options = {
       keepalive: 60,
@@ -374,7 +364,11 @@ export class ChatService {
               }
               this.chatClient.on("message", (topic, message) => {
                 if (this.log) {
-                  console.log("topic:" + topic + "\nmessage payload:" + message);
+                  const messageJson = JSON.parse(message.toString());
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata') {
+                    this.messageObservable.next(messageJson);
+                  }
+                  console.log("topic sk :" + topic + "\nmessage payload:" + message);
                 }
                 const _topic = this.parseTopic(topic);
                 if (!_topic) {
@@ -389,7 +383,7 @@ export class ChatService {
 
                   if (this.onConversationUpdatedCallbacks) {
                     // example topic: apps.tilechat.users.ME.conversations.CONVERS-WITH.clientdeleted
-                    if (topic.includes("/conversations/") && topic.endsWith(this._CLIENTUPDATED)) {
+                    if (topic.includes("/conversations/") && topic.endsWith(this._CLIENT_UPDATED)) {
                       if (this.log) {
                         console.log("conversation updated! /conversations/, topic:", topic);
                       }
@@ -401,7 +395,7 @@ export class ChatService {
                   }
 
                   if (this.onConversationDeletedCallbacks) {
-                    if (topic.includes("/conversations/") && topic.endsWith(this._CLIENTDELETED)) {
+                    if (topic.includes("/conversations/") && topic.endsWith(this._CLIENT_DELETED)) {
                       // map.forEach((value, key, map) =>)
                       if (this.log) {
                         console.log("conversation deleted! /conversations/, topic:", topic, message.toString());
@@ -413,7 +407,7 @@ export class ChatService {
                   }
 
                   if (this.onArchivedConversationAddedCallbacks) {
-                    if (topic.includes("/archived_conversations/") && topic.endsWith(this._CLIENTADDED)) {
+                    if (topic.includes("/archived_conversations/") && topic.endsWith(this._CLIENT_ADDED)) {
                       // map.forEach((value, key, map) =>)
                       this.onArchivedConversationAddedCallbacks.forEach((callback, handler, map) => {
                         callback(JSON.parse(message.toString()), _topic);
@@ -422,25 +416,21 @@ export class ChatService {
                   }
 
                   if (this.onArchivedConversationDeletedCallbacks) {
-                    if (topic.includes("/archived_conversations/") && topic.endsWith(this._CLIENTDELETED)) {
+                    if (topic.includes("/archived_conversations/") && topic.endsWith(this._CLIENT_DELETED)) {
                       // map.forEach((value, key, map) =>)
                       this.onArchivedConversationDeletedCallbacks.forEach((callback, handler, map) => {
                         callback(JSON.parse(message.toString()), _topic);
                       });
                     }
                   }
-                  if (topic.includes("/messages/") && topic.endsWith(this._CLIENTADDED)) {
+                  if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                        // console.log("DEBUG: MESSAGE:", message)
                         let messages = this.addMessageToDB(JSON.parse(message.toString()));
                         callback(ChatEvents.MESSAGE_RECEIVED);
 
                       });
                     }
-                    // Observing conversations added from messages
-                    // console.log("Observing conversations added from messages", message_json);
-                    // if (this.onConversationAddedCallbacks) {
                     let update_conversation = true;
 
                     if (message_json.attributes && message_json.attributes.updateconversation == false) {
@@ -458,7 +448,7 @@ export class ChatService {
                   // }
 
                   if (this.onMessageUpdatedCallbacks) {
-                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENTUPDATED)) {
+                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_UPDATED)) {
                       this.onMessageUpdatedCallbacks.forEach((callback, handler, map) => {
                         callback(JSON.parse(message.toString()), _topic);
                       });
@@ -466,7 +456,7 @@ export class ChatService {
                   }
 
                   if (this.onGroupUpdatedCallbacks) {
-                    if (topic.includes("/groups/") && topic.endsWith(this._CLIENTUPDATED)) {
+                    if (topic.includes("/groups/") && topic.endsWith(this._CLIENT_UPDATED)) {
                       this.onGroupUpdatedCallbacks.forEach((callback, handler, map) => {
                         callback(JSON.parse(message.toString()), _topic);
                       });
@@ -476,13 +466,8 @@ export class ChatService {
                   // // ******* NEW!!
                   this.callbackHandlers.forEach((value, key, map) => {
                     const callback_obj = value;
-                    // callback_obj = {
-                    //     "type": "onMessageUpdatedForConversation",
-                    //     "conversWith": conversWith,
-                    //     "callback": callback
-                    // }
                     const type = callback_obj.type;
-                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENTADDED)) {
+                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                       if (this.log) {
                         console.log("/messages/_CLIENTADDED");
                       }
@@ -495,7 +480,7 @@ export class ChatService {
                         }
                       }
                     }
-                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENTUPDATED)) {
+                    if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_UPDATED)) {
                       if (this.log) {
                         console.log("/messages/_CLIENTUPDATED");
                       }
@@ -601,7 +586,7 @@ export class ChatService {
     }
   };
 
-  sendMessage(message: string,payloads?: any) {
+  sendMessage(message: string, payloads?: any) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
     // console.log("dest_topic:", dest_topic)
