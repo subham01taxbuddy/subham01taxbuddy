@@ -19,7 +19,7 @@
   <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" #chatWindow>
     <ng-container *ngFor="let message of fetchedMessages">
       <div [ngClass]="{
-              'system-messages': message.sender === 'system' || message.sender==='metadata',
+              'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId,
               'user-messages': message.sender === chat21UserId,
               'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
              }">
@@ -33,17 +33,23 @@
 
         <div class="message-container">
           <div class="message-and-timestamp">
-            <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content"
+            <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId"
               [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId}"
-              class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)"></span>
+              class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)">{{message.content}}</span>
+
+              <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
+              class="message text-type-user-messages"> {{
+              message.content
+              }}</span>
+
             <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
               (loadeddata)="addMessageEvents(message)">
-              <div [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
+              <div *ngIf="parsedContent(message.content).metadata.templateId !='7'" [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
 
 
               <ng-container *ngIf="parsedContent(message.content).metadata">
 
-                <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '6'">
+                <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '6' && message.action === null">
                   <ng-template #buttonTemplate>
                     <button *ngFor="let button of parsedContent(message.content).metadata.payload"
                       (click)="handleButtonEvent(button.message)" class="btn btn-primary"
@@ -55,22 +61,22 @@
                 <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '7'">
                   <div class="container">
                     <div class="row">
-                      <div *ngFor="let element of parsedContent(message.content).metadata.payload.elements"
-                        class="col-md-6 mb-4">
-                        <div class="card h-100">
-                          <a [href]="element.action.url" target="_blank">
-                            <img class="card-img-top"
-                              [src]="parsedContent(message.content).metadata.payload.headerImgSrc" alt="card-image">
-                          
+                      <!-- <div *ngFor="let element of parsedContent(message.content).metadata.payload.elements"
+                        class="col-md-12 mb-4"> -->
+                      <div class="card h-100"
+                        *ngFor="let element of parsedContent(message.content).metadata.payload.elements">
+                        <a class="fileBorder"  [href]="element.action.url" target="_blank">
+                          <img class="card-img-top mt-2"
+                            [src]="parsedContent(message.content).metadata.payload.headerImgSrc" alt="card-image">
                           <div class="card-body">
                             <p class="card-text doc-title">{{ element.description }}</p>
                           </div>
-                          </a>
-                          <!-- <div class="card-footer">
-                                        <button class="btn btn-primary" (click)="handleLinkAction(element.action)">View Document</button>
-                                      </div> -->
-                        </div>
+                        </a>
+                        <!-- <div class="card-footer">
+                            <button class="btn btn-primary" (click)="handleLinkAction(element.action)">View Document</button>
+                          </div> -->
                       </div>
+                      <!-- </div> -->
                     </div>
                   </div>
                 </ng-container>
@@ -118,20 +124,22 @@
                             <label>{{ item.data.label }}</label>
                             <input type="text" class="form-control"
                               [attr.disabled]="isBotSender(message.sender) ? true : null" name="{{ item.data.label }}"
-                              placeholder="{{item.data.placeholder}}" [pattern]="item.data.validation.regex"
-                              [value]="formData3[item.data.label]" [ngClass]="{
-                                            'is-invalid':
-                                              formData3[item.data.label] &&
-                                              !isInputValid(formData3[item.data.label], item.data.validation.regex)
-                                          }" (change)="onInputChange($event, item.data.label, message.message_id)"
+                              [placeholder]="(message?.action != null ) ? (message?.action[item.data.label]) : item.data.placeholder"
+                              [pattern]="item.data?.validation?.regex" [value]="formData3[item.data.label] ? formData3[item.data.label]:''" [ngClass]="{
+                                'is-invalid':
+                                  formData3[item.data.label] &&
+                                  !isInputValid(formData3[item.data.label], item?.data?.validation?.regex)
+                              }"(change)="onInputChange($event, item.data.label, message.message_id); invalid=formData3[item.data.label] &&
+                              !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
+                              formData3[item.data.label].length > 0"
                               [required]="isRequired" />
-                            <div *ngIf="
-                                            formData3[item.data.label] &&
-                                            !isInputValid(formData3[item.data.label], item.data.validation.regex) &&
-                                            formData3[item.data.label].length > 0
-                                          " class="text-danger mt-1">
-                              {{ item.data.validation.errorText }}
-                            </div>
+                              <div *ngIf="
+                              formData3[item.data.label] &&
+                              !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
+                              formData3[item.data.label].length > 0
+                            " class="text-danger mt-1">
+                            {{ item.data.validation.errorText }}
+                          </div>
                           </div>
                         </ng-container>
 
@@ -167,13 +175,10 @@
                         <ng-container *ngIf="item.type === 'checkbox'">
                           <div>{{ item.data.title }}</div>
                           <div *ngFor="let option of item.data.options">
-                            <label>
-                              <input type="checkbox" [attr.disabled]="isBotSender(message.sender)"
-                                [value]="option.value" [name]="item.data.name"
-                                [checked]="isChecked(item.data.name, option.value)"
-                                (change)="onCheckBoxChange(item.data.name, option.value,message.message_id)">
-                              {{ option.label }}
-                            </label>
+                            <button mat-raised-button [disabled]="isBotSender(message.sender)" class="lgtBtn"
+                            (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"><mat-icon
+                              *ngIf="this.selectedCheckBoxes[item.data.name]?.includes(option.value)">check_circle</mat-icon>
+                            {{ option.label }}</button>
                           </div>
                         </ng-container>
                         <ng-container *ngIf="item.type === 'dropdown'">

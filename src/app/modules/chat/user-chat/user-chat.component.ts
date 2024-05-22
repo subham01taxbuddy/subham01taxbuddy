@@ -60,6 +60,9 @@ export class UserChatComponent implements OnInit {
   formValue: any;
   payload: any;
 
+  invalid = false;
+
+
   selectedRadio: { [name: string]: string } = {};
   selectedCheckBoxes: { [name: string]: string[] } = {};
   selectedOptions: { [name: string]: string } = {};
