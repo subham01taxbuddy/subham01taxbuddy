@@ -168,6 +168,7 @@ export class UserChatComponent implements OnInit {
   }
 
   sendMessage(payload?: any) {
+    this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
       // const chatMessagesContainer = document.querySelector('.chat-window');
       // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
