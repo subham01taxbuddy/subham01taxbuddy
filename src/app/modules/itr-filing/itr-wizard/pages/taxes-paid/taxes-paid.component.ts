@@ -566,19 +566,19 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   deleteAsset(data) {
     if (data.tdsCode === this.TDS_TYPE_CODE) {
       this.taxPaid?.onSalary?.splice(data.index, 1);
-      this.onSalaryGridOptions.api?.setRowData(this.taxPaid?.onSalary);
+      this.onSalaryGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TDS_OTHER_TYPE_CODE) {
       this.taxPaid?.otherThanSalary16A.splice(data.index, 1);
-      this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary16A);
+      this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TDS_PAN_TYPE_CODE) {
       this.taxPaid?.otherThanSalary26QB.splice(data.index, 1);
-      this.tdsOtherThanSalary26QBGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary26QB);
+      this.tdsOtherThanSalary26QBGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TCS_TYPE_CODE) {
       this.taxPaid?.tcs.splice(data.index, 1);
-      this.tcsGridOptions.api?.setRowData(this.taxPaid?.tcs);
+      this.tcsGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.ADVANCE_TYPE_CODE) {
-      this.taxPaid?.otherThanTDSTCS?.splice(data.index);
-      this.otherThanTdsTcsGridOptions.api?.setRowData(this.taxPaid?.otherThanTDSTCS);
+      this.taxPaid?.otherThanTDSTCS?.splice(data.index, 1);
+      this.otherThanTdsTcsGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     }
     this.Copy_ITR_JSON.taxPaid = this.taxPaid;
   }

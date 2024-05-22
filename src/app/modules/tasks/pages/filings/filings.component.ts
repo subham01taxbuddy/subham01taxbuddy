@@ -335,6 +335,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
         param = param + `&financialYear=${this.searchParams.selectedFyYear}`;
+      } else {
+        param = param + `&financialYear=2023-2024`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
         param = param + `&status=${this.searchParams.selectedStatusId}`;
