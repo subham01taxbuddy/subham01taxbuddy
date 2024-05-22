@@ -84,6 +84,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       columnDefs: this.columnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      rowSelection: 'multiple',
       onGridReady: (params) => {
         params.api?.setRowData(
           this.nonspecIncomeFormArray.controls
