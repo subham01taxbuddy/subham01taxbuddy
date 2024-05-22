@@ -194,6 +194,57 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
   }
 
+  updateData(){
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    if (this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
+      let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
+          (item: any) => item.businessType === 'NONSPECULATIVEINCOME'
+      );
+      if (data.length > 0) {
+        let index = 0;
+        data[0].incomes.forEach((item) => {
+          let form = this.createNonSpecIncomeForm(index, item);
+          this.nonspecIncomeFormArray.push(form);
+        });
+
+        this.profitLossForm.controls['grossProfit'].setValue(
+            data[0].totalgrossProfitFromNonSpeculativeIncome
+        );
+        this.profitLossForm.controls['netProfit'].setValue(
+            data[0].netProfitfromNonSpeculativeIncome
+        );
+
+        this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
+        let expenseList = data[0].expenses;
+        if (expenseList?.length) {
+          expenseList?.forEach((element) => {
+            this.addExpenseForm(element);
+          });
+        } else {
+          this.addExpenseForm();
+        }
+        let incomeList = data[0].otherIncomes;
+        if (incomeList?.length) {
+          incomeList?.forEach((element) => {
+            this.addIncomeForm(element);
+          });
+        } else {
+          this.addIncomeForm();
+        }
+      } else {
+        // let form = this.createNonSpecIncomeForm(0, null);
+        // form.enable();
+        // this.nonspecIncomeFormArray.push(form);
+      }
+    }
+    this.gridOptions.api?.setRowData(this.nonspecIncomeFormArray.controls);
+    (
+        this.nonspecIncomeForm.controls['nonspecIncomesArray'] as UntypedFormArray
+    ).controls.forEach((element, index) => {
+      this.calculateNonSpeculativeIncome(index);
+    });
+  }
   get getnatOfBusinessDtlsArray() {
     return <UntypedFormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
   }
@@ -444,7 +495,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
       let incomes = row.incomes.filter(item => item.type);
-      let expenses = row.expenses.filter(item => item.type);
+      let expenses = row.expenses.filter(item => item.expenseType);
       const profitLossACIncomes = [];
       profitLossACIncomes.push({
         id: null,
