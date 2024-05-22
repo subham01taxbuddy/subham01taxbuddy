@@ -494,6 +494,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     if (this.profitLossForm.valid) {
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
+      let incomes = row.incomes.filter(item => item.type);
+      let expenses = row.expenses.filter(item => item.expenseType);
       const profitLossACIncomes = [];
       profitLossACIncomes.push({
         id: null,
@@ -501,8 +503,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
         netProfitfromNonSpeculativeIncome: row.netProfit,
         incomes: this.nonspecIncomeFormArray.getRawValue(),
-        expenses: row.expenses,
-        otherIncomes: row.incomes,
+        expenses: expenses,
+        otherIncomes: incomes,
       });
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {
