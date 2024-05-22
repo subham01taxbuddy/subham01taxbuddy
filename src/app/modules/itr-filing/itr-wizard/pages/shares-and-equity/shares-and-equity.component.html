@@ -335,7 +335,9 @@
                         <button class="btn btn__white" (click)="clearForm()">cancel</button>
                       </div>
                       <div class="box-right">
-                        <button class="btn btn__primary" (click)="saveManualEntry()">Save Details</button>
+                        <button class="btn btn__primary" (click)="saveManualEntry()"
+                                [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button>
                       </div>
                     </div>
 

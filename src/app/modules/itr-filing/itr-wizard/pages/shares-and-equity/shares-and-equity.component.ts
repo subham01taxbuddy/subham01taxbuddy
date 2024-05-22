@@ -1627,7 +1627,7 @@ export class SharesAndEquityComponent
           return params.data.controls['sellExpense'].value;
         },
         valueFormatter: function (params) {
-          const sellExpense = params.data.controls['sellExpense'].value;
+          const sellExpense = params.data.controls['sellExpense'].value ? params.data.controls['sellExpense'].value : 0;
           return `₹ ${sellExpense}`;
         }
       },
