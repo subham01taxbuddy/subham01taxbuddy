@@ -1091,6 +1091,7 @@ export class ZeroCouponBondsComponent
             `${bondType} data updated successfully`
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(true);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
