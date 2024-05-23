@@ -853,7 +853,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.utilsService.showSnackBar('Fill the required count value');
           return;
         }
-
       }else{
         this.smeObj['serviceEligibility_ITR']={
           "assignmentStart":false,
@@ -920,6 +919,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if (this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL"){
      this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
+    }
+
+    if(!this.isDisabled && this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL" ){
+      if(!this.additionalIdsCount.value || !this.additionalIdsCount.valid ){
+        this.utilsService.showSnackBar('Please select Proper Value of additional IDs count,Number must be between 1 to 5 for additional IDs count');
+        return;
+      }
     }
 
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
