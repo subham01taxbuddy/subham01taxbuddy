@@ -10,6 +10,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { User } from '../subscription/components/performa-invoice/performa-invoice.component';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -42,9 +43,9 @@ export class DashboardComponent implements OnInit {
   roles: any;
   // maxDate = new Date(2024,2,31);
   // minDate = new Date(2023, 3, 1);
-  minDate: string = '2023-04-01';
-  maxDate: string = '2024-03-31';
-  maxStartDate = new Date().toISOString().slice(0, 10);
+  minStartDate: string = '2023-04-01';
+  maxEndDate = moment().toDate();
+  maxStartDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new UntypedFormControl('');
   endDate = new UntypedFormControl('');
@@ -583,9 +584,9 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  setEndDateValidate(startDateVal: any) {
-    console.log('startDateVal: ', startDateVal);
-    this.minEndDate = startDateVal.value;
+  setEndDateValidate() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   resetFilters() {
