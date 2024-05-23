@@ -498,15 +498,17 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       let incomes = row.incomes.filter(item => item.type);
       let expenses = row.expenses.filter(item => item.expenseType);
       const profitLossACIncomes = [];
-      profitLossACIncomes.push({
-        id: null,
-        businessType: 'NONSPECULATIVEINCOME',
-        totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
-        netProfitfromNonSpeculativeIncome: row.netProfit,
-        incomes: this.nonspecIncomeFormArray.getRawValue(),
-        expenses: expenses,
-        otherIncomes: incomes,
-      });
+      if(this.nonspecIncomeFormArray.getRawValue().length > 0) {
+        profitLossACIncomes.push({
+          id: null,
+          businessType: 'NONSPECULATIVEINCOME',
+          totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
+          netProfitfromNonSpeculativeIncome: row.netProfit,
+          incomes: this.nonspecIncomeFormArray.getRawValue(),
+          expenses: expenses,
+          otherIncomes: incomes,
+        });
+      }
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {
           businessDescription: [],

@@ -189,11 +189,13 @@ export class SpeculativeIncomeComponent implements OnInit {
 
       specBusiness[0].incomes = [];
 
-      (
-        this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
-      )?.controls?.forEach((form: UntypedFormGroup) => {
-        specBusiness[0]?.incomes?.push(form?.value);
-      });
+      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+        (
+            this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
+        )?.controls?.forEach((form: UntypedFormGroup) => {
+          specBusiness[0]?.incomes?.push(form?.value);
+        });
+      }
 
       console.log(specBusiness);
       let grossProfit = 0;
@@ -212,11 +214,17 @@ export class SpeculativeIncomeComponent implements OnInit {
         (item) => item?.businessType === 'SPECULATIVEINCOME'
       );
 
-      if (index || index === 0) {
-        this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
-          specBusiness[0];
+      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+        if (index || index === 0) {
+          this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
+              specBusiness[0];
+        } else {
+          this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
+        }
       } else {
-        this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
+        if (index || index === 0) {
+          this.Copy_ITR_JSON.business.profitLossACIncomes.splice(index, 1);
+        }
       }
 
       console.log(this.Copy_ITR_JSON);
