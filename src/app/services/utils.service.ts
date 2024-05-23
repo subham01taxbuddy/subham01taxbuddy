@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {ElementRef, Injectable} from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import {catchError, concatMap, Observable, Subject} from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
@@ -1080,7 +1080,7 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId) {
+  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId, el: ElementRef) {
     Object.keys(formGroup.controls).forEach((key) => {
       if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
@@ -1097,6 +1097,10 @@ export class UtilsService {
             );
             console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
+            const nameInput = el.nativeElement.querySelector(`[formControlName="${key}"]`);
+            if (nameInput) {
+              nameInput.focus();
+            }
             const accordionButton = document.getElementById(accordionBtnId);
             if (accordionButton) {
               if (accordionButton.getAttribute("aria-expanded") === "false")
@@ -1106,11 +1110,11 @@ export class UtilsService {
           });
         }
       } else if (formGroup.get(key) instanceof UntypedFormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId);
+        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId, el);
       } else if (formGroup.get(key) instanceof UntypedFormArray) {
         let formArray = formGroup.get(key) as UntypedFormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId);
+          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId, el);
         });
       }
     });

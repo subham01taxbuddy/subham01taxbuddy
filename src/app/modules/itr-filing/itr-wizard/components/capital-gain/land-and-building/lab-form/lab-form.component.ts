@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ElementRef} from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormControl,
@@ -77,7 +77,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
-    public location: Location
+    public location: Location, private elementRef: ElementRef
   ) {
     super();
     this.config = {
@@ -1257,7 +1257,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.loading = false;
       this.utilsService.showErrorMsg('Please fill all mandatory details.');
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(formGroupName, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(formGroupName, 'accordBtn1', this.elementRef);
     }
   }
 

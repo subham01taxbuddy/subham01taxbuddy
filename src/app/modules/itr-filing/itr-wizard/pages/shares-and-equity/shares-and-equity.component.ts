@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, ElementRef,
   Inject,
   Input,
   LOCALE_ID,
@@ -81,7 +81,7 @@ export class SharesAndEquityComponent
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
     private activateRoute: ActivatedRoute,
-    private dialog: MatDialog,
+    private dialog: MatDialog, private elementRef: ElementRef,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super();
@@ -671,7 +671,7 @@ export class SharesAndEquityComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
     }
   }
 
@@ -927,7 +927,7 @@ export class SharesAndEquityComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(securities, "accordBtn");
+      this.utilsService.highlightInvalidFormFields(securities, "accordBtn", this.elementRef);
     }
   }
 
@@ -1865,7 +1865,7 @@ export class SharesAndEquityComponent
       );
       return;
     } else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }

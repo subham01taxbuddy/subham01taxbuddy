@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
@@ -74,7 +74,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     public utilsService: UtilsService,
     private cdRef: ChangeDetectorRef,
-    public fb: UntypedFormBuilder,
+    public fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -595,7 +595,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 

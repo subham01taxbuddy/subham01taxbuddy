@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
@@ -82,7 +82,7 @@ export class HousePropertyComponent implements OnInit {
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
-    private userMsService: UserMsService
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -1068,10 +1068,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 
@@ -1200,10 +1200,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 

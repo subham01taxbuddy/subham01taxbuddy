@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -26,7 +26,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -236,7 +236,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     } else {
       //show errors
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.specIncomeForm, 'accordBtn');
+      this.utilsService.highlightInvalidFormFields(this.specIncomeForm, 'accordBtn', this.elementRef);
       return false;
     }
   }
@@ -267,7 +267,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 

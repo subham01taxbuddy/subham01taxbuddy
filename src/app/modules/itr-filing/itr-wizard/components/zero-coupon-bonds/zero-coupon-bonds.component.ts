@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -56,7 +56,7 @@ export class ZeroCouponBondsComponent
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute, private elementRef: ElementRef
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -325,7 +325,7 @@ export class ZeroCouponBondsComponent
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -1338,7 +1338,7 @@ export class ZeroCouponBondsComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
     }
   }
 
@@ -1353,7 +1353,7 @@ export class ZeroCouponBondsComponent
       );
       return;
     }else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }

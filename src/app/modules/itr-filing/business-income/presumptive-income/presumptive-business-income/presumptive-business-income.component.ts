@@ -1,5 +1,5 @@
 import { NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ElementRef} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -48,7 +48,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -494,7 +494,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 

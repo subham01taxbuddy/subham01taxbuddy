@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import {Component, OnInit, Input, SimpleChanges, ElementRef} from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -432,7 +432,7 @@ export class DonationsComponent implements OnInit {
   constructor(
     private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
-    private userMsService: UserMsService
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -650,7 +650,7 @@ export class DonationsComponent implements OnInit {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.generalDonationForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.generalDonationForm, 'accordBtn1', this.elementRef);
       $('input.ng-invalid').first().focus();
       return false;
     }
