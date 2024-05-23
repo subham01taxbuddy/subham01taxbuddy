@@ -1246,12 +1246,16 @@ export class ZeroCouponBondsComponent
   }
 
   updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value){
+    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     } else {
       formGroup.controls['purchaseDate'].setValidators(null);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators(null);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
     if(formGroup.controls['investmentInCGAccount'].value){
