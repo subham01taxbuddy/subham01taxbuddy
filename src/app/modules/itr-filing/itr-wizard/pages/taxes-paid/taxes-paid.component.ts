@@ -657,6 +657,52 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
         this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
       }
+    } else if(!save){
+      if(this.tdsMode === 'EDIT'){
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if(this.TDS_OTHER_TYPE_CODE === 'EDIT'){
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsOtherBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if(this.TDS_PAN_TYPE_CODE === 'EDIT'){
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsPanBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if(this.TCS_TYPE_CODE === 'EDIT'){
+        this.utilsService.showSnackBar('Please save TCS entries by clicking Save');
+        const accordionButton = document.getElementById('tcsBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if(this.ADVANCE_TYPE_CODE === 'EDIT'){
+        this.utilsService.showSnackBar('Please save advance tax entries by clicking Save');
+        const accordionButton = document.getElementById('advanceBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
     }
 
     this.loading = true;
