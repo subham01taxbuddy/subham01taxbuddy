@@ -1,7 +1,7 @@
-import {ChatService} from "./chat.service";
-import {ChatEvents} from "./chat-events";
-import {Injectable} from "@angular/core";
-import {LocalStorageService} from "../../services/storage.service";
+import { ChatService } from "./chat.service";
+import { ChatEvents } from "./chat-events";
+import { Injectable } from "@angular/core";
+import { LocalStorageService } from "../../services/storage.service";
 
 @Injectable({
   providedIn: 'root',
@@ -15,17 +15,17 @@ export class ChatManager {
   } = {};
 
   constructor(private chatService: ChatService,
-              private localStorageService: LocalStorageService,) {
+    private localStorageService: LocalStorageService,) {
     Object.values(ChatEvents).forEach((eventName) => {
       this.subscriptions[eventName] = [];
     });
   }
 
-  registerCallbacks(){
+  registerCallbacks() {
     let self = this;
-    this.chatService.registerMessageReceived((event:ChatEvents, data?:any) => {
+    this.chatService.registerMessageReceived((event: ChatEvents, data?: any) => {
       console.log('Ashwini', event);
-      switch (event){
+      switch (event) {
         case ChatEvents.MESSAGE_RECEIVED:
           self.handleReceivedMessages();
           break;
@@ -40,7 +40,7 @@ export class ChatManager {
 
   }
 
-  handleReceivedMessages(){
+  handleReceivedMessages() {
     this.fireEvents(ChatEvents.MESSAGE_RECEIVED);
   }
 
@@ -59,31 +59,30 @@ export class ChatManager {
     }
   }
 
-  getDepartmentList(){
+  getDepartmentList() {
     this.chatService.initDeptDetails();
   }
 
-  getDepartmentNames(){
+  getDepartmentNames() {
     return this.departmentNames;
   }
 
-  async initChat(serviceType?:string){
-    await this.chatService.initTokens(serviceType);
+  async initChat(initializeSocket: boolean, serviceType?: string) {
+    await this.chatService.initTokens(initializeSocket, serviceType);
     this.registerCallbacks();
     this.chatService.initDeptDetails(serviceType);
 
     this.fireEvents(ChatEvents.TOKEN_GENERATED);
-
   }
 
-  fireEvents(eventType: ChatEvents, serviceType?:string){
+  fireEvents(eventType: ChatEvents, serviceType?: string) {
     if (this.subscriptions[eventType]) {
       this.subscriptions[eventType].forEach((fn) => {
-        fn.apply(null, [{serviceType:serviceType}]);
+        fn.apply(null, [{ serviceType: serviceType }]);
       });
     }
   }
-  fireEventsWithData(eventType: ChatEvents, data:any){
+  fireEventsWithData(eventType: ChatEvents, data: any) {
     if (this.subscriptions[eventType]) {
       this.subscriptions[eventType].forEach((fn) => {
         fn.apply(null, [data]);
@@ -91,35 +90,35 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: any,payload?:any, serviceType?: string){
-    this.chatService.sendMessage(message,payload);
+  sendMessage(message: any, payload?: any, serviceType?: string) {
+    this.chatService.sendMessage(message, payload);
 
   }
 
-  openConversation(conversationId: string){
+  openConversation(conversationId: string) {
     this.chatService.fetchMessages(conversationId);
   }
 
-  closeChat(){
+  closeChat() {
     this.chatService.closeWebSocket();
   }
 
-  getConversationList(departmentId: any){
+  getConversationList(departmentId: any) {
     let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(chat21UserID,departmentId,true);
+    this.chatService.fetchConversationList(chat21UserID, departmentId, true);
     const convdata = this.localStorageService.getItem('conversationList', true);
     console.log('conv data', convdata);
     if (convdata) {
       const conversations = JSON.parse(convdata);
       let conversationList = conversations.map((conversation: any) => {
 
-         return {
-           image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-           name: conversation.name,
-           text: conversation.text,
-           timestamp: conversation.timestamp,
-           request_id: conversation.request_id
-         }
+        return {
+          image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+          name: conversation.name,
+          text: conversation.text,
+          timestamp: conversation.timestamp,
+          request_id: conversation.request_id
+        }
 
       })
       console.log('new list 1', conversationList);
@@ -127,8 +126,8 @@ export class ChatManager {
     }
   }
 
-  convList(departmentId?: any){
+  conversationList(departmentId?: any) {
     let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(chat21UserID,departmentId,true);
+    this.chatService.fetchConversationList(chat21UserID, departmentId, true);
   }
 }

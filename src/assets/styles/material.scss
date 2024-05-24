@@ -539,6 +539,13 @@ mat-form-field .mat-mdc-form-field {
     background: #FFF;
 }
 
+.notification {
+    width: 30% !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+}
+
 
 .mat-calendar-controls .mat-mdc-icon-button.mat-mdc-button-base {
     --mdc-icon-button-state-layer-size: 40px;

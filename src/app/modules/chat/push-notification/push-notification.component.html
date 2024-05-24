@@ -1,0 +1,37 @@
+<div class="push-notification-card">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-11 row">
+                <div class="col-2"> <i class="fas fa-comment message-icon"></i></div>
+                <div class="title col-10">Chat Notification</div>
+            </div>
+            <div class="col-1 row" (click)="this.dialogRef.close()">
+                <!-- <div class="col-2" style="position: relative;"> <i class="fas fa-ellipsis-h menu-icon"></i></div> -->
+                <i class="fas fa-times close-icon"></i>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="profile">
+            <div class="profile-img">
+                <img src="assets/img/profile.webp" alt="">
+            </div>
+            <div class="profile-info">
+                <span class="name">{{data?.sender_fullname}}</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="unread-messages-container">
+        <i class='fa fa-envelope'></i>
+        <span class="unread-messages">{{data?.text}}</span>
+    </div>
+
+
+    <div class="footer">
+
+        <input type="text" placeholder="Type a reply..." (keyup.enter)="sendMessage()" [(ngModel)]="messageSent">
+        <button class="send-btn" (click)="sendMessage()">Send</button>
+
+    </div>
+</div>

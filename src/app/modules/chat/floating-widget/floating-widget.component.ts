@@ -20,7 +20,8 @@ export class FloatingWidgetComponent implements OnInit {
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService) {
+        private localStorage: LocalStorageService,
+    ) {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
@@ -39,7 +40,7 @@ export class FloatingWidgetComponent implements OnInit {
     showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
         this.selectedDepartmentId = null;
-        this.chatManager.convList();
+        this.chatManager.conversationList();
     }
 
     openUserChat(user: any) {
@@ -126,10 +127,10 @@ export class FloatingWidgetComponent implements OnInit {
         // }
         this.selectedDepartmentId = departmentId;
         if (departmentId) {
-            this.chatManager.convList(departmentId);
+            this.chatManager.conversationList(departmentId);
         }
         else {
-            this.chatManager.convList();
+            this.chatManager.conversationList();
         }
         setTimeout(() => {
             this.handleConversationList();
