@@ -12,7 +12,6 @@ import { LocalStorageService } from 'src/app/services/storage.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-
 export class UserChatComponent implements OnInit {
 
   private cd: ChangeDetectorRef;
