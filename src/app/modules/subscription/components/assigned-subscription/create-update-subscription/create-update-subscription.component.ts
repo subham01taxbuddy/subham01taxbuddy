@@ -109,6 +109,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     },
   ]
   showScheduledFields:boolean =false;
+  scheduleCallTypes =[
+    {
+      label: 'Business Requirements',
+      value: 'business',
+    },
+    {
+      label: 'LDC Service',
+      value: 'lower_deduction',
+    }
+  ]
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -506,6 +516,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     sacNumber: new UntypedFormControl('998232'),
     description: new UntypedFormControl(''),
     scheduleCallService:new UntypedFormControl(''),
+    scheduleCallType:new UntypedFormControl(''),
   });
 
   get description() {
@@ -516,6 +527,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
   get scheduleCallService() {
     return this.otherInfoForm.controls['scheduleCallService'] as UntypedFormControl;
+  }
+
+  get scheduleCallType(){
+    return this.otherInfoForm.controls['scheduleCallType'] as UntypedFormControl;
   }
 
   getAllPromoCode() {
@@ -1352,6 +1367,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
           if(this.scheduleCallService.value){
             reqBody.serviceType = this.scheduleCallService.value
+          }
+
+          if(this.scheduleCallType.value){
+            reqBody.item.scheduleCallType = this.scheduleCallType.value
           }
           console.log('Req Body: ', reqBody);
           let requestData = JSON.parse(JSON.stringify(reqBody));
