@@ -4934,7 +4934,7 @@
                           <!-- 12th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev11thYearFromAY
+                              ?.LossCFFromPrev12thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
@@ -4943,11 +4943,48 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
+                              ?.LossCFFromPrev12thYearFromAY?.dateOfFiling
                               }}
                               <!-- house property loss -->
                             </td>
 
+                            <td>0</td>
+                            <!-- Other than speculative and specified business -->
+                            <td>0</td>
+                            <!-- loss from speculative business  -->
+                            <td>0</td>
+                            <!-- loss from specified business  -->
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev12thYearFromAY
+                              ?.LossFrmSpecifiedBusCF
+                              }}
+                            </td>
+                            <!-- short term capital loss  -->
+                            <td>0</td>
+                            <!-- long term capital loss  -->
+                            <td>0</td>
+                            <!-- loss from maintaining and owning horses  -->
+                            <td>0</td>
+                          </tr>
+
+                          <!-- 11th Assessment Year -->
+                          <tr *ngIf="
+                            finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev11thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          ">
+                            <!-- Assessment year -->
+                            <td>2013-2014</td>
+                            <!-- date of filing -->
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
+                              }}
+                            </td>
+                            <!-- house property loss -->
                             <td>0</td>
                             <!-- Other than speculative and specified business -->
                             <td>0</td>
@@ -4969,14 +5006,14 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 11th Assessment Year -->
+                          <!-- 10th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
                               ?.LossCFFromPrev10thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
-                            <td>2013-2014</td>
+                            <td>2014-2015</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5006,14 +5043,14 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 10th Assessment Year -->
+                          <!-- 9th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
                               ?.LossCFFromPrev9thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
-                            <td>2014-2015</td>
+                            <td>2015-2016</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5043,14 +5080,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 9th Assessment Year -->
-                          <tr *ngIf="
-                            finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev8thYearFromAY
-                              ?.LossFrmSpecifiedBusCF > 0
-                          ">
+                          <!-- 8th Assessment Year -->
+                          <tr>
                             <!-- Assessment year -->
-                            <td>2014-2015</td>
+                            <td>2016-2017</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5059,9 +5092,20 @@
                               }}
                             </td>
                             <!-- house property loss -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.hpLoss
+                              }}
+                            </td>
                             <!-- Other than speculative and specified business -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY
+                              ?.broughtForwardBusLoss
+                              }}
+                            </td>
                             <!-- loss from speculative business  -->
                             <td>0</td>
                             <!-- loss from specified business  -->
@@ -5073,17 +5117,27 @@
                               }}
                             </td>
                             <!-- short term capital loss  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.stcgLoss
+                              }}
+                            </td>
                             <!-- long term capital loss  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.ltcgLoss
+                              }}
+                            </td>
                             <!-- loss from maintaining and owning horses  -->
                             <td>0</td>
                           </tr>
 
-                          <!-- 8th Assessment Year -->
+                          <!-- 7th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2015-2016</td>
+                            <td>2017-2018</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5134,10 +5188,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 7th Assessment Year -->
+                          <!-- 6th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2016-2017</td>
+                            <td>2018-2019</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5188,10 +5242,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 6th Assessment Year -->
+                          <!-- 5th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2017-2018</td>
+                            <td>2019-2020</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5242,10 +5296,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 5th Assessment Year -->
+                          <!-- 4th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2018-2019</td>
+                            <td>2020-2021</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5269,7 +5323,13 @@
                               }}
                             </td>
                             <!-- loss from speculative business  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev4thYearFromAY
+                              ?.lossFromSpeculativeBus
+                              }}
+                            </td>
                             <!-- loss from specified business  -->
                             <td>
                               {{
@@ -5293,13 +5353,19 @@
                               }}
                             </td>
                             <!-- loss from maintaining and owning horses  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev4thYearFromAY
+                              ?.OthSrcLossRaceHorseCF
+                              }}
+                            </td>
                           </tr>
 
-                          <!-- 4th Assessment Year -->
+                          <!-- 3rd Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2019-2020</td>
+                            <td>2021-2022</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5318,24 +5384,21 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.broughtForwardBusLoss
+                              ?.LossCFFromPrev3rdYearFromAY?.broughtForwardBusLoss
                               }}
                             </td>
                             <!-- loss from speculative business  -->
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.lossFromSpeculativeBus
+                              ?.LossCFFromPrev3rdYearFromAY?.lossFromSpeculativeBus
                               }}
                             </td>
                             <!-- loss from specified business  -->
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.LossFrmSpecifiedBusCF
+                              ?.LossCFFromPrev3rdYearFromAY?.LossFrmSpecifiedBusCF
                               }}
                             </td>
                             <!-- short term capital loss  -->
@@ -5356,16 +5419,15 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.OthSrcLossRaceHorseCF
+                              ?.LossCFFromPrev3rdYearFromAY?.OthSrcLossRaceHorseCF
                               }}
                             </td>
                           </tr>
 
-                          <!-- 3rd Assessment Year -->
+                          <!-- previous Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2020-2021</td>
+                            <td>2022-2023</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5391,7 +5453,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFPrevAssmntYear?.lossFromSpeculativeBus
+                              ?.LossCFPrevAssmntYear
+                              ?.lossFromSpeculativeBus
                               }}
                             </td>
                             <!-- loss from specified business  -->
@@ -5424,10 +5487,10 @@
                             </td>
                           </tr>
 
-                          <!-- previous Assessment Year -->
+                          <!--current Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2021-2022</td>
+                            <td>2023-2024</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5446,7 +5509,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.broughtForwardBusLoss
+                              ?.LossCFCurrentAssmntYear
+                              ?.broughtForwardBusLoss
                               }}
                             </td>
                             <!-- loss from speculative business  -->
@@ -5461,7 +5525,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.LossFrmSpecifiedBusCF
+                              ?.LossCFCurrentAssmntYear
+                              ?.LossFrmSpecifiedBusCF
                               }}
                             </td>
                             <!-- short term capital loss  -->
@@ -5482,72 +5547,7 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.OthSrcLossRaceHorseCF
-                              }}
-                            </td>
-                          </tr>
-
-                          <!--current Assessment Year -->
-                          <tr>
-                            <!-- Assessment year -->
-                            <td>2022-2023</td>
-                            <!-- date of filing -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.dateOfFiling
-                              }}
-                            </td>
-                            <!-- house property loss -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.hpLoss
-                              }}
-                            </td>
-                            <!-- Other than speculative and specified business -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.broughtForwardBusLoss
-                              }}
-                            </td>
-                            <!-- loss from speculative business  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.lossFromSpeculativeBus
-                              }}
-                            </td>
-                            <!-- loss from specified business  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.LossFrmSpecifiedBusCF
-                              }}
-                            </td>
-                            <!-- short term capital loss  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.stcgLoss
-                              }}
-                            </td>
-                            <!-- long term capital loss  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.ltcgLoss
-                              }}
-                            </td>
-                            <!-- loss from maintaining and owning horses  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
+                              ?.LossCFCurrentAssmntYear
                               ?.OthSrcLossRaceHorseCF
                               }}
                             </td>
