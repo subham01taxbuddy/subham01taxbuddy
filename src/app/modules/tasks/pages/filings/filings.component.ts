@@ -290,14 +290,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
 
       if (
-        this.roles.includes('ROLE_FILER') &&
+        this.roles?.includes('ROLE_FILER') &&
         this.partnerType === 'PRINCIPAL' &&
         this.agentId === loggedInId
       ) {
         this.filerUserId = loggedInId;
         this.searchAsPrinciple = true;
       } else if (
-        this.roles.includes('ROLE_FILER') &&
+        this.roles?.includes('ROLE_FILER') &&
         this.partnerType === 'INDIVIDUAL' &&
         this.agentId === loggedInId
       ) {
