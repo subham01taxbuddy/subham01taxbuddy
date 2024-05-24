@@ -3,6 +3,7 @@ import { LocalStorageService, SessionStorageService } from "src/app/services/sto
 import { Injectable } from '@angular/core';
 import { ChatEvents } from "./chat-events";
 import { Subject } from "rxjs";
+import { environment } from "src/environments/environment";
 @Injectable({
   providedIn: 'root'
 })
@@ -146,7 +147,8 @@ export class ChatService {
         headers: new HttpHeaders({
           "Content-Type": "application/json",
           "Authorization": "Bearer " + TOKEN,
-          "service": "chat-" + type
+          "service": "chat-" + type,
+          "environment": environment.lifecycleEnv
         })
       };
       return httpOptions;
@@ -157,7 +159,8 @@ export class ChatService {
         headers: new HttpHeaders({
           "Content-Type": "application/json",
           "Authorization": TOKEN,
-          "service": "chat-" + type
+          "service": "chat-" + type,
+          "environment": environment.lifecycleEnv
         })
       };
       return httpOptions;
@@ -195,7 +198,7 @@ export class ChatService {
     formData.append('file', file);
     formData.append('requestId', requestId);
 
-    return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}` } })
+    return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } })
   }
 
   fetchMessages(requestId) {
