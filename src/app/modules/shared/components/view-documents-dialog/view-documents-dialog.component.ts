@@ -41,7 +41,7 @@ export class ViewDocumentsDialogComponent implements OnInit {
   ngOnInit() {
     console.log('Data From CG doc-viewer',this.data);
     if(this.data.serviceType=='ITR'){
-      this.breadcrumbsPart = ["Home", "ITR", "2022-23", "Original"];
+      this.breadcrumbsPart = ["Home", "ITR", "2023-24", "Original"];
     }
     this.getCloudFilePath(this.data.serviceType);
   }
