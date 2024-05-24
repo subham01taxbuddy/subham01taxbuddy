@@ -20,7 +20,7 @@
     
     </div>  
     <div class="col-sm-12">
-          <div class="row">  
+          <div class="row scrollable-content">
             <div class="col-sm-3">
               <span *ngIf="!isFile">
                   <div class="inlinBx" *ngFor="let folder of folders; let k=index;">
@@ -30,7 +30,7 @@
                           </button></span>        
                   </div>
               </span>
-              </div>
+            </div>
               <div class="col-sm-9">
                 <div class="listVw" *ngIf="isFile">
                   <span *ngFor="let folder of folders; let k=index;">
