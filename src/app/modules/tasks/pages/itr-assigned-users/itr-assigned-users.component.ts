@@ -392,10 +392,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
 
           if (data.serviceType === 'ITRU') {
-            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
               itrSubscriptionFound = true;
               return;
-            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
               itrSubscriptionFound = true;
               return;
             }
