@@ -148,7 +148,18 @@ input[type="text"] {
     margin-top: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
+.conversation-text{
+    color: #888;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 159px;
+}
+ 
 
 .user-time {
     position: absolute;

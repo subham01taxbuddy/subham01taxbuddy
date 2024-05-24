@@ -564,7 +564,7 @@
   padding: 12px;
   margin-bottom: -8px;
   border-radius: 3px;
-}
+  }
 
 
 /* For system messages */
@@ -668,6 +668,7 @@
   /* Example border */
   padding: 10px;
   border-radius: 5px;
+  overflow-wrap: anywhere;
 }
 
 .fileBorder{

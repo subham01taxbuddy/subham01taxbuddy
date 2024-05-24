@@ -295,7 +295,6 @@ export class UserChatComponent implements OnInit {
   formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
     
-    // Get month and day
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[date.getMonth()];
     const day = date.getDate();

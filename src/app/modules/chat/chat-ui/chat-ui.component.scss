@@ -176,6 +176,13 @@ input[type="text"] {
 .user-name {
   font-weight: bold;
   margin-bottom: 5px;
+ 
+}
+
+.conversation-text{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat-snippet {
