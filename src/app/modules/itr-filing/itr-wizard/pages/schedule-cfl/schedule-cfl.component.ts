@@ -160,6 +160,13 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       )
     }
     if (this.pastYearLosses) {
+      this.scheduleCflArray.forEach((obj) => {
+        let year = this.pastYearLosses?.map((item) => item.assessmentPastYear)
+            .filter((item:string) => item === obj.assessmentPastYear)
+        if(!year || year.length === 0) {
+          this.addMore(obj);
+        }
+      });
       this.pastYearLosses.forEach((obj) => {
         this.addMore(obj);
       });
