@@ -88,7 +88,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private matDialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -657,8 +657,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
         this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
       }
-    } else if(!save){
-      if(this.tdsMode === 'EDIT'){
+    } else if (!save) {
+      if (this.tdsMode === 'EDIT') {
         this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
         const accordionButton = document.getElementById('tdsBtn');
         if (accordionButton) {
@@ -667,7 +667,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         }
         return;
       }
-      if(this.TDS_OTHER_TYPE_CODE === 'EDIT'){
+      if (this.TDS_OTHER_TYPE_CODE === 'EDIT') {
         this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
         const accordionButton = document.getElementById('tdsOtherBtn');
         if (accordionButton) {
@@ -676,7 +676,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         }
         return;
       }
-      if(this.TDS_PAN_TYPE_CODE === 'EDIT'){
+      if (this.TDS_PAN_TYPE_CODE === 'EDIT') {
         this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
         const accordionButton = document.getElementById('tdsPanBtn');
         if (accordionButton) {
@@ -685,7 +685,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         }
         return;
       }
-      if(this.TCS_TYPE_CODE === 'EDIT'){
+      if (this.TCS_TYPE_CODE === 'EDIT') {
         this.utilsService.showSnackBar('Please save TCS entries by clicking Save');
         const accordionButton = document.getElementById('tcsBtn');
         if (accordionButton) {
@@ -694,7 +694,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         }
         return;
       }
-      if(this.ADVANCE_TYPE_CODE === 'EDIT'){
+      if (this.ADVANCE_TYPE_CODE === 'EDIT') {
         this.utilsService.showSnackBar('Please save advance tax entries by clicking Save');
         const accordionButton = document.getElementById('advanceBtn');
         if (accordionButton) {
@@ -729,6 +729,57 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+
+  totalOfTotalAmountCredited = 0;
+  totalOfTotalTdsDeposited = 0;
+  getTotalOfTdsOnSalary(item) {
+    this.totalOfTotalAmountCredited = 0;
+    this.totalOfTotalTdsDeposited = 0;
+    // this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.tdsOtherThanSalary16AGridApi);
+    if (this.onSalaryGridOptions && this.onSalaryGridOptions.rowData.length) {
+      this.onSalaryGridOptions.rowData.forEach(element => {
+        if (item === 'totalOfTotalAmountCredited') {
+          this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
+        }
+        if (item === 'totalOfTotalTdsDeposited') {
+          this.totalOfTotalTdsDeposited += Number(element.totalTdsDeposited);
+        }
+
+      })
+    }
+    if (item === 'totalOfTotalAmountCredited') {
+      return this.totalOfTotalAmountCredited;
+    }
+    if (item === 'totalOfTotalTdsDeposited') {
+      return this.totalOfTotalTdsDeposited;
+    }
+  }
+
+  getTotalOfTdsOtherThanSalary(item) {
+    this.totalOfTotalAmountCredited = 0;
+    this.totalOfTotalTdsDeposited = 0;
+    // this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(this.TDS_OTHER_TYPE_CODE, this.tdsOtherThanSalary16AGridApi);
+    if (this.tdsOtherThanSalary16AGridOptions && this.tdsOtherThanSalary16AGridOptions.rowData.length) {
+      debugger
+      this.tdsOtherThanSalary16AGridOptions.rowData.forEach(element => {
+        if (item === 'totalOfTotalAmountCredited') {
+          this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
+        }
+        if (item === 'totalOfTotalTdsDeposited') {
+          this.totalOfTotalTdsDeposited += Number(element.totalTdsDeposited);
+        }
+
+      })
+    }
+    // this.cd.detectChanges();
+    if (item === 'totalOfTotalAmountCredited') {
+      return this.totalOfTotalAmountCredited;
+    }
+    if (item === 'totalOfTotalTdsDeposited') {
+      return this.totalOfTotalTdsDeposited;
+    }
   }
 
   getItrDocuments() {
