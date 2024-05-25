@@ -141,7 +141,8 @@ export class HousePropertyComponent implements OnInit {
           this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
         }
       });
-      this.markActive(0);
+      this.currentIndex = 0;
+      this.editHouseProperty(this.currentIndex);
     } else {
       this.addHousingIncome();
     }
