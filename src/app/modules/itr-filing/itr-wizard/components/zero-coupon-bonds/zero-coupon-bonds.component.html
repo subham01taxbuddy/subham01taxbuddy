@@ -254,7 +254,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
-                                       (change)="updateValidations(deductionForm);"
+                                       (dateChange)="updateValidations(deductionForm);"
                                   formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
                                   [max]="maximumDate" />
                                 <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>

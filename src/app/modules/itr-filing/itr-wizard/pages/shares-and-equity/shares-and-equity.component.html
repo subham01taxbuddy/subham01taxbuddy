@@ -499,7 +499,7 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (change)="updateValidations(deductionForm);calculateDeductionGain()" matInput readonly
+                              <input (dateChange)="updateValidations(deductionForm);calculateDeductionGain()" matInput readonly
                                 placeholder="Purchase date of new asset" formControlName="purchaseDate"
                                 name="purchaseDate" [max]="maximumDate" [matDatepicker]="purchaseDate" />
                               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
