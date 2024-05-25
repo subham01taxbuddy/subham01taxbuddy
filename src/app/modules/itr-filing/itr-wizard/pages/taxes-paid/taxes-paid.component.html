@@ -30,23 +30,19 @@
                   <ag-grid-angular *ngIf="tdsMode === 'VIEW'" style="width: 100%; height: 150%"
                     class="ag-theme-balham spsTp" [gridOptions]="onSalaryGridOptions" [animateRows]="true"
                     (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
-
-                  <div class="row total">
-                    <div class="col-lg-4 ms-md-auto bold">Total of Income chargeable under salaries
+                  <div *ngIf="tdsMode === 'VIEW'">
+                    <div class="row total">
+                      <div class="col-lg-4 ms-md-auto bold">Total of Income chargeable under salaries
+                      </div>
+                      <div class="col-lg-4 bold">{{getTotalOfTdsOnSalary('totalOfTotalAmountCredited')}}
+                      </div>
                     </div>
-                    <div class="col-lg-4 bold">{{getTotalOfTdsOnSalary('totalOfTotalAmountCredited')}}
+                    <div class="row total" style="padding: 0 10px 10px 10px;">
+                      <div class="col-lg-4 ms-md-auto bold">Total of total tax deducted </div>
+                      <div class="col-lg-4 bold">{{getTotalOfTdsOnSalary('totalOfTotalTdsDeposited')}}
+                      </div>
                     </div>
                   </div>
-                  <div class="row total" style="padding: 0 10px 10px 10px;">
-                    <div class="col-lg-4 ms-md-auto bold">Total of total tax deducted </div>
-                    <div class="col-lg-4 bold">{{getTotalOfTdsOnSalary('totalOfTotalTdsDeposited')}}
-                    </div>
-                  </div>
-                  <!-- <button *ngIf="false" class="delete-btn delete-icon" (click)="$event.stopPropagation(); deleteAsset()"
-                    [disabled]="!isAssetSelected()">
-                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                  </button> -->
-
                 </div>
               </div>
             </div>
@@ -78,24 +74,19 @@
                   <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'" class="ag-theme-balham spsTp"
                     [gridOptions]="tdsOtherThanSalary16AGridOptions" [animateRows]="true"
                     (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
-                  <div class="row total">
-                    <div class="col-lg-4 ms-md-auto bold">Total of Total Amount credited
+                  <div *ngIf="tdsOtherMode === 'VIEW'">
+                    <div class="row total">
+                      <div class="col-lg-4 ms-md-auto bold">Total of Total Amount credited
+                      </div>
+                      <div class="col-lg-4 bold">{{getTotalOfTdsOtherThanSalary('totalOfTotalAmountCredited')}}
+                      </div>
                     </div>
-                    <div class="col-lg-4 bold">{{getTotalOfTdsOtherThanSalary('totalOfTotalAmountCredited')}}
+                    <div class="row total" style="padding: 0 10px 10px 10px;">
+                      <div class="col-lg-4 ms-md-auto bold">Total of total tax deducted </div>
+                      <div class="col-lg-4 bold">{{getTotalOfTdsOtherThanSalary('totalOfTotalTdsDeposited')}}
+                      </div>
                     </div>
                   </div>
-                  <div class="row total" style="padding: 0 10px 10px 10px;">
-                    <div class="col-lg-4 ms-md-auto bold">Total of total tax deducted </div>
-                    <div class="col-lg-4 bold">{{getTotalOfTdsOtherThanSalary('totalOfTotalTdsDeposited')}}
-                    </div>
-                  </div>
-                  <!--                    <button *ngIf="false"-->
-                  <!--                            class="delete-btn delete-icon"-->
-                  <!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
-                  <!--                            [disabled]="!isAssetSelected()">-->
-                  <!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
-                  <!--                    </button>-->
-
                 </div>
               </div>
             </div>
