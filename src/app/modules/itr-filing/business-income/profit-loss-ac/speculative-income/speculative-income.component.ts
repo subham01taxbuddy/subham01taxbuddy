@@ -292,6 +292,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       ((this.specIncomeForm.controls['specIncomesArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculateNetIncome();
     this.activeIndex = i;
+    document.getElementById("speculative_id").scrollIntoView();
   }
 
   columnDef() {

@@ -486,6 +486,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.calculatePresumptiveIncome('anyOther', true);
     // this.calculatePresumptive();
     this.activeIndex = i;
+    document.getElementById("professional_id").scrollIntoView();
   }
 
   columnDef() {

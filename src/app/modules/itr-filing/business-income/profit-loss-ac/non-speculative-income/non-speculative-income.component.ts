@@ -624,6 +624,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       ((this.nonspecIncomeForm.controls['nonspecIncomesArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculateIncome();
     this.activeIndex = i;
+    document.getElementById("nonSpeculative_id").scrollIntoView();
   }
 
   columnDef() {

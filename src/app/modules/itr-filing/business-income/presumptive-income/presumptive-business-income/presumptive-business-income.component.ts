@@ -1,5 +1,5 @@
 import { NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
-import {Component, OnInit, Output, EventEmitter, ElementRef} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -545,6 +545,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.calculatePresumptiveIncome('bank', true);
     this.calculatePresumptiveIncome('anyOther', true);
     this.activeIndex = i;
+    document.getElementById("business_id").scrollIntoView();
   }
 
   columnDef() {
