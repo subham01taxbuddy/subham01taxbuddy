@@ -1384,13 +1384,13 @@ export class PrefillIdComponent implements OnInit {
 
               if (this.ITR_Type === 'ITR1') {
                 if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'N' ||
-                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
+                  ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
                   this.regime = 'OLD';
                   this.ITR_Obj.regime = this.regime;
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
                   ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegime === 'Y' ||
-                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.regime = 'NEW';
                   this.ITR_Obj.regime = this.regime;
@@ -2745,27 +2745,27 @@ export class PrefillIdComponent implements OnInit {
                 // optionForCurrentAY
                 if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptingNewTaxRegime === 1 ||
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
                 } else if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptingNewTaxRegime === 2 ||
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptingNewTaxRegime === 3 ||
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
                 } else if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptingNewTaxRegime === 4 ||
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptingNewTaxRegime === 5 ||
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptOutNewTaxRegime === 'Y'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
@@ -6816,7 +6816,7 @@ export class PrefillIdComponent implements OnInit {
       .subscribe(
         (result: any) => {
           this.loading = false;
-          if (result.status === 'ok') {
+          if (result?.status === 'ok') {
             this.utilsService.showSnackBar(result.message);
           } else {
             this.utilsService.showSnackBar('Error in updating ERI');
