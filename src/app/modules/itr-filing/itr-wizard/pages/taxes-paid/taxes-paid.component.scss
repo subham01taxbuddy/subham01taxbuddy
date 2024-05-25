@@ -1,4 +1,5 @@
 @import "../../../../../ux/scss/style.scss";
+
 .header_content {
   display: flex;
   align-items: flex-start;
@@ -64,9 +65,9 @@
   position: relative;
 }
 
-.spsTp{
-  width: 100%; 
-  margin-top:55px!important;
+.spsTp {
+  width: 100%;
+  margin-top: 55px !important;
 }
 
 .div-5 {
@@ -82,6 +83,7 @@
   background-color: #ffffff;
   border-radius: 0px 0px 4px 4px;
 }
+
 .div-6 {
   display: flex;
   align-items: flex-start;
@@ -161,19 +163,29 @@ tr:nth-child(even) {
   color: #1E1E1E;
 }
 
-.fullBox{
+.fullBox {
   position: relative;
 }
 
-.Bx4R{
+.Bx4R {
   float: right;
   border-radius: 5px;
   border: 1px solid #15799f;
-  padding: 8px!important;
+  padding: 8px !important;
   z-index: 10;
   position: relative;
 }
 
 .delete-btn:disabled {
   margin-top: 15px;
+}
+
+
+.total {
+  background-color: #E4E4E4;
+  padding: 10px;
+
+  .bold {
+    font-size: 14px;
+  }
 }
