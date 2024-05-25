@@ -737,16 +737,16 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   getTotalOfTdsOnSalary(item) {
     this.totalOfTotalAmountCredited = 0;
     this.totalOfTotalTdsDeposited = 0;
-    // this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.tdsOtherThanSalary16AGridApi);
-    if (this.onSalaryGridOptions && this.onSalaryGridOptions.rowData.length) {
-      this.onSalaryGridOptions.rowData.forEach(element => {
+    let rowData = [];
+    this.onSalaryGridOptions.api?.forEachNode(node => rowData.push(node.data));
+    if (this.onSalaryGridOptions && rowData.length) {
+      rowData.forEach(element => {
         if (item === 'totalOfTotalAmountCredited') {
           this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
         }
         if (item === 'totalOfTotalTdsDeposited') {
           this.totalOfTotalTdsDeposited += Number(element.totalTdsDeposited);
         }
-
       })
     }
     if (item === 'totalOfTotalAmountCredited') {
@@ -760,10 +760,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   getTotalOfTdsOtherThanSalary(item) {
     this.totalOfTotalAmountCredited = 0;
     this.totalOfTotalTdsDeposited = 0;
-    // this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(this.TDS_OTHER_TYPE_CODE, this.tdsOtherThanSalary16AGridApi);
-    if (this.tdsOtherThanSalary16AGridOptions && this.tdsOtherThanSalary16AGridOptions.rowData.length) {
-      debugger
-      this.tdsOtherThanSalary16AGridOptions.rowData.forEach(element => {
+    let rowData = [];
+    this.tdsOtherThanSalary16AGridOptions.api?.forEachNode(node => rowData.push(node.data));
+    if (this.tdsOtherThanSalary16AGridOptions && rowData.length) {
+      rowData.forEach(element => {
         if (item === 'totalOfTotalAmountCredited') {
           this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
         }
