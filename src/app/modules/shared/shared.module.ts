@@ -64,6 +64,7 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { ChatModule } from '../chat/chat.module';
 import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
+import { UserChatComponent } from '../chat/user-chat/user-chat.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -167,7 +168,8 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
     GenericUserFilterComponent,
     FloatingWidgetComponent,
     UpdateNoJsonFilingDialogComponent,
-    CalculatorModalComponent
+    CalculatorModalComponent,
+    UserChatComponent
   ],
   providers: [StorageService, Schedules, RequestManager]
 })

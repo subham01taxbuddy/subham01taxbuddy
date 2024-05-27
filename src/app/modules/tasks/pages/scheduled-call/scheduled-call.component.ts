@@ -231,6 +231,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     for (let i = 0; i < scheduleCalls.length; i++) {
       let scheduleCallsInfo = Object.assign({}, scheduleCalls[i], {
         userId: scheduleCalls[i]['userId'],
+        requestId: scheduleCalls[i]['requestId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
         filerNumber: scheduleCalls[i]['filerNumber'],
@@ -812,6 +813,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         userId: client.userId,
         clientName: client.userName,
         serviceType: client.serviceType,
+        requestId: client.requestId
       },
     });
 

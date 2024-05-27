@@ -852,6 +852,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : null,
         name: userData[i].name,
+        requestId: userData[i].requestId,
         mobileNumber: this.utilsService.isNonEmpty(userData[i].customerNumber) ? userData[i].customerNumber : '-',
         email: this.utilsService.isNonEmpty(userData[i].email) ? userData[i].email : '-',
         serviceType: userData[i].serviceType,
@@ -1250,7 +1251,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        requestId: client.requestId,
       }
     })
 
