@@ -186,13 +186,13 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     cflArray.controls.forEach((element, index) => {
       if (
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-        '2015-16' ||
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
         '2016-17' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
         '2017-18' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-        '2018-19'
+        '2018-19' ||
+        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        '2019-20'
       ) {
         (element as UntypedFormGroup).controls['speculativeBusinessLoss'].disable();
       }
@@ -319,7 +319,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       totalSTCGLoss += Number(element.STCGLoss);
 
       if (
-        element.assessmentPastYear === '2019-20' ||
         element.assessmentPastYear === '2020-21' ||
         element.assessmentPastYear === '2021-22' ||
         element.assessmentPastYear === '2022-23' ||

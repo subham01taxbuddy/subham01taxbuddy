@@ -634,7 +634,7 @@ table {
 }
 
 .lwBtDn {
-  margin: 25px 0px 0px 0px;
+  margin: 25px 0px 0px 65px;
 }
 
 .icRup {
@@ -653,4 +653,8 @@ table {
 
 .ft-18 {
   font-weight: 800;
+}
+.new-ml{
+  margin-left: 70px;
+  margin-top: 10px;
 }
