@@ -25,7 +25,7 @@ export class PushNotificationComponent {
   sendMessage() {
     this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
-      this.chatManager.sendMessage(this.messageSent);
+      this.chatManager.sendMessage(this.messageSent, this.data.recipient);
       this.dialogRef.close();
     }
   }

@@ -370,7 +370,7 @@ export class ChatService {
               this.chatClient.on("message", (topic, message) => {
                 if (this.log) {
                   const messageJson = JSON.parse(message.toString());
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata') {
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);
@@ -591,9 +591,14 @@ export class ChatService {
     }
   };
 
-  sendMessage(message: string, payloads?: any) {
+  sendMessage(message: string, recipient: string, payloads?: any) {
     // console.log("sendMessage sattributes:", attributes);
-    let dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
+    let dest_topic;
+    if (recipient) {
+      dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${recipient}/outgoing`;
+    } else {
+      dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
+    }
     // console.log("dest_topic:", dest_topic)
     let outgoing_message = {
       text: message,
