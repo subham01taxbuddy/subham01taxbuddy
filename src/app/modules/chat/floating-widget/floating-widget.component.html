@@ -54,6 +54,6 @@
 
 </div>
 <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
-    [username]="selectedUser.name" [requestId]="selectedUser.request_id"></app-user-chat>
+    [username]="selectedUser.name" [requestId]="selectedUser.request_id" [serviceType]="selectedUser.departmentName"></app-user-chat>
 
 <app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>
