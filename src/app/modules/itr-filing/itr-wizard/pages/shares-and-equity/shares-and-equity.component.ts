@@ -1149,12 +1149,12 @@ export class SharesAndEquityComponent
             sameData = [];
           }
           if (this.selectedBroker === '') {
-            sameData = securitiesData;
+            sameData = securitiesData.assetDetails;
           } else {
             if (this.isAdd) {
-              sameData = sameData.concat(securitiesData);
+              securitiesData.assetDetails = securitiesData.assetDetails.concat(otherData);
             } else {
-              sameData = securitiesData;
+              sameData = securitiesData.assetDetails;
             }
           }
 
@@ -1171,7 +1171,7 @@ export class SharesAndEquityComponent
               element.indexCostOfAcquisition = 0;
             }
           });
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = securitiesData;
 
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
