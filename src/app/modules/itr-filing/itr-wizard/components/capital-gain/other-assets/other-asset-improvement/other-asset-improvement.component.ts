@@ -655,7 +655,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
 
       improvementsArray?.value?.forEach((element) => {
         // element.srn = this.data?.assetIndex;
-        filteredImprovement.push(element);
+        filteredImprovement?.push(element);
       });
 
       filteredCapitalGain[0].improvement = filteredImprovement;
@@ -692,7 +692,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   }
 
   clearForm(){
-    this.assetsForm.reset();
+    this.addMoreOtherAssetsForm();
     this.assetsForm.controls['algorithm'].setValue('cgProperty');
   }
 }
