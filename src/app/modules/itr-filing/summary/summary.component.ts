@@ -6540,7 +6540,7 @@ export class SummaryComponent implements OnInit {
           this.errorMessage =
             'We are unable to display your summary,Please try again later.';
         }
-        console.log('In error method===', error);
+        console.log('In error method ===', error);
       }
     );
   }
