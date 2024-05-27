@@ -90,8 +90,8 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: any, payload?: any, serviceType?: string) {
-    this.chatService.sendMessage(message, payload);
+  sendMessage(message: any, recipient: string, payload?: any, serviceType?: string) {
+    this.chatService.sendMessage(message, recipient, payload);
 
   }
 
