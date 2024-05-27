@@ -60,7 +60,7 @@ export class SharesAndEquityComponent
   bondType: any;
   title: string;
   buyDateBefore31stJan: boolean;
-  selectedBroker = '';
+  selectedBroker = 'Manual';
   brokerList = [];
   brokerSelected = [];
   compactView = true;
@@ -171,7 +171,7 @@ export class SharesAndEquityComponent
     if (data.length > 0) {
       data.forEach((obj, index) => {
         obj.assetDetails.forEach((security: any) => {
-          let broker = security.brokerName ? security.brokerName : '';
+          let broker = security.brokerName ? security.brokerName : 'Manual';
           let gainType = security.gainType;
           let capitalGain = security.capitalGain;
           let deduction = data?.[index]?.deduction?.[0]?.totalDeductionClaimed;
@@ -233,7 +233,7 @@ export class SharesAndEquityComponent
 
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      brokerName: [item ? item.brokerName : ''],
+      brokerName: [item ? item.brokerName : 'Manual'],
       srn: [item ? item.srn : srn],
       sellOrBuyQuantity: [item ? item.sellOrBuyQuantity : null, validators],
       sellDate: [item ? item.sellDate : null, [Validators.required]],
@@ -1148,15 +1148,13 @@ export class SharesAndEquityComponent
           if (!sameData) {
             sameData = [];
           }
-          if (this.selectedBroker === '') {
-            sameData = securitiesData.assetDetails;
+
+          if (this.isAdd) {
+            securitiesData.assetDetails = securitiesData.assetDetails.concat(otherData);
           } else {
-            if (this.isAdd) {
-              securitiesData.assetDetails = securitiesData.assetDetails.concat(otherData);
-            } else {
-              sameData = securitiesData.assetDetails;
-            }
+            sameData = securitiesData.assetDetails;
           }
+
 
           sameData.improvement?.forEach((element) => {
             sameData.assetDetails.forEach((item) => {
