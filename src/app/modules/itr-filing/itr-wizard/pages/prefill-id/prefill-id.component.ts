@@ -1405,31 +1405,17 @@ export class PrefillIdComponent implements OnInit {
               if (this.ITR_Type === 'ITR4') {
                 // "description": "1 - Opting in now; 2 - Not opting; 3 - Continue to opt; 4 - Opt out; 5 - Not eligible to opt in",
                 // optionForCurrentAY
-                if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 1
+                if (ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
+                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
+                } else if (
+                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-                } else if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 2
-                ) {
-                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-                } else if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 3
-                ) {
-                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
-                } else if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 4
-                ) {
-                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
-                } else if (
-                  ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime === 5
-                ) {
-                  this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
                   !ItrJSON[this.ITR_Type].FilingStatus?.OptingNewTaxRegime
                 ) {
                   this.utilsService.showSnackBar(
-                    'Tax Regime detail is not present for this JSON. OptingNewTaxRegime is missing in the JSON '
+                    'Tax Regime detail is not present for this JSON. OptOutNewTaxRegime is missing in the JSON '
                   );
                 }
 
