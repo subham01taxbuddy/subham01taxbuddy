@@ -214,6 +214,18 @@ export class PayProcessingComponent implements OnInit {
           debounceMs: 0,
         },
       },
+      {
+        headerName: 'vendor',
+        field: 'vendor',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
     ];
   }
 
