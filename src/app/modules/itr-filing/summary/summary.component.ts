@@ -5790,189 +5790,189 @@ export class SummaryComponent implements OnInit {
                 LossCFFromPrev8thYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2015-16'
+                      (year) => year.assessmentPastYear === '2016-17'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2015-16'
+                    (year) => year.assessmentPastYear === '2016-17'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2015-16'
+                      (year) => year.assessmentPastYear === '2016-17'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2015-16'
+                    (year) => year.assessmentPastYear === '2016-17'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2015-16'
+                    (year) => year.assessmentPastYear === '2016-17'
                   )?.LTCGLoss,
                 },
                 LossCFFromPrev7thYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2016-17'
+                      (year) => year.assessmentPastYear === '2017-18'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2016-17'
+                    (year) => year.assessmentPastYear === '2017-18'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2016-17'
+                      (year) => year.assessmentPastYear === '2017-18'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2016-17'
+                    (year) => year.assessmentPastYear === '2017-18'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2016-17'
+                    (year) => year.assessmentPastYear === '2017-18'
                   )?.LTCGLoss,
                 },
                 LossCFFromPrev6thYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2017-18'
+                      (year) => year.assessmentPastYear === '2018-19'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2017-18'
+                    (year) => year.assessmentPastYear === '2018-19'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2017-18'
+                      (year) => year.assessmentPastYear === '2018-19'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2017-18'
+                    (year) => year.assessmentPastYear === '2018-19'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2017-18'
+                    (year) => year.assessmentPastYear === '2018-19'
                   )?.LTCGLoss,
                 },
                 LossCFFromPrev5thYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2018-19'
+                      (year) => year.assessmentPastYear === '2019-20'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2018-19'
+                    (year) => year.assessmentPastYear === '2019-20'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2018-19'
+                      (year) => year.assessmentPastYear === '2019-20'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2018-19'
+                    (year) => year.assessmentPastYear === '2019-20'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2018-19'
+                    (year) => year.assessmentPastYear === '2019-20'
                   )?.LTCGLoss,
                 },
                 LossCFFromPrev4thYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2019-20'
+                      (year) => year.assessmentPastYear === '2020-21'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2019-20'
+                    (year) => year.assessmentPastYear === '2020-21'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2019-20'
+                      (year) => year.assessmentPastYear === '2020-21'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2019-20'
+                    (year) => year.assessmentPastYear === '2020-21'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2019-20'
+                    (year) => year.assessmentPastYear === '2020-21'
                   )?.LTCGLoss,
                   OthSrcLossRaceHorseCF: 0,
                   lossFromSpeculativeBus:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2019-20'
+                      (year) => year.assessmentPastYear === '2020-21'
                     )?.speculativeBusinessLoss,
                 },
                 LossCFFromPrev3rdYearFromAY: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2020-21'
+                      (year) => year.assessmentPastYear === '2021-22'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2020-21'
+                    (year) => year.assessmentPastYear === '2021-22'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2020-21'
+                      (year) => year.assessmentPastYear === '2021-22'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2020-21'
+                    (year) => year.assessmentPastYear === '2021-22'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2020-21'
+                    (year) => year.assessmentPastYear === '2021-22'
                   )?.LTCGLoss,
                   OthSrcLossRaceHorseCF: 0,
                   lossFromSpeculativeBus:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2020-21'
+                      (year) => year.assessmentPastYear === '2021-22'
                     )?.speculativeBusinessLoss,
                 },
                 LossCFPrevAssmntYear: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2021-22'
+                      (year) => year.assessmentPastYear === '2022-23'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2021-22'
+                    (year) => year.assessmentPastYear === '2022-23'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2021-22'
+                      (year) => year.assessmentPastYear === '2022-23'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2021-22'
+                    (year) => year.assessmentPastYear === '2022-23'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2021-22'
+                    (year) => year.assessmentPastYear === '2022-23'
                   )?.LTCGLoss,
                   OthSrcLossRaceHorseCF: 0,
                   lossFromSpeculativeBus:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2021-22'
+                      (year) => year.assessmentPastYear === '2022-23'
                     )?.speculativeBusinessLoss,
                 },
                 LossCFCurrentAssmntYear: {
                   dateOfFiling:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2022-23'
+                      (year) => year.assessmentPastYear === '2023-24'
                     )?.dateOfFiling,
                   hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2022-23'
+                    (year) => year.assessmentPastYear === '2023-24'
                   )?.housePropertyLoss,
                   broughtForwardBusLoss:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2022-23'
+                      (year) => year.assessmentPastYear === '2023-24'
                     )?.broughtForwordBusinessLoss,
                   BusLossOthThanSpecifiedLossCF: 0,
                   LossFrmSpecifiedBusCF: 0,
                   stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2022-23'
+                    (year) => year.assessmentPastYear === '2023-24'
                   )?.STCGLoss,
                   ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
-                    (year) => year.assessmentPastYear === '2022-23'
+                    (year) => year.assessmentPastYear === '2023-24'
                   )?.LTCGLoss,
                   OthSrcLossRaceHorseCF: 0,
                   lossFromSpeculativeBus:
                     this.finalSummary?.assessment?.pastYearLosses?.find(
-                      (year) => year.assessmentPastYear === '2022-23'
+                      (year) => year.assessmentPastYear === '2023-24'
                     )?.speculativeBusinessLoss,
                 },
                 TotalOfBFLossesEarlierYrs: {
