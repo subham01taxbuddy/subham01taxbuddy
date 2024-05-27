@@ -119,6 +119,8 @@ export class FloatingWidgetComponent implements OnInit {
 
     ngOnInit(): void {
         this.chatManager.getDepartmentList();
+        console.log('full conversation list');
+        this.chatManager.conversationList();
 
     }
 
@@ -133,9 +135,11 @@ export class FloatingWidgetComponent implements OnInit {
         // }
         this.selectedDepartmentId = departmentId;
         if (departmentId) {
+            console.log('with department filter conv list');
             this.chatManager.conversationList(departmentId);
         }
         else {
+            console.log('full conversation list')
             this.chatManager.conversationList();
         }
         setTimeout(() => {
