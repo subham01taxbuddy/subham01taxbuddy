@@ -19,20 +19,12 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
-import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import * as moment from 'moment';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
-import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-salary/tds-other-than-salary.component';
-import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
 import { SelectionComponent } from './selection-component/selection-component.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
-import { TcsComponent } from '../../components/tcs/tcs.component';
-import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
 import { TdsTypeCellRenderer } from './tds-type-cell-renderer';
-import { param } from 'jquery';
 
 @Component({
   selector: 'app-taxes-paid',
@@ -295,7 +287,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         copy.srNo = copy.index;
       });
       this.totalEntries += counter;
-      this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
+      // this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
     }
 
     if (type === this.TDS_OTHER_TYPE_CODE) {

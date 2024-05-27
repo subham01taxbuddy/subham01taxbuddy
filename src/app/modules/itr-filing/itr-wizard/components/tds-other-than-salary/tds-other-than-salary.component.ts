@@ -70,8 +70,9 @@ export class TdsOtherThanSalaryComponent implements OnInit {
         this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
     ) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach((item) => {
-        this.addMoreSalary(item);
+        this.addMoreSalary(item, false);
       });
+      this.changed();
       // this.addSalary();
     } else if (
         this.showHeadOfIncome === 'TDTSP' &&
@@ -81,11 +82,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
         this.addMoreSalary(item);
       });
+      this.changed();
     }
     if (this.editIndex != undefined && this.editIndex >= 0) {
       this.activeIndex = this.editIndex;
     } else {
-      this.addMoreSalary();
+      this.addMoreSalary(null, true);
     }
   }
 
@@ -102,7 +104,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     // if (salaryArray.valid) {
     // setTimeout(() => {
       // if (this.addData) {
-      this.addMoreSalary();
+      this.addMoreSalary(null, false);
       // }
     // }, 1000);
     // } else {
@@ -241,12 +243,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
           saved: false
         });
         this.loading = false;
-        this.utilsService.showSnackBar('data saved successfully.');
+        this.utilsService.showSnackBar('Data saved successfully.');
       }
 
     } else {
       this.loading = false;
-      this.utilsService.showSnackBar('Failed to save data.');
+      this.utilsService.showSnackBar('Please fill in all the mandatory fields.');
 
     }
   }
@@ -256,19 +258,23 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
 
-  addMoreSalary(item?) {
-    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
-      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
-        this.utilsService.showSnackBar(
-            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
-        );
-        return;
+  addMoreSalary(item?, refresh?) {
+    if(refresh){
+      if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+        if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
+          this.utilsService.showSnackBar(
+              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          );
+          return;
+        }
       }
     }
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.insert(0, this.createForm(item));
     delay(0);
-    this.changed();
+    if(refresh) {
+      this.changed();
+    }
   }
 
   deleteSalaryArray(index) {
