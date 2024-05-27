@@ -254,6 +254,9 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         slabTwoEarningAfterTds: payoutData[i].slabTwoEarningAfterTds,
         slabThreeTDS: payoutData[i].slabThreeTDS,
         slabThreeEarningAfterTds: payoutData[i].slabThreeEarningAfterTds,
+        panNumber : payoutData[i].panNumber ? payoutData[i].panNumber : '-',
+        gstin : payoutData[i].gstin ? payoutData[i].gstin  : '-',
+
       };
       payoutRepoInfoArray.push(agentReportInfo);
     }
@@ -292,6 +295,31 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
       },
+      {
+        headerName: 'PAN',
+        field: 'panNumber',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'GSTN',
+        field: 'gstin',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+
       {
         headerName: 'Role',
         field: 'role',
@@ -525,6 +553,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
 
     let fieldName = [
       { key: 'filerName', value: 'filerName' },
+      { key: 'panNumber', value: 'PAN' },
+      { key: 'gstin', value: 'GSTN' },
       { key: 'role', value: 'Role' },
       { key: 'numberOfFiling', value: 'Total Number of ITR filed' },
       { key: 'totalCommissionEarned', value: 'Total Commission Earned' },
