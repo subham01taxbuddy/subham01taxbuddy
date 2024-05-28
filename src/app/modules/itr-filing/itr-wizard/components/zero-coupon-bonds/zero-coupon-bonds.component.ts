@@ -321,6 +321,8 @@ export class ZeroCouponBondsComponent
 
   clearForm() {
     this.selectedFormGroup.reset();
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
+    this.selectedFormGroup = this.createForm(srn);
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
   }
 

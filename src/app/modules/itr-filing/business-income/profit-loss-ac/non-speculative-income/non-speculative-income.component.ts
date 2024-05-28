@@ -403,11 +403,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     );
     this.selectedFormGroup.controls['grossProfit'].setValue(
       Number(this.selectedFormGroup.controls['totalCredit'].value) - Number(this.selectedFormGroup.controls['finishedGoodsOpeningStock'].value)
-      - Number(this.selectedFormGroup.controls['purchase'].value)
+      - Number(this.selectedFormGroup.controls['purchase'].value) - Number(this.selectedFormGroup.controls['expenditure'].value)
     );
     this.selectedFormGroup.controls['netIncome'].setValue(
-      Number(this.selectedFormGroup.controls['grossProfit'].value) -
-      Number(this.selectedFormGroup.controls['expenditure'].value)
+      Number(this.selectedFormGroup.controls['grossProfit'].value) 
     );
     this.calculateNetProfit();
   }
@@ -422,11 +421,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     );
     specIncome.controls['grossProfit'].setValue(
       Number(specIncome.controls['totalCredit'].value) - Number(specIncome.controls['finishedGoodsOpeningStock'].value)
-      - Number(specIncome.controls['purchase'].value)
+      - Number(specIncome.controls['purchase'].value) - Number(this.selectedFormGroup.controls['expenditure'].value)
     );
     specIncome.controls['netIncome'].setValue(
-      Number(specIncome.controls['grossProfit'].value) -
-      Number(specIncome.controls['expenditure'].value)
+      Number(specIncome.controls['grossProfit'].value)
     );
     this.calculateNetProfit();
   }
