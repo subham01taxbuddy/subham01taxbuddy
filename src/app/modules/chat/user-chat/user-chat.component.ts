@@ -14,6 +14,9 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 
 export class UserChatComponent implements OnInit {
 
+  @ViewChild('chatWindow') chatWindowContainer: ElementRef;
+
+
   private cd: ChangeDetectorRef;
 
   @ViewChild('chatWindow') chatWindow: ElementRef;
@@ -187,6 +190,7 @@ export class UserChatComponent implements OnInit {
         console.log('file upload response', response);
       })
     }
+    this.fileToUpload = null;
     this.scrollToBottom();
   }
 
@@ -206,14 +210,25 @@ export class UserChatComponent implements OnInit {
     return file.type === 'application/msword';
   }
 
-  scrollToBottom(): void {
-    try {
-      const chatWindow = this.chatWindow.nativeElement;
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    } catch (error) {
-      console.error('error scrolling chat window')
+  // scrollToBottom(): void {
+  //   try {
+  //     const chatWindow = this.chatWindow.nativeElement;
+  //     chatWindow.scrollTop = chatWindow.scrollHeight;
+  //   } catch (error) {
+  //     console.error('error scrolling chat window')
+  //   }
+  // }
+
+   scrollToBottom(): void {
+    if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
+      const container = this.chatWindowContainer.nativeElement;
+      setTimeout(() => {
+        container.scrollTop = container.scrollHeight;
+      }, 0);
     }
   }
+
+  
 
   isBotSender(sender: string): boolean{
     return sender.startsWith('bot_');

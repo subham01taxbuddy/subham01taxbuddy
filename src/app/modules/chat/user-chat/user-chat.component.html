@@ -33,23 +33,26 @@
 
         <div class="message-container">
           <div class="message-and-timestamp">
-            <span *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId"
+            <span
+              *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId"
               [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId}"
               class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)">{{message.content}}</span>
 
-              <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
+            <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
               class="message text-type-user-messages"> {{
               message.content
               }}</span>
 
             <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
               (loadeddata)="addMessageEvents(message)">
-              <div *ngIf="parsedContent(message.content).metadata.templateId !='7'" [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
+              <div *ngIf="parsedContent(message.content).metadata.templateId !='7'"
+                [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
 
 
               <ng-container *ngIf="parsedContent(message.content).metadata">
 
-                <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '6' && message.action === null">
+                <ng-container
+                  *ngIf="parsedContent(message.content).metadata.templateId === '6' && message.action === null">
                   <ng-template #buttonTemplate>
                     <button *ngFor="let button of parsedContent(message.content).metadata.payload"
                       (click)="handleButtonEvent(button.message)" class="btn btn-primary"
@@ -65,7 +68,7 @@
                         class="col-md-12 mb-4"> -->
                       <div class="card h-100"
                         *ngFor="let element of parsedContent(message.content).metadata.payload.elements">
-                        <a class="fileBorder"  [href]="element.action.url" target="_blank">
+                        <a class="fileBorder" [href]="element.action.url" target="_blank">
                           <img class="card-img-top mt-2"
                             [src]="parsedContent(message.content).metadata.payload.headerImgSrc" alt="card-image">
                           <div class="card-body">
@@ -125,21 +128,21 @@
                             <input type="text" class="form-control"
                               [attr.disabled]="isBotSender(message.sender) ? true : null" name="{{ item.data.label }}"
                               [placeholder]="(message?.action != null ) ? (message?.action[item.data.label]) : item.data.placeholder"
-                              [pattern]="item.data?.validation?.regex" [value]="formData3[item.data.label] ? formData3[item.data.label]:''" [ngClass]="{
+                              [pattern]="item.data?.validation?.regex"
+                              [value]="formData3[item.data.label] ? formData3[item.data.label]:''" [ngClass]="{
                                 'is-invalid':
                                   formData3[item.data.label] &&
                                   !isInputValid(formData3[item.data.label], item?.data?.validation?.regex)
-                              }"(change)="onInputChange($event, item.data.label, message.message_id); invalid=formData3[item.data.label] &&
+                              }" (change)="onInputChange($event, item.data.label, message.message_id); invalid=formData3[item.data.label] &&
                               !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
-                              formData3[item.data.label].length > 0"
-                              [required]="isRequired" />
-                              <div *ngIf="
+                              formData3[item.data.label].length > 0" [required]="isRequired" />
+                            <div *ngIf="
                               formData3[item.data.label] &&
                               !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
                               formData3[item.data.label].length > 0
                             " class="text-danger mt-1">
-                            {{ item.data.validation.errorText }}
-                          </div>
+                              {{ item.data.validation.errorText }}
+                            </div>
                           </div>
                         </ng-container>
 
@@ -176,15 +179,15 @@
                           <div>{{ item.data.title }}</div>
                           <div *ngFor="let option of item.data.options">
                             <button mat-raised-button [disabled]="isBotSender(message.sender)" class="lgtBtn"
-                            (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"><mat-icon
-                              *ngIf="this.selectedCheckBoxes[item.data.name]?.includes(option.value)">check_circle</mat-icon>
-                            {{ option.label }}</button>
+                              (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"><mat-icon
+                                *ngIf="this.selectedCheckBoxes[item.data.name]?.includes(option.value)">check_circle</mat-icon>
+                              {{ option.label }}</button>
                           </div>
                         </ng-container>
                         <ng-container *ngIf="item.type === 'dropdown'">
                           <div class="form-group">
                             <label>{{ item.data.title }} </label>
-                            <select class="form-control" [attr.disabled]="isBotSender(message.sender)"
+                            <select class="form-control dropdown-length" [attr.disabled]="isBotSender(message.sender)"
                               name="{{ item.data.name }}"
                               [value]="(message?.action) ? message?.action[item.data.name]:''"
                               (change)="onDropdownChange(item.data.name, $event,message.message_id)">
@@ -249,11 +252,13 @@
     <label for="fileInput" class="fa fa-paperclip"></label>
     <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
 
+
+    <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
+      [(ngModel)]="messageSent">
+
     <button type="button" (click)="sendMessage()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
     </button>
-    <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
-      [(ngModel)]="messageSent">
   </div>
 
 

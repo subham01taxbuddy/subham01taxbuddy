@@ -86,7 +86,7 @@
   border-radius: 20px;
   background-color: #f2f2f2;
   margin-left: 5px;
-  width: 900px;
+  width: 261px;
 }
 
 
@@ -727,6 +727,7 @@
   max-width: fit-content;
   /* Adjust as needed */
   width: fit-content;
+  margin-left: 4px;
   /* Adjust as needed */
 }
 
@@ -789,4 +790,8 @@
 .cht21FullName {
   justify-content: flex-end;
   margin-bottom: -17px;
+}
+
+.dropdown-length{
+  width: auto;
 }
