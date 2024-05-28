@@ -6863,6 +6863,19 @@ export class PrefillIdComponent implements OnInit {
 
         document.getElementById('input-utility-file-jsonfile-id').click();
       }
+
+      //fetch the ITR again
+      let itrFilter = `&itrId=${this.ITR_JSON.itrId}`;
+      const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}` + itrFilter;
+      this.itrMsService.getMethod(param).subscribe(async (result: any) => {
+        console.log(`My ITR by ${param}`, result);
+        if (result == null || result.length == 0) {
+          this.utilsService.showErrorMsg('Something went wrong. Please try again');
+        } else if (result.length == 1) {
+          this.ITR_JSON = result[0];
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result[0]));
+        }
+      });
     });
   }
 
