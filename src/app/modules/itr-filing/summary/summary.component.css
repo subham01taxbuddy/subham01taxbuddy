@@ -379,10 +379,10 @@ table {
 }
 
 .incBx {
-  width: 80%;
+  width: 75%;
   background-color: #ffffff;
   border: 1px solid #c4c0c0;
-  padding: 2%;
+  padding: 0%;
   margin-top: -16px;
 }
 
@@ -406,7 +406,7 @@ table {
   font-size: 22px;
   font-weight: bold;
   color: #ba3131;
-  margin: -6px 0px 10px 57px;
+  margin: -40px 0px 10px 57px;
   display: block;
 }
 
@@ -422,8 +422,10 @@ table {
   padding: 2%;
   /* margin-right: 119px; */
   margin-left: -5px;
-  color: #000000;
+  /* color: #000000; */
   line-height: 25px;
+  font-size: 15px;
+  color: #b60000;
 }
 
 .paIncTx1 {
