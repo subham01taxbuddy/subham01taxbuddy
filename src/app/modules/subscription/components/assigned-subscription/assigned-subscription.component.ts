@@ -296,9 +296,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     let emailFilter = '';
     if (this.searchBy?.email) {
-      if(this.roles.includes("ROLE_FILER")){
-        this.isAllowed = true;
-      }
+      this.isAllowed = true;
       emailFilter = '&email=' + this.searchBy?.email;
     }
 
@@ -410,13 +408,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 item === 'ROLE_FILER'
             );
             this.isAllowed = filtered && filtered.length > 0 ? true : false;
-            if(!this.roles.includes("ROLE_FILER") && this.searchBy?.email){
-              this.isAllowed = false;
-              this._toastMessageService.alert(
-                'error',
-                'For Leader & Admin Please Create Subscription Using Mobile Number'
-              );
-            }
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
               this.createRowData([])
@@ -1198,7 +1189,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
     //integrate new api to check active user
 
-    if(this.roles.includes('ROLE_FILER') && this.searchedEmail){
+    if(this.searchedEmail){
       this.utilsService.getActiveUsers('',this.searchedEmail).subscribe((res:any) => {
         console.log(res);
         if (res.data) {
@@ -1213,7 +1204,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.createSubMiddle()
         }
       })
-    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+    }else if(this.selectedSearchUserId){
       this.createSubMiddle()
     }else{
       this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
@@ -1236,19 +1227,19 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSubMiddle(){
-    if (this.roles.includes('ROLE_FILER') && this.searchedEmail) {
+    if (this.searchedEmail) {
       this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
         console.log(res);
           if (res.data) {
             this.userId = res?.data?.content[0].userId;
-            this.assignedFilerId = this?.loggedInSme[0]?.userId;
+            this.assignedFilerId = res?.data?.content[0].filerUserId;
             this.openAddSubscriptionDialog();
           }else {
             this.utilsService.getFilerIdByMobile('', 'ITR',this.searchedEmail).subscribe((res: any) => {
               console.log(res);
               if (res.data) {
                 this.userId = res?.data?.content[0].userId;
-                this.assignedFilerId = this?.loggedInSme[0]?.userId;
+                this.assignedFilerId = res?.data?.content[0].filerUserId;
                 this.openAddSubscriptionDialog();
               } else {
                 this._toastMessageService.alert('error', res.message);
@@ -1256,7 +1247,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             })
           }
       });
-    }else if(this.roles.includes('ROLE_FILER') && this.selectedSearchUserId){
+    }else if(this.selectedSearchUserId){
       this.userId = this.selectedSearchUserId;
       this.assignedFilerId = this?.loggedInSme[0]?.userId;
       this.openAddSubscriptionDialog();
@@ -1300,6 +1291,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             data: {
               userId: this.userId,
               mobileNo: this.mobileNumber,
+              email : this.searchedEmail,
               filerId: this.assignedFilerId,
               assessmentYear:this.assessmentYear.value.assessmentYear
             },
@@ -1536,4 +1528,5 @@ export interface ConfirmModel {
   mobileNo: number
   filerId:number
   assessmentYear: string
+  email:string
 }

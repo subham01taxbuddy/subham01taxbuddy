@@ -920,7 +920,7 @@ export class UtilsService {
     if (mobile) {
       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
     } else if (email) {
-      param = `/bo/user-list-new?page=0&pageSize=20&email=${email}${userFilter}&active=false`
+      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}&active=false`
     }
     return this.userMsService.getMethodNew(param);
   }
