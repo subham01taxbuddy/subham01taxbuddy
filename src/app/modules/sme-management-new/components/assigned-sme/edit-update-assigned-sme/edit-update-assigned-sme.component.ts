@@ -773,6 +773,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.additionalIdsCount.setValue(this.existingCount);
       this.additionalIdsCount.setErrors({ 'totalCountExceeded': true });
     }else {
+      this.additionalIdsCount.setValue(totalCount);
       this.additionalIdsCount.setErrors(null)
     }
   }
