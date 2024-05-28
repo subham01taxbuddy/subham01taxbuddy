@@ -406,7 +406,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       - Number(this.selectedFormGroup.controls['purchase'].value) - Number(this.selectedFormGroup.controls['expenditure'].value)
     );
     this.selectedFormGroup.controls['netIncome'].setValue(
-      Number(this.selectedFormGroup.controls['grossProfit'].value)
+      Number(this.selectedFormGroup.controls['grossProfit'].value) 
     );
     this.calculateNetProfit();
   }
