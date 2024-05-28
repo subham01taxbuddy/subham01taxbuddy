@@ -506,7 +506,7 @@ export class DonationsComponent implements OnInit {
   createDonationForm(item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      identifier: [item ? item.identifier : '', this.type != '80ggc' ? [Validators.required, Validators.maxLength(25)] : Validators.maxLength(25)],
+      identifier: [item ? item.identifier : '', this.type === '80ggc' ? [Validators.required, Validators.maxLength(25)] : Validators.maxLength(25)],
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : this.type === '80g' ? 'OTHER' : 'POLITICAL',
       amountInCash: [item ? item.amountInCash : 0, this.type === '80ggc' ? '' : [Validators.required, Validators.max(2000)],],
       amountOtherThanCash: [item ? item.amountOtherThanCash : null, this.type === '80ggc' ? '' : Validators.required,],
@@ -519,7 +519,7 @@ export class DonationsComponent implements OnInit {
       state: [item ? item.state : '', this.type != '80ggc' ? Validators.required : ''],
       panNumber: [item ? item.panNumber : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)] : '',],
       dateOfDonation: [item ? item.dateOfDonation : '',],
-      ifscBank: [item ? item.ifscBank : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.IFSCRegex)] : Validators.pattern(AppConstants.IFSCRegex)],
+      ifscBank: [item ? item.ifscBank : '', this.type === '80ggc' ? [Validators.required, Validators.pattern(AppConstants.IFSCRegex)] : Validators.pattern(AppConstants.IFSCRegex)],
     });
   }
 
