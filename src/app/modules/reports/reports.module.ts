@@ -25,6 +25,7 @@ import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up
 import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
 import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
+import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report/view-call-details/view-call-details.component';
 
 @NgModule({
     imports: [
@@ -56,7 +57,8 @@ import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-fi
         DailySignUpReportComponent,
         CustomerSignUpComponent,
         FillingDonePaymentNotReceivedComponent,
-        DocumentsUploadedFilingNotDoneComponent
+        DocumentsUploadedFilingNotDoneComponent,
+        ViewCallDetailsComponent
     ],
     providers: [JsonToCsvService]
 })
