@@ -78,6 +78,7 @@ export class ZeroCouponBondsComponent
       columnDefs: this.bondsColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      rowSelection: 'multiple',
       onGridReady: (params) => {
         params.api?.setRowData(
           this.getBondsArray.controls
@@ -213,7 +214,7 @@ export class ZeroCouponBondsComponent
     this.bondsGridOptions.api?.setRowData(
       this.getBondsArray.controls
     );
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length - 1 : 0;
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
     this.activeIndex = -1;
 
