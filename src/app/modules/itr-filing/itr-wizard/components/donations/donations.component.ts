@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import {Component, OnInit, Input, SimpleChanges, ElementRef} from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -432,7 +432,7 @@ export class DonationsComponent implements OnInit {
   constructor(
     private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
-    private userMsService: UserMsService
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -506,7 +506,7 @@ export class DonationsComponent implements OnInit {
   createDonationForm(item?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      identifier: [item ? item.identifier : '', Validators.maxLength(25)],
+      identifier: [item ? item.identifier : '', this.type === '80ggc' ? [Validators.required, Validators.maxLength(25)] : Validators.maxLength(25)],
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : this.type === '80g' ? 'OTHER' : 'POLITICAL',
       amountInCash: [item ? item.amountInCash : 0, this.type === '80ggc' ? '' : [Validators.required, Validators.max(2000)],],
       amountOtherThanCash: [item ? item.amountOtherThanCash : null, this.type === '80ggc' ? '' : Validators.required,],
@@ -519,7 +519,7 @@ export class DonationsComponent implements OnInit {
       state: [item ? item.state : '', this.type != '80ggc' ? Validators.required : ''],
       panNumber: [item ? item.panNumber : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.panDoneeRegex)] : '',],
       dateOfDonation: [item ? item.dateOfDonation : '',],
-      ifscBank: [item ? item.ifscBank : '', Validators.pattern(AppConstants.IFSCRegex)],
+      ifscBank: [item ? item.ifscBank : '', this.type === '80ggc' ? [Validators.required, Validators.pattern(AppConstants.IFSCRegex)] : Validators.pattern(AppConstants.IFSCRegex)],
     });
   }
 
@@ -632,6 +632,9 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'SCIENTIFIC'
         );
+        if(!this.Copy_ITR_JSON.donations){
+          this.Copy_ITR_JSON.donations = [];
+        }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
           this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
             this.generalDonationForm.value.donationArray
@@ -641,6 +644,9 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'OTHER'
         );
+        if(!this.Copy_ITR_JSON.donations){
+          this.Copy_ITR_JSON.donations = [];
+        }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
           this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
             this.generalDonationForm.value.donationArray
@@ -650,7 +656,7 @@ export class DonationsComponent implements OnInit {
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.generalDonationForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.generalDonationForm, 'accordBtn1', this.elementRef);
       $('input.ng-invalid').first().focus();
       return false;
     }

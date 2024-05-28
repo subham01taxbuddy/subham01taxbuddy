@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
 import { UtilsService } from '../../../../../services/utils.service';
 import {
-  Component,
+  Component, ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -166,7 +166,7 @@ export class CustomerProfileComponent implements OnInit {
     public location: Location,
     private datePipe: DatePipe,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
-    private requestManager: RequestManager
+    private requestManager: RequestManager, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -516,7 +516,7 @@ export class CustomerProfileComponent implements OnInit {
       );
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn');
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn', this.elementRef);
 
       if (gender?.status === 'INVALID') {
         gender?.setValidators(Validators.required);

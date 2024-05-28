@@ -199,7 +199,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.invoicesCreateColumnDef(this.allFilerList),
+      columnDefs: this.roles.includes('ROLE_FILER') ? this.invoicesCreateColumnDef(this.allFilerList , 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList) ,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -596,7 +596,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  invoicesCreateColumnDef(List) {
+  invoicesCreateColumnDef(List ,hidePaymentLink?) {
     return [
       {
         headerName: 'User Id',
@@ -770,6 +770,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       {
         headerName: 'Razor-Pay Link',
         field: 'paymentLink',
+        hide : hidePaymentLink ? true : false,
         width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },

@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="counter-item">
-  <div class="card__title" style="padding: 15px; font-size: 20px">
-    Personal Details
+  <div class="card__title" style="padding: 15px; font-size: 25px; display: flex; justify-content: center; align-items: center;">
+    <b>PERSONAL DETAILS</b>
   </div>
 
   <div class="grids griHgh return_glance tpOfBx">
@@ -162,7 +162,7 @@
           </div>
 
           <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-            <div *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
+            <div class="ml-2" *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
               <div class="incBx">
                 <span class="inTex">Income Tax Payable:</span><br /><br />
                 <span class="inNo">{{
@@ -289,7 +289,7 @@
       <button _ngcontent-c4="" class="btn grBut" type="button" style="cursor: pointer;"><i _ngcontent-c4=""
           class="fas fa-download"></i> Download </button></div> -->
 
-    <div class="flex flex-col ml-1">
+    <div class="flex flex-col ml-1 new-ml">
       <div class="sub_btn lwBtDn" *ngIf="show">
         <!-- <button type="button" class="btn prvBut" (click)="previousRoute()"
               [disabled]="isPreviousAvailable()">Previous</button> -->
@@ -342,7 +342,7 @@
       </div>
 
       <div>
-        <div class="flex flex-row justify-between items-start">
+        <div class="flex flex-row justify-between items-start new-ml">
           <h3>Computation of Income and Tax</h3>
           <!-- <div>
           <mat-slide-toggle [(ngModel)]="summaryToolChecked"></mat-slide-toggle>

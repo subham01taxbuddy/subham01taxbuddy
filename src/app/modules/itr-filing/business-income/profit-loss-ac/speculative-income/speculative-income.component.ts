@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -26,7 +26,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -76,6 +76,21 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.gridOptions.api?.setRowData(
       this.specIncomeFormArray.controls
     );
+    this.calculateNetIncome();
+  }
+
+  updateData(){
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
+    if (specBusiness?.incomes.length) {
+      let index = 0;
+      for (let income of specBusiness.incomes) {
+        let form = this.createSpecIncomeForm(index++, income);
+        this.specIncomeFormArray.push(form);
+      }
+    }
+    this.gridOptions.api?.setRowData(this.specIncomeFormArray.controls);
     this.calculateNetIncome();
   }
 
@@ -174,11 +189,13 @@ export class SpeculativeIncomeComponent implements OnInit {
 
       specBusiness[0].incomes = [];
 
-      (
-        this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
-      )?.controls?.forEach((form: UntypedFormGroup) => {
-        specBusiness[0]?.incomes?.push(form?.value);
-      });
+      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+        (
+            this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
+        )?.controls?.forEach((form: UntypedFormGroup) => {
+          specBusiness[0]?.incomes?.push(form?.value);
+        });
+      }
 
       console.log(specBusiness);
       let grossProfit = 0;
@@ -197,11 +214,17 @@ export class SpeculativeIncomeComponent implements OnInit {
         (item) => item?.businessType === 'SPECULATIVEINCOME'
       );
 
-      if (index || index === 0) {
-        this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
-          specBusiness[0];
+      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+        if (index || index === 0) {
+          this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
+              specBusiness[0];
+        } else {
+          this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
+        }
       } else {
-        this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
+        if (index || index === 0) {
+          this.Copy_ITR_JSON.business.profitLossACIncomes.splice(index, 1);
+        }
       }
 
       console.log(this.Copy_ITR_JSON);
@@ -213,7 +236,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     } else {
       //show errors
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.specIncomeForm, 'accordBtn');
+      this.utilsService.highlightInvalidFormFields(this.specIncomeForm, 'accordBtn', this.elementRef);
       return false;
     }
   }
@@ -244,7 +267,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -269,6 +292,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       ((this.specIncomeForm.controls['specIncomesArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.calculateNetIncome();
     this.activeIndex = i;
+    document.getElementById("speculative_id").scrollIntoView();
   }
 
   columnDef() {

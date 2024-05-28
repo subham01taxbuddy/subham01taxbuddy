@@ -81,6 +81,9 @@
                                                                 <input aria-describedby="emailHelp"
                                                                     class="form-control inpplac disable"
                                                                     formControlName="gainType" readonly type="text">
+                                                                <div class="note new-note" >
+                                                                  <b>Note:</b> Date is mandatory in order to determine holding period & the quarter in which CG will be recognized
+                                                                </div>
                                                             </div>
 
                                                         </div>
@@ -387,7 +390,7 @@
                                                                 <input [matDatepicker]="purchaseDate"
                                                                     [max]="maximumDate" class="input-field"
                                                                     formControlName="purchaseDate" matInput
-                                                                    name="purchaseDate"
+                                                                    name="purchaseDate" (dateChange)="updateValidations(deductionForm);"
                                                                     placeholder="Purchase date of new asset" readonly />
                                                                 <mat-datepicker-toggle [for]="purchaseDate"
                                                                     matSuffix></mat-datepicker-toggle>

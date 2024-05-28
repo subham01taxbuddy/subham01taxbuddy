@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -56,7 +56,7 @@ export class ZeroCouponBondsComponent
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute, private elementRef: ElementRef
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -78,6 +78,7 @@ export class ZeroCouponBondsComponent
       columnDefs: this.bondsColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
+      rowSelection: 'multiple',
       onGridReady: (params) => {
         params.api?.setRowData(
           this.getBondsArray.controls
@@ -213,7 +214,7 @@ export class ZeroCouponBondsComponent
     this.bondsGridOptions.api?.setRowData(
       this.getBondsArray.controls
     );
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length - 1 : 0;
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
     this.activeIndex = -1;
 
@@ -320,12 +321,14 @@ export class ZeroCouponBondsComponent
 
   clearForm() {
     this.selectedFormGroup.reset();
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
+    this.selectedFormGroup = this.createForm(srn);
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
   }
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -1091,6 +1094,7 @@ export class ZeroCouponBondsComponent
             `${bondType} data updated successfully`
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(true);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1245,12 +1249,16 @@ export class ZeroCouponBondsComponent
   }
 
   updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value){
+    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     } else {
       formGroup.controls['purchaseDate'].setValidators(null);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators(null);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
     if(formGroup.controls['investmentInCGAccount'].value){
@@ -1333,7 +1341,7 @@ export class ZeroCouponBondsComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
     }
   }
 
@@ -1348,7 +1356,7 @@ export class ZeroCouponBondsComponent
       );
       return;
     }else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }

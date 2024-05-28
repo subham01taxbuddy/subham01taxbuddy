@@ -17,6 +17,8 @@ import { environment } from 'src/environments/environment';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewCallDetailsComponent } from './view-call-details/view-call-details.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -91,7 +93,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private genericCsvService: GenericCsvService,
-    private cacheManager: CacheManager
+    private cacheManager: CacheManager,
+    private dialog: MatDialog,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -289,6 +292,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         role: callingData[i].role,
         averageTimeSpentOnCalling : callingData[i].averageTimeSpentOnCalling,
         averageTimeSpentOnConnectedCall : callingData[i].averageTimeSpentOnConnectedCall,
+        smeUserId : callingData[i].smeUserId
         // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
       })
       callingRepoInfoArray.push(agentReportInfo);
@@ -337,7 +341,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view outbound call details"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-Outbound-details">
+          ${params.data.outboundCalls} </button>`;
+        },
       },
       {
         headerName: 'Outbound Connected',
@@ -459,6 +468,33 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       },
 
     ]
+  }
+
+
+  onSmeRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'view-Outbound-details': {
+          this.viewCallDetails(params.data,'Outbound');
+        }
+      }
+    }
+  }
+
+  viewCallDetails(data, mode){
+    let disposable = this.dialog.open(ViewCallDetailsComponent, {
+      width: '80%',
+      height: 'auto',
+      data: {
+        mode: mode,
+        data: data
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      // this.advanceSearch();
+    });
   }
 
   async downloadReport() {

@@ -40,6 +40,7 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
           );
           console.log('non-speculative income=', result);
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(true);
         },
         (error) => {
           this.loading = false;
@@ -49,7 +50,6 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
           this.utilsService.smoothScrollToTop();
         }
       );
-      this.saveAndNext.emit(true);
     } else {
       this.loading = false;
       this.utilsService.showSnackBar('Please enter the all input field details.');
@@ -62,6 +62,11 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     const child: WizardNavigation = componentRef;
     child.saveAndNext.subscribe(() => {
     });
+  }
+
+  getFileParserData() {
+    this.SpeculativeIncomeComponent.updateData();
+    this.NonSpeculativeIncomeComponent.updateData();
   }
 
   unsubscribe() {

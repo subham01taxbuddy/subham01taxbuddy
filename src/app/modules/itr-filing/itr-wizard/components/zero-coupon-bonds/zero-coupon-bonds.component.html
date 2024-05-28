@@ -62,6 +62,9 @@
                                 <div><span class="span">Type of gain </span></div>
                                 <input type="text" class="form-control inpplac disable" formControlName="gainType"
                                   aria-describedby="emailHelp" readonly>
+                                <div class="note new-note" >
+                                  <b>Note:</b> Date is mandatory in order to determine holding period & the quarter in which CG will be recognized
+                                </div>
                               </div>
 
                             </div>
@@ -254,6 +257,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
+                                       (dateChange)="updateValidations(deductionForm);"
                                   formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
                                   [max]="maximumDate" />
                                 <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>

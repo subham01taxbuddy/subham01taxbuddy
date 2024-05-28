@@ -76,6 +76,9 @@
                               <div><span class="span">Type of gain </span></div>
                               <input type="text" class="form-control inpplac disable" formControlName="gainType"
                                 aria-describedby="emailHelp" readonly>
+                              <div class="note new-note" >
+                                <b>Note:</b> Date is mandatory in order to determine holding period & the quarter in which CG will be recognized
+                              </div>
                             </div>
                           </div>
                           <div class="div-6 mt-4" *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
@@ -335,7 +338,9 @@
                         <button class="btn btn__white" (click)="clearForm()">cancel</button>
                       </div>
                       <div class="box-right">
-                        <button class="btn btn__primary" (click)="saveManualEntry()">Save Details</button>
+                        <button class="btn btn__primary" (click)="saveManualEntry()"
+                                [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button>
                       </div>
                     </div>
 
@@ -497,7 +502,7 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (change)="calculateDeductionGain()" matInput readonly
+                              <input (dateChange)="updateValidations(deductionForm);calculateDeductionGain()" matInput readonly
                                 placeholder="Purchase date of new asset" formControlName="purchaseDate"
                                 name="purchaseDate" [max]="maximumDate" [matDatepicker]="purchaseDate" />
                               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>

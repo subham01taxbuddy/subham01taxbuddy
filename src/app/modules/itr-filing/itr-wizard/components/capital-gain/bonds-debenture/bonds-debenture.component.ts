@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -44,7 +44,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute, private elementRef: ElementRef
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -276,7 +276,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -945,12 +945,16 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value){
+    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     } else {
       formGroup.controls['purchaseDate'].setValidators(null);
-      formGroup.updateValueAndValidity();
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators(null);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
     if(formGroup.controls['investmentInCGAccount'].value){
@@ -1032,7 +1036,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
     }
   }
 
@@ -1047,7 +1051,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       );
       return;
     } else if(this.deduction && this.deductionForm.invalid){
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2")
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef)
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
     }
