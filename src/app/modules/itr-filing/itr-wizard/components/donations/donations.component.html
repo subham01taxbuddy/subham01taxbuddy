@@ -79,7 +79,7 @@
                             *ngIf="type === '80g' && donation.get('schemeCode').value === 'FND_SEC80G'">Donation
                             Reference Number </span>
                           <span class="span" *ngIf="type === '80ggc'">Transaction Reference Number for UPI
-                            transfer/Cheque/IMPS/NEFT/RTGS</span>
+                            transfer/Cheque/IMPS/NEFT/RTGS</span><span class="text-wrapper-2">*</span>
                         </div>
                         <mat-form-field appearance="outline" class="no-height small-inp">
                           <input formControlName="identifier" matInput currencyMask
@@ -210,7 +210,7 @@
                     <div *ngIf="type === '80ggc'">
                       <div class="div-6">
                         <div class="form-field">
-                          <div><span class="span">IFSC of Bank</span>
+                          <div><span class="span">IFSC of Bank</span><span class="text-wrapper-2">*</span>
                           </div>
                           <mat-form-field appearance="outline" class="no-height small-inp">
                             <input formControlName="ifscBank" matInput placeholder="IFSC of Bank" name="ifscBank[i]"
