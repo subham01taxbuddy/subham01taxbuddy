@@ -655,6 +655,6 @@ table {
   font-weight: 800;
 }
 .new-ml{
-  margin-left: 70px;
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
 }
