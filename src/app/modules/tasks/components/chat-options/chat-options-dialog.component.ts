@@ -62,12 +62,13 @@ export class ChatOptionsDialogComponent implements OnInit {
   ngOnInit() {
     console.log('DATA1:', this.data);
     this.loading = true;
-    let paramKomm = `/kommunicate/chat-link?userId=${this.data.userId}&serviceType=${this.data.serviceType}`;
+    let paramKomm = `/chat-link?userId=${this.data.userId}&serviceType=${this.data.serviceType}`;
     let paramWa = `/kommunicate/whatsApp-chat-link?userId=${this.data.userId}`;
     this.userMsService.getMethod(paramKomm).subscribe(
       (response: any) => {
         this.loading = false;
         if (response.success) {
+          this.requestId = response.data.requestId
           this.kommChatLink = response.data?.chatLink;
           this.kommChatConversationId = response.data?.conversationId;
           this.waChatLink = response.data?.whatsAppChatLink
