@@ -401,6 +401,10 @@ export class SharesAndEquityComponent
 
   clearForm() {
     this.selectedFormGroup.reset();
+    const securitiesArray = <UntypedFormArray>(
+        this.securitiesForm?.get('securitiesArray')
+    );
+    this.selectedFormGroup = this.createForm(securitiesArray.length);
     this.selectedFormGroup.controls['algorithm'].setValue('cgSharesMF');
   }
 
@@ -1138,12 +1142,14 @@ export class SharesAndEquityComponent
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
           ].assetDetails.filter(
-            (item) => item.brokerName !== this.selectedBroker
+            (item) => (this.utilsService.isNonEmpty(this.selectedBroker) &&
+                this.utilsService.isNonEmpty(item.brokerName) && item.brokerName !== this.selectedBroker)
           );
           let sameData: any = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
           ].assetDetails.filter(
-            (item) => item.brokerName === this.selectedBroker
+            (item) => (this.utilsService.isNonEmpty(this.selectedBroker) && item.brokerName === this.selectedBroker) ||
+                (!this.utilsService.isNonEmpty(this.selectedBroker) && !this.utilsService.isNonEmpty(item.brokerName))
           );
           if (!sameData) {
             sameData = [];
@@ -1176,7 +1182,8 @@ export class SharesAndEquityComponent
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
           ].assetDetails.filter(
-            (item) => item.brokerName !== this.selectedBroker
+            (item) => (this.utilsService.isNonEmpty(this.selectedBroker) &&
+                this.utilsService.isNonEmpty(item.brokerName) && item.brokerName !== this.selectedBroker)
           );
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
             otherData;

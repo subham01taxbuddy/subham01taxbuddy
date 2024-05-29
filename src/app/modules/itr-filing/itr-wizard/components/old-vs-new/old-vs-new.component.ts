@@ -2402,7 +2402,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
       stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
       stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
       stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
 
       stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
