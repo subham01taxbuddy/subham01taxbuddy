@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { fromEvent, Subject } from "rxjs";
-import { environment } from "../../environments/environment";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +11,7 @@ export class IdleService {
   public wake$: Subject<boolean> = new Subject();
 
   isIdle = false;
-  private loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
-
-  idleAfterSeconds = (this.loginSmeDetails.length > 0 && this.loginSmeDetails[0].inactivityTimeInMinutes > 0) ? this.loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
+  private idleAfterSeconds = environment.idleTimeMins * 60;
   private countDown;
 
   constructor() {
@@ -24,7 +22,7 @@ export class IdleService {
     fromEvent(document, 'beforeunload').subscribe(() => this.onPageEvent());
   }
 
-  onPageEvent() {
+  onPageEvent(){
     console.log('on page event');
   }
 
@@ -32,11 +30,11 @@ export class IdleService {
     //console.log('checking interaction');
     let current = new Date().getTime();
     let last = sessionStorage.getItem('lastInteraction');
-    if (!last) {
+    if(!last){
       last = current.toString();
     }
     sessionStorage.setItem('lastInteraction', current.toString());
-    if (current - parseInt(last) > this.idleAfterSeconds * 1000) {
+    if(current-parseInt(last) > this.idleAfterSeconds * 1000){
       //console.log('this was idle****');
       this.isIdle = true;
       this.idle$.next(true);
