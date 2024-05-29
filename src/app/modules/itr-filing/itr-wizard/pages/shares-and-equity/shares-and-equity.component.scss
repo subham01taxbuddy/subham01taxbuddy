@@ -1,5 +1,6 @@
 @import "../../../../../ux/scss/style.scss";
 @import '../../../../../ux/scss/layout.scss';
+
 .header_content {
   display: flex;
   align-items: flex-start;
@@ -41,24 +42,24 @@
   top: 0px;
 }
 
-.bdrBlw{
-  border-bottom:1px solid #cccccc;
-  padding-bottom:10px;
+.bdrBlw {
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 10px;
 }
 
-.bdrAbv{
-  border-top:1px solid #cccccc;
-  padding-top:10px;
+.bdrAbv {
+  border-top: 1px solid #cccccc;
+  padding-top: 10px;
 }
 
 .gray_container {
-  margin: 25px 0px 12px 0px!important;
+  margin: 25px 0px 12px 0px !important;
 }
 
-.spcTpBtm{
+.spcTpBtm {
   font-size: 75%;
   margin-top: 15px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 
 
@@ -79,16 +80,16 @@
   position: relative;
 }
 
-.btnStyl{
-  border:1px solid #1B67BA;
-  border-radius:6px;
-  padding:8px;
-  float:right;
-  color:#1B67BA;
+.btnStyl {
+  border: 1px solid #1B67BA;
+  border-radius: 6px;
+  padding: 8px;
+  float: right;
+  color: #1B67BA;
 }
 
-.rghtBack{
-  float:right;
+.rghtBack {
+  float: right;
 }
 
 
@@ -107,7 +108,7 @@
   width: auto;
   align-items: flex-start;
   position: relative;
-  margin:25px 25px 0px 25px;
+  margin: 25px 25px 0px 25px;
 }
 
 .div-5 {
@@ -123,6 +124,7 @@
   background-color: #ffffff;
   border-radius: 0px 0px 4px 4px;
 }
+
 .div-6 {
   display: flex;
   align-items: flex-start;
@@ -142,34 +144,38 @@
 }
 
 .bdrArnd {
-  border: 1px solid #00AECA!important;
-  padding: 20px 30px 10px 25px!important;
+  border: 1px solid #00AECA !important;
+  padding: 20px 30px 10px 25px !important;
 }
 
 .mat-mdc-radio-button {
-   margin-right: 15px!important;
+  margin-right: 15px !important;
 }
 
 .hide {
+
   /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
   .mat-select-trigger {
+
     /*TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-arrow-wrapper {
       display: none;
     }
   }
 }
+
 .edit-head .edit-donation {
-    background: #E5F2F6;
-    border: 0.5px solid #D9D9D9;
-    border-radius: 3px;
-    display: block!important;
-    padding: 10px;
+  background: #E5F2F6;
+  border: 0.5px solid #D9D9D9;
+  border-radius: 3px;
+  display: block !important;
+  padding: 10px;
 }
+
 .btm {
-margin-bottom:150px!important;
-float: left;
+  margin-bottom: 150px !important;
+  float: left;
 }
 
 .gainHeader {
@@ -177,13 +183,13 @@ float: left;
   text-align: right;
 }
 
-.delete-icon{
+.delete-icon {
   margin-top: 20px;
 }
 
 .drop {
-    cursor:pointer!important;
-    background-color:#fbfbff!important;
+  cursor: pointer !important;
+  background-color: #fbfbff !important;
 }
 
 .isDeduction {
@@ -314,7 +320,7 @@ float: left;
 .cancel:hover {
   font-weight: 400;
   border-width: 1px;
-  border:1px solid #cccccc;
+  border: 1px solid #cccccc;
   background-color: #fafafa;
 }
 
@@ -352,17 +358,24 @@ float: left;
   font-weight: 500;
   line-height: normal;
 }
-.mvrl{
+
+.mvrl {
   margin-left: -160px;
   margin-top: -30px;
 }
-.note{
+
+.note {
   color: #b60000;
   font-style: italic;
   font-size: 14px;
-  line-height:1.5;
+  line-height: 1.5;
 }
+
 .new-note {
   white-space: normal;
   word-wrap: break-word;
+}
+
+.align-center {
+  text-align: center;
 }
