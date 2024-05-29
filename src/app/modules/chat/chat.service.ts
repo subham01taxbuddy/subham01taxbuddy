@@ -253,7 +253,9 @@ export class ChatService {
       sender: message.sender,
       timestamp: message.timestamp,
       type: message.type,
-      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+      message_id: message.message_id,
+      action: (message?.attributes?.action) ? (message?.attributes?.action) : null
     }));
 
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
@@ -271,21 +273,33 @@ export class ChatService {
         sender: message.sender,
         timestamp: message.timestamp,
         type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+        message_id: message.message_id,
+        action: (message?.attributes?.action) ? (message?.attributes?.action) : null
       }));
       let m = {
         content: message.text,
         sender: message.sender,
         timestamp: message.timestamp,
         type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+        message_id: message.message_id,
+        action: (message?.attributes?.action) ? (message?.attributes?.action) : null
       };
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
       if (user && m.sender === user.sender)
         transformedMessages.push(m);
-      this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
-      return transformedMessages;
+        const msgString = this.sessionStorageService.getItem('fetchedMessages');
+        const oldMessageList = JSON.parse(msgString);
+        transformedMessages.forEach(element => {
+          if (!element.action) {
+            const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+            element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+          }
+        });
+        this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
+        return transformedMessages;
     }
   }
 
@@ -613,6 +627,19 @@ export class ChatService {
       metadata: "",
       channel_type: "group"
     };
+
+
+    if (payloads?.message_id) {
+      let fetchedMessages: any = sessionStorage.getItem("fetchedMessages");
+      fetchedMessages = JSON.parse(fetchedMessages);
+      fetchedMessages?.forEach(item => {
+        if (item.message_id === payloads.message_id) {
+          item.action = payloads
+        }
+      });
+      this.sessionStorageService.setItem('fetchedMessages', fetchedMessages, true);
+    }
+
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
     this.chatClient.publish(dest_topic, payload, null, (err) => {
