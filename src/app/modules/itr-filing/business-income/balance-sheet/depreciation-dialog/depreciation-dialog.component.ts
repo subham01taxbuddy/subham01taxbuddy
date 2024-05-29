@@ -129,6 +129,8 @@ export class DepreciationDialogComponent implements OnInit {
 
         })
 
+    } else {
+      this.onSave.emit('invalid');
     }
   }
 
@@ -144,10 +146,7 @@ export class DepreciationDialogComponent implements OnInit {
       this.loading = false;
     } else {
       this.loading = false;
-      const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
-      this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-      this.onSave.emit(this.Copy_ITR_JSON);
+      this.onSave.emit('invalid');
     }
   }
 
@@ -163,6 +162,8 @@ export class DepreciationDialogComponent implements OnInit {
   deleteDepreciationArray() {
     const depreciationArray = <UntypedFormArray>this.depreciationForm.get('depreciationArray');
     depreciationArray.controls = depreciationArray.controls.filter(element => !(element as UntypedFormGroup).controls['hasEdit'].value);
+    depreciationArray.updateValueAndValidity();
+    this.depreciationForm.updateValueAndValidity();
     this.calculateDepreciationTotal();
   }
 
@@ -192,6 +193,7 @@ export class DepreciationDialogComponent implements OnInit {
           this.depreciationForm.controls['totalNetBlock'].setValue(0);
         }
       })
+      debugger
       this.save();
     } else {
       this.depreciationForm.controls['totalGrossBlock'].setValue(0);
