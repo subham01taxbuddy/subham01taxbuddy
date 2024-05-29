@@ -30,7 +30,7 @@
                               <div><span class="span">Scrip Name</span></div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput formControlName="nameOfTheUnits" placeholder="Scrip Name"
-                                  name="nameOfTheUnits" (change)="calculateTotalCG(selectedFormGroup)" />
+                                  name="nameOfTheUnits" (change)="calculateTotalCG(selectedFormGroup, true)" />
                                 <mat-hint class="spcTpBtm">If Scrip Name is not available, we will take
                                   INNOTREQUIRD</mat-hint>
                                 <mat-error *ngIf="selectedFormGroup?.get('nameOfTheUnits').hasError('pattern')">
@@ -44,7 +44,7 @@
                                 <input matInput [min]="minDate" [max]="maxDate" formControlName="sellDate"
                                   name="sellDate" readonly [matDatepicker]="sellDate" placeholder="DD/MM/YYYY"
                                   (dateChange)="calculateGainTypeOrIndexCost(selectedFormGroup);
-                          calculateTotalCG(selectedFormGroup);
+                          calculateTotalCG(selectedFormGroup, true);
                           calMaxPurchaseDate(selectedFormGroup?.get('sellDate').value)" />
                                 <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
                                 <mat-datepicker #sellDate> </mat-datepicker>
@@ -63,7 +63,7 @@
                                 <input matInput [max]="selectedFormGroup?.get('sellDate').value"
                                   formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
                                   placeholder="DD/MM/YYYY" readonly (dateChange)="calculateGainTypeOrIndexCost(selectedFormGroup);
-                          calculateTotalCG(selectedFormGroup);
+                          calculateTotalCG(selectedFormGroup, true);
                           getImprovementYears()" />
                                 <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                                 <mat-datepicker #purchaseDate></mat-datepicker>
@@ -85,8 +85,9 @@
                             <div class="form-field">
                               <mat-label>Buy/Sell Quantity</mat-label>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="sellOrBuyQuantity" placeholder="Sell/Buy Quantity"
-                                  name="sellOrBuyQuantity" maxlength="14" (change)="calculateTotalCG(selectedFormGroup)"
+                                <input matInput appTwoDigitDecimaNumber formControlName="sellOrBuyQuantity"
+                                  placeholder="Sell/Buy Quantity" name="sellOrBuyQuantity" maxlength="14"
+                                  (change)="calculateTotalCG(selectedFormGroup, true)"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   (blur)="getPurchaseValue(); getSaleValue()" />
 
@@ -98,8 +99,9 @@
                             <div class="form-field">
                               <mat-label>Sale Price</mat-label>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="sellValuePerUnit" placeholder="Sale Price"
-                                  name="sellValuePerUnit" maxlength="14" (change)="calculateTotalCG(selectedFormGroup)" (blur)="getSaleValue()"
+                                <input matInput appTwoDigitDecimaNumber formControlName="sellValuePerUnit"
+                                  placeholder="Sale Price" name="sellValuePerUnit" maxlength="14"
+                                  (change)="calculateTotalCG(selectedFormGroup, true)" (blur)="getSaleValue()"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                 <mat-error *ngIf="
                                             selectedFormGroup?.get('sellValuePerUnit').hasError('pattern')
@@ -109,8 +111,9 @@
                             <div class="form-field">
                               <mat-label>Buy Price</mat-label>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="purchaseValuePerUnit" placeholder="Buy Price"
-                                  name="purchaseValuePerUnit" maxlength="14" (blur)="getPurchaseValue()"
+                                <input matInput appTwoDigitDecimaNumber formControlName="purchaseValuePerUnit"
+                                  placeholder="Buy Price" name="purchaseValuePerUnit" maxlength="14"
+                                  (blur)="getPurchaseValue()"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                 <mat-error *ngIf="
                                             selectedFormGroup
@@ -136,8 +139,9 @@
                                               calculateGainTypeOrIndexCost(
                                                 selectedFormGroup
                                               );
-                                              calculateTotalCG(selectedFormGroup)
-                                            " type="number" step="1" onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                              calculateTotalCG(selectedFormGroup, true)
+                                            " type="number" step="1"
+                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                   <mat-error *ngIf="
                                               bondType !== 'listed' &&
@@ -178,8 +182,9 @@
                                   <b>Note:</b> Kindly tab to get the indexed cost
                                 </div>
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="indexCostOfAcquisition" placeholder="Indexed Cost Of Acquisition"
-                                    name="indexCostOfAcquisition" maxlength="14" readonly (change)="calculateTotalCG(selectedFormGroup)"
+                                  <input matInput formControlName="indexCostOfAcquisition"
+                                    placeholder="Indexed Cost Of Acquisition" name="indexCostOfAcquisition"
+                                    maxlength="14" readonly (change)="calculateTotalCG(selectedFormGroup, true)"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                   <mat-error *ngIf="
                                           selectedFormGroup?.get('purchaseCost').hasError('pattern')
@@ -194,8 +199,9 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="sellExpense" placeholder="Expenses" name="sellExpense" maxlength="14"
-                                    digitsOnly (change)="calculateTotalCG(selectedFormGroup)"
+                                  <input matInput formControlName="sellExpense" placeholder="Expenses"
+                                    name="sellExpense" maxlength="14" digitsOnly
+                                    (change)="calculateTotalCG(selectedFormGroup, true)"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                   <mat-error *ngIf="selectedFormGroup?.get('sellExpense').hasError('pattern')">Enter
                                     valid amount.</mat-error>
@@ -224,8 +230,8 @@
                                 </div>
                                 <div class="form-field">
                                   <mat-form-field appearance="outline" class="small-inp no-height">
-                                    <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV" name="fmvAsOn31Jan2018"
-                                      (change)="calculateTotalCG(selectedFormGroup)" />
+                                    <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV"
+                                      name="fmvAsOn31Jan2018" (change)="calculateTotalCG(selectedFormGroup, true)" />
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -238,7 +244,7 @@
                                     <input matInput formControlName="grandFatheredValue" placeholder="GrandFathered Value "
                                       name="grandFatheredValue" maxlength="14" matTooltip="Cost of acquisition(as per grandfathering)"
                                       matTooltipClass="tab-tooltip" matTooltipPosition="above" readonly
-                                      (change)="calculateTotalCG(selectedFormGroup)"
+                                      (change)="calculateTotalCG(selectedFormGroup, true)"
                                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                     <mat-hint style="font-size: 75%">As per grandfathering</mat-hint>
                                     <mat-error *ngIf="
