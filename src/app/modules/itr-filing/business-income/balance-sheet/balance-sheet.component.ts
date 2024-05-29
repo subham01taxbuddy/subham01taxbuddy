@@ -30,6 +30,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   fixedAssetData: any;
   totalAppOfFunds: number = 0;
   totalDepNetBlock: any;
+  isDeprecationObjInvalid: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -154,14 +155,19 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   getFixedAssetData(data) {
-    this.fixedAssetData = data;
-    this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
-    if (this.depreciationObj.length) {
-      this.totalDepNetBlock = 0;
-      this.depreciationObj.forEach(element => {
-        this.totalDepNetBlock += element.fixedAssetClosingAmount;
-      });
-      this.totalApplicationOfFunds();
+    if (data === 'invalid') {
+      this.isDeprecationObjInvalid = true;
+    } else {
+      this.isDeprecationObjInvalid = false;
+      this.fixedAssetData = data;
+      this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
+      if (this.depreciationObj.length) {
+        this.totalDepNetBlock = 0;
+        this.depreciationObj.forEach(element => {
+          this.totalDepNetBlock += element.fixedAssetClosingAmount;
+        });
+        this.totalApplicationOfFunds();
+      }
     }
   }
 
@@ -224,6 +230,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       this.utilsService.showSnackBar(
         'Please make sure all the details of balance sheet are entered correctly'
       );
+    }
+    if (this.isDeprecationObjInvalid) {
+      this.utilsService.showSnackBar('Please enter the all fixed asset details');
+      return;
     }
 
     // if (this.ITR_JSON?.liableSection44AAflag === 'Y') {

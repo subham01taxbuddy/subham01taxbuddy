@@ -66,10 +66,10 @@
                         </div>
                     </div>
                     <div class="form-field">
-                        <div><span class="span">Description </span></div>
+                        <div><span class="span">Description </span><span class="text-wrapper-2">*</span></div>
                         <mat-form-field appearance="outline">
                             <input matInput class="input-field" placeholder="description" formControlName="description"
-                                maxlength="30">
+                                maxlength="30" required (blur)="saveDepreciationDetails(depreciation)">
                             <mat-error
                                 *ngIf="depreciation.get('description').hasError('required')  && (depreciation.get('description').dirty || depreciation.get('description').touched)">Please
                                 enter

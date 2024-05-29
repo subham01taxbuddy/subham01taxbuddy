@@ -221,7 +221,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
   addNewProperty() {
     this.amountRegex = AppConstants.amountWithoutDecimal;
-    this.cgArrayElement = this.ITR_JSON.capitalGain?.filter(
+    this.cgArrayElement = this.Copy_ITR_JSON.capitalGain?.filter(
       (item) => item.assetType === 'PLOT_OF_LAND'
     )[0];
     if (this.cgArrayElement?.assetDetails?.length > 0) {
@@ -370,9 +370,11 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   }
 
   markActive(index) {
+    let saved = false;
     if (this.currentCgIndex >= 0 && this.currentCgIndex <= this.labData[0]?.assetDetails?.length) {
       if(this.immovableForm.valid) {
         this.saveImmovableCG(this.immovableForm, index, false);
+        saved = true;
       } else {
         this.utilsService.showSnackBar(
             'To Switch/Add new property Please fill in all the mandatory fields in the current property'
@@ -385,7 +387,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       // this.cgArrayElement.assetDetails.push(this.cgArrayElement.assetDetails[this.currentCgIndex]);
       // this.editEmployerDetails(this.Copy_ITR_JSON.employers.length -1);
       this.mode = 'ADD';
-      this.saveImmovableCG(this.immovableForm, this.currentCgIndex, false);
+      if(!saved) {
+        this.saveImmovableCG(this.immovableForm, this.currentCgIndex, false);
+      }
     } else {
       this.currentCgIndex = index;
       this.mode = 'EDIT';
@@ -605,6 +609,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       first.amount = '';
       buyersDetails.push(this.createBuyersDetailsForm(first));
     } else {
+      this.utilsService.highlightInvalidFormFields(buyersDetails.controls[buyersDetails.controls.length-1] as UntypedFormGroup,
+          'accordBtn2', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -1202,12 +1208,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           this.currentCgIndex
         ].isIndexationBenefitAvailable = false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
 
-        // let filtered = this.cgArrayElement.improvement?.filter(
-        //   (imp) => imp.srn != this.currentCgIndex
-        // );
-        // if (this.improvements.length > 0) {
-        //   this.cgArrayElement.improvement = filtered.concat(this.improvements);
-        // }
+        let filtered = this.cgArrayElement.improvement?.filter(
+          (imp) => imp.srn != this.currentCgIndex
+        );
+        if (this.improvements.length > 0) {
+          this.cgArrayElement.improvement = filtered.concat(this.improvements);
+        }
 
         if (!this.Copy_ITR_JSON.capitalGain) {
           this.Copy_ITR_JSON.capitalGain = [];
@@ -1240,7 +1246,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
           );
           console.log('copy', this.Copy_ITR_JSON);
         }
-        this.labData = this.ITR_JSON.capitalGain?.filter(
+        this.labData = this.Copy_ITR_JSON.capitalGain?.filter(
             (item) => item.assetType === 'PLOT_OF_LAND'
         );
 
@@ -1577,21 +1583,23 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm =
         'cgProperty';
 
-      let tempImprovements = [];
-
+      let imp = [];
       if (this.isImprovements.value) {
         const improve = <UntypedFormArray>formGroupName.get('improvement');
-        let ded = [];
+
         improve.controls.forEach((obj: UntypedFormGroup) => {
-          ded.push(obj.getRawValue());
+          imp.push(obj.getRawValue());
         });
-        this.cgArrayElement.improvement = ded;
+        // this.cgArrayElement.improvement = imp;
       } else {
-        this.cgArrayElement.improvement = [];
+        // this.cgArrayElement.improvement = [];
       }
       // if (this.cgArrayElement.improvement?.length == 0) {
       //   this.cgArrayElement.improvement = null;
       // }
+      this.cgArrayElement.improvement = this.cgArrayElement.improvement?.filter(
+          element => element.srn != this.cgArrayElement.assetDetails[this.currentCgIndex].srn);
+      this.cgArrayElement.improvement = this.cgArrayElement.improvement.concat(imp);
 
       let ded = [];
       if (this.isDeductions.value) {

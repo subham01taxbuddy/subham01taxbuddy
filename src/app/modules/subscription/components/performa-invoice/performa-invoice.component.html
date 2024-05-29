@@ -15,7 +15,16 @@
             <div class="col-sm-12">
               <div class="filter-box">
                 <div class="row">
-                  <div class="col-sm-12 bckClr">
+                  <div class="col-sm-12">
+                    <section class="example-section checkbox-right">
+                      <div class="checkbox-group ">
+                        <mat-checkbox class="ft-18 mb-4" [formControl]="deletedInvoiceList"
+                        *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')"
+                        (change)="onCheckBoxChange()">Deleted Proforma Invoice List</mat-checkbox>
+                      </div>
+                    </section>
+                  </div>
+                  <div class="col-sm-12 bckClr mtNew">
                     <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
                       (sendPrincipleIndividual)="fromSme($event, false, true)"
                       (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
