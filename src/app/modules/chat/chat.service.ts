@@ -233,7 +233,8 @@ export class ChatService {
         departmentName: message.attributes.departmentName,
         departmentId: message.attributes.departmentId,
         type: message.type,
-        recipientFullName: message.recipient_fullname
+        recipientFullName: message.recipient_fullname,
+        sender:message.sender
 
       })
     );
@@ -279,7 +280,10 @@ export class ChatService {
         type: message.type,
         senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
       };
-      transformedMessages.push(m);
+
+      const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
+      if (user && m.sender === user.sender)
+        transformedMessages.push(m);
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
       return transformedMessages;
     }

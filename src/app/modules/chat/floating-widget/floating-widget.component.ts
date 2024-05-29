@@ -47,9 +47,10 @@ export class FloatingWidgetComponent implements OnInit {
         this.selectedUser = user;
         this.isUserChatVisible = true;
         this.showWidget = false;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
 
         const selectedDepartment = this.departmentNames.find(dept => dept.id === user.departmentId);
-        if(selectedDepartment){
+        if (selectedDepartment) {
             this.selectedUser.departmentName = selectedDepartment.name
         }
 
@@ -163,7 +164,8 @@ export class FloatingWidgetComponent implements OnInit {
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
                             type: conversation.type,
-                            departmentId: conversation.departmentId
+                            departmentId: conversation.departmentId,
+                            sender: conversation.sender
                         };
                     });
             }
@@ -177,7 +179,8 @@ export class FloatingWidgetComponent implements OnInit {
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id,
                         type: conversation.type,
-                        departmentId: conversation.departmentId
+                        departmentId: conversation.departmentId,
+                        sender: conversation.sender
                     };
                 });
             }
