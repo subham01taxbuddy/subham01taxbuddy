@@ -99,6 +99,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   selectedSearchUserId: any;
   assignedFilerId: number;
   searchedEmail:any;
+  userData :any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -1231,16 +1232,39 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
         console.log(res);
           if (res.data) {
-            this.userId = res?.data?.content[0].userId;
-            this.assignedFilerId = res?.data?.content[0].filerUserId;
-            this.openAddSubscriptionDialog();
+            this.userData = res?.data?.content;
+            const userIds = this.userData.map((user) => user.userId);
+            const uniqueUserIds = new Set(userIds);
+            if (uniqueUserIds.size !== 1) {
+              this._toastMessageService.alert(
+                'error',
+                'Found different user IDs for the same email. Unable to create subscription.'
+              );
+              return;
+            }else {
+              this.userId = res?.data?.content[0].userId;
+              this.assignedFilerId = res?.data?.content[0].filerUserId;
+
+              this.openAddSubscriptionDialog();
+            }
           }else {
             this.utilsService.getFilerIdByMobile('', 'ITR',this.searchedEmail).subscribe((res: any) => {
               console.log(res);
               if (res.data) {
-                this.userId = res?.data?.content[0].userId;
-                this.assignedFilerId = res?.data?.content[0].filerUserId;
-                this.openAddSubscriptionDialog();
+                this.userData = res?.data?.content;
+                const userIds = this.userData.map((user) => user.userId);
+                const uniqueUserIds = new Set(userIds);
+                if (uniqueUserIds.size !== 1) {
+                  this._toastMessageService.alert(
+                    'error',
+                    'Found different user IDs for the same email. Unable to create subscription.'
+                  );
+                  return;
+                }else{
+                  this.userId = res?.data?.content[0].userId;
+                  this.assignedFilerId = res?.data?.content[0].filerUserId;
+                  this.openAddSubscriptionDialog();
+                }
               } else {
                 this._toastMessageService.alert('error', res.message);
               }
