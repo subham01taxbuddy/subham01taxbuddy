@@ -104,7 +104,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     // if (salaryArray.valid) {
     // setTimeout(() => {
       // if (this.addData) {
-      this.addMoreSalary(null, false);
+      this.addMoreSalary(null, true);
       // }
     // }, 1000);
     // } else {
