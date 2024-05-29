@@ -605,6 +605,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       first.amount = '';
       buyersDetails.push(this.createBuyersDetailsForm(first));
     } else {
+      this.utilsService.highlightInvalidFormFields(buyersDetails.controls[buyersDetails.controls.length-1] as UntypedFormGroup,
+          'accordBtn2', this.elementRef);
       console.log('add above details first');
     }
   }

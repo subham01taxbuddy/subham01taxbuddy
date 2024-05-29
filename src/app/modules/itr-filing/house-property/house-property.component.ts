@@ -533,6 +533,8 @@ export class HousePropertyComponent implements OnInit {
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
+      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length-1] as UntypedFormGroup,
+          'accordBtn3', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -811,6 +813,8 @@ export class HousePropertyComponent implements OnInit {
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
+      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length-1] as UntypedFormGroup,
+          'accordBtn4', this.elementRef);
       console.log('add above details first');
     }
   }
