@@ -36,7 +36,7 @@
                   <span *ngFor="let folder of folders; let k=index;">
                    
                         <ul class="bullet-list">
-                          <li>
+                          <li *ngIf="!folder.isDeleted">
                             <h5>{{ folder.documentTag }}</h5>
                             <a style="line-height: 16px; overflow-wrap: break-word;" href="javascript:void(0)"
                               (click)="getCommonDocsUrl(folder);preventDownload($event)">{{ folder.fileName }}</a>
