@@ -1293,7 +1293,9 @@ export class SharesAndEquityComponent
         saleValue.toFixed()
       );
     }
-    this.calculateTotalCG(this.selectedFormGroup);
+    if(this.selectedFormGroup.controls['sellValuePerUnit'].value) {
+      this.calculateTotalCG(this.selectedFormGroup);
+    }
   }
 
   getPurchaseValue() {
