@@ -1,0 +1,70 @@
+.custome-dialog {
+  display: block;
+  padding: 24px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  overflow: auto;
+  outline: 0;
+  width: 100%;
+  height: auto;
+}
+.scroll{
+  overflow-x: hidden;
+  overflow-y: scroll !important;
+  min-height: inherit;
+  max-height: inherit;
+}
+.mat-mdc-dialog-container{
+  max-height: auto !important;
+  min-height: auto !important;
+}
+.mat-mdc-dialog-container{
+  height: auto !important;
+}
+.mdc-dialog{
+  height: auto !important;
+}
+.mdc-dialog__surface {
+  height: auto !important;
+  max-height: auto !important;
+  min-height: auto !important;
+}
+.mat-mdc-dialog-container .mdc-dialog__surface{
+  height: auto !important;
+  max-height: auto !important;
+  min-height: auto !important;
+}
+
+::ng-deep.mat-mdc-dialog-container {
+  height: auto !important;
+}
+
+
+.ag-theme-balham .ag-row {
+  height: auto !important;
+  padding: 10px 0 !important;
+}
+
+.ag-theme-balham .ag-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100% !important;
+}
+
+.dwldBtn-1{
+  margin-left:100px;
+  height: 48px;
+  padding: 8px 24px;
+  align-items: center;
+  gap: 9px;
+  border-radius: 4px;
+  border: 1px solid #2D8EF9;
+  color: #2D8EF9;
+  font-family: DM Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.28px
+}

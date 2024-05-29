@@ -1,10 +1,41 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="row">
-  <h5>{{data.mode}} Call Details For <span><span style="color: rgb(106, 123, 237);">{{data.filerName}}</span> </span>
+<div  class="custome-dialog">
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+  <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+    move
+    away from the page...</span>
+  <div class="row">
+    <h5>{{data.mode}} Call Details For <span><span style="color: rgb(106, 123, 237);">{{data.data.filerName}}</span></span>
+      <button class="dwldBtn-1" [disabled]="loading"
+        *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+          (click)="downloadReport()">
+          <i class="fa fa-download" aria-hidden="true"></i> Download File
+      </button>
       <button style="float: right" (click)="close()"><i class="fa fa-close"></i></button>
-  </h5>
-</div>
-<hr class="hrAdj">
-<div class="col-sm-12">
+    </h5>
+  </div>
+  <hr class="hrAdj">
+  <div>
+    <div class="mt-3">
+      <div>
+        <div class="row">
+          <div class="col-sm-9 row">
+            <div class="table-info-text col-sm-4">
+              {{data.mode}} Calling Details:
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+          </div>
+        </div>
+        <table>
+          <tr *ngFor="let item of callingReport | paginate:config"></tr>
+        </table>
 
-</div>
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="callingReportGridOptions">
+        </ag-grid-angular>
+
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
+  </div>
+  </div>

@@ -359,7 +359,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view outbound Connected call details"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-outboundConnected-details">
+          ${params.data.outboundConnected} </button>`;
+        },
       },
       {
         headerName: 'Outbound Answered Ratio',
@@ -385,7 +390,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view inbound Calls details"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundCalls-details">
+          ${params.data.inboundCalls} </button>`;
+        },
       },
       {
         headerName: 'Inbound Connected',
@@ -398,7 +408,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view inbound Connected call details"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundConnected-details">
+          ${params.data.inboundConnected} </button>`;
+        },
       },
       {
         headerName: 'Inbound Answered Ratio',
@@ -424,7 +439,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="view no Of MissedCall call details"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-noOfMissedCall-details">
+          ${params.data.noOfMissedCall} </button>`;
+        },
       },
       {
         headerName: 'Average time spent on calling (overall from dialing till end of call)',
@@ -477,6 +497,23 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       switch (actionType) {
         case 'view-Outbound-details': {
           this.viewCallDetails(params.data,'Outbound');
+          break;
+        }
+        case 'view-outboundConnected-details': {
+          this.viewCallDetails(params.data,'Outbound Connected');
+          break;
+        }
+        case 'view-inboundCalls-details': {
+          this.viewCallDetails(params.data,'Inbound');
+          break;
+        }
+        case 'view-inboundConnected-details': {
+          this.viewCallDetails(params.data,'Inbound Connected');
+          break;
+        }
+        case 'view-noOfMissedCall-details': {
+          this.viewCallDetails(params.data,'No Of Missed');
+          break;
         }
       }
     }
@@ -484,11 +521,13 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
   viewCallDetails(data, mode){
     let disposable = this.dialog.open(ViewCallDetailsComponent, {
-      width: '80%',
+      width: '90%',
       height: 'auto',
       data: {
         mode: mode,
-        data: data
+        data: data,
+        startDate: this.startDate.value,
+        endDate: this.endDate.value,
       }
     })
 
