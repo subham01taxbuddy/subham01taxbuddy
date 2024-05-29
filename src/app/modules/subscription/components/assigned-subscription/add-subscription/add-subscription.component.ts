@@ -162,7 +162,7 @@ export class AddSubscriptionComponent implements OnInit {
 
     this.loading = true;
     let futureParam
-    if (this.roles.includes('ROLE_FILER') || userId) {
+    if (this.roles.includes('ROLE_FILER')) {
       futureParam = `/bo/future-year-subscription-exists?userId=${userId}`
     }else{
       futureParam = `/bo/future-year-subscription-exists?mobileNumber=${number}`
@@ -180,9 +180,6 @@ export class AddSubscriptionComponent implements OnInit {
       this.disableItrSubPlan = response.data.itrSubscriptionExists;
 
       this.loading = true;
-      if(! this.roles.includes('ROLE_FILER') && this.data.email){
-        filter = '&email=' + this.data.email
-      }
       let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
       this.reportService.getMethod(param).subscribe((response: any) => {
         this.loading = false;
