@@ -10,7 +10,7 @@ import {
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridApi, GridOptions } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -175,6 +175,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   // cardTitles = ['Filer View','Owner View','Leader/Admin'];
   smeList: any;
   gridApi: GridApi;
+  deletedInvoiceList = new UntypedFormControl(false);
 
   ngOnInit() {
     this.getMasterStatusList();
@@ -325,6 +326,30 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     // this.getInvoice();
   }
 
+  onCheckBoxChange() {
+    if (this.deletedInvoiceList.value) {
+      this.cacheManager.clearCache();
+      this.searchParam.serviceType = null;
+      this.searchParam.statusId = null;
+      this.searchParam.page = 0;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.emailId = null;
+      this.config.totalItems = 0;
+      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+
+      if (this.roles.includes('ROLE_FILER')) {
+        this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink', 'hideCol'));
+      } else {
+        this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, '', 'hideCol'));
+      }
+    } else {
+      this.roles.includes('ROLE_FILER') ?
+        this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink')) :
+        this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList));
+
+      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+    }
+  }
 
 
   get assessmentYear() {
@@ -366,6 +391,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.deletedInvoiceList.setValue(false);
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
@@ -454,8 +480,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       nameFilter = '&name=' + this.invoiceFormGroup.controls['name'].value;
     }
 
+    let deleteFilter = '';
+    if(this.deletedInvoiceList.value){
+      this.searchParam.page = 0;
+      deleteFilter = '&deletedInvoice=' + this.deletedInvoiceList.value;
+    }
+
     let data = this.utilService.createUrlParams(this.searchParam);
-    param = `/bo/v1/invoice?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}`;
+    param = `/bo/v1/invoice?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}${deleteFilter}`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
@@ -576,6 +608,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         userFilter += `&filerUserId=${this.filerId}`;
       }
       param = param + userFilter;
+
+      let deleteFilter = '';
+      if(this.deletedInvoiceList.value){
+        this.searchParam.page = 0;
+        deleteFilter = '&deletedInvoice=' + this.deletedInvoiceList.value;
+      }
+      param = param + deleteFilter
+
       if (Object.keys(this.searchBy).length) {
         let searchByKey = Object.keys(this.searchBy);
         let searchByValue = Object.values(this.searchBy);
@@ -596,7 +636,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
   }
 
-  invoicesCreateColumnDef(List ,hidePaymentLink?) {
+  invoicesCreateColumnDef(List: any, hidePaymentLink?: string, hideCol?: string): (ColDef | ColGroupDef)[] {
     return [
       {
         headerName: 'User Id',
@@ -840,6 +880,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
+        hide : hideCol ? true :false ,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {

@@ -419,10 +419,14 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       Number(specIncome.controls['turnOver'].value) +
       Number(specIncome.controls['finishedGoodsClosingStock'].value)
     );
-    specIncome.controls['grossProfit'].setValue(
-      Number(specIncome.controls['totalCredit'].value) - Number(specIncome.controls['finishedGoodsOpeningStock'].value)
-      - Number(specIncome.controls['purchase'].value) - Number(this.selectedFormGroup.controls['expenditure'].value)
-    );
+
+    let grossProfit = Number(specIncome.controls['totalCredit'].value) -
+    Number(specIncome.controls['finishedGoodsOpeningStock'].value)-
+    Number(specIncome.controls['purchase'].value)-
+    Number(specIncome.controls['expenditure'].value);
+
+    specIncome.controls['grossProfit'].setValue(grossProfit);
+    
     specIncome.controls['netIncome'].setValue(
       Number(specIncome.controls['grossProfit'].value)
     );
