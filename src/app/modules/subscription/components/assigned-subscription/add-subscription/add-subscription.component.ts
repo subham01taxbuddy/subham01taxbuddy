@@ -69,8 +69,10 @@ export class AddSubscriptionComponent implements OnInit {
       this.getSmeDetail();
     }
     if (this.data.mobileNo) {
+      this.loading = true;
       this.getUserInfoByMobileNum(this.data.mobileNo);
     } else {
+      this.loading = true;
       this.getUserInfoByMobileNum('', this.data.userId);
     }
 
@@ -78,6 +80,7 @@ export class AddSubscriptionComponent implements OnInit {
 
   getSmeDetail() {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
+    this.loading = true;
     let loggedInSmeUserId = this.loggedInSme[0]?.userId;
     let userId;
     if (this.data.filerId) {
@@ -103,22 +106,28 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
+    this.loading =true;
     if (this.roles.includes('ROLE_FILER') || (this.data.filerId && (plan.servicesType === 'ITR' || plan.servicesType ==='ITRU'))) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
         this.onlyServiceITR = true;
+        this.loading=false;
         return this.smeDetails?.skillSetPlanIdList.includes(planId);
       }
+      this.loading=false;
       return false;
     } else {
       this.onlyServiceITR = false;
+      this.loading=false;
       return true;
     }
   }
 
   getAllPlanInfo() {
+    this.loading = true;
     let param = '/plans-master';
     this.itrService.getMethod(param).subscribe((plans: any) => {
+      this.loading = false;
       console.log('Plans -> ', plans);
       this.allPlans = [];
 
@@ -140,6 +149,7 @@ export class AddSubscriptionComponent implements OnInit {
 
   getUserInfoByMobileNum(number, userId?) {
     // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
+    this.loading = true;
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
     let filter = '';
     if (number) {
@@ -175,7 +185,7 @@ export class AddSubscriptionComponent implements OnInit {
     (response: any) => {
       if (response?.success && response?.data?.couponCodeExists)
         this.disableTpaSubPlan = response.data;
-
+      this.loading = true;
       this.reportService.getMethod(futureParam).subscribe((response: any) => {
       this.disableItrSubPlan = response.data.itrSubscriptionExists;
 

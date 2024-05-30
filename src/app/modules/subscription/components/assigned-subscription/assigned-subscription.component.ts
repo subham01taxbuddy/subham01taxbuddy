@@ -1175,6 +1175,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
+    this.loading=true;
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach((key) => {
         if (key === 'mobileNumber') {
@@ -1199,6 +1200,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               'error',
               'The Customer is in potential Users, please activate from there and then create subscription'
             );
+            this.loading=false;
             return;
           }
         } else {
@@ -1216,6 +1218,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               'error',
               'The Customer is in potential Users, please activate from there and then create subscription'
             );
+            this.loading=false;
             return;
           }
         } else {
@@ -1240,11 +1243,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 'error',
                 'Found different user IDs for the same email. Unable to create subscription.'
               );
+              this.loading=false;
               return;
             }else {
               this.userId = res?.data?.content[0].userId;
               this.assignedFilerId = res?.data?.content[0].filerUserId;
-
+              this.loading=false;
               this.openAddSubscriptionDialog();
             }
           }else {
@@ -1259,10 +1263,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                     'error',
                     'Found different user IDs for the same email. Unable to create subscription.'
                   );
+                  this.loading=false;
                   return;
                 }else{
                   this.userId = res?.data?.content[0].userId;
                   this.assignedFilerId = res?.data?.content[0].filerUserId;
+                  this.loading=false;
                   this.openAddSubscriptionDialog();
                 }
               } else {
@@ -1274,6 +1280,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }else if(this.selectedSearchUserId){
       this.userId = this.selectedSearchUserId;
       this.assignedFilerId = this?.loggedInSme[0]?.userId;
+      this.loading=false;
       this.openAddSubscriptionDialog();
     } else {
       this.utilsService.getFilerIdByMobile(this.mobileNumber)
@@ -1282,6 +1289,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           if (res.data) {
             this.assignedFilerId = res?.data?.content[0].filerUserId;
             this.userId = res?.data?.content[0].userId;
+            this.loading=false;
             this.openAddSubscriptionDialog();
           } else {
             this.utilsService.getFilerIdByMobile(this.mobileNumber, 'ITR')
@@ -1290,9 +1298,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 if (res.data) {
                   this.assignedFilerId = res?.data?.content[0].filerUserId;
                   this.userId = res?.data?.content[0].userId;
+                  this.loading=false;
                   this.openAddSubscriptionDialog();
                 } else {
                   this._toastMessageService.alert('error', res.message);
+                  this.loading=false;
                 }
               });
           }
