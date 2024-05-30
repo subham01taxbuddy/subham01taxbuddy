@@ -68,3 +68,16 @@
   line-height: 20px; /* 142.857% */
   letter-spacing: -0.28px
 }
+audio {
+  display: block;
+  width: 100%;
+
+}
+
+.audio-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}

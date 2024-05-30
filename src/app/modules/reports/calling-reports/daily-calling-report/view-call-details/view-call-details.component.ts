@@ -43,12 +43,13 @@ export class ViewCallDetailsComponent implements OnInit {
     page: 0,
     pageSize: 15,
   };
-  config: any;
+  childConfig: any;
   callingReport:any;
   callingReportGridOptions:GridOptions;
   loggedInSme: any;
   roles: any;
   showCsvMessage: boolean;
+  totalPages : 0
 
   constructor(
     public dialogRef: MatDialogRef<ViewCallDetailsComponent>,
@@ -69,11 +70,12 @@ export class ViewCallDetailsComponent implements OnInit {
       sortable: true,
       filter: true,
       getRowHeight: this.getRowHeight,
+
     };
-    this.config = {
+    this.childConfig = {
       itemsPerPage: 15,
       currentPage: 1,
-      totalItems: null,
+      totalItems: 0,
     };
     console.log('data', this.data)
     this.getCallList()
@@ -82,6 +84,7 @@ export class ViewCallDetailsComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    // this.attachEventListeners();
   }
 
   getCallList(){
@@ -123,11 +126,12 @@ export class ViewCallDetailsComponent implements OnInit {
       if (response.success) {
         if (Array.isArray(response?.data?.content) && response?.data?.content?.length > 0) {
           this.callingReport = response?.data?.content;
-          this.config.totalItems = response?.data?.totalElements;
+          this.childConfig.totalItems = response?.data?.totalElements;
+          this.totalPages = response?.data?.totalPages;
           this.callingReportGridOptions.api?.setRowData(this.createRowData(this.callingReport));
         }else{
           this.callingReportGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
+          this.childConfig.totalItems = 0;
           this._toastMessageService.alert('error', 'Data Not Found')
         }
 
@@ -149,6 +153,21 @@ export class ViewCallDetailsComponent implements OnInit {
 
   reportsCodeColumnDef() {
     return [
+      {
+        headerName: 'Sr. No.',
+        width: 40,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function (params) {
+          return params.node.rowIndex + 1;
+        }
+      },
       {
         headerName: 'Customer Name',
         field: 'customerName',
@@ -174,7 +193,7 @@ export class ViewCallDetailsComponent implements OnInit {
         headerName: 'Customer Number',
         field: 'customerNumber',
         sortable: true,
-        width: 200,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -194,7 +213,7 @@ export class ViewCallDetailsComponent implements OnInit {
         headerName: 'Call Status',
         field: 'call_status',
         sortable: true,
-        width: 150,
+        width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -211,6 +230,27 @@ export class ViewCallDetailsComponent implements OnInit {
          }
       },
       {
+        headerName: 'Call Date|Time',
+        field: 'start_stamp',
+        sortable: true,
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (params) => {
+          if (params.value) {
+            const formattedDate = this.datePipe.transform(params.value, 'MMM d, y, h:mm:ss a');
+            return formattedDate ? formattedDate : params.value;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
         headerName: 'Recording',
         field: 'recordingLink',
         sortable: true,
@@ -223,16 +263,60 @@ export class ViewCallDetailsComponent implements OnInit {
           debounceMs: 0
         },
         cellRenderer: (params) => {
-          return `<div display: flex; align-items: center;">
-          <audio controls>
-            <source src="${params.value}" type="audio/mpeg">
-            Your browser does not support the audio tag.
-          </audio>
-          </div>`;
+          if (params.value) {
+            const uniqueId = `recording-${params.node.id}`;
+            return `<button id="${uniqueId}" type="button" class="play-recording action_icon add_button"
+              title="view no Of MissedCall call details"
+              style="border: none; background: transparent; font-size: 13px; cursor: pointer !important; color: #04a4bc;"
+              data-recording="${params.value}" data-action-type="play-details">
+              Click here to play Recording
+            </button>`;
+          } else {
+            return '-';
+          }
         }
-      },
+      }
     ]
   }
+
+  onSmeRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      if (actionType === 'play-details') {
+        const recordingLink = params.event.target.getAttribute('data-recording');
+        const targetId = params.event.target.id;
+        this.playRecording(targetId, recordingLink);
+      }
+    }
+  }
+
+  attachEventListeners(data?) {
+  const recordingLink = data.recordingLink;
+    if (recordingLink) {
+      return` <div class="audio-container">
+              <audio controls controlsList="nodownload noplaybackrate">
+                <source src="${recordingLink}" type="audio/mpeg">
+                Your browser does not support the audio tag.
+              </audio>
+            </div>
+          `
+    }
+  }
+
+  playRecording(targetId: string, recordingLink: string) {
+    const buttonElement = document.getElementById(targetId);
+    if (buttonElement && recordingLink) {
+      buttonElement.outerHTML = `
+        <div class="audio-container">
+          <audio controls controlsList="nodownload noplaybackrate">
+            <source src="${recordingLink}" type="audio/mpeg">
+            Your browser does not support the audio tag.
+          </audio>
+        </div>
+      `;
+    }
+  }
+
 
   getRowHeight(params) {
     if (params.data.recordingLink) {
@@ -278,6 +362,7 @@ export class ViewCallDetailsComponent implements OnInit {
       { key: 'customerName', value: 'Customer Name' },
       { key: 'customerNumber', value: 'Customer Number' },
       { key: 'call_status', value: 'Call Status' },
+      {key:'start_stamp',value : 'Call Date|Time'},
       { key: 'recordingLink', value: 'Recording' },
 
     ]
@@ -287,11 +372,13 @@ export class ViewCallDetailsComponent implements OnInit {
     this.showCsvMessage = false;
   }
 
-  pageChanged(event:any) {
-    this.config.currentPage = event;
+  pageChanged1(event: number): void {
+    console.log('Page changed to: ', event);
+    this.childConfig.currentPage = event;
     this.searchParam.page = event - 1;
     this.getCallList();
   }
+
 
   close(){
     this.dialogRef.close();
