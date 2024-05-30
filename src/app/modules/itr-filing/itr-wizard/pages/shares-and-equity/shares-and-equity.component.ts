@@ -775,14 +775,14 @@ export class SharesAndEquityComponent
           res?.data?.costOfAcquisitionOrImprovement
         );
         this.getImprovementYears();
-        this.calculateTotalCG(this.selectedFormGroup);
+        this.calculateTotalCG(this.selectedFormGroup, true);
       });
     } else if (this.bondType === 'listed') {
-      this.calculateTotalCG(this.selectedFormGroup);
+      this.calculateTotalCG(this.selectedFormGroup, true);
     } else {
       this.selectedFormGroup?.controls['indexCostOfAcquisition']?.setValue(0);
       this.getImprovementYears();
-      this.calculateTotalCG(this.selectedFormGroup);
+      this.calculateTotalCG(this.selectedFormGroup, true);
     }
   }
 
@@ -826,10 +826,10 @@ export class SharesAndEquityComponent
           res?.data?.costOfAcquisitionOrImprovement
         );
         this.getImprovementYears();
-        this.calculateTotalCG(this.selectedFormGroup);
+        this.calculateTotalCG(this.selectedFormGroup, true);
       });
     } else if (this.bondType === 'listed') {
-      this.calculateTotalCG(this.selectedFormGroup);
+      this.calculateTotalCG(this.selectedFormGroup, true);
     } else {
       (
         this.selectedFormGroup?.controls['improvementsArray'] as UntypedFormGroup
@@ -838,7 +838,7 @@ export class SharesAndEquityComponent
           ?.controls['costOfImprovement']?.value
       );
       this.getImprovementYears();
-      this.calculateTotalCG(this.selectedFormGroup);
+      this.calculateTotalCG(this.selectedFormGroup, true);
     }
   }
 
@@ -846,7 +846,7 @@ export class SharesAndEquityComponent
     this.calculateGainType(securities);
   }
 
-  calculateTotalCG(securities) {
+  calculateTotalCG(securities, refresh?) {
     this.updateDeductionUI();
     if (securities.valid) {
       const param = '/singleCgCalculate';
@@ -931,7 +931,9 @@ export class SharesAndEquityComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(securities, "accordBtn", this.elementRef);
+      if(refresh) {
+        this.utilsService.highlightInvalidFormFields(securities, "accordBtn", this.elementRef);
+      }
     }
   }
 
@@ -1278,23 +1280,24 @@ export class SharesAndEquityComponent
   }
 
   getSaleValue() {
-    let saleValue =
-      parseFloat(this.selectedFormGroup.controls['sellValuePerUnit'].value) *
-      parseFloat(this.selectedFormGroup.controls['sellOrBuyQuantity'].value);
-    // this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed());
-
-    //Ashwini: Removing rounding off of the values after discussion with Gitanjali
-    if (this.bondType === 'listed') {
-      this.selectedFormGroup.controls['sellValue'].setValue(
-        saleValue.toFixed()
-      );
-    } else {
-      this.selectedFormGroup.controls['sellValue'].setValue(
-        saleValue.toFixed()
-      );
-    }
     if(this.selectedFormGroup.controls['sellValuePerUnit'].value) {
-      this.calculateTotalCG(this.selectedFormGroup);
+      let saleValue =
+        parseFloat(this.selectedFormGroup.controls['sellValuePerUnit'].value) *
+        parseFloat(this.selectedFormGroup.controls['sellOrBuyQuantity'].value);
+      // this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed());
+
+      //Ashwini: Removing rounding off of the values after discussion with Gitanjali
+      if (this.bondType === 'listed') {
+        this.selectedFormGroup.controls['sellValue'].setValue(
+          saleValue.toFixed()
+        );
+      } else {
+        this.selectedFormGroup.controls['sellValue'].setValue(
+          saleValue.toFixed()
+        );
+      }
+
+      this.calculateTotalCG(this.selectedFormGroup, false);
     }
   }
 
@@ -1317,7 +1320,7 @@ export class SharesAndEquityComponent
         purchaseValue.toFixed()
       );
     }
-    this.calculateTotalCG(this.selectedFormGroup);
+    this.calculateTotalCG(this.selectedFormGroup, false);
   }
 
   getImprovementYears() {
@@ -1773,7 +1776,7 @@ export class SharesAndEquityComponent
         ].updateValueAndValidity();
         improvementsFormArray.controls['costOfImprovement'].setValue(null);
         improvementsFormArray.controls['indexCostOfImprovement'].setValue(null);
-        this.calculateTotalCG(this.selectedFormGroup);
+        this.calculateTotalCG(this.selectedFormGroup, true);
       } else {
         improvementsFormArray.controls[
           'financialYearOfImprovement'
