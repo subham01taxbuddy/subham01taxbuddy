@@ -55,7 +55,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   dailyCallingReport: any;
-  config: any;
+  parentConfig: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -110,7 +110,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     };
 
 
-    this.config = {
+    this.parentConfig = {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
@@ -215,7 +215,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let userFilter = '';
     if (this.leaderId && !this.filerId && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
@@ -225,7 +225,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
     if (this.filerId && this.searchAsPrinciple === true && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === true && pageNumber) {
@@ -233,7 +233,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     }
     if (this.filerId && this.searchAsPrinciple === false && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false && pageNumber) {
@@ -256,14 +256,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       this.loading = false;
       if (response.success) {
         this.dailyCallingReport = response?.data?.content;
-        this.config.totalItems = response?.data?.totalElements;
+        this.parentConfig.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
         this.cacheManager.initializeCache(this.createRowData(this.dailyCallingReport));
         // this.cacheManager.cachePageContent(0, this.createRowData(this.dailyCallingReport));
 
         const currentPageNumber = pageNumber || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.dailyCallingReport));
-        this.config.currentPage = currentPageNumber;
+        this.parentConfig.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -343,9 +343,13 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view outbound call details"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-Outbound-details">
-          ${params.data.outboundCalls} </button>`;
+          if(params.data.outboundCalls > 0){
+            return `<button type="button" class="action_icon add_button" title="view outbound call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-Outbound-details">
+            ${params.data.outboundCalls} </button>`;
+          }else{
+            return params.data.outboundCalls ;
+          }
         },
       },
       {
@@ -361,9 +365,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view outbound Connected call details"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-outboundConnected-details">
-          ${params.data.outboundConnected} </button>`;
+          if(params.data.outboundConnected > 0){
+            return `<button type="button" class="action_icon add_button" title="view outbound Connected call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-outboundConnected-details">
+            ${params.data.outboundConnected} </button>`;
+          }else{
+            return  params.data.outboundConnected ;
+          }
+
         },
       },
       {
@@ -392,9 +401,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view inbound Calls details"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundCalls-details">
-          ${params.data.inboundCalls} </button>`;
+          if(params.data.inboundCalls > 0){
+            return `<button type="button" class="action_icon add_button" title="view inbound Calls details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundCalls-details">
+            ${params.data.inboundCalls} </button>`;
+          }else{
+            return params.data.inboundCalls
+          }
+
         },
       },
       {
@@ -410,9 +424,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view inbound Connected call details"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundConnected-details">
-          ${params.data.inboundConnected} </button>`;
+          if(params.data.inboundConnected > 0){
+            return `<button type="button" class="action_icon add_button" title="view inbound Connected call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundConnected-details">
+            ${params.data.inboundConnected} </button>`;
+          }else{
+            return params.data.inboundConnected
+          }
+
         },
       },
       {
@@ -441,9 +460,13 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="view no Of MissedCall call details"
-          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-noOfMissedCall-details">
-          ${params.data.noOfMissedCall} </button>`;
+          if(params.data.noOfMissedCall > 0){
+            return `<button type="button" class="action_icon add_button" title="view no Of MissedCall call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-noOfMissedCall-details">
+            ${params.data.noOfMissedCall} </button>`;
+          }else{
+            return params.data.noOfMissedCall
+          }
         },
       },
       {
@@ -590,7 +613,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.selectRole.setValue(null);
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
-    this.config.currentPage = 1
+    this.parentConfig.currentPage = 1
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
@@ -604,7 +627,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     } else {
       //clear grid for loaded data
       this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData([]));
-      this.config.totalItems = 0;
+      this.parentConfig.totalItems = 0;
     }
     // this.showReports();
   }
@@ -613,9 +636,9 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
       this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
-      this.config.currentPage = event;
+      this.parentConfig.currentPage = event;
     } else {
-      this.config.currentPage = event;
+      this.parentConfig.currentPage = event;
       this.searchParam.page = event - 1;
       this.showReports(event);
     }
