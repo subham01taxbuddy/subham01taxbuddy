@@ -89,7 +89,9 @@ export class LoginComponent implements OnInit {
     console.log(res);
     if (res.success) {
       sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data));
-      this.idleService.idleAfterSeconds = res.data[0].inactivityTimeInMinutes * 60;
+      let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
+      this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
+
       we_login(res.data[0].userId.toString());
       we_setAttribute('we_email', res.data[0].email);
       we_setAttribute('we_phone', (res.data[0].callingNumber));
