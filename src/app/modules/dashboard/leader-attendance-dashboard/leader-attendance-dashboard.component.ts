@@ -134,7 +134,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
         const totalItrOthers = this.allDetails?.reduce((total, item) => total + item.others, 0);
         const totalItrU = this.allDetails?.reduce((total, item) => total + item.itrU, 0);
         const totalItrFiled = this.allDetails?.reduce((total, item) => total + item.totalITRFiled, 0);
-        const totalRevenueGenerated = this.allDetails?.reduce((total, item) => total + item.revenueGenerated, 0);
+        const totalRevenueGenerated = this.allDetails?.reduce((total, item) => total + item.paymentGenerated, 0);
         const totalCommissionEarnedBeforeTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedBeforeTDS, 0);
         const totalTds = this.allDetails?.reduce((total, item) => total + item.tds, 0);
         const totalCommissionEarnedAfterTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedAfterTDS, 0);
@@ -260,14 +260,14 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
       { key: 'others', value: 'Other(original + revise)' },
       { key: 'itrU', value: 'ITR U' },
       { key: 'totalITRFiled', value: 'Total ITR Filed' },
-      { key: 'revenueGenerated', value: 'Revenue Generated(filed + pending to file cases) Total amount of paid invoices' },
-      { key: 'applicableCommissionPercentage', value: 'Applicable Commission Percentage as on date' },
+      { key: 'paymentGenerated', value: 'Revenue Generated(filed)<br>Total amount of paid invoices' },
       { key: 'totalCommissionEarnedBeforeTDS', value: 'Total Commission Earned before TDS' },
       { key: 'tds', value: 'TDS' },
       { key: 'totalCommissionEarnedAfterTDS', value: 'Total Commission Earned after TDS' },
       { key: 'commissionPaid', value: 'Commission Paid' },
       { key: 'commissionPayable', value: 'Commission Payable' },
       { key: 'averageUserRating', value: 'Average of users Rating' },
+      // { key: 'applicableCommissionPercentage', value: 'Applicable Commission Percentage as on date' },
     ]
 
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'attendance-performance-report', fieldName, {});
