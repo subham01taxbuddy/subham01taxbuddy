@@ -35,7 +35,7 @@
                     <img [src]="conversation.image" alt="User Icon">
                     <div class="user-info">
                         <div class="card_row row col-lg-12">
-                            <span class="col-lg-8 user-name">{{ conversation.name }}</span>
+                            <span class="col-lg-8 user-name">{{ conversation.userFullName }}</span>
                             <span class="col-lg-4 user-time">{{ getCurrentTime(conversation.timestamp) }}</span>
                         </div>
                         <span *ngIf="conversation.type === 'html'"><em>rich message text</em></span>
@@ -53,7 +53,7 @@
     
     </div>
     <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
-        [username]="selectedUser.name" [requestId]="selectedUser.request_id" class="floating expanded"></app-user-chat>
+        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id" class="floating expanded"></app-user-chat>
     
  </div>
     
