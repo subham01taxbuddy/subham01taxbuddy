@@ -60,13 +60,14 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: './assets/files/Steps to download Angel One.pdf',
       // },
-      {
-        name: 'Paytm',
-        label: 'PayTm',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download PayTM.pdf',
-      },
+        //30-05-24
+      // {
+      //   name: 'Paytm',
+      //   label: 'PayTm',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download PayTM.pdf',
+      // },
       //commenting for this release
       // {
       //   name: 'Axis',
@@ -75,13 +76,14 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      {
-        name: 'Upstox',
-        label: 'Upstox',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download upstox statement.pdf',
-      },
+        //30-05-24
+      // {
+      //   name: 'Upstox',
+      //   label: 'Upstox',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download upstox statement.pdf',
+      // },
       {
         name: 'Groww',
         label: 'Groww',
