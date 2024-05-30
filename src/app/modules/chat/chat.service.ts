@@ -232,9 +232,10 @@ export class ChatService {
         request_id: message.conversWith,
         departmentName: message.attributes.departmentName,
         departmentId: message.attributes.departmentId,
+        userFullName: message.attributes.userFullname,
         type: message.type,
         recipientFullName: message.recipient_fullname,
-        sender:message.sender
+        sender: message.sender
 
       })
     );
@@ -288,18 +289,19 @@ export class ChatService {
       };
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
+      console.log(' selected user details', user)
       if (user && m.sender === user.sender)
         transformedMessages.push(m);
-        const msgString = this.sessionStorageService.getItem('fetchedMessages');
-        const oldMessageList = JSON.parse(msgString);
-        transformedMessages.forEach(element => {
-          if (!element.action) {
-            const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-            element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
-          }
-        });
-        this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
-        return transformedMessages;
+      const msgString = this.sessionStorageService.getItem('fetchedMessages');
+      const oldMessageList = JSON.parse(msgString);
+      transformedMessages.forEach(element => {
+        if (!element.action) {
+          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+          element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+        }
+      });
+      this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
+      return transformedMessages;
     }
   }
 
@@ -591,6 +593,10 @@ export class ChatService {
 
   getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
+    let user = this.localStorageService.getItem('SELECTED_CHAT');
+    let parsedUser = JSON.parse(user);
+    let userFullName = parsedUser?.userFullName;
+    debugger
     return {
       "departmentId": this.deptID,
       "departmentName": this.deptName,
@@ -601,7 +607,7 @@ export class ChatService {
       "projectId": this.PROJECT_ID,
       "widgetVer": "v.5.0.71.3",
       "payload": [],
-      "userFullname": this.userFullName,
+      "userFullname": userFullName,
       "requester_id": chatToken,
       "lang": "en",
       "tempUID": this.uuidv4(),

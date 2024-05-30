@@ -52,6 +52,8 @@ export class UserChatComponent implements OnInit {
 
   fullChatScreen: boolean = false;
 
+  showSendButton: boolean = false;
+
 
   templateId: any;
   formData: any = {};

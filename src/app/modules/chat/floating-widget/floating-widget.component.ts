@@ -165,7 +165,8 @@ export class FloatingWidgetComponent implements OnInit {
                             request_id: conversation.request_id,
                             type: conversation.type,
                             departmentId: conversation.departmentId,
-                            sender: conversation.sender
+                            sender: conversation.sender,
+                            userFullName: conversation.userFullName
                         };
                     });
             }
@@ -180,7 +181,8 @@ export class FloatingWidgetComponent implements OnInit {
                         request_id: conversation.request_id,
                         type: conversation.type,
                         departmentId: conversation.departmentId,
-                        sender: conversation.sender
+                        sender: conversation.sender,
+                        userFullName: conversation.userFullName
                     };
                 });
             }
