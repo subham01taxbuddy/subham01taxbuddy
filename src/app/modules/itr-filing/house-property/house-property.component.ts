@@ -176,7 +176,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   markActive(index) {
-    if (this.currentIndex >= 0 && this.currentIndex <= this.ITR_JSON.houseProperties.length) {
+    if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
       if(this.housePropertyForm.valid) {
         this.saveHpDetails(false);
       } else {
