@@ -19,6 +19,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { IdleService } from 'src/app/services/idle-service';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -55,7 +56,8 @@ export class LoginComponent implements OnInit {
     private speedTestService: SpeedTestService,
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
-    private kommunicateSsoService: KommunicateSsoService
+    private kommunicateSsoService: KommunicateSsoService,
+    private idleService: IdleService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -86,7 +88,10 @@ export class LoginComponent implements OnInit {
   handleSmeInfo(res) {
     console.log(res);
     if (res.success) {
-      sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data))
+      sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data));
+      let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
+      this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
+
       we_login(res.data[0].userId.toString());
       we_setAttribute('we_email', res.data[0].email);
       we_setAttribute('we_phone', (res.data[0].callingNumber));
