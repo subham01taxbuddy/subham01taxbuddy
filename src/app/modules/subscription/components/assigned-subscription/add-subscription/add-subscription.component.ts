@@ -236,7 +236,7 @@ export class AddSubscriptionComponent implements OnInit {
   createSubscription() {
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
       let param1
-      if (this.roles.includes('ROLE_FILER') || this.data.email ) {
+      if (this.roles.includes('ROLE_FILER')) {
         param1 = '/bo/subscription/coupon-code-exists?userId='+this.data.userId+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
       }else{
         param1 = '/bo/subscription/coupon-code-exists?mobileNumber='+this.data.mobileNo+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
@@ -279,7 +279,7 @@ export class AddSubscriptionComponent implements OnInit {
                 }
 
                 let param
-                if (this.roles.includes('ROLE_FILER') || this.data.email){
+                if (this.roles.includes('ROLE_FILER')){
                   param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&userId=${this.data.userId}${userFilter}`
                 }else{
                   param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}${userFilter}`
