@@ -232,9 +232,10 @@ export class ChatService {
         request_id: message.conversWith,
         departmentName: message.attributes.departmentName,
         departmentId: message.attributes.departmentId,
+        userFullName: message.attributes.userFullname,
         type: message.type,
         recipientFullName: message.recipient_fullname,
-        sender:message.sender
+        sender: message.sender
 
       })
     );
@@ -253,7 +254,9 @@ export class ChatService {
       sender: message.sender,
       timestamp: message.timestamp,
       type: message.type,
-      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+      senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+      message_id: message.message_id,
+      action: (message?.attributes?.action) ? (message?.attributes?.action) : null
     }));
 
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
@@ -271,19 +274,32 @@ export class ChatService {
         sender: message.sender,
         timestamp: message.timestamp,
         type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+        message_id: message.message_id,
+        action: (message?.attributes?.action) ? (message?.attributes?.action) : null
       }));
       let m = {
         content: message.text,
         sender: message.sender,
         timestamp: message.timestamp,
         type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname
+        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+        message_id: message.message_id,
+        action: (message?.attributes?.action) ? (message?.attributes?.action) : null
       };
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
+      console.log(' selected user details', user)
       if (user && m.sender === user.sender)
         transformedMessages.push(m);
+      const msgString = this.sessionStorageService.getItem('fetchedMessages');
+      const oldMessageList = JSON.parse(msgString);
+      transformedMessages.forEach(element => {
+        if (!element.action) {
+          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+          element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+        }
+      });
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
       return transformedMessages;
     }
@@ -577,6 +593,10 @@ export class ChatService {
 
   getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
+    let user = this.localStorageService.getItem('SELECTED_CHAT');
+    let parsedUser = JSON.parse(user);
+    let userFullName = parsedUser?.userFullName;
+    debugger
     return {
       "departmentId": this.deptID,
       "departmentName": this.deptName,
@@ -587,7 +607,7 @@ export class ChatService {
       "projectId": this.PROJECT_ID,
       "widgetVer": "v.5.0.71.3",
       "payload": [],
-      "userFullname": this.userFullName,
+      "userFullname": userFullName,
       "requester_id": chatToken,
       "lang": "en",
       "tempUID": this.uuidv4(),
@@ -613,6 +633,19 @@ export class ChatService {
       metadata: "",
       channel_type: "group"
     };
+
+
+    if (payloads?.message_id) {
+      let fetchedMessages: any = sessionStorage.getItem("fetchedMessages");
+      fetchedMessages = JSON.parse(fetchedMessages);
+      fetchedMessages?.forEach(item => {
+        if (item.message_id === payloads.message_id) {
+          item.action = payloads
+        }
+      });
+      this.sessionStorageService.setItem('fetchedMessages', fetchedMessages, true);
+    }
+
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
     this.chatClient.publish(dest_topic, payload, null, (err) => {
