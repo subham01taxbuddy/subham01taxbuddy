@@ -1007,28 +1007,26 @@ export class UtilsService {
   }
 
   getUserRoles() {
-    let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
-    if (smeInfoStr) {
-      const loggedInSmeInfo = JSON.parse(smeInfoStr ?? '');
-      if (
-          this.isNonEmpty(loggedInSmeInfo) &&
-          this.isNonEmpty(loggedInSmeInfo[0].roles)
-      ) {
-        return loggedInSmeInfo[0].roles;
-      }
+    const loggedInSmeInfo = JSON.parse(
+      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+    );
+    if (
+      this.isNonEmpty(loggedInSmeInfo) &&
+      this.isNonEmpty(loggedInSmeInfo[0].roles)
+    ) {
+      return loggedInSmeInfo[0].roles;
     }
   }
 
   getPartnerType() {
-    let smeInfoStr = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
-    if (smeInfoStr) {
-      const loggedInSmeInfo = JSON.parse(smeInfoStr ?? '');
-      if (
-          this.isNonEmpty(loggedInSmeInfo) &&
-          this.isNonEmpty(loggedInSmeInfo[0].partnerType)
-      ) {
-        return loggedInSmeInfo[0].partnerType;
-      }
+    const loggedInSmeInfo = JSON.parse(
+      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+    );
+    if (
+      this.isNonEmpty(loggedInSmeInfo) &&
+      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+    ) {
+      return loggedInSmeInfo[0].partnerType;
     }
   }
 
