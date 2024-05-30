@@ -151,7 +151,7 @@
                   <td>{{ item.others}}</td>
                   <td>{{ item.itrU}}</td>
                   <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
-                  <td>{{ item.revenueGenerated}}</td>
+                  <td>{{ item.paymentGenerated}}</td>
                   <!-- <td>{{ item.applicableCommissionPercentage}}</td> -->
                   <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
                   <td>{{ item.tds}}</td>
@@ -171,13 +171,13 @@
                   <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
                   <td class="text-success">{{ grandTotal?.totalItrU }}</td>
                   <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
-                  <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
+                  <td class="text-success">{{ grandTotal?.totalRevenueGenerated | number:'1.2-2' }}</td>
                   <!-- <td>{{ 'NA' }}</td> -->
                   <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
-                  <td class="text-success">{{ grandTotal?.totalTds }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
+                  <td class="text-success">{{ grandTotal?.totalTds | number:'1.2-2' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS | number:'1.2-2' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPaid | number:'1.2-2'}}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPayable| number:'1.2-2' }}</td>
                   <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
                 </tr>
                 <tr *ngIf="allDetails?.length === 0 || !allDetails">
