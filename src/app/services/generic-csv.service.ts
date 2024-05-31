@@ -58,11 +58,20 @@ export class GenericCsvService {
       if (name === 'assigned-sme-report') {
         this.mapAssignedSmeDetails(fields);
       }
+      if(name === 'calling-report-list'){
+        this.mapCallingReportDetails();
+      }
       this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");
       return
     }
+  }
+
+  mapCallingReportDetails(){
+    this.data.forEach((element) => {
+      element['recordingLink'] = `=HYPERLINK("${element.recordingLink}")`;
+    });
   }
 
   mapFiledItrDetails() {
