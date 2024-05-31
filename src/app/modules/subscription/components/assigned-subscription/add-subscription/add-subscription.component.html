@@ -35,7 +35,7 @@
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false"
             [class.disabled]="tpaService === 'TPA' || disableTpaSubPlan" (click)="showSelectedServicePlans('TPA')">TPA</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
+          <div class="col-lg-2 col-md-4 col-sm-6 ">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false"
               (click)="showSelectedServicePlans('OTHER')">OTHER SERVICE</a>
           </div>

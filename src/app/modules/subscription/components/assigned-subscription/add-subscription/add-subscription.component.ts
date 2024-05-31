@@ -107,6 +107,11 @@ export class AddSubscriptionComponent implements OnInit {
 
   isPlanEnabled(plan: any): boolean {
     this.loading =true;
+    const defaultPlansForFilers = [137, 160];
+    if (defaultPlansForFilers.includes(plan.planId) && this.roles.includes('ROLE_FILER')) {
+      this.loading = false;
+      return true;
+  }
     if (this.roles.includes('ROLE_FILER') || (this.data.filerId && (plan.servicesType === 'ITR' || plan.servicesType ==='ITRU'))) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
