@@ -65,6 +65,7 @@ export class UserChatComponent implements OnInit {
   payload: any;
 
   invalid = false;
+  showArrow: boolean = true;
 
 
   selectedRadio: { [name: string]: string } = {};
@@ -83,8 +84,9 @@ export class UserChatComponent implements OnInit {
     private renderer: Renderer2,
     cd: ChangeDetectorRef) {
      this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
-    this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
     this.cd = cd
+    this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
+
   }
 
   onRadioChange(name: string, value: string, message_id) {
@@ -226,11 +228,22 @@ export class UserChatComponent implements OnInit {
       const container = this.chatWindowContainer.nativeElement;
       setTimeout(() => {
         container.scrollTop = container.scrollHeight;
+        this.toggleArrowVisibility();
       }, 0);
     }
   }
 
-  
+  toggleArrowVisibility(): void {
+    if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
+      const container = this.chatWindowContainer.nativeElement;
+      const atBottom = container.scrollHeight - container.scrollTop === container.clientHeight;
+      this.showArrow = !atBottom;
+    }
+  }
+
+  onScroll(): void {
+    this.toggleArrowVisibility();
+  }
 
   isBotSender(sender: string): boolean{
     return sender.startsWith('bot_');

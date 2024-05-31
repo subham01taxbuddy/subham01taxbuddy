@@ -16,7 +16,7 @@
     <span class="username">{{ username }}</span>
   </div>
 
-  <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" #chatWindow>
+  <div class="chat-messages" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}" (scroll)="onScroll()" #chatWindow>
     <ng-container *ngFor="let message of fetchedMessages">
       <div [ngClass]="{
               'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId,
@@ -225,7 +225,7 @@
     </ng-container>
 
 
-    <div class="new-messages-indicator" (click)="scrollToBottom()">
+    <div class="new-messages-indicator" (click)="scrollToBottom()"  *ngIf="showArrow">
       <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
       <span class="fas fa-arrow-down"></span>
     </div>

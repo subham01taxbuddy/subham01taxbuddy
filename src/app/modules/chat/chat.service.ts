@@ -204,6 +204,7 @@ export class ChatService {
   fetchMessages(requestId) {
     let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
     let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=300`;
+    console.log('fetch messages url',url)
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -596,7 +597,6 @@ export class ChatService {
     let user = this.localStorageService.getItem('SELECTED_CHAT');
     let parsedUser = JSON.parse(user);
     let userFullName = parsedUser?.userFullName;
-    debugger
     return {
       "departmentId": this.deptID,
       "departmentName": this.deptName,
