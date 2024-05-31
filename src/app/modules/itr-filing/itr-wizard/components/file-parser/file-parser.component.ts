@@ -43,6 +43,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download 5 Paisa.pdf',
+        note: 'Equity/Intraday/F&O'
       },
       // {
       //   name: 'IIFL',
@@ -57,6 +58,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Angel One.pdf',
+        note:''
       },
       {
         name: 'Paytm',
@@ -64,6 +66,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download PayTM.pdf',
+        note:'Equity/F&O'
       },
       {
         name: 'Axis',
@@ -71,6 +74,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: '',
+        note:''
       },
       {
         name: 'Upstox',
@@ -78,6 +82,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download upstox statement.pdf',
+        note:''
       },
       {
         name: 'Groww',
@@ -85,6 +90,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Groww statement.pdf',
+        note:'Equity/Intraday/MF'
       },
       {
         name: 'Zerodha',
@@ -92,6 +98,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Zerodha statement.pdf',
+        note:'MF/Equity/Intraday/F&O'
       },
       {
         name: 'ICICI',
@@ -99,6 +106,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download ICICI Statement.pdf',
+        note:''
       },
       // {
       //   name: 'Jainam',
@@ -113,6 +121,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: '',
+        note:'Equity (intraday)/MF/F&O'
       },
     ];
   }

@@ -49,7 +49,7 @@
 
           <div class="row">
             <div class="col-7 align_self">
-              <p class="normal_text">Use Taxbuddy Template</p>
+              <p class="normal_text">Use Taxbuddy Template (Equity-intraday/MF/F&O)</p>
             </div>
             <div class="col-5">
               <button class="btn__upload float-right" (click)="downloadTemplate()">
@@ -62,9 +62,12 @@
               <p class="normal_text">Steps to Download (Listed Company) Statement?</p>
             </div>
             <div class="row col-sm-12">
-              <div *ngFor="let broker of brokerData" class="col-sm-4">
-                <a class="downLd" *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)">
-                  <i class="fa fa-download"></i> {{ broker.name }} Steps</a>
+              <div *ngFor="let broker of brokerData" class="row col-sm-4">
+                <div class="col-sm-6" *ngIf="broker.name !== 'Taxbuddy'">
+                  <a class="downLd" (click)="steps(broker.steps)">
+                    <i class="fa fa-download"></i> {{ broker.name }} Steps</a>
+                </div>
+                <div class="col-sm-6 enote" *ngIf="broker.name !== 'Taxbuddy'">{{broker.note}}</div>
               </div>
             </div>
           </div>
