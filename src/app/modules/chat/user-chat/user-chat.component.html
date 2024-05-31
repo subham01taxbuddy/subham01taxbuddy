@@ -249,9 +249,8 @@
 
 
   <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
-    <label for="fileInput" class="fa fa-paperclip"></label>
-    <input type="file" #fileInput id="fileInput" style="display: none;" (change)="onFileSelected($event)">
-
+    <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
+    <div #fileInputContainer style="display: none;"></div>
 
     <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
       [(ngModel)]="messageSent">
@@ -259,7 +258,8 @@
     <button type="button" (click)="sendMessage()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
     </button>
-  </div>
+</div>
+
 
 
 </div>
