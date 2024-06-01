@@ -585,6 +585,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
         return;
       } else {
+        this.tdsMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
