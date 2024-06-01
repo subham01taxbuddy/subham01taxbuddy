@@ -1207,9 +1207,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.createSubMiddle()
         }
       })
-    }else if(this.selectedSearchUserId){
-      this.createSubMiddle()
-    }else{
+    }else if(this.mobileNumber) {
       this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
         console.log(res);
         if (res.data) {
@@ -1225,6 +1223,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.createSubMiddle()
         }
       });
+    }else if(this.selectedSearchUserId){
+      this.createSubMiddle()
     }
 
 
@@ -1277,12 +1277,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             })
           }
       });
-    }else if(this.selectedSearchUserId){
-      this.userId = this.selectedSearchUserId;
-      this.assignedFilerId = this?.loggedInSme[0]?.userId;
-      this.loading=false;
-      this.openAddSubscriptionDialog();
-    } else {
+    } else if(this.mobileNumber) {
       this.utilsService.getFilerIdByMobile(this.mobileNumber)
         .subscribe((res: any) => {
           console.log(res);
@@ -1307,6 +1302,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               });
           }
         });
+    }else if(this.selectedSearchUserId){
+      this.userId = this.selectedSearchUserId;
+      this.assignedFilerId = this?.loggedInSme[0]?.userId;
+      this.loading=false;
+      this.openAddSubscriptionDialog();
     }
   }
 
