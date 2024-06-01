@@ -1070,7 +1070,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
      // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
      const loggedInSmeUserId = this?.loggedInSme[0]?.userId
      let filter = '';
-    filter = '&mobileNumber=' + this.unMaskedMobileNo
+     if(this.roles.includes('ROLE_FILER')){
+      filter = '&email=' + this.emailAddress.value || this?.selectedUserInfo?.emailAddress
+     }else{
+      filter = '&mobileNumber=' + this.unMaskedMobileNo
+     }
+
 
      let userFilter = ''
      if (this.roles.includes('ROLE_LEADER')) {
