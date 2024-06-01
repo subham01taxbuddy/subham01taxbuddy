@@ -280,7 +280,8 @@ export class AddSubscriptionComponent implements OnInit {
                 }
 
                 let param
-                if (this.roles.includes('ROLE_FILER')){
+                if (this.roles.includes('ROLE_FILER') || this.data.email){
+
                   param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&userId=${this.data.userId}${userFilter}`
                 }else{
                   param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}${userFilter}`
