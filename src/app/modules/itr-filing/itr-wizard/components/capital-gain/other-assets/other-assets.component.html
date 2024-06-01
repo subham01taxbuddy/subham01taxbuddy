@@ -199,7 +199,7 @@
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input matInput formControlName="purchaseDate" name="purchaseDate"
                                     [matDatepicker]="purchaseDate" placeholder="Buy Date / Date of Acquisition"
-                                    [max]="maximumDate" (change)="calculateDeduction()" />
+                                    [max]="maximumDate" (dateChange)="updateValidations(deduction);calculateDeduction()" />
                                   <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                                   <mat-datepicker #purchaseDate></mat-datepicker>
                                 </mat-form-field>
@@ -216,7 +216,7 @@
                                     placeholder="Cost Of New Asset" name="costOfNewAsset" class="input-field"
                                     maxlength="14"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (change)="calculateDeduction()" />
+                                    (change)="updateValidations(deduction);calculateDeduction()" />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -231,7 +231,7 @@
                                     placeholder="Amount deposited in CGAS before due date" name="CGASAmount"
                                     class="input-field" maxlength="14"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (change)="calculateDeduction()" />
+                                    (change)="updateValidations(deduction);calculateDeduction()" />
                                   <!-- <mat-error
                                       *ngIf="
                                         assetDetailsForm.controls['sellExpense'].hasError('pattern')
@@ -261,7 +261,8 @@
 
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">Account Number</span></div>
+                                <div><span class="span">Account Number</span><span
+                                  class="text-wrapper-2">*</span></div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
@@ -276,7 +277,8 @@
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">IFSC Code</span></div>
+                                <div><span class="span">IFSC Code</span><span
+                                  class="text-wrapper-2">*</span></div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
@@ -289,12 +291,13 @@
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">Date Of Deposit</span></div>
+                                <div><span class="span">Date Of Deposit</span><span
+                                  class="text-wrapper-2">*</span></div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
-                                    class="input-field" [matDatepicker]="dateOfDeposit" />
+                                    class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate"/>
                                   <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                                   <mat-datepicker #dateOfDeposit></mat-datepicker>
                                   <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">

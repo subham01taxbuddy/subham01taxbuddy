@@ -5,7 +5,7 @@ import {
   EventEmitter,
   OnChanges,
   Input,
-  SimpleChanges,
+  SimpleChanges, ElementRef,
 } from '@angular/core';
 import {
   Validators,
@@ -2190,7 +2190,7 @@ export class PersonalInformationComponent implements OnInit {
     private titlecasePipe: TitleCasePipe,
     private itrMsService: ItrMsService,
     private router: Router,
-    private userMsService: UserMsService
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
@@ -2703,13 +2703,26 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailsId');
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'bankAccountsId');
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailsId', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'bankAccountsId', this.elementRef);
       this.openAcc();
       this.personalInfoSaved.emit(false);
       return;
     }
     // }
+
+    const formArrayValid = this.getBankDetailsArray.controls.every(control => control.valid);
+    const formArrayHasValues = this.getBankDetailsArray.controls.length > 0;
+
+    if (!formArrayValid || !formArrayHasValues) {
+      this.loading = false;
+      this.personalInfoSaved.emit(false);
+      this.utilsService.showSnackBar(
+        'Please select at least one bank account in which you prefer to get refund'
+      );
+      this.openAcc();
+      return;
+    }
 
     Object.keys(this.customerProfileForm.controls).forEach((key) => {
       const controlErrors: ValidationErrors =
@@ -2762,7 +2775,7 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId');
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId', this.elementRef);
       this.personalInfoSaved.emit(false);
       this.openAcc();
     }

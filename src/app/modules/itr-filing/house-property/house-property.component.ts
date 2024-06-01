@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
   FormArray,
   UntypedFormControl,
+  UntypedFormArray,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,7 +32,7 @@ export class HousePropertyComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
-  isCoOwners = new UntypedFormControl(false);
+  // isCoOwners = new UntypedFormControl(false);
   hpView: string = 'FORM';
   propertyTypeDropdown = [
     {
@@ -82,7 +83,7 @@ export class HousePropertyComponent implements OnInit {
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
-    private userMsService: UserMsService
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -141,7 +142,8 @@ export class HousePropertyComponent implements OnInit {
           this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
         }
       });
-      this.markActive(0);
+      this.currentIndex = 0;
+      this.editHouseProperty(this.currentIndex);
     } else {
       this.addHousingIncome();
     }
@@ -153,9 +155,37 @@ export class HousePropertyComponent implements OnInit {
 
   }
 
+  usePersonalAddress = false;
+  toggleAddress(){
+    if(this.usePersonalAddress){
+      let address = this.ITR_JSON.address.flatNo + ' ' + this.ITR_JSON.address.premisesName + ' ' +
+          this.ITR_JSON.address.area;
+      this.housePropertyForm.controls['address'].setValue(address);
+      this.housePropertyForm.controls['city'].setValue(this.ITR_JSON.address.city);
+
+      this.housePropertyForm.controls['state'].setValue(this.ITR_JSON.address.state);
+      this.housePropertyForm.controls['country'].setValue(this.ITR_JSON.address.country);
+      this.housePropertyForm.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
+    } else {
+      // this.housePropertyForm.controls['address'].setValue(null);
+      // this.housePropertyForm.controls['city'].setValue(null);
+      //
+      // this.housePropertyForm.controls['state'].setValue(null);
+      // this.housePropertyForm.controls['country'].setValue(null);
+      // this.housePropertyForm.controls['pinCode'].setValue(null);
+    }
+  }
+
   markActive(index) {
-    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.houseProperties.length) {
-      this.saveHpDetails(false);
+    if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
+      if(this.housePropertyForm.valid) {
+        this.saveHpDetails(false);
+      } else {
+        this.utilsService.showSnackBar(
+            'To Switch/Add new property Please fill in all the mandatory fields in the current property'
+        );
+        return;
+      }
     }
     if (index === -1) {
       this.addHousingIncome();
@@ -291,6 +321,7 @@ export class HousePropertyComponent implements OnInit {
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
+        isCoOwners:[false,Validators.required],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -363,6 +394,7 @@ export class HousePropertyComponent implements OnInit {
       });
     } else {
       return this.fb.group({
+        isCoOwners:[false],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -502,6 +534,8 @@ export class HousePropertyComponent implements OnInit {
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
+      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length-1] as UntypedFormGroup,
+          'accordBtn3', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -513,7 +547,7 @@ export class HousePropertyComponent implements OnInit {
     // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
     // And this Control is used for Yes/No Type question for showing the details of CoOwners
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    coOwner.length === 0 ? this.isCoOwners.setValue(false) : null;
+    coOwner.length === 0 ? this.housePropertyForm.controls['isCoOwners'].setValue(false) : null;
     this.calAnnualValue();
   }
 
@@ -564,13 +598,13 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  getUserSharePercent(){
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+  getUserSharePercent() {
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     coOwner.controls.forEach((controlName) => {
       sum = Number(sum) + Number(controlName.value.percentage);
     });
-    return 100- sum;
+    return 100 - sum;
   }
 
   isduplicatePAN(i, formArrayName) {
@@ -609,7 +643,8 @@ export class HousePropertyComponent implements OnInit {
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
     this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
-    this.currentIndex = this.Copy_ITR_JSON.houseProperties.length -1;
+    this.currentIndex = this.Copy_ITR_JSON.houseProperties.length - 1;
+    this.housePropertyForm.controls['isCoOwners'].setValue(false);
   }
 
   settingInterestValues(itrJsonHp) {
@@ -631,12 +666,12 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['isEligibleFor80EE']?.setValue('80EE');
       housePropertyForm['eligible80EEAmount']?.setValue(itrJsonHp?.eligible80EEAmount);
     } else {
-      if(itrJsonHp?.loans) {
+      if (itrJsonHp?.loans) {
         housePropertyForm['interestAmount'].setValue(
-            itrJsonHp?.loans[0]?.interestAmount
+          itrJsonHp?.loans[0]?.interestAmount
         );
         housePropertyForm['interest24bAmount'].setValue(
-            Math.min(itrJsonHp?.loans[0]?.interestAmount, 200000)
+          Math.min(itrJsonHp?.loans[0]?.interestAmount, 200000)
         );
       }
       housePropertyForm['isEligibleFor80EE']?.setValue('');
@@ -655,9 +690,9 @@ export class HousePropertyComponent implements OnInit {
     this.housePropertyForm.patchValue(itrJsonHp);
     this.housePropertyForm.controls['country'].setValue('91');
 
-    if(itrJsonHp?.loans) {
+    if (itrJsonHp?.loans) {
       this.housePropertyForm.controls['principalAmount'].setValue(
-          itrJsonHp?.loans[0]?.principalAmount
+        itrJsonHp?.loans[0]?.principalAmount
       );
     }
 
@@ -676,8 +711,8 @@ export class HousePropertyComponent implements OnInit {
 
     // setting coOwners Details
     if (itrJsonHp?.coOwners?.length > 0) {
-      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
-      this.isCoOwners.setValue(true);
+      const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+      this.housePropertyForm.controls['isCoOwners'].setValue(true);
       itrJsonHp?.coOwners?.forEach(element => {
         let obj = {
           name: element.name,
@@ -689,6 +724,8 @@ export class HousePropertyComponent implements OnInit {
           this.createCoOwnerForm(obj)
         )
       });
+    } else {
+      this.housePropertyForm.controls['isCoOwners'].setValue(false);
     }
 
     if (itrJsonHp?.propertyType === 'SOP') {
@@ -703,8 +740,10 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
       this.housePropertyForm.controls[
-          'annualRentReceived'
-          ].updateValueAndValidity();
+        'annualRentReceived'
+      ].updateValueAndValidity();
+      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+          ? this.currentIndex : this.firstSOPIndex;
     } else {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -742,15 +781,15 @@ export class HousePropertyComponent implements OnInit {
         Validators.min(1),
       ]);
       this.housePropertyForm.controls[
-          'annualRentReceived'
-          ].updateValueAndValidity();
+        'annualRentReceived'
+      ].updateValueAndValidity();
     }
   }
 
   haveCoOwners() {
-    console.log('Hp===', this.isCoOwners.value);
-    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
-    if (this.isCoOwners.value) {
+    console.log('Hp===', this.housePropertyForm.controls['isCoOwners'].value);
+    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+    if (this.housePropertyForm.controls['isCoOwners'].value) {
       coOwner.push(this.createCoOwnerForm());
     } else {
       console.log('coOwner==', coOwner);
@@ -759,7 +798,7 @@ export class HousePropertyComponent implements OnInit {
       // this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].percentage.value))) {
       // this.confirmationDialog('CONFIRM_COOWNER_DELETE');
       // } else {
-      this.isCoOwners.setValue(false);
+      this.housePropertyForm.controls['isCoOwners'].setValue(false);
       this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
       // }
     }
@@ -775,6 +814,8 @@ export class HousePropertyComponent implements OnInit {
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
+      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length-1] as UntypedFormGroup,
+          'accordBtn4', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -869,6 +910,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isDisable = false;
+  firstSOPIndex = -1;
   changePropType(type, mode?) {
     console.log(type);
     this.isDisable = false;
@@ -887,7 +929,7 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['state'].reset();
         this.housePropertyForm.controls['pinCode'].reset();
         this.housePropertyForm.controls['country'].reset();
-        // this.isCoOwners.disable();
+        // this.housePropertyForm.controls['isCoOwners'].disable();
         // this.housePropertyForm.controls['coOwners'].disable();
 
         //   for (var control in this.housePropertyForm.controls) {
@@ -927,6 +969,9 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'interestAmount'
       ].updateValueAndValidity();
+
+      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+          ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
@@ -1012,7 +1057,7 @@ export class HousePropertyComponent implements OnInit {
         hp.loans = [];
       }
 
-      if(!this.Copy_ITR_JSON.houseProperties){
+      if (!this.Copy_ITR_JSON.houseProperties) {
         this.Copy_ITR_JSON.houseProperties = [];
       }
       // this.Copy_ITR_JSON.houseProperties = [];
@@ -1029,10 +1074,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 
@@ -1093,7 +1138,7 @@ export class HousePropertyComponent implements OnInit {
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
-      // if (this.isCoOwners.value) {
+      // if (this.housePropertyForm.controls['isCoOwners'].value) {
       //   let sum = 0;
       //   for (let i = 0; i < hp.coOwners.length; i++) {
       //     sum = sum + hp.coOwners[i].percentage;
@@ -1161,10 +1206,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 
@@ -1203,7 +1248,7 @@ export class HousePropertyComponent implements OnInit {
             this.housePropertyForm.controls['loans'] = this.fb.array([]);
 
             // this.isHomeLoan.setValue(false);
-            this.isCoOwners.setValue(false);
+            this.housePropertyForm.controls['isCoOwners'].setValue(false);
             this.utilsService.smoothScrollToTop();
 
             // this.chekIsSOPAdded();
@@ -1250,7 +1295,7 @@ export class HousePropertyComponent implements OnInit {
 
   cancelHpForm() {
     this.housePropertyForm.reset();
-    this.isCoOwners.setValue(false);
+    this.housePropertyForm.controls['isCoOwners'].setValue(false);
     // this.isHomeLoan.setValue(false);
     this.housePropertyForm.controls['tenant'] = this.fb.array([]);
     this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
@@ -1878,7 +1923,7 @@ export class HousePropertyComponent implements OnInit {
         parseFloat(interest24b?.value) > 200000
       ) {
         interest24b?.setValue(200000);
-      } else if(propertyType?.value === 'SOP'){
+      } else if (propertyType?.value === 'SOP') {
         interest24b?.setValue(Math.min(interest?.value, 200000));
       } else {
         interest24b?.setValue(interest?.value);

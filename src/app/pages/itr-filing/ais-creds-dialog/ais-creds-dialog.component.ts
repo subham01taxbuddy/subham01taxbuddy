@@ -38,6 +38,7 @@ export class AisCredsDialogComponent implements OnInit {
       if(result.error === 'DATA_NOT_FOUND'){
         this.passwordAvailable = false;
         this.passwordStatus = 'Unavailable';
+        this.utilsService.showSnackBar(result.message);
       } else {
         this.passwordAvailable = true;
         this.passwordStatus = result.data.passwordStatus;

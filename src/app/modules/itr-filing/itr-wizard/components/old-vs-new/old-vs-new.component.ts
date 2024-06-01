@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  BankDetails,
   ITR_JSON,
-  OptedInNewRegime,
-  OptedOutNewRegime,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
@@ -75,6 +72,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   isITRU: boolean;
   PREV_ITR_JSON: any;
   pySummary: any;
+  fyStartYear = '2023';
+  fyEndYear = '2024';
 
   constructor(
     public utilsService: UtilsService,
@@ -1619,11 +1618,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                  .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
+                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
               },
               {
                 label: 'Total Headwise Income',
@@ -1792,11 +1794,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
+              + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+              + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB : 0,
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+                  + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
             },
             {
               label: 'Total Headwise Income',
@@ -2394,35 +2399,35 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     let capitalGains = this.assessment.summaryIncome.cgIncomeN.capitalGain;
 
     this.cgQuarterWiseBreakUp = {
-      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
-      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
-      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
-      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
+      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
+      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
+      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
 
-      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
-      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
-      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
-      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
+      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
+      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
+      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
 
-      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
-      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
-      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
-      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
+      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
+      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
+      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
 
-      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
-      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
-      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
-      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
+      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
+      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
+      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
 
-      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
-      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
-      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
-      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
+      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
+      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
+      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
+      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
     }
   }
 

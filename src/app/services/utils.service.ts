@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {ElementRef, Injectable} from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import { concatMap, Observable, Subject } from 'rxjs';
+import {catchError, concatMap, Observable, Subject} from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { ItrActionsComponent } from '../modules/shared/components/itr-actions/it
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import {FormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors} from '@angular/forms';
+import {FormArray, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors} from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -784,6 +784,17 @@ export class UtilsService {
     return this.itrMsService.putMethod(param, itrObject);
   }
 
+  innerFunction(res: any, itrObject: ITR_JSON) {
+      if(res.error) {
+        this.showSnackBar(res.error);
+      } else {
+        itrObject.isItrSummaryJsonEdited = false;
+        const param = `/itr/itr-type`;
+        return this.itrMsService
+            .postMethod(param, itrObject)
+            .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+      }
+  }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {
@@ -797,11 +808,13 @@ export class UtilsService {
         itrObject.assessmentYear;
       return this.itrMsService.putMethod(param, itrObject);
     } else {
+      // return this.getUserCurrentStatus([itrObject.userId])
+      //     .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
       itrObject.isItrSummaryJsonEdited = false;
       const param = `/itr/itr-type`;
       return this.itrMsService
-        .postMethod(param, itrObject)
-        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+          .postMethod(param, itrObject)
+          .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
     }
   }
 
@@ -907,7 +920,7 @@ export class UtilsService {
     if (mobile) {
       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
     } else if (email) {
-      param = `/bo/user-list-new?page=0&pageSize=20&email=${email}${userFilter}&active=false`
+      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}&active=false`
     }
     return this.userMsService.getMethodNew(param);
   }
@@ -1067,7 +1080,7 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId) {
+  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId, el: ElementRef) {
     Object.keys(formGroup.controls).forEach((key) => {
       if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
@@ -1084,6 +1097,10 @@ export class UtilsService {
             );
             console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
+            const nameInput = el.nativeElement.querySelector(`[formControlName="${key}"]`);
+            if (nameInput) {
+              nameInput.focus();
+            }
             const accordionButton = document.getElementById(accordionBtnId);
             if (accordionButton) {
               if (accordionButton.getAttribute("aria-expanded") === "false")
@@ -1093,11 +1110,11 @@ export class UtilsService {
           });
         }
       } else if (formGroup.get(key) instanceof UntypedFormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId);
-      } else if (formGroup.get(key) instanceof FormArray) {
-        let formArray = formGroup.get(key) as FormArray;
+        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId, el);
+      } else if (formGroup.get(key) instanceof UntypedFormArray) {
+        let formArray = formGroup.get(key) as UntypedFormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId);
+          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId, el);
         });
       }
     });

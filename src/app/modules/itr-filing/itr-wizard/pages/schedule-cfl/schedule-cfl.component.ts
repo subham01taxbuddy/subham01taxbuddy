@@ -129,10 +129,12 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.cflForm = this.initForm();
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
-    this.pastYearLosses = this.pastYearLosses.filter((item) => {
-      item.assessmentPastYear != '2015-16'
-      if (item.assessmentPastYear != '2023-24') {
-        this.pastYearLosses.push(
+    this.pastYearLosses = this.pastYearLosses?.filter((item) =>
+        item.assessmentPastYear != '2015-16');
+    let latestYear = this.pastYearLosses?.map((item) => item.assessmentPastYear)
+        .filter((item:string) => item === '2023-24');
+    if (!latestYear || latestYear.length === 0) {
+      this.pastYearLosses?.push(
           {
             hasEdit: false,
             dateofFilling: null,
@@ -155,10 +157,16 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
             carryForwardAmountLTCGIncome: 0,
             totalLoss: 0,
           }
-        )
-      }
-    });
+      )
+    }
     if (this.pastYearLosses) {
+      this.scheduleCflArray.forEach((obj) => {
+        let year = this.pastYearLosses?.map((item) => item.assessmentPastYear)
+            .filter((item:string) => item === obj.assessmentPastYear)
+        if(!year || year.length === 0) {
+          this.addMore(obj);
+        }
+      });
       this.pastYearLosses.forEach((obj) => {
         this.addMore(obj);
       });
@@ -178,13 +186,13 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     cflArray.controls.forEach((element, index) => {
       if (
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-        '2015-16' ||
-        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
         '2016-17' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
         '2017-18' ||
         (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
-        '2018-19'
+        '2018-19' ||
+        (element as UntypedFormGroup).controls['assessmentPastYear'].value ===
+        '2019-20'
       ) {
         (element as UntypedFormGroup).controls['speculativeBusinessLoss'].disable();
       }
@@ -311,10 +319,10 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       totalSTCGLoss += Number(element.STCGLoss);
 
       if (
-        element.assessmentPastYear === '2019-20' ||
         element.assessmentPastYear === '2020-21' ||
         element.assessmentPastYear === '2021-22' ||
-        element.assessmentPastYear === '2022-23'
+        element.assessmentPastYear === '2022-23' ||
+        element.assessmentPastYear === '2023-24'
       ) {
         totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
       } else {

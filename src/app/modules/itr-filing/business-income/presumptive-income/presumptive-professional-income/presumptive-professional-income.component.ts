@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ElementRef} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -46,7 +46,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -432,7 +432,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -486,6 +486,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.calculatePresumptiveIncome('anyOther', true);
     // this.calculatePresumptive();
     this.activeIndex = i;
+    document.getElementById("professional_id").scrollIntoView();
   }
 
   columnDef() {

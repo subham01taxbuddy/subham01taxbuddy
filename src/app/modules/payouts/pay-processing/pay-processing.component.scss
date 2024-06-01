@@ -16,3 +16,24 @@
   display: flex;
   align-items: center;
 }
+.custom-loader {
+  position: absolute;
+  top: 30%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000000;
+}
+
+.custom-loader span {
+  font-size: 18px;
+  color: #333;
+}
+.loading-overlay {
+  opacity: 0.7;
+  pointer-events: none;
+}

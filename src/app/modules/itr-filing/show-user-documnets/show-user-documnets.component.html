@@ -84,7 +84,7 @@
                                 (click)="editFile(folder)" style="margin-right: 10px;"><i class="fa fa-pencil" aria-hidden="true"></i></button>
                               <button *ngIf="!folder.isDeleted && !isDocTypeSupported(folder)"
                                 (click)="gotoDrive(folder)" style="margin-right: 10px;"><i class="fa fa-external-link" aria-hidden="true"></i></button>
-                              <button *ngIf="isDownloadAllowed" (click)="downloadFile(folder)">
+                              <button *ngIf="(!folder.isDeleted && isDownloadAllowed) || folder.documentTag === 'AIS_JSON'" (click)="downloadFile(folder)">
                                 <i class="fa fa-download" aria-hidden="true"
                                   style="font-size: 18px; padding: inherit; cursor: pointer;"></i>
                               </button>

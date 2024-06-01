@@ -1,0 +1,79 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+  <div class="col-sm-12">
+    <h5 class="bdrbl">PAN Exception:</h5>
+  </div>
+  <div class="rowClr">
+    <div class="surround">
+      <div class="row">
+        <div class="col-sm-4">
+          <mat-label> Enter PAN Number </mat-label>
+          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+            <input matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+            matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN" name="panNumber"
+            [formControl]="searchValue" class="input-field" maxlength="10" minlength="10"
+            type="text" upperCase required>
+            <mat-error *ngIf="searchValue?.hasError('required') ">
+              Please Enter PAN Number </mat-error>
+            <mat-error *ngIf="searchValue.hasError('pattern')">
+                Enter valid PAN (e.g XXXXX1234X)</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8 btn12">
+          <div>
+            <button class="btnUpdate margin" (click)="searchPan()">
+              Search PAN </button>
+          </div>
+          <div>
+            <button [disabled]="disableAddButton" class="btnUpdate margin" (click)="addPan()">
+              Add PAN Exception </button>
+          </div>
+          <div>
+            <button class="clrLnk-1 margin" (click)="resetFilters()">
+              Clear form
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div class="row" *ngIf="panData">
+      <div class="col-sm-9 row">
+        <div class="table-info-text col-sm-4">
+          User Details based on search:
+        </div>
+      </div>
+      <div class="col-sm-8 mt-3">
+        <!-- <table class="center-table mt-3">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Mobile Number</th>
+              <th>Name</th>
+              <th>PAN Number</th>
+              <th>Email</th>
+              <th>Leader Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ panData.userId }}</td>
+              <td>{{ panData.mobileNumber }}</td>
+              <td>{{ panData.name }}</td>
+              <td>{{ panData.panNumber }}</td>
+              <td>{{ panData.email }}</td>
+              <td>{{ panData.leaderName }}</td>
+            </tr>
+          </tbody>
+        </table> -->
+        <div class="vertical-table center-table">
+          <div class="row" *ngFor="let keyValuePair of panData | keyvalue">
+            <div class="col-sm-4">{{ keyValuePair.key }}</div>
+            <div class="col-sm-8">{{ keyValuePair.value }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+

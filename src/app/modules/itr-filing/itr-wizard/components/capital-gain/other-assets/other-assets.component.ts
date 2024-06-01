@@ -15,6 +15,7 @@ import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
 import { formatDate } from '@angular/common';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
+import * as moment from "moment/moment";
 
 @Component({
   selector: 'app-other-assets',
@@ -177,6 +178,36 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  updateValidations(formGroup){
+    if(formGroup.controls['costOfNewAsset'].value){
+      formGroup.controls['purchaseDate'].setValidators([Validators.required]);
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAsset'].setValidators([Validators.required]);
+      formGroup.controls['costOfNewAsset'].updateValueAndValidity();
+    } else {
+      formGroup.controls['purchaseDate'].setValidators(null);
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAsset'].setValidators(null);
+      formGroup.controls['costOfNewAsset'].updateValueAndValidity();
+    }
+
+    if(formGroup.controls['CGASAmount'].value){
+      formGroup.controls['accountNumber'].setValidators([Validators.required]);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators([Validators.required]);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators([Validators.required]);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
+    } else {
+      formGroup.controls['accountNumber'].setValidators(null);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators(null);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators(null);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
+    }
+  }
+
   //getting the deductions Array
   get getDeductions() {
     return this.deductionForm?.get('deductions') as FormArray;
@@ -251,6 +282,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     // this.calculateCg();
     console.log(this.goldCg);
   }
+
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
 
   // saving the cg
   saveCg() {
@@ -366,6 +399,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         });
       console.log('GOLD:', this.goldCg);
     } else {
+      $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
         'Please make sure all deduction details are entered correctly'
       );
@@ -709,6 +743,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         }
         case 'edit': {
           this.addOtherAssets('EDIT', params.rowIndex);
+          this.utilsService.smoothScrollToTop();
           break;
         }
       }

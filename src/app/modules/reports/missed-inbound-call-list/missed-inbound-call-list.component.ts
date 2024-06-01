@@ -234,6 +234,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
         clientNumber: fillingData[i].clientNumber,
         callDate: fillingData[i].callDate,
         currentStatus: fillingData[i].currentStatus,
+        userId : fillingData[i].userId
       })
       fillingRepoInfoArray.push(agentReportInfo);
     }

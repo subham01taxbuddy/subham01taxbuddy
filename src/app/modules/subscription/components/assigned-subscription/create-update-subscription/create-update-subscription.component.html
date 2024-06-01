@@ -564,6 +564,16 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <div class="col-sm-4 mt-3" *ngIf="showScheduledFields && scheduleCallService.value === 'ITR' ">
+                <mat-label>Select Particular Schedule Call Type</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select [formControl]="scheduleCallType ">
+                    <mat-option *ngFor="let service of scheduleCallTypes" [value]="service.value">
+                      {{service.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
           </div>
           <div class="row mt-3">

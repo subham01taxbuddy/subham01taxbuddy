@@ -55,7 +55,6 @@ export class ChatService {
       : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
     let deptList = [];
     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
-      console.log('fetch departments result', result);
       if (result.success && result.data.length > 0) {
         this.deptName = result.data[0].name;
         console.log('names', this.deptName)

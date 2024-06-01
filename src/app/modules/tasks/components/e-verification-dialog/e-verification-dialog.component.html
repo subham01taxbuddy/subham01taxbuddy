@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <h1 mat-dialog-title>
   <span *ngIf="data.title === 'eVerify'">E-Verification For:</span>
   <span *ngIf="data.title === 'itrProcessed'">ITR Status For:</span>
@@ -88,7 +89,7 @@
             <button
               type="submit"
               [disabled]="loading"
-              class="tbd-btn-secondary"
+              class="tbd-btn"
               (click)="validateOtp()"
             >
               E-Verify

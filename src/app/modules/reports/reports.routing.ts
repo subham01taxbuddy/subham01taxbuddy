@@ -17,6 +17,8 @@ import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.com
 import { MissedInboundCallListComponent } from './missed-inbound-call-list/missed-inbound-call-list.component';
 import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up-report.component';
 import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
+import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
+import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 
 
 const routes: Routes = [
@@ -99,6 +101,14 @@ const routes: Routes = [
       {
         path:'customer-sign-up',
         component:CustomerSignUpComponent,
+      },
+      {
+        path:'filling-done-payment-not-received',
+        component:FillingDonePaymentNotReceivedComponent,
+      },
+      {
+        path:'documents-uploaded-filing-not-done',
+        component:DocumentsUploadedFilingNotDoneComponent,
       }
     ],
 

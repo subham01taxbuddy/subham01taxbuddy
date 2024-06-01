@@ -78,6 +78,11 @@
                 <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
                                                                         aria-hidden="true"></i></button>
             </div>
+            <div *ngIf="!showAffiliateBtn && checkEnv !=='UAT' " class="header__breadcrumbs">
+              <span class="affId">
+                <i class="fa-light fa-people-group"></i> Affiliate ID - {{userAffiliateID}}
+              </span>
+          </div>
         </div>
 
 

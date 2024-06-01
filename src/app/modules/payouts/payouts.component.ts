@@ -22,6 +22,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
+import { DomSanitizer } from '@angular/platform-browser';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -108,6 +110,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public datePipe: DatePipe,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
     this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
@@ -128,7 +132,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       paginationPageSize: 15,
       rowSelection: this.isEditAllowed ? 'multiple' : 'none',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? this.isEditAllowed && rowNode.data.commissionPaymentApprovalStatus !== 'APPROVED' : false;
+        return rowNode.data ? this.isEditAllowed && rowNode.data.slabwiseCommissionPaymentApprovalStatus !== 'APPROVED' : false;
       },
       onGridReady: params => {
       },
@@ -337,7 +341,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       }
     }, error => {
       this.loading = false;
-      this.utilsService.showSnackBar('Please try again, failed to get data');
+      this.utilsService.showSnackBar('Data not found');
+      // this.utilsService.showSnackBar(error.error.message);
       this.usersGridOptions.api?.setRowData([]);
       this.userInfo = [];
       this.config.totalItems = 0;
@@ -436,7 +441,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       {
         headerName: 'User Phone Number',
         field: 'userMobileNumber',
-        width: 100,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -486,7 +491,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Ack No',
         field: 'ackNumber',
-        width: 140,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -522,7 +527,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Invoice List',
-        field: 'invoiceNo',
+        field: 'invoiceNoList',
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -535,7 +540,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       {
         headerName: 'Tax Invoice Date',
         field: 'invoiceDate',
-        width: 100,
+        width: 140,
         suppressMovable: true,
         filter: "agTextColumnFilter",
         filterParams: {
@@ -559,9 +564,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'GST Amount',
-        field: 'gstAmount',
-        width: 100,
+        headerName: 'Base price for payout',
+        field: 'basePriceForPayout',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -571,20 +576,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Without GST Amount',
-        field: 'amountwithoutGST',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Commission %',
-        field: 'commissionPercentage',
+        headerName: 'Payout Share %',
+        field: 'totalCommissionPercentage',
         width: 100,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -596,8 +589,69 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Commission Earned',
-        field: 'commissionEarned',
-        width: 100,
+        field: 'totalCommissionEarned',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      // {
+      //   headerName: 'GST Amount',
+      //   field: 'gstAmount',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
+      // {
+      //   headerName: 'Without GST Amount',
+      //   field: 'amountwithoutGST',
+      //   width: 100,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
+      {
+        headerName: '% Due from payout',
+        field: 'slabwiseCommissionPercentage',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Commission Due',
+        field: 'slabwiseCommissionEarned',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+
+      {
+        headerName: 'TDS to be deducted',
+        field: 'tdsOnSlabwiseCommissionEarned',
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -607,21 +661,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'TDS Amount',
-        field: 'tdsOnCommissionEarned',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Final Amount To Pay',
-        field: 'commissionPayable',
-        width: 100,
+        headerName: 'Commission Payable after TDS',
+        field: 'slabwiseCommissionPayableAfterTds',
+        width: 170,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -632,7 +674,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Payout Status',
-        field: 'commissionPaymentStatus',
+        field: 'slabwiseCommissionPaymentStatus',
         width: 100,
         suppressMovable: true,
         pinned: 'right',
@@ -644,6 +686,22 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         },
         cellRenderer: (data: any) => {
           return data.value.charAt(0).toUpperCase() + data.value.slice(1).toLowerCase();
+        }
+      },
+      {
+        headerName: 'Realised/Unrealised',
+        field: 'invoicePaymentStatus',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          const value = data.value.toLowerCase();
+          return value === 'paid' ? 'Realised' : 'Unrealised';
         }
       },
       {
@@ -662,7 +720,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           let filer1 = leaderList;
           if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
             return 'Admin';
-          } else if (environment.environment === 'PROD' && (params?.data?.commissionPaymentApprovedBy === 7002 || params?.data?.commissionPaymentApprovedBy === 21354)) {
+          } else if (environment.environment === 'PROD' && (params?.data?.commissionPaymentApprovedBy === 7002 || params?.data?.commissionPaymentApprovedBy === 21354 || params?.data?.commissionPaymentApprovedBy === 963757)) {
             return 'Admin';
           } else if (params?.data?.commissionPaymentApprovedBy === 0) {
             return '-'
@@ -765,7 +823,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.commissionPaymentStatus == 'Unpaid' && params.data.commissionPaymentApprovalStatus == 'APPROVED') {
+          if (params.data.slabwiseCommissionPaymentStatus == 'Unpaid' && params.data.slabwiseCommissionPaymentApprovalStatus == 'APPROVED') {
             return `<button type="button" class="action_icon add_button" title="disapprove payout " style="border: none;
             background: transparent; font-size: 16px; cursor:pointer;">
             <i class="fas fa-thumbs-down" style="color: #00ff00;" data-action-type="disapprove"></i>
@@ -786,21 +844,21 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         // headerName: "Approve",
-        field: "commissionPaymentApprovalStatus",
+        field: "slabwiseCommissionPaymentApprovalStatus",
         headerCheckboxSelection: this.isEditAllowed,
         width: 50,
         pinned: 'right',
         hide: !this.isEditAllowed,
         checkboxSelection: (params) => {
-          return params.data.commissionPaymentApprovalStatus !== 'APPROVED'
+          return params.data.slabwiseCommissionPaymentApprovalStatus !== 'APPROVED'
         },
         // showDisabledCheckboxes: true
         // method not allowed
         // showDisabledCheckboxes: (params) => {
-        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED'
+        //   return params.data.slabwiseCommissionPaymentApprovalStatus === 'APPROVED'
         // },
         // valueGetter: function (params:any){
-        //   return params.data.commissionPaymentApprovalStatus === 'APPROVED';
+        //   return params.data.slabwiseCommissionPaymentApprovalStatus === 'APPROVED';
         // }
       },
     ]
@@ -837,18 +895,31 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   approveSelected() {
+    // new api for approval 13-5-24- 'https://uat-api.taxbuddy.com/itr/v2/partnerCommission' \
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
       this.utilsService.showSnackBar('Please select entries to approve');
       return;
     }
-    let invoices = selectedRows.flatMap(item => item.invoiceNo);
-    let param = '/dashboard/partner-commission';
+    let invoices = selectedRows.map(item => Number(item.subscriptionId));
+    let commissionPercentages = selectedRows.map(item =>item.slabwiseCommissionPercentage);
+
+    console.log('commissionPercentage',commissionPercentages)
+    console.log('invoices',invoices)
+
+    if (commissionPercentages.includes(25) && commissionPercentages.includes(75)) {
+      this.utilsService.showSnackBar('Please select either 25 or 75 commission percentage, not both');
+      return;
+    }
+
+    let commissionPercentage = commissionPercentages[0];
+
+    let param = '/v2/partnerCommission';
     let request = {
-      invoiceNoList: invoices,
+      subscriptionIdList: invoices,
       commissionPaymentApprovalStatus: 'APPROVED',
-      commissionPaymentApprovedBy: this.loggedInUserId
+      commissionPercentage: commissionPercentage
     };
     this.loading = true;
     this.itrMsService.putMethod(param, request).subscribe((result: any) => {
@@ -863,6 +934,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     });
   }
 
+  isChatOpen = false;
+  kommChatLink = null;
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
       width: '50%',
@@ -875,12 +948,22 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
     });
 
   }
 
   redirectTowardInvoice(userInfo: any) {
-    this.router.navigate(['/subscription/tax-invoice'], { queryParams: { invoiceNo: userInfo.invoiceNo } });
+    let invoiceNo = userInfo.invoiceNoList[0]
+    if(userInfo.invoicePaymentStatus === 'Paid'){
+      this.router.navigate(['/subscription/tax-invoice'], { queryParams: { invoiceNo: invoiceNo } });
+    }else{
+      this.router.navigate(['/subscription/proforma-invoice'], { queryParams: { invoiceNo: invoiceNo } });
+    }
   }
 
   showNotes(client) {
@@ -901,7 +984,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   disApprovePayOut(data) {
-    // http://localhost:9050/itr/dashboard/status?invoiceNumber=SSBA%2F2023%2F4364&status=DISAPPROVED'
+   //https://uat-api.taxbuddy.com/itr/v2/partnerCommission
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Disapprove Payout Request!',
@@ -911,10 +994,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
         this.loading = true;
-        if (data.invoiceNo) {
-          let param = `/dashboard/status?invoiceNumber=${data.invoiceNo}&status=DISAPPROVED`;
+        if (data.subscriptionId) {
+          let param = `/v2/partnerCommission`;
 
-          this.itrMsService.putMethod(param).subscribe(
+          let request = {
+            subscriptionIdList: [data.subscriptionId],
+            commissionPaymentApprovalStatus: 'DISAPPROVED',
+            commissionPercentage: data.slabwiseCommissionPercentage
+          };
+
+          this.itrMsService.putMethod(param,request).subscribe(
             (result: any) => {
               this.loading = false;
               if (result.success) {
@@ -931,7 +1020,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           );
         } else {
           this.loading = false;
-          this.utilsService.showSnackBar('invoice Number not available');
+          this.utilsService.showSnackBar('Subscription Id not available');
         }
       }
     })
@@ -976,16 +1065,18 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'filingSource', value: 'Filing Source' },
       { key: 'ackNumber', value: 'Ack No' },
       { key: 'ackNumber', value: 'Date of Filing' },
-      { key: 'invoiceNo', value: 'Invoice List' },
+      { key: 'invoiceNoList', value: 'Invoice List' },
       { key: 'invoiceDate', value: 'Tax Invoice Date' },
       { key: 'invoiceAmount', value: 'Invoice Amount' },
-      { key: 'gstAmount', value: 'GST Amount' },
-      { key: 'amountwithoutGST', value: 'Without GST Amount' },
-      { key: 'commissionPercentage', value: 'Commission %' },
-      { key: 'commissionEarned', value: 'Commission Earned' },
-      { key: 'tdsOnCommissionEarned', value: 'TDS Amount' },
-      { key: 'commissionPayable', value: 'Final Amount To Pay' },
-      { key: 'commissionPaymentStatus', value: 'Payout Status' },
+      { key: 'basePriceForPayout', value: 'Base price for payout' },
+      { key: 'totalCommissionPercentage', value: 'Payout Share %' },
+      { key: 'totalCommissionEarned', value: 'Commission Earned' },
+      { key: 'slabwiseCommissionPercentage', value: '% Due from payout' },
+      { key: 'slabwiseCommissionEarned', value: 'Commission Due' },
+      { key: 'tdsOnSlabwiseCommissionEarned', value: 'TDS to be deducted' },
+      { key: 'slabwiseCommissionPayableAfterTds', value: 'Commission Payable after TDS' },
+      { key: 'slabwiseCommissionPaymentStatus', value: 'Payout Status' },
+      { key: 'invoicePaymentStatus', value: 'Realised/Unrealised' },
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
     ]

@@ -117,9 +117,9 @@
                   <th scope="col">Other <br>(original + revise)</th>
                   <th scope="col">ITR U</th>
                   <th scope="col">Total ITR Filed</th>
-                  <th scope="col">Revenue Generated(filed + pending to file cases)<br>
+                  <th scope="col">Revenue Generated(filed)<br>
                     Total amount of paid invoices</th>
-                  <th scope="col">Applicable Commission <br>Percentage as on date</th>
+                  <!-- <th scope="col">Applicable Commission <br>Percentage as on date</th> -->
                   <th scope="col">Total Commission<br>Earned before TDS</th>
                   <th scope="col">TDS</th>
                   <th scope="col">Total Commission<br>Earned after TDS</th>
@@ -151,8 +151,8 @@
                   <td>{{ item.others}}</td>
                   <td>{{ item.itrU}}</td>
                   <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
-                  <td>{{ item.revenueGenerated}}</td>
-                  <td>{{ item.applicableCommissionPercentage}}</td>
+                  <td>{{ item.paymentGenerated}}</td>
+                  <!-- <td>{{ item.applicableCommissionPercentage}}</td> -->
                   <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
                   <td>{{ item.tds}}</td>
                   <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
@@ -171,13 +171,13 @@
                   <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
                   <td class="text-success">{{ grandTotal?.totalItrU }}</td>
                   <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
-                  <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
-                  <td>{{ 'NA' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalRevenueGenerated | number:'1.2-2' }}</td>
+                  <!-- <td>{{ 'NA' }}</td> -->
                   <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
-                  <td class="text-success">{{ grandTotal?.totalTds }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
-                  <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
+                  <td class="text-success">{{ grandTotal?.totalTds | number:'1.2-2' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS | number:'1.2-2' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPaid | number:'1.2-2'}}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPayable| number:'1.2-2' }}</td>
                   <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
                 </tr>
                 <tr *ngIf="allDetails?.length === 0 || !allDetails">

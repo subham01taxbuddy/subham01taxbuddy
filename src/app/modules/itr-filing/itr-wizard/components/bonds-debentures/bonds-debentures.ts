@@ -1028,7 +1028,7 @@ export class BondsDebentures
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
     }
   }
 
