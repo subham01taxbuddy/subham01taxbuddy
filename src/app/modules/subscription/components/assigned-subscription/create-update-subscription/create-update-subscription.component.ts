@@ -73,7 +73,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   isButtonDisable: boolean;
   AssessmentYear: string;
   dialogRef: any;
-
+  filteredFinancialYears: any[]
   gstTypesMaster = AppConstants.gstTypesMaster;
   stateDropdown = AppConstants.stateDropdown;
   frequencyTypesMaster: any = [
@@ -109,6 +109,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     },
   ]
   showScheduledFields:boolean =false;
+  scheduleCallTypes =[
+    {
+      label: 'Business Requirements',
+      value: 'business',
+    },
+    {
+      label: 'LDC Service',
+      value: 'lower_deduction',
+    }
+  ]
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -207,6 +217,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
     if(this.smeSelectedPlanId === 120){
       this.showScheduledFields =true;
+    }
+
+    let gstServiceType = this.subscriptionObj?.servicesType ===  "GST" ? true : false;
+    if (this.serviceType === 'GST' || gstServiceType) {
+      this.filteredFinancialYears = [{ financialYear: '2024-2025' }, ...this.financialYear];
+      console.log('updated FY ',this.filteredFinancialYears)
+    }else{
+      this.filteredFinancialYears= this.financialYear;
     }
   }
 
@@ -499,6 +517,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     sacNumber: new UntypedFormControl('998232'),
     description: new UntypedFormControl(''),
     scheduleCallService:new UntypedFormControl(''),
+    scheduleCallType:new UntypedFormControl(''),
   });
 
   get description() {
@@ -509,6 +528,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
   get scheduleCallService() {
     return this.otherInfoForm.controls['scheduleCallService'] as UntypedFormControl;
+  }
+
+  get scheduleCallType(){
+    return this.otherInfoForm.controls['scheduleCallType'] as UntypedFormControl;
   }
 
   getAllPromoCode() {
@@ -1071,8 +1094,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
      })
   }
 
-  filteredFinancialYears: any[] = this.financialYear;
-
   isYearDisabled(year: string): boolean {
     return this.service === 'ITRU' && this.selectedITRUFy?.includes(year);
   }
@@ -1087,6 +1108,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.filteredFinancialYears = this.financialYear.slice(0, 1);
       else
         this.filteredFinancialYears = this.financialYear;
+
+
+    if (this.service === 'GST') {
+      this.filteredFinancialYears = [{ financialYear: '2024-2025' }, ...this.financialYear];
+    }
 
     const serviceArray = [
       { service: 'GST', details: 'GST Registration' },
@@ -1342,6 +1368,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           if(this.scheduleCallService.value){
             reqBody.serviceType = this.scheduleCallService.value
           }
+
+          if(this.scheduleCallType.value){
+            reqBody.item.scheduleCallType = this.scheduleCallType.value
+          }
           console.log('Req Body: ', reqBody);
           let requestData = JSON.parse(JSON.stringify(reqBody));
           this.itrService.postMethod(param, requestData).subscribe(
@@ -1517,4 +1547,5 @@ export interface userInfo {
   subscriptionAssigneeId: number;
   smeSelectedPlan: any;
   item: any;
+  servicesType:any;
 }

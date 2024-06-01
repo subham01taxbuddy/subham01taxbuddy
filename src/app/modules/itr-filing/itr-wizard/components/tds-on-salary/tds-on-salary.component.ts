@@ -1,5 +1,5 @@
-import {Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input} from '@angular/core';
-import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input } from '@angular/core';
+import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ITR_JSON,
   OnSalary,
@@ -7,7 +7,7 @@ import {
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {MatPaginator} from "@angular/material/paginator";
+import { MatPaginator } from "@angular/material/paginator";
 declare let $: any;
 @Component({
   selector: 'app-tds-on-salary',
@@ -30,7 +30,7 @@ export class TdsOnSalaryComponent implements OnInit {
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TdsOnSalaryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -40,8 +40,8 @@ export class TdsOnSalaryComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
     if (
-        this.Copy_ITR_JSON.taxPaid?.onSalary &&
-        this.Copy_ITR_JSON.taxPaid?.onSalary.length > 0
+      this.Copy_ITR_JSON.taxPaid?.onSalary &&
+      this.Copy_ITR_JSON.taxPaid?.onSalary.length > 0
     ) {
       this.Copy_ITR_JSON.taxPaid?.onSalary.forEach((item) => {
         this.addMore(item);
@@ -73,10 +73,10 @@ export class TdsOnSalaryComponent implements OnInit {
 
   createForm(item?): UntypedFormGroup {
     let srn = 0;
-    if(this.data.assetIndex !== null && item){
+    if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
-    if(!this.Copy_ITR_JSON.taxPaid?.onSalary.length){
+    if (!this.Copy_ITR_JSON.taxPaid?.onSalary.length) {
       srn = 0;
     } else {
       srn = this.Copy_ITR_JSON.taxPaid?.onSalary.length;
@@ -162,14 +162,20 @@ export class TdsOnSalaryComponent implements OnInit {
     }
   }
 
-  goBack(){
+  goBack() {
     this.onSave.emit({
       type: 'tdsOnSalary',
       saved: false
     })
   }
   activeIndex = 0;
-  markActive(index){
+  markActive(index) {
+    if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
+      this.utilsService.showSnackBar(
+        'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+      );
+      return;
+    }
     this.activeIndex = index;
     (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
@@ -177,8 +183,8 @@ export class TdsOnSalaryComponent implements OnInit {
   }
 
   @ViewChild('paginator') paginator: MatPaginator;
-  getTotalCount(){
-    return (<FormArray>this.salaryForm.get('salaryArray')).controls.length;
+  getTotalCount() {
+    return (<UntypedFormArray>this.salaryForm.get('salaryArray')).controls.length;
   }
 
   get getSalaryArray() {
@@ -189,10 +195,18 @@ export class TdsOnSalaryComponent implements OnInit {
     const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
 
+    if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
+        this.utilsService.showSnackBar(
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        );
+        return;
+      }
+    }
     // if (salaryJsonArray?.length > 0) {
-      salaryArray.push(this.createForm(item));
+    salaryArray.push(this.createForm(item));
     // }
-    if(!item) {
+    if (!item) {
       this.activeIndex = salaryArray.length - 1;
       this.paginator.pageIndex = this.activeIndex;
       this.paginator.length = salaryArray.length;
@@ -200,6 +214,7 @@ export class TdsOnSalaryComponent implements OnInit {
       (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
       (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     }
+
   }
 
   deleteSalaryArray(index) {

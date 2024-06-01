@@ -78,6 +78,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
   partnerType: any;
+  totalItrFiledCount:any;
 
   constructor(
     public datePipe: DatePipe,
@@ -264,6 +265,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.loading = false;
       if (response.success) {
         this.itrFillingReport = response?.data?.content;
+        this.totalItrFiledCount=response?.data?.content[0].totalItrFiledCount;
         this.config.totalItems = response?.data?.totalElements;
         this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
         this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
@@ -275,10 +277,12 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
+        this.totalItrFiledCount = 0;
       }
     }, (error) => {
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
+      this.totalItrFiledCount = 0;
     });
   }
 
@@ -697,6 +701,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
+    this.totalItrFiledCount = 0;
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this.leaderView.enable();

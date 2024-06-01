@@ -26,6 +26,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import {DomSanitizer} from "@angular/platform-browser";
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -80,6 +82,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   itrType = new UntypedFormControl('');
   returnType = new UntypedFormControl('');
   isEverified = new UntypedFormControl('');
+  paymentStatus = new  UntypedFormControl();
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
@@ -88,6 +91,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
   isVerified = [
     { value: 'true', name: 'True' },
     { value: 'false', name: 'False' },
+  ];
+  paymentStatusValues=[
+    { value: 'Paid', name: 'Paid' },
+    { value: 'Unpaid', name: 'Unpaid' },
   ]
 
   constructor(
@@ -101,7 +108,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private http: HttpClient,
     private reportService: ReportService,
-    private genericCsvService: GenericCsvService
+    private genericCsvService: GenericCsvService,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer
   ) {
     this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
@@ -285,14 +294,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
 
       if (
-        this.roles.includes('ROLE_FILER') &&
+        this.roles?.includes('ROLE_FILER') &&
         this.partnerType === 'PRINCIPAL' &&
         this.agentId === loggedInId
       ) {
         this.filerUserId = loggedInId;
         this.searchAsPrinciple = true;
       } else if (
-        this.roles.includes('ROLE_FILER') &&
+        this.roles?.includes('ROLE_FILER') &&
         this.partnerType === 'INDIVIDUAL' &&
         this.agentId === loggedInId
       ) {
@@ -352,6 +361,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       if (this.utilsService.isNonEmpty(this.isEverified.value)) {
         param = param + '&isEverified=' + this.isEverified.value;
+      }
+      if (this.utilsService.isNonEmpty(this.paymentStatus.value)) {
+        param = param + '&paymentStatus=' + this.paymentStatus.value;
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
@@ -1215,6 +1227,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     );
 
   }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
   openChat(client) {
     console.log('client:', client);
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
@@ -1227,7 +1243,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+    disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
+    });
   }
   markAsEverified(data) {
     this.loading = true;
@@ -1480,8 +1502,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.itrType.setValue(null);
     this.returnType.setValue(null);
     this.isEverified.setValue(null);
+    this.paymentStatus.setValue(null);
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
+    this.config.currentPage = 1;
     this.config.totalItems = 0;
     this.config.itemsPerPage = 20;
     this.searchParams.mobileNumber = null;

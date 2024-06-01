@@ -3,7 +3,7 @@ import { map, Observable, startWith } from 'rxjs';
 
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { UntypedFormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -199,93 +199,107 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     return this.languageForm.get(lang) as UntypedFormControl;
   }
 
-  getItrTypeControl(itrType: string): UntypedFormControl {
-    return this.itrTypeForm.get(itrType) as UntypedFormControl;
+  getItrTypeControl(planId: number): UntypedFormControl {
+    return this.itrTypeForm.get(planId.toString()) as UntypedFormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
-    const itrTypeControl = this.getItrTypeControl(itrType);
     if (!this.smeObj['skillSetPlanIdList']) {
-      this.smeObj['skillSetPlanIdList'] = [];
+        this.smeObj['skillSetPlanIdList'] = [];
     }
-    let planId = this.smeObj['skillSetPlanIdList'];
 
-    if (itrTypeControl.value) {
-      this.itrPlanList.forEach(element => {
-        if (element.name === itrType) {
-          planId.push(element.planId);
-        }
-      });
-      this.smeObj['skillSetPlanIdList'] = planId;
-    } else {
-      this.itrPlanList.forEach(element => {
-        if (element.name === itrType) {
-          let index = this.smeObj['skillSetPlanIdList'].indexOf(element.planId);
-          this.smeObj['skillSetPlanIdList'].splice(index, 1);
-        }
-      });
+    const plan = this.itrPlanList.find(plan => plan.planId === itrType);
+    if (!plan) return;
+
+    const itrTypeControl = this.getItrTypeControl(plan.planId);
+    if (!itrTypeControl) return;
+
+    const index = this.smeObj['skillSetPlanIdList'].indexOf(plan.planId);
+
+    if (itrTypeControl.value && index === -1) {
+        this.smeObj['skillSetPlanIdList'].push(plan.planId);
+    } else if (!itrTypeControl.value && index !== -1) {
+        this.smeObj['skillSetPlanIdList'].splice(index, 1);
     }
+
+    console.log(this.smeObj['skillSetPlanIdList']);
   }
 
+
+  planIdList:any = []
   getPlanDetails() {
     this.loading = true;
     let param = '/plans-master?serviceType=ITR&isActive=true';
     this.itrMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      this.itrPlanList = response;
-      if (this.itrPlanList.length) {
-        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
-        if (this.smeObj?.['partnerType'] === 'CHILD') {
-          this.getPrincipalDetails(this.itrPlanList);
-        } else {
-          this.itrPlanList.forEach(element => {
-            this.irtTypeCapability.push(element.name);
-            this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
-            })
-            this.setPlanDetails();
-          });
+        this.loading = false;
+        this.itrPlanList = response;
+        if (this.itrPlanList.length) {
+            this.planIdList = this.itrPlanList.map(plan => plan.planId);
+            this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+            if (this.smeObj?.['partnerType'] === 'CHILD') {
+                this.getPrincipalDetails(this.itrPlanList);
+            } else {
+                this.irtTypeCapability = [];
+                this.itrPlanList.forEach(element => {
+                    this.irtTypeCapability.push(element.planId);
+                    this.irtTypeCapability.forEach((itrType) => {
+                        this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
+                    })
+                });
+                this.setPlanDetails();
+            }
         }
-      }
     },
-      error => {
+    error => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to get selected plan details');
-      });
-
+    });
   }
+
   getPrincipalDetails(itrPlanList) {
     let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
     this.reportService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        this.smeDetails = response.data[0];
-        itrPlanList.forEach(element => {
-          this.smeDetails?.skillSetPlanIdList.forEach(item => {
-            if (element.planId === item) {
-              this.irtTypeCapability.push(element.name);
-              this.irtTypeCapability.forEach((itrType) => {
-                this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
-              })
-            }
-          });
-          this.setPlanDetails();
-        });
-      }
-    })
+        this.loading = false;
+        if (response.success) {
+            this.smeDetails = response.data[0];
+            itrPlanList.forEach(element => {
+                this.smeDetails?.skillSetPlanIdList.forEach(item => {
+                    if (element.planId === item) {
+                        this.irtTypeCapability.push(element.planId);
+                        this.irtTypeCapability.forEach((itrType) => {
+                            this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
+                        })
+                    }
+                });
+                this.setPlanDetails();
+            });
+        }
+    });
   }
 
   setPlanDetails() {
     if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
-      this.itrPlanList.forEach(item => {
-        this.smeObj?.['skillSetPlanIdList'].forEach(element => {
-          if (item.planId === element) {
-            const name = item.name;
-            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
-          }
+        this.itrPlanList.forEach(item => {
+            this.smeObj?.['skillSetPlanIdList'].forEach(element => {
+                if(element === 138){
+                    const businessAndProfessionControl =  this.itrTypeForm.controls['138'];
+                    if (businessAndProfessionControl) {
+                        businessAndProfessionControl.setValue(true);
+                    }
+                } else {
+                    if (item.planId === element && element != 138) {
+                        const planId = item.planId.toString();
+                        this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
+                    }
+                }
+            })
         })
-      })
     }
+  }
+
+  getItrTypeName(planId: number): string {
+    const plan = this.itrPlanList.find(plan => plan.planId === planId);
+    return plan ? plan.name : '';
   }
 
   onAdditionalIdsRequiredChange() {

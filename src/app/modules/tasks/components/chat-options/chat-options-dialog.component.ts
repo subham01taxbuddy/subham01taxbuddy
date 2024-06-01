@@ -86,10 +86,13 @@ export class ChatOptionsDialogComponent implements OnInit {
   goToKommunicate() {
     console.log(this.kommChatLink);
     if (this.kommChatLink) {
-      // window.open(this.kommChatLink);
-      this.dialogRef.close({
-        id: this.kommChatConversationId
-      });
+      if(this.data.newTab) {
+        window.open(this.kommChatLink);
+      } else {
+        this.dialogRef.close({
+          id: this.kommChatConversationId
+        });
+      }
     }
   }
 

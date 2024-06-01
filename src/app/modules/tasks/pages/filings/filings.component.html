@@ -23,10 +23,10 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-2 spsTp">
+                        <div class="col-sm-3 spsTp">
                           <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                           <label class="input__label" for="attr">ITR Type</label>
                           <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [formControl]="itrType">
@@ -36,7 +36,7 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                           <label class="input__label" for="attr">Return Type</label>
                           <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [formControl]="returnType">
@@ -46,7 +46,7 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                           <label class="input__label" for="attr">Is-Everified</label>
                           <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [formControl]="isEverified">
@@ -56,7 +56,17 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-4 ">
+                        <div class="col-sm-3 mt-1">
+                          <label class="input__label" for="attr">Payment Status</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                            <mat-select placeholder="" [formControl]="paymentStatus">
+                              <mat-option *ngFor="let item of paymentStatusValues" [value]="item.value">
+                                {{item.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-9  mt-1">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>

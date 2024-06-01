@@ -5,3 +5,41 @@
     color: #242426;
     line-height: 28px;
 }
+
+.custom-autocomplete {
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-autocomplete-panel {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .mat-option {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+
+    .option-content {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .label {
+        flex: 1;
+        text-align: left;
+      }
+
+      .code {
+        flex: 1;
+        text-align: right;
+        color: grey;
+      }
+    }
+  }
+}
+
+.text-wrapper-2 {
+  color: red;
+}

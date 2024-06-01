@@ -269,3 +269,21 @@
     display: none;
   }
 }
+
+.div-8AA {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-left: 24px;
+  gap: 15px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.frameC .div-5 {
+  gap:0px !important
+}
+.frameC .div-8A{
+  padding-bottom: 0px !important;
+}

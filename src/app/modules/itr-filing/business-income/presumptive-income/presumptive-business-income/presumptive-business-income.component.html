@@ -1,7 +1,7 @@
 <div style="overflow: hidden">
   <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-  <div class="">
-    <main>
+  <div>
+    <main id="business_id">
       <div class="frameC p-10">
         <div class="div">
           <div class="text-wrapper">Presumptive Income</div>
@@ -13,32 +13,6 @@
               <div class="frame-wrapper-2A">
                 <div class="accordion" id="myAccordion">
                   <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading3">
-                      <button class="accordion-button" data-bs-target="#collapse1" data-bs-toggle="collapse"
-                        type="button">
-                        Business Income</button>
-                    </h2>
-                    <div class="accordion-collapse collapse show" id="collapse1">
-                      <div class="accordion__item-body">
-                        <div class="table-responsive" style="overflow-x: scroll;">
-                          <div>
-                            <div class="col-sm-12">
-                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
-                                class="newAG ag-theme-balham topSps">
-                              </ag-grid-angular>
-                            </div>
-                            <div class="row col-sm-12">
-                              <div class="col-sm-6">
-                                <button (click)="deleteArray()" [disabled]="!busSelected()" class=" delete-btn"
-                                  type="submit">
-                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div class="accordion-item mt-3">
                       <h2 class="accordion-header accoHdclr" id="headingOne">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -47,7 +21,7 @@
                       <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                         <div class="card-body p-15">
                           <form [formGroup]="selectedFormGroup">
-                            <div class="land-box-buyr">
+                            <div class="land-box-buyr" style="padding: 0 15px 15px;">
                               <div class="PreBxUp mb-2">
                                 <div class="field">
                                   <app-business-input-autocomplete [businessType]="'44AD'" [selectedInput]="
@@ -65,7 +39,7 @@
                                   <div class="field-label">
                                     <span class="span">Trade Name</span> <span class="text-wrapper-2">*</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input formControlName="tradeName" matInput name="tradeName" class="input-field"
                                       required />
                                   </mat-form-field>
@@ -78,14 +52,14 @@
                                   <div class="field-label">
                                     <span class="span">Business description</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input matInput class="input-field" formControlName="description"
                                       name="description" />
                                   </mat-form-field>
                                 </div>
                               </div>
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Bank Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -153,7 +127,7 @@
                               </div>
 
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Cash Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -219,7 +193,7 @@
                                 </div>
                               </div>
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Any Other Mode <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -298,6 +272,34 @@
                         </div>
                       </div>
                     </div>
+
+                    <h2 class="accordion-header" id="heading3">
+                      <button class="accordion-button" data-bs-target="#collapse1" data-bs-toggle="collapse"
+                        type="button">
+                        Business Income</button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" id="collapse1">
+                      <div class="accordion__item-body">
+                        <div class="table-responsive" style="overflow-x: scroll;">
+                          <div>
+                            <div class="col-sm-12">
+                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                                class="newAG ag-theme-balham topSps">
+                              </ag-grid-angular>
+                            </div>
+                            <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button (click)="deleteArray()" [disabled]="!busSelected()" class=" delete-btn"
+                                  type="submit">
+                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>

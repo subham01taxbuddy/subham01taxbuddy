@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit} from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -44,7 +44,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute, private elementRef: ElementRef
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -141,6 +141,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           if (obj.deduction && obj.deduction.length > 0) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
+              this.updateValidations(this.deductionForm);
             });
             this.deduction = true;
           }
@@ -275,7 +276,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   saveManualEntry() {
     if (this.selectedFormGroup.invalid) {
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1', this.elementRef);
       return;
     }
 
@@ -303,6 +304,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.selectedFormGroup.patchValue(
         ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
+    this.utilsService.smoothScrollToTop();
   }
 
   get getBondsArray() {
@@ -713,7 +715,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.updateDeductionUI();
     this.bondsForm.enable();
     this.deductionForm.enable();
-    if (this.bondsForm.valid || this.deductionForm.valid) {
+    if (this.bondsForm.valid && this.deductionForm.valid) {
       if (!this.Copy_ITR_JSON.capitalGain) {
         this.Copy_ITR_JSON.capitalGain = [];
       }
@@ -750,6 +752,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           } else {
               (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
           }
+        } else {
+          (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
         }
           bondsList.push((element as UntypedFormGroup).getRawValue());
       });
@@ -788,6 +792,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             `Bonds data updated successfully`
           );
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(false);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -796,6 +801,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           );
           this.utilsService.smoothScrollToTop();
         }
+      );
+    } else{
+      this.loading = false;
+      $('input.ng-invalid').first().focus();
+      this.utilsService.showSnackBar(
+          'Please verify the form and try again.'
       );
     }
   }
@@ -910,6 +921,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
+  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
@@ -918,20 +931,48 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       orgAssestTransferDate: [obj ? obj.orgAssestTransferDate : null],
       panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
       purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
-      purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
-      costOfNewAssets: [obj ? obj.costOfNewAssets : null, Validators.required],
+      purchaseDate: [obj ? obj.purchaseDate : null],
+      costOfNewAssets: [obj ? obj.costOfNewAssets : null],
       investmentInCGAccount: [
         obj ? obj.investmentInCGAccount : null,
-        Validators.required,
       ],
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null,[Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
-      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex),]],
+      accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
       dateOfDeposit: [obj?.dateOfDeposit || null],
     });
   }
 
+  updateValidations(formGroup){
+    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+      formGroup.controls['purchaseDate'].setValidators([Validators.required]);
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
+    } else {
+      formGroup.controls['purchaseDate'].setValidators(null);
+      formGroup.controls['purchaseDate'].updateValueAndValidity();
+      formGroup.controls['costOfNewAssets'].setValidators(null);
+      formGroup.controls['costOfNewAssets'].updateValueAndValidity();
+    }
+
+    if(formGroup.controls['investmentInCGAccount'].value){
+      formGroup.controls['accountNumber'].setValidators([Validators.required]);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators([Validators.required]);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators([Validators.required]);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
+    } else {
+      formGroup.controls['accountNumber'].setValidators(null);
+      formGroup.controls['accountNumber'].updateValueAndValidity();
+      formGroup.controls['ifscCode'].setValidators(null);
+      formGroup.controls['ifscCode'].updateValueAndValidity();
+      formGroup.controls['dateOfDeposit'].setValidators(null);
+      formGroup.controls['dateOfDeposit'].updateValueAndValidity();
+    }
+  }
   calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
         this.deductionForm.controls['costOfNewAssets'].valid &&
@@ -995,7 +1036,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2");
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
     }
   }
 
@@ -1009,8 +1050,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
+    } else if(this.deduction && this.deductionForm.invalid){
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef)
+      this.utilsService.showSnackBar('Please fill all mandatory details.');
+      return;
     }
     this.save('bonds');
-    this.saveAndNext.emit(false);
   }
 }

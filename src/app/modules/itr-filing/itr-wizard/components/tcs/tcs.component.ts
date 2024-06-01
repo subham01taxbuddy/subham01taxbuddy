@@ -7,7 +7,7 @@ import {
   Output,
   Inject,
 } from '@angular/core';
-import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -82,6 +82,10 @@ export class TcsComponent implements OnInit {
         if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
+          this.utilsService.showSnackBar(
+              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          );
+          return;
         }
       });
     }
@@ -121,6 +125,12 @@ export class TcsComponent implements OnInit {
 
   activeIndex = 0;
   markActive(index){
+    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+      this.utilsService.showSnackBar(
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+      );
+      return;
+    }
     this.activeIndex = index;
     (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
@@ -180,7 +190,15 @@ export class TcsComponent implements OnInit {
   }
 
   addMoreSalary(item?) {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+        this.utilsService.showSnackBar(
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        );
+        return;
+      }
+    }
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
     this.activeIndex = salaryArray.length - 1;
   }

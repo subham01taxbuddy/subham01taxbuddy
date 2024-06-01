@@ -117,7 +117,7 @@ export class SidebarComponent {
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: [] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
-      ] 
+      ]
     },
     {
       name: 'Subscription',
@@ -166,19 +166,11 @@ export class SidebarComponent {
       submenu: []
     },
     {
-      name: 'All Users',
-      icon: 'all-users.png',
-      active: true,
-      url: '/pages/user-management/users',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-      submenu: []
-    },
-    {
       name: 'Review',
       icon: 'review.png',
       active: true,
       url: '/review',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
     {
@@ -186,7 +178,7 @@ export class SidebarComponent {
       icon: 'promocode.png',
       active: true,
       url: '/promo-code',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
     {
@@ -194,7 +186,7 @@ export class SidebarComponent {
       icon: 'academy.png',
       active: true,
       url: '/academy-courses',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
 
@@ -212,23 +204,42 @@ export class SidebarComponent {
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
+        { name: 'Filing Done But Unpaid', url: '/reports/filling-done-payment-not-received', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+
       ]
     },
     {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
       icon: 'invoice.png',
       submenu: [
-        { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
+        // { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
       ]
+    },
+    {
+      name: 'All Users',
+      icon: 'all-users.png',
+      active: true,
+      url: '/pages/user-management/users',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
+    {
+      name: 'PAN Exception',
+      icon: 'invoice.png',
+      active: false,
+      url: '/pages/user-management/pan-exception',
+      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      submenu: []
     },
     {
       name: 'Delete User Request',
       icon: 'sme-mgmt.png',
       active: false,
       url: '/delete-user',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN'],
       submenu: []
     },
   ];

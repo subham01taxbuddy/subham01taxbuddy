@@ -140,12 +140,17 @@ export class SideSummaryPanelComponent implements OnInit {
       income.incomeType === "INTEREST_ACCRUED_10_12_II_P"
     ).reduce((total, element) => total + element.taxableAmount, 0);
 
+    this.otherIncome.giftIncome = this.summary.summaryIncome.summaryOtherIncome?.incomes.filter(income =>
+        income.incomeType === "AGGREGATE_VALUE_WITHOUT_CONS" ||
+        income.incomeType === "IMMOV_PROP_WITHOUT_CONS" ||
+        income.incomeType === "IMMOV_PROP_INADEQ_CONS" ||
+        income.incomeType === "ANY_OTHER_PROP_WITHOUT_CONS" ||
+        income.incomeType === "ANY_OTHER_PROP_INADEQ_CONS"
+    ).reduce((total, element) => total + element.taxableAmount, 0);
+
     this.otherIncome.totalAnyOtherIncome = this.summary.summaryIncome.summaryOtherIncome?.incomes.filter(income =>
-      income.incomeType === "AGGREGATE_VALUE_WITHOUT_CONS" ||
-      income.incomeType === "IMMOV_PROP_WITHOUT_CONS" ||
-      income.incomeType === "IMMOV_PROP_INADEQ_CONS" ||
-      income.incomeType === "ANY_OTHER_PROP_WITHOUT_CONS" ||
-      income.incomeType === "ANY_OTHER_PROP_INADEQ_CONS" ||
+      income.incomeType === "INCOME_US_56_2_XII" ||
+      income.incomeType === "INCOME_US_56_2_XIII" ||
       income.incomeType === "ROYALTY_US_80QQB" ||
       income.incomeType === "ROYALTY_US_80RRB" ||
       income.incomeType === "FAMILY_PENSION" ||
@@ -155,7 +160,14 @@ export class SideSummaryPanelComponent implements OnInit {
     this.otherIncome.totalDividendIncome = this.summary.summaryIncome.summaryOtherIncome?.incomes.find(income =>
       income.incomeType === "DIVIDEND"
     )?.taxableAmount;
+    let a = this.summary?.taxSummary?.totalWinningsUS115BB ? this.summary?.taxSummary?.totalWinningsUS115BB : 0;
+    let b = this.summary?.taxSummary?.totalWinningsUS115BBJ ? this.summary?.taxSummary?.totalWinningsUS115BBJ : 0;
+    this.otherIncome.winningsIncome = a + b;
 
+  }
+
+  getTotalOtherIncome(){
+    return this.summary.summaryIncome.summaryOtherIncome.totalOtherTaxableIncome + this.otherIncome.winningsIncome;
   }
 
   //Summary - Presumptive Income

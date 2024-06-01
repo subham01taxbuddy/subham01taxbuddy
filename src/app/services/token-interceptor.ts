@@ -33,27 +33,27 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request.clone({ headers }));
     }
     this.userData = JSON.parse(localStorage.getItem('UMD'));
-    if (this.userData?.id_token) {
-      const TOKEN = this.userData ? this.userData.id_token : null;
+    if (this.userData?.id_token && !this.tokenExpired(this.userData?.id_token)) {
+      //make api call
+      return this.makeApiCall(this.userData.id_token, request, next);
     } else {
       Auth.currentSession()
         .then((data) => {
           if (data.isValid()) {
             this.userData.id_token = data.getAccessToken().getJwtToken();
             localStorage.setItem('UMD', JSON.stringify(this.userData));
+            //token is valid, make api call
+            return this.makeApiCall(this.userData.id_token, request, next);
           } else {
             alert('Got expired session!!');
-            // data.getRefreshToken().getToken().
+            this.logout();
           }
         })
         .catch((err) => console.log('Auth.currentSession err:', err));
     }
+  }
 
-    const TOKEN = this.userData ? this.userData.id_token : null;
-    if (TOKEN && this.tokenExpired(TOKEN)) {
-      console.log("this is expired token case");
-    }
-
+  makeApiCall(TOKEN, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
     if ((request.url.startsWith(environment.url) || request.url.startsWith(environment.eri_url)) && TOKEN) {
       let eriHeader = JSON.parse(sessionStorage.getItem('ERI-Request-Header'));
       if (request.headers.has(InterceptorSkipHeader)) {
@@ -88,31 +88,51 @@ export class TokenInterceptor implements HttpInterceptor {
           environment: environment.environment
         },
       });
-    }
-    else if (request.url.startsWith(environment.ITR_LIFECYCLE)) {
+    } else if (request.url.startsWith(environment.validate_km_token)) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ` + TOKEN,
+          'API-Key': '65041ba789abcf021392ac6a'
+        },
+      });
+    } else if (request.url.startsWith(environment.ITR_LIFECYCLE)) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
           environment: environment.lifecycleEnv
         },
       });
-    } else if ((request.url.startsWith(environment.check_upload)) || (request.url.startsWith(environment.upload_file))
-      || (request.url.startsWith(environment.download_file))) {
+    } else if ((request.url.startsWith(environment.check_upload))) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
           // environment: environment.lifecycleEnv
         },
       });
+    }else if (request.url.startsWith(environment.download_file)){
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ` + TOKEN,
+          environment: environment.payOutEnv,
+          vendor: "Razorpay"
+        },
+      });
+    }else if(request.url.startsWith(environment.upload_file)){
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ` + TOKEN,
+          environment: environment.payOutEnv,
+        },
+      });
     }
     // console.log('Im in intercept====', request);
     return next.handle(request).pipe(
-      catchError((error, caught) => {
-        // intercept the respons error and displace it to the console
-        console.log(error);
-        this.handleAuthError(error);
-        return of(error);
-      }) as any
+        catchError((error, caught) => {
+          // intercept the respons error and displace it to the console
+          console.log(error);
+          this.handleAuthError(error);
+          return of(error);
+        }) as any
     );
   }
 

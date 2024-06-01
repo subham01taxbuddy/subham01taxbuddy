@@ -490,7 +490,7 @@
               </div>
             </div>
           </div>
-          <div class="col-sm-5">
+          <!-- <div class="col-sm-5">
             <div class="card" style="margin-top: 10px;">
               <b style="font-size: 18px">ITR's Type can Handle: </b>
               <div class="row">
@@ -505,7 +505,25 @@
                 </section>
               </div>
             </div>
+          </div> -->
+          <div class="col-sm-5">
+            <div class="card" style="margin-top: 10px;">
+                <b style="font-size: 18px">ITR's Type can Handle: </b>
+                <div class="row">
+                    <section class="example-section">
+                        <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
+                            <p>
+                                <mat-checkbox [formControl]="getItrTypeControl(itrType)"
+                                    (change)="onItrTypeCheckboxChange(itrType)">
+                                    <span class="spacer">{{ getItrTypeName(itrType) }}</span>
+                                </mat-checkbox>
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </div>
           </div>
+
           <div class="col-sm-4">
             <mat-label>Interviewed By </mat-label>
             <mat-form-field appearance="outline">

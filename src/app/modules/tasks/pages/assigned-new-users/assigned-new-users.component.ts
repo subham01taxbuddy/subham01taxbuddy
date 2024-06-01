@@ -1257,7 +1257,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      if (result.id) {
+      if (result?.id) {
         this.isChatOpen = true;
         this.chatManager.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);

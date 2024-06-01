@@ -17,6 +17,8 @@ import { environment } from 'src/environments/environment';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewCallDetailsComponent } from './view-call-details/view-call-details.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -53,7 +55,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   dailyCallingReport: any;
-  config: any;
+  parentConfig: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -91,7 +93,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private genericCsvService: GenericCsvService,
-    private cacheManager: CacheManager
+    private cacheManager: CacheManager,
+    private dialog: MatDialog,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -107,7 +110,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     };
 
 
-    this.config = {
+    this.parentConfig = {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
@@ -212,7 +215,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let userFilter = '';
     if (this.leaderId && !this.filerId && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
@@ -222,7 +225,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
     if (this.filerId && this.searchAsPrinciple === true && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === true && pageNumber) {
@@ -230,7 +233,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     }
     if (this.filerId && this.searchAsPrinciple === false && !pageNumber) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1
+      this.parentConfig.currentPage = 1
       userFilter += `&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false && pageNumber) {
@@ -253,14 +256,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       this.loading = false;
       if (response.success) {
         this.dailyCallingReport = response?.data?.content;
-        this.config.totalItems = response?.data?.totalElements;
+        this.parentConfig.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
         this.cacheManager.initializeCache(this.createRowData(this.dailyCallingReport));
         // this.cacheManager.cachePageContent(0, this.createRowData(this.dailyCallingReport));
 
         const currentPageNumber = pageNumber || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.dailyCallingReport));
-        this.config.currentPage = currentPageNumber;
+        this.parentConfig.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -287,6 +290,9 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         noOfMissedCall: callingData[i].noOfMissedCall,
         parentName: callingData[i].parentName,
         role: callingData[i].role,
+        averageTimeSpentOnCalling : callingData[i].averageTimeSpentOnCalling,
+        averageTimeSpentOnConnectedCall : callingData[i].averageTimeSpentOnConnectedCall,
+        smeUserId : callingData[i].smeUserId
         // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
       })
       callingRepoInfoArray.push(agentReportInfo);
@@ -335,7 +341,16 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.outboundCalls > 0){
+            return `<button type="button" class="action_icon add_button" title="view outbound call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-Outbound-details">
+            ${params.data.outboundCalls} </button>`;
+          }else{
+            return params.data.outboundCalls ;
+          }
+        },
       },
       {
         headerName: 'Outbound Connected',
@@ -348,7 +363,17 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.outboundConnected > 0){
+            return `<button type="button" class="action_icon add_button" title="view outbound Connected call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-outboundConnected-details">
+            ${params.data.outboundConnected} </button>`;
+          }else{
+            return  params.data.outboundConnected ;
+          }
+
+        },
       },
       {
         headerName: 'Outbound Answered Ratio',
@@ -374,7 +399,17 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.inboundCalls > 0){
+            return `<button type="button" class="action_icon add_button" title="view inbound Calls details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundCalls-details">
+            ${params.data.inboundCalls} </button>`;
+          }else{
+            return params.data.inboundCalls
+          }
+
+        },
       },
       {
         headerName: 'Inbound Connected',
@@ -387,7 +422,17 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.inboundConnected > 0){
+            return `<button type="button" class="action_icon add_button" title="view inbound Connected call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-inboundConnected-details">
+            ${params.data.inboundConnected} </button>`;
+          }else{
+            return params.data.inboundConnected
+          }
+
+        },
       },
       {
         headerName: 'Inbound Answered Ratio',
@@ -413,6 +458,41 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.noOfMissedCall > 0){
+            return `<button type="button" class="action_icon add_button" title="view no Of MissedCall call details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-noOfMissedCall-details">
+            ${params.data.noOfMissedCall} </button>`;
+          }else{
+            return params.data.noOfMissedCall
+          }
+        },
+      },
+      {
+        headerName: 'Average time spent on calling (overall from dialing till end of call)',
+        field: 'averageTimeSpentOnCalling',
+        sortable: true,
+        width: 320,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Average time spent on connected call',
+        field: 'averageTimeSpentOnConnectedCall',
+        sortable: true,
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         }
       },
       {
@@ -431,6 +511,52 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       },
 
     ]
+  }
+
+
+  onSmeRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'view-Outbound-details': {
+          this.viewCallDetails(params.data,'Outbound');
+          break;
+        }
+        case 'view-outboundConnected-details': {
+          this.viewCallDetails(params.data,'Outbound Connected');
+          break;
+        }
+        case 'view-inboundCalls-details': {
+          this.viewCallDetails(params.data,'Inbound');
+          break;
+        }
+        case 'view-inboundConnected-details': {
+          this.viewCallDetails(params.data,'Inbound Connected');
+          break;
+        }
+        case 'view-noOfMissedCall-details': {
+          this.viewCallDetails(params.data,'No Of Missed');
+          break;
+        }
+      }
+    }
+  }
+
+  viewCallDetails(data, mode){
+    let disposable = this.dialog.open(ViewCallDetailsComponent, {
+      width: '90%',
+      height: 'auto',
+      data: {
+        mode: mode,
+        data: data,
+        startDate: this.startDate.value,
+        endDate: this.endDate.value,
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      // this.advanceSearch();
+    });
   }
 
   async downloadReport() {
@@ -487,7 +613,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.selectRole.setValue(null);
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
-    this.config.currentPage = 1
+    this.parentConfig.currentPage = 1
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
@@ -501,7 +627,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     } else {
       //clear grid for loaded data
       this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData([]));
-      this.config.totalItems = 0;
+      this.parentConfig.totalItems = 0;
     }
     // this.showReports();
   }
@@ -510,9 +636,9 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
       this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
-      this.config.currentPage = event;
+      this.parentConfig.currentPage = event;
     } else {
-      this.config.currentPage = event;
+      this.parentConfig.currentPage = event;
       this.searchParam.page = event - 1;
       this.showReports(event);
     }

@@ -27,6 +27,10 @@ export class ServiceDropDownComponent implements OnInit {
           label: 'ITR',
           value: 'ITR',
         },
+        {
+          label: 'ITR-U',
+          value: 'ITRU',
+        },
       ];
     }else if(this.fromInvoices){
       this.serviceTypes =[

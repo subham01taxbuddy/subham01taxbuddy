@@ -1,32 +1,30 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div>
   <div class="spcDwn">
-  <div class="div-3" *ngFor="let salary of getSalaryArray.controls; let i = index">
-    <!--      <div>-->
-    <div class="contents-wrapper">
-      <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
-        <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}</div>
-        <div class="group" (click)="deleteSalaryArray(i)">
-          <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'"></i>
+    <div class="div-3" *ngFor="let salary of getSalaryArray.controls; let i = index">
+      <!--      <div>-->
+      <div class="contents-wrapper">
+        <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
+          <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}
+          </div>
+          <div class="group" (click)="deleteSalaryArray(i)">
+            <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'"></i>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="contents-wrapper spcLft">
-    <div class="field-text-wrapper">
-      <div class="field-text-2" (click)="$event.stopPropagation(); addMore();">+ Add Another</div>
+    <div class="contents-wrapper spcLft">
+      <div class="field-text-wrapper">
+        <div class="field-text-2" (click)="$event.stopPropagation(); addMore();">+ Add Another</div>
+      </div>
     </div>
   </div>
-</div>
 
   <form [formGroup]="salaryForm">
     <div formArrayName="salaryArray">
       <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
-           [formGroupName]="activeIndex">
+        [formGroupName]="activeIndex">
         <div *ngIf="activeIndex === i">
           <!-- <mat-checkbox
             color="primary"
@@ -37,98 +35,60 @@
           </mat-checkbox> -->
 
           <div class="container spcBlw">
-          <div class="row">
+            <div class="row">
 
-            <div class="col-sm-6">
+              <div class="col-sm-6">
 
-              <div class="form-field">
-                <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
-                    matTooltipClass="tab-tooltip"
-                    matTooltipPosition="above"
-                    formControlName="deductorTAN"
-                    matInput
-                    currencyMask
-                    placeholder="XXXXXNNNNX"
-                    name="deductorTAN[activeIndex]"
-                    class="input-field"
-                    maxlength="10"
-                    minlength="10"
-                    required
-                    type="text"
-                    trim
-                    upperCase
-                  />
+                <div class="form-field">
+                  <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+                      matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="deductorTAN" matInput
+                      currencyMask placeholder="XXXXXNNNNX" name="deductorTAN[activeIndex]" class="input-field"
+                      maxlength="10" minlength="10" required type="text" trim upperCase />
 
-                  <mat-error *ngIf="getSalaryArray.controls[activeIndex].get('deductorTAN').hasError('pattern')">
-                    Enter valid TAN (e.g XXXXX1234X)</mat-error
-                  >
-                </mat-form-field>
+                    <mat-error *ngIf="getSalaryArray.controls[activeIndex].get('deductorTAN').hasError('pattern')">
+                      Enter valid TAN (e.g XXXXX1234X)</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-field">
+                  <mat-label>Name of Employer*</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input formControlName="deductorName" matInput placeholder="Name of Employer"
+                      name="deductorName[activeIndex]" class="input-field" maxlength="125" required type="text" trim />
+                    <mat-error *ngIf="getSalaryArray.controls[activeIndex].get('deductorName').hasError('pattern')">
+                      Name should be character only</mat-error>
+                  </mat-form-field>
+                </div>
               </div>
-              <div class="form-field">
-              <mat-label>Name of Employer*</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  formControlName="deductorName"
-                  matInput
-                  placeholder="Name of Employer"
-                  name="deductorName[activeIndex]"
-                  class="input-field"
-                  maxlength="125"
-                  required
-                  type="text"
-                  trim
-                />
-                <mat-error *ngIf="getSalaryArray.controls[activeIndex].get('deductorName').hasError('pattern')">
-                  Name should be character only</mat-error
-                >
-              </mat-form-field>
-            </div>
-            </div>
 
-            <div class="col-sm-6">
-              <div class="form-field">
-              <mat-label>Total Amount credited*</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  formControlName="totalAmountCredited"
-                  matInput
-                  placeholder="Total Amount credited"
-                  name="totalAmountCredited[i]"
-                  required
-                  class="input-field"
-                  maxlength="14"
-                  digitsOnly/>
-                <mat-error
-                  *ngIf="getSalaryArray.controls[activeIndex].get('totalAmountCredited').hasError('pattern')">
-                  Enter positive amount without decimal.</mat-error>
-              </mat-form-field>
-            </div>
-              <div class="form-field">
-              <mat-label>Total Tax Deducted*</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  formControlName="totalTdsDeposited"
-                  matInput
-                  placeholder="Total Tax Deducted"
-                  name="totalTdsDeposited[activeIndex]"
-                  required
-                  class="input-field"
-                  maxlength="14"
-                  digitsOnly
-                />
-                <mat-error
-                  *ngIf="getSalaryArray.controls[activeIndex].get('totalTdsDeposited').hasError('pattern')">
-                  Enter positive amount without decimal.</mat-error>
-              </mat-form-field>
-            </div>
+              <div class="col-sm-6">
+                <div class="form-field">
+                  <mat-label>Total Amount credited*</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input formControlName="totalAmountCredited" matInput placeholder="Total Amount credited"
+                      name="totalAmountCredited[i]" required class="input-field" maxlength="14" digitsOnly />
+                    <mat-error
+                      *ngIf="getSalaryArray.controls[activeIndex].get('totalAmountCredited').hasError('pattern')">
+                      Enter positive amount without decimal.</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-field">
+                  <mat-label>Total Tax Deducted*</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input formControlName="totalTdsDeposited" matInput placeholder="Total Tax Deducted"
+                      name="totalTdsDeposited[activeIndex]" required class="input-field" maxlength="14" digitsOnly />
+                    <mat-error
+                      *ngIf="getSalaryArray.controls[activeIndex].get('totalTdsDeposited').hasError('pattern')">
+                      Enter positive amount without decimal.</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
             </div>
 
           </div>
-
-        </div>
 
 
         </div>
@@ -147,4 +107,3 @@
     </div>
   </form>
 </div>
-

@@ -512,6 +512,7 @@ export class ItrWizardComponent implements OnInit {
         userId: this.ITR_JSON.userId,
         clientName: this.customerName,
         serviceType: 'ITR',
+        newTab: true
       },
     });
 
