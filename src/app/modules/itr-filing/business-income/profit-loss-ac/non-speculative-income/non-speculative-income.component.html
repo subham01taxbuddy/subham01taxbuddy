@@ -36,14 +36,14 @@
                                   </div>
                                   <div class="form-field">
                                     <div><span class="normal_text">Trade Name </span> </div>
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="tradeName" matInput name="tradeName[i]"
                                         class="input-field" />
                                     </mat-form-field>
                                   </div>
                                   <div class="form-field">
                                     <div><span class="normal_text">Business Description</span></div>
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="businessDescription" matInput
                                         name="businessDescription[i]" class="input-field" />
                                     </mat-form-field>
@@ -94,7 +94,7 @@
                               class="newAG ag-theme-balham topSps">
                             </ag-grid-angular>
                           </div>
-                          <div class="row col-sm-12">
+                          <div class="row col-sm-12" id="nonSpeculative_id">
                             <div class="col-sm-6">
                               <button (click)="deleteNonSpecArray()" [disabled]="!nonspecSelected()" class=" delete-btn"
                                 type="submit">
@@ -122,7 +122,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="brokerName" matInput [disabled]="true" name="brokerName"
                                     readonly />
                                 </mat-form-field>
@@ -135,7 +135,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput
                                     [disabled]="true" name="turnOver" required class="input-field"
                                     (blur)="calculateIncome()" digitsOnly />
@@ -149,7 +149,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount"
                                     matInput name="finishedGoodsClosingStock" class="input-field" required type="number"
                                     trim (blur)="calculateIncome()" />
@@ -163,7 +163,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input readonly formControlName="totalCredit" name="totalCredit" matInput
                                     class="input-field" required type="number" trim />
                                 </mat-form-field>
@@ -176,7 +176,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount"
                                     matInput name="finishedGoodsOpeningStock" class="input-field" required type="number"
                                     trim (blur)="calculateIncome()" />
@@ -189,7 +189,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="purchase" placeholder="₹ Enter Amount" matInput
                                     name="purchase" class="input-field" required type="number" trim
                                     (blur)="calculateIncome()" />
@@ -202,7 +202,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="expenditure" placeholder="₹ Enter Amount" matInput
                                     name="tradingExpense" class="input-field" required type="number" trim
                                     (blur)="calculateIncome()" />
@@ -216,7 +216,7 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input readonly formControlName="netIncome" name="netIncome" matInput
                                     class="input-field" required type="number" trim />
                                 </mat-form-field>
@@ -250,7 +250,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input readonly type="text" matInput class="input-field" value="{{totalOtherIncomes}}"
                                   id="exampleInputEmail1" aria-describedby="emailHelp">
                               </mat-form-field>
@@ -288,7 +288,7 @@
                                   <div><span class="normal_text">Income Type </span>
                                   </div>
                                   <div class="form-control-wrapper">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <mat-select placeholder="Income Type" formControlName="type" name="type"
                                         (selectionChange)="changeIncomes()">
                                         <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
@@ -302,7 +302,7 @@
                                 <div class="form-field">
                                   <div><span class="normal_text">Amount</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
                                       (change)="calculateNetProfit()" placeholder="Income Amount"
                                       formControlName="amount" maxlength="14" />
@@ -312,7 +312,8 @@
                               <div class="form-field" *ngIf="income.get('type').value === 'ANY_OTHER'">
                                 <div><span class="normal_text">Description</span>
                                 </div>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field class="input-field-width" appearance="outline"
+                                  class="small-inp no-height">
                                   <input matInput class="input-field" placeholder="description"
                                     formControlName="description" [required]="
                                       income.get('type').value === 'ANY_OTHER'" />
@@ -327,7 +328,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input readonly type="text" matInput class="input-field" value="{{totalOtherExpenses}}"
                                   id="exampleInputEmail1" aria-describedby="emailHelp">
                               </mat-form-field>
@@ -365,7 +366,7 @@
                                   <div><span class="normal_text">Expense Type </span>
                                   </div>
                                   <div class="form-control-wrapper">
-                                    <mat-form-field appearance="outline">
+                                    <mat-form-field appearance="outline" class="small-inp no-height">
                                       <mat-select placeholder="expense Type" formControlName="expenseType"
                                         name="expenseType" (selectionChange)="changed()">
                                         <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
@@ -379,7 +380,7 @@
                                 <div class="form-field">
                                   <div><span class="normal_text">Amount</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
                                       (change)="calculateNetProfit()" placeholder="Expense Amount"
                                       formControlName="expenseAmount" maxlength="14" />
@@ -389,7 +390,7 @@
                               <div class="form-field" *ngIf="expense.get('expenseType').value === 'OTHER_EXPENSES'">
                                 <div><span class="normal_text">Description</span>
                                 </div>
-                                <mat-form-field class="input-field-width" appearance="outline">
+                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                   <input matInput class="input-field" placeholder="description"
                                     formControlName="description" [required]="
                                       expense.get('expenseType').value === 'OTHER_EXPENSES'
@@ -407,7 +408,7 @@
                             </div>
                           </div>
                           <div class="form-field">
-                            <mat-form-field appearance="outline">
+                            <mat-form-field appearance="outline" class="small-inp no-height">
                               <input readonly type="text" matInput class="input-field" value="{{totalNetProfit}}"
                                 id="exampleInputEmail1" aria-describedby="emailHelp">
                             </mat-form-field>

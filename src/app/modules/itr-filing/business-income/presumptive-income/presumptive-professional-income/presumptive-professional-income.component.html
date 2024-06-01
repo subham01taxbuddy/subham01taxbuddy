@@ -1,6 +1,6 @@
 <div style="overflow: hidden">
   <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-  <div class="">
+  <div id="professional_id">
     <main>
       <div class="frameC p-10">
         <div class="space">
@@ -11,32 +11,6 @@
                 <div class="accordion" id="myAccordion">
 
                   <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading3">
-                      <button class="accordion-button" data-bs-target="#collapse2" data-bs-toggle="collapse"
-                        type="button">
-                        Professional Income</button>
-                    </h2>
-                    <div class="accordion-collapse collapse show" id="collapse2">
-                      <div class="accordion__item-body">
-                        <div class="table-responsive" style="overflow-x: scroll;">
-                          <div>
-                            <div class="col-sm-12">
-                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
-                                class="newAG ag-theme-balham topSps">
-                              </ag-grid-angular>
-                            </div>
-                            <div class="row col-sm-12">
-                              <div class="col-sm-6">
-                                <button (click)="deleteArray()" [disabled]="!profSelected()" class=" delete-btn"
-                                  type="submit">
-                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                     <div class="accordion-item mt-3">
                       <h2 class="accordion-header" id="headingTwo">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -45,14 +19,14 @@
                       <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                         <div class="card-body p-15">
                           <form [formGroup]="selectedFormGroup">
-                            <div class="land-box-buyr">
+                            <div class="land-box-buyr" style="padding: 0 15px 15px;">
                               <div class="PreBxUp mb-2">
                                 <div class="field">
                                   <app-business-input-autocomplete [businessType]="'44ADA'"
                                     [selectedInput]="selectedFormGroup.controls['natureOfBusiness'].value"
                                     (businessSelected)="businessClicked($event)">
                                   </app-business-input-autocomplete>
-                                  <mat-error *ngIf="(selectedFormGroup.controls['natureOfBusiness'].touched || submitted) && 
+                                  <mat-error *ngIf="(selectedFormGroup.controls['natureOfBusiness'].touched || submitted) &&
                                     selectedFormGroup.controls['natureOfBusiness'].hasError('required')">Please
                                     select</mat-error>
                                 </div>
@@ -60,7 +34,7 @@
                                   <div class="field-label">
                                     <span class="span">Trade Name</span> <span class="redAst">*</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input formControlName="tradeName" matInput name="tradeName" class="input-field"
                                       required />
                                   </mat-form-field>
@@ -73,7 +47,7 @@
                                   <div class="field-label">
                                     <span class="span">Business description</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input matInput class="input-field" formControlName="description"
                                       name="description" />
                                   </mat-form-field>
@@ -152,7 +126,7 @@
                               </div>
 
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Bank Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -167,7 +141,7 @@
                                     <mat-error *ngIf="
                                         (selectedFormGroup.controls['bankReceipts'].touched || submitted) &&
                                         selectedFormGroup.controls['bankReceipts'].hasError('max')">
-                                        The overall turnover limit u/s 44ADA exceeds.</mat-error>
+                                      The overall turnover limit u/s 44ADA exceeds.</mat-error>
                                   </div>
                                 </div>
                                 <div class="pre-box">
@@ -219,7 +193,7 @@
                                 </div>
                               </div>
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Cash Receipts <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -285,7 +259,7 @@
                                 </div>
                               </div>
                               <div class="PreBxDwn">
-                                <div class="pre-box">
+                                <div class="pre-box" style="background-color: #cedaed;">
                                   <div class="lndBldg-L">Any Other Mode <span class="redAst">*</span></div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
@@ -363,6 +337,34 @@
                         </div>
                       </div>
                     </div>
+
+                    <h2 class="accordion-header" id="heading3">
+                      <button class="accordion-button" data-bs-target="#collapse2" data-bs-toggle="collapse"
+                        type="button">
+                        Professional Income</button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" id="collapse2">
+                      <div class="accordion__item-body">
+                        <div class="table-responsive" style="overflow-x: scroll;">
+                          <div>
+                            <div class="col-sm-12">
+                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                                class="newAG ag-theme-balham topSps">
+                              </ag-grid-angular>
+                            </div>
+                            <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button (click)="deleteArray()" [disabled]="!profSelected()" class=" delete-btn"
+                                  type="submit">
+                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>

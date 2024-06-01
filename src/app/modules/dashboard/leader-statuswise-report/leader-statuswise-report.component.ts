@@ -119,6 +119,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   grandTotalKeys: string[];
   grandTotal: any;
 
+
   getStatusWiseReport() {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -150,6 +151,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         const columnMap: Record<string, Record<string, string>> = {
           ITR: {
             filerName: 'filerName',
+            leaderName: 'leaderName',
+            servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
             chatInitiated: 'chatInitiated',
@@ -158,17 +161,18 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             documentsUploaded: 'documentsUploaded',
             proformaInvoiceSent: 'proformaInvoiceSent',
             paymentReceived: 'paymentReceived',
-            upgradedInvoiceSent: 'upgradedInvoiceSent',
-            preparingItr: 'preparingItr',
-            waitingForConfirmation: 'waitingForConfirmation',
             itrConfirmationReceived: 'itrConfirmationReceived',
-            itrFiledEverificationCompleted: 'itrFiledEverificationCompleted',
-            itrFiledEverificationPending: 'itrFiledEverificationPending',
-            backOutWithoutRefund: 'backOutWithoutRefund',
+            itrFiled: 'itrFiled',
+            planConfirmed: 'planConfirmed',
+            documentsIncomplete: 'documentsIncomplete',
+            waitingForConfirmation: 'waitingForConfirmation',
+            backOut: 'backOut',
             backOutWithRefund: 'backOutWithRefund',
           },
           TPA: {
             filerName: 'filerName',
+            leaderName: 'leaderName',
+            servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
             interested: 'interested',
@@ -176,11 +180,13 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             proformaInvoiceSent: 'proformaInvoiceSent',
             paymentReceived: 'paymentReceived',
             backOut: 'backOut',
-            followup:'followup',
-            tpaCompleted:'tpaCompleted'
+            followup: 'followup',
+            tpaCompleted: 'tpaCompleted'
           },
           NOTICE: {
             filerName: 'filerName',
+            leaderName: 'leaderName',
+            servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
             interested: 'interested',
@@ -198,6 +204,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
           },
           GST: {
             filerName: 'filerName',
+            leaderName: 'leaderName',
+            servicetype: 'servicetype',
             open: 'open',
             interested: 'interested',
             notInterested: 'notInterested',
@@ -212,32 +220,37 @@ export class LeaderStatuswiseReportComponent implements OnInit {
           },
           ITRU: {
             filerName: 'filerName',
+            leaderName: 'leaderName',
+            servicetype: 'servicetype',
             open: 'open',
             interested: 'interested',
             notInterested: 'notInterested',
             chatInitiated: 'chatInitiated',
+            chatResolve: 'chatResolve',
             proformaInvoiceSent: 'proformaInvoiceSent',
-            paymentReceived: 'paymentReceived',
-            payLater: 'payLater',
-            preparingItr: 'preparingItr',
+            documentsIncomplete: 'documentsIncomplete',
+            documentsUploaded: 'documentsUploaded',
+            itrConfirmationReceived: 'itrConfirmationReceived',
             itrFiled20_21: 'itrFiled20_21',
             itrFiled21_22: 'itrFiled21_22',
             itrFiled22_23: 'itrFiled22_23',
+            paymentReceived: 'paymentReceived',
+            planConfirmed: 'planConfirmed',
+            waitingForConfirmation: 'waitingForConfirmation',
+            backOutWithRefund: 'backOutWithRefund',
             backedOut: 'backedOut'
-          },
-
+          }
         };
 
         const selectedServiceMap = columnMap[this.selectedService.value];
 
-        if (selectedServiceMap) {
+         if (selectedServiceMap) {
           this.columns = Object.values(selectedServiceMap);
           this.dataKeys = Object.values(selectedServiceMap);
           this.data = response?.data?.content[0];
           this.grandTotal = response?.data?.content[0].total;
           this.grandTotalKeys = Object.keys(this.grandTotal);
         } else {
-          // Handle the case when the selected service type is not found in columnMap
           console.error('Selected service type not found in columnMap');
         }
 
@@ -258,7 +271,6 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
   addSpaces(text: string): string {
-    // Use a regular expression to add spaces between words in the text
     return text.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase();
   }
 
@@ -330,6 +342,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     if (this.selectedService.value === 'ITR') {
       fieldName = [
         { key: 'filerName', value: 'Filer Name' },
+        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
         { key: 'chatInitiated', value: 'Chat Initiated' },
@@ -342,14 +356,18 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         { key: 'preparingItr', value: 'Preparing ITR' },
         { key: 'waitingForConfirmation', value: 'Waiting For Confirmation' },
         { key: 'itrConfirmationReceived', value: 'ITR Confirmation Received' },
-        { key: 'itrFiledEverificationCompleted', value: 'ITR Filed & Verification Completed' },
-        { key: 'itrFiledEverificationPending', value: 'ITR Filed & Verification Pending' },
-        { key: 'backOutWithoutRefund', value: 'Back Out Without Refund' },
+        { key: 'itrFiled', value: 'ITR Filed' },
         { key: 'backOutWithRefund', value: 'Back Out With Refund' },
+        { key: 'backOut', value: 'Back Out' },
+        { key: 'waitingForConfirmation', value: 'Waiting For Confirmation' },
+        { key: 'planConfirmed', value: 'Plan Confirmed' },
+        { key: 'documentsIncomplete', value: 'Documents Incomplete' }
       ];
     } else if (this.selectedService.value === 'TPA') {
       fieldName = [
         { key: 'filerName', value: 'Filer Name' },
+        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
         { key: 'interested', value: 'Interested' },
@@ -357,10 +375,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
         { key: 'paymentReceived', value: 'Payment Received' },
         { key: 'backOut', value: 'Back Out' },
+        { key: 'followup', value: 'Follow Up' },
+        { key: 'tpaCompleted', value: 'TPA Completed' }
       ];
     } else if (this.selectedService.value === 'NOTICE') {
       fieldName = [
         { key: 'filerName', value: 'Filer Name' },
+        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
         { key: 'interested', value: 'Interested' },
@@ -374,11 +396,13 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         { key: 'noticeWIP', value: 'Notice Work in Progress' },
         { key: 'noticeClosed', value: 'Notice Closed' },
         { key: 'noticeReopen', value: 'Notice Reopen' },
-        { key: 'backOut', value: 'Back Out' },
+        { key: 'backOut', value: 'Back Out' }
       ];
     } else if (this.selectedService.value === 'GST') {
       fieldName = [
         { key: 'filerName', value: 'Filer Name' },
+        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'interested', value: 'Interested' },
         { key: 'notInterested', value: 'Not Interested' },
@@ -389,7 +413,30 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         { key: 'activeClientReturn', value: 'Active Client Return' },
         { key: 'registrationDone', value: 'Registration Done' },
         { key: 'gstCancelled', value: 'GST Cancelled' },
-        { key: 'backOut', value: 'Back Out' },
+        { key: 'backOut', value: 'Back Out' }
+      ];
+    } else if (this.selectedService.value === 'ITRU') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'servicetype', value: 'Service Type' },
+        { key: 'open', value: 'Open' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'chatInitiated', value: 'Chat Initiated' },
+        { key: 'chatResolve', value: 'Chat Resolve' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'documentsIncomplete', value: 'Documents Incomplete' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'itrConfirmationReceived', value: 'ITR Confirmation Received' },
+        { key: 'itrFiled20_21', value: 'ITR Filed 20-21' },
+        { key: 'itrFiled21_22', value: 'ITR Filed 21-22' },
+        { key: 'itrFiled22_23', value: 'ITR Filed 22-23' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'planConfirmed', value: 'Plan Confirmed' },
+        { key: 'waitingForConfirmation', value: 'Waiting For Confirmation' },
+        { key: 'backOutWithRefund', value: 'Back Out With Refund' },
+        { key: 'backedOut', value: 'Backed Out' }
       ];
     }
 
@@ -400,7 +447,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'status-wise-report', fieldName, {});
     this.loading = false;
-  }
+}
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {

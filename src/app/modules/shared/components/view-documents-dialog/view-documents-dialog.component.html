@@ -20,7 +20,7 @@
     
     </div>  
     <div class="col-sm-12">
-          <div class="row">  
+          <div class="row scrollable-content">
             <div class="col-sm-3">
               <span *ngIf="!isFile">
                   <div class="inlinBx" *ngFor="let folder of folders; let k=index;">
@@ -30,13 +30,13 @@
                           </button></span>        
                   </div>
               </span>
-              </div>
+            </div>
               <div class="col-sm-9">
                 <div class="listVw" *ngIf="isFile">
                   <span *ngFor="let folder of folders; let k=index;">
                    
                         <ul class="bullet-list">
-                          <li>
+                          <li *ngIf="!folder.isDeleted">
                             <h5>{{ folder.documentTag }}</h5>
                             <a style="line-height: 16px; overflow-wrap: break-word;" href="javascript:void(0)"
                               (click)="getCommonDocsUrl(folder);preventDownload($event)">{{ folder.fileName }}</a>

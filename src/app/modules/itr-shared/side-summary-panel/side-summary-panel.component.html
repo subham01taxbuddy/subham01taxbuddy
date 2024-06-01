@@ -12,6 +12,9 @@
                     <a (click)="closePanel()"><img class="clos" src="assets/img/new/close.png" /></a>
                 </div>
             </div>
+            <div class="note mb-2 mt-2 ml-2" >
+              <b>Note:</b>  click "Save all" to view accurate summary
+            </div>
             <div class="space" *ngIf="type === 'salary'">
                 <table class="table table-borderless f-size">
                     <tbody>
@@ -118,6 +121,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Winning Income</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(otherIncome.winningsIncome)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gift Income</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(otherIncome.giftIncome)}}
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Any Other Income</td>
                             <td>₹
                                 {{utilsService.currencyFormatter(otherIncome.totalAnyOtherIncome)}}
@@ -126,7 +141,7 @@
                         <tr class="border-top">
                             <th>Total income</th>
                             <th>₹
-                                {{utilsService.currencyFormatter(summary.summaryIncome.summaryOtherIncome.totalOtherTaxableIncome)}}
+                                {{utilsService.currencyFormatter(getTotalOtherIncome())}}
                             </th>
                         </tr>
                     </tbody>

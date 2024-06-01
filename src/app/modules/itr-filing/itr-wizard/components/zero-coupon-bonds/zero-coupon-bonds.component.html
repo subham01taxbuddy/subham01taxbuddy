@@ -62,6 +62,9 @@
                                 <div><span class="span">Type of gain </span></div>
                                 <input type="text" class="form-control inpplac disable" formControlName="gainType"
                                   aria-describedby="emailHelp" readonly>
+                                <div class="note new-note" >
+                                  <b>Note:</b> Date is mandatory in order to determine holding period & the quarter in which CG will be recognized
+                                </div>
                               </div>
 
                             </div>
@@ -254,6 +257,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput class="input-field" readonly placeholder="Purchase date of new asset"
+                                       (dateChange)="updateValidations(deductionForm);"
                                   formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
                                   [max]="maximumDate" />
                                 <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
@@ -271,7 +275,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput digitsOnly class="input-field" placeholder="cost of new asset"
-                                  (change)="calculateDeductionGain()" formControlName="costOfNewAssets" required
+                                  (change)="updateValidations(deductionForm);calculateDeductionGain()" formControlName="costOfNewAssets"
                                   maxlength="14" />
                                 <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
                                                   'required')">Please enter cost of new assets
@@ -287,9 +291,9 @@
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput digitsOnly class="input-field"
                                   placeholder="Amount deposited on CGAS before due date"
-                                  formControlName="investmentInCGAccount" required maxlength="14"
+                                  formControlName="investmentInCGAccount" maxlength="14"
                                   matTooltip="Amount deposited on CGAS before due date"
-                                  (change)="calculateDeductionGain()" matTooltipClass="tab-tooltip"
+                                  (change)="updateValidations(deductionForm);calculateDeductionGain()" matTooltipClass="tab-tooltip"
                                   matTooltipPosition="above" />
                                 <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
                               'required')">Please enter amount
@@ -317,7 +321,7 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">Account Number</span></div>
+                              <div><span class="span">Account Number*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
@@ -332,7 +336,7 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">IFSC Code</span></div>
+                              <div><span class="span">IFSC Code*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
@@ -345,12 +349,12 @@
                           </div>
                           <div class="div-6 mb-20">
                             <div class="form-field">
-                              <div><span class="span">Date Of Deposit</span></div>
+                              <div><span class="span">Date Of Deposit*</span></div>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
-                                  class="input-field" [matDatepicker]="dateOfDeposit" />
+                                  class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate"/>
                                 <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                                 <mat-datepicker #dateOfDeposit></mat-datepicker>
                                 <mat-error *ngIf="deductionForm.controls['dateOfDeposit'].hasError('pattern')">

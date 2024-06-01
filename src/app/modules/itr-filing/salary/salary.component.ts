@@ -337,7 +337,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   markActive(index, hasValidate) {
     if (hasValidate && (this.allowanceFormGroup.invalid || this.bifurcationFormGroup || this.invalid || this.employerDetailsFormGroup.invalid)) {
       this.utilsService.showSnackBar(
-        'This form has error. Please verify'
+        'To Switch/Add a New Employer Please fill in all the mandatory fields in the current form'
       );
       return;
     }
@@ -2122,6 +2122,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
                 control.get('allowValue').setValue(result.value);
             }
         });
+        return;
     }else if(result.type ==='leaveExemptValue'){
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
       allowancesArray.controls.forEach((control: UntypedFormGroup, index: number) => {
@@ -2130,6 +2131,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               control.get('allowValue').setValue(result.value);
           }
       });
+      return;
     }else if (result.type === 'GRATUITYexemptValue') {
       this.addExemptIncome('GRATUITY','fromEvent');
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
@@ -2139,6 +2141,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               control.get('allowValue').setValue(result.value);
           }
       });
+      return;
   } else if (result.type === 'PENSIONexemptValue') {
       this.addExemptIncome('COMMUTED_PENSION' ,'fromEvent');
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
@@ -2148,6 +2151,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
               control.get('allowValue').setValue(result.value);
           }
       });
+    return;
   }
     this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {

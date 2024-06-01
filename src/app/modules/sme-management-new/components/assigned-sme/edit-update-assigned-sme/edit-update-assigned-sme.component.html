@@ -98,18 +98,18 @@
             <div class="role-container">
               <span class="role-header">Role: </span>
               <section class="example-section" [formGroup]="roles">
-                <p><mat-checkbox [formControl]="admin" onclick="return false">Admin</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="admin" onclick="return false" class="non-clickable">Admin</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox [formControl]="leader" onclick="return false">Leader</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="leader" onclick="return false" class="non-clickable">Leader</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox [formControl]="filerIndividual" onclick="return false">Filer-Individual</mat-checkbox>
+                <p><mat-checkbox [formControl]="filerIndividual" onclick="return false" class="non-clickable">Filer-Individual</mat-checkbox>
                 </p>
                 <hr>
                 <p><mat-checkbox [formControl]="filerPrinciple"
-                    onclick="return false">Filer-Principal/Firm</mat-checkbox>
+                    onclick="return false" class="non-clickable">Filer-Principal/Firm</mat-checkbox>
                 </p>
                 <hr>
-                <p><mat-checkbox [formControl]="filerChild" onclick="return false">Filer- Assistant</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="filerChild" onclick="return false" class="non-clickable">Filer- Assistant</mat-checkbox></p>
                 <hr>
               </section>
             </div>
@@ -118,9 +118,9 @@
             <div class="role-container">
               <span class="role-header">SME/Partner Type: </span>
               <section class="example-section">
-                <p><mat-checkbox [formControl]="internal" onclick="return false">Internal</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="internal" onclick="return false" class="non-clickable">Internal</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox [formControl]="external" onclick="return false">External</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="external" onclick="return false" class="non-clickable">External</mat-checkbox></p>
                 <hr>
               </section>
             </div>
@@ -149,7 +149,7 @@
               </mat-form-field>
             </div>
             <div class="col-sm-7 bankDetails" [formGroup]="bankDetailsFormGroup">
-              <div class="row">
+              <div class="row ">
                 <div class="col-sm-5">
                   <mat-label> Account Number* </mat-label>
                   <mat-form-field appearance="outline">
@@ -368,8 +368,8 @@
                   <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
                     <p>
                       <mat-checkbox [formControl]="getItrTypeControl(itrType)"
-                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
-                          }}</span></mat-checkbox>
+                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ getItrTypeName(itrType)}}</span>
+                      </mat-checkbox>
                     </p>
                   </div>
                 </section>

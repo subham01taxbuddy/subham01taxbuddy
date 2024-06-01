@@ -247,6 +247,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         time: (!this.subPaidScheduleCallList.value) ? this.getCallTime(scheduleCalls[i]['scheduleCallTime']) : '',
         statusName: scheduleCalls[i]['statusName'],
         statusId: scheduleCalls[i]['statusId'],
+        scheduleCallType : scheduleCalls[i]['scheduleCallType'],
         serviceType:
           scheduleCalls[i]['serviceType'] !== null
             ? scheduleCalls[i]['serviceType']
@@ -433,6 +434,34 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         }
+      },
+      {
+        headerName: 'Schedule Call Type',
+        field: 'scheduleCallType',
+        width: 140,
+        suppressMovable: true,
+        sortable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        hide: subPaidScheduleCallList ? false : true,
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+        valueFormatter: function (params: any) {
+          const valueMap = {
+              'business': 'Business Requirements',
+              'lower_deduction': 'LDC Service'
+          };
+          return valueMap[params.value] || params.value || '-';
+      }
       },
       {
         headerName: 'Re-Assign',

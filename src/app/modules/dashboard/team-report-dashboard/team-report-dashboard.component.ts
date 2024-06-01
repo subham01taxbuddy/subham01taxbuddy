@@ -300,7 +300,6 @@ export class TeamReportDashboardComponent implements OnInit {
             this.commissionData.itr2 +
             this.commissionData.itr3 +
             this.commissionData.itr4 +
-            this.commissionData.itrU +
             this.commissionData.originalReturnOther;
           this.totalRevised =
             this.commissionData.itr1_revised +
@@ -331,7 +330,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
   getSubPaidScheduleCallCount() {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?toDate=2024-02-09&count=true&fromDate=2024-02-01
-    // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01' 
+    // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01'
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;

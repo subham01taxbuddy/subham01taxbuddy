@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="counter-item">
-  <div class="card__title" style="padding: 15px; font-size: 20px">
-    Personal Details
+  <div class="card__title" style="padding: 15px; font-size: 25px; display: flex; justify-content: center; align-items: center;">
+    <b>PERSONAL DETAILS</b>
   </div>
 
   <div class="grids griHgh return_glance tpOfBx">
@@ -162,7 +162,7 @@
           </div>
 
           <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-            <div *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
+            <div class="ml-2" *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
               <div class="incBx">
                 <span class="inTex">Income Tax Payable:</span><br /><br />
                 <span class="inNo">{{
@@ -289,7 +289,7 @@
       <button _ngcontent-c4="" class="btn grBut" type="button" style="cursor: pointer;"><i _ngcontent-c4=""
           class="fas fa-download"></i> Download </button></div> -->
 
-    <div class="flex flex-col ml-1">
+    <div class="flex flex-col ml-1 new-ml">
       <div class="sub_btn lwBtDn" *ngIf="show">
         <!-- <button type="button" class="btn prvBut" (click)="previousRoute()"
               [disabled]="isPreviousAvailable()">Previous</button> -->
@@ -342,7 +342,7 @@
       </div>
 
       <div>
-        <div class="flex flex-row justify-between items-start">
+        <div class="flex flex-row justify-between items-start new-ml">
           <h3>Computation of Income and Tax</h3>
           <!-- <div>
           <mat-slide-toggle [(ngModel)]="summaryToolChecked"></mat-slide-toggle>
@@ -885,6 +885,35 @@
 
                       <!-- spec non-spec -->
                       <div>
+                        <table class="table table-bordered table-striped table-hover" style="margin-top: 20px"
+                               *ngIf="ITR_JSON.business?.businessDescription?.length > 0">
+                          <tbody>
+                          <tr>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Description</th>
+                          </tr>
+                          </tbody>
+                          <!-- Non speculative Income  -->
+                          <tr *ngFor="let business of ITR_JSON.business?.businessDescription">
+                            <td>
+                              {{ business?.natureOfBusiness }} -
+                              {{ getBusinessNatureLabel(business?.natureOfBusiness) }}
+                            </td>
+                            <td>
+                              {{
+                              business.tradeName
+                              }}
+                            </td>
+                            <td>
+                              {{
+                              business.businessDescription
+                              }}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                      <div>
                         <table class="table table-bordered table-striped table-hover" style="margin-top: 20px" *ngIf="
                           (finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncome
@@ -903,8 +932,8 @@
                           <tbody>
                             <tr>
                               <th>Business section</th>
-                              <th>Nature Of Business Code</th>
-                              <th>Trade Name</th>
+<!--                              <th>Nature Of Business Code</th>-->
+<!--                              <th>Trade Name</th>-->
                               <th>Gross Turnover/Receipt</th>
                               <th>Taxable Income</th>
                             </tr>
@@ -925,20 +954,20 @@
                               ?.businessSection
                               }}
                             </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.natureOfBusinessCode
-                              }}
-                            </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.tradeName
-                              }}
-                            </td>
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.nonSpecIncome-->
+<!--                              ?.natureOfBusinessCode-->
+<!--                              }}-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.nonSpecIncome-->
+<!--                              ?.tradeName-->
+<!--                              }}-->
+<!--                            </td>-->
                             <td>
                               {{
                               finalCalculations?.businessIncome
@@ -956,22 +985,7 @@
                               }}
                             </td>
                           </tr>
-                          <!-- <tr
-                          *ngIf="
-                            finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncomePl
-                          "
-                        >
-                          <td colspan="4">P&L details</td>
-                          <td>
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.businessIncome
-                                  ?.businessIncomeDetails?.nonSpecIncomePl
-                              )
-                            }}
-                          </td>
-                        </tr> -->
+
 
                           <!-- speculative Income  -->
 
@@ -990,19 +1004,19 @@
                               ?.businessSection
                               }}
                             </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.specIncome
-                              ?.natureOfBusinessCode
-                              }}
-                            </td>
-                            <td>
-                              {{
-                              finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.specIncome?.tradeName
-                              }}
-                            </td>
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.specIncome-->
+<!--                              ?.natureOfBusinessCode-->
+<!--                              }}-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              {{-->
+<!--                              finalCalculations?.businessIncome-->
+<!--                              ?.businessIncomeDetails?.specIncome?.tradeName-->
+<!--                              }}-->
+<!--                            </td>-->
                             <td>
                               Rs
                               {{
@@ -2472,9 +2486,7 @@
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.intFromDeposit ||
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.taxRefund ||
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest
+                                ?.taxRefund
                             ">
                               <th colspan="2">Interest Income</th>
                             </tr>
@@ -2636,46 +2648,7 @@
                               </td>
                             </tr>
 
-                            <tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xii
-                            ">
-                              <td>
-                                Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                utilsService.currencyFormatter(
-                                finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xii
-                                )
-                                }}
-                              </td>
-                            </tr><tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xiii
-                            ">
-                              <td>
-                                Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                utilsService.currencyFormatter(
-                                finalCalculations?.otherIncome?.otherIncomes
-                                ?.SumRecdPrYrBusTRU562xiii
-                                )
-                                }}
-                              </td>
-                            </tr>
-
-                            <tr *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.dividendIncome ||
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.familyPension
-                            ">
+                            <tr *ngIf="isOtherIncome()">
                               <th colspan="2">Other Income</th>
                             </tr>
                             <tr *ngIf="
@@ -2767,6 +2740,40 @@
 
                             <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
+                                ?.SumRecdPrYrBusTRU562xii
+                            ">
+                              <td>
+                                Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                utilsService.currencyFormatter(
+                                        finalCalculations?.otherIncome?.otherIncomes
+                                                ?.SumRecdPrYrBusTRU562xii
+                                )
+                                }}
+                              </td>
+                            </tr>
+                            <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.SumRecdPrYrBusTRU562xiii
+                            ">
+                              <td>
+                                Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                utilsService.currencyFormatter(
+                                        finalCalculations?.otherIncome?.otherIncomes
+                                                ?.SumRecdPrYrBusTRU562xiii
+                                )
+                                }}
+                              </td>
+                            </tr>
+                            <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherInterest
                             ">
                               <td>Any Other Income</td>
@@ -2775,13 +2782,7 @@
                                 {{
                                 utilsService.currencyFormatter(
                                 finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest -
-                                (finalCalculations?.otherIncome
-                                ?.otherIncomes?.winningFromLotteries
-                                ? finalCalculations?.otherIncome
-                                ?.otherIncomes?.winningFromLotteries
-                                : 0)
-                                )
+                                ?.anyOtherInterest)
                                 }}
                               </td>
                             </tr>
@@ -3305,7 +3306,7 @@
                             </td>
                           </tr>
                           <tr>
-                            <td><b>Other Income</b></td>
+                            <td><b>Income from other sources chargeable at Normal applicable rate</b></td>
                             <td>
                               <i class="material-icons icSmRup">&#8377;</i>&nbsp;{{
                               utilsService.currencyFormatter(
@@ -4933,7 +4934,7 @@
                           <!-- 12th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev11thYearFromAY
+                              ?.LossCFFromPrev12thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
@@ -4942,11 +4943,48 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
+                              ?.LossCFFromPrev12thYearFromAY?.dateOfFiling
                               }}
                               <!-- house property loss -->
                             </td>
 
+                            <td>0</td>
+                            <!-- Other than speculative and specified business -->
+                            <td>0</td>
+                            <!-- loss from speculative business  -->
+                            <td>0</td>
+                            <!-- loss from specified business  -->
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev12thYearFromAY
+                              ?.LossFrmSpecifiedBusCF
+                              }}
+                            </td>
+                            <!-- short term capital loss  -->
+                            <td>0</td>
+                            <!-- long term capital loss  -->
+                            <td>0</td>
+                            <!-- loss from maintaining and owning horses  -->
+                            <td>0</td>
+                          </tr>
+
+                          <!-- 11th Assessment Year -->
+                          <tr *ngIf="
+                            finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev11thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          ">
+                            <!-- Assessment year -->
+                            <td>2013-2014</td>
+                            <!-- date of filing -->
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
+                              }}
+                            </td>
+                            <!-- house property loss -->
                             <td>0</td>
                             <!-- Other than speculative and specified business -->
                             <td>0</td>
@@ -4968,14 +5006,14 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 11th Assessment Year -->
+                          <!-- 10th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
                               ?.LossCFFromPrev10thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
-                            <td>2013-2014</td>
+                            <td>2014-2015</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5005,14 +5043,14 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 10th Assessment Year -->
+                          <!-- 9th Assessment Year -->
                           <tr *ngIf="
                             finalCalculations?.scheduleCflDetails
                               ?.LossCFFromPrev9thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           ">
                             <!-- Assessment year -->
-                            <td>2014-2015</td>
+                            <td>2015-2016</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5042,14 +5080,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 9th Assessment Year -->
-                          <tr *ngIf="
-                            finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev8thYearFromAY
-                              ?.LossFrmSpecifiedBusCF > 0
-                          ">
+                          <!-- 8th Assessment Year -->
+                          <tr>
                             <!-- Assessment year -->
-                            <td>2014-2015</td>
+                            <td>2016-2017</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5058,9 +5092,20 @@
                               }}
                             </td>
                             <!-- house property loss -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.hpLoss
+                              }}
+                            </td>
                             <!-- Other than speculative and specified business -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY
+                              ?.broughtForwardBusLoss
+                              }}
+                            </td>
                             <!-- loss from speculative business  -->
                             <td>0</td>
                             <!-- loss from specified business  -->
@@ -5072,17 +5117,27 @@
                               }}
                             </td>
                             <!-- short term capital loss  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.stcgLoss
+                              }}
+                            </td>
                             <!-- long term capital loss  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY?.ltcgLoss
+                              }}
+                            </td>
                             <!-- loss from maintaining and owning horses  -->
                             <td>0</td>
                           </tr>
 
-                          <!-- 8th Assessment Year -->
+                          <!-- 7th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2015-2016</td>
+                            <td>2017-2018</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5133,10 +5188,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 7th Assessment Year -->
+                          <!-- 6th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2016-2017</td>
+                            <td>2018-2019</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5187,10 +5242,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 6th Assessment Year -->
+                          <!-- 5th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2017-2018</td>
+                            <td>2019-2020</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5241,10 +5296,10 @@
                             <td>0</td>
                           </tr>
 
-                          <!-- 5th Assessment Year -->
+                          <!-- 4th Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2018-2019</td>
+                            <td>2020-2021</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5268,7 +5323,13 @@
                               }}
                             </td>
                             <!-- loss from speculative business  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev4thYearFromAY
+                              ?.lossFromSpeculativeBus
+                              }}
+                            </td>
                             <!-- loss from specified business  -->
                             <td>
                               {{
@@ -5292,13 +5353,19 @@
                               }}
                             </td>
                             <!-- loss from maintaining and owning horses  -->
-                            <td>0</td>
+                            <td>
+                              {{
+                              finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev4thYearFromAY
+                              ?.OthSrcLossRaceHorseCF
+                              }}
+                            </td>
                           </tr>
 
-                          <!-- 4th Assessment Year -->
+                          <!-- 3rd Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2019-2020</td>
+                            <td>2021-2022</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5317,24 +5384,21 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.broughtForwardBusLoss
+                              ?.LossCFFromPrev3rdYearFromAY?.broughtForwardBusLoss
                               }}
                             </td>
                             <!-- loss from speculative business  -->
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.lossFromSpeculativeBus
+                              ?.LossCFFromPrev3rdYearFromAY?.lossFromSpeculativeBus
                               }}
                             </td>
                             <!-- loss from specified business  -->
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.LossFrmSpecifiedBusCF
+                              ?.LossCFFromPrev3rdYearFromAY?.LossFrmSpecifiedBusCF
                               }}
                             </td>
                             <!-- short term capital loss  -->
@@ -5355,16 +5419,15 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev3rdYearFromAY
-                              ?.OthSrcLossRaceHorseCF
+                              ?.LossCFFromPrev3rdYearFromAY?.OthSrcLossRaceHorseCF
                               }}
                             </td>
                           </tr>
 
-                          <!-- 3rd Assessment Year -->
+                          <!-- previous Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2020-2021</td>
+                            <td>2022-2023</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5390,7 +5453,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFPrevAssmntYear?.lossFromSpeculativeBus
+                              ?.LossCFPrevAssmntYear
+                              ?.lossFromSpeculativeBus
                               }}
                             </td>
                             <!-- loss from specified business  -->
@@ -5423,10 +5487,10 @@
                             </td>
                           </tr>
 
-                          <!-- previous Assessment Year -->
+                          <!--current Assessment Year -->
                           <tr>
                             <!-- Assessment year -->
-                            <td>2021-2022</td>
+                            <td>2023-2024</td>
                             <!-- date of filing -->
                             <td>
                               {{
@@ -5445,7 +5509,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.broughtForwardBusLoss
+                              ?.LossCFCurrentAssmntYear
+                              ?.broughtForwardBusLoss
                               }}
                             </td>
                             <!-- loss from speculative business  -->
@@ -5460,7 +5525,8 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.LossFrmSpecifiedBusCF
+                              ?.LossCFCurrentAssmntYear
+                              ?.LossFrmSpecifiedBusCF
                               }}
                             </td>
                             <!-- short term capital loss  -->
@@ -5481,72 +5547,7 @@
                             <td>
                               {{
                               finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear?.OthSrcLossRaceHorseCF
-                              }}
-                            </td>
-                          </tr>
-
-                          <!--current Assessment Year -->
-                          <tr>
-                            <!-- Assessment year -->
-                            <td>2022-2023</td>
-                            <!-- date of filing -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.dateOfFiling
-                              }}
-                            </td>
-                            <!-- house property loss -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.hpLoss
-                              }}
-                            </td>
-                            <!-- Other than speculative and specified business -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.broughtForwardBusLoss
-                              }}
-                            </td>
-                            <!-- loss from speculative business  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.lossFromSpeculativeBus
-                              }}
-                            </td>
-                            <!-- loss from specified business  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
-                              ?.LossFrmSpecifiedBusCF
-                              }}
-                            </td>
-                            <!-- short term capital loss  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.stcgLoss
-                              }}
-                            </td>
-                            <!-- long term capital loss  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023?.ltcgLoss
-                              }}
-                            </td>
-                            <!-- loss from maintaining and owning horses  -->
-                            <td>
-                              {{
-                              finalCalculations?.scheduleCflDetails
-                              ?.LossCFCurrentAssmntYear2023
+                              ?.LossCFCurrentAssmntYear
                               ?.OthSrcLossRaceHorseCF
                               }}
                             </td>
@@ -5861,7 +5862,7 @@
                             <tr>
                               <td>Rebate on agriculture income - C</td>
                               <td>
-                                <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;-{{
+                                <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;{{
                                 utilsService.currencyFormatter(
                                 finalCalculations?.totalTax
                                 ?.rebateOnAgricultureIncome
@@ -5872,7 +5873,7 @@
                             <tr>
                               <td>Marginal Relief - D</td>
                               <td>
-                                <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;-{{
+                                <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;{{
                                 utilsService.currencyFormatter(
                                 finalCalculations?.totalTax
                                 ?.marginalRelief

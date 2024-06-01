@@ -74,6 +74,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   partnerType: any;
   unAssignedUsersView = new UntypedFormControl(false);
   disableCheckboxes = false;
+  showMessage: boolean = false;
   serviceTypes = [
     {
       label: 'ITR',
@@ -391,10 +392,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
 
           if (data.serviceType === 'ITRU') {
-            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
               itrSubscriptionFound = true;
               return;
-            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
               itrSubscriptionFound = true;
               return;
             }
@@ -498,6 +499,16 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   onCheckBoxChange() {
     if (this.unAssignedUsersView.value) {
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
+        if (this.leaderId && !this.filerId) {
+          this.disableCheckboxes = false;
+        } else {
+          this.disableCheckboxes = true;
+          this.utilsService.showSnackBar("Please select a leader  before ticking the checkbox and search");
+          this.unAssignedUsersView.setValue(false);
+          return;
+        }
+      }
       this.clearUserFilter = moment.now().valueOf();
       this.cacheManager.clearCache();
       this.searchParam.serviceType = null;

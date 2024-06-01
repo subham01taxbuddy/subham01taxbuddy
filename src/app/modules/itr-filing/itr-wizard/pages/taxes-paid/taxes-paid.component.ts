@@ -19,20 +19,12 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
-import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import * as moment from 'moment';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
-import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-salary/tds-other-than-salary.component';
-import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
 import { SelectionComponent } from './selection-component/selection-component.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
-import { TcsComponent } from '../../components/tcs/tcs.component';
-import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
 import { TdsTypeCellRenderer } from './tds-type-cell-renderer';
-import { param } from 'jquery';
 
 @Component({
   selector: 'app-taxes-paid',
@@ -88,7 +80,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private matDialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
@@ -295,7 +287,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         copy.srNo = copy.index;
       });
       this.totalEntries += counter;
-      this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
+      // this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
     }
 
     if (type === this.TDS_OTHER_TYPE_CODE) {
@@ -566,19 +558,19 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   deleteAsset(data) {
     if (data.tdsCode === this.TDS_TYPE_CODE) {
       this.taxPaid?.onSalary?.splice(data.index, 1);
-      this.onSalaryGridOptions.api?.setRowData(this.taxPaid?.onSalary);
+      this.onSalaryGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TDS_OTHER_TYPE_CODE) {
       this.taxPaid?.otherThanSalary16A.splice(data.index, 1);
-      this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary16A);
+      this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TDS_PAN_TYPE_CODE) {
       this.taxPaid?.otherThanSalary26QB.splice(data.index, 1);
-      this.tdsOtherThanSalary26QBGridOptions.api?.setRowData(this.taxPaid?.otherThanSalary26QB);
+      this.tdsOtherThanSalary26QBGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.TCS_TYPE_CODE) {
       this.taxPaid?.tcs.splice(data.index, 1);
-      this.tcsGridOptions.api?.setRowData(this.taxPaid?.tcs);
+      this.tcsGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     } else if (data.tdsCode === this.ADVANCE_TYPE_CODE) {
-      this.taxPaid?.otherThanTDSTCS?.splice(data.index);
-      this.otherThanTdsTcsGridOptions.api?.setRowData(this.taxPaid?.otherThanTDSTCS);
+      this.taxPaid?.otherThanTDSTCS?.splice(data.index, 1);
+      this.otherThanTdsTcsGridOptions.api?.setRowData(this.tdsDetailCreateRowData(data.tdsCode));
     }
     this.Copy_ITR_JSON.taxPaid = this.taxPaid;
   }
@@ -593,6 +585,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
         return;
       } else {
+        this.tdsMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
@@ -651,10 +644,57 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
         return;
       } else {
+        this.advanceMode = 'VIEW';
         this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
         this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
+      }
+    } else if (!save) {
+      if (this.tdsMode === 'EDIT') {
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if (this.TDS_OTHER_TYPE_CODE === 'EDIT') {
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsOtherBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if (this.TDS_PAN_TYPE_CODE === 'EDIT') {
+        this.utilsService.showSnackBar('Please save TDS entries by clicking Save');
+        const accordionButton = document.getElementById('tdsPanBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if (this.TCS_TYPE_CODE === 'EDIT') {
+        this.utilsService.showSnackBar('Please save TCS entries by clicking Save');
+        const accordionButton = document.getElementById('tcsBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
+      }
+      if (this.ADVANCE_TYPE_CODE === 'EDIT') {
+        this.utilsService.showSnackBar('Please save advance tax entries by clicking Save');
+        const accordionButton = document.getElementById('advanceBtn');
+        if (accordionButton) {
+          if (accordionButton.getAttribute("aria-expanded") === "false")
+            accordionButton.click();
+        }
+        return;
       }
     }
 
@@ -669,7 +709,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Tds updated successfully.');
+        let type = save && save.type === this.ADVANCE_TYPE_CODE ? 'Advance Tax' : 'TDS';
+        this.utilsService.showSnackBar(type + ' updated successfully.');
         if (!save) {
           this.saveAndNext.emit(false);
         }
@@ -681,6 +722,57 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+
+  totalOfTotalAmountCredited = 0;
+  totalOfTotalTdsDeposited = 0;
+  getTotalOfTdsOnSalary(item) {
+    this.totalOfTotalAmountCredited = 0;
+    this.totalOfTotalTdsDeposited = 0;
+    let rowData = [];
+    this.onSalaryGridOptions.api?.forEachNode(node => rowData.push(node.data));
+    if (this.onSalaryGridOptions && rowData.length) {
+      rowData.forEach(element => {
+        if (item === 'totalOfTotalAmountCredited') {
+          this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
+        }
+        if (item === 'totalOfTotalTdsDeposited') {
+          this.totalOfTotalTdsDeposited += Number(element.totalTdsDeposited);
+        }
+      })
+    }
+    if (item === 'totalOfTotalAmountCredited') {
+      return this.totalOfTotalAmountCredited;
+    }
+    if (item === 'totalOfTotalTdsDeposited') {
+      return this.totalOfTotalTdsDeposited;
+    }
+  }
+
+  getTotalOfTdsOtherThanSalary(item) {
+    this.totalOfTotalAmountCredited = 0;
+    this.totalOfTotalTdsDeposited = 0;
+    let rowData = [];
+    this.tdsOtherThanSalary16AGridOptions.api?.forEachNode(node => rowData.push(node.data));
+    if (this.tdsOtherThanSalary16AGridOptions && rowData.length) {
+      rowData.forEach(element => {
+        if (item === 'totalOfTotalAmountCredited') {
+          this.totalOfTotalAmountCredited += Number(element.totalAmountCredited);
+        }
+        if (item === 'totalOfTotalTdsDeposited') {
+          this.totalOfTotalTdsDeposited += Number(element.totalTdsDeposited);
+        }
+
+      })
+    }
+    // this.cd.detectChanges();
+    if (item === 'totalOfTotalAmountCredited') {
+      return this.totalOfTotalAmountCredited;
+    }
+    if (item === 'totalOfTotalTdsDeposited') {
+      return this.totalOfTotalTdsDeposited;
+    }
   }
 
   getItrDocuments() {

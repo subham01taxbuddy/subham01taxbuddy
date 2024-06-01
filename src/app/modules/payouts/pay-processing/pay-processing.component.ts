@@ -17,18 +17,19 @@ export class PayProcessingComponent implements OnInit {
   payProcessingGridOptions: GridOptions;
   config: any;
   PayOutInfo: any = [];
-  isUploadTrue = false;
+  isUploadTrue = true;
   payProcessList: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
   };
   downloadURL:any;
-  hideDownload = false;
+  hideDownload = true;
   showMessage ='';
   accountType = new UntypedFormControl('razorpayX')
   currentAccountNumber: string = '333005001704';
   razorpayXAccountNumber: string = '3434696314924813';
+  loading1:boolean =false
 
   constructor(
     private itrMsService: ItrMsService,
@@ -59,11 +60,11 @@ export class PayProcessingComponent implements OnInit {
   }
 
   isUploadAllowed() {
-    this.loading = true;
+    this.loading1 = true;
     let param = '';
     this.itrMsService.getLambda(param).subscribe((response: any) => {
       if (response.success) {
-        this.loading = false;
+        this.loading1 = false;
         console.log('response', response);
         if(response?.allowUpload){
           this.isUploadTrue = true;
@@ -73,7 +74,7 @@ export class PayProcessingComponent implements OnInit {
         }
 
       } else {
-        this.loading = false;
+        this.loading1 = false;
         this.isUploadTrue = false;
         this.hideDownload = false;
         this.utilsService.showSnackBar(response.message);
@@ -81,6 +82,7 @@ export class PayProcessingComponent implements OnInit {
     },
     (error) => {
       this.loading = false;
+      this.loading1 = false;
       this.utilsService.showSnackBar('Error in API of check upload/download csv');
     });
   }
@@ -212,6 +214,18 @@ export class PayProcessingComponent implements OnInit {
           debounceMs: 0,
         },
       },
+      {
+        headerName: 'vendor',
+        field: 'vendor',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
     ];
   }
 
@@ -318,6 +332,7 @@ export class PayProcessingComponent implements OnInit {
       userId: userId,
       accountNumber:accountNumber
     };
+    this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
 
     let param = 'partner/payout/generate-csv';
     this.itrMsService.downloadLambda(param,request).subscribe((response: any) => {
@@ -348,12 +363,7 @@ export class PayProcessingComponent implements OnInit {
   }
 
   isSurroundDynamic(): boolean {
-    if(this.isUploadTrue || this.hideDownload){
-      return true;
-    }
-     else{
-      return false ;
-     }
+    return this.isUploadTrue || this.hideDownload;
   }
 
   pageChanged(event: any) {

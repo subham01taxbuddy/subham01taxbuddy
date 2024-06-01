@@ -1746,7 +1746,7 @@ main {
   align-items: flex-start;
   justify-content: space-between;
   align-items: baseline;
-  padding: 24px;
+  padding: 10px;
   background-color: #F6F6F6;
   width: 100%;
   position: relative;
@@ -1911,7 +1911,7 @@ main {
   margin-top: 10px !important;
   display: block;
   border: 1px solid #3E82CD;
-  width: 40%;
+  /*width: 40%;*/
   text-align: center;
   border-radius: 6px;
 }
@@ -2775,7 +2775,7 @@ main {
   border-right: 1px solid #ededed;
   background: #ffffff;
   /* flex: 1 0 0%; */
-  padding: 17px 15px 0px 0px;
+  padding: 25px 15px 0px 0px;
 }
 
 .frameS {

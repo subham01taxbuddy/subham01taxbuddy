@@ -80,7 +80,7 @@
                         Start
                       </button>
                     </div>
-                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                    <div *ngIf="ITR_JSON?.prefillDate !== null && this.ITR_JSON?.prefillDataSource !== 'UPLOAD'" style="font-size: 12px">
                       Last
                       {{
                       this.ITR_JSON?.prefillDataSource === "UPLOAD"
@@ -121,7 +121,7 @@
                         Upload
                       </button>
                     </div>
-                    <div *ngIf="ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                    <div *ngIf="ITR_JSON?.prefillDate !== null && this.ITR_JSON?.prefillDataSource === 'UPLOAD'" style="font-size: 12px">
                       <!--  -->
                       Last
                       {{
@@ -161,7 +161,7 @@
                         Start
                       </button>
                     </div>
-                    <div *ngIf="ITR_JSON?.aisLastUploadedDownloadedDate !== null" style="font-size: 12px">
+                    <div *ngIf="ITR_JSON?.aisLastUploadedDownloadedDate !== null && this.ITR_JSON?.aisDataSource !== 'UPLOAD'" style="font-size: 12px">
                       Last
                       {{
                       this.ITR_JSON?.aisDataSource === "UPLOAD"
@@ -202,15 +202,15 @@
                         Upload
                       </button>
                     </div>
-                    <div *ngIf="false && ITR_JSON?.prefillDate !== null" style="font-size: 12px">
+                    <div *ngIf="false && ITR_JSON?.aisLastUploadedDownloadedDate !== null && this.ITR_JSON?.aisDataSource === 'UPLOAD'" style="font-size: 12px">
                       <!--  -->
                       Last
                       {{
-                      this.ITR_JSON?.prefillDataSource === "UPLOAD"
+                      this.ITR_JSON?.aisLastUploadedDownloadedDate === "UPLOAD"
                       ? "uploaded"
                       : "generated"
                       }}
-                      on {{ this.ITR_JSON?.prefillDate | date }}
+                      on {{ this.ITR_JSON?.aisLastUploadedDownloadedDate | date }}
                     </div>
                   </div>
                 </div>

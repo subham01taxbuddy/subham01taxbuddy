@@ -10,3 +10,7 @@
 .tbd-btn-small:hover {
   background-color: #b7f5f5;
 }
+.disabled-button {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -16,6 +16,7 @@ export const environment = {
 	webportal_url: 'https://itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "prod",
+  payOutEnv :"PROD",
 	kmAppId: "3c45762181ce71ac72f5e8ffd90da16a8",
 	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",

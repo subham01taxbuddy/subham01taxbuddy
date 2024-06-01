@@ -22,7 +22,7 @@
                               class="newAG ag-theme-balham topSps">
                             </ag-grid-angular>
                           </div>
-                          <div class="row col-sm-12">
+                          <div class="row col-sm-12" id="speculative_id">
                             <div class="col-sm-6">
                               <button (click)="deleteArray()" [disabled]="!specSelected()" class="delete-btn"
                                 type="submit">
@@ -48,7 +48,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="brokerName" matInput [disabled]="true" name="brokerName[i]"
                                   readonly />
                               </mat-form-field>
@@ -60,7 +60,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput name="turnOver"
                                   digitsOnly class="input-field" trim (change)="calculateNetIncome()" />
                               </mat-form-field>
@@ -76,7 +76,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
                                   name="grossProfit" class="input-field" type="number" trim
                                   (change)="calculateNetIncome()" />
@@ -96,7 +96,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
                                   name="expenditure" class="input-field" required trim
                                   (change)="calculateNetIncome()" />
@@ -111,7 +111,7 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="netIncome" matInput readonly name="netIncome[i]" required
                                   class="input-field" maxlength="14" digitsOnly />
                               </mat-form-field>
