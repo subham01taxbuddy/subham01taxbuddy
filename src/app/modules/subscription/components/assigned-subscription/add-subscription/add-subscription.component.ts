@@ -236,7 +236,8 @@ export class AddSubscriptionComponent implements OnInit {
   createSubscription() {
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
       let param1
-      if (this.roles.includes('ROLE_FILER')) {
+      if (this.roles.includes('ROLE_FILER') || this.data.email ) {
+
         param1 = '/bo/subscription/coupon-code-exists?userId='+this.data.userId+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
       }else{
         param1 = '/bo/subscription/coupon-code-exists?mobileNumber='+this.data.mobileNo+'&serviceType='+this.selectedPlanInfo.servicesType+'&planId='+this.selectedPlanInfo.planId;
