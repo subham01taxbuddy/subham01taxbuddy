@@ -728,7 +728,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       {
         headerName: 'Email',
         field: 'email',
-        width: 150,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
