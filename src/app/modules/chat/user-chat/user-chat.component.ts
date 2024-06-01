@@ -151,7 +151,11 @@ export class UserChatComponent implements OnInit {
     return pattern.test(value);
   }
 
+
+
+
   onSubmit(message: string) {
+
     this.messageSent = message;
     if ((Object.keys(this.formData3).length != 0)) {
       this.sendMessage(this.formData3);
