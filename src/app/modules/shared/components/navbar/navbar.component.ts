@@ -70,7 +70,7 @@ export class NavbarComponent implements DoCheck {
     private renderer: Renderer2,
     private elementRef: ElementRef,
     private chatManager: ChatManager,
-    private chatService: ChatService
+    private chatService: ChatService,
 
   ) {
     this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
