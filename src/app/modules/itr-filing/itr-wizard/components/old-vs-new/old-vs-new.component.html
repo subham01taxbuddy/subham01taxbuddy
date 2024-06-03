@@ -3,8 +3,10 @@
 <div class="spc-blw">
   <div class="com_model perBx">
     <div class="container card">
-      <div class="card__title" style="padding: 10px; font-size: 20px">
-        Comparison of New v/s Old Regime
+      <div style="padding: 10px; font-size: 20px">
+        <span class="card__title">Comparison of New v/s Old Regime</span>
+        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="downloadComparison()" class="comp-title">
+          <i class="fas fa-download"></i></button>
       </div>
       <div class="cardRect">
         <table class="table table-bordered">
