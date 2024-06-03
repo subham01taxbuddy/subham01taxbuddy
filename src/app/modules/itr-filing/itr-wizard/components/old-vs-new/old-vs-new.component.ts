@@ -2431,6 +2431,31 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  downloadComparison(){
+    let param = '/api/download/comparison/pdf';
+    let request = {
+      oldRegime : this.oldSummaryIncome,
+      newRegime : this.newSummaryIncome
+    }
+    this.loading = true;
+    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+      // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+      console.log('XML Result', result);
+      var FileSaver = require('file-saver');
+      //const fileURL = URL.createObjectURL(result);
+      const fileURL = webkitURL.createObjectURL(result);
+      window.open(fileURL);
+      let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';
+      console.log('fileName: ', fileName);
+      FileSaver.saveAs(fileURL, fileName);
+      this.loading = false;
+    }, (error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar(
+          'Failed to download PDF file, please try again.'
+      );
+    });
+  }
 }
 
 function getCFL(cfl: any): number {
