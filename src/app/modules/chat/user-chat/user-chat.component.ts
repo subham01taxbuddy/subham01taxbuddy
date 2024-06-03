@@ -176,6 +176,7 @@ export class UserChatComponent implements OnInit {
 
   showFullScreen() {
     this.fullChatScreen = !this.fullChatScreen;
+    this.chatManager.getDepartmentList();
   }
 
   sendMessage(payload?: any) {
@@ -265,6 +266,7 @@ export class UserChatComponent implements OnInit {
   //       this.scrollToBottom();
   //   }
   ngOnInit(): void {
+ 
     if (this.requestId) {
       console.log('request_id', this.requestId)
       this.chatManager.openConversation(this.requestId)

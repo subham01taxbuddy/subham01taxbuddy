@@ -40,6 +40,7 @@ export class FloatingWidgetComponent implements OnInit {
     showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
         this.selectedDepartmentId = null;
+        this.chatManager.getDepartmentList();
         this.chatManager.conversationList();
     }
 
@@ -59,8 +60,7 @@ export class FloatingWidgetComponent implements OnInit {
                 this.userChatComponent.scrollToBottom();
             }
         }, 1000);
-
-    }
+     }
 
 
     closeWidget() {
