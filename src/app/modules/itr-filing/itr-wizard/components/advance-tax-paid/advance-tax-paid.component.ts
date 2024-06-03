@@ -173,7 +173,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     } else {
       this.loading = false;
       this.utilsService.showSnackBar(
-        'Failed to save advance tax or self assessment tax paid data.'
+        'Please fill in all the mandatory fields.'
       );
     }
   }
