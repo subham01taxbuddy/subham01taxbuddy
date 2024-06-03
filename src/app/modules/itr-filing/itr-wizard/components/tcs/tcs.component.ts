@@ -181,7 +181,7 @@ export class TcsComponent implements OnInit {
       this.utilsService.showSnackBar('TCS data saved successfully.');
     } else {
       this.loading = false;
-      this.utilsService.showSnackBar('Failed to save TCS tax paid data.');
+      this.utilsService.showSnackBar('Please fill in all the mandatory fields.');
     }
   }
 
