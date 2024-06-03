@@ -69,7 +69,7 @@
               </div>
             </div>
 
-            <div class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
+            <div *ngIf="(loggedInUserInfo[0]?.serviceEligibility_GST && !roles?.includes('ROLE_FILER') || roles?.includes('ROLE_ADMIN'))" class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
                 <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp; </div>
             </div>
 

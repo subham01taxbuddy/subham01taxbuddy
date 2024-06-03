@@ -22,10 +22,12 @@ export class ChatUIComponent implements OnInit {
 
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
+    centralizedChatDetails: any;
 
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService) {
+        this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
@@ -172,7 +174,9 @@ export class ChatUIComponent implements OnInit {
 
     handleDeptList = (data: any) => {
         console.log('received message', data);
+        data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
+        this.selectedDepartmentId = data[0]._id;
         console.log('list', this.departmentNames);
         console.log('selected department name', this.departmentNames)
     }

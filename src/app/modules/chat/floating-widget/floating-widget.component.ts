@@ -18,10 +18,12 @@ interface Department {
 export class FloatingWidgetComponent implements OnInit {
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
+    centralizedChatDetails: any;
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService,
     ) {
+        this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
@@ -60,7 +62,7 @@ export class FloatingWidgetComponent implements OnInit {
                 this.userChatComponent.scrollToBottom();
             }
         }, 1000);
-     }
+    }
 
 
     closeWidget() {
@@ -201,7 +203,10 @@ export class FloatingWidgetComponent implements OnInit {
 
     handleDeptList = (data: any) => {
         console.log('received message', data);
+        data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
+        this.selectedDepartmentId = data[0]._id;
+        // this.chatManager.conversationList(this.selectedDepartmentId);
         console.log('list', this.departmentNames);
         console.log('selected department name', this.departmentNames)
     }

@@ -47,10 +47,12 @@ export class NavbarComponent implements DoCheck {
   isDropdownOpen = false;
   showDropDown: boolean = false;
   partnerType: any;
-  userAffiliateID:any;
-  checkEnv= environment.environment;
+  userAffiliateID: any;
+  checkEnv = environment.environment;
   floatingWidgetShow: boolean = false;
   disposable: any;
+  loggedInUserInfo: any;
+  roles: any;
 
 
   toggleWidget() {
@@ -71,7 +73,8 @@ export class NavbarComponent implements DoCheck {
     private chatService: ChatService
 
   ) {
-
+    this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    this.roles = this.loggedInUserInfo[0]?.roles;
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
     this.partnerType = this.utilsService.getPartnerType();

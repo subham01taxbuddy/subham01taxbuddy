@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { ChatEvents } from "./chat-events";
 import { Subject } from "rxjs";
 import { environment } from "src/environments/environment";
+import { UtilsService } from "src/app/services/utils.service";
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +24,7 @@ export class ChatService {
   private CHAT_API_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat";
   private WEBSOCKET_URL = "wss://heavy-azure-whale.rmq3.cloudamqp.com/ws/mqtt";
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
+  private CENTRALIZED_CHAT_DETAILS = "https://zbuz4brujg5rfks47lct546o5u0aduge.lambda-url.ap-south-1.on.aws/chat-system-config";
 
   presenceTopic;
   topicInbox;
@@ -37,10 +39,13 @@ export class ChatService {
 
 
   messageObservable = new Subject<any>();
+  centralizedChatDetails: any;
 
-  constructor(public httpClient: HttpClient,
+  constructor(
+    public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService,
+    private utilsService: UtilsService
   ) {
   }
 
@@ -60,7 +65,9 @@ export class ChatService {
         console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
-
+        // if (this.centralizedChatDetails) {
+        //   deptList = deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
+        // }
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.DEPT_RECEIVED, deptList);
         });
@@ -167,6 +174,8 @@ export class ChatService {
   }
 
   fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
+    if(!departmentId)
+      departmentId = "65e56e777c8dbc0013851f4d";
     let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
     if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
@@ -203,7 +212,7 @@ export class ChatService {
   fetchMessages(requestId) {
     let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
     let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=300`;
-    console.log('fetch messages url',url)
+    console.log('fetch messages url', url)
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
       console.log('fetch messages result', chat21Result);
@@ -677,6 +686,34 @@ export class ChatService {
           // }
         })
       });
+    }
+  }
+
+  getCentralizedChatApiDetails() {
+    if (!this.localStorageService.getItem("CENTRALIZED_CHAT_CONFIG_DETAILS", true)) {
+      let url = `${this.CENTRALIZED_CHAT_DETAILS}`;
+      this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
+        if (result.success) {
+          // let result = {
+          //   "UI": {
+          //     "GST": "chatbuddy",
+          //     "NOTICE": "kommunicate",
+          //     "TPA": "kommunicate",
+          //     "ITR": "kommunicate",
+          //     "ITRU": "kommunicate"
+          //   }
+          // };
+          // this.localStorageService.setItem("CENTRALIZED_CHAT_CONFIG_DETAILS", result.UI, true);
+          this.centralizedChatDetails = result.data.UI;
+          this.localStorageService.setItem("CENTRALIZED_CHAT_CONFIG_DETAILS", result.data.UI, true);
+        } else {
+          this.utilsService.showSnackBar(result.message);
+        }
+      },
+        error => {
+          this.utilsService.showSnackBar('Failed to Save the system config api Details');
+        });
+
     }
   }
 
