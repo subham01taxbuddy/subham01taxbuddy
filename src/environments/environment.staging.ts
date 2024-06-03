@@ -17,18 +17,19 @@ export const environment = {
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "qa",
-  payOutEnv :"QA",
+	payOutEnv: "QA",
+	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
 	check_upload: 'https://rskq6saw7ymmdgm3cloc4dcenm0ywqix.lambda-url.ap-south-1.on.aws/',
 	download_file: 'https://avamuzavbieadujrkme44yfetq0cxiou.lambda-url.ap-south-1.on.aws/',
-  update_id : 'https://7nlo6vqc673gcqlt7dx5byvgo40qcfeg.lambda-url.ap-south-1.on.aws/',
-  get_adjustment :'https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/',
-  add_adjustment: 'https://2hifgwy53ui62fbhnucv77mjdq0rcslo.lambda-url.ap-south-1.on.aws/',
-  get_tds : 'https://cihbintebntput6bydyqnksj2a0zykgg.lambda-url.ap-south-1.on.aws/',
-  adjustment : 'https://ufkz5k66goajzposopzqdn5ciq0bimle.lambda-url.ap-south-1.on.aws/',
-  get_adjustment_csv : 'https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/',
+	update_id: 'https://7nlo6vqc673gcqlt7dx5byvgo40qcfeg.lambda-url.ap-south-1.on.aws/',
+	get_adjustment: 'https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/',
+	add_adjustment: 'https://2hifgwy53ui62fbhnucv77mjdq0rcslo.lambda-url.ap-south-1.on.aws/',
+	get_tds: 'https://cihbintebntput6bydyqnksj2a0zykgg.lambda-url.ap-south-1.on.aws/',
+	adjustment: 'https://ufkz5k66goajzposopzqdn5ciq0bimle.lambda-url.ap-south-1.on.aws/',
+	get_adjustment_csv: 'https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/',
 
 	gdrive: {
 		GOOGLE_DRIVE_CLIENT_ID: '994281120398-930gtuaop72na800aqf6f38uqjc77mvq.apps.googleusercontent.com',
@@ -50,16 +51,16 @@ export const environment = {
 	// 	appId: "1:805239680508:web:b9258ec04023b0fda05679",
 	// 	measurementId: "G-DMWVKK98X2"
 	// },
-  firebaseConfig: {
-    apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
-    authDomain: "taxbuddy-uat.firebaseapp.com",
-    databaseURL: "https://taxbuddy-uat.firebaseio.com",
-    projectId: "taxbuddy-uat",
-    storageBucket: "taxbuddy-uat.appspot.com",
-    messagingSenderId: "805239680508",
-    appId: "1:805239680508:web:c5a224dafd6a97bea05679",
-    measurementId: "G-R5JYTLSE8B"
-  },
+	firebaseConfig: {
+		apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+		authDomain: "taxbuddy-uat.firebaseapp.com",
+		databaseURL: "https://taxbuddy-uat.firebaseio.com",
+		projectId: "taxbuddy-uat",
+		storageBucket: "taxbuddy-uat.appspot.com",
+		messagingSenderId: "805239680508",
+		appId: "1:805239680508:web:c5a224dafd6a97bea05679",
+		measurementId: "G-R5JYTLSE8B"
+	},
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
