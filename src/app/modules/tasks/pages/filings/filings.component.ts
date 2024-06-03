@@ -469,6 +469,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'filingTeamMemberId', value: 'Filer Name' },
       { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' },
+      { key: 'filingFormatedDate', value: 'Filing Formatted Date' },
     ];
     await this.genericCsvService.downloadReport(
       environment.url + '/report',
@@ -622,15 +623,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          if (params.data.filingSource === 'ERI') {
-            if (!params.data.itrSummaryJson) {
-              return params.data.filingSource + ' - TB Utility';
-            } else {
-              return params.data.filingSource + '- Summary JSON ';
-            }
-          } else {
-            return params.data.filingSource;
-          }
+          return params.data.filingSource;
         },
       },
       {
