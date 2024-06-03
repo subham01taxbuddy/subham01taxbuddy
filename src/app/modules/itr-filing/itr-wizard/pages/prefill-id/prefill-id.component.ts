@@ -5991,7 +5991,7 @@ export class PrefillIdComponent implements OnInit {
           {
             const CFL = this.uploadedJson[this.ITR_Type]?.ScheduleCFL;
 
-            // AY 2014 - 2015
+            // AY 2016 - 2017
             {
               const LossCFFromPrev8thYearFromAY =
                 CFL?.LossCFFromPrev8thYearFromAY;
@@ -5999,7 +5999,7 @@ export class PrefillIdComponent implements OnInit {
               if (LossCFFromPrev8thYearFromAY) {
                 const LossCFFromPrev8thYearFromAYItrObj = {
                   id: null,
-                  assessmentPastYear: '2014-15',
+                  assessmentPastYear: '2016-17',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6037,15 +6037,15 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2015 - 2016
+            // AY 2017-18
             {
               const LossCFFromPrev7thYearFromAY =
-                CFL?.LossCFFromPrev7thYearFromAY;
+                CFL?.LossCFFromPrev2ndYearFromAY;
 
               if (LossCFFromPrev7thYearFromAY) {
                 const LossCFFromPrev7thYearFromAYITtrObj = {
                   id: null,
-                  assessmentPastYear: '2015-16',
+                  assessmentPastYear: '2017-18',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6083,10 +6083,10 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2016 - 2017
+            // AY 2018 - 2019
             {
               const LossCFFromPrev6thYearFromAY =
-                CFL?.LossCFFromPrev6thYearFromAY;
+                CFL?.LossCFFromPrevYrToAY;
 
               if (
                 LossCFFromPrev6thYearFromAY &&
@@ -6094,7 +6094,7 @@ export class PrefillIdComponent implements OnInit {
               ) {
                 const LossCFFromPrev6thYearFromAYITtrObj = {
                   id: null,
-                  assessmentPastYear: '2016-17',
+                  assessmentPastYear: '2018-19',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6132,10 +6132,10 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2017 - 2018
+            // AY 2019 - 2020
             {
               const LossCFFromPrev5thYearFromAY =
-                CFL?.LossCFFromPrev5thYearFromAY;
+                CFL?.LossCFCurrentAssmntYear;
 
               if (
                 LossCFFromPrev5thYearFromAY &&
@@ -6143,7 +6143,7 @@ export class PrefillIdComponent implements OnInit {
               ) {
                 const LossCFFromPrev5thYearFromAYITtrObj = {
                   id: null,
-                  assessmentPastYear: '2017-18',
+                  assessmentPastYear: '2019-20',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6181,10 +6181,10 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2018 - 2019
+            // AY 2020 - 2021
             {
               const LossCFFromPrev4thYearFromAY =
-                CFL?.LossCFFromPrev4thYearFromAY;
+                CFL?.LossCFCurrentAssmntYear2021;
 
               if (
                 LossCFFromPrev4thYearFromAY &&
@@ -6192,7 +6192,7 @@ export class PrefillIdComponent implements OnInit {
               ) {
                 const LossCFFromPrev4thYearFromAYITtrObj = {
                   id: null,
-                  assessmentPastYear: '2018-19',
+                  assessmentPastYear: '2020-21',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6230,10 +6230,10 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2019 - 2020
+            // AY 2021 - 2022
             {
               const LossCFFromPrev3rdYearFromAY =
-                CFL?.LossCFFromPrev3rdYearFromAY;
+                CFL?.LossCFCurrentAssmntYear2022;
 
               if (
                 LossCFFromPrev3rdYearFromAY &&
@@ -6241,7 +6241,7 @@ export class PrefillIdComponent implements OnInit {
               ) {
                 const LossCFFromPrev3rdYearFromAYITtrObj = {
                   id: null,
-                  assessmentPastYear: '2019-20',
+                  assessmentPastYear: '2021-22',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6279,10 +6279,10 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2020 - 2021
+            // AY 2022-2023
             {
               const LossCFFromPrev2ndYearFromAY =
-                CFL?.LossCFFromPrev2ndYearFromAY;
+                CFL?.LossCFCurrentAssmntYear2023;
 
               if (
                 LossCFFromPrev2ndYearFromAY &&
@@ -6290,7 +6290,7 @@ export class PrefillIdComponent implements OnInit {
               ) {
                 const LossCFFromPrev2ndYearFromAYItrObj = {
                   id: null,
-                  assessmentPastYear: '2020-21',
+                  assessmentPastYear: '2022-23',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                       ?.DateOfFiling
@@ -6328,14 +6328,14 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // AY 2021 - 2022
+            // AY 2023-24
             {
-              const LossCFFromPrevYrToAY = CFL?.LossCFFromPrevYrToAY;
+              const LossCFFromPrevYrToAY = CFL?.LossCFCurrentAssmntYear2024;
 
               if (LossCFFromPrevYrToAY && LossCFFromPrevYrToAY.DateOfFiling) {
                 const LossCFFromPrevYrToAYItrObj = {
                   id: null,
-                  assessmentPastYear: '2021-22',
+                  assessmentPastYear: '2023-24',
                   dateofFilling: this.parseAndFormatDate(
                     LossCFFromPrevYrToAY?.CarryFwdLossDetail?.DateOfFiling
                   ),

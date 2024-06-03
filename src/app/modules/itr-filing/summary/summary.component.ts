@@ -3809,278 +3809,240 @@ export class SummaryComponent implements OnInit {
               LossCFFromPrev7thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev6thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev5thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev4thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.DateOfFiling,
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.BrtFwdBusLoss,
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFFromPrev3rdYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail?.DateOfFiling,
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFPrevAssmntYear: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFCurrentAssmntYear: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
-                    ?.LossFrmSpecBusCF,
-              },
-              LossCFCurrentAssmntYear2023: {
-                dateOfFiling:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.DateOfFiling,
-                hpLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.TotalHPPTILossCF,
-                broughtForwardBusLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.BrtFwdBusLoss,
-                BusLossOthThanSpecifiedLossCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.BusLossOthThanSpecLossCF,
-                LossFrmSpecifiedBusCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.LossFrmSpecifiedBusCF,
-                stcgLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.TotalSTCGPTILossCF,
-                ltcgLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
-                    ?.TotalLTCGPTILossCF,
-                OthSrcLossRaceHorseCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.OthSrcLossRaceHorseCF,
-                lossFromSpeculativeBus:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
