@@ -172,6 +172,9 @@ export class ChatService {
   }
 
   fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
+    if (!departmentId) {
+      departmentId = "65e56e777c8dbc0013851f4d";
+    }
     let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations'
     if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
