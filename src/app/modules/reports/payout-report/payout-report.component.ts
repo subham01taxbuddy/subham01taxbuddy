@@ -382,149 +382,45 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
       },
-      {
-        headerName: '',
-        headerClass: 'vertical-line',
-        width: 0,
-        suppressMovable: true,
-        cellStyle: {
-          borderRight: '3px solid #ccc',
-          backgroundColor: '#fff',
-        },
-      },
-      {
-        headerName: 'Slab 0-50 40:60',
-        headerClass: 'centered-header',
-        children: [
 
-          {
-            headerName: 'No Of filling',
-            field: 'slabOneCount',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission Earned',
-            field: 'slabOneEarning',
-            width: 190,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total TDS',
-            field: 'slabOneTDS',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission After TDS',
-            field: 'slabOneEarningAfterTds',
-            width: 200,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-        ]
-      },
       {
-        headerName: '',
-        headerClass: 'vertical-line',
-        width: 0,
-        suppressMovable: true,
-        cellStyle: {
-          borderRight: '3px solid #ccc',
-          backgroundColor: '#fff',
-        },
-      },
-      {
-        headerName: 'Slab 51-100 , 50:50',
-        headerClass: 'centered-header',
-        children: [
-          {
-            headerName: 'No Of filling',
-            field: 'slabTwoCount',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission Earned',
-            field: 'slabTwoEarning',
-            width: 190,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total TDS',
-            field: 'slabTwoTDS',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission After TDS',
-            field: 'slabTwoEarningAfterTds',
-            width: 200,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-        ]
-      },
-      {
-        headerName: '',
-        headerClass: 'vertical-line',
-        width: 0,
-        suppressMovable: true,
-        cellStyle: {
-          borderRight: '3px solid #ccc',
-          backgroundColor: '#fff',
-        },
-      },
-      {
-        headerName: 'Slab >100, 60:40',
-        headerClass: 'centered-header',
-        children: [
-          {
-            headerName: 'No Of filling',
-            field: 'slabThreeCount',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission Earned',
-            field: 'slabThreeEarning',
-            width: 190,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total TDS',
-            field: 'slabThreeTDS',
-            width: 110,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-          {
-            headerName: 'Total Commission After TDS',
-            field: 'slabThreeEarningAfterTds',
-            width: 200,
-            suppressMovable: true,
-            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-          },
-        ]
-      },
-      {
-        headerName: 'Parent Name',
-        field: 'leaderName',
-        width: 150,
+        headerName: 'Commission Paid',
+        field: 'commissionPaid',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.commissionPaid){
+            return params.data.commissionPaid
+          }else{
+            return '-'
+          }
+
+        },
+      },
+
+      {
+        headerName: 'Commission Payable',
+        field: 'commissionPayable',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return `${data.value}`
+          } else {
+            return '-';
+          }
         },
       },
     ]
@@ -560,22 +456,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       { key: 'totalCommissionEarned', value: 'Total Commission Earned' },
       { key: 'totalTDS', value: 'Total TDS' },
       { key: 'totalCommissionEarnedTds', value: 'Total Commission After TDS' },
-      { key: 'slabOneCount', value: 'Slab 0-50 40:60 (No Of filling)' },
-      { key: 'slabOneEarning', value: 'Slab 0-50 40:60 (Total Commission Earned)' },
-      { key: 'slabOneTDS', value: 'Slab 0-50 40:60 (Total TDS)' },
-      { key: 'slabOneEarningAfterTds', value: 'Slab 0-50 40:60 (Total Commission After TDS)' },
-
-      { key: 'slabTwoCount', value: 'Slab 51-100 50:50 (No Of filling)' },
-      { key: 'slabTwoEarning', value: 'Slab 51-100 50:50 (Total Commission Earned)' },
-      { key: 'slabTwoTDS', value: 'Slab 51-100 50:50 (Total TDS)' },
-      { key: 'slabTwoEarningAfterTds', value: 'Slab 51-100 50:50 (Total Commission After TDS)' },
-
-      { key: 'slabThreeCount', value: 'Slab >100 60:40 (No Of filling)' },
-      { key: 'slabThreeEarning', value: 'Slab >100 60:40 (Total Commission Earned)' },
-      { key: 'slabThreeTDS', value: 'Slab >100 60:40 (Total TDS)' },
-      { key: 'slabThreeEarningAfterTds', value: 'Slab >100 60:40 (Total Commission After TDS)' },
-
-      { key: 'leaderName', value: 'Parent Name' },
+      { key: 'commissionPaid', value: 'Commission Paid' },
+      { key: 'commissionPayable', value: 'Commission Payable' },
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
     this.loading = false;
