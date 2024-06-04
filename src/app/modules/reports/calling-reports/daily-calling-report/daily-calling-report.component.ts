@@ -84,8 +84,16 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false;
   partnerType: any;
   selectRole = new UntypedFormControl();
+  selectedStatus = new UntypedFormControl();
   searchVal: string = "";
   showError: boolean = false;
+  statusList = [
+    { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+
+  ];
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -245,9 +253,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -579,10 +592,15 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${statusFilter}`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
@@ -611,6 +629,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.cacheManager.clearCache();
     this.selectRole.setValue(null);
+    this.selectedStatus.setValue(null);
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.parentConfig.currentPage = 1
