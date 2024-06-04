@@ -75,6 +75,13 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
   partnerType: any;
+  selectedStatus = new UntypedFormControl();
+  statusList = [
+    { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+  ];
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -226,9 +233,14 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -286,10 +298,15 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${statusFilter}`;
 
 
     let fieldName = [
@@ -379,6 +396,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.selectRole.setValue(null);
+    this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
