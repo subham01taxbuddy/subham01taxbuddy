@@ -70,10 +70,10 @@
                     </div>
                     <div class="right"
                       *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
-                      <button class="bulk-buttons bulk" style="float:right"
+                      <button class="bulk-buttons bulk" style="float:right" [disabled]="loading"
                         (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
                           Re-Assignment to Filer</span></button>
-                      <button class="bulk-buttons bulk spRt" style="float:right"
+                      <button class="bulk-buttons bulk spRt" style="float:right" [disabled]="loading"
                         (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
                           Re-Assignment to Leader</span></button>
                     </div>
