@@ -144,11 +144,13 @@ export class ReAssignDialogComponent implements OnInit {
 
   reAssign() {
     // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
+    this.loading = true
     this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
+        this.loading =false;
         return;
       } else {
         if (this.leaderId || this.filerId) {
@@ -164,6 +166,7 @@ export class ReAssignDialogComponent implements OnInit {
           }
           const param = `/v2/user-reassignment?userId=${this.data.userId}&serviceType=${this.serviceType}${leaderFilter}${filerFilter}`
           this.userMsService.getMethod(param).subscribe((res: any) => {
+            this.loading = false;
             console.log(res);
             we_track('Re-assign', {
               'User Name': this.data?.userInfo?.name,
@@ -187,6 +190,7 @@ export class ReAssignDialogComponent implements OnInit {
             this.dialogRef.close({ event: 'close', data: 'success' });
           })
         } else {
+          this.loading = false;
           this.utilsService.showSnackBar('Please select leader/Filer Name');
         }
       }

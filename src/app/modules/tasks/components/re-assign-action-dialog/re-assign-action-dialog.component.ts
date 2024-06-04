@@ -104,12 +104,14 @@ export class ReAssignActionDialogComponent implements OnInit {
 
   reAssignmentForFiler() {
     //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-filer?userIdList=14157,14159&filerUserId=14129
+    this.loading =true
     let userIdList = this.data.data.map(row => row.userId).join(',');
     this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
+        this.loading =false;
         return;
       } else {
         if (this.filerId) {
@@ -173,12 +175,14 @@ export class ReAssignActionDialogComponent implements OnInit {
   reAssignmentForLeader() {
     //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-leader?userIdList=14157,14159
     //&serviceType=ITR&leaderUserId=14129&filerUserId=1234
+    this.loading =true;
     let userIdList = this.data.data.map(row => row.userId).join(',');
     this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
         this.dialogRef.close({ event: 'close', data: 'success' });
+        this.loading =false;
         return;
       } else {
         if (this.leaderId) {
