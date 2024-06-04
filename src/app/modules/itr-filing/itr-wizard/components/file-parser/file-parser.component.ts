@@ -53,38 +53,38 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      {
-        name: 'Angel',
-        label: 'Angel One',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download Angel One.pdf',
-        note:''
-      },
-      {
-        name: 'Paytm',
-        label: 'PayTm',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download PayTM.pdf',
-        note:'Equity/F&O'
-      },
-      {
-        name: 'Axis',
-        label: 'Axis Broker',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-        note:''
-      },
-      {
-        name: 'Upstox',
-        label: 'Upstox',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download upstox statement.pdf',
-        note:''
-      },
+      // {
+      //   name: 'Angel',
+      //   label: 'Angel One',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download Angel One.pdf',
+      //   note:''
+      // },
+      // {
+      //   name: 'Paytm',
+      //   label: 'PayTm',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download PayTM.pdf',
+      //   note:'Equity/F&O'
+      // },
+      // {
+      //   name: 'Axis',
+      //   label: 'Axis Broker',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      //   note:''
+      // },
+      // {
+      //   name: 'Upstox',
+      //   label: 'Upstox',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download upstox statement.pdf',
+      //   note:''
+      // },
       {
         name: 'Groww',
         label: 'Groww',
@@ -101,14 +101,14 @@ export class FileParserComponent implements OnInit {
         steps: './assets/files/Steps to download Zerodha statement.pdf',
         note:'MF/Equity/Intraday/F&O'
       },
-      {
-        name: 'ICICI',
-        label: 'ICICI Bank',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download ICICI Statement.pdf',
-        note:''
-      },
+      // {
+      //   name: 'ICICI',
+      //   label: 'ICICI Bank',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download ICICI Statement.pdf',
+      //   note:''
+      // },
       // {
       //   name: 'Jainam',
       //   label: 'Jainam',
