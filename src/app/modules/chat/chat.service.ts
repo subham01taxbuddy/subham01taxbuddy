@@ -19,10 +19,10 @@ export class ChatService {
 
   private TILE_DESK_TOKEN_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/generate-tiledesk-token";
   private CHAT21_TOKEN_URL = "https://sravqc6xvv6dalsjuu66wyhtvi0iojcy.lambda-url.ap-south-1.on.aws/chat21-authentication";
-  private CONVERSATION_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat/659f70587e6a8d00122fb149/conversations";
+  private CONVERSATION_URL = environment.TILEDESK_URL + "/chatapi/api/tilechat/";
   private DEPT_DTLS_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/departments?projectId=";
-  private CHAT_API_URL = "https://tiledesk.taxbuddy.com/chatapi/api/tilechat";
-  private WEBSOCKET_URL = "wss://heavy-azure-whale.rmq3.cloudamqp.com/ws/mqtt";
+  private CHAT_API_URL = environment.CHAT_API_URL;
+  private WEBSOCKET_URL = environment.WEBSOCKET_URL;
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
   private CENTRALIZED_CHAT_DETAILS = "https://zbuz4brujg5rfks47lct546o5u0aduge.lambda-url.ap-south-1.on.aws/chat-system-config";
 
@@ -172,7 +172,7 @@ export class ChatService {
   }
 
   fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
-    let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
+    let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations'
     if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
     }
