@@ -174,9 +174,10 @@ export class ChatUIComponent implements OnInit {
 
     handleDeptList = (data: any) => {
         console.log('received message', data);
-        data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
+        // data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         this.selectedDepartmentId = data[0]._id;
+        this.chatManager.conversationList(this.selectedDepartmentId);
         console.log('list', this.departmentNames);
         console.log('selected department name', this.departmentNames)
     }
