@@ -65,9 +65,8 @@ export class ChatService {
         console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
-        // if (this.centralizedChatDetails) {
-        //   deptList = deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
-        // }
+        this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
+        deptList = deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.DEPT_RECEIVED, deptList);
         });
@@ -121,7 +120,6 @@ export class ChatService {
                 this.localStorageService.setItem("CHAT21_TOKEN", chat21Result.data.token);
                 this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
                 this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
-                this.fetchConversationList(chat21Result.data.userid);
                 this.initChatVariables(result.data.requestId);
                 this.fetchConversationList(chat21Result.data.userid);
                 if (initializeSocket) {
@@ -174,8 +172,6 @@ export class ChatService {
   }
 
   fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
-    if(!departmentId)
-      departmentId = "65e56e777c8dbc0013851f4d";
     let CONVERSATION_URL = `https://tiledesk.taxbuddy.com/chatapi/api/tilechat/${userId}/conversations`
     if (departmentId) {
       CONVERSATION_URL += `?departmentId=${departmentId}`
