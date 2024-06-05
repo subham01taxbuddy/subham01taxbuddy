@@ -29,6 +29,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatManager } from 'src/app/modules/chat/chat-manager';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
 declare function we_track(key: string, value: any);
 @Component({
@@ -85,6 +86,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private userService: UserMsService,
     private sanitizer: DomSanitizer,
     private chatManager: ChatManager,
+    private kommunicateSsoService: KommunicateSsoService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -318,7 +320,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
-          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
+          this.itrStatus.sort((a, b) => a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
@@ -1259,7 +1261,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result?.id) {
         this.isChatOpen = true;
-        this.chatManager.openConversation(result.id)
+        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
     });
