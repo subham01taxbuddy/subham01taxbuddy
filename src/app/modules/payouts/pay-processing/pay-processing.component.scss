@@ -12,7 +12,7 @@
 .radio-group {
   margin-top: 15px;
   margin-bottom: 5px;
-  margin-left: 60px;
+  // margin-left: 60px;
   display: flex;
   align-items: center;
 }
@@ -36,4 +36,11 @@
 .loading-overlay {
   opacity: 0.7;
   pointer-events: none;
+}
+.new-display{
+  display: flex;
+}
+.display-1{
+  display: flex;
+  align-items: center;
 }
