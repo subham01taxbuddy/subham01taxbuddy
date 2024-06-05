@@ -321,20 +321,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       },
 
       {
-        headerName: 'Role',
-        field: 'role',
-        sortable: true,
-        width: 200,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Total Number of ITR filed',
+        headerName: 'Number of ITR filed',
         field: 'numberOfFiling',
         sortable: true,
         width: 200,
@@ -451,8 +438,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       { key: 'filerName', value: 'filerName' },
       { key: 'panNumber', value: 'PAN' },
       { key: 'gstin', value: 'GSTN' },
-      { key: 'role', value: 'Role' },
-      { key: 'numberOfFiling', value: 'Total Number of ITR filed' },
+      { key: 'numberOfFiling', value: 'Number of ITR filed' },
       { key: 'totalCommissionEarned', value: 'Total Commission Earned' },
       { key: 'totalTDS', value: 'Total TDS' },
       { key: 'totalCommissionEarnedTds', value: 'Total Commission After TDS' },

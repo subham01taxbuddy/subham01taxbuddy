@@ -68,6 +68,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   showCsvMessage: boolean;
   sortMenus = [
     { value: 'filerName', name: 'Filer Name / Leader Name ' },
+    { value: 'outboundCalls', name: 'Number of Dialed Outbound Calls' },
+    { value: 'outboundConnected', name: 'Number of connected outbound calls' },
     { value: 'outboundAnsweredRatio', name: 'Outbound answered Ratio' },
     { value: 'inboundAnsweredRatio', name: 'Inbound answered Ratio' },
     { value: 'noOfMissedCall', name: 'No. of Missed calls' }
@@ -94,6 +96,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
 
   ];
+  clearUserFilter: number;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -627,6 +630,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.selectRole.setValue(null);
     this.selectedStatus.setValue(null);
