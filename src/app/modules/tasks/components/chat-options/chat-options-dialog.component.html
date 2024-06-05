@@ -12,7 +12,7 @@
       Whatsapp
     </button>
   </span> &nbsp;&nbsp;&nbsp;&nbsp;
-  <span>
+  <span  *ngIf="centralizedChatDetails[data.serviceType] ==='kommunicate'">
     <button type="button" class="new-button-1" title="Kommunicate" (click)="goToKommunicate()"
       [disabled]="!kommChatLink"><i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;
       Kommunicate
