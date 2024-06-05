@@ -124,6 +124,54 @@
           <div class="count1"> Total Count: <span class="txClr1">{{parentConfig.totalItems}}</span></div>
         </div>
       </div>
+      <div class="col-sm-12">
+        <div class="tpMain">
+          <!-- <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+          <span class="numTxBg1">{{ this.config.totalItems }}</span> -->
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ this.parentConfig.internalCount }}</span><br>
+                  <span class="TxSm">Outbound Call</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ this.parentConfig.externalCount }}</span><br>
+                  <span class="TxSm">Outbound Connected</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ this.parentConfig.activeCount }}</span><br>
+                  <span class="TxSm">Inbound Call</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ this.parentConfig.inactiveCount }}</span><br>
+                  <span class="TxSm">Inbound Connected</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="radius2">
+                <div class="inBxM">
+                    <span class="numTxSm grTx1">{{ this.parentConfig.assignmentOnCount }}</span><br>
+                    <span class="TxSm">No of Missed Call</span>
+                </div>
+                <div class="inBxM">
+                    <span class="numTxSm OrgTx">{{ this.parentConfig.assignmentOffCount }}</span><br>
+                    <span class="TxSm">Average time spent on calling</span>
+                </div>
+                <div class="inBxM-N ">
+                    <span class="numTxSm OrgTx">{{ this.parentConfig.assignmentOffCount }}</span><br>
+                    <span class="TxSm">Average time spent on connected call</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <table>
         <tr *ngFor="let item of dailyCallingReport | paginate:parentConfig"></tr>
       </table>
