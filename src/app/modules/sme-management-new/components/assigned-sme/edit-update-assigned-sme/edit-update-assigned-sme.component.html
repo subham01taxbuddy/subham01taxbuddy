@@ -720,7 +720,7 @@
             *ngIf="(loggedInSmeRoles?.includes('ROLE_LEADER') || loggedInSmeRoles?.includes('ROLE_ADMIN'))  && !checkRoles?.includes('ROLE_LEADER') && !checkRoles?.includes('ROLE_ADMIN')">
             <mat-label> Resigning Date </mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate" [max]="maxDate"
+              <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="maxDate" [max]="maxDate"
                 [matDatepicker]="picker4" autocomplete="off">
               <mat-hint>
                 <p><i class="fas fa-circle"></i> Resignation date is date of removal</p>
