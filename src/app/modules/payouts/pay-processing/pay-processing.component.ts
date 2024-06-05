@@ -5,6 +5,7 @@ import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { VendorService } from 'src/app/services/vendor.service';
 
 @Component({
   selector: 'app-pay-processing',
@@ -30,11 +31,13 @@ export class PayProcessingComponent implements OnInit {
   currentAccountNumber: string = '333005001704';
   razorpayXAccountNumber: string = '3434696314924813';
   loading1:boolean =false
+  vendorType = new UntypedFormControl('Razorpay')
 
   constructor(
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     private reportService: ReportService,
+    private vendorService : VendorService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.payProcessingGridOptions = <GridOptions>{
@@ -327,6 +330,9 @@ export class PayProcessingComponent implements OnInit {
       console.log('Account Number:', this.razorpayXAccountNumber);
       accountNumber = this.razorpayXAccountNumber;
     }
+
+    this.vendorService.setVendor(this.vendorType.value);
+    this.accountType.value === 'current' ? this.vendorService.setPaymentMethod('Current Account') : this.vendorService.setPaymentMethod('Wallet')
 
     const request = {
       userId: userId,
