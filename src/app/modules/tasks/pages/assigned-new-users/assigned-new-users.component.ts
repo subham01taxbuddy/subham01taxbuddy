@@ -71,6 +71,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
+  username: any;
+  requestId: any;
+  image: any;
+  serviceType: any;
+
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -1264,6 +1269,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.username){
+        this.isChatOpen = true;
+        this.username = result.username;
+        this.image = result.image;
+        this.serviceType = result.serviceType;
+        this.requestId = result.requestId
+      }
     });
 
   }
@@ -1409,5 +1421,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       })
   }
 
+  closeChat() {
+    this.isChatOpen = false;
+  }
 
 }

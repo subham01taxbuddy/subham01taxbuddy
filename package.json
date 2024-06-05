@@ -49,6 +49,7 @@
     "moment-timezone": "^0.5.43",
     "ng-speed-test": "2.6.1",
     "ngx-bootstrap": "^11.0.0",
+    "ngx-debounce": "^2.0.1",
     "ngx-doc-viewer": "2.1.2",
     "ngx-extended-pdf-viewer": "^19.6.1",
     "ngx-image-zoom": "~1.0.1",

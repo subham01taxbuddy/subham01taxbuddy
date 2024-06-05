@@ -20,16 +20,18 @@ export class UserChatComponent implements OnInit {
 
   private cd: ChangeDetectorRef;
 
-  @ViewChild('chatWindow') chatWindow: ElementRef;
   @Input() filetype: string;
   @Input() user: string;
   @Input() image: any;
   @Input() username: string;
   @Input() requestId: string;
+  @Input() showChevronIcon: boolean = false;
+
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
 
   @Input() serviceType: string;
-
+  @Input() showCloseIcon: boolean = false;
+  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>(); 
 
   isHeaderActive: boolean = true;
   isFloatingActive: boolean = true;
@@ -76,6 +78,8 @@ export class UserChatComponent implements OnInit {
  
 
   isRequired: boolean = false;
+
+  
 
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
@@ -421,4 +425,8 @@ export class UserChatComponent implements OnInit {
   //     this.messageSent = "";
 
   // }
+
+  closeChat() {
+    this.closeChatClicked.emit();
+  }
 }

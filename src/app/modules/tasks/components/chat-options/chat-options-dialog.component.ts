@@ -46,6 +46,7 @@ export class ChatOptionsDialogComponent implements OnInit {
   }
 
 
+  
   openUserChat(username: string, requestId: string) {
     console.log('method is triggered')
     this.userChatOpen = !this.userChatOpen;
@@ -56,8 +57,17 @@ export class ChatOptionsDialogComponent implements OnInit {
         this.userChatComponent.scrollToBottom();
       }
     }, 1000);
+    const data = {
+      username: this.username,
+      requestId: this.requestId,
+      serviceType: this.data.serviceType,
+      image: this.image
+    };
+    this.dialogRef.close(data);
   }
 
+
+ 
 
 
   ngOnInit() {
@@ -108,4 +118,6 @@ export class ChatOptionsDialogComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
+
+  
 }

@@ -116,3 +116,6 @@
   </div>
 
 </div>
+
+<app-user-chat *ngIf="isChatOpen" [username]="username" [requestId]="requestId" [serviceType]="serviceType"
+  [image]="image" [showCloseIcon]="true"  (closeChatClicked)="closeChat()"></app-user-chat>

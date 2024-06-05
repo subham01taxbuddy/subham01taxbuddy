@@ -1,7 +1,8 @@
 <div class="floating expanded" [ngClass]="{'active': isFloatingActive,'inactive': !isFloatingActive}">
   <div class="header expanded" [ngClass]="{'active': isHeaderActive, 'inactive': !isHeaderActive}">
     <button (click)="goBack()">
-      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      <i class="fa" [ngClass]="{'fa-chevron-left': showChevronIcon}" aria-hidden="true"></i>
+      <i class="fa fa-times" aria-hidden="true" *ngIf="showCloseIcon" (click)="closeChat()"></i>
     </button>
     <button (click)="showFullScreen()">
       <i class="fa fa-external-link" aria-hidden="true"></i>
