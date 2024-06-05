@@ -82,6 +82,11 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
     { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
   ];
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'noOfMissedChat', name: 'Number of missed chat' }
+  ];
+  clearUserFilter: number;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -176,6 +181,10 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/missed-chat-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
@@ -241,6 +250,12 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -308,6 +323,10 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
     param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${statusFilter}`;
 
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     let fieldName = [
       { key: 'noOfMissedChat', value: 'No of missed chat' },
@@ -395,6 +414,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.selectRole.setValue(null);
     this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();

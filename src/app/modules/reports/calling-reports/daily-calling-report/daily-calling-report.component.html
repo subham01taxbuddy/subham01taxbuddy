@@ -75,7 +75,7 @@
                   <!-- Table Toggle Inside Filter Starts -->
                   <div class="row">
                     <div class="col-sm-6 tpSpc">
-                      <app-generic-sorting [sortingParameter]="sortMenus"
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                         (onChange)="sortByObject($event)"></app-generic-sorting>
                     </div>
                     <div class="col-sm-6">
