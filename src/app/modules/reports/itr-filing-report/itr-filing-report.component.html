@@ -85,7 +85,7 @@
                       </div>
                       <div class="col-sm-6">
                         <div class="button-container">
-                          <button class="srch-btn-1" (click)="showReports()">
+                          <button class="srch-btn-1" (click)="showReports();getFilingCount();">
                             <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                           </button>
                           <button class="dwldBtn-1" [disabled]="loading"
@@ -128,6 +128,63 @@
         </div>
         <div class="col-sm-4">
           <div class="count1"> Total ITR Filed Count: <span class="txClr1">{{ totalItrFiledCount || 0}}</span></div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="tpMain">
+          <!-- <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+          <span class="numTxBg1">{{ this.config.totalItems }}</span> -->
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr1 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-1</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr1Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-1</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr2 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-2</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr2Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-2</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr3 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-3</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr3Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-3</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr4 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-4</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr4Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-4</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
       <table>
