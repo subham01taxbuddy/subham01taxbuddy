@@ -51,8 +51,8 @@ export class ChatService {
     private sessionStorageService: SessionStorageService,
     private utilsService: UtilsService
   ) {
-    this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
-    this.roles = this.loggedInUserInfo[0]?.roles;
+    // this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    // this.roles = this.loggedInUserInfo[0]?.roles;
   }
 
   registerMessageReceived(messageReceivedCallback) {
