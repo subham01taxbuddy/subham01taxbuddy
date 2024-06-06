@@ -75,7 +75,7 @@ export class UserChatComponent implements OnInit {
   selectedCheckBoxes: { [name: string]: string[] } = {};
   selectedOptions: { [name: string]: string } = {};
 
- 
+
 
   isRequired: boolean = false;
 
@@ -83,12 +83,12 @@ export class UserChatComponent implements OnInit {
 
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
-    
+
     private localStorage: LocalStorageService,
     private sanitizer: DomSanitizer, private elementRef: ElementRef,
     private renderer: Renderer2,
     cd: ChangeDetectorRef) {
-     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
+    this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.cd = cd
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
 
@@ -189,7 +189,7 @@ export class UserChatComponent implements OnInit {
       // const chatMessagesContainer = document.querySelector('.chat-window');
       // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
 
-      this.chatManager.sendMessage(this.messageSent, payload, this.serviceType);
+      this.chatManager.sendMessage(this.messageSent, '', payload);
       this.messageSent = '';
       setTimeout(() => {
         this.scrollToBottom()
@@ -213,10 +213,10 @@ export class UserChatComponent implements OnInit {
     if (files && files.length > 0) {
       this.fileToUpload = files[0];
       this.cd.detectChanges();
-          this.scrollToBottom();
+      this.scrollToBottom();
     }
   }
-   
+
   selectFile() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -238,9 +238,9 @@ export class UserChatComponent implements OnInit {
     return file.type === 'application/msword';
   }
 
- 
 
-   scrollToBottom(): void {
+
+  scrollToBottom(): void {
     if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
       const container = this.chatWindowContainer.nativeElement;
       setTimeout(() => {
@@ -262,7 +262,7 @@ export class UserChatComponent implements OnInit {
     this.toggleArrowVisibility();
   }
 
-  isBotSender(sender: string): boolean{
+  isBotSender(sender: string): boolean {
     return sender.startsWith('bot_');
   }
 
@@ -270,7 +270,7 @@ export class UserChatComponent implements OnInit {
   //       this.scrollToBottom();
   //   }
   ngOnInit(): void {
- 
+
     if (this.requestId) {
       console.log('request_id', this.requestId)
       this.chatManager.openConversation(this.requestId)
@@ -341,11 +341,11 @@ export class UserChatComponent implements OnInit {
 
   formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
-    
+
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[date.getMonth()];
     const day = date.getDate();
-    
+
     // Get hours, minutes, and AM/PM
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -353,11 +353,11 @@ export class UserChatComponent implements OnInit {
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-    
+
     // Return formatted string
     return `${month} ${day}, ${hours}:${minutesStr} ${ampm}`;
   }
-  
+
 
   getSanitizedHtml(message) {
     // this.renderer.setProperty(this.myDiv.nativeElement, 'innerHTML', htmlContent);

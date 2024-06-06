@@ -298,7 +298,7 @@ export class ChatService {
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
       console.log(' selected user details', user)
-      if (user && m.sender === user.sender)
+      if ((user && m.sender === user.sender) || (m.sender === this.chat21UserID))
         transformedMessages.push(m);
       const msgString = this.sessionStorageService.getItem('fetchedMessages');
       const oldMessageList = JSON.parse(msgString);

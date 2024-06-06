@@ -56,6 +56,7 @@ export class ChatUIComponent implements OnInit {
         this.selectedUser = conversation;
         this.selectedConversation = conversation;
         this.isUserChatVisible = true;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
             if (this.userChatComp) {
