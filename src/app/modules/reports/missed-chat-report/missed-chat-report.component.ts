@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewChatLinksComponent } from './view-chat-links/view-chat-links.component';
 
 
 export const MY_FORMATS = {
@@ -95,6 +97,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private cacheManager: CacheManager,
+    private dialog: MatDialog,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -352,6 +355,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
         filerName: missedChatData[i].filerName,
         parentName: missedChatData[i].parentName,
         role: missedChatData[i].role,
+        smeUserId : missedChatData[i].smeUserId
       })
       missedChatRepoInfoArray.push(agentReportInfo);
     }
@@ -372,6 +376,16 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.noOfMissedChat > 0){
+            return `<button type="button" class="action_icon add_button" title="view Missed Chat Link details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-details">
+            ${params.data.noOfMissedChat} </button>`;
+          }else{
+            return  params.data.noOfMissedChat ;
+          }
+
         },
       },
       {
@@ -414,6 +428,34 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
         }
       },
     ]
+  }
+
+  onSmeRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'view-details': {
+          this.viewChatDetails(params.data);
+          break;
+        }
+      }
+    }
+  }
+
+  viewChatDetails(data){
+    let disposable = this.dialog.open(ViewChatLinksComponent, {
+      width: '90%',
+      height: 'auto',
+      data: {
+        data: data,
+        startDate: this.startDate.value,
+        endDate: this.endDate.value,
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      // this.advanceSearch();
+    });
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
