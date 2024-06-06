@@ -5,6 +5,7 @@ import { ChatEvents } from "./chat-events";
 import { Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
+import { AppConstants } from "../shared/constants";
 @Injectable({
   providedIn: 'root'
 })
@@ -40,6 +41,9 @@ export class ChatService {
 
   messageObservable = new Subject<any>();
   centralizedChatDetails: any;
+  chatbuddyDeptDetails: any;
+  loggedInUserInfo: any;
+  roles: any;
 
   constructor(
     public httpClient: HttpClient,
@@ -47,6 +51,8 @@ export class ChatService {
     private sessionStorageService: SessionStorageService,
     private utilsService: UtilsService
   ) {
+    this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    this.roles = this.loggedInUserInfo[0]?.roles;
   }
 
   registerMessageReceived(messageReceivedCallback) {
@@ -65,6 +71,7 @@ export class ChatService {
         console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
         deptList = result.data;
+        this.localStorageService.setItem("CHATBUDDY_DEPT_DETAILS", result.data, true);
         this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         deptList = deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
@@ -397,8 +404,12 @@ export class ChatService {
               }
               this.chatClient.on("message", (topic, message) => {
                 if (this.log) {
-                  const messageJson = JSON.parse(message.toString());
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID) {
+                  const messageJson = JSON.parse(message.toString())
+                  console.log('message received', messageJson);
+                  this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
+                  this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
+                  let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && this.roles?.includes('ROLE_LEADER') && this.loggedInUserInfo[0]?.serviceEligibility_GST) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);
@@ -693,16 +704,6 @@ export class ChatService {
       let url = `${this.CENTRALIZED_CHAT_DETAILS}`;
       this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
         if (result.success) {
-          // let result = {
-          //   "UI": {
-          //     "GST": "chatbuddy",
-          //     "NOTICE": "kommunicate",
-          //     "TPA": "kommunicate",
-          //     "ITR": "kommunicate",
-          //     "ITRU": "kommunicate"
-          //   }
-          // };
-          // this.localStorageService.setItem("CENTRALIZED_CHAT_CONFIG_DETAILS", result.UI, true);
           this.centralizedChatDetails = result.data.UI;
           this.localStorageService.setItem("CENTRALIZED_CHAT_CONFIG_DETAILS", result.data.UI, true);
         } else {
