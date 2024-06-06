@@ -87,6 +87,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     { value: 'noOfMissedChat', name: 'Number of missed chat' }
   ];
   clearUserFilter: number;
+  totalNoOfMissedChat:any;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -261,6 +262,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.missedChatReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
+        this.totalNoOfMissedChat=response?.data?.content[0]?.totalNoOfMissedChat;
         this.missedChatReportGridOptions.api?.setRowData(this.createRowData(this.missedChatReport));
         this.cacheManager.initializeCache(this.createRowData(this.missedChatReport));
 
@@ -270,10 +272,12 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
       } else {
         this.loading = false;
+        this.totalNoOfMissedChat = 0;
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
       this.loading = false;
+      this.totalNoOfMissedChat = 0;
       this._toastMessageService.alert("error", "Error");
     });
   }
@@ -417,6 +421,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.selectRole.setValue(null);
     this.selectedStatus.setValue(null);
+    this.totalNoOfMissedChat = 0;
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;

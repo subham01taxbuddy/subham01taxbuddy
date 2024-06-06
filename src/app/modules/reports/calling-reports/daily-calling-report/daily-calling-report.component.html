@@ -80,7 +80,7 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="button-container">
-                        <button class="srch-btn-1" (click)="showReports()">
+                        <button class="srch-btn-1" (click)="showReports();getCallingCount()">
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                         </button>
                         <button class="dwldBtn-1" [disabled]="loading"
@@ -121,7 +121,7 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="count1"> Total Count: <span class="txClr1">{{parentConfig.totalItems}}</span></div>
+          <div class="count1"> Total Count: <span class="txClr1">{{parentConfig.totalItems || 0}}</span></div>
         </div>
       </div>
       <div class="col-sm-12">
@@ -132,11 +132,11 @@
             <div class="col-sm-3">
               <div class="radius2">
                 <div class="inBxL">
-                  <span class="numTxSm grTx1">{{ this.parentConfig.internalCount }}</span><br>
+                  <span class="numTxSm grTx1">{{ countData?.total_outboundCalls || 0 }}</span><br>
                   <span class="TxSm">Outbound Call</span>
                 </div>
                 <div class="inBxR">
-                  <span class="numTxSm OrgTx">{{ this.parentConfig.externalCount }}</span><br>
+                  <span class="numTxSm OrgTx">{{ countData?.total_outboundConnected || 0 }}</span><br>
                   <span class="TxSm">Outbound Connected</span>
                 </div>
               </div>
@@ -144,11 +144,11 @@
             <div class="col-sm-3">
               <div class="radius2">
                 <div class="inBxL">
-                  <span class="numTxSm grTx1">{{ this.parentConfig.activeCount }}</span><br>
+                  <span class="numTxSm grTx1">{{ countData?.total_inboundCalls || 0 }}</span><br>
                   <span class="TxSm">Inbound Call</span>
                 </div>
                 <div class="inBxR">
-                  <span class="numTxSm OrgTx">{{ this.parentConfig.inactiveCount }}</span><br>
+                  <span class="numTxSm OrgTx">{{ countData?.total_inboundConnected || 0 }}</span><br>
                   <span class="TxSm">Inbound Connected</span>
                 </div>
               </div>
@@ -156,15 +156,15 @@
             <div class="col-sm-6">
               <div class="radius2">
                 <div class="inBxM">
-                    <span class="numTxSm grTx1">{{ this.parentConfig.assignmentOnCount }}</span><br>
+                    <span class="numTxSm grTx1">{{ countData?.total_noOfMissedCall || 0 }}</span><br>
                     <span class="TxSm">No of Missed Call</span>
                 </div>
                 <div class="inBxM">
-                    <span class="numTxSm OrgTx">{{ this.parentConfig.assignmentOffCount }}</span><br>
+                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnCalling || 0 }}</span><br>
                     <span class="TxSm">Average time spent on calling</span>
                 </div>
                 <div class="inBxM-N ">
-                    <span class="numTxSm OrgTx">{{ this.parentConfig.assignmentOffCount }}</span><br>
+                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnConnectedCall || 0 }}</span><br>
                     <span class="TxSm">Average time spent on connected call</span>
                 </div>
               </div>
