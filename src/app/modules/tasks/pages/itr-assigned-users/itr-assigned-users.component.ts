@@ -96,6 +96,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     },
   ];
 
+  chatBuddyDetails: any;
+
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -1560,6 +1562,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.chatManager.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
+
     });
 
   }
@@ -1729,5 +1735,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       })
   }
 
+  closeChat() {
+    this.chatBuddyDetails = null;
+  }
 
 }

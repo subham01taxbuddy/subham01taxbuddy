@@ -48,6 +48,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   searchVal: any;
   searchStatusId: any;
+  chatBuddyDetails: any;
+
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -1249,6 +1251,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
     });
   }
   markAsEverified(data) {
@@ -1662,5 +1667,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+   this.chatBuddyDetails = null;
   }
 }

@@ -97,6 +97,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   serviceType = new UntypedFormControl('');
+  chatBuddyDetails: any;
+
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -953,6 +955,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
     });
 
   }
@@ -1120,5 +1125,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.maxStartDate = this.endDate.value;
   }
 
+  closeChat(){
+    this.chatBuddyDetails = null;
+  }
 
 }

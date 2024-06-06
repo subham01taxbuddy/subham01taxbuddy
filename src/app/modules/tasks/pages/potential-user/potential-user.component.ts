@@ -35,6 +35,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   roles: any;
+  chatBuddyDetails: any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
     { statusName: 'Interested', statusId: '16' },
@@ -802,6 +803,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
     });
   }
 
@@ -930,5 +934,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 }

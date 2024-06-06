@@ -76,6 +76,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     serviceType: null,
   };
   itrStatus: any = [];
+  chatBuddyDetails:any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -659,10 +660,17 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
     });
   }
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 }

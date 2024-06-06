@@ -101,3 +101,6 @@
     </div>
   </div>
 </div>
+
+<app-user-chat *ngIf="chatBuddyDetails" [username]="chatBuddyDetails.username" [requestId]="chatBuddyDetails.requestId" [serviceType]="chatBuddyDetails.serviceType"
+  [image]="chatBuddyDetails.image" [showCloseIcon]="true"  (closeChatClicked)="closeChat()"></app-user-chat>

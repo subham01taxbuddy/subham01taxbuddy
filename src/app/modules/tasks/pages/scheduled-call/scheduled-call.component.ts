@@ -101,6 +101,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   minEndDate = new Date().toISOString().slice(0, 10);
   show: boolean;
   scheduleCallRemoteConfig: any;
+  chatBuddyDetails: any;
+
 
   constructor(
     private reviewService: ReviewService,
@@ -846,7 +848,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+    disposable.afterClosed().subscribe((result) => { 
+      if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
+    });
   }
   showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.userMobile)) {
@@ -1176,5 +1182,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat() {
+    this.chatBuddyDetails = null;
   }
 }

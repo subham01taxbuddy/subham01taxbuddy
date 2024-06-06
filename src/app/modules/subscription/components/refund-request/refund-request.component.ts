@@ -83,6 +83,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
+  chatBuddyDetails: any;
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
     requestType: new UntypedFormControl(''),
     mobile: new UntypedFormControl(''),
@@ -808,6 +809,9 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.requestId){
+        this.chatBuddyDetails = result;
+     }
     });
 
   }
@@ -953,6 +957,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 
 }
