@@ -322,12 +322,13 @@ th {
   border: 1px solid #8CBDF2;
 }
 .button-container {
-    margin-top: 20px;
+    margin-top: -6px;
     display: inline-flex;
     justify-content: right;
     gap:10px;
-    border-top: 1px solid #cacaca;
+    // border-top: 1px solid #cacaca;
     padding-top: 20px;
+    float: right;
 }
 
 .dwldBtn-1{
@@ -381,7 +382,7 @@ th {
 .new-table-container{
   background: #FBFBFB;
   margin-right: 50px;
-  margin-top: 50px;
+  margin-top: 20px;
   margin-left: 50px;
   margin-bottom: 40px;
 }
