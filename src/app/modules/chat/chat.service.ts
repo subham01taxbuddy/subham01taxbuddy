@@ -51,8 +51,8 @@ export class ChatService {
     private sessionStorageService: SessionStorageService,
     private utilsService: UtilsService
   ) {
-    // this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
-    // this.roles = this.loggedInUserInfo[0]?.roles;
+    this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
   registerMessageReceived(messageReceivedCallback) {
@@ -408,6 +408,8 @@ export class ChatService {
                   console.log('message received', messageJson);
                   this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
                   this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
+                  this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+                  this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
                   let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
                   if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && this.roles?.includes('ROLE_LEADER') && this.loggedInUserInfo[0]?.serviceEligibility_GST) {
                     this.messageObservable.next(messageJson);
