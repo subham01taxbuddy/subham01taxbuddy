@@ -2456,6 +2456,25 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       );
     });
   }
+  shareComparison(){
+    let param = '/api/send/comparison/pdf';
+    let request = {
+      oldRegime : this.oldSummaryIncome,
+      newRegime : this.newSummaryIncome
+    }
+    this.loading = true;
+    this.itrMsService.postMethod(param, request).subscribe(
+          (result:any) => {
+      console.log('pdf Result', result);
+      this.utilsService.showSnackBar(result.message);
+      this.loading = false;
+    }, (error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar(
+          'Failed to send PDF file, please try again.'
+      );
+    });
+  }
 }
 
 function getCFL(cfl: any): number {
