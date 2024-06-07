@@ -31,7 +31,7 @@ export class UserChatComponent implements OnInit {
 
   @Input() serviceType: string;
   @Input() showCloseIcon: boolean = false;
-  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>(); 
+  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>();
 
   isHeaderActive: boolean = true;
   isFloatingActive: boolean = true;
@@ -79,7 +79,7 @@ export class UserChatComponent implements OnInit {
 
   isRequired: boolean = false;
 
-  
+
 
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
@@ -253,13 +253,16 @@ export class UserChatComponent implements OnInit {
   toggleArrowVisibility(): void {
     if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
       const container = this.chatWindowContainer.nativeElement;
-      const atBottom = container.scrollHeight - container.scrollTop === container.clientHeight;
+      const atBottom = Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) <= 1;
       this.showArrow = !atBottom;
     }
   }
 
   onScroll(): void {
     this.toggleArrowVisibility();
+    if (!this.showArrow) {
+      this.newMessageCount = 0;
+    }
   }
 
   isBotSender(sender: string): boolean {
