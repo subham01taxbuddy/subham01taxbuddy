@@ -256,6 +256,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         slabThreeEarningAfterTds: payoutData[i].slabThreeEarningAfterTds,
         panNumber : payoutData[i].panNumber ? payoutData[i].panNumber : '-',
         gstin : payoutData[i].gstin ? payoutData[i].gstin  : '-',
+        commissionPaid : payoutData[i].commissionPaid,
+        commissionPayable: payoutData[i].commissionPayable,
 
       };
       payoutRepoInfoArray.push(agentReportInfo);
@@ -380,15 +382,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        },
-        cellRenderer: function (params: any) {
-          if(params.data.commissionPaid){
-            return params.data.commissionPaid
-          }else{
-            return '-'
-          }
-
-        },
+        }
       },
 
       {
@@ -401,14 +395,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        },
-        cellRenderer: (data: any) => {
-          if (data.value) {
-            return `${data.value}`
-          } else {
-            return '-';
-          }
-        },
+        }
       },
     ]
   }
