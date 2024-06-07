@@ -7,6 +7,8 @@
         <span class="card__title">Comparison of New v/s Old Regime</span>
         <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="downloadComparison()" class="comp-title">
           <i class="fas fa-download"></i></button>
+        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="shareComparison()" class="comp-title">
+          <i class="fa fa-paper-plane"></i></button>
       </div>
       <div class="cardRect">
         <table class="table table-bordered">
