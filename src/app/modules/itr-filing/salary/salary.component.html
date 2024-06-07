@@ -193,15 +193,17 @@
                           </div>
 
                           <!-- <div class="item2"> -->
-                          <div class="col-3">
-                            <mat-form-field appearance="outline">
-                              <mat-select name="allowType[i]" formControlName="allowType"
-                                (selectionChange)="validateExemptIncomes($event);changeAllowancesType()">
-                                <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
-                                  [value]="exempt.value" [disabled]="exempt['disabled']">{{ exempt.label }}</mat-option>
-                              </mat-select>
-                            </mat-form-field>
-                          </div>
+                            <div class="col-3">
+                              <mat-form-field appearance="outline">
+                                <mat-select name="allowType[i]" formControlName="allowType"
+                                            (selectionChange)="validateExemptIncomes($event);changeAllowancesType()">
+                                  <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
+                                              [value]="exempt.value" [disabled]="exempt['disabled']" class="custom-dropdown-option">
+                                    {{ exempt.label }}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
                           <!-- </div> -->
 
                           <div class="item3 col-3">

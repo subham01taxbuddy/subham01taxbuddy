@@ -27,6 +27,7 @@ import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-n
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report/view-call-details/view-call-details.component';
 import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/view-chat-links.component';
+import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 
 @NgModule({
     imports: [
@@ -60,7 +61,8 @@ import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/vie
         FillingDonePaymentNotReceivedComponent,
         DocumentsUploadedFilingNotDoneComponent,
         ViewCallDetailsComponent,
-        ViewChatLinksComponent
+        ViewChatLinksComponent,
+        ClientAddedFilingNotDoneComponent
     ],
     providers: [JsonToCsvService]
 })

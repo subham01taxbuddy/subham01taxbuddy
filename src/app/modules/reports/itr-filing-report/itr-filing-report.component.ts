@@ -806,6 +806,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.selectRole.setValue(null);
     this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();
+    this.countData = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
