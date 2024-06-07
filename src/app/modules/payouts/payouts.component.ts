@@ -71,7 +71,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     { value: 'Unpaid', name: 'Unpaid' },
     { value: 'Adjusted', name: 'Adjusted' },
     { value: 'initiated', name: 'Initiated' },
-    { value: 'failed', name: 'Failed' }
+    { value: 'Failed', name: 'Failed' }
   ];
   selectedStatus: any;
   selectedPayoutStatus: any;

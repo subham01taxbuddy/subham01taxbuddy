@@ -128,7 +128,8 @@
     <table>
       <tr *ngFor="let item of missedChatReport | paginate:config"></tr>
     </table>
-    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"></ag-grid-angular>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"
+    (rowClicked)="onSmeRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>
