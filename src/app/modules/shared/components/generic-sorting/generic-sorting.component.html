@@ -5,7 +5,7 @@
       <div class="col-sm-6">
         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
           <mat-label>Select attribute</mat-label>
-          <mat-select [(ngModel)]="sortName" (change)="changeInput(true)">
+          <mat-select [(ngModel)]="sortName" (selectionChange)="changeInput(false)">
             <mat-option *ngFor="let drop of sortingParameter" [value]="drop.value">
               {{drop.name}}
             </mat-option>
