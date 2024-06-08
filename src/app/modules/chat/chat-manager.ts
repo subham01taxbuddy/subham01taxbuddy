@@ -104,31 +104,8 @@ export class ChatManager {
     this.chatService.closeWebSocket();
   }
 
-  getConversationList(departmentId: any) {
+  conversationList(page: number, departmentId?: any) {
     let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(chat21UserID, departmentId, true);
-    const convdata = this.localStorageService.getItem('conversationList', true);
-    console.log('conv data', convdata);
-    if (convdata) {
-      const conversations = JSON.parse(convdata);
-      let conversationList = conversations.map((conversation: any) => {
-
-        return {
-          image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-          name: conversation.name,
-          text: conversation.text,
-          timestamp: conversation.timestamp,
-          request_id: conversation.request_id
-        }
-
-      })
-      console.log('new list 1', conversationList);
-      return conversationList
-    }
-  }
-
-  conversationList(departmentId?: any) {
-    let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(chat21UserID, departmentId, true);
+    this.chatService.fetchConversationList(page, chat21UserID, departmentId, false);
   }
 }

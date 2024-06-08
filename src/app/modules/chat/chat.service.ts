@@ -36,9 +36,6 @@ export class ChatService {
   deptName = '';
   deptID = '';
   departmentNames: string[] = [];
-  removeCallback: boolean;
-
-
   messageObservable = new Subject<any>();
   centralizedChatDetails: any;
   chatbuddyDeptDetails: any;
@@ -128,20 +125,18 @@ export class ChatService {
                 this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
                 this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
                 this.initChatVariables(result.data.requestId);
-                this.fetchConversationList(chat21Result.data.userid);
+                this.fetchConversationList(0, chat21Result.data.userid);
                 if (initializeSocket) {
                   if (initializeSocket) {
                     this.websocketConnection(chat21Result.data.token, '');
                   }
                 }
-
               }
             });
           } else {
             let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
-            this.fetchConversationList(chat21Result.userid);
             this.initChatVariables(result.requestId);
-            this.fetchConversationList(chat21Result.userid);
+            this.fetchConversationList(0, chat21Result.userid);
           }
         }
       });
@@ -178,21 +173,18 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(userId: any, departmentId?: any, removeCallback?) {
+  fetchConversationList(page, userId: any, departmentId?: any, removeCallback?) {
     if (!departmentId) {
       departmentId = "65e56e777c8dbc0013851f4d";
     }
-    let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations'
+    let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations?page=' + page + '&pageSize=20'
     if (departmentId) {
-      CONVERSATION_URL += `?departmentId=${departmentId}`
+      CONVERSATION_URL += `&departmentId=${departmentId}`
     }
     console.log('conversation url', CONVERSATION_URL);
     this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
       console.log('conversation result', conversationResult);
-      const newarrays = this.conversationList(conversationResult.result);
-      if (removeCallback) {
-        this.removeCallback = true;
-      }
+      this.conversationList(page, conversationResult.result)
       if (!removeCallback) {
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.CONVERSATION_UPDATED);
@@ -238,9 +230,9 @@ export class ChatService {
     this.websocketConnection(TOKEN, requestId);
   }
 
-  conversationList(data: any) {
+  conversationList(page, data: any) {
 
-    const transformedData = data.map(message => (
+    let transformedData = data.map(message => (
       {
         new: message.is_new,
         name: message.sender_fullname,
@@ -256,7 +248,14 @@ export class ChatService {
 
       })
     );
-    this.localStorageService.setItem('conversationList', JSON.stringify(transformedData), true)
+    if (page != 0) {
+      const msgString = this.localStorageService.getItem('conversationList');
+      let oldMessageList = JSON.parse(msgString);
+      transformedData = [...oldMessageList, ...transformedData];
+    }
+    this.localStorageService.setItem('conversationList', transformedData, true);
+
+
     return transformedData;
   }
 

@@ -4,57 +4,60 @@
 
 <div class="blank-screen" *ngIf="isBlankScreenVisible">
     <div class="floating-widget" *ngIf="showWidget">
-    
-    
+
+
         <div class="header">
             <!-- <span class="icon menu-icon">&#9776;</span> -->
             <button (click)="goBack()">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        </button>
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </button>
             <span class="widget-title">Chat</span>
-            <!-- <button (click)="closeWidget()">
-                <i class="fa fa-times" aria-hidden="true"></i>
-            </button> -->
         </div>
-    
+
         <div class="options">
             <div class="option-box" *ngFor="let deptName of departmentNames"
                 [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
                 (click)="fetchList(deptName.id)">{{
                 deptName.name }}</div>
         </div>
-    
+
         <!-- <div class="search-bar">
           <span class="glyphicon glyphicon-search"></span>
           <input type="text" placeholder="Search messages or users">
       </div> -->
-    
-      <div class="user-list">
-        <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
-            <div class="row">
-                <div class="col-2">
-                    <img [src]="conversation.image" alt="User Icon">
-                </div>
-                <div class="col-8">
-                    <div class="user-name">{{ conversation.userFullName }}</div>
-                    <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{ conversation.text }}</div>
-                    <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to view the details...</strong></em></div>
+
+        <div class="user-list main-panel">
+            <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
+                [infiniteScrollThrottle]="20" (scrolled)="onScrollDown()">
+                <div class="user-box" *ngFor="let conversation of conversationList"
+                    (click)="openUserChat(conversation)">
+                    <div class="row">
+                        <div class="col-2">
+                            <img [src]="conversation.image" alt="User Icon">
+                        </div>
+                        <div class="col-8">
+                            <div class="user-name">{{ conversation.userFullName }}</div>
+                            <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
+                                conversation.text }}</div>
+                            <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
+                                        view the details...</strong></em></div>
+
+                        </div>
+                        <div class="col-2">
+                            <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                        </div>
+
+                    </div>
 
                 </div>
-                <div class="col-2">
-                    <div>{{ getCurrentTime(conversation.timestamp) }}</div>
-                </div>
-
             </div>
-
         </div>
-    </div>
-    
-    
-    
+
+
+
     </div>
     <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
-        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id" class="floating expanded"></app-user-chat>
-    
- </div>
-    
+        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id"
+        class="floating expanded"></app-user-chat>
+
+</div>

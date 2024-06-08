@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { widgetVisibility } from '../floating-widget/animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -19,7 +19,7 @@ interface Department {
 
 
 export class ChatUIComponent implements OnInit {
-
+    selector: string = ".main-panel";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
     centralizedChatDetails: any;
@@ -41,16 +41,10 @@ export class ChatUIComponent implements OnInit {
     conversationList: any[] = []
     departmentNames: Department[] = [];
     isUserChatVisible: boolean = false;
-    fullChatScreen: boolean = false;
     isBlankScreenVisible: boolean = true;
     selectedConversation: any;
     selectedDepartmentId: any;
-
-
-
-    showFullScreen() {
-        this.fullChatScreen = !this.fullChatScreen;
-    }
+    page = 0;
 
     openUserChat(conversation: any) {
         this.selectedUser = conversation;
@@ -66,24 +60,15 @@ export class ChatUIComponent implements OnInit {
 
     }
 
-    //  ngAfterViewInit(): void {
-    //     console.log('scroll initialize');
-    //     this.scrollToBottom();
-    //  }
-
-
-    closeWidget() {
-        this.showWidget = false;
-        // this.isUserChatVisible = false;
-
-    }
 
     closeUserChat() {
+        this.page = 0;
         // this.isUserChatVisible = false;
         this.showWidget = true;
     }
 
     goBack() {
+        this.page = 0;
         this.isBlankScreenVisible = false;
     }
 
@@ -99,8 +84,8 @@ export class ChatUIComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.chatManager.getDepartmentList();
-        this.chatManager.conversationList();
+        // this.chatManager.getDepartmentList();
+        // this.chatManager.conversationList(this.page);
     }
 
     handleReceivedMessages = (data: any) => {
@@ -114,10 +99,10 @@ export class ChatUIComponent implements OnInit {
         // }
         this.selectedDepartmentId = departmentId;
         if (departmentId) {
-            this.chatManager.conversationList(departmentId);
+            this.chatManager.conversationList(this.page, departmentId);
         }
         else {
-            this.chatManager.conversationList();
+            this.chatManager.conversationList(this.page);
         }
         setTimeout(() => {
             this.handleConversationList();
@@ -126,9 +111,9 @@ export class ChatUIComponent implements OnInit {
 
     handleConversationList = () => {
         console.log('started')
-        const convdata = this.localStorage.getItem('conversationList', true);
-        if (convdata) {
-            const conversations = JSON.parse(convdata);
+        const convData = this.localStorage.getItem('conversationList', true);
+        if (convData) {
+            const conversations = convData;
             if (this.selectedDepartmentId) {
                 this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
                     .map((conversation: any) => {
@@ -164,34 +149,15 @@ export class ChatUIComponent implements OnInit {
         }
     }
 
-    isJsonString(str: string): boolean {
-        try {
-            JSON.parse(str);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
     handleDeptList = (data: any) => {
-        console.log('received message', data);
-        // data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         this.selectedDepartmentId = data[0]._id;
-        this.chatManager.conversationList(this.selectedDepartmentId);
-        console.log('list', this.departmentNames);
-        console.log('selected department name', this.departmentNames)
+        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
 
-
-    // updatedConversation(conversation: any){
-    //   const existingConversationIndex = this.conversationList.findIndex(c => c.request_id === conversation.request_id);
-    //   if(existingConversationIndex !== -1){
-    //     this.conversationList[existingConversationIndex] = conversation;
-    //   }else{
-    //     this.conversationList.push(conversation);
-    //   }
-    // }
-
+    onScrollDown() {
+        this.page = this.page + 1;;
+        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
+    }
 }

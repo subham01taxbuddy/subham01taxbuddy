@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { widgetVisibility } from './animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -38,12 +38,13 @@ export class FloatingWidgetComponent implements OnInit {
     isUserChatVisible: boolean = false;
     fullChatScreen: boolean = false;
     selectedDepartmentId: any;
-
+    page = 0;
     showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
+        this.page = 0;
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
-        this.chatManager.conversationList();
+        this.chatManager.conversationList(this.page);
     }
 
     openUserChat(user: any) {
@@ -66,23 +67,18 @@ export class FloatingWidgetComponent implements OnInit {
 
 
     closeWidget() {
+        this.page = 0;
         this.showWidget = false;
         this.isUserChatVisible = false;
-
     }
 
     closeUserChat() {
+
         this.isUserChatVisible = false;
         this.showWidget = true;
     }
 
-    // goBack(){
-    //   this.router.navigate(['']);
-    // }
 
-    // selectedUsers(user: any){
-    //   this.selectedUser = user 
-    // }
 
     users = [
         {
@@ -121,10 +117,19 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.page = 0;
         this.chatManager.getDepartmentList();
         console.log('full conversation list');
-        this.chatManager.conversationList();
+        this.chatManager.conversationList(this.page);
 
+    }
+
+    onScrollDown() {
+        if (!this.fullChatScreen) {
+            console.log('Scrolled down')
+            this.page = this.page + 1;
+            this.chatManager.conversationList(this.page, this.selectedDepartmentId);
+        }
     }
 
     handleReceivedMessages = (data: any) => {
@@ -132,18 +137,13 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     fetchList(departmentId: any) {
-        // const selectedDepartment = this.departmentNames.find(dept => dept.id === departmentId);
-        // if(selectedDepartment){
-        //     console.log('selected dept',selectedDepartment.name, selectedDepartment.id)
-        // }
+        this.page = 0;
         this.selectedDepartmentId = departmentId;
         if (departmentId) {
-            console.log('with department filter conv list');
-            this.chatManager.conversationList(departmentId);
+            this.chatManager.conversationList(this.page, departmentId);
         }
         else {
-            console.log('full conversation list')
-            this.chatManager.conversationList();
+            this.chatManager.conversationList(this.page);
         }
         setTimeout(() => {
             this.handleConversationList();
@@ -154,9 +154,8 @@ export class FloatingWidgetComponent implements OnInit {
         console.log('started')
         const convdata = this.localStorage.getItem('conversationList', true);
         if (convdata) {
-            const conversations = JSON.parse(convdata);
             if (this.selectedDepartmentId) {
-                this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                this.conversationList = convdata.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
@@ -173,7 +172,7 @@ export class FloatingWidgetComponent implements OnInit {
                     });
             }
             else {
-                this.conversationList = conversations.map((conversation: any) => {
+                this.conversationList = convdata.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
                         image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
@@ -188,30 +187,13 @@ export class FloatingWidgetComponent implements OnInit {
                     };
                 });
             }
-            // this.conversationList = [...this.conversationList]
         }
     }
 
-    // isJsonString(str: string): boolean {
-    //     try {
-    //       JSON.parse(str);
-    //       return true;
-    //     } catch (e) {
-    //       return false;
-    //     }
-    //   }
-
     handleDeptList = (data: any) => {
-        console.log('received message', data);
-        // data = data.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         this.selectedDepartmentId = data[0]._id;
-        this.chatManager.conversationList(this.selectedDepartmentId);
-        console.log('list', this.departmentNames);
-        console.log('selected department name', this.departmentNames)
+        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
-
-
-
 }
 
