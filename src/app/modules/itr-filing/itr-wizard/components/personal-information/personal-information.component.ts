@@ -2707,6 +2707,7 @@ export class PersonalInformationComponent implements OnInit {
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'bankAccountsId', this.elementRef);
       this.openAcc();
       this.personalInfoSaved.emit(false);
+      this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       return;
     }
     // }
@@ -2777,6 +2778,7 @@ export class PersonalInformationComponent implements OnInit {
       this.loading = false;
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId', this.elementRef);
       this.personalInfoSaved.emit(false);
+      this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       this.openAcc();
     }
   }
