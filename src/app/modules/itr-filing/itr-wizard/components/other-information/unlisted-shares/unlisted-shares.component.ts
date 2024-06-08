@@ -23,6 +23,7 @@ $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
 });
 
+//This is unused component and shall be removed in next optimisation cycle -Ashwini
 @Component({
   selector: 'app-unlisted-shares',
   templateUrl: './unlisted-shares.component.html',
@@ -73,13 +74,13 @@ export class UnlistedSharesComponent implements OnInit {
       companyName: ['', Validators.required],
       typeOfCompany: ['', Validators.required],
       companyPAN: ['', Validators.compose([Validators.pattern(AppConstants.panNumberRegex)])],
-      openingShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
-      openingCOA: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
+      openingShares: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      openingCOA: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
       acquiredShares: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
       purchaseDate: [null, Validators.required],
       faceValuePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
-      issuePricePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],
-      purchasePricePerShare: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)])],
+      issuePricePerShare: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
+      purchasePricePerShare: [null, Validators.compose([ Validators.pattern(AppConstants.amountWithDecimal)])],
       transferredShares: [null, Validators.compose([Validators.pattern(AppConstants.amountWithoutDecimal)])],
       saleConsideration: [null, Validators.compose([Validators.pattern(AppConstants.amountWithDecimal)])],
       closingShares: [null, Validators.compose([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)])],

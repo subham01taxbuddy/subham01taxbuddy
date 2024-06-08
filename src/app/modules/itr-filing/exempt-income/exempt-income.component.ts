@@ -824,7 +824,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
                 this.exemptIncomesDropdown[1].value === 'AGRI'
                     ? [null]
                     : [this.ITR_JSON.exemptIncomes[i].amount, Validators.min(0)],
-            incomeDesc: this.ITR_JSON.exemptIncomes[i].details,
+            incomeDesc: this.ITR_JSON.exemptIncomes[i].othNatOfInc,
           });
           exemptIncomesFormArray.push(formGroup);
         }
