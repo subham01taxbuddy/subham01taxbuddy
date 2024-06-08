@@ -37,6 +37,7 @@ export class NavbarComponent implements DoCheck {
   loggedInUserId: number;
   showAffiliateBtn = false;
   showCopyLinkButton =false;
+  affLink:any;
 
   loading: boolean = false;
   nav: boolean;
@@ -141,7 +142,8 @@ export class NavbarComponent implements DoCheck {
       this.loading = false;
       if (response.success) {
         if (response.data.affiliateId) {
-          this.userAffiliateID = response.data.affiliateId
+          this.userAffiliateID = response.data.affiliateId;
+          this.affLink = response.data.referralLink;
           return;
         } else {
           this.showAffiliateBtn = true;
@@ -277,6 +279,18 @@ export class NavbarComponent implements DoCheck {
     document.body.removeChild(textarea);
     this._toastMessageService.alert("success", 'Link copied to clipboard!');
 
+  }
+
+  copyAffiliateLink() {
+    const textarea = document.createElement('textarea');
+    textarea.value = this.affLink;
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(textarea);
+    this._toastMessageService.alert("success", 'Affiliate Link copied to clipboard!');
   }
 
 
