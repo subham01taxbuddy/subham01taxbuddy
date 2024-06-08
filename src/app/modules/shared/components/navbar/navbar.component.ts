@@ -38,6 +38,7 @@ export class NavbarComponent implements DoCheck {
   showAffiliateBtn = false;
   showCopyLinkButton =false;
   affLink:any;
+  showAffButton = false;
 
   loading: boolean = false;
   nav: boolean;
@@ -143,10 +144,14 @@ export class NavbarComponent implements DoCheck {
       if (response.success) {
         if (response.data.affiliateId) {
           this.userAffiliateID = response.data.affiliateId;
-          this.affLink = response.data.referralLink;
-          return;
         } else {
           this.showAffiliateBtn = true;
+        }
+        if(response.data.referralLink){
+          this.affLink = response.data.referralLink;
+          this.showAffButton = true;
+        }else{
+          this.showAffButton = false;
         }
       } else {
         this.loading = false;
