@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { ChatEvents } from "../chat-events";
 import { ChatManager } from "../chat-manager";
@@ -13,6 +13,7 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 })
 
 export class UserChatComponent implements OnInit {
+  selector: string = ".main-panel";
 
   @ViewChild('chatWindow') chatWindowContainer: ElementRef;
   @ViewChild('fileInputContainer') fileInputContainer: ElementRef;
@@ -31,7 +32,7 @@ export class UserChatComponent implements OnInit {
 
   @Input() serviceType: string;
   @Input() showCloseIcon: boolean = false;
-  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>(); 
+  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>();
 
   isHeaderActive: boolean = true;
   isFloatingActive: boolean = true;
@@ -51,7 +52,6 @@ export class UserChatComponent implements OnInit {
   fetchedMessages: any[] = [];
   newMessageCount: number = 0;
   isAtBottom: boolean = true;
-  removefile: boolean = true;
 
   fullChatScreen: boolean = false;
 
@@ -74,13 +74,7 @@ export class UserChatComponent implements OnInit {
   selectedRadio: { [name: string]: string } = {};
   selectedCheckBoxes: { [name: string]: string[] } = {};
   selectedOptions: { [name: string]: string } = {};
-
-
-
   isRequired: boolean = false;
-
-  
-
 
   constructor(private chatService: ChatService, private chatManager: ChatManager,
 
@@ -89,7 +83,7 @@ export class UserChatComponent implements OnInit {
     private renderer: Renderer2,
     cd: ChangeDetectorRef) {
     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
-    this.cd = cd
+    this.cd = cd;
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
 
   }
@@ -144,9 +138,6 @@ export class UserChatComponent implements OnInit {
     this.sendMessage()
   }
 
-
-
-
   isInputValid(value: string, regex: string): boolean {
     if (value === '') {
       return true;
@@ -155,11 +146,7 @@ export class UserChatComponent implements OnInit {
     return pattern.test(value);
   }
 
-
-
-
   onSubmit(message: string) {
-
     this.messageSent = message;
     if ((Object.keys(this.formData3).length != 0)) {
       this.sendMessage(this.formData3);
@@ -171,7 +158,6 @@ export class UserChatComponent implements OnInit {
       this.sendMessage(this.selectedOptions)
     }
   }
-
 
   goBack() {
     this.chatManager.closeChat();
@@ -186,9 +172,6 @@ export class UserChatComponent implements OnInit {
   sendMessage(payload?: any) {
     this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
-      // const chatMessagesContainer = document.querySelector('.chat-window');
-      // const isAtBottom = chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <= chatMessagesContainer.scrollTop + 1;
-
       this.chatManager.sendMessage(this.messageSent, '', payload);
       this.messageSent = '';
       setTimeout(() => {
@@ -199,10 +182,8 @@ export class UserChatComponent implements OnInit {
 
   sendFile() {
     if (this.fileToUpload) {
-      console.log('user reqid is ', this.requestId)
       this.chatService.uploadFile(this.fileToUpload, this.requestId).subscribe((response: any) => {
-        console.log('file upload response', response);
-      })
+      });
     }
     this.fileToUpload = null;
     this.scrollToBottom();
@@ -238,8 +219,6 @@ export class UserChatComponent implements OnInit {
     return file.type === 'application/msword';
   }
 
-
-
   scrollToBottom(): void {
     if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
       const container = this.chatWindowContainer.nativeElement;
@@ -258,7 +237,7 @@ export class UserChatComponent implements OnInit {
     }
   }
 
-  onScroll(): void {
+  onScrollToBottom(): void {
     this.toggleArrowVisibility();
   }
 
@@ -266,22 +245,12 @@ export class UserChatComponent implements OnInit {
     return sender.startsWith('bot_');
   }
 
-  //   ngAfterViewInit(): void {
-  //       this.scrollToBottom();
-  //   }
   ngOnInit(): void {
-
     if (this.requestId) {
-      console.log('request_id', this.requestId)
-      this.chatManager.openConversation(this.requestId)
-      // this.scrollToBottom()
+      this.chatManager.openConversation(this.requestId);
     }
-
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
-
   }
-
-
 
   handleTokenEvent = (data: any) => {
     console.log("subscribed", data);
@@ -289,7 +258,6 @@ export class UserChatComponent implements OnInit {
 
   handleReceivedMessages = (data?: any) => {
     console.log('received message', data);
-
 
     const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
     const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
@@ -306,15 +274,6 @@ export class UserChatComponent implements OnInit {
       else {
         this.scrollToBottom();
       }
-      // this.fetchedMessages.forEach((message: any) => {
-      //     if (message.type === 'html') {
-      //         setTimeout(() => {
-      //             message.content = this.sanitizer.bypassSecurityTrustHtml(message.content);
-      //             this.addMessageEvents(message);
-      //         }, 3000);
-      //     }
-      // });
-
     }
     this.isAtBottom = isAtBottom;
     this.messageCountTo0();
@@ -407,7 +366,7 @@ export class UserChatComponent implements OnInit {
     //   selectedServices.push(checkbox.value);
   }
 
-  removeFile() {
+  onRemoveFile() {
     this.fileToUpload = null;
   }
 
@@ -418,15 +377,12 @@ export class UserChatComponent implements OnInit {
   onTypingStopped() {
     this.isTyping = false;
   }
-  // messageSent: any;
-
-  // sendMessage() {
-  //     this.chatManager.sendMessage(this.messageSent);
-  //     this.messageSent = "";
-
-  // }
 
   closeChat() {
     this.closeChatClicked.emit();
+  }
+
+  onScrollUp() {
+    this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp);
   }
 }

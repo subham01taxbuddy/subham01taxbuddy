@@ -96,8 +96,8 @@ export class ChatManager {
 
   }
 
-  openConversation(conversationId: string) {
-    this.chatService.fetchMessages(conversationId);
+  openConversation(conversationId: string, timeStamp?: number) {
+    this.chatService.fetchMessages(conversationId, timeStamp);
   }
 
   closeChat() {

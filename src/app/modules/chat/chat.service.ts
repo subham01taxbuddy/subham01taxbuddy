@@ -215,17 +215,19 @@ export class ChatService {
     return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } })
   }
 
-  fetchMessages(requestId) {
+  fetchMessages(requestId, timeStamp?) {
     let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
-    let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=300`;
-    console.log('fetch messages url', url)
+    let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=40`;
+    if (timeStamp) {
+      url = url + '&timeStamp=' + timeStamp;
+    }
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
-      console.log('fetch messages result', chat21Result);
       if (chat21Result.success) {
-        console.log('new result', chat21Result.result);
-        this.clearMessagesDB();
-        let transformedMessages = this.updateMessagesDB(chat21Result.result);
+        if (!timeStamp) {
+          this.clearMessagesDB();
+        }
+        this.updateMessagesDB(chat21Result.result, timeStamp);
 
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.MESSAGE_RECEIVED);
@@ -263,8 +265,8 @@ export class ChatService {
     this.sessionStorageService.removeItem('fetchedMessages');
   }
 
-  updateMessagesDB(messages: any) {
-    const transformedMessages = messages.map(message => ({
+  updateMessagesDB(messages: any, timeStamp?: any) {
+    let transformedMessages = messages.map(message => ({
       content: message.text,
       sender: message.sender,
       timestamp: message.timestamp,
@@ -274,8 +276,13 @@ export class ChatService {
       action: (message?.attributes?.action) ? (message?.attributes?.action) : null
     }));
 
+    if (timeStamp) {
+      const msgString = this.sessionStorageService.getItem('fetchedMessages');
+      const oldMessageList = JSON.parse(msgString);
+      transformedMessages = [...transformedMessages, ...oldMessageList];
+    }
+
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
-    console.log('transformed array', transformedMessages);
     return transformedMessages;
   }
 
