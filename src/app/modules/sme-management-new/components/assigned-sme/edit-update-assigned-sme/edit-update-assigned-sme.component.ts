@@ -100,6 +100,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   isReadOnly:boolean =false;
   activeCaseMaxCapacity = new UntypedFormControl('')
   isDisabled:boolean =false;
+  urls:any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -366,6 +367,58 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.joiningDate.setValue(moment(this.smeObj?.joiningDate, 'DD/MM/YYYY').toDate())
     this.minDate = moment(this.smeObj?.joiningDate, 'DD/MM/YYYY').toDate();
 
+    this.urls = {
+      "signedNDAInput": this.smeObj?.['partnerDetails']?.signedNDAUrl,
+      "certificateOfPracticeUrl": this.smeObj?.['partnerDetails']?.certificateOfPracticeUrl,
+      "aadhaarUrl": this.smeObj?.['partnerDetails']?.aadhaarUrl,
+      "panInput": this.smeObj?.['partnerDetails']?.panUrl,
+      "passbookOrCancelledChequeInput": this.smeObj?.['partnerDetails']?.passbookOrCancelledChequeUrl,
+      "cvInput": this.smeObj?.['partnerDetails']?.cvUrl,
+      "gstinInput": this.smeObj?.['partnerDetails']?.gstUrl,
+      "zipInput" : this.smeObj?.['partnerDetails']?.zipUrl
+    };
+
+  }
+
+  openDocument(documentType: string ,url) {
+    if(url){
+      const parts = url.split('/');
+      const lastPart = parts[parts.length - 1];
+      const fileNameWithParams = lastPart.split('?')[0];
+      let newFileName= decodeURIComponent(fileNameWithParams);
+      console.log(newFileName,"New File Name");
+      this.getViewSignedUrl(fileNameWithParams)
+    }else{
+      this._toastMessageService.alert('error',`${documentType} URL not found`);
+    }
+  }
+
+  getViewSignedUrl(name){
+    let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        if (result && result.data) {
+          let signedUrl = result.data.s3SignedUrl;
+          this.open(signedUrl);
+        } else {
+          this.utilsService.showSnackBar(`Something went wrong while getting URL`);
+        }
+      }),
+      (err: any) => {
+        this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
+      }
+  }
+
+  open(url) {
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      this._toastMessageService.alert('error',` URL not found`);
+    }
+  }
+
+  hasUrls(): boolean {
+    return Object.values(this.urls).some(url => url);
   }
 
   setPlanDetails() {

@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewChatLinksComponent } from './view-chat-links/view-chat-links.component';
 
 
 export const MY_FORMATS = {
@@ -75,6 +77,19 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
   partnerType: any;
+  selectedStatus = new UntypedFormControl();
+  statusList = [
+    { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+  ];
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'noOfMissedChat', name: 'Number of missed chat' }
+  ];
+  clearUserFilter: number;
+  totalNoOfMissedChat:any;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -82,6 +97,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private cacheManager: CacheManager,
+    private dialog: MatDialog,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -169,6 +185,10 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/missed-chat-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
@@ -226,14 +246,26 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.missedChatReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
+        this.totalNoOfMissedChat=response?.data?.content[0]?.totalNoOfMissedChat;
         this.missedChatReportGridOptions.api?.setRowData(this.createRowData(this.missedChatReport));
         this.cacheManager.initializeCache(this.createRowData(this.missedChatReport));
 
@@ -243,10 +275,12 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
       } else {
         this.loading = false;
+        this.totalNoOfMissedChat = 0;
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
       this.loading = false;
+      this.totalNoOfMissedChat = 0;
       this._toastMessageService.alert("error", "Error");
     });
   }
@@ -286,11 +320,20 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       roleFilter = this.selectRole.value;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${statusFilter}`;
 
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     let fieldName = [
       { key: 'noOfMissedChat', value: 'No of missed chat' },
@@ -312,6 +355,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
         filerName: missedChatData[i].filerName,
         parentName: missedChatData[i].parentName,
         role: missedChatData[i].role,
+        smeUserId : missedChatData[i].smeUserId
       })
       missedChatRepoInfoArray.push(agentReportInfo);
     }
@@ -332,6 +376,16 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        },
+        cellRenderer: function (params: any) {
+          if(params.data.noOfMissedChat > 0){
+            return `<button type="button" class="action_icon add_button" title="view Missed Chat Link details"
+            style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="view-details">
+            ${params.data.noOfMissedChat} </button>`;
+          }else{
+            return  params.data.noOfMissedChat ;
+          }
+
         },
       },
       {
@@ -376,9 +430,40 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     ]
   }
 
+  onSmeRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'view-details': {
+          this.viewChatDetails(params.data);
+          break;
+        }
+      }
+    }
+  }
+
+  viewChatDetails(data){
+    let disposable = this.dialog.open(ViewChatLinksComponent, {
+      width: '90%',
+      height: 'auto',
+      data: {
+        data: data,
+        startDate: this.startDate.value,
+        endDate: this.endDate.value,
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      // this.advanceSearch();
+    });
+  }
+
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.selectRole.setValue(null);
+    this.selectedStatus.setValue(null);
+    this.totalNoOfMissedChat = 0;
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;

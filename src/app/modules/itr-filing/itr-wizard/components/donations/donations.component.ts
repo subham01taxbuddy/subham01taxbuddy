@@ -504,6 +504,11 @@ export class DonationsComponent implements OnInit {
   }
 
   createDonationForm(item?): UntypedFormGroup {
+    let nameValidator = this.type != '80ggc' ?
+        (this.type === '80g' ?
+            [Validators.required, Validators.pattern(AppConstants.charAllSpecialRegex),]
+            :[Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex),])
+        : '';
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : '', this.type === '80ggc' ? [Validators.required, Validators.maxLength(25)] : Validators.maxLength(25)],
@@ -512,7 +517,7 @@ export class DonationsComponent implements OnInit {
       amountOtherThanCash: [item ? item.amountOtherThanCash : null, this.type === '80ggc' ? '' : Validators.required,],
       schemeCode: [item ? item.schemeCode : '', this.type != '80ggc' ? Validators.required : ''],
       details: [item ? item.details : ''],
-      name: [item ? item.name : '', this.type != '80ggc' ? [Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex),] : '',],
+      name: [item ? item.name : '', nameValidator],
       address: [item ? item.address : '', this.type != '80ggc' ? Validators.required : ''],
       city: [item ? item.city : '', this.type != '80ggc' ? Validators.required : ''],
       pinCode: [item ? item.pinCode : '', this.type != '80ggc' ? [Validators.required, Validators.pattern(AppConstants.PINCode)] : '',],

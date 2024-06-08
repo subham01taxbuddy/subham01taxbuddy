@@ -28,7 +28,17 @@
 
                   <div class="col-sm-12">
                     <div class="row">
-                      <div class="col-sm-4">
+                      <div class="col-sm-3">
+                        <mat-label>Select Status</mat-label>
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                          <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
+                            <mat-option *ngFor="let drop of statusList" [value]="drop.value">
+                              {{ drop.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-3">
                         <mat-label>Select Role</mat-label>
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
@@ -40,7 +50,7 @@
                           </mat-select>
                         </mat-form-field>
                       </div>
-                      <div class="col-sm-4 spsTp">
+                      <div class="col-sm-3 spsTp">
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-label>From Date</mat-label>
                           <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
@@ -50,7 +60,7 @@
                           <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                         </mat-form-field>
                       </div>
-                      <div class="col-sm-4 spsTp">
+                      <div class="col-sm-3 spsTp">
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-label>To Date</mat-label>
                           <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
@@ -63,19 +73,27 @@
                       </div>
                     </div>
                   </div>
-                  <div class="button-container">
-                    <button class="srch-btn-1" (click)="showReports()">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                    </button>
-                    <button class="dwldBtn-1" [disabled]="loading"
-                      *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
-                      (click)="downloadReport()">
-                      <i class="fa fa-download" aria-hidden="true"></i> Download File
-                    </button>
-                    <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                  <div class="row">
+                    <div class="col-sm-6 tpSpc">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="button-container">
+                        <button class="srch-btn-1" (click)="showReports()">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                        </button>
+                        <button class="dwldBtn-1" [disabled]="loading"
+                          *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                          (click)="downloadReport()">
+                          <i class="fa fa-download" aria-hidden="true"></i> Download File
+                        </button>
+                        <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                      </div>
+                    </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 mt-3">
                       <span class="new-note1 note">
                         Note : Please select required filters Above and click on Show Reports to get information
                       </span>
@@ -98,19 +116,20 @@
 <div class="tableSpc mt-3">
   <div>
     <div class="row">
-      <div class="col-sm-9 row">
+      <div class="col-sm-8 row">
         <div class="table-info-text">
           Missed Chat Reports Details:
         </div>
       </div>
-      <!-- <div class="col-sm-3">
-        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-      </div> -->
+      <div class="col-sm-4">
+        <div class="count1"> Total Missed Chat Count: <span class="txClr1">{{totalNoOfMissedChat || 0}}</span></div>
+      </div>
     </div>
     <table>
       <tr *ngFor="let item of missedChatReport | paginate:config"></tr>
     </table>
-    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"></ag-grid-angular>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"
+    (rowClicked)="onSmeRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>

@@ -586,7 +586,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
           natureDesc: exempt.controls['incomeType'].value,
-          OthNatOfInc: exempt.controls['incomeDesc']?.value,
+          othNatOfInc: exempt.controls['incomeDesc']?.value,
           amount: exempt.controls['incomeValue'].value,
         });
         // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);
@@ -624,7 +624,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = true;
       this.Copy_ITR_JSON.exemptIncomes.push({
         natureDesc: 'AGRI',
-        OthNatOfInc: '',
+        othNatOfInc: '',
         amount: agriIncome.netAgriculturalIncome,
       })
     } else {
@@ -824,7 +824,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
                 this.exemptIncomesDropdown[1].value === 'AGRI'
                     ? [null]
                     : [this.ITR_JSON.exemptIncomes[i].amount, Validators.min(0)],
-            incomeDesc: this.ITR_JSON.exemptIncomes[i].details,
+            incomeDesc: this.ITR_JSON.exemptIncomes[i].othNatOfInc,
           });
           exemptIncomesFormArray.push(formGroup);
         }

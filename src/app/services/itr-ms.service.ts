@@ -215,6 +215,23 @@ export class ItrMsService {
         })
       );
   }
+  downloadFileAsPost(param: any, fileType: any, request:any) {
+    console.log('get Param', param);
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    this.headers = new Headers();
+    this.headers.append('Authorization', 'Bearer ' + TOKEN);
+    return this.http
+      .post(environment.url + this.microService + param, request, {
+        headers: this.headers,
+        responseType: 'blob',
+      })
+      .pipe(
+        map((response) => {
+          return new Blob([response], { type: fileType });
+        })
+      );
+  }
 
   downloadJsonFile(param: any, fileType: any) {
     console.log('get Param', param);

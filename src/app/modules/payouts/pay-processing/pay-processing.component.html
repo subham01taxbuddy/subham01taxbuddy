@@ -7,9 +7,9 @@
         <span>Please Wait Loading ...</span>
       </div>
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-5">
           <div class="row" *ngIf="isUploadTrue">
-            <div class="col-sm-4 " style="margin-top: 15px;">
+            <div class="col-sm-6 " style="margin-top: 15px;">
               <!-- <input type="file" id="input-file-id" hidden class="inptfile" (change)="uploadFile($event.target.files)" /> -->
               <input class="inptfile" type="file" id="input-file-id" #fileInput>
             </div>
@@ -19,16 +19,27 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-4" *ngIf="!isUploadTrue && hideDownload">
-          <mat-label style="margin-left: 110px; font-size: 14px;font-weight: bold;"> Select Account Type </mat-label>
+        <div class="col-sm-7 new-display" *ngIf="!isUploadTrue && hideDownload">
+          <div class="col-sm-6">
+            <mat-label style=" font-size: 14px; font-weight: bold; margin-left: 25%;">Select Vendor Type</mat-label>
+            <div class="radio-group">
+              <mat-radio-group [formControl]="vendorType">
+                <mat-radio-button value="Easebuzz">Easebuzz </mat-radio-button>&nbsp; &nbsp;
+                <mat-radio-button value="Razorpay">Razorpay</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <mat-label style=" font-size: 14px;font-weight: bold; margin-left: 25%;"> Select Account Type </mat-label>
             <div class="radio-group">
               <mat-radio-group [formControl]="accountType">
                 <mat-radio-button [disabled]="true" value="current">Current account</mat-radio-button>&nbsp; &nbsp;
-                <mat-radio-button value="razorpayX">RazorpayX</mat-radio-button>
+                <mat-radio-button value="razorpayX">Wallet</mat-radio-button>
               </mat-radio-group>
             </div>
-          <button class="tbd-btn spRt aprv" [disabled]="loading && loading1" (click)="download()"> Generate CSV File </button>
-          <span class="txblw1">Generate CSV file.</span>
+            <button class="tbd-btn spRt aprv" [disabled]="loading && loading1" (click)="download()"> Generate Output File </button>
+            <span class="txblw1">Generate CSV/XLSX file.</span>
+          </div>
         </div>
       </div>
     </div>

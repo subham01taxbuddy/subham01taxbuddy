@@ -43,6 +43,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download 5 Paisa.pdf',
+        note: 'Equity/Intraday/F&O'
       },
         //not supported
       // {
@@ -52,37 +53,37 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      //commenting for this release
       // {
       //   name: 'Angel',
       //   label: 'Angel One',
       //   loading: false,
       //   filesUploaded: [],
       //   steps: './assets/files/Steps to download Angel One.pdf',
+      //   note:''
       // },
-        //30-05-24
       // {
       //   name: 'Paytm',
       //   label: 'PayTm',
       //   loading: false,
       //   filesUploaded: [],
       //   steps: './assets/files/Steps to download PayTM.pdf',
+      //   note:'Equity/F&O'
       // },
-      //commenting for this release
       // {
       //   name: 'Axis',
       //   label: 'Axis Broker',
       //   loading: false,
       //   filesUploaded: [],
       //   steps: '',
+      //   note:''
       // },
-        //30-05-24
       // {
       //   name: 'Upstox',
       //   label: 'Upstox',
       //   loading: false,
       //   filesUploaded: [],
       //   steps: './assets/files/Steps to download upstox statement.pdf',
+      //   note:''
       // },
       {
         name: 'Groww',
@@ -90,6 +91,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Groww statement.pdf',
+        note:'Equity/Intraday/MF'
       },
       {
         name: 'Zerodha',
@@ -97,16 +99,16 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Zerodha statement.pdf',
+        note:'MF/Equity/Intraday/F&O'
       },
-      //commenting for this release
       // {
       //   name: 'ICICI',
       //   label: 'ICICI Bank',
       //   loading: false,
       //   filesUploaded: [],
       //   steps: './assets/files/Steps to download ICICI Statement.pdf',
+      //   note:''
       // },
-        //not supported
       // {
       //   name: 'Jainam',
       //   label: 'Jainam',
@@ -120,6 +122,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: '',
+        note:'Equity (intraday)/MF/F&O'
       },
     ];
   }

@@ -79,6 +79,20 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false;
   partnerType: any;
   totalItrFiledCount:any;
+  selectedStatus = new UntypedFormControl();
+  statusList = [
+    { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+  ];
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'totalItrFiled', name: 'Number of ITR file(Total)' },
+    { value: 'totalPayment', name: 'Payment Earned (Total)' }
+  ];
+  clearUserFilter: number;
+  countData:any;
 
   constructor(
     public datePipe: DatePipe,
@@ -189,6 +203,78 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
 
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
+  getFilingCount(){
+    // https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?page=0&pageSize=20&fromDate=2024-06-05&toDate=2024-06-05&count=true
+    this.loading = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInId
+    }
+
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
+
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
+    }
+
+    let param = ''
+    let userFilter = '';
+
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+
+    let viewFilter = '';
+
+    if (this.leaderView.value === true) {
+      viewFilter += `&leaderView=${this.leaderView.value}`
+    }
+
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
+    let data = this.utilsService.createUrlParams(this.searchParam);
+
+    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${viewFilter}${statusFilter}&count=true`;
+
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+       this.countData = response?.data;
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert("error", "Error");
+
+    });
+  }
+
   showReports(pageChange?) {
     //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
@@ -257,9 +343,19 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${viewFilter}`;
+    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${viewFilter}${statusFilter}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -659,10 +755,20 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${viewFilter}`;
+    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${viewFilter}${statusFilter}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     let fieldName = [
       { key: 'filerName', value: 'Leader/Filer Name' },
@@ -696,8 +802,11 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.selectRole.setValue(null);
+    this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();
+    this.countData = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1

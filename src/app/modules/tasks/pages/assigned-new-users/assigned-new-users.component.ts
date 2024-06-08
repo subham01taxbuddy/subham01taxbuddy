@@ -136,6 +136,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     } else {
@@ -143,6 +144,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     }

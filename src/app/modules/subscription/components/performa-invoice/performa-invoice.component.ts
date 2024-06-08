@@ -327,16 +327,17 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   }
 
   onCheckBoxChange() {
+    this.cacheManager.clearCache();
+    this.searchParam.serviceType = null;
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+    this.config.totalItems = 0;
+    this.config.currentPage =1;
+    this.totalInvoice = 0
     if (this.deletedInvoiceList.value) {
-      this.cacheManager.clearCache();
-      this.searchParam.serviceType = null;
-      this.searchParam.statusId = null;
-      this.searchParam.page = 0;
-      this.searchParam.mobileNumber = null;
-      this.searchParam.emailId = null;
-      this.config.totalItems = 0;
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
-
+      this.gridApi?.setRowData(this.createRowData([]));
       if (this.roles.includes('ROLE_FILER')) {
         this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink', 'hideCol'));
       } else {
@@ -346,8 +347,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       this.roles.includes('ROLE_FILER') ?
         this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink')) :
         this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList));
-
-      this.invoiceListGridOptions.api?.setRowData(this.createRowData(this.invoiceData));
+        this.gridApi?.setRowData(this.createRowData([]));
     }
   }
 
@@ -391,6 +391,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.totalInvoice = 0
     this.deletedInvoiceList.setValue(false);
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
@@ -482,7 +483,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
     let deleteFilter = '';
     if(this.deletedInvoiceList.value){
-      this.searchParam.page = 0;
       deleteFilter = '&deletedInvoice=' + this.deletedInvoiceList.value;
     }
 
@@ -728,7 +728,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       {
         headerName: 'Email',
         field: 'email',
-        width: 150,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',

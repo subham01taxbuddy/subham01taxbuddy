@@ -26,6 +26,8 @@ import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.com
 import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report/view-call-details/view-call-details.component';
+import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/view-chat-links.component';
+import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 
 @NgModule({
     imports: [
@@ -58,7 +60,9 @@ import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report
         CustomerSignUpComponent,
         FillingDonePaymentNotReceivedComponent,
         DocumentsUploadedFilingNotDoneComponent,
-        ViewCallDetailsComponent
+        ViewCallDetailsComponent,
+        ViewChatLinksComponent,
+        ClientAddedFilingNotDoneComponent
     ],
     providers: [JsonToCsvService]
 })

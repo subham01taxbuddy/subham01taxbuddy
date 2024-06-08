@@ -248,6 +248,96 @@
           </div>
         </div>
       </div>
+
+      <div class="row mt-3"  >
+        <div class="col-sm-12 TxHd-12">
+          <span class="header-text-1">Documents</span>
+        </div>
+      </div>
+      <div class="user-data-container" >
+        <span *ngIf="hasUrls(); else noDocuments">
+          <b style="font-size: 18px">Click Button To View Document</b>
+        </span>
+        <ng-template #noDocuments>
+          <b style="font-size: 18px">Documents not uploaded for this agent</b>
+        </ng-template>
+
+        <div class="document-container row mt-2">
+          <!-- Signed NDA Copy -->
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.signedNDAInput">
+            <div class="document-item">
+              <div class="document-title">Signed NDA Copy</div>
+              <button *ngIf="urls.signedNDAInput" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('signedNDAInput', urls.signedNDAInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+          <!-- CV (Resume)/COP -->
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.cvInput">
+            <div class="document-item">
+              <div class="document-title">CV (Resume)</div>
+              <button *ngIf="urls.cvInput" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('cvInput', urls.cvInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.certificateOfPracticeUrl">
+            <div class="document-item">
+              <div class="document-title">COP</div>
+              <button *ngIf="urls.certificateOfPracticeUrl" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('certificateOfPracticeUrl', urls.certificateOfPracticeUrl)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <!-- PAN -->
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.panInput">
+            <div class="document-item">
+              <div class="document-title">PAN</div>
+              <button *ngIf="urls.panInput" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('panInput', urls.panInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <!-- Passbook/Canceled Cheque -->
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.passbookOrCancelledChequeInput">
+            <div class="document-item">
+              <div class="document-title">Passbook/Cheque</div>
+              <button *ngIf="urls.passbookOrCancelledChequeInput" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('passbookOrCancelledChequeInput', urls.passbookOrCancelledChequeInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <!-- GSTIN -->
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.gstinInput">
+            <div class="document-item">
+              <div class="document-title">GSTIN</div>
+               <button *ngIf="urls.gstinInput" type="button" class="btn btn-secondary btn-sm"
+                (click)="openDocument('gstinInput', urls.gstinInput)">
+                <i class="fas fa-eye"></i>View
+              </button>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-sm-6" *ngIf="urls.zipInput">
+            <div class="document-item">
+              <div class="document-title">ZIP Download</div>
+              <button *ngIf="urls.zipInput" type="button" class="btn btn-primary btn-sm" (click)="openDocument('zipInput', urls.zipInput)">
+                <i class="fas fa-download"></i>Download Zip
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="row mt-3" *ngIf="smeObj?.roles.includes('ROLE_LEADER') || smeObj?.roles.includes('ROLE_FILER')">
         <div class="col-sm-12 TxHd-12">
           <span class="header-text-1">Expertise & Availability</span>
@@ -532,7 +622,7 @@
           </div>
 
           <div class="row" *ngIf="smeObj?.roles.includes('ROLE_FILER')">
-            <div class="col-sm-4" *ngIf="false">
+            <div class="col-sm-4">
               <div class="card" style="margin-top: 10px;">
                 <b style="font-size: 18px">Inactivity Time Duration:</b>
                 <div class="row">
@@ -630,7 +720,7 @@
             *ngIf="(loggedInSmeRoles?.includes('ROLE_LEADER') || loggedInSmeRoles?.includes('ROLE_ADMIN'))  && !checkRoles?.includes('ROLE_LEADER') && !checkRoles?.includes('ROLE_ADMIN')">
             <mat-label> Resigning Date </mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate" [max]="maxDate"
+              <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="maxDate" [max]="maxDate"
                 [matDatepicker]="picker4" autocomplete="off">
               <mat-hint>
                 <p><i class="fas fa-circle"></i> Resignation date is date of removal</p>

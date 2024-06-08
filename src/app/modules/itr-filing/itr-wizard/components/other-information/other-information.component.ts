@@ -1,6 +1,6 @@
 import { headOfIncome } from './../../../../shared/interfaces/itr-input.interface';
 import {
-  Component,
+  Component, ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -63,7 +63,7 @@ export class OtherInformationComponent implements OnInit {
     public matDialog: MatDialog,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder, private elementRef: ElementRef
   ) {
     this.config = {
       itemsPerPage: 2,
@@ -315,43 +315,37 @@ export class OtherInformationComponent implements OnInit {
       acquiredShares: [
         share?.acquiredShares,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ]),
       ],
-      purchaseDate: [share?.purchaseDate, Validators.required],
+      purchaseDate: [share?.purchaseDate],
       faceValuePerShare: [
         share?.faceValuePerShare,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],
       issuePricePerShare: [
         share?.issuePricePerShare,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ]),
       ],
       purchasePricePerShare: [
         share?.purchasePricePerShare,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],
       transferredShares: [
         share?.transferredShares,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ]),
       ],
       saleConsideration: [
         share?.saleConsideration,
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],
@@ -688,6 +682,18 @@ export class OtherInformationComponent implements OnInit {
       !this.sharesForm?.valid ||
       !this.directorForm?.valid
     ) {
+      if(!this.sharesForm?.valid){
+        this.utilsService.highlightInvalidFormFields(this.sharesForm, 'otherBtn', this.elementRef);
+      }
+      if(!this.schedule5AForm?.valid){
+        this.utilsService.highlightInvalidFormFields(this.schedule5AForm, 'otherBtn', this.elementRef);
+      }
+      if(!this.firmForm?.valid){
+        this.utilsService.highlightInvalidFormFields(this.firmForm, 'otherBtn', this.elementRef);
+      }
+      if(!this.directorForm?.valid){
+        this.utilsService.highlightInvalidFormFields(this.directorForm, 'otherBtn', this.elementRef);
+      }
       this.otherInfoSaved.emit(false);
       return;
     }

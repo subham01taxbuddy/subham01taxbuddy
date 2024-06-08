@@ -26,6 +26,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
+import {DomSanitizer} from "@angular/platform-browser";
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -106,7 +108,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private http: HttpClient,
     private reportService: ReportService,
-    private genericCsvService: GenericCsvService
+    private genericCsvService: GenericCsvService,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer
   ) {
     this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
@@ -467,6 +471,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'filingTeamMemberId', value: 'Filer Name' },
       { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' },
+      { key: 'filingFormatedDate', value: 'Filing Formatted Date' },
     ];
     await this.genericCsvService.downloadReport(
       environment.url + '/report',
@@ -620,15 +625,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          if (params.data.filingSource === 'ERI') {
-            if (!params.data.itrSummaryJson) {
-              return params.data.filingSource + ' - TB Utility';
-            } else {
-              return params.data.filingSource + '- Summary JSON ';
-            }
-          } else {
-            return params.data.filingSource;
-          }
+          return params.data.filingSource;
         },
       },
       {
@@ -1225,6 +1222,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     );
 
   }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
   openChat(client) {
     console.log('client:', client);
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
@@ -1237,7 +1238,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+    disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
+    });
   }
   markAsEverified(data) {
     this.loading = true;

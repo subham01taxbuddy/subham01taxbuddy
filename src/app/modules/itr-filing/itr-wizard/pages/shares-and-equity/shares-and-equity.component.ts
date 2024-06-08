@@ -302,7 +302,8 @@ export class SharesAndEquityComponent
         console.log(assetDetails);
         assetDetails.forEach((element: any) => {
           if ((this.utilsService.isNonEmpty(this.selectedBroker) && element.brokerName == this.selectedBroker) ||
-           !this.utilsService.isNonEmpty(this.selectedBroker)) {
+           !this.utilsService.isNonEmpty(this.selectedBroker) ||
+              (!this.utilsService.isNonEmpty(element.brokerName) && this.selectedBroker === 'Manual')) {
             const filterImp = obj.improvement?.filter(
               (data) => data.srn == element.srn
             );
@@ -1725,7 +1726,7 @@ export class SharesAndEquityComponent
   }
 
   showBroker(brokerName) {
-    this.selectedBroker = brokerName;
+    this.selectedBroker = brokerName ? brokerName : 'Manual';
     this.compactView = false;
     this.initDetailedForm(this.Copy_ITR_JSON);
     this.equityGridOptions = <GridOptions>{

@@ -162,6 +162,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     } else {
@@ -169,6 +170,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     }
@@ -392,10 +394,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
 
           if (data.serviceType === 'ITRU') {
-            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23" || item1.financialYear === "2022-2023")))) {
               itrSubscriptionFound = true;
               return;
-            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23" || item1.financialYear === "2022-2023")))) {
               itrSubscriptionFound = true;
               return;
             }

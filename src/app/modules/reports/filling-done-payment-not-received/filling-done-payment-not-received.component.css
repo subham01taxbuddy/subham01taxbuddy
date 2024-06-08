@@ -22,10 +22,11 @@
   margin-top: -20px;
 }
 .button-container {
-  margin-top: 20px;
+  margin-top: 14px;
   display: inline-flex;
   justify-content: right;
   gap:10px;
+  float: right;
 }
 
 .dwldBtn-1{

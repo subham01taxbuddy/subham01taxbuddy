@@ -1,17 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { GridOptions } from 'ag-grid-community';
+import * as moment from 'moment';
+import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { ReportService } from 'src/app/services/report-service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { ReportService } from 'src/app/services/report-service';
-import { GridOptions } from 'ag-grid-community';
-import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
-import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
-import { UntypedFormControl } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import * as moment from 'moment';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -26,9 +27,9 @@ export const MY_FORMATS = {
 };
 
 @Component({
-  selector: 'app-payout-report',
-  templateUrl: './payout-report.component.html',
-  styleUrls: ['./payout-report.component.scss'],
+  selector: 'app-client-added-filing-not-done',
+  templateUrl: './client-added-filing-not-done.component.html',
+  styleUrls: ['./client-added-filing-not-done.component.css'],
   providers: [
     DatePipe,
     {
@@ -39,36 +40,25 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PayoutReportComponent implements OnInit, OnDestroy {
+export class ClientAddedFilingNotDoneComponent implements OnInit {
   loading = false;
-  isInternal = true;
-  payoutReport: any;
+  showCsvMessage: boolean;
+  loggedInSme: any;
+  roles: any;
+  filingDoneReport: any;
   config: any;
   searchParam: any = {
     page: 0,
     pageSize: 20,
   };
-  payoutReportGridOptions: GridOptions;
-  // totalCommissionEarned =0;
-  // totalPartnersPaid=0;
-  dataOnLoad = true;
-  roles: any;
-  loggedInSme: any;
-  showCsvMessage: boolean;
-  statusList = [
-    { value: '', name: 'All' },
-    { value: 'tdsApplicable', name: 'TDS Applicable' },
-    { value: 'tdsNotApplicable', name: 'TDS Not Applicable' },
-  ];
+  filingDoneReportGridOptions: GridOptions;
   searchAsPrinciple: boolean = false;
-  selectedStatus = new UntypedFormControl();
   startDate = new UntypedFormControl('');
   endDate = new UntypedFormControl('');
   minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
-
   constructor(
     public datePipe: DatePipe,
     private utilsService: UtilsService,
@@ -77,10 +67,11 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
   ) {
+
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this.setToDateValidation();
-    this.payoutReportGridOptions = <GridOptions>{
+    this.filingDoneReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
       enableCellChangeFlash: true,
@@ -94,8 +85,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
-      totalCommissionEarned: null,
-      totalPartnersPaid: null,
     };
   }
 
@@ -105,10 +94,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     if (this.roles?.includes('ROLE_LEADER')) {
       this.leaderId = this.loggedInSme[0].userId;
     }
-  }
-
-  getStatusValue(item) {
-
   }
 
   setToDateValidation() {
@@ -150,7 +135,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
   }
 
   showReports(pageChange?) {
-    //'https://uat-api.taxbuddy.com/report/payout/report?toDate=2023-11-10&fromDate=2023-04-01&page=0&pageSize=20' \
+    // 'https://uat-api.taxbuddy.com/report/bo/add-client-done-no-filing?fromDate=2024-01-30&toDate=2024-05-03&page=0&pageSize=5' \
+
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -188,82 +174,57 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    let statusFilter = '';
-    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
-      statusFilter += `&status=${this.selectedStatus.value}`;
-    }
-
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/add-client-done-no-filing?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.payoutReport = response?.data?.content;
+        this.filingDoneReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
-        this.config.totalCommissionEarned = response?.data?.totalCommisionEarned;
-        this.config.totalPartnersPaid = response?.data?.totalPartnerPaidOut;
-        this.payoutReportGridOptions.api?.setRowData(this.createRowData(this.payoutReport));
-        this.cacheManager.initializeCache(this.createRowData(this.payoutReport));
+        this.filingDoneReportGridOptions.api?.setRowData(this.createRowData(this.filingDoneReport));
+        this.cacheManager.initializeCache(this.createRowData(this.filingDoneReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.payoutReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.filingDoneReport));
         this.config.currentPage = currentPageNumber;
-
+        if(response?.data?.content == ''){
+          this._toastMessageService.alert("error", "No Data Found ");
+        }
 
       } else {
         this.loading = false;
         this.config.totalItems = 0;
-        this.config.totalCommissionEarned = 0;
-        this.config.totalPartnersPaid = 0;
-        this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
+        this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
       this.config.totalItems = 0;
-      this.config.totalCommissionEarned = 0;
-      this.config.totalPartnersPaid = 0;
-      this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
+      this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });
   }
 
-  createRowData(payoutData) {
-    console.log('payoutRepoInfo -> ', payoutData);
-    var payoutRepoInfoArray = [];
-    for (let i = 0; i < payoutData.length; i++) {
+  createRowData(fillingData) {
+    console.log('payoutRepoInfo -> ', fillingData);
+    var fillingRepoInfoArray = [];
+    for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
-        filerName: payoutData[i].filerName,
-        leaderName: payoutData[i].leaderName, // Assuming leaderName should be different from filerName
-        ownerName: payoutData[i].ownerName,
-        totalCommissionEarned: payoutData[i].totalCommissionEarned,
-        totalCommissionEarnedTds: payoutData[i].totalCommissionEarnedTds,
-        totalTDS: payoutData[i].totalTDS,
-        numberOfFiling: payoutData[i].numberOfFiling,
-        slabOneCount: payoutData[i].slabOneCount,
-        slabOneEarning: payoutData[i].slabOneEarning,
-        slabTwoCount: payoutData[i].slabTwoCount,
-        slabTwoEarning: payoutData[i].slabTwoEarning,
-        slabThreeCount: payoutData[i].slabThreeCount,
-        slabThreeEarning: payoutData[i].slabThreeEarning,
-        role: payoutData[i].role,
-        slabOneTDS: payoutData[i].slabOneTDS,
-        slabOneEarningAfterTds: payoutData[i].slabOneEarningAfterTds,
-        slabTwoTDS: payoutData[i].slabTwoTDS,
-        slabTwoEarningAfterTds: payoutData[i].slabTwoEarningAfterTds,
-        slabThreeTDS: payoutData[i].slabThreeTDS,
-        slabThreeEarningAfterTds: payoutData[i].slabThreeEarningAfterTds,
-        panNumber : payoutData[i].panNumber ? payoutData[i].panNumber : '-',
-        gstin : payoutData[i].gstin ? payoutData[i].gstin  : '-',
-        commissionPaid : payoutData[i].commissionPaid,
-        commissionPayable: payoutData[i].commissionPayable,
-
+        name: fillingData[i].name,
+        email: fillingData[i].email,
+        phoneNo: fillingData[i].phoneNo,
+        pan: fillingData[i].pan,
+        eriAdded: fillingData[i].eriAdded,
+        leaderName: fillingData[i].leaderName,
+        filerName: fillingData[i].filerName,
+        userStatus: fillingData[i].userStatus,
+        userId: fillingData[i].userId,
       };
-      payoutRepoInfoArray.push(agentReportInfo);
+      fillingRepoInfoArray.push(agentReportInfo);
     }
-    console.log('payoutRepoInfoArray-> ', payoutRepoInfoArray);
-    return payoutRepoInfoArray;
+    console.log('fillingRepoInfoArray-> ', fillingRepoInfoArray);
+    return fillingRepoInfoArray;
   }
 
 
@@ -285,8 +246,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Filer Name',
-        field: 'filerName',
+        headerName: 'Name',
+        field: 'name',
         width: 150,
         pinned: 'left',
         suppressMovable: true,
@@ -298,33 +259,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'PAN',
-        field: 'panNumber',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
-      },
-      {
-        headerName: 'GSTN',
-        field: 'gstin',
-        width: 150,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        },
-      },
-
-      {
-        headerName: 'Number of ITR filed',
-        field: 'numberOfFiling',
+        headerName: 'Email',
+        field: 'email',
         sortable: true,
         width: 200,
         suppressMovable: true,
@@ -336,8 +272,21 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Total Commission Earned',
-        field: 'totalCommissionEarned',
+        headerName: 'Phone Number',
+        field: 'phoneNo',
+        sortable: true,
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'PAN',
+        field: 'pan',
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -348,9 +297,22 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Total TDS',
-        field: 'totalTDS',
+        headerName: 'ERI Added',
+        field: 'eriAdded',
         width: 160,
+        suppressMovable: true,
+        hide:true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -360,9 +322,21 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Total Commission After TDS',
-        field: 'totalCommissionEarnedTds',
-        width: 260,
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'User Status',
+        field: 'userStatus',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -372,31 +346,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         },
       },
 
-      {
-        headerName: 'Commission Paid',
-        field: 'commissionPaid',
-        width: 160,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-
-      {
-        headerName: 'Commission Payable',
-        field: 'commissionPayable',
-        width: 160,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
     ]
   }
 
@@ -419,27 +368,27 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    param = `/bo/add-client-done-no-filing?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
     let fieldName = [
-      { key: 'filerName', value: 'filerName' },
-      { key: 'panNumber', value: 'PAN' },
-      { key: 'gstin', value: 'GSTN' },
-      { key: 'numberOfFiling', value: 'Number of ITR filed' },
-      { key: 'totalCommissionEarned', value: 'Total Commission Earned' },
-      { key: 'totalTDS', value: 'Total TDS' },
-      { key: 'totalCommissionEarnedTds', value: 'Total Commission After TDS' },
-      { key: 'commissionPaid', value: 'Commission Paid' },
-      { key: 'commissionPayable', value: 'Commission Payable' },
+      { key: 'name', value: 'Name' },
+      { key: 'email', value: 'Email' },
+      { key: 'phoneNo', value: 'Phone Number' },
+      { key: 'pan', value: 'PAN' },
+      { key: 'eriAdded', value: 'ERI Added' },
+      { key: 'leaderName', value: 'Leader Name' },
+      { key: 'filerName', value: 'Filer Name' },
+      { key: 'userStatus', value: 'User Status' },
+
     ]
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'client-added-on-eri-but-filing-not-done-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
 
+
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
-    this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
@@ -449,7 +398,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     this.endDate.setValue(new Date());
     this.config.totalCommissionEarned = 0;
     this.config.totalPartnersPaid = 0;
-    this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
+    this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
     // this.showReports();
   }
@@ -457,7 +406,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
-      this.payoutReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.filingDoneReportGridOptions.api?.setRowData(this.createRowData(pageContent));
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;

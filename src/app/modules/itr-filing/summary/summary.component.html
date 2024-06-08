@@ -4865,10 +4865,7 @@
                     </mat-expansion-panel>
 
                     <!-- ****************************** Schedule cfl ************************************* -->
-                    <mat-expansion-panel class="color-panel accordion-border" [disabled]="
-                      finalCalculations?.scheduleCflDetails
-                        ?.TotalOfAllLossCFSummary === 0
-                    " #lossCarryFwd>
+                    <mat-expansion-panel class="color-panel accordion-border" #lossCarryFwd>
                       <mat-expansion-panel-header>
                         <div class="font80" style="width: 100%" cellpadding="0" cellspacing="0">
                           <div class="nav nav-stacked">
@@ -5572,7 +5569,7 @@
                               {{
                               finalCalculations?.scheduleCflDetails
                               ?.TotalOfBFLossesEarlierYrs
-                              ?.totalBroughtForwardBusLoss
+                              ?.totalBroughtForwardBusLossOthThanSpecifiedLossCF
                               }}
                             </td>
                             <!-- loss from speculative business  -->

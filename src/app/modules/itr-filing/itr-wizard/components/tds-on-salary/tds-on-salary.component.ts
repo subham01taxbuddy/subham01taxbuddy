@@ -157,7 +157,7 @@ export class TdsOnSalaryComponent implements OnInit {
     } else {
       this.loading = false;
       this.utilsService.showSnackBar(
-        'Failed to save tax on salary tax paid data.'
+        'Please fill in all the mandatory fields.'
       );
     }
   }

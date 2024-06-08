@@ -24,7 +24,17 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="row">
-                      <div class="col-sm-4 ">
+                      <div class="col-sm-3">
+                        <mat-label>Select Status</mat-label>
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                          <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
+                            <mat-option *ngFor="let drop of statusList" [value]="drop.value">
+                              {{ drop.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-3 ">
                         <mat-label>Select Role</mat-label>
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
@@ -37,7 +47,7 @@
                         </mat-form-field>
                       </div>
 
-                      <div class="col-sm-4 spsTp">
+                      <div class="col-sm-3 spsTp">
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-label>From Date</mat-label>
                           <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
@@ -47,7 +57,7 @@
                           <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                         </mat-form-field>
                       </div>
-                      <div class="col-sm-4 spsTp">
+                      <div class="col-sm-3 spsTp">
                         <mat-form-field appearance="outline" class=" small-inp no-height">
                           <mat-label>To Date</mat-label>
                           <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
@@ -65,12 +75,12 @@
                   <!-- Table Toggle Inside Filter Starts -->
                   <div class="row">
                     <div class="col-sm-6 tpSpc">
-                      <app-generic-sorting [sortingParameter]="sortMenus"
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                         (onChange)="sortByObject($event)"></app-generic-sorting>
                     </div>
                     <div class="col-sm-6">
                       <div class="button-container">
-                        <button class="srch-btn-1" (click)="showReports()">
+                        <button class="srch-btn-1" (click)="showReports();getCallingCount()">
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                         </button>
                         <button class="dwldBtn-1" [disabled]="loading"
@@ -111,7 +121,55 @@
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="count1"> Total Count: <span class="txClr1">{{parentConfig.totalItems}}</span></div>
+          <div class="count1"> Total Count: <span class="txClr1">{{parentConfig.totalItems || 0}}</span></div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="tpMain">
+          <!-- <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+          <span class="numTxBg1">{{ this.config.totalItems }}</span> -->
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.total_outboundCalls || 0 }}</span><br>
+                  <span class="TxSm">Outbound Call</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.total_outboundConnected || 0 }}</span><br>
+                  <span class="TxSm">Outbound Connected</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.total_inboundCalls || 0 }}</span><br>
+                  <span class="TxSm">Inbound Call</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.total_inboundConnected || 0 }}</span><br>
+                  <span class="TxSm">Inbound Connected</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="radius2">
+                <div class="inBxM">
+                    <span class="numTxSm grTx1">{{ countData?.total_noOfMissedCall || 0 }}</span><br>
+                    <span class="TxSm">No of Missed Call</span>
+                </div>
+                <div class="inBxM">
+                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnCalling || 0 }}</span><br>
+                    <span class="TxSm">Average time spent on calling</span>
+                </div>
+                <div class="inBxM-N ">
+                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnConnectedCall || 0 }}</span><br>
+                    <span class="TxSm">Average time spent on connected call</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <table>

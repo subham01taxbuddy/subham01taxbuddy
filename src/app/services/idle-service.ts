@@ -11,7 +11,9 @@ export class IdleService {
   public wake$: Subject<boolean> = new Subject();
 
   isIdle = false;
-  private idleAfterSeconds = environment.idleTimeMins * 60;
+  private loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
+  idleAfterSeconds = (this.loginSmeDetails.length > 0 && this.loginSmeDetails[0].inactivityTimeInMinutes > 0) ? this.loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
+
   private countDown;
 
   constructor() {
