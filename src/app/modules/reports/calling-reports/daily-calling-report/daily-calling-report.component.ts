@@ -696,6 +696,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.selectRole.setValue(null);
+    this.countData = null;
     this.selectedStatus.setValue(null);
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;

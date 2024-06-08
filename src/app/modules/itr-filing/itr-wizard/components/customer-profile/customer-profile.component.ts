@@ -253,8 +253,8 @@ export class CustomerProfileComponent implements OnInit {
   charRegex = AppConstants.charRegex;
   createCustomerProfileForm() {
     return this.fb.group({
-      firstName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
-      middleName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
+      firstName: ['', Validators.compose([Validators.required,Validators.pattern(AppConstants.charRegex)]),],
+      middleName: ['', Validators.compose([Validators.required,Validators.pattern(AppConstants.charRegex)]),],
       lastName: ['', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex),]),],
       fatherName: ['', Validators.compose([Validators.pattern(AppConstants.charRegex)]),],
       dateOfBirth: ['', Validators.required],
@@ -526,20 +526,21 @@ export class CustomerProfileComponent implements OnInit {
         gender?.updateValueAndValidity();
       }
 
-      if (
-        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
-          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
-        (this.utilsService.isNonEmpty(aadhaarNumber) &&
-          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
-      ) {
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
-        this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
-        // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
-        // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
-        this.utilsService.showSnackBar(
-          'Please provide aadhar number or enrollment ID'
-        );
-      }
+      // if (
+      //   (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+      //     !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+      //   (this.utilsService.isNonEmpty(aadhaarNumber) &&
+      //     this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+      // ) {
+      //   this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
+      //   this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
+      //   // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
+      //   // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
+      //   this.utilsService.showSnackBar(
+      //     'Please provide aadhar number or enrollment ID'
+      //   );
+      // }
+      this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       this.customerProfileSaved.emit(false);
       this.openAccordion();
     }

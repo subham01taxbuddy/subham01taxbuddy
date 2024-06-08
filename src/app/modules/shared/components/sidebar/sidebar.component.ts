@@ -206,6 +206,7 @@ export class SidebarComponent {
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
         { name: 'Filing Done But Unpaid', url: '/reports/filling-done-payment-not-received', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Client Added But UnFiled', url: '/reports/client-added-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
 
       ]
     },

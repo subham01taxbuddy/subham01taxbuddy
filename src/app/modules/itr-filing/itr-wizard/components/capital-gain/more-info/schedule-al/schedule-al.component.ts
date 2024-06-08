@@ -246,7 +246,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     const immovableAssetArray = <UntypedFormArray>(
       this.immovableAssetForm.get('immovableAssetArray')
     );
-    if (immovableAssetArray.valid || immovableAssetArray === null) {
+    if (immovableAssetArray.valid || immovableAssetArray === null || immovableAssetArray?.length == 0) {
       this.addMoreAssetsData();
     } else {
       immovableAssetArray.controls.forEach((element) => {
@@ -412,6 +412,12 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
 
   changeMode(){
     this.mode = 'VIEW';
+    const immovableAssetArray = <UntypedFormArray>(
+        this.immovableAssetForm.get('immovableAssetArray')
+    );
+    if(!immovableAssetArray.controls[this.activeIndex].valid){
+      immovableAssetArray.controls.splice(this.activeIndex,1);
+    }
   }
 
   goBack() {

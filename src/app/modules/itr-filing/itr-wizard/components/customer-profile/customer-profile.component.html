@@ -53,9 +53,11 @@
             <mat-form-field appearance="outline">
               <input type="text" matTooltip="First name as per PAN" [pattern]="charRegex" matTooltipClass="tab-tooltip"
                 matTooltipPosition="above" matInput currencyMask placeholder="First name" name="FirstName"
-                formControlName="firstName" class="input-field" maxlength="25" />
+                formControlName="firstName" class="input-field" maxlength="25" required/>
               <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('pattern')">
                 Enter character only</mat-error>
+              <mat-error *ngIf="customerProfileForm.controls['firstName'].hasError('required')">
+                  Enter First name.</mat-error>
             </mat-form-field>
           </div>
           <div class="form-field">
@@ -63,9 +65,11 @@
             <mat-form-field appearance="outline">
               <input type="text" matTooltip="Middle name as per PAN" [pattern]="charRegex" matTooltipClass="tab-tooltip"
                 matTooltipPosition="above" matInput currencyMask placeholder="Middle name" name="MiddleName"
-                formControlName="middleName" class="input-field" maxlength="75" />
+                formControlName="middleName" class="input-field" maxlength="75" required />
               <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('pattern')">
                 Enter character only</mat-error>
+              <mat-error *ngIf="customerProfileForm.controls['middleName'].hasError('required')">
+                  Enter Middle name.</mat-error>
             </mat-form-field>
           </div>
           <div class="form-field">
