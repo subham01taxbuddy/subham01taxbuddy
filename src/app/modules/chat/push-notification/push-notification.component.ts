@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChatManager } from '../chat-manager';
 
@@ -9,24 +9,59 @@ import { ChatManager } from '../chat-manager';
 })
 export class PushNotificationComponent {
   messageSent: string = '';
+  notifications: any[] = [];
+  maxNotifications = 5;
+
+
 
   constructor(
     private chatManager: ChatManager,
+    private changeDetectorRef: ChangeDetectorRef,
     public dialogRef: MatDialogRef<PushNotificationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.dialogRef.close();
-    }, 60000);
+    console.log('data is ',this.data)
+    this.addNotification(this.data)
+    // setTimeout(() => {
+    //   this.dialogRef.close();
+    // }, 60000);
   }
 
-  sendMessage() {
-    this.messageSent = this.messageSent.trim();
-    if (this.messageSent) {
-      this.chatManager.sendMessage(this.messageSent, this.data.recipient);
+
+  addNotification(notification: any){
+    const existingIndex = this.notifications.findIndex(n => n.sender === notification.sender);
+    if(existingIndex != -1){
+      this.notifications.splice(existingIndex,1);
+    }
+    this.notifications.unshift({ ...notification, messageSent: '' });
+
+    if(this.notifications.length > this.maxNotifications){
+      this.notifications.pop();
+    }
+
+    setTimeout(() => {
+     this.removeNotification(notification);
+    },60000)
+  }
+
+  removeNotification(notification: any) {
+    this.notifications = this.notifications.filter(n => n !== notification);
+    this.changeDetectorRef.detectChanges();
+    if (this.notifications.length === 0) {
       this.dialogRef.close();
     }
+  }
+    sendMessage(notification: any) {
+    const message = notification.messageSent.trim();
+    if (message) {
+      this.chatManager.sendMessage(message, notification.recipient);
+      this.removeNotification(notification);
+     }
+  }
+
+  closeNotification(notification){
+   this.removeNotification(notification);
   }
 }

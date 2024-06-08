@@ -53,6 +53,8 @@ export class NavbarComponent implements DoCheck {
   disposable: any;
   loggedInUserInfo: any;
   roles: any;
+  private dialogRef: any = null;
+
 
 
   toggleWidget() {
@@ -98,20 +100,25 @@ export class NavbarComponent implements DoCheck {
     });
 
     this.chatService.messageObservable.subscribe(data => {
-      if (!this.disposable) {
-        this.disposable = this.dialog.open(PushNotificationComponent, {
-          panelClass: 'notification',
-          data: data,
-        });
-        this.disposable.afterClosed().subscribe(result => {
-          this.disposable = null;
-        });
-      }
+      this.handleNewNotification(data);
     });
 
   }
 
 
+  handleNewNotification(data: any) {
+    if (this.dialogRef) {
+      this.dialogRef.componentInstance.addNotification(data);
+    } else {
+      this.dialogRef = this.dialog.open(PushNotificationComponent, {
+        panelClass: 'notification',
+        data: data,
+      });
+      this.dialogRef.afterClosed().subscribe(() => {
+        this.dialogRef = null;
+      });
+    }
+  }
 
   ngDoCheck() {
     this.component_link = NavbarService.getInstance().component_link;
