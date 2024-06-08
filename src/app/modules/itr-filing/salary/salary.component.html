@@ -213,6 +213,8 @@
                                 <input type="text" trim digitsOnly matInput placeholder="" name="allowValue[i]"
                                   formControlName="allowValue" maxlength="125" (change)="validations()" />
                               </mat-form-field>
+                              <mat-hint *ngIf="income.value.allowType === 'US_10_14II'">In New tax regime Maximum eligible dedution is 34800
+                              </mat-hint>
                               <mat-error
                                 *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' ||
                               income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO')">
