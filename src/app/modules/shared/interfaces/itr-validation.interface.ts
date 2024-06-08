@@ -687,6 +687,26 @@ export const ErrorMsgsSchedule = {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
     message: 'To claim tax relief against foreign income, please select tax relief section in schedule TR',
     relatedSchedule: 'foreignIncome',
+  },
+  TDS_INCOME_HEAD_MISSING: {
+    code: 'TDS_INCOME_HEAD_MISSING',
+    message: 'Source of income head is missing in TDS entry, please update in schedule Taxes Paid',
+    relatedSchedule: 'taxesPaid',
+  },
+  PENSION_CONTRI_MORE_THAN_SALARY: {
+    code: 'PENSION_CONTRI_MORE_THAN_SALARY',
+    message: '80CCD2 investment declared exceeds the allowed value',
+    relatedSchedule: 'investmentsDeductions',
+  },
+  NPS_EMPLOYER_CONTRI_INCORRECT: {
+    code: 'NPS_EMPLOYER_CONTRI_INCORRECT',
+    message: '80CCD2 investment is not allowed for pensioners',
+    relatedSchedule: 'investmentsDeductions',
+  },
+  NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY: {
+    code: 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY',
+    message: '80CCD2 investment declared exceeds the allowed value',
+    relatedSchedule: 'investmentsDeductions',
   }
 };
 export interface Schedules {
