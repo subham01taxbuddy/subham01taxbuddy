@@ -232,13 +232,16 @@ export class UserChatComponent implements OnInit {
   toggleArrowVisibility(): void {
     if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
       const container = this.chatWindowContainer.nativeElement;
-      const atBottom = container.scrollHeight - container.scrollTop === container.clientHeight;
+      const atBottom = Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) <= 1;
       this.showArrow = !atBottom;
     }
   }
 
   onScrollToBottom(): void {
     this.toggleArrowVisibility();
+    if (!this.showArrow) {
+      this.newMessageCount = 0;
+    }
   }
 
   isBotSender(sender: string): boolean {
