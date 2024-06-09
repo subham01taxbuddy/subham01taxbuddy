@@ -693,9 +693,9 @@ export const ErrorMsgsSchedule = {
     message: 'Source of income head is missing in TDS entry, please update in schedule Taxes Paid',
     relatedSchedule: 'taxesPaid',
   },
-  PENSION_CONTRI_MORE_THAN_SALARY: {
-    code: 'PENSION_CONTRI_MORE_THAN_SALARY',
-    message: '80CCD2 investment declared exceeds the allowed value',
+  NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY: {
+    code: 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY',
+    message: '80CCD1 investment declared exceeds the allowed value',
     relatedSchedule: 'investmentsDeductions',
   },
   NPS_EMPLOYER_CONTRI_INCORRECT: {
