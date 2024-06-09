@@ -4,6 +4,7 @@ import { ChatEvents } from "../chat-events";
 import { ChatManager } from "../chat-manager";
 import { DomSanitizer } from "@angular/platform-browser";
 import { LocalStorageService } from 'src/app/services/storage.service';
+import { memoize } from 'lodash';
 
 @Component({
   selector: 'app-user-chat',
@@ -32,7 +33,7 @@ export class UserChatComponent implements OnInit {
 
   @Input() serviceType: string;
   @Input() showCloseIcon: boolean = false;
-  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>(); 
 
   isHeaderActive: boolean = true;
   isFloatingActive: boolean = true;
@@ -235,14 +236,14 @@ export class UserChatComponent implements OnInit {
       const atBottom = Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) <= 1;
       this.showArrow = !atBottom;
     }
-  }
+}
 
   onScrollToBottom(): void {
     this.toggleArrowVisibility();
     if (!this.showArrow) {
       this.newMessageCount = 0;
-    }
   }
+}
 
   isBotSender(sender: string): boolean {
     return sender.startsWith('bot_');
@@ -284,17 +285,16 @@ export class UserChatComponent implements OnInit {
 
   };
 
-  parsedContent(content) {
+  parsedContent = memoize((content) => {
     let parsedContent;
     try {
       const escapedContent = content.replace(/\\/g, '\\\\');
       parsedContent = JSON.parse(escapedContent);
-
     } catch (err) {
       console.log('Error parsing JSON:', err);
     }
     return parsedContent;
-  }
+  });
 
   messageCountTo0() {
     this.scrollToBottom();
