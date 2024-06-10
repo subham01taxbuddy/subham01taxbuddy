@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { widgetVisibility } from './animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -19,6 +19,8 @@ export class FloatingWidgetComponent implements OnInit {
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
     centralizedChatDetails: any;
+
+    @Output() widgetClosed = new EventEmitter<void>();
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService,
@@ -70,6 +72,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.page = 0;
         this.showWidget = false;
         this.isUserChatVisible = false;
+        this.widgetClosed.emit();
     }
 
     closeUserChat() {

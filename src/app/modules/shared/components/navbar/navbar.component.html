@@ -96,5 +96,5 @@
 </header>
 
 <div *ngIf="floatingWidgetShow">
- <app-floating-widget></app-floating-widget>
+ <app-floating-widget (widgetClosed)="handleWidgetClosed()" ></app-floating-widget>
 </div>

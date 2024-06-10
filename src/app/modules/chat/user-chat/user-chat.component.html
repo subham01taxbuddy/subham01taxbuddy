@@ -256,21 +256,23 @@
         </div>
       </div>
     </div>
-    <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
-      <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
-      <div #fileInputContainer style="display: none;"></div>
-      <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
-        [(ngModel)]="messageSent">
-
-      <button type="button" (click)="sendMessage()">
-        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-      </button>
-    </div>
+    
   </div>
 
   <div class="new-messages-indicator" (click)="scrollToBottom()" *ngIf="showArrow">
     <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
     <span class="fas fa-arrow-down"></span>
+  </div>
+
+  <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
+    <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
+    <div #fileInputContainer style="display: none;"></div>
+    <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
+      [(ngModel)]="messageSent">
+
+    <button type="button" (click)="sendMessage()">
+      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+    </button>
   </div>
 </div>
 <app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>

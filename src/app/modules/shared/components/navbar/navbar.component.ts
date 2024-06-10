@@ -325,4 +325,8 @@ export class NavbarComponent implements DoCheck {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  handleWidgetClosed(){
+    this.floatingWidgetShow = false;
+  }
+
 }
