@@ -42,11 +42,10 @@
         </div>
 
         <div class="pagination-controls">
-          <button [disabled]="childConfig.currentPage === 1" (click)="changePage(childConfig.currentPage - 1)">Previous</button>
-          <span>Page {{childConfig.currentPage}} of {{totalPages}}</span>
-          <button [disabled]="childConfig.currentPage === totalPages" (click)="changePage(childConfig.currentPage + 1)">Next</button>
+          <button class="pagination-btn" [disabled]="childConfig.currentPage === 1" (click)="changePage(childConfig.currentPage - 1)">Previous</button>
+          <span class="pagination-info">Page {{childConfig.currentPage}} of {{totalPages}}</span>
+          <button class="pagination-btn" [disabled]="childConfig.currentPage === totalPages" (click)="changePage(childConfig.currentPage + 1)">Next</button>
         </div>
-
 
       </div>
     </div>
