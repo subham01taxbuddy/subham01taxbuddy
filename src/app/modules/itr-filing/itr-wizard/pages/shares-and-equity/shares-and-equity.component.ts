@@ -575,6 +575,13 @@ export class SharesAndEquityComponent
             }
             this.selectedFormGroup = params.data;
           }
+          const accordionButton = document.getElementById('accordBtn');
+          if (accordionButton) {
+            if (accordionButton.getAttribute("aria-expanded") === "false"){
+              accordionButton.click();
+            }
+
+          }
           this.utilsService.smoothScrollToTop();
           break;
       }
@@ -850,6 +857,7 @@ export class SharesAndEquityComponent
   calculateTotalCG(securities, refresh?) {
     this.updateDeductionUI();
     if (securities.valid) {
+      this.loading = true;
       const param = '/singleCgCalculate';
       let securitiesImprovement =
         securities?.controls['improvementsArray']?.value;
