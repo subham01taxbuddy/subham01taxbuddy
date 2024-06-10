@@ -24,7 +24,7 @@
         [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolledUp)="onScrollUp()">
         <ng-container *ngFor="let message of fetchedMessages">
           <div [ngClass]="{
-              'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId,
+              'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId && displaySystemMessage(message) ,
               'user-messages': message.sender === chat21UserId,
               'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
              }">
@@ -39,7 +39,7 @@
             <div class="message-container">
               <div class="message-and-timestamp">
                 <span
-                  *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId"
+                  *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId && displaySystemMessage(message)"
                   [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId}"
                   class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)">{{message.content}}</span>
 
@@ -238,10 +238,7 @@
         </ng-container>
 
 
-        <div class="new-messages-indicator" (click)="scrollToBottom()" *ngIf="showArrow">
-          <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
-          <span class="fas fa-arrow-down"></span>
-        </div>
+       
 
 
         <div *ngIf="fileToUpload" class="file-upload-box">
@@ -269,6 +266,11 @@
         <i class="fa fa-paper-plane" aria-hidden="true"></i>
       </button>
     </div>
+  </div>
+
+  <div class="new-messages-indicator" (click)="scrollToBottom()" *ngIf="showArrow">
+    <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
+    <span class="fas fa-arrow-down"></span>
   </div>
 </div>
 <app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>

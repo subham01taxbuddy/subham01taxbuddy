@@ -388,4 +388,18 @@ export class UserChatComponent implements OnInit {
   onScrollUp() {
     this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp);
   }
+
+  displaySystemMessage(message: any): boolean {
+    if (message.subtype === 'info') {
+      if (!message.showOnUI) {
+        return false;
+      }
+      if (message.showOnUI === 'BO' || message.showOnUI === 'BOTH') {
+        return true;
+      }
+    }
+    return true;
+  }
+  
+
 }
