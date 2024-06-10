@@ -27,7 +27,17 @@
 
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-3 spsTp">
+                        <div class="col-sm-4">
+                          <mat-label>Select Status</mat-label>
+                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                            <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
+                             <mat-option *ngFor="let drop of statusList" [value]="drop.value">
+                                {{ drop.name }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-4 spsTp">
                           <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-label>From Date</mat-label>
                             <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
@@ -37,7 +47,7 @@
                             <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-3 spsTp">
+                        <div class="col-sm-4 spsTp">
                           <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                             <mat-label>To Date</mat-label>
                             <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
@@ -48,7 +58,7 @@
                             <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                           <div class="button-container">
                             <button class="srch-btn-1" (click)="showReports()">
                               <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
@@ -63,7 +73,7 @@
                       </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row ">
                       <div class="col-sm-12">
                         <span class="new-note1 note">
                           Note : Please select required filters Above and click on Show Reports to get information

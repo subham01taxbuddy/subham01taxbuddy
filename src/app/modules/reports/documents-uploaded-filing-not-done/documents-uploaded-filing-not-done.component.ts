@@ -57,6 +57,12 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  selectedStatus = new UntypedFormControl();
+  statusList = [
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+  ];
 
   constructor(
     public datePipe: DatePipe,
@@ -171,8 +177,13 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${statusFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -351,7 +362,12 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
+    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}${userFilter}${statusFilter}`;
 
     let fieldName = [
       { key: 'name', value: 'Name' },
@@ -373,6 +389,7 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
+    this.selectedStatus.setValue(null);
     this?.smeDropDown?.resetDropdown();
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
