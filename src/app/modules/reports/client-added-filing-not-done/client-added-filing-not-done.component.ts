@@ -301,7 +301,6 @@ export class ClientAddedFilingNotDoneComponent implements OnInit {
         field: 'eriAdded',
         width: 160,
         suppressMovable: true,
-        hide:true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
         filterParams: {
