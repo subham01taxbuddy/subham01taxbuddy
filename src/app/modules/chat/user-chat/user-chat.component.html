@@ -182,7 +182,7 @@
                                 <label>
                                   <input type="radio" [attr.disabled]="isBotSender(message.sender)"
                                     [value]="option.value" name="{{item.data.name}}"
-                                    [checked]="selectedRadio[item.data.name] === option.value"
+                                    [checked]="isOptionSelected(item.data.name, option.value,message)"
                                     (change)="onRadioChange(item.data.name,option.value,message.message_id)">
                                   {{ option.label }}
                                 </label>

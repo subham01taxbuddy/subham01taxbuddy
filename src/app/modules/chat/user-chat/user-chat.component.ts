@@ -93,6 +93,11 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   }
 
+
+  isOptionSelected(name: string, value: string, message): boolean {
+    return this.selectedRadio[name] === value || (message?.action && message?.action[name] === value);
+  }
+  
   onRadioChange(name: string, value: string, message_id) {
     this.selectedRadio[name] = value;
     this.selectedRadio['message_id'] = message_id;
@@ -401,7 +406,7 @@ ngAfterViewInit(): void {
   }
 
   displaySystemMessage(message: any): boolean {
-    if (message.subtype === 'info') {
+    if (message.subtype === 'info' || message.subtype === 'info/support') {
       if (!message.showOnUI) {
         return false;
       }
