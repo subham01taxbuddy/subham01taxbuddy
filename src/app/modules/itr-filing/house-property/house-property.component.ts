@@ -1045,9 +1045,14 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
+        let eligible80EEAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAmount'].value)
+            ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
+        let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
+            ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
+        let interestAmount = eligible80EEAmount + eligible80EEAAmount + this.housePropertyForm.controls['interestAmount']?.value;
         hp.loans.push({
           interestAmount:
-            this.housePropertyForm.controls['interestAmount']?.value,
+            interestAmount,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
