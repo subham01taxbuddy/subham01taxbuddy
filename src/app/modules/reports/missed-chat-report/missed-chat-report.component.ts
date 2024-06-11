@@ -189,7 +189,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  async showReports(pageChange?) {
+   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/missed-chat-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -260,7 +260,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.missedChatReport = response?.data?.content;
