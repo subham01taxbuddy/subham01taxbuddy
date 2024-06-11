@@ -129,9 +129,7 @@ export class ChatService {
                 this.fetchConversationList(0, chat21Result.data.userid);
                 this.getCannedMessageList();
                 if (initializeSocket) {
-                  if (initializeSocket) {
-                    this.websocketConnection(chat21Result.data.token, '');
-                  }
+                  this.websocketConnection(chat21Result.data.token, '');
                 }
               }
             });
@@ -285,8 +283,8 @@ export class ChatService {
       senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
       message_id: message.message_id,
       action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-      subtype: message?.attributes?.subtype,
-      showOnUI: message?.attributes?.showOnUI
+      subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
+      showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
     }));
 
     if (timeStamp) {
@@ -312,8 +310,8 @@ export class ChatService {
         senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
         message_id: message.message_id,
         action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: message?.attributes?.subtype,
-        showOnUI: message?.attributes?.showOnUI
+        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
+        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
       }));
       let m = {
         content: message.text,
@@ -323,8 +321,8 @@ export class ChatService {
         senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
         message_id: message.message_id,
         action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: message?.attributes?.subtype,
-        showOnUI: message?.attributes?.showOnUI
+        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
+        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
       };
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
@@ -337,6 +335,11 @@ export class ChatService {
         if (!element.action) {
           const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
           element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+        }
+        if (!element.showOnUI && !element.subtype) {
+          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+          element.showOnUI = filterOldMsg.length > 0 ? filterOldMsg[0].showOnUI : null;
+          element.subtype = filterOldMsg.length > 0 ? filterOldMsg[0].subtype : null;
         }
       });
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
