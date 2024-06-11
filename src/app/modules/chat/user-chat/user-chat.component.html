@@ -238,7 +238,7 @@
         </ng-container>
 
 
-       
+
 
 
         <div *ngIf="fileToUpload" class="file-upload-box">
@@ -256,19 +256,26 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 
   <div class="new-messages-indicator" (click)="scrollToBottom()" *ngIf="showArrow">
     <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
     <span class="fas fa-arrow-down"></span>
   </div>
-
+  <div class="cannedMessageBox" *ngIf="cannedMessageList.length>0">
+    <div *ngFor="let cannedMessage of cannedMessageList" class="cannedMessage"
+      (click)="onSelectCannedMessage(cannedMessage)">
+      <div class="title">{{cannedMessage.title}}</div>
+      <div class="text">{{cannedMessage.text}}</div>
+      <hr>
+    </div>
+  </div>
   <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
     <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
     <div #fileInputContainer style="display: none;"></div>
-    <input type="text" placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()"
-      [(ngModel)]="messageSent">
+    <input type="text" (input)="filterCannedMessages()"
+      placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()" [(ngModel)]="messageSent">
 
     <button type="button" (click)="sendMessage()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>

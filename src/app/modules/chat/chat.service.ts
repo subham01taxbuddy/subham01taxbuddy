@@ -26,7 +26,7 @@ export class ChatService {
   private WEBSOCKET_URL = environment.WEBSOCKET_URL;
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
   private CENTRALIZED_CHAT_DETAILS = "https://zbuz4brujg5rfks47lct546o5u0aduge.lambda-url.ap-south-1.on.aws/chat-system-config";
-
+  private CANNED_MESSAGE_LIST = environment.TILEDESK_URL + '/api/' + this.PROJECT_ID + '/canned';
   presenceTopic;
   topicInbox;
   clientId;
@@ -41,6 +41,7 @@ export class ChatService {
   chatbuddyDeptDetails: any;
   loggedInUserInfo: any;
   roles: any;
+  cannedMessageList: any;
 
   constructor(
     public httpClient: HttpClient,
@@ -126,6 +127,7 @@ export class ChatService {
                 this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
                 this.initChatVariables(result.data.requestId);
                 this.fetchConversationList(0, chat21Result.data.userid);
+                this.getCannedMessageList();
                 if (initializeSocket) {
                   if (initializeSocket) {
                     this.websocketConnection(chat21Result.data.token, '');
@@ -167,6 +169,16 @@ export class ChatService {
           "Authorization": TOKEN,
           "service": "chat-" + type,
           "environment": environment.lifecycleEnv
+        })
+      };
+      return httpOptions;
+    }
+    if (type == "tileDesk") {
+      let TOKEN = this.localStorageService.getItem("TILEDESK_TOKEN");
+      httpOptions = {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+          "Authorization": TOKEN,
         })
       };
       return httpOptions;
@@ -729,6 +741,40 @@ export class ChatService {
         });
 
     }
+  }
+
+  getCannedMessageList() {
+    if (!this.localStorageService.getItem("CANNED_MESSAGE_LIST", true)) {
+      let url = `${this.CANNED_MESSAGE_LIST}`;
+      this.httpClient.get(url, this.setHeaders("tileDesk")).subscribe((result: any) => {
+        if (result) {
+          this.cannedMessageList = result;
+          this.localStorageService.setItem("CANNED_MESSAGE_LIST", result, true);
+          this.filterCannedMessages();
+        } else {
+          // this.utilsService.showSnackBar(result.message);
+        }
+      },
+        error => {
+          // this.utilsService.showSnackBar('Failed to get the canned message list');
+        });
+
+    }
+  }
+
+  filterCannedMessages() {
+    this.cannedMessageList = this.localStorageService.getItem("CANNED_MESSAGE_LIST", true);
+    let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+    let cannedMessageArray = [];
+    let messageArray = [];
+    messageArray = this.cannedMessageList.map((message: any) => ({ title: message.title, titleWithSlash: '/' + message.title, text: message.text, allowDept: (message?.attributes) ? message?.attributes?.departments : [] }));
+    cannedMessageArray = messageArray.filter(element => element.allowDept.length === 0);
+    messageArray.filter(element => {
+      if (element.allowDept.length > 0 && element.allowDept.includes(selectedUser.departmentId)) {
+        cannedMessageArray.push(element);
+      }
+    });
+    return cannedMessageArray;
   }
 
 }

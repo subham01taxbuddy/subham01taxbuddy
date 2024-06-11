@@ -125,8 +125,9 @@ export class ChatUIComponent implements OnInit {
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
                             type: conversation.type,
-                            userFullName: conversation.userFullName
-
+                            userFullName: conversation.userFullName,
+                            departmentId: conversation.departmentId,
+                            sender: conversation.sender,
                         };
                     });
             }
@@ -140,8 +141,9 @@ export class ChatUIComponent implements OnInit {
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id,
                         type: conversation.type,
-                        userFullName: conversation.userFullName
-
+                        userFullName: conversation.userFullName,
+                        departmentId: conversation.departmentId,
+                        sender: conversation.sender,
                     };
                 });
             }

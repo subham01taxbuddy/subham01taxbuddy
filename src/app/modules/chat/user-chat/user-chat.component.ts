@@ -33,7 +33,7 @@ export class UserChatComponent implements OnInit {
 
   @Input() serviceType: string;
   @Input() showCloseIcon: boolean = false;
-  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>(); 
+  @Output() closeChatClicked: EventEmitter<void> = new EventEmitter<void>();
 
   isHeaderActive: boolean = true;
   isFloatingActive: boolean = true;
@@ -76,9 +76,13 @@ export class UserChatComponent implements OnInit {
   selectedCheckBoxes: { [name: string]: string[] } = {};
   selectedOptions: { [name: string]: string } = {};
   isRequired: boolean = false;
+  cannedMessageList: any[] = [];
+  originalCannedMessageList: any[] = [];
 
-  constructor(private chatService: ChatService, private chatManager: ChatManager,
-
+  constructor(
+    private chatService: ChatService,
+    private chatManager: ChatManager,
+    private localStorageService: LocalStorageService,
     private localStorage: LocalStorageService,
     private sanitizer: DomSanitizer, private elementRef: ElementRef,
     private renderer: Renderer2,
@@ -236,14 +240,14 @@ export class UserChatComponent implements OnInit {
       const atBottom = Math.abs(container.scrollHeight - container.scrollTop - container.clientHeight) <= 1;
       this.showArrow = !atBottom;
     }
-}
+  }
 
   onScrollToBottom(): void {
     this.toggleArrowVisibility();
     if (!this.showArrow) {
       this.newMessageCount = 0;
+    }
   }
-}
 
   isBotSender(sender: string): boolean {
     return sender.startsWith('bot_');
@@ -254,6 +258,7 @@ export class UserChatComponent implements OnInit {
       this.chatManager.openConversation(this.requestId);
     }
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
+    this.originalCannedMessageList = this.chatService.filterCannedMessages();
   }
 
   handleTokenEvent = (data: any) => {
@@ -400,6 +405,23 @@ export class UserChatComponent implements OnInit {
     }
     return true;
   }
-  
 
+  filterCannedMessages() {
+    if (this.messageSent.startsWith('/')) {
+      this.cannedMessageList = this.originalCannedMessageList.filter(element => element.titleWithSlash.toLowerCase().startsWith(this.messageSent.toLowerCase())
+      )
+    } else {
+      this.cannedMessageList = [];
+    }
+  }
+
+  onSelectCannedMessage(cannedMessage) {
+    let inputMessage = cannedMessage.text;
+    let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+    let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
+    inputMessage = inputMessage.replaceAll('$agent_name', chat21Result.fullname);
+    inputMessage = inputMessage.replaceAll('$recipient_name', selectedUser.userFullName);
+    this.messageSent = inputMessage;
+    this.cannedMessageList = [];
+  }
 }

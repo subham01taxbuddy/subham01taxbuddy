@@ -44,7 +44,7 @@
   z-index: 999;
 }
 
-.message-input-container{
+.message-input-container {
   position: relative;
 }
 
@@ -507,7 +507,7 @@
   padding-bottom: 30px;
 }
 
-.card{
+.card {
   border: 1px solid black;
 }
 
@@ -570,7 +570,7 @@
   margin-bottom: -8px;
   border-radius: 3px;
   overflow-wrap: anywhere;
-  }
+}
 
 
 /* For system messages */
@@ -677,7 +677,7 @@
   overflow-wrap: anywhere;
 }
 
-.fileBorder{
+.fileBorder {
   border: 1px solid #ccc;
 }
 
@@ -798,6 +798,32 @@
   margin-bottom: -17px;
 }
 
-.dropdown-length{
+.dropdown-length {
   width: auto;
+}
+
+.cannedMessageBox {
+  width: 100%;
+  padding: 10px;
+  z-index: 999999999;
+  height: 120px;
+  overflow-y: scroll;
+  background: #ebe9e9;
+  position: absolute;
+  bottom: 37px;
+
+  .cannedMessage {
+    margin-bottom: 12px;
+    cursor: pointer;
+
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .text {
+      font-size: 16px;
+      color: #685f5fed;
+    }
+  }
 }
