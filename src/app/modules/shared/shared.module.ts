@@ -62,6 +62,7 @@ import { GenericUserFilterComponent } from './components/generic-user-filter/gen
 import { UpdateCapacityComponent } from './components/update-capacity/update-capacity.component';
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
+import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -105,8 +106,9 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
         UpdateItrUFillingDialogComponent,
         ValidationErrorScreenComponent,
         GenericSortingComponent,
-    GenericUserFilterComponent,
-    CalculatorModalComponent
+        GenericUserFilterComponent,
+        CalculatorModalComponent,
+        CustomButtonComponent
     ],
     imports: [
         CommonModule,
@@ -168,7 +170,8 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
         GenericSortingComponent,
         GenericUserFilterComponent,
         UpdateNoJsonFilingDialogComponent,
-    CalculatorModalComponent
+        CalculatorModalComponent,
+        CustomButtonComponent
     ],
     providers: [StorageService, Schedules, RequestManager]
 })
