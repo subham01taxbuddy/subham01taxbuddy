@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { ChatEvents } from "../chat-events";
 import { ChatManager } from "../chat-manager";
@@ -13,7 +13,7 @@ import { memoize } from 'lodash';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class UserChatComponent implements OnInit {
+export class UserChatComponent implements OnInit, AfterViewInit {
   selector: string = ".main-panel";
 
   @ViewChild('chatWindow') chatWindowContainer: ElementRef;
@@ -260,6 +260,12 @@ export class UserChatComponent implements OnInit {
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
     this.originalCannedMessageList = this.chatService.filterCannedMessages();
   }
+
+ngAfterViewInit(): void {
+  this.scrollToBottom();
+  this.toggleArrowVisibility();
+}
+  
 
   handleTokenEvent = (data: any) => {
     console.log("subscribed", data);

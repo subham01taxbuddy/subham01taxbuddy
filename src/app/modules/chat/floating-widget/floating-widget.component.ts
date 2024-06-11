@@ -63,7 +63,7 @@ export class FloatingWidgetComponent implements OnInit {
         setTimeout(() => {
             if (this.userChatComponent) {
                 this.userChatComponent.scrollToBottom();
-            }
+             }
         }, 1000);
     }
 
