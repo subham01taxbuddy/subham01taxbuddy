@@ -298,53 +298,56 @@ export class ChatService {
   }
 
   addMessageToDB(message: any) {
-    const messagesString = sessionStorage.getItem("fetchedMessages");
+    // let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+    // if (message.recipient === selectedUser.request_id) {
+      const messagesString = sessionStorage.getItem("fetchedMessages");
 
-    if (messagesString) {
-      const messages = JSON.parse(messagesString);
-      const transformedMessages = messages.map(message => ({
-        content: message.content,
-        sender: message.sender,
-        timestamp: message.timestamp,
-        type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
-        message_id: message.message_id,
-        action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
-      }));
-      let m = {
-        content: message.text,
-        sender: message.sender,
-        timestamp: message.timestamp,
-        type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
-        message_id: message.message_id,
-        action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
-      };
+      if (messagesString) {
+        const messages = JSON.parse(messagesString);
+        const transformedMessages = messages.map(message => ({
+          content: message.content,
+          sender: message.sender,
+          timestamp: message.timestamp,
+          type: message.type,
+          senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+          message_id: message.message_id,
+          action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
+          subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
+          showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+        }));
+        let m = {
+          content: message.text,
+          sender: message.sender,
+          timestamp: message.timestamp,
+          type: message.type,
+          senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+          message_id: message.message_id,
+          action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
+          subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
+          showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+        };
 
-      const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
-      console.log(' selected user details', user)
-      if ((user && m.sender === user.sender) || (m.sender === this.chat21UserID))
-        transformedMessages.push(m);
-      const msgString = this.sessionStorageService.getItem('fetchedMessages');
-      const oldMessageList = JSON.parse(msgString);
-      transformedMessages.forEach(element => {
-        if (!element.action) {
-          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-          element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
-        }
-        if (!element.showOnUI && !element.subtype) {
-          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-          element.showOnUI = filterOldMsg.length > 0 ? filterOldMsg[0].showOnUI : null;
-          element.subtype = filterOldMsg.length > 0 ? filterOldMsg[0].subtype : null;
-        }
-      });
-      this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
-      return transformedMessages;
-    }
+        const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
+        console.log(' selected user details', user)
+        if ((user && m.sender === user.sender) || (m.sender === this.chat21UserID))
+          transformedMessages.push(m);
+        const msgString = this.sessionStorageService.getItem('fetchedMessages');
+        const oldMessageList = JSON.parse(msgString);
+        transformedMessages.forEach(element => {
+          if (!element.action) {
+            const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+            element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+          }
+          if (!element.showOnUI && !element.subtype) {
+            const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+            element.showOnUI = filterOldMsg.length > 0 ? filterOldMsg[0].showOnUI : null;
+            element.subtype = filterOldMsg.length > 0 ? filterOldMsg[0].subtype : null;
+          }
+        });
+        this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
+        return transformedMessages;
+      }
+    // }
   }
 
   uuidv4() {
@@ -433,12 +436,13 @@ export class ChatService {
                 if (this.log) {
                   const messageJson = JSON.parse(message.toString())
                   console.log('message received', messageJson);
+                  let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                   this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
                   this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
                   let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && this.roles?.includes('ROLE_LEADER') && this.loggedInUserInfo[0]?.serviceEligibility_GST) {
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && this.roles?.includes('ROLE_LEADER') && this.loggedInUserInfo[0]?.serviceEligibility_GST && messageJson.recipient === selectedUser.request_id) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);
@@ -498,11 +502,14 @@ export class ChatService {
                   }
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
-                      this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                        let messages = this.addMessageToDB(JSON.parse(message.toString()));
-                        callback(ChatEvents.MESSAGE_RECEIVED);
-
-                      });
+                      const messageJson = JSON.parse(message.toString());
+                      let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+                      if (messageJson.recipient === selectedUser.request_id) {
+                        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+                          let messages = this.addMessageToDB(JSON.parse(message.toString()));
+                          callback(ChatEvents.MESSAGE_RECEIVED);
+                        });
+                      }
                     }
                     let update_conversation = true;
 
