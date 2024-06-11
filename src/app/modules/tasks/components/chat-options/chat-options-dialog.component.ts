@@ -24,6 +24,7 @@ export class ChatOptionsDialogComponent implements OnInit {
   kommChatLink = null;
   waChatLink = null;
   kommChatConversationId: any;
+  waChatConversationId: string;
 
   constructor(
     public dialogRef: MatDialogRef<ChatOptionsDialogComponent>,
@@ -69,11 +70,23 @@ export class ChatOptionsDialogComponent implements OnInit {
   }
 
   goToWhatsapp() {
+    this.waChatConversationId = this.extractChatId(this.waChatLink);
     console.log(this.waChatLink);
     if (this.waChatLink) {
-      window.open(this.waChatLink);
-      this.dialogRef.close();
+      if(this.data.newTab) {
+        window.open(this.waChatLink);
+      } else {
+        this.dialogRef.close({
+          id: this.waChatConversationId
+        });
+      }
     }
+  }
+
+  extractChatId(url: string): string | null {
+    const regex = /conversations\/(\d+)/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
   }
 
   close() {
