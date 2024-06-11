@@ -298,6 +298,8 @@ export class ChatService {
   }
 
   addMessageToDB(message: any) {
+    // let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+    // if (message.recipient === selectedUser.request_id) {
     const messagesString = sessionStorage.getItem("fetchedMessages");
 
     if (messagesString) {
@@ -345,6 +347,7 @@ export class ChatService {
       this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
       return transformedMessages;
     }
+    // }
   }
 
   uuidv4() {
@@ -433,6 +436,7 @@ export class ChatService {
                 if (this.log) {
                   const messageJson = JSON.parse(message.toString())
                   console.log('message received', messageJson);
+                  let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                   this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
                   this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
@@ -498,11 +502,14 @@ export class ChatService {
                   }
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
-                      this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                        let messages = this.addMessageToDB(JSON.parse(message.toString()));
-                        callback(ChatEvents.MESSAGE_RECEIVED);
-
-                      });
+                      const messageJson = JSON.parse(message.toString());
+                      let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+                      if (messageJson.recipient === selectedUser.request_id) {
+                        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+                          let messages = this.addMessageToDB(JSON.parse(message.toString()));
+                          callback(ChatEvents.MESSAGE_RECEIVED);
+                        });
+                      }
                     }
                     let update_conversation = true;
 
