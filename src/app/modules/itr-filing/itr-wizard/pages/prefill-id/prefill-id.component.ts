@@ -166,6 +166,7 @@ export class PrefillIdComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       async (result: any) => {
         console.log('My ITR by user Id and Assessment Years=', result);
+        this.loading = false;
         if (result == null || result.length == 0) {
           //invalid case here
           this.utilsService.showErrorMsg(
@@ -1203,6 +1204,7 @@ export class PrefillIdComponent implements OnInit {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
+            this.loading = true;
             let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4 : undefined;
             // if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
             //   this.utilsService.showSnackBar(
@@ -1217,6 +1219,7 @@ export class PrefillIdComponent implements OnInit {
             this.utilsService.setUploadedJson(this.uploadedJson);
             this.mapItrJson(this.uploadedJson);
             this.jsonUpload();
+            this.loading = false;
           } else {
             this.utilsService.showSnackBar(
               'There was some error while uploading the JSON'
@@ -6579,13 +6582,13 @@ export class PrefillIdComponent implements OnInit {
     let param = '/eri/prefill-json/upload';
     this.itrMsService.postMethod(param, formData).subscribe(
       (res: any) => {
-        this.loading = false;
         console.log('uploadDocument response =>', res);
         if (res && res.success) {
           this.utilsService.showSnackBar(res.message);
           //prefill uploaded successfully, fetch ITR again
           this.fetchUpdatedITR();
         } else {
+          this.loading = false;
           if (res.errors instanceof Array && res.errors.length > 0) {
             this.utilsService.showSnackBar(res.errors[0].desc);
           } else if (res.messages instanceof Array && res.messages.length > 0) {
@@ -6890,6 +6893,7 @@ export class PrefillIdComponent implements OnInit {
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 
+      this.loading = true;
       let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
       this.itrMsService.getMethod(reqUrl).subscribe(
         (result: any) => {
