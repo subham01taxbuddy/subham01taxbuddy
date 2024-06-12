@@ -184,6 +184,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       if (this.subscriptionObj?.['invoiceAmount']) {
         this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
       }
+      this.serviceType = this.subscriptionObj.servicesType
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
       this.userSubscription = this.createSubscriptionObj;
@@ -206,9 +207,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.getFy();
       }
     }
-
-    this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
+    this.getAllPlanInfo(this.serviceType);
     this.setFormValues(this.selectedUserInfo);
     this.isButtonDisable = true;
     if(this.serviceType === 'ITR')
