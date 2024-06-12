@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -7,32 +7,53 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./custom-button.component.css']
 })
 export class CustomButtonComponent {
-  @Input() action: (...args: any[]) => Promise<void> | Subscription;
-  @Input() actionParams: any[] = [];
-  isProcessing = false;
-  private subscription: Subscription | null = null;
+  // @Input() action: (...args: any[]) => Promise<void> | Subscription;
+  // @Input() actionParams: any[] = [];
+  // isProcessing = false;
+  // private subscription: Subscription | null = null;
 
-  handleClick() {
-    if (this.isProcessing) return;
+  // handleClick() {
+  //   if (this.isProcessing) return;
 
-    this.isProcessing = true;
+  //   this.isProcessing = true;
 
-    const result = this.action(...this.actionParams);
-    if (result instanceof Promise) {
-      result.finally(() => {
-        this.isProcessing = false;
-      });
-    } else if (result instanceof Subscription) {
-      this.subscription = result;
-      this.subscription.add(() => {
-        this.isProcessing = false;
-      });
-    }
+  //   const result = this.action(...this.actionParams);
+  //   if (result instanceof Promise) {
+  //     result.finally(() => {
+  //       this.isProcessing = false;
+  //     });
+  //   } else if (result instanceof Subscription) {
+  //     this.subscription = result;
+  //     this.subscription.add(() => {
+  //       this.isProcessing = false;
+  //     });
+  //   }
+  // }
+
+  // ngOnDestroy() {
+  //   if (this.subscription) {
+  //     this.subscription.unsubscribe();
+  //   }
+  // }
+  constructor(private changeDetectorRef: ChangeDetectorRef){
+
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+  @Input() action!: () => Promise<any>;
+  @Output() actionComplete = new EventEmitter<void>();
+
+  isLoading = false;
+
+  async handleClick() {
+    this.isLoading = true;
+    try {
+      await this.action();
+    } catch (error) {
+      console.error('Error during API call', error);
+    } finally {
+      this.isLoading = false;
+      this.actionComplete.emit();
+      this.changeDetectorRef.detectChanges()
     }
   }
 }
