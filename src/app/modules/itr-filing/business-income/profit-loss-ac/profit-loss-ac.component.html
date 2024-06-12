@@ -1,7 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="page-wrapper">
   <main>
-    <div class="mrgArd">
+    <div class="mrgArd" *ngIf="false">
       <app-file-parser (newDataAvailable)="getFileParserData()"></app-file-parser>
     </div>
     <mat-accordion class="headers-align spcArnd2">
