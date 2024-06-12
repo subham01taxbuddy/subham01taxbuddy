@@ -85,14 +85,14 @@ export class FileParserComponent implements OnInit {
       //   steps: './assets/files/Steps to download upstox statement.pdf',
       //   note:''
       // },
-      {
-        name: 'Groww',
-        label: 'Groww',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download Groww statement.pdf',
-        note:'Equity/Intraday/MF'
-      },
+      // {
+      //   name: 'Groww',
+      //   label: 'Groww',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download Groww statement.pdf',
+      //   note:'Equity/Intraday/MF'
+      // },
       {
         name: 'Zerodha',
         label: 'Zerodha',
