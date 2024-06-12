@@ -648,12 +648,10 @@ export class ChatService {
 
   getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
-    let user = this.localStorageService.getItem('SELECTED_CHAT');
-    let parsedUser = JSON.parse(user);
-    let userFullName = parsedUser?.userFullName;
+    let user = this.localStorageService.getItem('SELECTED_CHAT',true);
     return {
-      "departmentId": this.deptID,
-      "departmentName": this.deptName,
+      "departmentId": user?.departmentId,
+      "departmentName": user?.departmentName,
       "ipAddress": "103.97.240.182",
       "client": "",
       "sourcePage": "",
@@ -661,7 +659,7 @@ export class ChatService {
       "projectId": this.PROJECT_ID,
       "widgetVer": "v.5.0.71.3",
       "payload": [],
-      "userFullname": userFullName,
+      "userFullname": user?.userFullName,
       "requester_id": chatToken,
       "lang": "en",
       "tempUID": this.uuidv4(),
