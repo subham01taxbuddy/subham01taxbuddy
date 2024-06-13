@@ -633,7 +633,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           '',
           Validators.compose([
             Validators.required,
-            Validators.pattern(AppConstants.charSpecialRegex),
           ]),
         ],
         state: ['', Validators.compose([Validators.required])],
@@ -657,8 +656,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         employerName: ['', Validators.compose([Validators.required])],
         address: [''],
         city: [
-          '',
-          Validators.compose([Validators.pattern(AppConstants.charRegex)]),
+          ''
         ],
         state: [''],
         pinCode: [
