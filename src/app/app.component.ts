@@ -119,6 +119,11 @@ export class AppComponent {
       this.timedOut = false;
       console.log('im awake!');
     });
+
+    let cgPermission = sessionStorage.getItem('CG_MODULE');
+    if(!cgPermission){
+      sessionStorage.setItem('CG_MODULE', 'NO');
+    }
   }
 
   ngOnDestroy() {

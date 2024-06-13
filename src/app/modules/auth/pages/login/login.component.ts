@@ -128,6 +128,26 @@ export class LoginComponent implements OnInit {
         if (roles.length > 0)
           this._toastMessageService.alert("error", "Access Denied.");
       }
+
+      //Ashwini: check for specific users and allow the CG module for them
+      let userNumber = this.form.value.user;
+      let allowedUsers = [
+          //Gitanjali -
+      "9324957899",
+        // Divya-
+        "9324957908",
+        // Ankita-
+        "9594746347",
+        // Pratik
+        "9324501969",
+        // Astha -
+        "9773011936",
+          // UAT admin
+        "0014082016"
+        ];
+      if(allowedUsers.filter(value => value === userNumber).length > 0){
+        sessionStorage.setItem('CG_MODULE', 'YES');
+      }
     }
   }
 
