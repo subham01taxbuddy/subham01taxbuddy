@@ -152,12 +152,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
+        { value: 'userId', name: 'User Id ' }
       ];
     } else {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id ' }
       ];
     }
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -284,9 +286,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
 
     let userIdFilter = '';
-    if (userId) {
-      this.isAllowed = true;
-      userIdFilter = `&userId=${userId}`;
+    if (userId || this.searchBy?.userId ) {
+      if(this.roles.includes('ROLE_FILER')){
+        this.isAllowed = true;
+      }
+      userIdFilter ='&userId=' + (this.searchBy?.userId || userId);
     }
 
     let mobileFilter = '';
@@ -621,6 +625,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     ) {
       this.agentId = this.loggedInSme[0]?.userId;
     }
+
+    this.router.navigate([], { queryParams: {} });
   }
 
   subscriptionCreateColumnDef(List , view) {

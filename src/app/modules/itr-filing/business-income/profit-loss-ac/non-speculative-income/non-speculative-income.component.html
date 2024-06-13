@@ -150,7 +150,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount"
+                                  <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount" digitsOnly
                                     matInput name="finishedGoodsClosingStock" class="input-field" required type="number"
                                     trim (blur)="calculateIncome()" />
                                 </mat-form-field>
@@ -164,7 +164,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly formControlName="totalCredit" name="totalCredit" matInput
+                                  <input readonly formControlName="totalCredit" name="totalCredit" matInput digitsOnly
                                     class="input-field" required type="number" trim />
                                 </mat-form-field>
                               </div>
@@ -177,7 +177,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount"
+                                  <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount" digitsOnly
                                     matInput name="finishedGoodsOpeningStock" class="input-field" required type="number"
                                     trim (blur)="calculateIncome()" />
                                 </mat-form-field>
@@ -191,7 +191,7 @@
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="purchase" placeholder="₹ Enter Amount" matInput
-                                    name="purchase" class="input-field" required type="number" trim
+                                    name="purchase" class="input-field" required type="number" trim digitsOnly
                                     (blur)="calculateIncome()" />
                                 </mat-form-field>
                               </div>
@@ -204,7 +204,7 @@
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input formControlName="expenditure" placeholder="₹ Enter Amount" matInput
-                                    name="tradingExpense" class="input-field" required type="number" trim
+                                    name="tradingExpense" class="input-field" required type="number" trim digitsOnly
                                     (blur)="calculateIncome()" />
                                 </mat-form-field>
                               </div>
@@ -217,7 +217,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly formControlName="netIncome" name="netIncome" matInput
+                                  <input readonly formControlName="netIncome" name="netIncome" matInput digitsOnly
                                     class="input-field" required type="number" trim />
                                 </mat-form-field>
                               </div>

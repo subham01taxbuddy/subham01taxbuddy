@@ -78,7 +78,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
-                                  name="grossProfit" class="input-field" type="number" trim
+                                  name="grossProfit" class="input-field" type="number" trim digitsOnly
                                   (change)="calculateNetIncome()" />
                               </mat-form-field>
                               <mat-error
@@ -98,7 +98,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
-                                  name="expenditure" class="input-field" required trim
+                                  name="expenditure" class="input-field" required trim digitsOnly
                                   (change)="calculateNetIncome()" />
                               </mat-form-field>
                             </div>
