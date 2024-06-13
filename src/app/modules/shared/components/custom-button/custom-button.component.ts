@@ -39,7 +39,7 @@ export class CustomButtonComponent {
 
   }
 
-  @Input() action!: () => Promise<any>;
+  @Input() actions!: (() => Promise<any>)[];
   @Output() actionComplete = new EventEmitter<void>();
 
   isLoading = false;
@@ -47,7 +47,9 @@ export class CustomButtonComponent {
   async handleClick() {
     this.isLoading = true;
     try {
-      await this.action();
+      for (const action of this.actions) {
+        await action();
+      }
     } catch (error) {
       console.error('Error during API call', error);
     } finally {

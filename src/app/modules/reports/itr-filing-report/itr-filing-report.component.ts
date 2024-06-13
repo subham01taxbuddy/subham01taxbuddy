@@ -207,7 +207,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  getFilingCount(){
+  getFilingCount= (): Promise<any> =>{
     // https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?page=0&pageSize=20&fromDate=2024-06-05&toDate=2024-06-05&count=true
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
@@ -260,7 +260,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
 
     param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${viewFilter}${statusFilter}&count=true`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
        this.countData = response?.data;
@@ -268,14 +268,13 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-
-    });
+    })
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -357,7 +356,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.itrFillingReport = response?.data?.content;
@@ -375,11 +374,11 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         this._toastMessageService.alert("error", response.message);
         this.totalItrFiledCount = 0;
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
       this.totalItrFiledCount = 0;
-    });
+    })
   }
 
   createRowData(fillingData) {
