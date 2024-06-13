@@ -208,7 +208,7 @@ export class CreditNoteComponent implements OnInit {
     // this.getInvoice();
   }
 
-  getCreditNote(pageChange?) {
+  getCreditNote=(pageChange?):Promise<any> => {
     // 'https://dev-api.taxbuddy.com/report/bo/credit-note?fromDate=2022-01-10&toDate=2023-10-27' \
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -260,7 +260,7 @@ export class CreditNoteComponent implements OnInit {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.creditNoteInfo = response?.data?.content;
@@ -275,11 +275,10 @@ export class CreditNoteComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(()=>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     })
-
   }
 
   createRowData(creditData) {

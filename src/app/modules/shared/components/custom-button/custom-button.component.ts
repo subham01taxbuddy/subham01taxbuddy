@@ -39,16 +39,21 @@ export class CustomButtonComponent {
 
   }
 
-  @Input() actions!: (() => Promise<any>)[];
+  @Input() actions!: ((...args: any[]) => Promise<any>)[];
   @Output() actionComplete = new EventEmitter<void>();
+  @Input() actionParams: any[][] = [];
 
   isLoading = false;
 
   async handleClick() {
     this.isLoading = true;
     try {
-      for (const action of this.actions) {
-        await action();
+      for (let i = 0; i < this.actions.length; i++) {
+        if (this.actionParams && this.actionParams[i]) {
+          await this.actions[i](...this.actionParams[i]);
+        } else {
+          await this.actions[i]();
+        }
       }
     } catch (error) {
       console.error('Error during API call', error);

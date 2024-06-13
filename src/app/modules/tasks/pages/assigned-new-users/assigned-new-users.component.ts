@@ -1314,8 +1314,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
 
   }
-
-  search(form?, isAgent?, pageChange?) {
+  search= (form?, isAgent?, pageChange?): Promise<any> =>{
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1373,9 +1372,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-    this.userMsService.getMethodNew(param).subscribe(
-
-      (result: any) => {
+    return this.userMsService.getMethodNew(param).toPromise().then((result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
@@ -1401,11 +1398,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         }
         this.loading = false;
 
-      }, error => {
+      }).catch(() =>{
         this.loading = false;
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      })
+      });
   }
 
 

@@ -318,7 +318,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSmeList(isAgent?, pageChange?) {
+  getSmeList=(isAgent?, pageChange?):Promise <any> => {
     //'https://dev-api.taxbuddy.com/report/bo/sme-details?page=0&pageSize=15&assigned=true'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -383,8 +383,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.reportService.getMethod(param).subscribe(
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         this.key = null;
         this.searchVal = null;
         console.log('sme list result -> ', result);
@@ -425,19 +424,17 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
             this.createRowData([])
           );
         }
-      },
-      (error) => {
+      }).catch((error)=>{
         this.loading = false;
         this._toastMessageService.alert(
           'error',
           'Fail to getting leads data, try after some time.'
         );
         console.log('Error during getting Leads data. -> ', error);
-      }
-    );
+      });
   }
 
-  getCount(from?, kay?, searchValue?, isAgent?) {
+  getCount=(from?, kay?, searchValue?, isAgent?):Promise <any> =>{
     //https://uat-api.taxbuddy.com/report/sme-details-new/3000?page=0&size=30&assigned=true&onlyCount=true'
     //https://dev-api.taxbuddy.com/report/bo/sme-details?assigned=true&page=0&pageSize=5&onlyCount=true' \
     this.loading = true;
@@ -494,8 +491,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe(
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         if (result.success) {
           this.loading = false;
           this.config.totalItems = result?.data?.totalCount;
@@ -519,15 +515,13 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           );
         }
 
-      }, (error) => {
+      }).catch((error)=>{
         this.loading = false;
         this._toastMessageService.alert(
           'error', 'Failed to get count.'
         );
         console.log('Error during getting count data. -> ', error);
-      })
-
-
+      });
   }
 
   async downloadReport() {

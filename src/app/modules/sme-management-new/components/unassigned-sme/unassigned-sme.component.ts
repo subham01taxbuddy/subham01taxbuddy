@@ -241,7 +241,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
     );
   }
 
-  getSmeList(pageChange?) {
+  getSmeList=(pageChange?):Promise <any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/sme-details?page=0&pageSize=1&assigned=false' \
     // ${this.config.currentPage - 1}
     if (!pageChange) {
@@ -274,8 +274,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.reportService.getMethod(param).subscribe(
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         console.log('sme list result -> ', result);
         if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
           this.loading = false;
@@ -304,16 +303,14 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           this.config.totalItems = 0;
         }
 
-      },
-      (error) => {
+      }).catch((error)=>{
         this.loading = false;
         this._toastMessageService.alert(
           'error',
           'Fail to getting leads data, try after some time.'
         );
         console.log('Error during getting Leads data. -> ', error);
-      }
-    );
+      });
   }
 
   smeCreateColumnDef(List) {

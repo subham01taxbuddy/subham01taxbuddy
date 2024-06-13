@@ -204,7 +204,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     this.getCancelSubscriptionList(0);
   }
 
-  getCancelSubscriptionList(pageNo, isUserId?, id?, fromPageChange?) {
+  getCancelSubscriptionList=(pageNo, isUserId?, id?, fromPageChange?):Promise<any> => {
     //https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5'
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -248,7 +248,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
     this.loading = true;
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.cancelSubscriptionData = response;
         this.loading = false;
@@ -271,13 +271,11 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
           this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
           this._toastMessageService.alert("error", response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
         this.loading = false;
         this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
-      }
-    );
+      });
   }
 
   // pageChanged(event: any) {

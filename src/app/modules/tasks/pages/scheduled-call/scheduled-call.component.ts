@@ -1025,7 +1025,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search=(form?, isAgent?, pageChange?): Promise<any> => {
     // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
     //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
     //
@@ -1106,7 +1106,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param = param + '&details=true'
     }
 
-    this.reportService.getMethod(param).subscribe((result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {
@@ -1136,9 +1136,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    }, error => {
+    }).catch(()=>{
       this.loading = false;
-    });
+    })
   }
 
   async downloadReport() {

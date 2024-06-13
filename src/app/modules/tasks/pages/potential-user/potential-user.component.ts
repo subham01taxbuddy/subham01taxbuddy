@@ -204,7 +204,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search=(form?, isAgent?, pageChange?): Promise<any> =>{
     //'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -274,8 +274,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.reportService.getMethod(param).subscribe(
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         this.loading = false;
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
@@ -302,6 +301,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           }
         }
         this.loading = false;
+      }).catch(()=>{
+        this.loading = false;
+        this._toastMessageService.alert('error', 'error')
       })
   }
 

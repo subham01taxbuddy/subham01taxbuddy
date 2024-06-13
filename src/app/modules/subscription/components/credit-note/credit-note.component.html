@@ -55,9 +55,12 @@
                 </div>
               </div>
               <div class="button-container">
-                <button class="srch-btn-1" [disabled]="loading" (click)="getCreditNote()">
+                <!-- <button class="srch-btn-1" [disabled]="loading" (click)="getCreditNote()">
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Credit
-                </button>
+                </button> -->
+                <app-custom-button class="srch-btn-1" [actions]="[getCreditNote]">
+                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Credit
+                </app-custom-button>
                 <button
                   *ngIf="loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER')"
                   class="dwldBtn-1" [disabled]="loading" (click)="downloadCreditNote()">
