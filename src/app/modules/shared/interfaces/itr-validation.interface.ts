@@ -683,6 +683,11 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income select BOA as "Yes"',
     relatedSchedule: 'personalInfo',
   },
+  NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_NO: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_No',
+    message: 'In case of Non Speculative Income select BOA as "No"',
+    relatedSchedule: 'personalInfo',
+  },
   FOREIGN_INCOME_TR_SECTION_NOT_FOUND: {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
     message: 'To claim tax relief against foreign income, please select tax relief section in schedule TR',
@@ -707,6 +712,26 @@ export const ErrorMsgsSchedule = {
     code: 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY',
     message: '80CCD2 investment declared exceeds the allowed value',
     relatedSchedule: 'investmentsDeductions',
+  },
+  TDS_SALARY_MORE_THAN_AMT: {
+    code: 'TDS_SALARY_MORE_THAN_AMT',
+    message: 'TDS on salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_16A_MORE_THAN_AMT: {
+    code: 'TDS_16A_MORE_THAN_AMT',
+    message: 'TDS other than salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_26QB_MORE_THAN_AMT: {
+    code: 'TDS_26QB_MORE_THAN_AMT',
+    message: 'TDS on sale/rent of property is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TCS_MORE_THAN_AMT: {
+    code: 'TCS_MORE_THAN_AMT',
+    message: 'TCS collected is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
   }
 };
 export interface Schedules {

@@ -4909,7 +4909,7 @@ export class PrefillIdComponent implements OnInit {
                         assesseeType: this.ITR_Obj.assesseeType,
                         residentialStatus: this.ITR_Obj.residentialStatus,
                         assetType: 'PLOT_OF_LAND',
-                        deduction: [
+                        deduction:
                           landAndBuilding?.ExemptionOrDednUs54
                             ?.ExemptionOrDednUs54Dtls
                             ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
@@ -4932,7 +4932,7 @@ export class PrefillIdComponent implements OnInit {
                                 usedDeduction: null,
                               })
                             )
-                            : {
+                            : [{
                               srn: index,
                               underSection: 'Deduction 54F',
                               orgAssestTransferDate: null,
@@ -4944,8 +4944,7 @@ export class PrefillIdComponent implements OnInit {
                               totalDeductionClaimed: null,
                               costOfPlantMachinary: null,
                               usedDeduction: null,
-                            },
-                        ],
+                            }],
                         improvement: [
                           {
                             id: null,
