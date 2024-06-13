@@ -280,8 +280,6 @@ export class LoginComponent implements OnInit {
         } else {
           this.getUserByCognitoId(res);
         }
-        //Ashwini: temp call to debug login issue
-        this.callProdApi();
       }, err => {
         this.loading = false;
         this._toastMessageService.alert("error", err.message);
@@ -289,13 +287,6 @@ export class LoginComponent implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
     }
-  }
-
-  callProdApi(){
-    //https://api.taxbuddy.com/user/user_account/9d5a2c50-7397-46c7-9302-74fbef32fdce
-    this.http.get('https://api.taxbuddy.com/user/user_account/9d5a2c50-7397-46c7-9302-74fbef32fdce').subscribe((res:any)=>{
-      console.log('prod api response:', res);
-    });
   }
 
   apiCallCounter = 0;
