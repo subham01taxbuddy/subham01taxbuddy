@@ -42,6 +42,7 @@ export class ChatService {
   loggedInUserInfo: any;
   roles: any;
   cannedMessageList: any;
+  lastMessageId: any;
 
   constructor(
     public httpClient: HttpClient,
@@ -503,12 +504,15 @@ export class ChatService {
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       const messageJson = JSON.parse(message.toString());
-                      let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-                      if (messageJson.recipient === selectedUser.request_id) {
-                        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                          let messages = this.addMessageToDB(JSON.parse(message.toString()));
-                          callback(ChatEvents.MESSAGE_RECEIVED);
-                        });
+                      if (this.lastMessageId != messageJson.message_id) {
+                        this.lastMessageId = messageJson.message_id;
+                        let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+                        if (messageJson.recipient === selectedUser.request_id) {
+                          this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+                            let messages = this.addMessageToDB(JSON.parse(message.toString()));
+                            callback(ChatEvents.MESSAGE_RECEIVED);
+                          });
+                        }
                       }
                     }
                     let update_conversation = true;
@@ -648,7 +652,7 @@ export class ChatService {
 
   getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
-    let user = this.localStorageService.getItem('SELECTED_CHAT',true);
+    let user = this.localStorageService.getItem('SELECTED_CHAT', true);
     return {
       "departmentId": user?.departmentId,
       "departmentName": user?.departmentName,
