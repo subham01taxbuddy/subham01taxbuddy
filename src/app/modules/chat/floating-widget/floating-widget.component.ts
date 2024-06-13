@@ -28,7 +28,6 @@ export class FloatingWidgetComponent implements OnInit {
         private localStorage: LocalStorageService,private chatService: ChatService
     ) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
-        this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
@@ -58,17 +57,20 @@ export class FloatingWidgetComponent implements OnInit {
         this.selectedUser = user;
         this.isUserChatVisible = true;
         this.showWidget = false;
-        localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
 
         const selectedDepartment = this.departmentNames.find(dept => dept.id === user.departmentId);
         if (selectedDepartment) {
-            this.selectedUser.departmentName = selectedDepartment.name
+            this.selectedUser.departmentName = selectedDepartment.name;
+            user.departmentName = selectedDepartment.name;
         }
+
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
+
 
         setTimeout(() => {
             if (this.userChatComponent) {
                 this.userChatComponent.scrollToBottom();
-             }
+            }
         }, 1000);
     }
 
@@ -143,10 +145,6 @@ export class FloatingWidgetComponent implements OnInit {
         }
     }
 
-    handleReceivedMessages = (data: any) => {
-        console.log('received message', data);
-     }
-
     fetchList(departmentId: any) {
         this.page = 0;
         this.selectedDepartmentId = departmentId;
@@ -178,7 +176,9 @@ export class FloatingWidgetComponent implements OnInit {
                             type: conversation.type,
                             departmentId: conversation.departmentId,
                             sender: conversation.sender,
-                            userFullName: conversation.userFullName
+                            userFullName: conversation.userFullName,
+                            departmentName: conversation.departmentName,
+
                         };
                     });
             }
@@ -194,7 +194,8 @@ export class FloatingWidgetComponent implements OnInit {
                         type: conversation.type,
                         departmentId: conversation.departmentId,
                         sender: conversation.sender,
-                        userFullName: conversation.userFullName
+                        userFullName: conversation.userFullName,
+                        departmentName: conversation.departmentName,
                     };
                 });
             }

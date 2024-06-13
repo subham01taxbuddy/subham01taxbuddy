@@ -54,6 +54,11 @@ export class ChatUIComponent implements OnInit {
         this.selectedUser = conversation;
         this.selectedConversation = conversation;
         this.isUserChatVisible = true;
+        const selectedDepartment = this.departmentNames.find(dept => dept.id === conversation.departmentId);
+        if (selectedDepartment) {
+            this.selectedUser.departmentName = selectedDepartment.name;
+            conversation.departmentName = selectedDepartment.name;
+        }
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
@@ -136,6 +141,7 @@ export class ChatUIComponent implements OnInit {
                             userFullName: conversation.userFullName,
                             departmentId: conversation.departmentId,
                             sender: conversation.sender,
+                            departmentName: conversation.departmentName,
                         };
                     });
             }
@@ -152,6 +158,7 @@ export class ChatUIComponent implements OnInit {
                         userFullName: conversation.userFullName,
                         departmentId: conversation.departmentId,
                         sender: conversation.sender,
+                        departmentName: conversation.departmentName,
                     };
                 });
             }

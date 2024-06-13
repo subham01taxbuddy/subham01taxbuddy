@@ -48,6 +48,7 @@ export class ChatService {
   private newMessageReceived = new Subject<any>();
   newMessageReceived$ = this.newMessageReceived.asObservable();
 
+  lastMessageId: any;
 
   constructor(
     public httpClient: HttpClient,
@@ -294,7 +295,7 @@ export class ChatService {
         sender: newMessage.sender,
         recipientFullName: newMessage.recipient_fullname,
       };
-     
+
       conversationLists[existingConversationIndex] = updatedConversation;
       conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
     } else {
@@ -546,16 +547,16 @@ export class ChatService {
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       const messageJson = JSON.parse(message.toString());
-                      console.log('messageJson', messageJson);
-                      this.newMessageReceived.next(message_json);
-
-                      let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-                      if (messageJson.recipient === selectedUser.request_id) {
-                        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                          let messages = this.addMessageToDB(JSON.parse(message.toString()));
- 
-                          callback(ChatEvents.MESSAGE_RECEIVED);
-                        });
+                      if (this.lastMessageId != messageJson.message_id) {
+                        this.lastMessageId = messageJson.message_id;
+                        this.newMessageReceived.next(message_json);
+                        let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+                        if (messageJson.recipient === selectedUser.request_id) {
+                          this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+                            let messages = this.addMessageToDB(JSON.parse(message.toString()));
+                            callback(ChatEvents.MESSAGE_RECEIVED);
+                          });
+                        }
                       }
                     }
                     let update_conversation = true;
@@ -695,12 +696,10 @@ export class ChatService {
 
   getMessageAttributes(payload: any) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
-    let user = this.localStorageService.getItem('SELECTED_CHAT');
-    let parsedUser = JSON.parse(user);
-    let userFullName = parsedUser?.userFullName;
+    let user = this.localStorageService.getItem('SELECTED_CHAT', true);
     return {
-      "departmentId": this.deptID,
-      "departmentName": this.deptName,
+      "departmentId": user?.departmentId,
+      "departmentName": user?.departmentName,
       "ipAddress": "103.97.240.182",
       "client": "",
       "sourcePage": "",
@@ -708,7 +707,7 @@ export class ChatService {
       "projectId": this.PROJECT_ID,
       "widgetVer": "v.5.0.71.3",
       "payload": [],
-      "userFullname": userFullName,
+      "userFullname": user?.userFullName,
       "requester_id": chatToken,
       "lang": "en",
       "tempUID": this.uuidv4(),
