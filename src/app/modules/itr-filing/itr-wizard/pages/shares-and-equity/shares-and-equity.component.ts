@@ -75,6 +75,8 @@ export class SharesAndEquityComponent
   formToBeShownAfterSaveAll: Array<any> = [];
   PREV_ITR_JSON: any;
 
+  cgAllowed = false;
+
   constructor(
     private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
@@ -107,6 +109,9 @@ export class SharesAndEquityComponent
       onGridReady: (params) => { },
       sortable: true,
     };
+
+    let cgPermission = sessionStorage.getItem('CG_MODULE');
+    this.cgAllowed = cgPermission === 'YES';
   }
 
   ngOnInit(): void {

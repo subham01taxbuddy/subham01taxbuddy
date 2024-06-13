@@ -9,7 +9,7 @@
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
 
-            <app-file-parser *ngIf="bondType === 'listed'" (newDataAvailable)="getFileParserData()"></app-file-parser>
+            <app-file-parser *ngIf="bondType === 'listed' && cgAllowed" (newDataAvailable)="getFileParserData()"></app-file-parser>
 
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading1">
