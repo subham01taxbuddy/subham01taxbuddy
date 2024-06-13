@@ -805,14 +805,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.changeService();
     switch (this.serviceType) {
       case 'ITR':
-        this.serviceDetail = this.userSubscription.smeSelectedPlan
-          ? this.userSubscription.smeSelectedPlan.name
-          : this.userSubscription.userSelectedPlan.name;
+        this.serviceDetail = this.userSubscription?.smeSelectedPlan
+          ? this.userSubscription?.smeSelectedPlan?.name
+          : this.userSubscription?.userSelectedPlan?.name;
         break;
       case 'ITRU':
-        this.serviceDetail = this.userSubscription.smeSelectedPlan
-          ? this.userSubscription.smeSelectedPlan.name
-          : this.userSubscription.userSelectedPlan.name;
+        this.serviceDetail = this.userSubscription?.smeSelectedPlan
+          ? this.userSubscription?.smeSelectedPlan?.name
+          : this.userSubscription?.userSelectedPlan?.name;
         break;
     }
     this.description.setValue(this.userSubscription?.item.itemDescription);
