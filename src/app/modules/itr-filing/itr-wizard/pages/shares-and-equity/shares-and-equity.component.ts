@@ -632,20 +632,22 @@ export class SharesAndEquityComponent
       let capitalGain = 0;
       let saleValue = 0;
       let expenses = 0;
-      const securitiesArray = <UntypedFormArray>(
-        this.securitiesForm.get('securitiesArray')
-      );
-      securitiesArray.controls.forEach((element) => {
-        if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
-          capitalGain += parseInt(
-            (element as UntypedFormGroup).controls['capitalGain'].value
-          );
-          saleValue += parseInt(
-            (element as UntypedFormGroup).controls['sellValue'].value
-          );
-          expenses += parseInt(
-            (element as UntypedFormGroup).controls['sellExpense'].value
-          );
+      let securitiesArray;
+      if (this.bondType === 'listed') {
+        securitiesArray = this.Copy_ITR_JSON.capitalGain.filter(
+            (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+        )[0]?.assetDetails;
+      } else if (this.bondType === 'unlisted') {
+        securitiesArray = this.Copy_ITR_JSON.capitalGain.filter(
+            (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+        )[0].assetDetails;
+
+      }
+      securitiesArray.forEach((element) => {
+        if (element.gainType === 'LONG') {
+          capitalGain += element.capitalGain;
+          saleValue += element.sellValue;
+          expenses += element.sellExpense;
         }
       });
 
