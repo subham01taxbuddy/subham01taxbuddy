@@ -4,6 +4,8 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
 import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
+import { Subscription } from 'rxjs';
+import { ChatService } from '../chat.service';
 
 interface Department {
     name: string,
@@ -23,7 +25,7 @@ export class FloatingWidgetComponent implements OnInit {
     @Output() widgetClosed = new EventEmitter<void>();
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService,
+        private localStorage: LocalStorageService,private chatService: ChatService
     ) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -41,12 +43,15 @@ export class FloatingWidgetComponent implements OnInit {
     fullChatScreen: boolean = false;
     selectedDepartmentId: any;
     page = 0;
+
+    newMessageSubscription: Subscription;
     showFullScreen() {
         this.fullChatScreen = !this.fullChatScreen;
         this.page = 0;
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
         this.chatManager.conversationList(this.page);
+        document.body.classList.add('no-scroll');
     }
 
     openUserChat(user: any) {
@@ -124,6 +129,9 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.getDepartmentList();
         console.log('full conversation list');
         this.chatManager.conversationList(this.page);
+        this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
+            this.chatService.updateConversationList(newMessage,this.conversationList);
+          });
 
     }
 
@@ -137,7 +145,7 @@ export class FloatingWidgetComponent implements OnInit {
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
-    }
+     }
 
     fetchList(departmentId: any) {
         this.page = 0;
@@ -198,5 +206,40 @@ export class FloatingWidgetComponent implements OnInit {
         this.selectedDepartmentId = data[0]._id;
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
+
+    // updateConversationList(newMessage: any) {
+    //     const existingConversationIndex = this.conversationList.findIndex(
+    //       (conversation) => conversation.request_id === newMessage.recipient
+    //     );
+      
+    //     if (existingConversationIndex !== -1) {
+    //        const updatedConversation = {
+    //         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+    //         userFullName: newMessage.sender_fullname,
+    //         text: newMessage.text,
+    //         timestamp: newMessage.timestamp,
+    //         request_id: newMessage.recipient,
+    //         type: newMessage.type,
+    //         departmentId: newMessage.attributes.departmentId,
+    //         sender: newMessage.sender,
+    //         recipientFullName: newMessage.recipient_fullname,
+    //       };
+    //       this.conversationList[existingConversationIndex] = updatedConversation;
+    //       this.conversationList.unshift(this.conversationList.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
+    //     } else {
+    //        const newConversation = {
+    //         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+    //         userFullName: newMessage.sender_fullname,
+    //         text: newMessage.text,
+    //         timestamp: newMessage.timestamp,
+    //         request_id: newMessage.recipient,
+    //         type: newMessage.type,
+    //         departmentId: newMessage.attributes.departmentId,
+    //         sender: newMessage.sender,
+    //         recipientFullName: newMessage.recipient_fullname,
+    //       };
+    //       this.conversationList.unshift(newConversation);
+    //     }
+    //   }
 }
 

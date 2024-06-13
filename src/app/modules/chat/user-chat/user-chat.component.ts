@@ -177,6 +177,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   showFullScreen() {
     this.fullChatScreen = !this.fullChatScreen;
     this.chatManager.getDepartmentList();
+    document.body.classList.add('no-scroll');
+
   }
 
   sendMessage(payload?: any) {

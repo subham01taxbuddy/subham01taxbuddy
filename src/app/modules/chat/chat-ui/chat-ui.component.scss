@@ -212,6 +212,11 @@ input[type="text"] {
 .selected-dept {
   background-color: #3498db;
 }
+
+.selected-chat{
+  background-color: #bcdff7 !important;
+}
+
 ::ng-deep app-user-chat.floating.expanded {
 
    .floating{
@@ -243,11 +248,16 @@ input[type="text"] {
    }
 
    .user-input{
-    bottom: 20px;
+    position: absolute;
+    bottom: 0px;
    }
 
    .file-upload-box{
     margin-left: 14px;
+   }
+
+   .cannedMessageBox{
+    bottom: 44px;
    }
   
  

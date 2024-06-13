@@ -42,6 +42,12 @@ export class ChatService {
   loggedInUserInfo: any;
   roles: any;
   cannedMessageList: any;
+  userId: any;
+
+
+  private newMessageReceived = new Subject<any>();
+  newMessageReceived$ = this.newMessageReceived.asObservable();
+
 
   constructor(
     public httpClient: HttpClient,
@@ -126,6 +132,7 @@ export class ChatService {
                 this.localStorageService.setItem("CHAT21_USER_ID", chat21Result.data.userid);
                 this.localStorageService.setItem("CHAT21_USER_NAME", chat21Result.data.fullname);
                 this.initChatVariables(result.data.requestId);
+                this.userId = chat21Result.data.userid;
                 this.fetchConversationList(0, chat21Result.data.userid);
                 this.getCannedMessageList();
                 if (initializeSocket) {
@@ -269,6 +276,42 @@ export class ChatService {
     return transformedData;
   }
 
+
+  updateConversationList(newMessage: any, conversationLists: any) {
+    const existingConversationIndex = conversationLists.findIndex(
+      (conversation) => conversation.request_id === newMessage.recipient
+    );
+
+    if (existingConversationIndex !== -1) {
+      const updatedConversation = {
+        image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+        userFullName: newMessage.attributes.userFullname,
+        text: newMessage.text,
+        timestamp: newMessage.timestamp,
+        request_id: newMessage.recipient,
+        type: newMessage.type,
+        departmentId: newMessage.attributes.departmentId,
+        sender: newMessage.sender,
+        recipientFullName: newMessage.recipient_fullname,
+      };
+     
+      conversationLists[existingConversationIndex] = updatedConversation;
+      conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
+    } else {
+      const newConversation = {
+        image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+        userFullName: newMessage.attributes.userFullname,
+        text: newMessage.text,
+        timestamp: newMessage.timestamp,
+        request_id: newMessage.recipient,
+        type: newMessage.type,
+        departmentId: newMessage.attributes.departmentId,
+        sender: newMessage.sender,
+        recipientFullName: newMessage.recipient_fullname,
+      };
+      conversationLists.unshift(newConversation);
+    }
+  }
 
   clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');
@@ -503,10 +546,14 @@ export class ChatService {
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       const messageJson = JSON.parse(message.toString());
+                      console.log('messageJson', messageJson);
+                      this.newMessageReceived.next(message_json);
+
                       let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                       if (messageJson.recipient === selectedUser.request_id) {
                         this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                           let messages = this.addMessageToDB(JSON.parse(message.toString()));
+ 
                           callback(ChatEvents.MESSAGE_RECEIVED);
                         });
                       }

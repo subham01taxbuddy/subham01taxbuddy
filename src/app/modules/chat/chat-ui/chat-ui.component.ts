@@ -4,6 +4,8 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
 import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
+import { Subscription } from 'rxjs';
+import { ChatService } from '../chat.service';
 
 interface Department {
     name: string,
@@ -26,7 +28,7 @@ export class ChatUIComponent implements OnInit {
 
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService) {
+        private localStorage: LocalStorageService, private chatService: ChatService) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
@@ -45,7 +47,9 @@ export class ChatUIComponent implements OnInit {
     selectedConversation: any;
     selectedDepartmentId: any;
     page = 0;
+    newMessageSubscription: Subscription;
 
+ 
     openUserChat(conversation: any) {
         this.selectedUser = conversation;
         this.selectedConversation = conversation;
@@ -70,6 +74,7 @@ export class ChatUIComponent implements OnInit {
     goBack() {
         this.page = 0;
         this.isBlankScreenVisible = false;
+        document.body.classList.remove('no-scroll');
     }
 
     users = [];
@@ -86,6 +91,9 @@ export class ChatUIComponent implements OnInit {
     ngOnInit(): void {
         // this.chatManager.getDepartmentList();
         // this.chatManager.conversationList(this.page);
+        this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
+            this.chatService.updateConversationList(newMessage,this.conversationList);
+          });
     }
 
     handleReceivedMessages = (data: any) => {
@@ -157,6 +165,7 @@ export class ChatUIComponent implements OnInit {
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
+    
 
     onScrollDown() {
         this.page = this.page + 1;;

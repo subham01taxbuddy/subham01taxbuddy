@@ -30,7 +30,7 @@
             <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
                 [infiniteScrollThrottle]="20" (scrolled)="onScrollDown()">
                 <div class="user-box" *ngFor="let conversation of conversationList"
-                    (click)="openUserChat(conversation)">
+                    (click)="openUserChat(conversation)" [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
                     <div class="row">
                         <div class="col-2">
                             <img [src]="conversation.image" alt="User Icon">
