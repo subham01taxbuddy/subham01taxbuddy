@@ -141,7 +141,7 @@
                                     maxlength="14" required [readonly]="
                                               checkBuyDateBefore31stJan(selectedFormGroup) &&
                                               this.bondType === 'listed'
-                                            " (change)="
+                                            " (blur)="
                                               calculateGainTypeOrIndexCost(
                                                 selectedFormGroup
                                               );
@@ -167,7 +167,7 @@
                                     name="purchaseCost" maxlength="14" [readonly]="
                                               checkBuyDateBefore31stJan(selectedFormGroup) &&
                                               this.bondType === 'listed'
-                                            " (change)="
+                                            " (blur)="
                                               calculateGainTypeOrIndexCost(
                                                 selectedFormGroup
                                               )
@@ -209,7 +209,7 @@
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input matInput formControlName="sellExpense" placeholder="Expenses"
                                     name="sellExpense" maxlength="14" digitsOnly
-                                    (change)="calculateTotalCG(selectedFormGroup, true)"
+                                    (blur)="calculateTotalCG(selectedFormGroup, true)"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                   <mat-error *ngIf="selectedFormGroup?.get('sellExpense').hasError('pattern')">Enter
                                     valid amount.</mat-error>

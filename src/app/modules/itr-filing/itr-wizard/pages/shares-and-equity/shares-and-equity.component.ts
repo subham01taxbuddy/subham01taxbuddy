@@ -414,7 +414,9 @@ export class SharesAndEquityComponent
     this.selectedFormGroup.controls['algorithm'].setValue('cgSharesMF');
   }
 
-  saveManualEntry() {
+  async saveManualEntry() {
+    event.preventDefault();
+    await this.calculateTotalCG(this.selectedFormGroup, true);
     let result = this.selectedFormGroup.getRawValue();
     if (this.isAdd) {
       let data;
@@ -863,94 +865,98 @@ export class SharesAndEquityComponent
 
   calculateTotalCG(securities, refresh?) {
     this.updateDeductionUI();
-    if (securities.valid) {
-      this.loading = true;
-      const param = '/singleCgCalculate';
-      let securitiesImprovement =
-        securities?.controls['improvementsArray']?.value;
-      securitiesImprovement.srn = securities?.controls['srn']?.value;
+    return new Promise(async (resolve, reject) => {
+      if (securities.valid) {
+        this.loading = true;
+        const param = '/singleCgCalculate';
+        let securitiesImprovement =
+            securities?.controls['improvementsArray']?.value;
+        securitiesImprovement.srn = securities?.controls['srn']?.value;
 
-      let request = {
-        assessmentYear: '2022-2023',
-        assesseeType: 'INDIVIDUAL',
-        residentialStatus: 'RESIDENT',
-        assetType:
-          this.bondType === 'listed'
-            ? 'EQUITY_SHARES_LISTED'
-            : 'EQUITY_SHARES_UNLISTED',
-        assetDetails: [securities.getRawValue()],
+        let request = {
+          assessmentYear: '2022-2023',
+          assesseeType: 'INDIVIDUAL',
+          residentialStatus: 'RESIDENT',
+          assetType:
+              this.bondType === 'listed'
+                  ? 'EQUITY_SHARES_LISTED'
+                  : 'EQUITY_SHARES_UNLISTED',
+          assetDetails: [securities.getRawValue()],
 
-        improvement:
-          this.bondType === 'listed'
-            ? [
-              {
-                srn: securities.controls['srn'].value,
-                dateOfImprovement: '',
-                costOfImprovement: 0,
-              },
-            ]
-            : [securitiesImprovement],
+          improvement:
+              this.bondType === 'listed'
+                  ? [
+                    {
+                      srn: securities.controls['srn'].value,
+                      dateOfImprovement: '',
+                      costOfImprovement: 0,
+                    },
+                  ]
+                  : [securitiesImprovement],
 
-        deduction:
-          this.deductionForm.invalid || !this.deduction
-            ? []
-            : [this.deductionForm.getRawValue()],
-      };
-      this.itrMsService.postMethod(param, request).subscribe(
-        (res: any) => {
-          this.loading = false;
-          if (res?.assetDetails[0]?.capitalGain) {
-            securities?.controls['capitalGain']?.setValue(
-              res?.assetDetails[0]?.capitalGain
-            );
-          } else {
-            this.loading = false;
-            securities?.controls['capitalGain']?.setValue(0);
-          }
+          deduction:
+              this.deductionForm.invalid || !this.deduction
+                  ? []
+                  : [this.deductionForm.getRawValue()],
+        };
+        this.itrMsService.postMethod(param, request).subscribe(
+            (res: any) => {
+              this.loading = false;
+              if (res?.assetDetails[0]?.capitalGain) {
+                securities?.controls['capitalGain']?.setValue(
+                    res?.assetDetails[0]?.capitalGain
+                );
+              } else {
+                this.loading = false;
+                securities?.controls['capitalGain']?.setValue(0);
+              }
 
-          if (this.bondType === 'listed') {
-            if (res.assetDetails[0].grandFatheredValue) {
-              securities.controls['grandFatheredValue'].setValue(
-                res.assetDetails[0].grandFatheredValue
+              if (this.bondType === 'listed') {
+                if (res.assetDetails[0].grandFatheredValue) {
+                  securities.controls['grandFatheredValue'].setValue(
+                      res.assetDetails[0].grandFatheredValue
+                  );
+                } else {
+                  securities.controls['grandFatheredValue'].setValue(
+                      res.assetDetails[0].purchaseCost
+                  );
+                }
+
+                if (res.assetDetails[0].totalFairMarketValueOfCapitalAsset) {
+                  securities.controls[
+                      'totalFairMarketValueOfCapitalAsset'
+                      ].setValue(
+                      res.assetDetails[0].totalFairMarketValueOfCapitalAsset
+                  );
+                } else {
+                  securities.controls['grandFatheredValue'].setValue(0);
+                }
+
+                if (res.assetDetails[0].lowerOfFMVandSaleValue) {
+                  securities.controls['lowerOfFMVandSaleValue'].setValue(
+                      res.assetDetails[0].lowerOfFMVandSaleValue
+                  );
+                } else {
+                  securities.controls['lowerOfFMVandSaleValue'].setValue(0);
+                }
+              }
+              resolve(0);
+            },
+            (error) => {
+              this.loading = false;
+              this.toastMsgService.alert(
+                  'error',
+                  'failed to calculate total capital gain.'
               );
-            } else {
-              securities.controls['grandFatheredValue'].setValue(
-                res.assetDetails[0].purchaseCost
-              );
+              resolve(0);
             }
-
-            if (res.assetDetails[0].totalFairMarketValueOfCapitalAsset) {
-              securities.controls[
-                'totalFairMarketValueOfCapitalAsset'
-              ].setValue(
-                res.assetDetails[0].totalFairMarketValueOfCapitalAsset
-              );
-            } else {
-              securities.controls['grandFatheredValue'].setValue(0);
-            }
-
-            if (res.assetDetails[0].lowerOfFMVandSaleValue) {
-              securities.controls['lowerOfFMVandSaleValue'].setValue(
-                res.assetDetails[0].lowerOfFMVandSaleValue
-              );
-            } else {
-              securities.controls['lowerOfFMVandSaleValue'].setValue(0);
-            }
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate total capital gain.'
-          );
+        );
+      } else {
+        if (refresh) {
+          this.utilsService.highlightInvalidFormFields(securities, "accordBtn", this.elementRef);
         }
-      );
-    } else {
-      if(refresh) {
-        this.utilsService.highlightInvalidFormFields(securities, "accordBtn", this.elementRef);
       }
-    }
+    });
   }
 
   // ================================SAVE FUNCTION===============================
