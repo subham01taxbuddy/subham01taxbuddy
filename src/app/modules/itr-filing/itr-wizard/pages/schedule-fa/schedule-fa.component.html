@@ -77,15 +77,16 @@
                             </div>                          
                               <div class="col-sm-6 px-2"><div class="form-field">
                                 <div>
-                                  <span class="normal_text">Country code </span>
+                                  <span class="normal_text">Country code</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                    [(value)]="depositoryAccounts.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                        matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
@@ -317,10 +318,11 @@
                                   </div>
                                   <div class="form-control-wrapper">
                                     <mat-form-field appearance="outline">
-                                      <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                        <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                          matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                          {{ nature }}
+                                      <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                  [(value)]="custodialAccounts.value.countryCode">
+                                        <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                    matTooltip="{{ nature.code + ':' + nature.name }}">
+                                          {{ nature.code + ':' + nature.name }}
                                         </mat-option>
                                       </mat-select>
                                     </mat-form-field>
@@ -567,11 +569,13 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
-                                      </mat-option></mat-select>
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                [(value)]="equityAndDebtInterest.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                  matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
+                                      </mat-option>
+                                    </mat-select>
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -764,10 +768,11 @@
                                 </div>
                                 <mat-form-field appearance="outline">
                                   <mat-label>Country Code</mat-label>
-                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                      {{ nature }}
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                              [(value)]="CashValueInsurance.value.countryCode">
+                                    <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                matTooltip="{{ nature.code + ':' + nature.name }}">
+                                      {{ nature.code + ':' + nature.name }}
                                     </mat-option></mat-select>
                                 </mat-form-field>
                               </div>
@@ -917,10 +922,11 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                [(value)]="financialInterestDetails.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                  matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
@@ -1136,10 +1142,11 @@
                               </div>
                               <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
-                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                      {{ nature }}
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                              [(value)]="immovablePropertryDetails.value.countryCode">
+                                    <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                matTooltip="{{ nature.code + ':' + nature.name }}">
+                                      {{ nature.code + ':' + nature.name }}
                                     </mat-option>
                                   </mat-select>
                                 </mat-form-field>
@@ -1327,10 +1334,11 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                [(value)]="capitalAssetsDetails.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                  matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
@@ -1576,10 +1584,11 @@
                                   </div>
                                   <div class="form-control-wrapper">
                                     <mat-form-field appearance="outline">
-                                      <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                        <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                          matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                          {{ nature }}
+                                      <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                  [(value)]="signingAuthorityDetails.value.countryCode">
+                                        <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                    matTooltip="{{ nature.code + ':' + nature.name }}">
+                                          {{ nature.code + ':' + nature.name }}
                                         </mat-option>
                                       </mat-select>
                                     </mat-form-field>
@@ -1841,10 +1850,11 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                [(value)]="trustsDetails.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                  matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
@@ -2120,10 +2130,11 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
-                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
-                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
-                                        {{ nature }}
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required
+                                                [(value)]="otherIncomeDetails.value.countryCode">
+                                      <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
+                                                  matTooltip="{{ nature.code + ':' + nature.name }}">
+                                        {{ nature.code + ':' + nature.name }}
                                       </mat-option></mat-select>
                                   </mat-form-field>
                                 </div>
