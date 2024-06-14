@@ -7135,10 +7135,10 @@ export class SummaryComponent implements OnInit {
     this.http.get(url, { responseType: 'json' }).subscribe(
       (data: any) => {
         console.log(data);
-        // if(data?.success && !data?.success){
-        //   this.utilsService.showSnackBar(data.message);
-        //   return;
-        // }
+        if(data.success === false){
+          this.utilsService.showSnackBar(data.message);
+          return;
+        }
         this.itrJsonForFileItr = data;
         // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
         this.loading = true;
