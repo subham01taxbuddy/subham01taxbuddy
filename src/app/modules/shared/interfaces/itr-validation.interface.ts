@@ -688,6 +688,16 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income select BOA as "No"',
     relatedSchedule: 'personalInfo',
   },
+  NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET',
+    message: 'In case of Non Speculative Income, please fill balance sheet',
+    relatedSchedule: 'balanceSheet',
+  },
+  IMMOVABLE_PROPERTY_INCOMPLETE: {
+    code: 'IMMOVABLE_PROPERTY_INCOMPLETE',
+    message: 'Please fill all immovable asset details in schedule AL',
+    relatedSchedule: 'moreInformation',
+  },
   FOREIGN_INCOME_TR_SECTION_NOT_FOUND: {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
     message: 'To claim tax relief against foreign income, please select tax relief section in schedule TR',
