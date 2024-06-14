@@ -7135,7 +7135,7 @@ export class SummaryComponent implements OnInit {
     this.http.get(url, { responseType: 'json' }).subscribe(
       (data: any) => {
         console.log(data);
-        if(!data?.success){
+        if(data && !data?.success){
           this.utilsService.showSnackBar(data.message);
           return;
         }
