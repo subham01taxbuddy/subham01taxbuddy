@@ -90,12 +90,12 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          let loggedInRole = this.utilsService.getUserRoles();
-          if(loggedInRole.includes('ROLE_FILER')){
-            this.itrStatus = response.filter((item: any) => item.statusId !== 8);
-          }else{
+          // let loggedInRole = this.utilsService.getUserRoles();
+          // if(loggedInRole.includes('ROLE_FILER')){
+          //   this.itrStatus = response.filter((item: any) => item.statusId !== 8);
+          // }else{
             this.itrStatus = response;
-          }
+          // }
         } else {
           this.itrStatus = [];
         }
