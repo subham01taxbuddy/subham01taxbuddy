@@ -1183,7 +1183,7 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   getCountryNameFromCode(code){
-    return this.countryCodeList.filter(value => value.code === code)[0]?.name;
+    return this.countryCodeList.find(value => value.code == code)?.name;
   }
   // GET FUNCTIONS SECTION
   get getDepositoryAccounts() {
