@@ -1007,12 +1007,13 @@ export class UtilsService {
   }
 
   getUserRoles() {
+    console.log('sme', sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     const loggedInSmeInfo = JSON.parse(
       sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
     );
     if (
       this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].roles)
+      loggedInSmeInfo[0]?.roles && loggedInSmeInfo[0].length > 1
     ) {
       return loggedInSmeInfo[0].roles;
     }
