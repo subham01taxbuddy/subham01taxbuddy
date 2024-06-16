@@ -1007,14 +1007,20 @@ export class UtilsService {
   }
 
   getUserRoles() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].roles)
-    ) {
-      return loggedInSmeInfo[0].roles;
+    let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    console.log('sme', sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    if(this.isNonEmpty(smeInfo)) {
+      const loggedInSmeInfo = JSON.parse(
+          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+      );
+      if (
+          this.isNonEmpty(loggedInSmeInfo) &&
+          loggedInSmeInfo[0]?.roles && loggedInSmeInfo[0].roles.length > 0
+      ) {
+        return loggedInSmeInfo[0].roles;
+      }
+    } else {
+      return [];
     }
   }
 
