@@ -1025,14 +1025,19 @@ export class UtilsService {
   }
 
   getPartnerType() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
-    ) {
-      return loggedInSmeInfo[0].partnerType;
+    let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    if(this.isNonEmpty(smeInfo)) {
+      const loggedInSmeInfo = JSON.parse(
+          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+      );
+      if (
+          this.isNonEmpty(loggedInSmeInfo) &&
+          this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+      ) {
+        return loggedInSmeInfo[0].partnerType;
+      }
+    } else {
+      return '';
     }
   }
 
