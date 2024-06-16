@@ -28,6 +28,7 @@ import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-fi
 import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report/view-call-details/view-call-details.component';
 import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/view-chat-links.component';
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
+import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 
 @NgModule({
     imports: [
@@ -62,7 +63,8 @@ import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-don
         DocumentsUploadedFilingNotDoneComponent,
         ViewCallDetailsComponent,
         ViewChatLinksComponent,
-        ClientAddedFilingNotDoneComponent
+        ClientAddedFilingNotDoneComponent,
+        FilingSlaComponent
     ],
     providers: [JsonToCsvService]
 })
