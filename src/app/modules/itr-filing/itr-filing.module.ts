@@ -108,6 +108,7 @@ import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-in
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/update-income-sources/update-income-sources.component';
 
 @NgModule({
     imports: [
@@ -233,7 +234,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         ExemptIncomeComponent,
         AddAssetsComponent,
         ScheduleEsopComponent,
-        NorDetailsDialogComponent
+        NorDetailsDialogComponent,
+        UpdateIncomeSourcesComponent
     ],
     exports: [CustomerProfileComponent]
 })

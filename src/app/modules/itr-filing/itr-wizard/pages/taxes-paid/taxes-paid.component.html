@@ -57,10 +57,18 @@
               </h2>
               <div id="tdsOther" class="accordion-collapse collapse" data-bs-parent="#tdsOtherAccordion">
                 <div class="accordion__item-body">
-                  <div class="Bx4R" *ngIf="tdsOtherMode === 'VIEW'">
-                    <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
-                      + Add more
-                    </button>
+                  <div *ngIf="tdsOtherMode === 'VIEW'">
+                    <div class="Bx4R">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+                    <div class="Bx4R mr-2">
+                      <button type="button" class="addAno"
+                        (click)="$event.stopPropagation();updateIncomeSources(TDS_OTHER_TYPE_CODE)">
+                        Income Source Update
+                      </button>
+                    </div>
                   </div>
 
 
