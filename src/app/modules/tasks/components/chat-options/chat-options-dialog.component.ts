@@ -6,6 +6,7 @@ import { GridOptions } from 'ag-grid-community';
 import { UserChatComponent } from 'src/app/modules/chat/user-chat/user-chat.component';
 import { ViewChild } from '@angular/core';
 import { LocalStorageService } from 'src/app/services/storage.service';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 @Component({
   selector: 'app-chat-options-dialog',
   templateUrl: './chat-options-dialog.component.html',
@@ -40,7 +41,8 @@ export class ChatOptionsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
-    private localStorageService:LocalStorageService
+    private localStorageService:LocalStorageService,
+    private chatService: ChatService
   ) {
     this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
   }
@@ -52,15 +54,19 @@ export class ChatOptionsDialogComponent implements OnInit {
     this.userChatOpen = !this.userChatOpen;
     this.username = username;
     this.requestId = requestId;
+
+    const department = this.chatService.getDeptDetails().find(dept => dept.name === this.data.serviceType);
+    console.log('department result in chat options',department);
     setTimeout(() => {
       if (this.userChatComponent) {
         this.userChatComponent.scrollToBottom();
       }
     }, 1000);
     const data = {
-      username: this.username,
-      requestId: this.requestId,
-      serviceType: this.data.serviceType,
+      userFullName: this.username,
+      request_id: this.requestId,
+      departmentName: this.data.serviceType,
+      departmentId: department ? department._id : null,
       image: this.image
     };
     this.dialogRef.close(data);

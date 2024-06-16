@@ -66,6 +66,10 @@ export class ChatUIComponent implements OnInit {
                 this.userChatComp.scrollToBottom();
             }
         }, 1000);
+        if(this.userChatComp){
+            this.userChatComp.messageSent = '';
+            this.userChatComp.cannedMessageList = [];
+        }
 
     }
 

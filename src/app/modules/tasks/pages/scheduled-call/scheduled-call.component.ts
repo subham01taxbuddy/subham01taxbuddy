@@ -849,8 +849,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     });
 
     disposable.afterClosed().subscribe((result) => { 
-      if(result?.requestId){
-        this.chatBuddyDetails = result;
+       if(result?.request_id){
+        this.chatBuddyDetails = result; 
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+       
      }
     });
   }

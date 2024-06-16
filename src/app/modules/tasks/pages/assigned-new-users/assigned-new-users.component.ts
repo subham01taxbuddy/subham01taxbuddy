@@ -30,6 +30,7 @@ import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatManager } from 'src/app/modules/chat/chat-manager';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { LocalStorageService } from 'src/app/services/storage.service';
 
 declare function we_track(key: string, value: any);
 @Component({
@@ -88,6 +89,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private userService: UserMsService,
     private sanitizer: DomSanitizer,
     private chatManager: ChatManager,
+    private localStorageService: LocalStorageService,
     private kommunicateSsoService: KommunicateSsoService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -1266,8 +1268,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
-      else if(result?.requestId){
-         this.chatBuddyDetails = result;
+      else if(result?.request_id){
+         this.chatBuddyDetails = result; 
+         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+        
       }
     });
 

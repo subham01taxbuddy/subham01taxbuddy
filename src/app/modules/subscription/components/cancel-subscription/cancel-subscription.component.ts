@@ -660,8 +660,10 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      if(result?.requestId){
+      if(result?.request_id){
         this.chatBuddyDetails = result;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+
      }
     });
   }

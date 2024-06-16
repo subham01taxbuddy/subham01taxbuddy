@@ -263,6 +263,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.requestId) {
       this.chatManager.openConversation(this.requestId);
+ 
     }
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
     this.originalCannedMessageList = this.chatService.filterCannedMessages();

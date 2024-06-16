@@ -805,6 +805,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if(result?.requestId){
         this.chatBuddyDetails = result;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+
      }
     });
   }

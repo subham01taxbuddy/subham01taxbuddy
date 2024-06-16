@@ -43,6 +43,9 @@ export class ChatService {
   roles: any;
   cannedMessageList: any;
   userId: any;
+  private deptList: any[] = [];
+  private deptListData: any[] = [];
+
 
 
   private newMessageReceived = new Subject<any>();
@@ -69,22 +72,27 @@ export class ChatService {
   initDeptDetails(serviceType?: string) {
     let url = serviceType ? `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`
       : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
-    let deptList = [];
-    this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
+     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
       if (result.success && result.data.length > 0) {
+        console.log('department result',result);
         this.deptName = result.data[0].name;
         console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
-        deptList = result.data;
+        this.deptList = result.data;
+        this.deptListData = result.data;
         this.localStorageService.setItem("CHATBUDDY_DEPT_DETAILS", result.data, true);
         this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
-        deptList = deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
+        this.deptList = this.deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(ChatEvents.DEPT_RECEIVED, deptList);
+          callback(ChatEvents.DEPT_RECEIVED, this.deptList);
         });
       }
     });
 
+  }
+ 
+  getDeptDetails(): any[] {
+    return this.deptListData;
   }
 
   initChatVariables(requestId) {

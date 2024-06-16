@@ -1253,6 +1253,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       else if(result?.requestId){
         this.chatBuddyDetails = result;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+
      }
     });
   }

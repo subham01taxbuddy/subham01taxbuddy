@@ -1562,8 +1562,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.chatManager.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
-      else if(result?.requestId){
+      else if(result?.request_id){
         this.chatBuddyDetails = result;
+        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+
      }
 
     });
