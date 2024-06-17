@@ -82,8 +82,8 @@ export class OtherDeductionsComponent implements OnInit {
     this.otherDeductionForm = this.fb.group({
       us80ee: [null, Validators.pattern(AppConstants.numericRegex)],
       us80eea: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80qqb: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80rrb: [null, Validators.pattern(AppConstants.numericRegex)],
+      // us80qqb: [null, Validators.pattern(AppConstants.numericRegex)],
+      // us80rrb: [null, Validators.pattern(AppConstants.numericRegex)],
       us80e: [null, Validators.pattern(AppConstants.numericRegex)],
       us80gg: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -206,8 +206,8 @@ export class OtherDeductionsComponent implements OnInit {
         if (result) {
           const deductionDetails = result.summaryDeductions.filter(
             (deduction) =>
-              deduction.sectionType === '80QQB' ||
-              deduction.sectionType === '80RRB' ||
+              // deduction.sectionType === '80QQB' ||
+              // deduction.sectionType === '80RRB' ||
               deduction.sectionType === '80EE' ||
               deduction.sectionType === '80EEA' ||
               deduction.sectionType === '80TTA' ||
@@ -218,8 +218,8 @@ export class OtherDeductionsComponent implements OnInit {
           const deductionArray = [
             'us80ee',
             'us80eea',
-            'us80qqb',
-            'us80rrb',
+            // 'us80qqb',
+            // 'us80rrb',
             'us80tta',
             'us80ttb'
           ];
@@ -249,7 +249,7 @@ export class OtherDeductionsComponent implements OnInit {
               );
               this.ded80TTB.emit(value[0]?.eligibleAmount);
               // key.setValue(value[0].eligibleAmount);
-            } else if (element === 'us80qqb') {
+            } /*else if (element === 'us80qqb') {
               let value = deductionDetails?.filter(
                 (deduction) => deduction.sectionType === '80QQB'
               );
@@ -259,7 +259,7 @@ export class OtherDeductionsComponent implements OnInit {
                 (deduction) => deduction.sectionType === '80RRB'
               );
               key.setValue(value[0].eligibleAmount);
-            }
+            }*/
           });
         }
         this.loading = false;

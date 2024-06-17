@@ -17,14 +17,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   anyOtherIncomeDropdown = [
-    {
-      value: 'ROYALTY_US_80QQB',
-      label: 'Royalty for Books/Author/Publishers (80QQB)',
-    },
-    {
-      value: 'ROYALTY_US_80RRB',
-      label: 'Royalty Against Patent (80RRB)',
-    },
+    // {
+    //   value: 'ROYALTY_US_80QQB',
+    //   label: 'Royalty for Books/Author/Publishers (80QQB)',
+    // },
+    // {
+    //   value: 'ROYALTY_US_80RRB',
+    //   label: 'Royalty Against Patent (80RRB)',
+    // },
     {
       value: 'INCOME_US_56_2_XII',
       label: 'Any specified sum received by a unit holder from a business trust during the previous year referred to in section 56(2)(xii)',
@@ -523,8 +523,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'TAX_REFUND_INTEREST' &&
         item.incomeType !== 'ANY_OTHER' &&
         item.incomeType !== 'FAMILY_PENSION' &&
-        item.incomeType !== 'ROYALTY_US_80RRB' &&
-        item.incomeType !== 'ROYALTY_US_80QQB' &&
+        // item.incomeType !== 'ROYALTY_US_80RRB' &&
+        // item.incomeType !== 'ROYALTY_US_80QQB' &&
         item.incomeType !== 'INCOME_US_56_2_XII' &&
         item.incomeType !== 'INCOME_US_56_2_XIII' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
@@ -745,8 +745,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
       let anyOtherIncomes = this.ITR_JSON.incomes.filter(
         (item) =>
-          item.incomeType === 'ROYALTY_US_80RRB' ||
-          item.incomeType === 'ROYALTY_US_80QQB' ||
+          // item.incomeType === 'ROYALTY_US_80RRB' ||
+          // item.incomeType === 'ROYALTY_US_80QQB' ||
           item.incomeType === 'INCOME_US_56_2_XII' ||
           item.incomeType === 'INCOME_US_56_2_XIII' ||
           item.incomeType === 'ANY_OTHER'
