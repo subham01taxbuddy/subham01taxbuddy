@@ -1035,7 +1035,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
           let lowerOf = Math.min(leaveEncash, fixedLimit);
 
-          // lower of 3 lakhs only applicable for non government employees
+          // lower of 25 lakhs only applicable for non government employees
           if (
             this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
             this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
