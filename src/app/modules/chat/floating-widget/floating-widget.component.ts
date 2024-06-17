@@ -51,6 +51,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.getDepartmentList();
         this.chatManager.conversationList(this.page);
         document.body.classList.add('no-scroll');
+        this.localStorage.removeItem('SELECTED_CHAT');
     }
 
     openUserChat(user: any) {
@@ -208,39 +209,6 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
-    // updateConversationList(newMessage: any) {
-    //     const existingConversationIndex = this.conversationList.findIndex(
-    //       (conversation) => conversation.request_id === newMessage.recipient
-    //     );
-      
-    //     if (existingConversationIndex !== -1) {
-    //        const updatedConversation = {
-    //         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-    //         userFullName: newMessage.sender_fullname,
-    //         text: newMessage.text,
-    //         timestamp: newMessage.timestamp,
-    //         request_id: newMessage.recipient,
-    //         type: newMessage.type,
-    //         departmentId: newMessage.attributes.departmentId,
-    //         sender: newMessage.sender,
-    //         recipientFullName: newMessage.recipient_fullname,
-    //       };
-    //       this.conversationList[existingConversationIndex] = updatedConversation;
-    //       this.conversationList.unshift(this.conversationList.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
-    //     } else {
-    //        const newConversation = {
-    //         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-    //         userFullName: newMessage.sender_fullname,
-    //         text: newMessage.text,
-    //         timestamp: newMessage.timestamp,
-    //         request_id: newMessage.recipient,
-    //         type: newMessage.type,
-    //         departmentId: newMessage.attributes.departmentId,
-    //         sender: newMessage.sender,
-    //         recipientFullName: newMessage.recipient_fullname,
-    //       };
-    //       this.conversationList.unshift(newConversation);
-    //     }
-    //   }
+    
 }
 
