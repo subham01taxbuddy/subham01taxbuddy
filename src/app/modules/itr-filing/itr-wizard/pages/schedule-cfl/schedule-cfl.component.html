@@ -55,7 +55,7 @@
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" name="housePropertyLoss[i]"
-                                                       maxlength="14"
+                                                       maxlength="14" digitsOnly
                                                        (change)="calculateTotalLosses()"
                                                        formControlName="housePropertyLoss">
                                             </mat-form-field>
@@ -63,7 +63,7 @@
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" name="broughtForwordBusinessLoss[i]"
-                                                       maxlength="14"
+                                                       maxlength="14" digitsOnly
                                                        formControlName="broughtForwordBusinessLoss"
                                                        (change)="calculateTotalLosses()">
                                             </mat-form-field>
@@ -71,7 +71,7 @@
                                         <td>
                                             <mat-form-field appearance="outline" class="colrOut">
                                                 <input matInput class="input-field" name="speculativeBusinessLoss[i]"
-                                                       maxlength="14"
+                                                       maxlength="14" digitsOnly
                                                        formControlName="speculativeBusinessLoss"
                                                        (change)="calculateTotalLosses()">
                                             </mat-form-field>
@@ -79,14 +79,14 @@
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" name="STCGLoss[i]" maxlength="14"
-                                                       formControlName="STCGLoss"
+                                                       formControlName="STCGLoss" digitsOnly
                                                        (change)="calculateTotalLosses()">
                                             </mat-form-field>
                                         </td>
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" name="LTCGLoss[i]" maxlength="14"
-                                                       formControlName="LTCGLoss"
+                                                       formControlName="LTCGLoss" digitsOnly
                                                        (change)="calculateTotalLosses()">
                                             </mat-form-field>
                                         </td>
