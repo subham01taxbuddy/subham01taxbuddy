@@ -33,7 +33,6 @@ export class ChatOptionsDialogComponent implements OnInit {
   username: string;
   requestId: string;
 
-  image: any = 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw';
   centralizedChatDetails: any;
 
   constructor(
@@ -41,14 +40,14 @@ export class ChatOptionsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
-    private localStorageService:LocalStorageService,
+    private localStorageService: LocalStorageService,
     private chatService: ChatService
   ) {
     this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
   }
 
 
-  
+
   openUserChat(username: string, requestId: string) {
     console.log('method is triggered')
     this.userChatOpen = !this.userChatOpen;
@@ -56,7 +55,7 @@ export class ChatOptionsDialogComponent implements OnInit {
     this.requestId = requestId;
 
     const department = this.chatService.getDeptDetails().find(dept => dept.name === this.data.serviceType);
-    console.log('department result in chat options',department);
+    console.log('department result in chat options', department);
     setTimeout(() => {
       if (this.userChatComponent) {
         this.userChatComponent.scrollToBottom();
@@ -67,13 +66,13 @@ export class ChatOptionsDialogComponent implements OnInit {
       request_id: this.requestId,
       departmentName: this.data.serviceType,
       departmentId: department ? department._id : null,
-      image: this.image
+      image: this.username[0]
     };
     this.dialogRef.close(data);
   }
 
 
- 
+
 
 
   ngOnInit() {
@@ -125,5 +124,5 @@ export class ChatOptionsDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  
+
 }

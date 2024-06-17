@@ -25,7 +25,7 @@ export class FloatingWidgetComponent implements OnInit {
     @Output() widgetClosed = new EventEmitter<void>();
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService,private chatService: ChatService
+        private localStorage: LocalStorageService, private chatService: ChatService
     ) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
@@ -132,8 +132,8 @@ export class FloatingWidgetComponent implements OnInit {
         console.log('full conversation list');
         this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            this.chatService.updateConversationList(newMessage,this.conversationList);
-          });
+            this.chatService.updateConversationList(newMessage, this.conversationList);
+        });
 
     }
 
@@ -168,8 +168,7 @@ export class FloatingWidgetComponent implements OnInit {
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
-                            image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
-                            name: conversation.recipientFullName,
+                            image: user ? user.image : conversation.userFullName[0],
                             text: conversation.text,
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
@@ -186,7 +185,7 @@ export class FloatingWidgetComponent implements OnInit {
                 this.conversationList = convdata.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                        image: user ? user.image : conversation.userFullName[0],
                         name: conversation.recipientFullName,
                         text: conversation.text,
                         timestamp: conversation.timestamp,
@@ -212,7 +211,7 @@ export class FloatingWidgetComponent implements OnInit {
     //     const existingConversationIndex = this.conversationList.findIndex(
     //       (conversation) => conversation.request_id === newMessage.recipient
     //     );
-      
+
     //     if (existingConversationIndex !== -1) {
     //        const updatedConversation = {
     //         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',

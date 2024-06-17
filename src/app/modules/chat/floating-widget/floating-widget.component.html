@@ -31,9 +31,12 @@
         <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
             [infiniteScrollThrottle]="60" (scrolled)="onScrollDown()">
             <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
-                <div class="row">
+                <div class="row" style="width: 100%;">
                     <div class="col-2">
-                        <img [src]="conversation.image" alt="User Icon">
+                        <div class="avatar">
+                            <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                        </div>
+                        <!-- <img [src]="conversation.image" alt="User Icon"> -->
                     </div>
                     <div class="col-8">
                         <div class="user-name">{{ conversation.userFullName }}</div>

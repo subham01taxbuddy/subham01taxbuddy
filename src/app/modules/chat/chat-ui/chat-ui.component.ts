@@ -136,7 +136,7 @@ export class ChatUIComponent implements OnInit {
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
-                            image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                            image: user ? user.image : conversation.userFullName[0],
                             name: conversation.name,
                             text: conversation.text,
                             timestamp: conversation.timestamp,
@@ -153,7 +153,7 @@ export class ChatUIComponent implements OnInit {
                 this.conversationList = conversations.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: user ? user.image : 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+                        image: user ? user.image : conversation.userFullName[0],
                         name: conversation.recipientFullName,
                         text: conversation.text,
                         timestamp: conversation.timestamp,

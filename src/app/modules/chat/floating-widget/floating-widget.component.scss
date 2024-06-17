@@ -151,7 +151,7 @@ input[type="text"] {
     white-space: nowrap;
 }
 
-.conversation-text{
+.conversation-text {
     color: #888;
     margin-top: 5px;
     overflow: hidden;
@@ -159,7 +159,7 @@ input[type="text"] {
     white-space: nowrap;
     max-width: 159px;
 }
- 
+
 
 .user-time {
     position: absolute;
@@ -173,7 +173,7 @@ input[type="text"] {
     margin-left: 10px;
 }
 
- 
+
 
 
 .notification-badge {
@@ -190,4 +190,19 @@ input[type="text"] {
 .selected-dept {
     background-color: #3498db;
 }
- 
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background: #62a7d5;
+    margin-right: 15px;
+    border-radius: 50%;
+
+    .initial {
+        justify-content: center;
+        display: flex;
+        font-size: 19px;
+        font-weight: 600;
+        align-items: center;
+    }
+}
