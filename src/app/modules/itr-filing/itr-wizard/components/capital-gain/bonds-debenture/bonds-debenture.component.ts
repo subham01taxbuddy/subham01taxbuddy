@@ -635,7 +635,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
-      const param = '/singleCgCalculate';
       let type = this.assetType;
       let request = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -656,7 +655,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           },
         ],
       };
-      this.itrMsService.postMethod(param, request).subscribe(
+      this.itrMsService.singelCgCalculate(request).subscribe(
         (res: any) => {
           this.loading = false;
           if (res.assetDetails[0].capitalGain) {

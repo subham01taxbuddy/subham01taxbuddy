@@ -874,7 +874,6 @@ export class SharesAndEquityComponent
     this.updateDeductionUI();
       if (securities.valid) {
         this.loading = true;
-        const param = '/singleCgCalculate';
         let securitiesImprovement =
             securities?.controls['improvementsArray']?.value;
         securitiesImprovement.srn = securities?.controls['srn']?.value;
@@ -906,7 +905,7 @@ export class SharesAndEquityComponent
                   : [this.deductionForm.getRawValue()],
         };
         return new Promise(async (resolve, reject) => {
-          await this.itrMsService.postMethod(param, request).subscribe(
+          await this.itrMsService.singelCgCalculate(request).subscribe(
               (res: any) => {
                 this.loading = false;
                 if (res?.assetDetails[0]?.capitalGain) {

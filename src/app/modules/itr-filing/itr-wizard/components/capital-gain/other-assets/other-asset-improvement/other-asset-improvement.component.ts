@@ -489,7 +489,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     }
 
     this.loading = true;
-    const param = '/singleCgCalculate';
     let request = {
       assessmentYear: '2023-2024',
       assesseeType: 'INDIVIDUAL',
@@ -532,7 +531,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     });
 
     // calling the API
-    this.itrMsService.postMethod(param, request).subscribe(
+    this.itrMsService.singelCgCalculate(request).subscribe(
       (res: any) => {
         this.loading = false;
         console.log('Single CG result:', res);
