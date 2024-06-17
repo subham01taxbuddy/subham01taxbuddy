@@ -549,14 +549,17 @@ export class ItrAssignedUsersComponent implements OnInit {
         width: 110,
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
+        lockPosition:true,
+        suppressMovable: true,
         checkboxSelection: (params) => {
           return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
+            textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },

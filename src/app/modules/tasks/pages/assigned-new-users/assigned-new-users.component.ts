@@ -384,9 +384,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
+        pinned: 'left',
+        lockPosition:true,
+        suppressMovable: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
-        pinned: 'left',
         checkboxSelection: (params) => {
           if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
@@ -398,8 +400,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           return {
             textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },
