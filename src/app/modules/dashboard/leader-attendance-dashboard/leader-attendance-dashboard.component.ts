@@ -92,7 +92,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.getAllPartnerDetails();
   }
 
-  getAllPartnerDetails() {
+  getAllPartnerDetails = (): Promise<any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/attendance-performance-report?fromDate=2023-04-01&toDate=2023-11-13&page=0&pageSize=5'
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -115,7 +115,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       if (response.success == false) {
         this.allDetails = null;
         this.calculateCounts();
@@ -166,14 +166,12 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(()=>{
       this.allDetails = null;
       this.calculateCounts();
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
-
-
+    })
   }
 
   calculateCounts() {
