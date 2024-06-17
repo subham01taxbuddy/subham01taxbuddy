@@ -1555,7 +1555,7 @@ export class HousePropertyComponent implements OnInit {
           Number(this.housePropertyForm.controls['propertyTax'].value)) *
           ownerPercentage) /
         100;
-      this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
+      this.thirtyPctOfAnnualValue = Math.round(this.annualValue * 0.3);
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }
     this.calculateInterestOrDeduction();
