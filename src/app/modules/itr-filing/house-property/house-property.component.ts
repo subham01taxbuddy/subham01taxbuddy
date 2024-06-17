@@ -1520,7 +1520,7 @@ export class HousePropertyComponent implements OnInit {
       if (propertyType?.value === 'LOP' || propertyType?.value === 'DLOP') {
         nav?.setValue(annualRentReceived?.value - propertyTax?.value);
         // standard deduction = 30% of nav
-        standardDeduction.setValue((nav?.value * 30) / 100);
+        standardDeduction.setValue(Math.round((nav?.value * 30) / 100));
       } else {
         nav?.setValue(0);
         standardDeduction.setValue(0);
@@ -1571,7 +1571,7 @@ export class HousePropertyComponent implements OnInit {
       0.3;
     console.log(arrearsUnrealizedRentReceived);
     this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
-      arrearsUnrealizedRentReceived
+      Math.round(arrearsUnrealizedRentReceived)
     );
   }
 
