@@ -24,8 +24,11 @@ export class ChatUIComponent implements OnInit {
     selector: string = ".main-panel";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
+ 
+
     centralizedChatDetails: any;
 
+ 
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService) {
@@ -37,6 +40,7 @@ export class ChatUIComponent implements OnInit {
     }
 
 
+    
 
     showWidget = true;
     selectedUser: any;
@@ -103,7 +107,12 @@ export class ChatUIComponent implements OnInit {
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             this.chatService.updateConversationList(newMessage,this.conversationList);
           });
-    }
+          const data = this.localStorage.getItem('SELECTED_CHAT',true);
+          if(data){
+            this.openUserChat(data);
+            
+          }
+     }
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
@@ -182,4 +191,13 @@ export class ChatUIComponent implements OnInit {
         this.page = this.page + 1;;
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
+
+
+    // openUserChatFullScreen(){
+    //     this.isUserChatVisible = true;
+    //     if(this.userChatComp && this.userChatComp.selectedUser){
+    //        const selectedUser = this.userChatComp.selectedUser;
+    //        this.openUserChat(selectedUser);
+    //     }
+    // }
 }
