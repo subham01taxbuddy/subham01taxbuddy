@@ -33,10 +33,12 @@
             </div>
             <!-- </div> -->
             <div class="col-sm-4">
-              <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
+              <!-- <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
                 <i class="fa fa-search" aria-hidden="true"></i> Search
-              </button>
-
+              </button> -->
+              <app-custom-button class="srch-btn" [actions]="[getPromoCodeList]">
+                <i class="fa fa-search" aria-hidden="true"></i> Search
+              </app-custom-button>
               <button class="srchSpcTp clrLnk mvRthB" [disabled]="loading" (click)="this.resetFilters()">
                 Clear
               </button>

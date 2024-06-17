@@ -54,9 +54,12 @@
               </span>
             </div>
             <div class="col-sm-6 spsTp text-end">
-              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
+              <!-- <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-              </button>
+              </button> -->
+              <app-custom-button class="srch-btn" [actions]="[getUserSearchList]" [actionParams]="[[0]]">
+                <i class="fa fa-search" aria-hidden="true"></i> Search
+              </app-custom-button>
               <button class="clrLnk movLf" [disabled]="loading" (click)="clearValue()">
                 Clear form
               </button>

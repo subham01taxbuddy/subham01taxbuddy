@@ -27,12 +27,12 @@ export class PanExceptionComponent implements OnInit {
   ngOnInit() {
   }
 
-  searchPan(){
+  searchPan=():Promise<any> =>{
     //'https://uat-api.taxbuddy.com/report/bo/pan-details?panNumber=BGFPV8770C'
     if(this.searchValue.value && this.searchValue.valid){
       this.loading = true;
       let param = `/bo/pan-details?panNumber=${this.searchValue.value}`
-      this.reportService.getMethod(param).subscribe((response: any) => {
+      return this.reportService.getMethod(param).toPromise().then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.panData = response.data.partnerDetails;
@@ -48,13 +48,11 @@ export class PanExceptionComponent implements OnInit {
           this.disableAddButton =false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-        (error) => {
-          this.loading = false;
-          this.disableAddButton =false;
-          this._toastMessageService.alert('error', 'Error In Get PAN details API');
-        }
-      )
+      }).catch(()=>{
+        this.loading = false;
+        this.disableAddButton =false;
+        this._toastMessageService.alert('error', 'Error In Get PAN details API');
+      });
 
     }else{
       this.loading = false;
