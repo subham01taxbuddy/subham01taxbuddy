@@ -15,7 +15,6 @@ import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -373,10 +372,6 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
       }
       if (result.success) {
         this._toastMessageService.alert("success", result.message)
-        we_track('Call', {
-          'User Name': params?.clientName,
-          'User Phone number ': agentNumber,
-        });
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');

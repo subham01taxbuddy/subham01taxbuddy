@@ -17,7 +17,6 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-potential-user',
@@ -764,10 +763,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
             this.utilsService.showSnackBar('Error while making call, Please try again.');
           }
           if (result.success) {
-            we_track('Call', {
-              'User Name': data?.name,
-              'User Phone number ': data.callerAgentNumber,
-            });
             this._toastMessageService.alert("success", result.message)
           }
         }, error => {
@@ -858,9 +853,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               console.log('res after active ', result);
               this.loading = false;
               if (result.success == true) {
-                we_track('Active', {
-                  'User number ': data.customerNumber,
-                });
                 this.utilsService.showSnackBar('user activated successfully.');
               } else {
                 this.utilsService.showSnackBar(

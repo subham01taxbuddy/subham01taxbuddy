@@ -30,7 +30,6 @@ import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
@@ -987,10 +986,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-    we_track('Start Filing', {
-      'User Name': data?.name,
-      'User Number': data?.mobileNumber
-    });
+
   }
 
   async getUserProfile(userId) {
@@ -1144,10 +1140,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
           if (result.success) {
-            we_track('Call', {
-              'User Name': data?.name,
-              'User Phone number ': agent_number,
-            });
             this._toastMessageService.alert("success", result.message)
           } else {
             this.utilsService.showSnackBar('Error while making call, Please try again.');

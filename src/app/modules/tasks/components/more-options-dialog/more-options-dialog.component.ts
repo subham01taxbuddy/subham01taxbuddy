@@ -138,9 +138,7 @@ export class MoreOptionsDialogComponent implements OnInit {
             this.utilsService.showSnackBar(`User deleted successfully!`);
             // this.isDisable = true;
             this.dialogRef.close(true);
-            we_track('Delete User', {
-              'User Number': this.data?.mobileNumber,
-            });
+
           } else {
             this.utilsService.showSnackBar(res.message);
             // this.isDisable = false;
@@ -277,11 +275,7 @@ export class MoreOptionsDialogComponent implements OnInit {
                 this.utilsService.showSnackBar(
                   'Successfully opted the service type ' + this.selectedService
                 );
-                we_track('Other Service', {
-                  'User Name': this.data?.name,
-                  'User Number': this.data?.mobileNumber,
-                  'Opt for which service ': this.selectedService,
-                });
+
               } else {
                 this.utilsService.showSnackBar(res.message);
               }
@@ -525,9 +519,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.createRowData(res.data.statusList)
         );
         console.log(this.initialData);
-        we_track('ITR Status Journey', {
-          'User Number': this.data?.mobileNumber,
-        });
+
       },
       () => { }
     );

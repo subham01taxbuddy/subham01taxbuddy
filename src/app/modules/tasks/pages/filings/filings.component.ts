@@ -28,7 +28,6 @@ import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
 import {DomSanitizer} from "@angular/platform-browser";
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-filings',
@@ -1024,9 +1023,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               name: data?.fName + ' ' + data?.lName,
             },
           });
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
+
           // if (data.statusId !== 11) {
           //   this.router.navigate(['/eri'], {
           //     state:
@@ -1077,9 +1074,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return;
         } else {
           console.log('Data for revise return ', data);
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
 
           if (data.isEverified) {
             let disposable = this.dialog.open(ReviseReturnDialogComponent, {
@@ -1128,9 +1122,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1178,9 +1169,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1388,10 +1376,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success) {
-                we_track('Call', {
-                  'User Name': user.fName + ' ' + user.lName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -1532,9 +1516,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           const param = `/eri/v1/api`;
           let headerObj = {

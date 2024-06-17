@@ -32,8 +32,6 @@ import * as moment from 'moment';
 import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
 
-declare function we_track(key: string, value: any);
-
 @Component({
   selector: 'app-itr-assigned-users',
   templateUrl: './itr-assigned-users.component.html',
@@ -1296,10 +1294,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.loading = true;
         this.requestManager.addRequest(this.LIFECYCLE,
           this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-        we_track('Start Filing', {
-          'User Name': data?.name,
-          'User Number': data?.mobileNumber
-        });
       }
     }, error => {
       this.loading = false;
@@ -1434,10 +1428,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             (result: any) => {
               this.loading = false;
               if (result.success) {
-                we_track('Call', {
-                  'User Name': data?.name,
-                  'User Phone number ': agent_number,
-                });
                 this._toastMessageService.alert('success', result.message);
               } else {
                 this.utilsService.showSnackBar(

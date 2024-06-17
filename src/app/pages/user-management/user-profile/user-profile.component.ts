@@ -15,7 +15,6 @@ import { Storage } from '@aws-amplify/storage';
 import { Location } from "@angular/common";
 
 import * as $ from 'jquery';
-declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -695,9 +694,6 @@ export class UserProfileComponent implements OnInit {
                 );
                 this.loading = false;
                 this.location.back();
-                we_track('Profile', {
-                  'Any Update': '',
-                });
               },
               (error) => {
                 let errorMessage =

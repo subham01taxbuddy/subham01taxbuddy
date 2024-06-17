@@ -11,7 +11,6 @@ import * as JSZip from "jszip";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { saveAs } from "file-saver/dist/FileSaver";
 
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-show-user-documnets',
   templateUrl: './show-user-documnets.component.html',
@@ -288,10 +287,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
         this.utilsService.showSnackBar('Failed to download document');
       }
     );
-    we_track('Cloud Download', {
-      'User Number': this.mobileNumber,
-      'File URL': signedUrl,
-    });
   }
 
 
@@ -338,10 +333,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log(res);
       if (res['signedUrl']) {
         this.docUrl = res['signedUrl'];
-        we_track('Cloud View', {
-          'User Number': this.mobileNumber,
-          'File URL': this.docUrl,
-        });
       } else {
         this.utilsService.showSnackBar(res.response);
       }

@@ -11,7 +11,6 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-user-notes',
   templateUrl: './user-notes.component.html',
@@ -137,10 +136,6 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       const param = `/note`;
       this.itrMsService.postMethod(param, request).subscribe(
         (result) => {
-          we_track('Notes ', {
-            'User Name': this.data?.['clientName'],
-            'User Number': this.data?.['clientMobileNumber']
-          });
           console.log(result);
           this.getNotes();
           this.noteDetails.reset();
