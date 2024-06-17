@@ -683,7 +683,7 @@ export class ScheduleFaComponent implements OnInit {
     asset.forEach((item, index) => {
       if (assetType === 'equityAndDebtInterest') {
         const formGroup = this.fb.group({
-          countryName: item.countryName ? item.countryName : item.countryCode,
+          countryName: this.getCountryNameFromCode(item.countryCode),
           countryCode: item.countryCode,
           nameOfEntity: item.nameOfEntity,
           addressOfEntity: item.addressOfEntity,
