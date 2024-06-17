@@ -679,7 +679,7 @@ export const ErrorMsgsSchedule = {
     relatedSchedule: 'balanceSheet',
   },
   NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO: {
-    code: 'NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO_AND_MAKE_44AA_FLAG_YES',
+    code: 'NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO',
     message: 'In case of Non Speculative Income balance sheet difference needs to be zero',
     relatedSchedule: 'balanceSheet',
   },
