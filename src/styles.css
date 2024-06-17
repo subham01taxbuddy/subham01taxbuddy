@@ -4128,7 +4128,7 @@ pagination-controls {
   justify-content: space-between;
   align-items: center;
   background-color: #F5F5FA;
-  /*position: fixed;*/
+  position: fixed;
   bottom: 0px;
   width: 100%;
   left: 0px;

@@ -469,7 +469,7 @@ export class HousePropertyComponent implements OnInit {
         name: [obj.name || '', [Validators.required]],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.pattern(AppConstants.panNumberRegex)],
         ],
       });
     } else {
@@ -477,7 +477,7 @@ export class HousePropertyComponent implements OnInit {
         name: [obj.name || ''],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.pattern(AppConstants.panNumberRegex)],
         ],
       });
     }
@@ -509,7 +509,7 @@ export class HousePropertyComponent implements OnInit {
         name: [obj.name || '', [Validators.required]],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.required, Validators.pattern(AppConstants.panNumberRegex)],
         ],
         percentage: [
           obj.percentage || 0,
