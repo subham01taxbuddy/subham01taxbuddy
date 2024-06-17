@@ -749,8 +749,7 @@ export class HousePropertyComponent implements OnInit {
         itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
       this.housePropertyForm.controls['standardDeduction'].setValue(
-        ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
-        100
+        Math.round(((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) / 100)
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
         itrJsonHp?.grossAnnualRentReceivedTotal
