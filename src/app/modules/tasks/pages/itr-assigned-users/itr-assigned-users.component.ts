@@ -1323,7 +1323,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if (data.statusId == 8 || data.statusId == 47) {
+        if (data.statusId == 11 || data.statusId == 8 || data.statusId == 47) {
           let disposable = this.dialog.open(ReviseReturnDialogComponent, {
             width: '50%',
             height: 'auto',
