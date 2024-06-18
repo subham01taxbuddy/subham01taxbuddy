@@ -60,6 +60,7 @@ export class Schedules {
     this.keysMap[this.SALARY] = 'SALARY';
     this.keysMap[this.HOUSE_PROPERTY] = 'HOUSE_PROPERTY';
     this.keysMap[this.BUSINESS_INCOME] = 'BUSINESS_AND_PROFESSION';
+    this.keysMap[this.BALANCE_SHEET] = 'BUSINESS_AND_PROFESSION';
     this.keysMap[this.CAPITAL_GAIN] = 'CAPITAL_GAINS';
     this.keysMap[this.SPECULATIVE_INCOME] = 'FUTURE_AND_OPTIONS';
     this.keysMap[this.FOREIGN_INCOME] = 'FOREIGN_INCOME_NRI_EXPAT';
