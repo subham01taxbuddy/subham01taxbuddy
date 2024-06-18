@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <form [formGroup]="assetsForm" class="scroll" style="padding: 0 40px">
 
   <div class="accordion__item-body">
@@ -76,7 +77,7 @@
                 <input matInput digitsOnly formControlName="purchaseCost" placeholder="Buy Value" name="purchaseCost[i]"
                   class="input-field" maxlength="14"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  (blur)="calculateGainType()" />
+                  (change)="calculateGainType()" />
 
                 <!-- <mat-error
                     *ngIf="
@@ -226,7 +227,7 @@
       <button class="btn btn__white" (click)="clearForm()">cancel</button>
     </div>
     <div class="box-right">
-      <button class="btn btn__primary" (click)="saveCg()">Save Details</button>
+      <button class="btn btn__primary" (click)="onSaveClick($event)">Save Details</button>
     </div>
   </div>
 
