@@ -276,7 +276,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               console.log(res);
               this.loading = false;
               if (res.success) {
-                this.updateStatus();
+                if(this.data.statusId !== 47)
+                  this.updateStatus();
                 this.utilsService.showSnackBar('Manual Filing Details updated successfully');
                 this.location.back();
               } else {
