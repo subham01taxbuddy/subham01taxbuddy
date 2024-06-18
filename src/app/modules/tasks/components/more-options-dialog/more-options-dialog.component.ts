@@ -659,7 +659,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     // this.itrMsService.getMethod(param).subscribe(
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if (this.data.statusId == 47) {
+          if (this.data.statusId == 8 || this.data.statusId == 47) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
               height: 'auto',
