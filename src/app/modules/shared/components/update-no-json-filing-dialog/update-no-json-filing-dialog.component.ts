@@ -66,7 +66,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
       return;
     }
 
-    if (this.data.statusId !== 8) {
+    if (this.data.statusId !== 8 && this.data.statusId !== 47) {
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
     }

@@ -32,8 +32,6 @@ import * as moment from 'moment';
 import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
 
-declare function we_track(key: string, value: any);
-
 @Component({
   selector: 'app-itr-assigned-users',
   templateUrl: './itr-assigned-users.component.html',
@@ -145,7 +143,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
     this.requestManager.init();
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
-      this.requestCompleted(value, this);
+      this.requestCompleted(value);
     });
   }
 
@@ -225,7 +223,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
+  async requestCompleted(res: any) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
@@ -234,9 +232,9 @@ export class ItrAssignedUsersComponent implements OnInit {
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if (self.rowData.openItrId === 0) {
+        if (this.rowData.openItrId === 0) {
           this.loading = true;
-          let profile = await this.getUserProfile(self.rowData.userId).catch(error => {
+          let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
             this.loading = false;
             console.log(error);
             this.utilsService.showSnackBar(error.error.detail);
@@ -261,9 +259,9 @@ export class ItrAssignedUsersComponent implements OnInit {
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
             this.router.navigate(['/itr-filing/itr'], {
               state: {
-                userId: self.rowData.userId,
-                panNumber: self.rowData.panNumber,
-                eriClientValidUpto: self.rowData.eriClientValidUpto,
+                userId: this.rowData.userId,
+                panNumber: this.rowData.panNumber,
+                eriClientValidUpto: this.rowData.eriClientValidUpto,
                 name: this.rowData.name
               }
             });
@@ -273,9 +271,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.loading = false;
           console.log('end');
         } else {
-          let itrFilter = self.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${self.rowData.openItrId}` : '';
-          let assessmentYear = self.rowData.serviceType === 'ITRU' ? '2023-2024' : self.rowData.assessmentYear;
-          const param = `/itr?userId=${self.rowData.userId}&assessmentYear=${assessmentYear}` + itrFilter;
+          let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
+          const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
@@ -552,14 +549,17 @@ export class ItrAssignedUsersComponent implements OnInit {
         width: 110,
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
+        lockPosition:true,
+        suppressMovable: true,
         checkboxSelection: (params) => {
           return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
+            textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },
@@ -1297,10 +1297,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.loading = true;
         this.requestManager.addRequest(this.LIFECYCLE,
           this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-        we_track('Start Filing', {
-          'User Name': data?.name,
-          'User Number': data?.mobileNumber
-        });
       }
     }, error => {
       this.loading = false;
@@ -1327,7 +1323,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if (data.statusId != 11) {
+        if (data.statusId == 47) { 
           let disposable = this.dialog.open(ReviseReturnDialogComponent, {
             width: '50%',
             height: 'auto',
@@ -1435,10 +1431,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             (result: any) => {
               this.loading = false;
               if (result.success) {
-                we_track('Call', {
-                  'User Name': data?.name,
-                  'User Phone number ': agent_number,
-                });
                 this._toastMessageService.alert('success', result.message);
               } else {
                 this.utilsService.showSnackBar(
