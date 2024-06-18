@@ -470,7 +470,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         headerCheckboxSelection: true,
         width: 180,
         hide: type != this.TDS_OTHER_TYPE_CODE,
-        // pinned: 'left',
+        suppressMovable: true,
         checkboxSelection: (params) => {
           if (type === this.TDS_OTHER_TYPE_CODE) {
             return true;
@@ -495,6 +495,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.deductorTAN;
         },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
       {
         headerName: this.getColumnName(type, 'deductorName'),
@@ -504,6 +512,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.deductorName;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -515,6 +531,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.totalAmountCredited;
         },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
       {
         headerName: this.getColumnName(type, 'totalTdsDeposited'),
@@ -524,6 +548,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.totalTdsDeposited;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -538,6 +570,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           } else {
             return self.headOfIncomeDropdownTDS3.filter(element => element.code === params.data.headOfIncome)[0]?.name;
           }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {
