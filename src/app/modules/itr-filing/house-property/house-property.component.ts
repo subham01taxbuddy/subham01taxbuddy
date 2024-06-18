@@ -650,7 +650,7 @@ export class HousePropertyComponent implements OnInit {
     let housePropertyForm = this.housePropertyForm.controls;
     if (itrJsonHp?.eligible80EEAAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount);
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -658,7 +658,7 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
     } else if (itrJsonHp?.eligible80EEAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount);
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -1048,7 +1048,7 @@ export class HousePropertyComponent implements OnInit {
             ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
         let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
             ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
-        let interestAmount = eligible80EEAmount + eligible80EEAAmount + this.housePropertyForm.controls['interestAmount']?.value;
+        let interestAmount = parseInt(this.housePropertyForm.controls['interestAmount']?.value) - eligible80EEAmount - eligible80EEAAmount;
         hp.loans.push({
           interestAmount:
             interestAmount,
