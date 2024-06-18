@@ -145,7 +145,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
     this.requestManager.init();
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
-      this.requestCompleted(value);
+      this.requestCompleted(value, this);
     });
   }
 
@@ -225,7 +225,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any) {
+  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
@@ -234,9 +234,9 @@ export class ItrAssignedUsersComponent implements OnInit {
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if (this.rowData.openItrId === 0) {
+        if (self.rowData.openItrId === 0) {
           this.loading = true;
-          let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
+          let profile = await this.getUserProfile(self.rowData.userId).catch(error => {
             this.loading = false;
             console.log(error);
             this.utilsService.showSnackBar(error.error.detail);
@@ -261,9 +261,9 @@ export class ItrAssignedUsersComponent implements OnInit {
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
             this.router.navigate(['/itr-filing/itr'], {
               state: {
-                userId: this.rowData.userId,
-                panNumber: this.rowData.panNumber,
-                eriClientValidUpto: this.rowData.eriClientValidUpto,
+                userId: self.rowData.userId,
+                panNumber: self.rowData.panNumber,
+                eriClientValidUpto: self.rowData.eriClientValidUpto,
                 name: this.rowData.name
               }
             });
@@ -273,8 +273,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.loading = false;
           console.log('end');
         } else {
-          let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
-          const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
+          let itrFilter = self.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${self.rowData.openItrId}` : '';
+          const param = `/itr?userId=${self.rowData.userId}&assessmentYear=${self.rowData.assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
