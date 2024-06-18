@@ -350,7 +350,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       }
     }
 
-    if(('ITR' === this.data.serviceType && this.data.statusId !== 8 && this.data.statusId !== 11) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
+    if(('ITR' === this.data.serviceType && this.data.statusId !== 8 && this.data.statusId !== 47) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
       this.loading = false;
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
@@ -659,7 +659,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     // this.itrMsService.getMethod(param).subscribe(
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if (this.data.statusId == 11 || this.data.statusId == 8) {
+          if (this.data.statusId == 8 || this.data.statusId == 47) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
               height: 'auto',
