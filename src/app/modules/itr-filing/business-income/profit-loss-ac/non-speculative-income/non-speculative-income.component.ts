@@ -510,6 +510,16 @@ export class NonSpeculativeIncomeComponent implements OnInit {
           expenses: expenses,
           otherIncomes: incomes,
         });
+      } else {
+        profitLossACIncomes.push({
+          id: null,
+          businessType: 'NONSPECULATIVEINCOME',
+          totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
+          netProfitfromNonSpeculativeIncome: row.netProfit,
+          incomes: [],
+          expenses: expenses,
+          otherIncomes: incomes,
+        });
       }
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {

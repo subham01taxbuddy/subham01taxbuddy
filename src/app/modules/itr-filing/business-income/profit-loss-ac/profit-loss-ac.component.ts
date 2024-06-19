@@ -29,6 +29,13 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
+    //validate nature of business is filled in if income details are available
+    if(this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 || this.SpeculativeIncomeComponent.specIncomeFormArray.length > 0) {
+      this.utilsService.showSnackBar("Business details are required");
+      this.utilsService.smoothScrollToTop();
+      return;
+    }
+
     let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
     let specSaved = this.SpeculativeIncomeComponent.onContinue();
     if (specSaved && nonSpecSaved) {
