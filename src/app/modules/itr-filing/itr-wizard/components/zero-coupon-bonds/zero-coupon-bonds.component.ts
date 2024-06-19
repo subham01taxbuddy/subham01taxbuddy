@@ -300,13 +300,13 @@ export class ZeroCouponBondsComponent
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       dateOfImprovement: [item ? item.dateOfImprovement : null],
       costOfImprovement: [
-        item ? item.costOfImprovement : null,
+        item ? item.costOfImprovement : 0,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
       indexCostOfImprovement: [item ? item.indexCostOfImprovement : null],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
-      sellExpense: [item ? item.sellExpense : null],
+      sellExpense: [item ? item.sellExpense : 0],
       gainType: [item ? item.gainType : null],
       capitalGain: [item ? item.capitalGain : null],
       purchaseValuePerUnit: [item ? item.purchaseValuePerUnit : null],
@@ -323,7 +323,40 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.reset();
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
+    this.selectedFormGroup.controls['capitalGain'].setValue(null);
+    this.selectedFormGroup.controls['capitalGain'].updateValueAndValidity();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
+  }
+
+  onSaveClick() {
+    // event.preventDefault();
+    setTimeout(() => {
+      if (this.selectedFormGroup.pending) {
+        // Wait for all async validators to complete
+        let subscription = this.selectedFormGroup.statusChanges.subscribe(status => {
+          if (status !== 'PENDING') {
+            if (this.selectedFormGroup.valid) {
+              this.saveManualEntry();
+            } else {
+              this.utilsService.showSnackBar(
+                  'Please make sure all the details are properly entered.'
+              );
+              this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+              subscription.unsubscribe();
+            }
+          }
+        });
+      } else {
+        if (this.selectedFormGroup.valid) {
+          this.saveManualEntry();
+        } else {
+          this.utilsService.showSnackBar(
+              'Please make sure all the details are properly entered.'
+          );
+          this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+        }
+      }
+    }, 200);
   }
 
   saveManualEntry() {
@@ -670,6 +703,8 @@ export class ZeroCouponBondsComponent
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
+      this.selectedFormGroup.markAsPending();
+      this.loading = true;
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
@@ -707,6 +742,7 @@ export class ZeroCouponBondsComponent
           }
           this.updateDeductionUI();
           this.calculateDeductionGain();
+          this.selectedFormGroup.markAsPristine();
         },
         (error) => {
           this.loading = false;
