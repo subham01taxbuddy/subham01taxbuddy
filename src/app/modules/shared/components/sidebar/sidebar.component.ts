@@ -36,6 +36,7 @@ export class SidebarComponent {
 
   openOtherMenu() {
     this.openSidebar = true;
+    this.sidebarService.open();
   }
 
   ngAfterViewInit() {
