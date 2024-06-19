@@ -468,6 +468,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       {
         field: 'Update Income Sources',
         headerCheckboxSelection: true,
+        headerCheckboxSelectionCurrentPageOnly: true,
         width: 180,
         hide: type != this.TDS_OTHER_TYPE_CODE,
         suppressMovable: true,
