@@ -32,10 +32,10 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     //validate nature of business is filled in if income details are available
     const row = this.NonSpeculativeIncomeComponent.profitLossForm.getRawValue();
     let incomes = row.incomes.filter(item => item.type);
-    if(this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 ||
+    if((this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 ||
         this.SpeculativeIncomeComponent.specIncomeFormArray.length > 0 ||
-      incomes.length > 0) {
-      this.utilsService.showSnackBar("Business details are required");
+      incomes.length > 0) && (this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.length === 0 || !this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.valid)) {
+      this.utilsService.showSnackBar("Nature of Business details are required");
       this.utilsService.smoothScrollToTop();
       return;
     }
