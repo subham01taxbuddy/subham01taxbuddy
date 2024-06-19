@@ -286,12 +286,15 @@ export class ChatService {
   }
 
 
-  updateConversationList(newMessage: any, conversationLists: any) {
+  updateConversationList(newMessage: any, conversationLists: any, selectedDepartmentId: any) {
     const existingConversationIndex = conversationLists.findIndex(
       (conversation) => conversation.request_id === newMessage.recipient
     );
 
+    if (newMessage.attributes.departmentId === selectedDepartmentId){
+
     if (existingConversationIndex !== -1) {
+ 
       const updatedConversation = {
         image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
         userFullName: newMessage.attributes.userFullname,
@@ -321,6 +324,7 @@ export class ChatService {
       conversationLists.unshift(newConversation);
     }
   }
+}
 
   clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');
