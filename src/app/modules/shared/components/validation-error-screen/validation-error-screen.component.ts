@@ -6,6 +6,7 @@ import { UpdateManualFilingDialogComponent } from '../update-manual-filing-dialo
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
+import {ErrorMsgsSchedule, ItrValidationObject, ItrValidations} from "../../interfaces/itr-validation.interface";
 
 @Component({
   selector: 'app-validation-error-screen',
@@ -35,6 +36,7 @@ export class ValidationErrorScreenComponent extends WizardNavigation implements 
       // this.itrType = this.errors[0]?.itrType;
     });
     console.log(this.errors, 'errors to be displayed');
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
   redirectToErrorPage(schedule: String) {
@@ -75,4 +77,41 @@ export class ValidationErrorScreenComponent extends WizardNavigation implements 
   goBack() {
     this.saveAndNext.emit(false);
   }
+
+// { value: 'CENTRAL_GOVT', label: 'Central Government' },
+// { value: 'GOVERNMENT', label: 'State Government' },
+// { value: 'PRIVATE', label: 'Public Sector Unit' },
+// { value: 'PE', label: 'Pensioners - Central Government' },
+// { value: 'PESG', label: 'Pensioners - State Government' },
+// { value: 'PEPS', label: 'Pensioners - Public sector undertaking' },
+// { value: 'PENSIONERS', label: 'Pensioners - Others' },
+// { value: 'OTHER', label: 'Other-Private' },
+// { value: 'NA', label: 'Not-Applicable' },
+  getMessage(errorCode: string, employerType: string){
+    if(errorCode === 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY'){
+      let list20 = ['PE', 'PESG', 'PEPS', 'PENSIONERS'];
+      let list10 = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE', 'OTHER'];
+      let extra = 'Deduction u/s 80CCD(1) is allowed ';
+      if(list20.find(value => value === employerType)){
+        extra += 'up to 20% of Basic+DA';
+        return extra;
+      } else if(list10.find(value => value === employerType)){
+        extra += 'up to 10% of Basic+DA';
+        return extra;
+      } else {
+        return ErrorMsgsSchedule[errorCode].message;
+      }
+    } if(errorCode === 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY'){
+      if (employerType === 'CENTRAL_GOVT' || employerType === 'GOVERNMENT') {
+        return 'Deduction u/s 80CCD(2) is allowed up to 14% of Basic+DA';
+      } else if (employerType === 'PRIVATE' || employerType === 'OTHER') {
+        return 'Deduction u/s 80CCD(2) is allowed up to 10% of Basic+DA';
+      } else {
+        return ErrorMsgsSchedule[errorCode].message;
+      }
+    } else {
+      return ErrorMsgsSchedule[errorCode].message;
+    }
+  }
+
 }
