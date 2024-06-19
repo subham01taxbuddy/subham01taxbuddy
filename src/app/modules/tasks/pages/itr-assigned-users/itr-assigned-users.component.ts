@@ -272,7 +272,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           console.log('end');
         } else {
           let itrFilter = self.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${self.rowData.openItrId}` : '';
-          const param = `/itr?userId=${self.rowData.userId}&assessmentYear=${self.rowData.assessmentYear}` + itrFilter;
+          let assessmentYear = self.rowData.serviceType === 'ITRU' ? '2023-2024' : self.rowData.assessmentYear;
+          const param = `/itr?userId=${self.rowData.userId}&assessmentYear=${assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
