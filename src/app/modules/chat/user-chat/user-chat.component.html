@@ -13,7 +13,10 @@
   </div>
 
   <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}">
-    <img [src]="image" alt="user-image">
+    <div class="avatar">
+      <div class="initial">{{image ? image:''}}</div>
+    </div>
+    <!-- <img [src]="image" alt="user-image"> -->
     <span class="username">{{ username }}</span>
   </div>
 
@@ -274,8 +277,8 @@
   <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
     <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
     <div #fileInputContainer style="display: none;"></div>
-    <input type="text" (input)="filterCannedMessages()"
-      placeholder="Type your message" class="message-input" (keyup.enter)="sendMessage()" [(ngModel)]="messageSent">
+    <input type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
+      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent">
 
     <button type="button" (click)="sendMessage()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>

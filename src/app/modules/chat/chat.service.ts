@@ -296,7 +296,7 @@ export class ChatService {
     if (existingConversationIndex !== -1) {
  
       const updatedConversation = {
-        image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+        image: newMessage.attributes.userFullname[0],
         userFullName: newMessage.attributes.userFullname,
         text: newMessage.text,
         timestamp: newMessage.timestamp,
@@ -311,7 +311,7 @@ export class ChatService {
       conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
     } else {
       const newConversation = {
-        image: 'https://imgs.search.brave.com/qXA9bvCc49ytYP5Db9jgYFHVeOIaV40wVOjulXVYUVk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYmls/bC1nYXRlcy1waG90/by1zaG9vdC1uMjdo/YnNrbXVkcXZycGxk/LmpwZw',
+        image: newMessage.attributes.userFullname[0],
         userFullName: newMessage.attributes.userFullname,
         text: newMessage.text,
         timestamp: newMessage.timestamp,

@@ -1,16 +1,16 @@
 .blank-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ffffff;
-    z-index: 9999; 
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 9999;
+}
 
 
-  
- .floating-widget {
+
+.floating-widget {
   position: fixed;
   left: 3px;
   width: 350px;
@@ -33,11 +33,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-   /* cursor: grab;
+  /* cursor: grab;
   user-select: none; */
 }
 
- .expanded .header.active {
+.expanded .header.active {
   background-color: #05121b;
   padding: 10px;
   text-align: left;
@@ -51,7 +51,7 @@
   cursor: grabbing;
 } */
 
-.options{
+.options {
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -137,7 +137,7 @@ input[type="text"] {
   box-sizing: border-box;
 }
 
-.user-list::-webkit-scrollbar{
+.user-list::-webkit-scrollbar {
   display: none;
 }
 
@@ -176,10 +176,10 @@ input[type="text"] {
 .user-name {
   font-weight: bold;
   margin-bottom: 5px;
- 
+
 }
 
-.conversation-text{
+.conversation-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -188,7 +188,7 @@ input[type="text"] {
 .chat-snippet {
   color: #888;
   margin-top: 5px;
-   overflow: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -213,54 +213,69 @@ input[type="text"] {
   background-color: #3498db;
 }
 
-.selected-chat{
+.selected-chat {
   background-color: #bcdff7 !important;
 }
 
 ::ng-deep app-user-chat.floating.expanded {
 
-   .floating{
-     height: 615px;
-     width: 990px;
-     top: 5px;
-     left: 352px;
-   }
+  .floating {
+    height: 615px;
+    width: 990px;
+    top: 5px;
+    left: 352px;
+  }
 
-   .header {
+  .header {
     display: none;
   }
-  
-   .chat-messages{
-    max-height: 510px;
-   }
 
-   .user-info{
+  .chat-messages {
+    max-height: 510px;
+  }
+
+  .user-info {
     margin-bottom: 9px;
     margin-top: 9px;
-   }
+  }
 
-   .user-info{
+  .user-info {
     margin-bottom: 3px;
-   }
+  }
 
-   .user-input input.message-input{
-     width: 900px;
-   }
+  .user-input input.message-input {
+    width: 900px;
+  }
 
-   .user-input{
+  .user-input {
     position: absolute;
     bottom: 0px;
-   }
+  }
 
-   .file-upload-box{
+  .file-upload-box {
     margin-left: 14px;
-   }
+  }
 
-   .cannedMessageBox{
+  .cannedMessageBox {
     bottom: 44px;
-   }
-  
- 
+  }
+
+
 }
 
 
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #62a7d5;
+  margin-right: 15px;
+  border-radius: 50%;
+
+  .initial {
+    justify-content: center;
+    display: flex;
+    font-size: 19px;
+    font-weight: 600;
+    align-items: center;
+  }
+}

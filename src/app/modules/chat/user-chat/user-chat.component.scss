@@ -527,11 +527,9 @@
 .user-info {
   display: flex;
   align-items: center;
-  /* Align items vertically */
   justify-content: flex-start;
   gap: 8px;
-  // margin-top: 0 !important;
-  // padding: 7px;
+  margin-bottom: 10px;
 }
 
 .user-messages .message-container {
@@ -825,5 +823,21 @@
       font-size: 16px;
       color: #685f5fed;
     }
+  }
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #62a7d5;
+  margin: 0 12px;
+  border-radius: 50%;
+
+  .initial {
+    justify-content: center;
+    display: flex;
+    font-size: 19px;
+    font-weight: 600;
+    align-items: center;
   }
 }

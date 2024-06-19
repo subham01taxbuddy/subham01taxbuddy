@@ -29,11 +29,14 @@
         <div class="user-list main-panel">
             <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
                 [infiniteScrollThrottle]="20" (scrolled)="onScrollDown()">
-                <div class="user-box" *ngFor="let conversation of conversationList"
-                    (click)="openUserChat(conversation)" [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
+                <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)"
+                    [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
                     <div class="row">
                         <div class="col-2">
-                            <img [src]="conversation.image" alt="User Icon">
+                            <div class="avatar">
+                                <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                            </div>
+                            <!-- <img [src]="conversation.image" alt="User Icon"> -->
                         </div>
                         <div class="col-8">
                             <div class="user-name">{{ conversation.userFullName }}</div>
