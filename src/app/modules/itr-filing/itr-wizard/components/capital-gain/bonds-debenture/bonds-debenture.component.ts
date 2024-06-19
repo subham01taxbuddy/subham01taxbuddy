@@ -242,13 +242,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       costOfImprovement: [
         item ? item.costOfImprovement : null],
       improvementCost: [
-        item ? item.improvementCost : null,
+        item ? item.improvementCost : 0,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
       indexCostOfImprovement: [item ? item.indexCostOfImprovement : null],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
-      sellExpense: [item ? item.sellExpense : null],
+      sellExpense: [item ? item.sellExpense : 0],
       gainType: [item ? item.gainType : null],
       capitalGain: [item ? item.capitalGain : null],
       purchaseValuePerUnit: [item ? item.purchaseValuePerUnit : null],
@@ -269,6 +269,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.selectedFormGroup.controls['whetherDebenturesAreListed'].setValue(
       this.assetType === 'LISTED_DEBENTURES' ? true : false
     );
+    this.selectedFormGroup.controls['capitalGain'].setValue(null);
+    this.selectedFormGroup.controls['capitalGain'].updateValueAndValidity();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup.controls['srn'].setValue(srn);

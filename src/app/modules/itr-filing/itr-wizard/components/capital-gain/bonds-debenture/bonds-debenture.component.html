@@ -111,7 +111,7 @@
                                                                             required />
                                                                         <mat-error *ngIf="
                                         selectedFormGroup.get('valueInConsideration').hasError('required')
-                                      ">Please sale value
+                                      ">Please enter sale value
                                                                         </mat-error>
                                                                     </mat-form-field>
                                                                 </div>
@@ -283,8 +283,9 @@
                                                     <button (click)="clearForm()" class="btn btn__white">Cancel</button>
                                                 </div>
                                                 <div class="box-right">
-                                                    <button (click)="saveManualEntry()" class="btn btn__primary">Save
-                                                        Details
+                                                    <button (click)="saveManualEntry()" class="btn btn__primary" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">
+                                                        Save Details
                                                     </button>
                                                 </div>
                                             </div>
