@@ -4,9 +4,9 @@ import {
   Input,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges, ViewChild,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -26,6 +26,7 @@ import { GridOptions } from "ag-grid-community";
 export class ZeroCouponBondsComponent
   extends WizardNavigation
   implements OnInit {
+  @ViewChild('formDirective') formDirective: NgForm;
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: UntypedFormGroup;
@@ -323,6 +324,7 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.reset();
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
+    this.formDirective.resetForm();
     this.selectedFormGroup.controls['capitalGain'].setValue(null);
     this.selectedFormGroup.controls['capitalGain'].updateValueAndValidity();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');

@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { Bonds, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -18,6 +18,7 @@ import {RequestManager} from "../../../../../shared/services/request-manager";
   styleUrls: ['./bonds-debenture.component.scss']
 })
 export class BondsDebentureComponent extends WizardNavigation implements OnInit {
+  @ViewChild('formDirective') formDirective: NgForm;
   step = 1;
   bondsForm: UntypedFormGroup;
   deductionForm: UntypedFormGroup;
@@ -320,6 +321,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.selectedFormGroup.reset();
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
+    this.formDirective.resetForm();
     this.selectedFormGroup.controls['isIndexationBenefitAvailable'].setValue(
       this.assetType === 'INDEXED_BONDS' ? true : false
     );
