@@ -230,7 +230,7 @@
       <button class="btn btn__white" (click)="clearForm()">cancel</button>
     </div>
     <div class="box-right">
-      <button class="btn btn__primary" (click)="onSaveClick($event)">Save Details</button>
+      <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="!assetsForm.valid">Save Details</button>
     </div>
   </div>
 
