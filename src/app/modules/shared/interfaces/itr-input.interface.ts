@@ -581,6 +581,8 @@ export interface Incomes {
 export interface Tenant {
   name: string;
   panNumber: string;
+  tanNumber: string;
+  tdsClaimed: boolean;
 }
 export interface CoOwners {
   name: string;
