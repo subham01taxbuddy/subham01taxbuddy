@@ -1165,6 +1165,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         leaderUserId: userData[i].leaderUserId,
         paymentStatus: userData[i].paymentStatus,
         aisProvided: userData[i].aisProvided,
+        everified: userData[i].everified
       })
       userArray.push(userInfo);
     }
@@ -1324,7 +1325,11 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if (data.statusId == 11 || data.statusId == 8 || data.statusId == 47) {
+        if(data.everified === false){
+          this.utilsService.showSnackBar(
+            'Please complete e-verification before starting with revised return'
+          );
+        } else if (data.statusId == 11 || data.statusId == 8 || data.statusId == 47) {
           let disposable = this.dialog.open(ReviseReturnDialogComponent, {
             width: '50%',
             height: 'auto',
@@ -1343,10 +1348,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             }
             console.log('The dialog was closed', result);
           });
-        } else {
-          this.utilsService.showSnackBar(
-            'Please complete e-verification before starting with revised return'
-          );
         }
       }
     }, error => {
