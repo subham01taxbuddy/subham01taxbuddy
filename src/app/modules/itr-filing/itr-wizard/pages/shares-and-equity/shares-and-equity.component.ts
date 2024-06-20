@@ -781,7 +781,7 @@ export class SharesAndEquityComponent
         this.calculateCoiIndexation(res.data.capitalGainType);
         if (res.data.capitalGainType === 'SHORT') {
           securities.controls['isinCode'].setValue('');
-          securities.controls['nameOfTheUnits'].setValue('');
+          // securities.controls['nameOfTheUnits'].setValue('');
           securities.controls['fmvAsOn31Jan2018'].setValue('');
         }
       });
