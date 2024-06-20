@@ -79,7 +79,9 @@ export class ReviseReturnDialogComponent implements OnInit {
           this.createReviseReturn(result);
         }
       } else {
-        console.log('At least one ITR should be there')
+        console.log('At least one ITR should be there');
+        this.utilsService.showSnackBar('At least one ITR should be there');
+        this.dialogRef.close();
       }
 
     }, error => {
