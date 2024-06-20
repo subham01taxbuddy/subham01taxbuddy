@@ -82,7 +82,7 @@
   margin-right: 2px;
 }
 
-.user-input input {
+.user-input textarea {
   flex-grow: 1;
   padding: 8px;
   border: none;
@@ -91,6 +91,7 @@
   background-color: #f2f2f2;
   margin-left: 5px;
   width: 261px;
+  height: 37px;
 }
 
 

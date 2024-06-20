@@ -127,17 +127,7 @@ export class FloatingWidgetComponent implements OnInit {
         return formattedTime;
     }
 
-    displaySystemMessage(message: any): boolean {
-        if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
-          if (!message?.attributes?.showOnUI) {
-            return false;
-          }
-          if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
-            return true;
-          }
-        }
-        return true;
-      }
+    
 
     displaySystemMessage(message: any): boolean {
         if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
