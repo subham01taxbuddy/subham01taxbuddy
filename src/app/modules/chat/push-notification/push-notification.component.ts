@@ -43,14 +43,18 @@ export class PushNotificationComponent {
 
     setTimeout(() => {
      this.removeNotification(notification);
+     console.log('remove card')
     },60000)
   }
 
   removeNotification(notification: any) {
-    this.notifications = this.notifications.filter(n => n !== notification);
-    this.changeDetectorRef.detectChanges();
-    if (this.notifications.length === 0) {
-      this.dialogRef.close();
+    const index = this.notifications.findIndex(n => n.sender === notification.sender && n.text === notification.text);
+    if (index !== -1) {
+      this.notifications.splice(index, 1);
+      this.changeDetectorRef.detectChanges();
+      if (this.notifications.length === 0) {
+        this.dialogRef.close();
+      }
     }
   }
     sendMessage(notification: any) {
