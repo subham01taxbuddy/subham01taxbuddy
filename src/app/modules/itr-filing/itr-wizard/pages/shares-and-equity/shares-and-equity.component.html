@@ -18,7 +18,7 @@
 
               </h2>
               <div id="collapse" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                <form [formGroup]="selectedFormGroup">
+                <form [formGroup]="selectedFormGroup" #formDirective="ngForm">
                   <div class="accordion__item-body">
 
                     <div>
@@ -357,7 +357,7 @@
                         <button class="btn btn__white" (click)="clearForm()">cancel</button>
                       </div>
                       <div class="box-right">
-                        <button class="btn btn__primary" (click)="saveManualEntry()" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                        <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
                                  selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button>
                       </div>
                     </div>

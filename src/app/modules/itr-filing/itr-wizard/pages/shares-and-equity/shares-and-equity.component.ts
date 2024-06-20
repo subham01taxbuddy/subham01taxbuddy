@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  NgForm,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
@@ -39,6 +40,7 @@ import * as moment from 'moment';
 export class SharesAndEquityComponent
   extends WizardNavigation
   implements OnInit {
+  @ViewChild('formDirective') formDirective: NgForm;
   step = 1;
   securitiesForm: UntypedFormGroup;
   deductionForm: UntypedFormGroup;
@@ -411,7 +413,39 @@ export class SharesAndEquityComponent
         this.securitiesForm?.get('securitiesArray')
     );
     this.selectedFormGroup = this.createForm(securitiesArray.length);
+    this.formDirective.resetForm();
     this.selectedFormGroup.controls['algorithm'].setValue('cgSharesMF');
+  }
+
+  onSaveClick(event) {
+    // event.preventDefault();
+    setTimeout(() => {
+      if (this.selectedFormGroup.pending) {
+        // Wait for all async validators to complete
+        let subscription = this.selectedFormGroup.statusChanges.subscribe(status => {
+          if (status !== 'PENDING') {
+            if (this.selectedFormGroup.valid) {
+              this.saveManualEntry();
+            } else {
+              this.utilsService.showSnackBar(
+                  'Please make sure all the details are properly entered.'
+              );
+              this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+              subscription.unsubscribe();
+            }
+          }
+        });
+      } else {
+        if (this.selectedFormGroup.valid) {
+          this.saveManualEntry();
+        } else {
+          this.utilsService.showSnackBar(
+              'Please make sure all the details are properly entered.'
+          );
+          this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "accordBtn", this.elementRef);
+        }
+      }
+    }, 200);
   }
 
   async saveManualEntry() {
@@ -723,7 +757,7 @@ export class SharesAndEquityComponent
         securities.controls['isinCode'].updateValueAndValidity();
       } else {
         securities.controls['isinCode'].setValue('');
-        securities.controls['nameOfTheUnits'].setValue('');
+        // securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
 
         securities.controls['isinCode'].removeValidators([Validators.required]);

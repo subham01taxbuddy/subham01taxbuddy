@@ -657,7 +657,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
         cellRenderer: function (params) {
           const sellExpense = params.value;
-          const formattedValue = `₹${sellExpense}`;
+          const formattedValue = sellExpense ? `₹${sellExpense}` : '';
           return formattedValue;
         },
       },
