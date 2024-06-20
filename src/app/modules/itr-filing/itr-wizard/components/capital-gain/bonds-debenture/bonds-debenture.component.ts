@@ -123,6 +123,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         break;
       }
       case 'calculateTotalCG':{
+        console.log('cg calculated');
         this.loading = false;
         if (res.assetDetails[0].capitalGain) {
           this.selectedFormGroup.controls['capitalGain'].setValue(
@@ -135,6 +136,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         this.calculateDeductionGain();
         this.selectedFormGroup.markAsPristine();
         if(self.saveClicked){
+          console.log('saving form');
           self.saveManualEntry();
           self.saveClicked = false;
         }
@@ -358,9 +360,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     }
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
-    setTimeout(() => {
+    // setTimeout(() => {
       this.clearForm();
-    }, 100);
+    // }, 100);
     this.updateDeductionUI();
     this.utilsService.showSnackBar("Record saved successfully.");
   }
