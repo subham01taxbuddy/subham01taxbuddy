@@ -20,19 +20,23 @@ export class ReviseReturnDialogComponent implements OnInit {
   }
 
   startReviseReturn() {
+    this.loading=true;
     this.getITRByUserIdAndAssesmentYear(this.data['userId']);
   }
 
   ITR_JSON: ITR_JSON;
   async getITRByUserIdAndAssesmentYear(userId) {
+    this.loading=true;
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
       this.utilsService.showSnackBar('There is no any active filing year available')
+      this.loading=false;
       return;
     }
     const param = `/itr?userId=${userId}&assessmentYear=${currentFyDetails[0].assessmentYear}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
+      this.loading=false;
       console.log('My ITR by user Id and Assesment Years=', result);
       if (result.length !== 0) {
         let isWIP_ITRFound = true;
@@ -85,6 +89,7 @@ export class ReviseReturnDialogComponent implements OnInit {
     });
   }
   async createReviseReturn(currentYearItrs) {
+    this.loading=true;
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item:any) => item.isFilingActive);
     if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
@@ -100,6 +105,7 @@ export class ReviseReturnDialogComponent implements OnInit {
 
     this.itrMsService.postMethod(param, copy).subscribe(
       (result: any) => {
+        this.loading=false;
         console.log('Revised Return copy created Result=', result);
         this.ITR_JSON = result;
         currentYearItrs = currentYearItrs.filter((item:any) => item.isRevised === 'N');
