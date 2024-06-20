@@ -180,7 +180,8 @@
                                 }}</button>
                             </ng-container>
                             <ng-container *ngIf="item.type === 'radio'">
-                              <div>{{ item.data.title }}</div>
+                              <div><strong>{{ item.data.title }}</strong></div>
+                              <div [ngClass]="{'radio-options-container': item.data.title.length}">
                               <div *ngFor="let option of item.data.options">
                                 <label>
                                   <input type="radio" [attr.disabled]="isBotSender(message.sender)"
@@ -189,6 +190,7 @@
                                     (change)="onRadioChange(item.data.name,option.value,message.message_id)">
                                   {{ option.label }}
                                 </label>
+                              </div>
                               </div>
                             </ng-container>
                             <ng-container *ngIf="item.type === 'checkbox'">
