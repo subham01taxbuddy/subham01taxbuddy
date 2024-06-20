@@ -557,7 +557,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             params.data.controls['improvementCost'].value;
         },
         valueFormatter: function (params) {
-          const costOfImprovement = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
+          const costOfImprovement = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ?
+              (params.data.controls['indexCostOfImprovement'].value ? params.data.controls['indexCostOfImprovement'].value : 0) :
             params.data.controls['improvementCost'].value;
           return `₹ ${costOfImprovement}`;
         }
