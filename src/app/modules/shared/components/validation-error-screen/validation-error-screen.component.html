@@ -72,7 +72,7 @@
                   {{ i + 1 }}
                 </td>
                 <td>
-                    {{ error?.message }}
+                    {{ getMessage(error.errorCode, ITR_JSON.employerCategory) }}
                 </td>
                 <td>{{ error?.relatedSchedule }}</td>
                 <td>

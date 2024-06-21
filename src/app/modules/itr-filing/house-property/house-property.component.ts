@@ -461,7 +461,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string } = {}): UntypedFormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?:boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -469,17 +469,33 @@ export class HousePropertyComponent implements OnInit {
         name: [obj.name || '', [Validators.required]],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.pattern(AppConstants.panNumberRegex)],
         ],
+        tdsClaimed: [obj.tdsClaimed],
+        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
       });
     } else {
       return this.fb.group({
         name: [obj.name || ''],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.pattern(AppConstants.panNumberRegex)],
         ],
+        tdsClaimed: [obj.tdsClaimed],
+        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
       });
+    }
+  }
+
+  updateTenantForm(tenant:any){
+    if(tenant.controls['tdsClaimed'].value){
+      tenant.controls['tanNumber'].enable();
+      tenant.controls['panNumber'].setValue(null);
+      tenant.controls['panNumber'].disable();
+    } else {
+      tenant.controls['tanNumber'].disable();
+      tenant.controls['tanNumber'].setValue(null);
+      tenant.controls['panNumber'].enable();
     }
   }
 
@@ -509,7 +525,7 @@ export class HousePropertyComponent implements OnInit {
         name: [obj.name || '', [Validators.required]],
         panNumber: [
           obj.panNumber || '',
-          Validators.pattern(AppConstants.panNumberRegex),
+          [Validators.required, Validators.pattern(AppConstants.panNumberRegex)],
         ],
         percentage: [
           obj.percentage || 0,
@@ -650,7 +666,7 @@ export class HousePropertyComponent implements OnInit {
     let housePropertyForm = this.housePropertyForm.controls;
     if (itrJsonHp?.eligible80EEAAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount);
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -658,7 +674,7 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
     } else if (itrJsonHp?.eligible80EEAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount);
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -749,8 +765,7 @@ export class HousePropertyComponent implements OnInit {
         itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
       this.housePropertyForm.controls['standardDeduction'].setValue(
-        ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
-        100
+        Math.round(((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) / 100)
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
         itrJsonHp?.grossAnnualRentReceivedTotal
@@ -763,7 +778,14 @@ export class HousePropertyComponent implements OnInit {
 
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
-        tenant.push(this.createTenantForm({ name: element.name, panNumber: element?.panNumber }));
+        tenant.push(this.createTenantForm(
+            {
+              name: element.name,
+              panNumber: element?.panNumber,
+              tanNumber: element?.tanNumber,
+              tdsClaimed: element?.tdsClaimed
+            }
+        ));
       });
 
       this.changePropType(
@@ -1045,9 +1067,14 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
+        let eligible80EEAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAmount'].value)
+            ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
+        let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
+            ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
+        let interestAmount = parseInt(this.housePropertyForm.controls['interestAmount']?.value) - eligible80EEAmount - eligible80EEAAmount;
         hp.loans.push({
           interestAmount:
-            this.housePropertyForm.controls['interestAmount']?.value,
+            interestAmount,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
@@ -1515,7 +1542,7 @@ export class HousePropertyComponent implements OnInit {
       if (propertyType?.value === 'LOP' || propertyType?.value === 'DLOP') {
         nav?.setValue(annualRentReceived?.value - propertyTax?.value);
         // standard deduction = 30% of nav
-        standardDeduction.setValue((nav?.value * 30) / 100);
+        standardDeduction.setValue(Math.round((nav?.value * 30) / 100));
       } else {
         nav?.setValue(0);
         standardDeduction.setValue(0);
@@ -1551,7 +1578,7 @@ export class HousePropertyComponent implements OnInit {
           Number(this.housePropertyForm.controls['propertyTax'].value)) *
           ownerPercentage) /
         100;
-      this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
+      this.thirtyPctOfAnnualValue = Math.round(this.annualValue * 0.3);
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }
     this.calculateInterestOrDeduction();
@@ -1566,7 +1593,7 @@ export class HousePropertyComponent implements OnInit {
       0.3;
     console.log(arrearsUnrealizedRentReceived);
     this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
-      arrearsUnrealizedRentReceived
+      Math.round(arrearsUnrealizedRentReceived)
     );
   }
 

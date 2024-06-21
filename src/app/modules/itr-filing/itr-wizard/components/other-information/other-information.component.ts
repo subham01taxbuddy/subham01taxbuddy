@@ -292,7 +292,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
   createSharesForm(share?: any) {
-    return this.fb.group({
+    let form = this.fb.group({
       hasEdit: [false],
       companyName: [share?.companyName, Validators.required],
       typeOfCompany: [share?.typeOfCompany, Validators.required],
@@ -364,6 +364,16 @@ export class OtherInformationComponent implements OnInit {
         ]),
       ],
     });
+    form.get('issuePricePerShare')?.valueChanges.subscribe(value => {
+      if (value) {
+        form.get('purchasePricePerShare').setValue(null);
+        form.get('purchasePricePerShare').updateValueAndValidity();
+        form.get('purchasePricePerShare')?.disable();
+      } else {
+        form.get('purchasePricePerShare')?.enable();
+      }
+    });
+    return form;
   }
 
   createFirmsForm(director?: any) {

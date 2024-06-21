@@ -25,7 +25,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -803,10 +802,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success == true) {
-                we_track('Call', {
-                  'User Name': user.userName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -883,14 +878,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
               'Call status update successfully.'
             );
             if (statusId === 19) {
-              we_track('Call Status - Follow Up', {
-                'User Number': callInfo.userMobile,
-              });
             } else if (statusId === 18) {
               this.markAsScheduleCallDone(callInfo);
-              we_track('Call Status - Done', {
-                'User Number': callInfo.userMobile,
-              });
             }
             setTimeout(() => {
               this.search();

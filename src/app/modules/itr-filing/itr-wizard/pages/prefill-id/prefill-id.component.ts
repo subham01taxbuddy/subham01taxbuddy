@@ -51,6 +51,7 @@ export class PrefillIdComponent implements OnInit {
   itrSummaryJson: any;
   taxComputation: any;
   Copy_ITR_JSON: ITR_JSON;
+  isPasswordAvailable: boolean = false;
 
   constructor(
     private router: Router,
@@ -96,6 +97,12 @@ export class PrefillIdComponent implements OnInit {
         if (result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
           this.ITR_JSON.panNumber = result.panNumber;
           this.getUserDetailsByPAN(result.panNumber);
+        }
+
+        if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
+          this.isPasswordAvailable = true;
+        }else{
+          this.isPasswordAvailable = false;
         }
       });
   }
@@ -166,6 +173,7 @@ export class PrefillIdComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       async (result: any) => {
         console.log('My ITR by user Id and Assessment Years=', result);
+        this.loading = false;
         if (result == null || result.length == 0) {
           //invalid case here
           this.utilsService.showErrorMsg(
@@ -1203,6 +1211,7 @@ export class PrefillIdComponent implements OnInit {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
+            this.loading = true;
             let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4 : undefined;
             // if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
             //   this.utilsService.showSnackBar(
@@ -1217,6 +1226,7 @@ export class PrefillIdComponent implements OnInit {
             this.utilsService.setUploadedJson(this.uploadedJson);
             this.mapItrJson(this.uploadedJson);
             this.jsonUpload();
+            this.loading = false;
           } else {
             this.utilsService.showSnackBar(
               'There was some error while uploading the JSON'
@@ -4905,7 +4915,7 @@ export class PrefillIdComponent implements OnInit {
                         assesseeType: this.ITR_Obj.assesseeType,
                         residentialStatus: this.ITR_Obj.residentialStatus,
                         assetType: 'PLOT_OF_LAND',
-                        deduction: [
+                        deduction:
                           landAndBuilding?.ExemptionOrDednUs54
                             ?.ExemptionOrDednUs54Dtls
                             ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
@@ -4928,7 +4938,7 @@ export class PrefillIdComponent implements OnInit {
                                 usedDeduction: null,
                               })
                             )
-                            : {
+                            : [{
                               srn: index,
                               underSection: 'Deduction 54F',
                               orgAssestTransferDate: null,
@@ -4940,8 +4950,7 @@ export class PrefillIdComponent implements OnInit {
                               totalDeductionClaimed: null,
                               costOfPlantMachinary: null,
                               usedDeduction: null,
-                            },
-                        ],
+                            }],
                         improvement: [
                           {
                             id: null,
@@ -6579,13 +6588,13 @@ export class PrefillIdComponent implements OnInit {
     let param = '/eri/prefill-json/upload';
     this.itrMsService.postMethod(param, formData).subscribe(
       (res: any) => {
-        this.loading = false;
         console.log('uploadDocument response =>', res);
         if (res && res.success) {
           this.utilsService.showSnackBar(res.message);
           //prefill uploaded successfully, fetch ITR again
           this.fetchUpdatedITR();
         } else {
+          this.loading = false;
           if (res.errors instanceof Array && res.errors.length > 0) {
             this.utilsService.showSnackBar(res.errors[0].desc);
           } else if (res.messages instanceof Array && res.messages.length > 0) {
@@ -6890,6 +6899,7 @@ export class PrefillIdComponent implements OnInit {
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 
+      this.loading = true;
       let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
       this.itrMsService.getMethod(reqUrl).subscribe(
         (result: any) => {
@@ -7032,6 +7042,10 @@ export class PrefillIdComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  getTooltipMessage(): string {
+    return this.isPasswordAvailable ? 'Password available for this user' : '';
   }
 
   // setting correct format dates

@@ -2,7 +2,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-re-assign-dialog',
   templateUrl: './re-assign-dialog.component.html',
@@ -168,14 +167,7 @@ export class ReAssignDialogComponent implements OnInit {
           this.userMsService.getMethod(param).subscribe((res: any) => {
             this.loading = false;
             console.log(res);
-            we_track('Re-assign', {
-              'User Name': this.data?.userInfo?.name,
-              'User Number': this.data?.userInfo?.mobileNumber,
-              'From filer ': this.data?.userInfo?.filerName,
-              'From Owner': this.data?.userInfo?.ownerName,
-              'To filer ': this.reAssignedFilerName,
-              'To Owner': this.reAssignedOwnerName
-            });
+
             this.utilsService.showSnackBar('User re assigned successfully.');
             this.loading = false;
             this.dialogRef.close({ event: 'close', data: 'success' });

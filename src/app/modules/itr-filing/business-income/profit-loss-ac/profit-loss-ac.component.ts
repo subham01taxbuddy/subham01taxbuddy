@@ -17,14 +17,29 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   NonSpeculativeIncomeComponent!: NonSpeculativeIncomeComponent;
   loading = false;
   PREV_ITR_JSON: any;
+  cgAllowed = false;
   constructor(private utilsService: UtilsService) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    let cgPermission = sessionStorage.getItem('CG_MODULE');
+    this.cgAllowed = cgPermission === 'YES';
+  }
 
   saveAll() {
+    //validate nature of business is filled in if income details are available
+    const row = this.NonSpeculativeIncomeComponent.profitLossForm.getRawValue();
+    let incomes = row.incomes.filter(item => item.type);
+    if((this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 ||
+        this.SpeculativeIncomeComponent.specIncomeFormArray.length > 0 ||
+      incomes.length > 0) && (this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.length === 0 || !this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.valid)) {
+      this.utilsService.showSnackBar("Nature of Business details are required");
+      this.utilsService.smoothScrollToTop();
+      return;
+    }
+
     let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
     let specSaved = this.SpeculativeIncomeComponent.onContinue();
     if (specSaved && nonSpecSaved) {

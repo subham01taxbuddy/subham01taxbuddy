@@ -873,12 +873,14 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     if (this.leaderView.value) {
       this.ownerView.disable();
       this.showReports();
+      this.getFilingCount();
       this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
       // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();
+      this.getFilingCount();
       this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef(''))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
     }

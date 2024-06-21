@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-change-status',
@@ -90,12 +89,12 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          let loggedInRole = this.utilsService.getUserRoles();
-          if(loggedInRole.includes('ROLE_FILER')){
-            this.itrStatus = response.filter((item: any) => item.statusId !== 8);
-          }else{
+          // let loggedInRole = this.utilsService.getUserRoles();
+          // if(loggedInRole.includes('ROLE_FILER')){
+          //   this.itrStatus = response.filter((item: any) => item.statusId !== 8);
+          // }else{
             this.itrStatus = response;
-          }
+          // }
         } else {
           this.itrStatus = [];
         }
@@ -184,12 +183,7 @@ export class ChangeStatusComponent implements OnInit {
                 );
                 let fromStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.data?.userInfo?.statusId)
                 let toStatusObj = this.itrStatus?.filter((item: any) => item.statusId === this.changeStatus.controls['selectStatus'].value)
-                we_track('Update status', {
-                  'User Name': this.data?.userInfo?.name,
-                  'User Number': this.data?.userInfo?.mobileNumber,
-                  'From status': fromStatusObj.length ? fromStatusObj[0].statusName : '',
-                  'To status': toStatusObj.length ? toStatusObj[0].statusName : '',
-                });
+
                 setTimeout(() => {
                   this.dialogRef.close({
                     event: 'close',

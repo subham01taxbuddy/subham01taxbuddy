@@ -16,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ActivatedRoute, Router } from '@angular/router';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -184,6 +183,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       if (this.subscriptionObj?.['invoiceAmount']) {
         this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
       }
+      this.serviceType = this.subscriptionObj.servicesType
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
       this.userSubscription = this.createSubscriptionObj;
@@ -206,9 +206,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.getFy();
       }
     }
-
-    this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
+    this.getAllPlanInfo(this.serviceType);
     this.setFormValues(this.selectedUserInfo);
     this.isButtonDisable = true;
     if(this.serviceType === 'ITR')
@@ -804,14 +803,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.changeService();
     switch (this.serviceType) {
       case 'ITR':
-        this.serviceDetail = this.userSubscription.smeSelectedPlan
-          ? this.userSubscription.smeSelectedPlan.name
-          : this.userSubscription.userSelectedPlan.name;
+        this.serviceDetail = this.userSubscription?.smeSelectedPlan
+          ? this.userSubscription?.smeSelectedPlan?.name
+          : this.userSubscription?.userSelectedPlan?.name;
         break;
       case 'ITRU':
-        this.serviceDetail = this.userSubscription.smeSelectedPlan
-          ? this.userSubscription.smeSelectedPlan.name
-          : this.userSubscription.userSelectedPlan.name;
+        this.serviceDetail = this.userSubscription?.smeSelectedPlan
+          ? this.userSubscription?.smeSelectedPlan?.name
+          : this.userSubscription?.userSelectedPlan?.name;
         break;
     }
     this.description.setValue(this.userSubscription?.item.itemDescription);
@@ -1388,13 +1387,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               } else {
                 invoiceTypeDetails = 'Upgrade'
               }
-              we_track('Subscription Edit', {
-                'User Number': this.personalInfoForm.controls['mobileNumber'].value,
-                'Service': this.service,
-                'Plan': this.serviceDetail,
-                'Promo Code': this.searchedPromoCode.value,
-                'Downgrade or Upgrade': invoiceTypeDetails
-              });
+
               this.toastMessage.alert('success', 'Subscription created successfully.');
               this.location.back();
             },
@@ -1452,9 +1445,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.userService.spamPutMethod(param, reqBody).subscribe(
           (res: any) => {
             this.loading = false;
-            we_track('Cancel Subscription  ', {
-              'User number ': this.personalInfoForm.controls['mobileNumber'].value,
-            });
+
             this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
             this.location.back();
           },

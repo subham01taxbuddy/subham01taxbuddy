@@ -10,7 +10,6 @@ import { ReportService } from 'src/app/services/report-service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
 import { MyDialogComponent } from 'src/app/modules/shared/components/my-dialog/my-dialog.component';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-add-subscription',
   templateUrl: './add-subscription.component.html',
@@ -359,13 +358,7 @@ export class AddSubscriptionComponent implements OnInit {
           this.itrService.postMethod(param, reqBody).subscribe(
             (res: any) => {
               this.loading = false;
-              we_track('Create Subscription', {
-                'User Number': this.data.mobileNo,
-                Service:
-                  this.selectedPlanInfo?.servicesType +
-                  ' : ' +
-                  this.selectedPlanInfo?.name,
-              });
+
               this.dialogRef.close({ event: 'close', data: res });
               // this.toastMessage.alert(
               //   'success',

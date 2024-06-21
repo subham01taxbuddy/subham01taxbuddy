@@ -22,7 +22,6 @@ import { ServiceDropDownComponent } from 'src/app/modules/shared/components/serv
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { Location, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-declare function we_track(key: string, value: any);
 export interface User {
   name: string;
   userId: Number;
@@ -152,12 +151,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
+        { value: 'userId', name: 'User Id ' }
       ];
     } else {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id ' }
       ];
     }
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -284,9 +285,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
 
     let userIdFilter = '';
-    if (userId) {
-      this.isAllowed = true;
-      userIdFilter = `&userId=${userId}`;
+    if (userId || this.searchBy?.userId ) {
+      if(this.roles.includes('ROLE_FILER')){
+        this.isAllowed = true;
+      }
+      userIdFilter ='&userId=' + (this.searchBy?.userId || userId);
     }
 
     let mobileFilter = '';
@@ -618,6 +621,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     ) {
       this.agentId = this.loggedInSme[0]?.userId;
     }
+
+    this.router.navigate([], { queryParams: {} });
   }
 
   subscriptionCreateColumnDef(List , view) {
@@ -1021,9 +1026,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                     this.userMsService.spamPutMethod(param, reqBody).subscribe(
                       (res: any) => {
                         this.loading = false;
-                        // we_track('Cancel Subscription  ', {
-                        //   'User number ': subscription.mobileNumber,
-                        // });
+
                         this._toastMessageService.alert(
                           'success',
                           'Subscription will be Canceled/Deleted onces your Leader Approves it.'
@@ -1541,7 +1544,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value);
-    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     } else {

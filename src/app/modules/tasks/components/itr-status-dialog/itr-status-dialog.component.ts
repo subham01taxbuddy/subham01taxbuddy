@@ -9,7 +9,6 @@ import { UntypedFormControl, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import * as moment from 'moment';
 import { MatStepper } from '@angular/material/stepper';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-itr-status-dialog',
   templateUrl: './itr-status-dialog.component.html',
@@ -85,9 +84,7 @@ export class ItrStatusDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    we_track('ITR User Journey', {
-      'User Number': this.data?.userInfo?.mobileNumber,
-    });
+
     this.loading = false;
     this.getAssessmentYear();
     this.getDueDateDetails();

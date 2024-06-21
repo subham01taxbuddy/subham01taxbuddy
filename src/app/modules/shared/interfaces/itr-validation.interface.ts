@@ -678,10 +678,30 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income balance sheet difference needs to be zero and select BOA as "Yes"',
     relatedSchedule: 'balanceSheet',
   },
+  NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO: {
+    code: 'NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO',
+    message: 'In case of Non Speculative Income balance sheet difference needs to be zero',
+    relatedSchedule: 'balanceSheet',
+  },
   NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES: {
     code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES',
     message: 'In case of Non Speculative Income select BOA as "Yes"',
     relatedSchedule: 'personalInfo',
+  },
+  NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_NO: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_No',
+    message: 'In case of Non Speculative Income select BOA as "No"',
+    relatedSchedule: 'personalInfo',
+  },
+  NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET',
+    message: 'In case of Non Speculative Income, please fill balance sheet',
+    relatedSchedule: 'balanceSheet',
+  },
+  IMMOVABLE_PROPERTY_INCOMPLETE: {
+    code: 'IMMOVABLE_PROPERTY_INCOMPLETE',
+    message: 'Please fill all immovable asset details in schedule AL',
+    relatedSchedule: 'moreInformation',
   },
   FOREIGN_INCOME_TR_SECTION_NOT_FOUND: {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
@@ -707,6 +727,26 @@ export const ErrorMsgsSchedule = {
     code: 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY',
     message: '80CCD2 investment declared exceeds the allowed value',
     relatedSchedule: 'investmentsDeductions',
+  },
+  TDS_SALARY_MORE_THAN_AMT: {
+    code: 'TDS_SALARY_MORE_THAN_AMT',
+    message: 'TDS on salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_16A_MORE_THAN_AMT: {
+    code: 'TDS_16A_MORE_THAN_AMT',
+    message: 'TDS other than salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_26QB_MORE_THAN_AMT: {
+    code: 'TDS_26QB_MORE_THAN_AMT',
+    message: 'TDS on sale/rent of property is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TCS_MORE_THAN_AMT: {
+    code: 'TCS_MORE_THAN_AMT',
+    message: 'TCS collected is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
   }
 };
 export interface Schedules {
@@ -764,5 +804,13 @@ export class ItrValidations {
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];
+  }
+
+  getMessage(errorCode: string, employerType: string){
+    if(errorCode === 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY'){
+      return ErrorMsgsSchedule[errorCode].message;
+    } else {
+      return ErrorMsgsSchedule[errorCode].message;
+    }
   }
 }

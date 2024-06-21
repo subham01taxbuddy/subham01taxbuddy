@@ -22,8 +22,6 @@ import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service'
 import { IdleService } from 'src/app/services/idle-service';
 
 declare let $: any;
-declare function we_login(userId: string);
-declare function we_setAttribute(key: string, value: any);
 
 @Component({
   selector: 'app-login',
@@ -92,12 +90,6 @@ export class LoginComponent implements OnInit {
       let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
       this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
 
-      we_login(res.data[0].userId.toString());
-      we_setAttribute('we_email', res.data[0].email);
-      we_setAttribute('we_phone', (res.data[0].callingNumber));
-      we_setAttribute('we_first_name', res.data[0].name);
-      we_setAttribute('User Id', parseInt(res.data[0].userId));
-
       //get logged in userID
       let userId = this.utilsService.getLoggedInUserID();
       //register sme login
@@ -127,6 +119,26 @@ export class LoginComponent implements OnInit {
       } else {
         if (roles.length > 0)
           this._toastMessageService.alert("error", "Access Denied.");
+      }
+
+      //Ashwini: check for specific users and allow the CG module for them
+      let userNumber = this.form.value.user;
+      let allowedUsers = [
+          //Gitanjali -
+      "9324957899",
+        // Divya-
+        "9324957908",
+        // Ankita-
+        "9594746347",
+        // Pratik
+        "9324501969",
+        // Astha -
+        "9773011936",
+          // UAT admin
+        "0014082016"
+        ];
+      if(allowedUsers.filter(value => value === userNumber).length > 0){
+        sessionStorage.setItem('CG_MODULE', 'YES');
       }
     }
   }

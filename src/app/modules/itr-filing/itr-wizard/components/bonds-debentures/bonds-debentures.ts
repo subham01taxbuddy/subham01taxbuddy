@@ -391,7 +391,6 @@ export class BondsDebentures
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
-      const param = '/singleCgCalculate';
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
@@ -417,7 +416,7 @@ export class BondsDebentures
           },
         ],
       };
-      this.itrMsService.postMethod(param, request).subscribe(
+      this.itrMsService.singelCgCalculate(request).subscribe(
         (res: any) => {
           this.loading = false;
           if (res.assetDetails[0].capitalGain) {

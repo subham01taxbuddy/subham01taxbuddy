@@ -16,7 +16,6 @@ import { saveAs } from "file-saver/dist/FileSaver";
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -588,10 +587,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
       console.log(this.invoiceFormGroup.value)
       let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
-      we_track('Old Invoice Download', {
-        'CSV from date': fromData,
-        'CSV  to date': toData
-      });
+
       if (this.utilService.isNonEmpty(this.status.value)) {
         location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.status.value;
       }

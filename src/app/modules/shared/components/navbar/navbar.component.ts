@@ -15,6 +15,7 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
+import {Subscription} from "rxjs";
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -117,10 +118,20 @@ export class NavbarComponent implements DoCheck {
     }
   }
 
+  subscription: Subscription;
+
   ngAfterViewInit() {
     if (this.router.url.startsWith('/itr-filing/itr')) {
       this.close();
     }
+    this.subscription = this.sidebarService.isLoading
+        .subscribe((state) => {
+          if (!state) {
+            this.nav = true;
+          } else {
+            this.nav =  false;
+          }
+        });
   }
 
   open() {

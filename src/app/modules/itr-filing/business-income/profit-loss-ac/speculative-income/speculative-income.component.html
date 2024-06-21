@@ -98,7 +98,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
-                                  name="expenditure" class="input-field" required trim
+                                  name="expenditure" class="input-field" required trim digitsOnly
                                   (change)="calculateNetIncome()" />
                               </mat-form-field>
                             </div>
@@ -122,7 +122,7 @@
                               <button (click)="clearForm()" class="btn btn__white">Cancel</button>
                             </div>
                             <div class="box-right">
-                              <button (click)="saveManualEntry()" class="btn btn__primary">Save
+                              <button (click)="saveManualEntry()" class="btn btn__primary" [disabled]="!selectedFormGroup.valid">Save
                                 Details
                               </button>
                             </div>
