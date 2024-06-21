@@ -109,7 +109,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
     }
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/schedule-call-report?leaderUserId=1064
     if(!pageChange){
       this.cacheManager.clearCache();
@@ -135,7 +135,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
 
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/schedule-call-report?${data}${userFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.scheduleCallingReport = response?.data?.content;
@@ -151,7 +151,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });

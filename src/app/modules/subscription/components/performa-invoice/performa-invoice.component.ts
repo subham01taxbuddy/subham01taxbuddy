@@ -405,7 +405,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.config.totalItems = 0;
   }
 
-  getInvoice(isCoOwner?, agentId?, pageChange?) {
+  getInvoice=(isCoOwner?, agentId?, pageChange?):Promise<any> =>{
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-24&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -493,7 +493,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.invoiceData = response.data.content;
@@ -519,14 +519,12 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.gridApi?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }, (error) => {
+    }).catch(()=>{
       this.gridApi?.setRowData(this.createRowData([]));
       this.totalInvoice = 0
       this.config.totalItems = 0;
       this.loading = false;
-    }
-    );
-
+    });
   }
 
   createRowData(userInvoices) {

@@ -199,7 +199,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  getCallingCount(){
+  getCallingCount= (): Promise<any> =>{
     // https://uat-api.taxbuddy.com/report/bo/calling-report/daily-calling-report?page=0&pageSize=20&fromDate=2024-06-05&toDate=2024-06-05&count=true
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -247,7 +247,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}&count=true`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.countData = response.data
@@ -255,13 +255,13 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });
   }
 
-  showReports(pageNumber?) {
+  showReports = (pageNumber?): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/daily-calling-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageNumber) {
       this.cacheManager.clearCache();
@@ -331,7 +331,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.dailyCallingReport = response?.data?.content;
@@ -348,7 +348,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });

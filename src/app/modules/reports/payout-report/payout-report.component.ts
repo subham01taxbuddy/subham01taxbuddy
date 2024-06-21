@@ -149,7 +149,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/payout/report?toDate=2023-11-10&fromDate=2023-04-01&page=0&pageSize=20' \
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -196,7 +196,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.payoutReport = response?.data?.content;
@@ -219,14 +219,14 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
         this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.config.totalItems = 0;
       this.config.totalCommissionEarned = 0;
       this.config.totalPartnersPaid = 0;
       this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(payoutData) {

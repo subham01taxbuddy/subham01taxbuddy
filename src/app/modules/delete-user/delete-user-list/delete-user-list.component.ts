@@ -108,15 +108,16 @@ export class DeleteUserListComponent implements OnInit {
     this.maxStartDate = this.toDate.value;
   }
 
-  getUserSearchList(pageNo) {
+  getUserSearchList=(pageNo):Promise<any> =>{
+
     const fromDateValue = this.fromDate.value;
     const toDateValue = this.toDate.value;
 
     let fromDate = this.datePipe.transform(fromDateValue, 'yyyy-MM-dd');
     let toDate = this.datePipe.transform(toDateValue, 'yyyy-MM-dd');
-
     if (fromDate && !toDate) {
-      return this._toastMessageService.alert("error", 'Please Select To Date ');
+      this._toastMessageService.alert("error", 'Please Select To Date ');
+      return
     }
 
     this.deleteUserData = [];
@@ -140,7 +141,7 @@ export class DeleteUserListComponent implements OnInit {
 
       console.log('url', dynamicUrl)
 
-      NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
+      return NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).toPromise().then(res => {
         if (Array.isArray(res.content)) {
           this.deleteUserData = res.content;
           console.log('list of delete req', this.deleteUserData)
@@ -149,7 +150,7 @@ export class DeleteUserListComponent implements OnInit {
         }
         this.loading = false;
         return resolve(true)
-      }, err => {
+      }).catch((err)=>{
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
         return resolve(false)

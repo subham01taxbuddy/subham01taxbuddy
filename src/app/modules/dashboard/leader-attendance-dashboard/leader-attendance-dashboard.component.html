@@ -44,8 +44,11 @@
                           </div>
                           <div class="col-sm-6">
                             <div class="button-container">
-                              <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                              </button>
+                              <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                              </button> -->
+                              <app-custom-button class="srch-btn-1" [actions]="[getAllPartnerDetails]">
+                                <i class="fa fa-search" aria-hidden="true"></i> Search
+                              </app-custom-button>
                               <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                                 <i class="fa fa-download" aria-hidden="true"></i> Download File
                               </button>

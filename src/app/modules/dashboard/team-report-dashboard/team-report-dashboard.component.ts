@@ -184,7 +184,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
   }
 
-  getInvoiceReports() {
+  getInvoiceReports=():Promise<any> => {
     // API to get invoice report for dashboard of leader
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/invoice-report?fromDate=2023-09-01&toDate=2023-11-08&serviceType=ITR'
     this.loading = true;
@@ -199,7 +199,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -208,15 +208,13 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      })
   }
 
-  getOperationTeamDetails() {
+  getOperationTeamDetails=():Promise<any> => {
     // API to get operation team
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/sme-report'
     this.loading = true;
@@ -227,7 +225,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
     param = `/bo/dashboard/sme-report${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -236,12 +234,10 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      });
   }
 
   getPartnersAssignmentDetails() {
@@ -277,7 +273,7 @@ export class TeamReportDashboardComponent implements OnInit {
     );
   }
 
-  getTotalCommission() {
+  getTotalCommission=():Promise<any> => {
     // API to get totalcommission
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
@@ -291,7 +287,7 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
@@ -317,18 +313,15 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert(
           'error',
-          'Error while filer commission report: Not_found: Data not found'
-        );
-      }
-    );
+          'Error while filer commission report: Not_found: Data not found')
+      });
   }
 
-  getSubPaidScheduleCallCount() {
+  getSubPaidScheduleCallCount=():Promise<any> =>{
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?toDate=2024-02-09&count=true&fromDate=2024-02-01
     // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01'
     this.loading = true;
@@ -341,7 +334,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}&count=true`;
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -355,15 +348,13 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      })
   }
 
-  getScheduledCallDetails() {
+  getScheduledCallDetails=():Promise<any> =>{
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -375,7 +366,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -389,12 +380,10 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      });
   }
 
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;

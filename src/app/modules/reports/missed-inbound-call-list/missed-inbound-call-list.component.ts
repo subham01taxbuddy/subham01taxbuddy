@@ -145,7 +145,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     }
   }
 
-  showReports(pageNumber?) {
+  showReports = (pageNumber?): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/report/calling-report/
     // missed-inbound-calls?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20&status=ALL
 
@@ -203,7 +203,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/missed-inbound-calls?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.missedInboundCallList = response?.data?.content;
@@ -219,10 +219,10 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(fillingData) {

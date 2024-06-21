@@ -43,8 +43,11 @@
                         </div>
 
                         <div class="button-container">
-                          <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                          </button>
+                          <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                          </button> -->
+                          <app-custom-button class="srch-btn-1" [actions]="[getInvoiceReports,getOperationTeamDetails,getTotalCommission,getScheduledCallDetails,getSubPaidScheduleCallCount]">
+                            <i class="fa fa-search" aria-hidden="true"></i> Search
+                          </app-custom-button>
                           <button class="clrLnk-1" (click)="this.resetFilters()">
                             Clear form
                           </button>

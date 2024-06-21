@@ -165,7 +165,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     console.log('object from search param ',this.searchBy);
   }
 
-  getInvoices(pageChange?) {
+  getInvoices=(pageChange?):Promise<any> => {
     //https://dev-api.taxbuddy.com/report/bo/invoice/report?fromDate=2022-04-01&toDate=2023-03-31&pageNumber=0
     //&pageSize=20&paymentStatus=Unpaid,Paid&mobile=9537210081
 
@@ -197,7 +197,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
       }
       let param = `/bo/invoice/report?fromDate=${fromData}&toDate=${toData}&${data}${statusFilter}${mobileFilter}${emailFilter}${nameFilter}`;
 
-      this.reportService.getMethod(param).subscribe((res: any) => {
+      return this.reportService.getMethod(param).toPromise().then((res: any) => {
         this.loading = false;
         this.invoiceData = res.content;
         this.totalInvoice = res?.totalElements;
@@ -210,10 +210,10 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
         this.cacheManager.cachePageContent(currentPageNumber,this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
-      }, error => {
+      }).catch(()=>{
         this.loading = false;
         this.gridApi?.setRowData(this.createRowData([]));
-      })
+      });
     } else {
       this.loading = false;
       this._toastMessageService.alert("error", "Please select Financial Year, Start and End Date and Status.");

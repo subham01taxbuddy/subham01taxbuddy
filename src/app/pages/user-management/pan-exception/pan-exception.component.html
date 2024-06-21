@@ -20,9 +20,14 @@
           </mat-form-field>
         </div>
         <div class="col-sm-8 btn12">
-          <div>
+          <!-- <div>
             <button class="btnUpdate margin" (click)="searchPan()">
               Search PAN </button>
+          </div> -->
+          <div>
+            <app-custom-button class="btnUpdate margin" [actions]="[searchPan]">
+              <i class="fa fa-search" aria-hidden="true"></i> Search PAN
+            </app-custom-button>
           </div>
           <div>
             <button [disabled]="disableAddButton" class="btnUpdate margin" (click)="addPan()">

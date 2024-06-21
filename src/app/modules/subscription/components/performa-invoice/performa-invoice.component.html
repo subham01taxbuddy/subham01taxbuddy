@@ -88,9 +88,12 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <button class="srch-btn-1" [disabled]="loading" (click)="getInvoice('isAgent','agentId')">
+                    <!-- <button class="srch-btn-1" [disabled]="loading" (click)="getInvoice('isAgent','agentId')">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                    </button>
+                    </button> -->
+                    <app-custom-button class="srch-btn-1" [actions]="[getInvoice]">
+                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
+                    </app-custom-button>
 
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
                       Clear form

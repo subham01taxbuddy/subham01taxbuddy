@@ -103,7 +103,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  getPromoCodeList(pageChange?) {
+  getPromoCodeList=(pageChange?):Promise<any> => {
     //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30&code=earlybird30&serviceType=ITR'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -135,7 +135,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
       this.PromoCodeInfo = result?.content;
@@ -155,9 +155,9 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
         this._toastMessageService.alert("error", 'No Data Found');
       }
 
-    }, error => {
+    }).catch(()=>{
       this.loading = false;
-    })
+    });
   }
 
   createRowData(promoCodeData) {
