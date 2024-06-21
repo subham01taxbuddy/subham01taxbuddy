@@ -51,6 +51,7 @@ export class PrefillIdComponent implements OnInit {
   itrSummaryJson: any;
   taxComputation: any;
   Copy_ITR_JSON: ITR_JSON;
+  isPasswordAvailable: boolean = false;
 
   constructor(
     private router: Router,
@@ -96,6 +97,12 @@ export class PrefillIdComponent implements OnInit {
         if (result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
           this.ITR_JSON.panNumber = result.panNumber;
           this.getUserDetailsByPAN(result.panNumber);
+        }
+
+        if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
+          this.isPasswordAvailable = true;
+        }else{
+          this.isPasswordAvailable = false;
         }
       });
   }
@@ -7035,6 +7042,10 @@ export class PrefillIdComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  getTooltipMessage(): string {
+    return this.isPasswordAvailable ? 'Password available for this user' : '';
   }
 
   // setting correct format dates

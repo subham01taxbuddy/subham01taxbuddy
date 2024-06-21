@@ -15,7 +15,9 @@
 
           <div class="flex flex-col items-center">
             <div class="flex flex-row items-center space-between">
-              <button class="lgtBtnTp" type="button" (click)="addAisCredentials()">
+              <button class="lgtBtnTp" [ngClass]="{'lgtBtnTp2': isPasswordAvailable, 'lgtBtnTp': !isPasswordAvailable}"  type="button" (click)="addAisCredentials()"
+                [matTooltip]="getTooltipMessage()"
+                matTooltipPosition="above">
                 <span class="font-semibold">
                   IT portal’s Credentials
                 </span>
