@@ -326,7 +326,7 @@ export const ErrorMsgsSchedule = {
   MAX_44AD_RECIEPT_LIMIT_EXCEED: {
     code: 'MAX_44AD_RECIEPT_LIMIT_EXCEED',
     message: 'if the taxpayer has filed ITR-4 then the gross receipt/income U/S 44AD cannot be more than Rs. 2 crores',
-    relatedSchedule: 'otherSources',
+    relatedSchedule: 'businessIncome',
   },
   CG_GOLD_EXPENSE_CLAIM_INCORRECT: {
     code: 'CG_GOLD_EXPENSE_CLAIM_INCORRECT',
