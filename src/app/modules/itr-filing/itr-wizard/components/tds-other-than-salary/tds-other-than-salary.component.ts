@@ -270,7 +270,8 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       }
     }
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
-    salaryArray.insert(0, this.createForm(item));
+    salaryArray.push(this.createForm(item));
+    // salaryArray.insert(0, this.createForm(item));
     delay(0);
     if(refresh) {
       this.changed();
