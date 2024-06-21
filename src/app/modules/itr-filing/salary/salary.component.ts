@@ -342,7 +342,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       );
       return;
     }
-    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length) {
+    if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.employers.length) {
       this.saveEmployerDetails(false);
     }
     if (index === -1) {
