@@ -1047,8 +1047,7 @@ export class EquityMfComponent implements OnInit {
       }
       ]
     }
-    const param = '/singleCgCalculate';
-    this.itrMsService.postMethod(param, request).subscribe((result: any) => {
+    this.itrMsService.singelCgCalculate(request).subscribe((result: any) => {
       console.log('Single CG Result:', result)
 
     }, error => {
@@ -1083,7 +1082,6 @@ export class EquityMfComponent implements OnInit {
 
   calculateCg(type) {
     this.loading = true;
-    const param = '/singleCgCalculate';
     let request = {
       assessmentYear: this.ITR_JSON.assessmentYear,
       assesseeType: "INDIVIDUAL",
@@ -1099,7 +1097,7 @@ export class EquityMfComponent implements OnInit {
       ],
     }
 
-    this.itrMsService.postMethod(param, request).subscribe((res: any) => {
+    this.itrMsService.singelCgCalculate(request).subscribe((res: any) => {
       this.loading = false;
       console.log('Single CG result:', res);
       if (type === 'EQUITY_SHARES_LISTED') {

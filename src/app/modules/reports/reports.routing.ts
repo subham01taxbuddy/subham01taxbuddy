@@ -20,6 +20,7 @@ import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.com
 import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
+import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 
 
 const routes: Routes = [
@@ -114,6 +115,10 @@ const routes: Routes = [
       {
         path:'client-added-filing-not-done',
         component:ClientAddedFilingNotDoneComponent,
+      },
+      {
+        path:'filing-sla',
+        component:FilingSlaComponent,
       }
     ],
 

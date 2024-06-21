@@ -461,7 +461,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string } = {}): UntypedFormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?:boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -471,6 +471,8 @@ export class HousePropertyComponent implements OnInit {
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
+        tdsClaimed: [obj.tdsClaimed],
+        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
       });
     } else {
       return this.fb.group({
@@ -479,7 +481,21 @@ export class HousePropertyComponent implements OnInit {
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
+        tdsClaimed: [obj.tdsClaimed],
+        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
       });
+    }
+  }
+
+  updateTenantForm(tenant:any){
+    if(tenant.controls['tdsClaimed'].value){
+      tenant.controls['tanNumber'].enable();
+      tenant.controls['panNumber'].setValue(null);
+      tenant.controls['panNumber'].disable();
+    } else {
+      tenant.controls['tanNumber'].disable();
+      tenant.controls['tanNumber'].setValue(null);
+      tenant.controls['panNumber'].enable();
     }
   }
 
@@ -762,7 +778,14 @@ export class HousePropertyComponent implements OnInit {
 
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
-        tenant.push(this.createTenantForm({ name: element.name, panNumber: element?.panNumber }));
+        tenant.push(this.createTenantForm(
+            {
+              name: element.name,
+              panNumber: element?.panNumber,
+              tanNumber: element?.tanNumber,
+              tdsClaimed: element?.tdsClaimed
+            }
+        ));
       });
 
       this.changePropType(

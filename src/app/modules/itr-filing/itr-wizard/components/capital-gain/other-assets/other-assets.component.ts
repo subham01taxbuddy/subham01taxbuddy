@@ -122,6 +122,13 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     } else {
       this.isDisable = false;
     }
+    this.assetList.sort((a,b)=>{
+      if(a.indexCostOfAcquisition > b.indexCostOfAcquisition){
+        return -1
+      } else {
+        return 1;
+      }
+    })
     return this.assetList;
   }
 
@@ -613,7 +620,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Buy Value',
+        headerName: 'Cost of Acquisition',
         field: 'purchaseCost',
         width: 100,
         editable: false,
@@ -650,7 +657,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
         cellRenderer: function (params) {
           const sellExpense = params.value;
-          const formattedValue = `₹${sellExpense}`;
+          const formattedValue = sellExpense ? `₹${sellExpense}` : '';
           return formattedValue;
         },
       },

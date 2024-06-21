@@ -294,6 +294,7 @@ export interface equityAndDebtInterest {
   closingValue: any;
   totalGrossAmountPaid: any;
   totalGrossProceedsFromSale: any;
+  closingBalance: any;
   countryName: any;
 }
 
@@ -581,6 +582,8 @@ export interface Incomes {
 export interface Tenant {
   name: string;
   panNumber: string;
+  tanNumber: string;
+  tdsClaimed: boolean;
 }
 export interface CoOwners {
   name: string;

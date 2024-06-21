@@ -8,7 +8,6 @@ import { ReportService } from 'src/app/services/report-service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import Auth from '@aws-amplify/auth';
-declare function we_track(key: string, value: any);
 export interface Country {
   name: string;
   code: string;
@@ -287,17 +286,6 @@ export class CreateNewUserComponent implements OnInit {
       this.loading = true;
       let param = "/user_account";
       this.userService.postMethod(param, finalReq).subscribe((res: any) => {
-        we_track('Create User', {
-          'Country Code': '+' + this.countryCode,
-          'User number': this.signUpForm.controls['mobile'].value,
-          'First Name ': this.signUpForm.controls['firstName'].value,
-          'Last Name': this.signUpForm.controls['lastName'].value,
-          'PAN ': this.signUpForm.controls['panNumber'].value,
-          'Email Address': this.signUpForm.controls['email'].value,
-          'Service Type ': this.signUpForm.controls['serviceType'].value,
-          'Leader': this.leaderName,
-          'Filer': this.filerName,
-        });
         if (res.status === 406) {
           this.loading = false;
           this.utilsService.showSnackBar(res.message);

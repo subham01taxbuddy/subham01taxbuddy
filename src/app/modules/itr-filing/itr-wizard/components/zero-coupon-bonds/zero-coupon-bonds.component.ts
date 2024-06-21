@@ -4,9 +4,9 @@ import {
   Input,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges, ViewChild,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -26,6 +26,7 @@ import { GridOptions } from "ag-grid-community";
 export class ZeroCouponBondsComponent
   extends WizardNavigation
   implements OnInit {
+  @ViewChild('formDirective') formDirective: NgForm;
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: UntypedFormGroup;
@@ -300,13 +301,13 @@ export class ZeroCouponBondsComponent
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       dateOfImprovement: [item ? item.dateOfImprovement : null],
       costOfImprovement: [
-        item ? item.costOfImprovement : null,
+        item ? item.costOfImprovement : 0,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
       indexCostOfImprovement: [item ? item.indexCostOfImprovement : null],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
-      sellExpense: [item ? item.sellExpense : null],
+      sellExpense: [item ? item.sellExpense : 0],
       gainType: [item ? item.gainType : null],
       capitalGain: [item ? item.capitalGain : null],
       purchaseValuePerUnit: [item ? item.purchaseValuePerUnit : null],
@@ -323,7 +324,41 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.reset();
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
+    this.formDirective.resetForm();
+    this.selectedFormGroup.controls['capitalGain'].setValue(null);
+    this.selectedFormGroup.controls['capitalGain'].updateValueAndValidity();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
+  }
+
+  onSaveClick() {
+    // event.preventDefault();
+    setTimeout(() => {
+      if (this.selectedFormGroup.pending) {
+        // Wait for all async validators to complete
+        let subscription = this.selectedFormGroup.statusChanges.subscribe(status => {
+          if (status !== 'PENDING') {
+            if (this.selectedFormGroup.valid) {
+              this.saveManualEntry();
+            } else {
+              this.utilsService.showSnackBar(
+                  'Please make sure all the details are properly entered.'
+              );
+              this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+              subscription.unsubscribe();
+            }
+          }
+        });
+      } else {
+        if (this.selectedFormGroup.valid) {
+          this.saveManualEntry();
+        } else {
+          this.utilsService.showSnackBar(
+              'Please make sure all the details are properly entered.'
+          );
+          this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+        }
+      }
+    }, 200);
   }
 
   saveManualEntry() {
@@ -670,7 +705,8 @@ export class ZeroCouponBondsComponent
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
-      const param = '/singleCgCalculate';
+      this.selectedFormGroup.markAsPending();
+      this.loading = true;
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
@@ -696,7 +732,7 @@ export class ZeroCouponBondsComponent
           },
         ],
       };
-      this.itrMsService.postMethod(param, request).subscribe(
+      this.itrMsService.singelCgCalculate(request).subscribe(
         (res: any) => {
           this.loading = false;
           if (res.assetDetails[0].capitalGain) {
@@ -708,6 +744,7 @@ export class ZeroCouponBondsComponent
           }
           this.updateDeductionUI();
           this.calculateDeductionGain();
+          this.selectedFormGroup.markAsPristine();
         },
         (error) => {
           this.loading = false;

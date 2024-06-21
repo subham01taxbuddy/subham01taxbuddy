@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-approve-reject',
   templateUrl: './approve-reject.component.html',
@@ -50,9 +49,6 @@ export class ApproveRejectComponent implements OnInit {
             (res: any) => {
               this.loading = false;
               if (action === 'APPROVED') {
-                we_track('Cancel Subscription Approval', {
-                  'User number ': (this.data?.userInfo?.mobileNumber) ? (this.data?.userInfo?.mobileNumber) : '',
-                });
               }
               this.toastMessage.alert('success', 'Cancel Subscription Updated Successfully.');
               this.dialogRef.close(true);

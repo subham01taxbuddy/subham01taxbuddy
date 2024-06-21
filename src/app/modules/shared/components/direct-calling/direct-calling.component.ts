@@ -5,7 +5,6 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-direct-calling',
@@ -46,10 +45,6 @@ export class DirectCallingComponent implements OnInit {
         this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
       if (result.success == true) {
-        we_track('Call', {
-          'User Name': this.mobileNo.value,
-          'User Phone number ': agentNumber,
-        });
         this._toastMessageService.alert("success", result.message)
       }
     }, error => {

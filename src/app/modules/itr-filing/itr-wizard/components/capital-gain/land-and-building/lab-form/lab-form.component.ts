@@ -1626,10 +1626,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       Object.assign(this.calculateCGRequest, this.cgArrayElement);
       console.log('cg request', this.calculateCGRequest);
       // this.utilsService.openLoaderDialog();
-      const param = '/singleCgCalculate';
       this.cgOutput = [];
       this.busyGain = true;
-      this.itrMsService.postMethod(param, this.calculateCGRequest).subscribe(
+      this.itrMsService.singelCgCalculate(this.calculateCGRequest).subscribe(
         (result: any) => {
           console.log('Drools Result=', result);
           this.cgOutput = result;

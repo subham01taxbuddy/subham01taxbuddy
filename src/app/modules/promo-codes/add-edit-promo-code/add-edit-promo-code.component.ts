@@ -8,7 +8,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from '../../shared/constants';
 import * as moment from 'moment';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -231,12 +230,6 @@ export class AddEditPromoCodeComponent implements OnInit {
         console.log('Coupon added responce: ', res);
         this.loading = false;
         if (res.success) {
-          we_track('Edit Promo code', {
-            'Previous Title': this.data?.data.title,
-            'Previous Date ': moment(this.data?.data.endDate).format("DD-MM-YYYY"),
-            'Previous Description': this.data?.data.description,
-            'Previous Status': this.previousStatus,
-          });
           this._toastMessageService.alert("success", "Promo-Code Updated successfully.")
         } else {
           this._toastMessageService.alert("error", res.message)
@@ -290,9 +283,6 @@ export class AddEditPromoCodeComponent implements OnInit {
         console.log('Coupon added responce: ', res);
         this.loading = false;
         if (res.success) {
-          we_track('Add Promo Code', {
-            'Who created : Name & User Number': (userObj ? userObj[0].name : '') + ' & ' + (userObj ? userObj[0].mobileNumber : ''),
-          });
           this._toastMessageService.alert("success", "Promo Code Added Successfully")
         } else {
           this._toastMessageService.alert("error", res.message)

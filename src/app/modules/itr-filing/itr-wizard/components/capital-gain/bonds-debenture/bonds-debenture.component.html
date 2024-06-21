@@ -11,7 +11,7 @@
 
 
                         <div>
-                            <form [formGroup]="selectedFormGroup">
+                            <form [formGroup]="selectedFormGroup" #formDirective="ngForm">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="heading1">
                                         <button id="accordBtn1" class="accordion-button" data-bs-target="#collapse1"
@@ -111,7 +111,7 @@
                                                                             required />
                                                                         <mat-error *ngIf="
                                         selectedFormGroup.get('valueInConsideration').hasError('required')
-                                      ">Please sale value
+                                      ">Please enter sale value
                                                                         </mat-error>
                                                                     </mat-form-field>
                                                                 </div>
@@ -172,8 +172,7 @@
                                                                 class="div-6 mb-20">
                                                                 <div class="form-field">
                                                                     <div><span class="span">Year Of
-                                                                            Improvement</span><span
-                                                                            class="redAst">*</span>
+                                                                            Improvement</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-field">
@@ -196,8 +195,7 @@
                                                             <div class="div-6 mb-20">
                                                                 <div class="form-field">
                                                                     <div><span class="normal_text">Cost of
-                                                                            improvement</span><span
-                                                                            class="redAst">*</span>
+                                                                            improvement</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-field">
@@ -223,8 +221,7 @@
                                                                 class="div-6 mb-20">
                                                                 <div class="form-field">
                                                                     <div><span class="span">Indexed Cost of
-                                                                            improvement</span><span
-                                                                            class="redAst">*</span>
+                                                                            improvement</span>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-field">
@@ -283,8 +280,9 @@
                                                     <button (click)="clearForm()" class="btn btn__white">Cancel</button>
                                                 </div>
                                                 <div class="box-right">
-                                                    <button (click)="saveManualEntry()" class="btn btn__primary">Save
-                                                        Details
+                                                    <button (click)="onSaveClick()" class="btn btn__primary" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">
+                                                        Save Details
                                                     </button>
                                                 </div>
                                             </div>

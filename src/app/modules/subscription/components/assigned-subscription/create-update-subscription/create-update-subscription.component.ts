@@ -16,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ActivatedRoute, Router } from '@angular/router';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -1388,13 +1387,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               } else {
                 invoiceTypeDetails = 'Upgrade'
               }
-              we_track('Subscription Edit', {
-                'User Number': this.personalInfoForm.controls['mobileNumber'].value,
-                'Service': this.service,
-                'Plan': this.serviceDetail,
-                'Promo Code': this.searchedPromoCode.value,
-                'Downgrade or Upgrade': invoiceTypeDetails
-              });
+
               this.toastMessage.alert('success', 'Subscription created successfully.');
               this.location.back();
             },
@@ -1452,9 +1445,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.userService.spamPutMethod(param, reqBody).subscribe(
           (res: any) => {
             this.loading = false;
-            we_track('Cancel Subscription  ', {
-              'User number ': this.personalInfoForm.controls['mobileNumber'].value,
-            });
+
             this.toastMessage.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
             this.location.back();
           },

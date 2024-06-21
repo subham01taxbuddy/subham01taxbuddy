@@ -26,7 +26,6 @@ import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.s
 import { saveAs } from "file-saver/dist/FileSaver";
 import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
-declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -1065,9 +1064,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
-        we_track('Send Reminder', {
-          'User number ': data.phone,
-        });
+
         console.log('Email sent response: ', result);
         this._toastMessageService.alert(
           'success',
@@ -1091,9 +1088,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
-        we_track('Send Reminder', {
-          'User number ': data.phone,
-        });
+
         console.log('WhatsAPP sent response: ', result);
         this._toastMessageService.alert(
           'success',
@@ -1112,9 +1107,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
-    we_track('Proforma Invoice Download', {
-      'User number': data.phone,
-    });
+
     // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;
@@ -1168,10 +1161,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success == true) {
-                we_track('Call', {
-                  'User Name': user?.billTo,
-                  'User Phone number ': agentNumber,
-                });
                 this._toastMessageService.alert('success', result.message);
               }
             },

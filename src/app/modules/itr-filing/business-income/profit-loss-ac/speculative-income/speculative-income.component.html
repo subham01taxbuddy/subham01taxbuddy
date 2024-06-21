@@ -122,7 +122,7 @@
                               <button (click)="clearForm()" class="btn btn__white">Cancel</button>
                             </div>
                             <div class="box-right">
-                              <button (click)="saveManualEntry()" class="btn btn__primary">Save
+                              <button (click)="saveManualEntry()" class="btn btn__primary" [disabled]="!selectedFormGroup.valid">Save
                                 Details
                               </button>
                             </div>

@@ -219,6 +219,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   goBack() {
     this.saveAndNext.emit(false);
+    this.nextBreadcrumb.emit("Business/Professional Income");
   }
 
   onContinue() {
@@ -316,6 +317,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
           console.log('Balance Sheet=', result);
           this.utilsService.smoothScrollToTop();
           this.saveAndNext.emit(true);
+          this.nextBreadcrumb.emit("Business/Professional Income");
         },
         (error) => {
           this.loading = false;

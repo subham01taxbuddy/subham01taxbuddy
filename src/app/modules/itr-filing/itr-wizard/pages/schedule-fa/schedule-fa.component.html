@@ -662,7 +662,16 @@
                               </div>
                             </div>
                             <div class="col-sm-4 px-2">
-
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Closing Balance</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="totalGrossProceedsFromSale[i]"
+                                         formControlName="totalGrossProceedsFromSale" digitsOnly required />
+                                </mat-form-field>
+                              </div>
                             </div>
                            
                             <hr class="hrBdr"> 
@@ -725,8 +734,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Name of Financial Institution in which
-                                    insurance contract held</mat-label>
                                   <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
                                     required />
                                 </mat-form-field>
@@ -739,7 +746,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Address of financial institution</mat-label>
                                   <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
                                     required />
                                 </mat-form-field>
@@ -752,7 +758,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Zip Code</mat-label>
                                   <input matInput name="zipCode[i]" formControlName="zipCode" />
                                 </mat-form-field>
                               </div>
@@ -767,7 +772,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Country Code</mat-label>
                                   <mat-select formControlName="countryCode" name="countryCode[i]" required
                                               [(value)]="CashValueInsurance.value.countryCode">
                                     <mat-option *ngFor="let nature of countryCodeList" value="{{nature.code}}"
@@ -784,7 +788,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Date of contract</mat-label>
                                   <input matInput placeholder="DD/MM/YYYY" name="dateOfContract[i]"
                                     [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateOfContract"
                                     [max]="maxPurchaseDate" required />
@@ -805,8 +808,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>Total gross amount paid/credited with respect
-                                    to the contract during the period</mat-label>
                                   <input matInput name="totalGrossAmountPaid[i]" formControlName="totalGrossAmountPaid"
                                     digitsOnly required />
                                 </mat-form-field>
@@ -820,8 +821,6 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-label>The Cash / Surrender value of the
-                                    contract</mat-label>
                                   <input matInput name="cashValue[i]" formControlName="cashValue" digitsOnly required />
                                 </mat-form-field>
                               </div>
@@ -834,14 +833,14 @@
 
                             <div class="container">
                               <div class="row">
-                              <div class="col-sm-12">                              
-                              <button class="delete-box"
-                              (click)="delete('cashValueInsurance', 'formArray', 3)">
-                              <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
-                              </button>
+                                <div class="col-sm-12">
+                                  <button class="delete-box"
+                                    (click)="delete('cashValueInsurance', 'formArray', 3)">
+                                     <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                                  </button>
+                                </div>
                               </div>
-                              </div>
-                              </div>
+                            </div>
                          
                         </div>
                         
@@ -943,8 +942,14 @@
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input matInput name="natureOfInterest[i]" formControlName="natureOfInterest"
-                                    required />
+                                  <mat-select name="natureOfInterest[i]" formControlName="natureOfInterest"
+                                              required>
+                                    <mat-option *ngFor="
+                                          let option of natureOfInterest
+                                        " [value]="option">
+                                      {{ option }}
+                                    </mat-option>
+                                  </mat-select>
                                 </mat-form-field>
                               </div>
                             </div>
@@ -1376,7 +1381,6 @@
                                 </div>
                                 <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Ownership</mat-label>
                                     <mat-select matInput name="ownerShip[i]" formControlName="ownerShip" required>
                                       <mat-option *ngFor="
                                           let option of natureOfInterestOwnership
@@ -2227,7 +2231,6 @@
                                     <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Item number of Schedule</mat-label>
                                     <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
                                       required />
                                   </mat-form-field>
