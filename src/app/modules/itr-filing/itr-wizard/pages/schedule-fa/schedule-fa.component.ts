@@ -455,7 +455,6 @@ export class ScheduleFaComponent implements OnInit {
             closingValue: null,
             totalGrossAmountPaid: null,
             totalGrossProceedsFromSale: null,
-            closingBalance: null,
           }),
         ]);
       case 'cashValueInsurance':
@@ -702,7 +701,6 @@ export class ScheduleFaComponent implements OnInit {
           closingValue: item.closingValue,
           totalGrossAmountPaid: item.totalGrossAmountPaid,
           totalGrossProceedsFromSale: item.totalGrossProceedsFromSale,
-          closingBalance: item.closingBalance
         });
         formArray.push(formGroup);
       } else if (assetType === 'cashValueInsurance') {

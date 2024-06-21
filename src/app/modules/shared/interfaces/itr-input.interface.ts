@@ -294,7 +294,6 @@ export interface equityAndDebtInterest {
   closingValue: any;
   totalGrossAmountPaid: any;
   totalGrossProceedsFromSale: any;
-  closingBalance: any;
   countryName: any;
 }
 
