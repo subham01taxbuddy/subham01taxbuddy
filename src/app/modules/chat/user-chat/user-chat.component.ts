@@ -5,6 +5,8 @@ import { ChatManager } from "../chat-manager";
 import { DomSanitizer } from "@angular/platform-browser";
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { memoize } from 'lodash';
+import { Subscription } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-user-chat',
@@ -15,6 +17,7 @@ import { memoize } from 'lodash';
 
 export class UserChatComponent implements OnInit, AfterViewInit {
   selector: string = ".main-panel";
+  subscription: Subscription;
 
   @ViewChild('chatWindow') chatWindowContainer: ElementRef;
   @ViewChild('fileInputContainer') fileInputContainer: ElementRef;
@@ -41,6 +44,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   userInfo: boolean = true;
   userInputField: boolean = true;
 
+  agentStatus: string = 'Last seen at dd-mmm-yy hh:mm:ss';
 
   fileToUpload: File | null = null;
 
@@ -78,6 +82,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   isRequired: boolean = false;
   cannedMessageList: any[] = [];
   originalCannedMessageList: any[] = [];
+  userCurrentStatus = 'online';
+  userLastSeen: any;
 
   constructor(
     private chatService: ChatService,
@@ -97,11 +103,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   isOptionSelected(name: string, value: string, message): boolean {
     return this.selectedRadio[name] === value || (message?.action && message?.action[name] === value);
   }
-  
+
   onRadioChange(name: string, value: string, message_id) {
     this.selectedRadio[name] = value;
     this.selectedRadio['message_id'] = message_id;
-    console.log(`Selected radio value for ${name}: ${value}`);
   }
 
   onCheckBoxChange(name: string, value: string, message_id) {
@@ -170,6 +175,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
+    this.chatService.unsubscribeRxjsWebsocket();
     this.chatManager.closeChat();
     this.back.emit();
   }
@@ -263,17 +269,27 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.requestId) {
       this.chatManager.openConversation(this.requestId);
- 
+
     }
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
     this.originalCannedMessageList = this.chatService.filterCannedMessages();
+    this.subscription = this.chatService.userOnlineOfflineEvent.subscribe((state) => {
+      if (state) {
+        let userOnlineOfflineData = this.localStorageService.getItem('USER_ONLINE_OFFLINE_DATA', true);
+        let userPresenceTopic = userOnlineOfflineData.presence;
+        this.userCurrentStatus = userPresenceTopic.status;
+        let lastSeenInMs = moment(userPresenceTopic.changedAt).valueOf();
+        this.userLastSeen = moment(lastSeenInMs).local().format("DD-MMM-YYYY hh:mm:ss a");
+        this.cd.detectChanges();
+      }
+    });
   }
 
-ngAfterViewInit(): void {
-  this.scrollToBottom();
-  this.toggleArrowVisibility();
-}
-  
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+    this.toggleArrowVisibility();
+  }
+
 
   handleTokenEvent = (data: any) => {
     console.log("subscribed", data);
@@ -437,5 +453,11 @@ ngAfterViewInit(): void {
     inputMessage = inputMessage.replaceAll('$recipient_name', selectedUser.userFullName);
     this.messageSent = inputMessage;
     this.cannedMessageList = [];
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

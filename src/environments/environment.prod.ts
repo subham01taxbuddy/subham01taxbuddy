@@ -90,5 +90,7 @@ export const environment = {
 	},
 	WEBSOCKET_URL: 'wss://tiledesk.taxbuddy.com/mqws/ws',
 	CHAT_API_URL: 'https://tiledesk.taxbuddy.com/chatapi/api/tilechat',
-	TILEDESK_URL: 'https://tiledesk.taxbuddy.com'
+	TILEDESK_URL: 'https://tiledesk.taxbuddy.com',
+	USER_STATUS_WEBSOCKET_URL: 'wss://tiledesk.taxbuddy.com/ws',
+	PROJECT_NAME: 'Taxbuddy Prod'
 };

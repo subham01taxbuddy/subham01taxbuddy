@@ -6,10 +6,12 @@ import { Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
+import { webSocket } from 'rxjs/webSocket';
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
+  userOnlineOfflineEvent = new Subject<boolean>();
 
   mqtt = require("./mqtt.min.js");
   _CLIENT_ADDED = "/clientadded"
@@ -24,6 +26,7 @@ export class ChatService {
   private DEPT_DTLS_URL = "https://lt3suqvzm22ts7atn4pyo4upni0ifnwd.lambda-url.ap-south-1.on.aws/departments?projectId=";
   private CHAT_API_URL = environment.CHAT_API_URL;
   private WEBSOCKET_URL = environment.WEBSOCKET_URL;
+  private USER_STATUS_WEBSOCKET_URL = environment.USER_STATUS_WEBSOCKET_URL;
   private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
   private CENTRALIZED_CHAT_DETAILS = "https://zbuz4brujg5rfks47lct546o5u0aduge.lambda-url.ap-south-1.on.aws/chat-system-config";
   private CANNED_MESSAGE_LIST = environment.TILEDESK_URL + '/api/' + this.PROJECT_ID + '/canned';
@@ -52,6 +55,7 @@ export class ChatService {
   newMessageReceived$ = this.newMessageReceived.asObservable();
 
   lastMessageId: any;
+  subject: any;
 
   constructor(
     public httpClient: HttpClient,
@@ -72,9 +76,9 @@ export class ChatService {
   initDeptDetails(serviceType?: string) {
     let url = serviceType ? `${this.DEPT_DTLS_URL}${this.PROJECT_ID}&serviceType=${serviceType}`
       : `${this.DEPT_DTLS_URL}${this.PROJECT_ID}`;
-     this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
+    this.httpClient.get(url, this.setHeaders("auth")).subscribe((result: any) => {
       if (result.success && result.data.length > 0) {
-        console.log('department result',result);
+        console.log('department result', result);
         this.deptName = result.data[0].name;
         console.log('names', this.deptName)
         this.deptID = result.data[0]._id;
@@ -90,7 +94,7 @@ export class ChatService {
     });
 
   }
- 
+
   getDeptDetails(): any[] {
     return this.deptListData;
   }
@@ -122,14 +126,14 @@ export class ChatService {
         if (result.success) {
           if (result?.data?.token) {
             this.localStorageService.setItem("TILEDESK_TOKEN", result.data.token);
-            console.log("tiledesk token: ", result.data.token);
           }
           if (result.data?.requestId) {
             this.sessionStorageService.setItem(`${service}_REQ_ID`, result.data.requestId);
           }
           if (tokenPresent) {
+            const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
             let chat21Request = {
-              tiledeskToken: this.localStorageService.getItem('TILEDESK_TOKEN')
+              tiledeskToken: tiledeskToken
             };
             this.httpClient.post(this.CHAT21_TOKEN_URL,
               chat21Request, this.setHeaders("auth")
@@ -270,8 +274,8 @@ export class ChatService {
         userFullName: message.attributes.userFullname,
         type: message.type,
         recipientFullName: message.recipient_fullname,
-        sender: message.sender
-
+        sender: message.sender,
+        conversWith: message.conversWith
       })
     );
     if (page != 0) {
@@ -365,7 +369,8 @@ export class ChatService {
         message_id: message.message_id,
         action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
         subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
+        conversWith: message.conversWith
       }));
       let m = {
         content: message.text,
@@ -376,7 +381,8 @@ export class ChatService {
         message_id: message.message_id,
         action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
         subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
+        conversWith: message.conversWith
       };
 
       const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
@@ -389,6 +395,10 @@ export class ChatService {
         if (!element.action) {
           const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
           element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
+        }
+        if (!element.conversWith) {
+          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
+          element.conversWith = filterOldMsg.length > 0 ? filterOldMsg[0].conversWith : null;
         }
         if (!element.showOnUI && !element.subtype) {
           const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
@@ -429,17 +439,12 @@ export class ChatService {
 
     let options = {
       keepalive: 60,
-      // protocolId: 'MQTT',
-      // protocolVersion: 4,
-      ////clean: true,
       reconnectPeriod: 1000,
-      // connectTimeout: 30 * 1000,
       will: {
         topic: this.presenceTopic,
         payload: "{\"disconnected\":true}",
         qos: 1,
         retain: true,
-        ////message: 'willMessage'
       },
       clientId: this.clientId,
       username: "JWT",
@@ -559,7 +564,7 @@ export class ChatService {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
                         let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-                        if (messageJson.recipient === selectedUser.request_id) {
+                        if (messageJson.recipient === selectedUser?.request_id) {
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             let messages = this.addMessageToDB(JSON.parse(message.toString()));
                             callback(ChatEvents.MESSAGE_RECEIVED);
@@ -638,17 +643,6 @@ export class ChatService {
             });
           }
         }
-
-        // this.chatClient.publish(
-        //   /// this.presence_topic,
-        //   JSON.stringify({ connected: true }),
-        //   null, (err) => {
-        //     if (err) {
-        //       console.error("Error con presence publish:", err);
-        //     }
-        //   }
-        // );
-
       }
     );
     this.chatClient.on("reconnect",
@@ -680,10 +674,47 @@ export class ChatService {
       }
       //TODO: here, all previous registered callbacks must be unregistered & cleared to avoid memory leaks
     );
-
-
-
   }
+
+  initRxjsWebsocket(conversWith) {
+    const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
+    this.subject = webSocket(`${this.USER_STATUS_WEBSOCKET_URL}/?token=${tiledeskToken}`);
+    const projectUserMsg = { "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/requests/${conversWith}` } }
+    this.subject.next(projectUserMsg);
+    let userTopic;
+    this.subject.subscribe({
+      next: (msg: any) => {
+        if (msg.action == "heartbeat") {
+          if (msg.payload.message.text == "ping") {
+            this.subject.next({ action: "heartbeat", payload: { message: { text: "pong" } } });
+          }
+          return;
+        }
+        if (msg.action == "publish") {
+          if (msg.payload.topic === projectUserMsg.payload.topic) {
+            this.subject.next({ "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}` } });
+            userTopic = `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}`;
+            this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message.requester, true)
+            this.userOnlineOfflineEvent.next(true);
+          }
+          if (msg.payload.topic === userTopic) {
+            this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message, true)
+            this.userOnlineOfflineEvent.next(true);
+          }
+        }
+        return;
+      },
+      error: err => console.log('rxjs error ' + err), // Called if at any point WebSocket API signals some kind of error.
+      complete: () => console.log('rxjs complete') // Called when connection is closed (for whatever reason).
+    });
+  }
+
+  unsubscribeRxjsWebsocket() {
+    if (this.subject) {
+      this.subject.unsubscribe();
+    }
+  }
+
 
   parseTopic(topic) {
     var topic_parts = topic.split("/");
@@ -834,7 +865,7 @@ export class ChatService {
     messageArray = this.cannedMessageList.map((message: any) => ({ title: message.title, titleWithSlash: '/' + message.title, text: message.text, allowDept: (message?.attributes) ? message?.attributes?.departments : [] }));
     cannedMessageArray = messageArray.filter(element => element.allowDept.length === 0);
     messageArray.filter(element => {
-      if (element.allowDept.length > 0 && element.allowDept.includes(selectedUser.departmentId)) {
+      if (element.allowDept.length > 0 && selectedUser && element.allowDept.includes(selectedUser.departmentId)) {
         cannedMessageArray.push(element);
       }
     });

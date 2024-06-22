@@ -12,12 +12,19 @@
     </div>
   </div>
 
-  <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}">
+  <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
     <div class="avatar">
       <div class="initial">{{image ? image:''}}</div>
     </div>
-    <!-- <img [src]="image" alt="user-image"> -->
-    <span class="username">{{ username }}</span>
+    <div class="agent-details">
+      <span class="username">{{ username }}</span>
+      <span class="status-dot"></span>
+      <div class="additional-details">
+        <span [ngClass]="(userCurrentStatus==='online')? 'user-status online' : 'user-status offline'"></span>
+        <span *ngIf="userCurrentStatus==='online'" class="experience ml-2">{{userCurrentStatus | titlecase}}</span>
+        <span *ngIf="userCurrentStatus==='offline'" class="experience ml-2">Last seen at <b>{{userLastSeen}}</b></span>
+      </div>
+    </div>
   </div>
 
   <div class="message-input-container">

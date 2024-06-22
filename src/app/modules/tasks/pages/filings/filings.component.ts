@@ -28,6 +28,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import {DomSanitizer} from "@angular/platform-browser";
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -112,7 +113,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private kommunicateSsoService: KommunicateSsoService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private chatService: ChatService,
   ) {
     this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
@@ -1254,7 +1256,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
       else if(result?.requestId){
         this.chatBuddyDetails = result;
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
-
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
      }
     });
   }

@@ -483,7 +483,6 @@ export class DashboardComponent implements OnInit {
   }
 
   getITRFiledButPaymentPendingList(configType) {
-    debugger
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam[configType]);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;

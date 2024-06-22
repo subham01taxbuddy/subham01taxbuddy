@@ -66,7 +66,8 @@ export class FloatingWidgetComponent implements OnInit {
         }
 
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
-
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
 
         setTimeout(() => {
             if (this.userChatComponent) {
@@ -178,6 +179,8 @@ export class FloatingWidgetComponent implements OnInit {
                             sender: conversation.sender,
                             userFullName: conversation.userFullName,
                             departmentName: conversation.departmentName,
+                            conversWith: conversation.conversWith,
+
 
                         };
                     });
@@ -196,6 +199,8 @@ export class FloatingWidgetComponent implements OnInit {
                         sender: conversation.sender,
                         userFullName: conversation.userFullName,
                         departmentName: conversation.departmentName,
+                        conversWith: conversation.conversWith,
+
                     };
                 });
             }
@@ -208,6 +213,6 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
-    
+
 }
 

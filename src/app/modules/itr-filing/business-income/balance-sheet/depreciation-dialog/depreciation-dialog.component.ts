@@ -193,7 +193,6 @@ export class DepreciationDialogComponent implements OnInit {
           this.depreciationForm.controls['totalNetBlock'].setValue(0);
         }
       })
-      debugger
       this.save();
     } else {
       this.depreciationForm.controls['totalGrossBlock'].setValue(0);

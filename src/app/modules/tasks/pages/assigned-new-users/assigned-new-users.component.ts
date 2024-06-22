@@ -31,6 +31,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ChatManager } from 'src/app/modules/chat/chat-manager';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { LocalStorageService } from 'src/app/services/storage.service';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 declare function we_track(key: string, value: any);
 @Component({
@@ -91,6 +92,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private chatManager: ChatManager,
     private localStorageService: LocalStorageService,
     private kommunicateSsoService: KommunicateSsoService,
+    private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -1271,7 +1273,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       else if(result?.request_id){
          this.chatBuddyDetails = result; 
          localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
-        
+         this.chatService.unsubscribeRxjsWebsocket();
+         this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
       }
     });
 

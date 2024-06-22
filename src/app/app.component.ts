@@ -16,6 +16,7 @@ import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
 import { ChatManager } from './modules/chat/chat-manager';
+import { ChatService } from './modules/chat/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,7 @@ export class AppComponent {
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private chatManager: ChatManager,
+    private chatService:ChatService,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -186,6 +188,7 @@ export class AppComponent {
   logout() {
     Auth.signOut()
       .then(data => {
+        this.chatService.unsubscribeRxjsWebsocket();
         this.chatManager.closeChat();
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();

@@ -242,6 +242,7 @@ export class NavbarComponent implements DoCheck {
     this.loading = true;
     Auth.signOut()
       .then(data => {
+        this.chatService.unsubscribeRxjsWebsocket();
         this.chatManager.closeChat();
         this.smeLogout();
         this.loading = false;

@@ -25,6 +25,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -118,7 +119,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     public datePipe: DatePipe,
-    private remoteConfigService: RemoteConfigService
+    private remoteConfigService: RemoteConfigService,
+    private chatService: ChatService,
   ) {
     this.getRemoteConfigData();
     this.startDate.setValue(new Date());
@@ -249,7 +251,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         time: (!this.subPaidScheduleCallList.value) ? this.getCallTime(scheduleCalls[i]['scheduleCallTime']) : '',
         statusName: scheduleCalls[i]['statusName'],
         statusId: scheduleCalls[i]['statusId'],
-        scheduleCallType : scheduleCalls[i]['scheduleCallType'],
+        scheduleCallType: scheduleCalls[i]['scheduleCallType'],
         serviceType:
           scheduleCalls[i]['serviceType'] !== null
             ? scheduleCalls[i]['serviceType']
@@ -386,9 +388,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           } else if (params.data.statusId == 19) {
             return 'Follow-Up';
           }
-          else if(params.data.statusId == 17) {
+          else if (params.data.statusId == 17) {
             return 'Open';
-          } else if(params.data.statusId == 20) {
+          } else if (params.data.statusId == 20) {
             return 'Cancelled';
           }
         },
@@ -459,11 +461,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         },
         valueFormatter: function (params: any) {
           const valueMap = {
-              'business': 'Business Requirements',
-              'lower_deduction': 'LDC Service'
+            'business': 'Business Requirements',
+            'lower_deduction': 'LDC Service'
           };
           return valueMap[params.value] || params.value || '-';
-      }
+        }
       },
       {
         headerName: 'Re-Assign',
@@ -485,7 +487,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
         },
         width: 95,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -508,7 +510,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -531,7 +533,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -552,7 +554,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 60,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -570,7 +572,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? true : false,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -603,7 +605,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? false : true,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -848,12 +850,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { 
-       if(result?.request_id){
-        this.chatBuddyDetails = result; 
+    disposable.afterClosed().subscribe((result) => {
+      if (result?.request_id) {
+        this.chatBuddyDetails = result;
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
-       
-     }
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+      }
     });
   }
   showUserInformation(user) {

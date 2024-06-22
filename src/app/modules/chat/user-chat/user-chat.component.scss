@@ -841,3 +841,29 @@
     align-items: center;
   }
 }
+
+.additional-details {
+  display: flex;
+  align-items: center;
+  font-size: small;
+}
+
+.user-status {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  left: 43px;
+  border: 1px solid #4ab6f5;
+  position: absolute;
+
+  &.online {
+    background-color: #2cc445;
+  }
+
+
+  &.offline {
+    background-color: #db9999;
+    top: 27px;
+    left: 43px;
+  }
+}

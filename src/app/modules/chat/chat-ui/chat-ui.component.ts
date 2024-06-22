@@ -24,11 +24,11 @@ export class ChatUIComponent implements OnInit {
     selector: string = ".main-panel";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
- 
+
 
     centralizedChatDetails: any;
 
- 
+
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService) {
@@ -40,7 +40,7 @@ export class ChatUIComponent implements OnInit {
     }
 
 
-    
+
 
     showWidget = true;
     selectedUser: any;
@@ -53,7 +53,7 @@ export class ChatUIComponent implements OnInit {
     page = 0;
     newMessageSubscription: Subscription;
 
- 
+
     openUserChat(conversation: any) {
         this.selectedUser = conversation;
         this.selectedConversation = conversation;
@@ -64,13 +64,15 @@ export class ChatUIComponent implements OnInit {
             conversation.departmentName = selectedDepartment.name;
         }
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
             if (this.userChatComp) {
                 this.userChatComp.scrollToBottom();
             }
         }, 1000);
-        if(this.userChatComp){
+        if (this.userChatComp) {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
         }
@@ -85,6 +87,7 @@ export class ChatUIComponent implements OnInit {
     }
 
     goBack() {
+        this.chatService.unsubscribeRxjsWebsocket();
         this.page = 0;
         this.isBlankScreenVisible = false;
         document.body.classList.remove('no-scroll');
@@ -105,14 +108,14 @@ export class ChatUIComponent implements OnInit {
         // this.chatManager.getDepartmentList();
         // this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            this.chatService.updateConversationList(newMessage,this.conversationList);
-          });
-          const data = this.localStorage.getItem('SELECTED_CHAT',true);
-          if(data){
+            this.chatService.updateConversationList(newMessage, this.conversationList);
+        });
+        const data = this.localStorage.getItem('SELECTED_CHAT', true);
+        if (data) {
             this.openUserChat(data);
-            
-          }
-     }
+
+        }
+    }
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
@@ -136,7 +139,6 @@ export class ChatUIComponent implements OnInit {
     }
 
     handleConversationList = () => {
-        console.log('started')
         const convData = this.localStorage.getItem('conversationList', true);
         if (convData) {
             const conversations = convData;
@@ -155,6 +157,7 @@ export class ChatUIComponent implements OnInit {
                             departmentId: conversation.departmentId,
                             sender: conversation.sender,
                             departmentName: conversation.departmentName,
+                            conversWith: conversation.conversWith,
                         };
                     });
             }
@@ -172,6 +175,8 @@ export class ChatUIComponent implements OnInit {
                         departmentId: conversation.departmentId,
                         sender: conversation.sender,
                         departmentName: conversation.departmentName,
+                        conversWith: conversation.conversWith,
+
                     };
                 });
             }
@@ -185,7 +190,7 @@ export class ChatUIComponent implements OnInit {
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
-    
+
 
     onScrollDown() {
         this.page = this.page + 1;;

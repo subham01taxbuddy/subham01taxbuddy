@@ -17,6 +17,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -78,6 +79,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
+    private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.usersGridOptions = <GridOptions>{
@@ -806,7 +808,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       if(result?.requestId){
         this.chatBuddyDetails = result;
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
-
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
      }
     });
   }

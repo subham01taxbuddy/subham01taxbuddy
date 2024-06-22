@@ -18,6 +18,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import * as moment from 'moment';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 @Component({
   selector: 'app-cancel-subscription',
@@ -86,6 +87,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     private itrService: ItrMsService,
     private cacheManager: CacheManager,
     private reportService: ReportService,
+    private chatService:ChatService,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -663,6 +665,8 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       if(result?.request_id){
         this.chatBuddyDetails = result;
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
 
      }
     });

@@ -24,7 +24,6 @@ export class ChatManager {
   registerCallbacks() {
     let self = this;
     this.chatService.registerMessageReceived((event: ChatEvents, data?: any) => {
-      console.log('Ashwini', event);
       switch (event) {
         case ChatEvents.MESSAGE_RECEIVED:
           self.handleReceivedMessages();

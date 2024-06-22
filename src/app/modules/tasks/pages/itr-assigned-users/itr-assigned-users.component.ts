@@ -31,6 +31,7 @@ import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
 import { DomSanitizer } from "@angular/platform-browser";
 import {ChatManager} from "../../../chat/chat-manager";
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 declare function we_track(key: string, value: any);
 
@@ -114,6 +115,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     private userService: UserMsService,
     private sanitizer: DomSanitizer,
     private chatManager: ChatManager,
+    private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -1565,7 +1567,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       else if(result?.request_id){
         this.chatBuddyDetails = result;
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
-
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
      }
 
     });
