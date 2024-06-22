@@ -945,11 +945,11 @@ export class ScheduleFaComponent implements OnInit {
           ).getRawValue();
 
           // have to implement later if required
-          console.log(formValueToSave);
-          formValueToSave.forEach((element) => {
-            const split = element.countryCode.split(':');
-            (element.countryCode = split[0]), (element.countryName = split[1]);
-          });
+          // console.log(formValueToSave);
+          // formValueToSave.forEach((element) => {
+          //   const split = element.countryCode.split(':');
+          //   (element.countryCode = split[0]), (element.countryName = split[1]);
+          // });
 
           formValueToSave.forEach((element) => {
             this.Copy_ITR_JSON.foreignIncome?.foreignAssets[section].push(
