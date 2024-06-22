@@ -187,7 +187,8 @@
                                 }}</button>
                             </ng-container>
                             <ng-container *ngIf="item.type === 'radio'">
-                              <div>{{ item.data.title }}</div>
+                              <div><strong>{{ item.data.title }}</strong></div>
+                              <div [ngClass]="{'radio-options-container': item.data.title.length}">
                               <div *ngFor="let option of item.data.options">
                                 <label>
                                   <input type="radio" [attr.disabled]="isBotSender(message.sender)"
@@ -196,6 +197,7 @@
                                     (change)="onRadioChange(item.data.name,option.value,message.message_id)">
                                   {{ option.label }}
                                 </label>
+                              </div>
                               </div>
                             </ng-container>
                             <ng-container *ngIf="item.type === 'checkbox'">
@@ -284,8 +286,8 @@
   <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
     <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
     <div #fileInputContainer style="display: none;"></div>
-    <input type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
-      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent">
+    <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
+      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize></textarea>
 
     <button type="button" (click)="sendMessage()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>

@@ -290,12 +290,15 @@ export class ChatService {
   }
 
 
-  updateConversationList(newMessage: any, conversationLists: any) {
+  updateConversationList(newMessage: any, conversationLists: any, selectedDepartmentId: any) {
     const existingConversationIndex = conversationLists.findIndex(
       (conversation) => conversation.request_id === newMessage.recipient
     );
 
+    if (newMessage.attributes.departmentId === selectedDepartmentId){
+
     if (existingConversationIndex !== -1) {
+ 
       const updatedConversation = {
         image: newMessage.attributes.userFullname[0],
         userFullName: newMessage.attributes.userFullname,
@@ -325,6 +328,7 @@ export class ChatService {
       conversationLists.unshift(newConversation);
     }
   }
+}
 
   clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');

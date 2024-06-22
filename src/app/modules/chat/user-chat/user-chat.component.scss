@@ -82,7 +82,7 @@
   margin-right: 2px;
 }
 
-.user-input input {
+.user-input textarea {
   flex-grow: 1;
   padding: 8px;
   border: none;
@@ -91,6 +91,7 @@
   background-color: #f2f2f2;
   margin-left: 5px;
   width: 261px;
+  height: 37px;
 }
 
 
@@ -866,4 +867,27 @@
     top: 27px;
     left: 43px;
   }
+}
+.radio-options-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(50% - 10px), 1fr));
+  width: 100%;
+  gap: 2px; 
+}
+
+@media (max-width: 600px) {
+  .radio-options-container {
+    grid-template-columns: repeat(auto-fill, minmax(calc(100% - 10px), 1fr));
+  }
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+}
+
+.radio-option label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

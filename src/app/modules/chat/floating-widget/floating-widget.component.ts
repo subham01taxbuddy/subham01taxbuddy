@@ -128,14 +128,30 @@ export class FloatingWidgetComponent implements OnInit {
         return formattedTime;
     }
 
+    
+
+    displaySystemMessage(message: any): boolean {
+        if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
+          if (!message?.attributes?.showOnUI) {
+            return false;
+          }
+          if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
+            return true;
+          }
+        }
+        return true;
+      }
+
     ngOnInit(): void {
         this.page = 0;
         this.chatManager.getDepartmentList();
         console.log('full conversation list');
         this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            this.chatService.updateConversationList(newMessage, this.conversationList);
-        });
+            if(this.displaySystemMessage(newMessage)){
+            this.chatService.updateConversationList(newMessage,this.conversationList,this.selectedDepartmentId);
+            }
+          });
 
     }
 

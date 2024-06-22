@@ -104,14 +104,28 @@ export class ChatUIComponent implements OnInit {
         return formattedTime;
     }
 
+    displaySystemMessage(message: any): boolean {
+        if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
+          if (!message?.attributes?.showOnUI) {
+            return false;
+          }
+          if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
+            return true;
+          }
+        }
+        return true;
+      }
+
     ngOnInit(): void {
         // this.chatManager.getDepartmentList();
         // this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            this.chatService.updateConversationList(newMessage, this.conversationList);
-        });
-        const data = this.localStorage.getItem('SELECTED_CHAT', true);
-        if (data) {
+            if(this.displaySystemMessage(newMessage)){
+            this.chatService.updateConversationList(newMessage,this.conversationList,this.selectedDepartmentId);
+            }
+          });
+          const data = this.localStorage.getItem('SELECTED_CHAT',true);
+          if(data){
             this.openUserChat(data);
 
         }
