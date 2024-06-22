@@ -1,8 +1,8 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {UserMsService} from "../../../services/user-ms.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { UserMsService } from "../../../services/user-ms.service";
 import * as CryptoJS from "crypto-js";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {UtilsService} from "../../../services/utils.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { UtilsService } from "../../../services/utils.service";
 
 @Component({
   selector: 'app-ais-creds-dialog',
@@ -16,9 +16,9 @@ export class AisCredsDialogComponent implements OnInit {
   showProgress: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<AisCredsDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private userService: UserMsService,
-              private utilsService: UtilsService) { }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private userService: UserMsService,
+    private utilsService: UtilsService) { }
 
   password: string;
   maskedPassword: string;
@@ -28,14 +28,14 @@ export class AisCredsDialogComponent implements OnInit {
   updateClicked: boolean = false;
   newPassword: string;
   ngOnInit(): void {
-    this.getUserCreds();
+    this.getUserCreds(false);
   }
 
-  private getUserCreds() {
+  private getUserCreds(showMessage) {
     let url = `/it-password/${this.data.userId}`;
     this.userService.getMethod(url).subscribe((result: any) => {
       console.log(result);
-      if(result.error === 'DATA_NOT_FOUND'){
+      if (result.error === 'DATA_NOT_FOUND') {
         this.passwordAvailable = false;
         this.passwordStatus = 'Unavailable';
         this.utilsService.showSnackBar(result.message);
@@ -44,25 +44,34 @@ export class AisCredsDialogComponent implements OnInit {
         this.passwordStatus = result.data.passwordStatus;
         this.password = this.decryptPassword(result.data.password);
         this.maskedPassword = '*'.repeat(this.password.length);
+        if (showMessage) {
+          if (result?.data?.passwordStatus === 'VALID') {
+            this.pauseTimer();
+            this.utilsService.showSnackBar('Password Validated successfully.');
+            this.dialogRef.close();
+          } else if (result?.data?.passwordStatus === 'INVALID') {
+            this.utilsService.showSnackBar('Password is Invalid.');
+          }
+        }
       }
-    }, (error)=>{
+    }, (error) => {
       console.error(error);
     });
   }
 
-  viewPassword(){
+  viewPassword() {
     this.showPassword = !this.showPassword;
     this.logPasswordAction('READ');
   }
 
-  copyPassword(){
+  copyPassword() {
     navigator.clipboard.writeText(this.password);
     this.logPasswordAction('COPY');
   }
 
-  logPasswordAction(action){
+  logPasswordAction(action) {
     let request = {
-      userId:this.data.userId,
+      userId: this.data.userId,
       actionType: action
     }
     let url = '/data-access-log';
@@ -71,10 +80,10 @@ export class AisCredsDialogComponent implements OnInit {
     });
   }
 
-  verifyPassword(){
+  verifyPassword() {
     let request = {
-      userId:this.data.userId,
-      checkExistingPassword:true
+      userId: this.data.userId,
+      checkExistingPassword: true
     }
     let url = '/validate-it-password';
     this.userService.postMethod(url, request).subscribe((result: any) => {
@@ -85,9 +94,9 @@ export class AisCredsDialogComponent implements OnInit {
     });
   }
 
-  updatePassword(){
+  updatePassword() {
     let request = {
-      userId:this.data.userId,
+      userId: this.data.userId,
       // checkExistingPassword:false,
       password: this.newPassword,
       source: 'BO'
@@ -108,25 +117,28 @@ export class AisCredsDialogComponent implements OnInit {
     this.timeLeft = 120;
     this.retryCount = 0;
     this.interval = setInterval(() => {
-      if(this.timeLeft > 0) {
+      if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
-        this.getUserCreds();
-        this.retryCount++;
+        this.getUserCreds(true);
+        // this.retryCount++;
+        this.updateClicked = false;
+        this.showProgress = false;
+        this.pauseTimer();
       }
-      if(this.retryCount === 3){
+      if (this.retryCount === 3) {
         this.pauseTimer();
         this.updateClicked = false;
         this.showProgress = false;
       }
-    },1000)
+    }, 1000)
   }
 
   pauseTimer() {
     clearInterval(this.interval);
   }
 
-  decryptPassword(encryptedPwd){
+  decryptPassword(encryptedPwd) {
     let ciphertext = CryptoJS.enc.Base64.parse(encryptedPwd);
     const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
     const key = CryptoJS.SHA1(this.decryptionKey)

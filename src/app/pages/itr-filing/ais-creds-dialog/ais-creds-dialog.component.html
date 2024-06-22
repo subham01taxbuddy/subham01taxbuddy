@@ -26,7 +26,7 @@
     [class.hide]="showPassword"
   ></i>&nbsp;
   </button><br><br>
-  <button *ngIf="passwordAvailable" class="col-sm-6" (click)="verifyPassword()">Verify Password</button>
+  <button *ngIf="passwordAvailable" class="action-buttons col-sm-4" (click)="verifyPassword()">Verify Password</button>
   <mat-checkbox [(ngModel)]="updateClicked" [ngModelOptions]="{standalone: true}">Update Password</mat-checkbox>
 </div>
 <div *ngIf="updateClicked">
@@ -39,7 +39,7 @@
       appearance="outline"/>
   </mat-form-field>
   <div class="col-sm-12">
-    <button (click)="updatePassword()">Update & Verify</button>&nbsp;&nbsp;
+    <button class="action-buttons col-sm-4" (click)="updatePassword()">Update & Verify</button>&nbsp;&nbsp;
   </div>
 </div>
 <div *ngIf="showProgress">
