@@ -52,6 +52,7 @@ export class PrefillIdComponent implements OnInit {
   taxComputation: any;
   Copy_ITR_JSON: ITR_JSON;
   isPasswordAvailable: boolean = false;
+  isDownloadAisPrefill:boolean = false;
 
   constructor(
     private router: Router,
@@ -69,6 +70,7 @@ export class PrefillIdComponent implements OnInit {
       AppConstants.ITR_JSON,
       JSON.stringify(this.ITR_JSON)
     );
+    this.checkAisPrefill()
   }
 
   customerName: any;
@@ -7046,6 +7048,43 @@ export class PrefillIdComponent implements OnInit {
 
   getTooltipMessage(): string {
     return this.isPasswordAvailable ? 'Password available for this user' : '';
+  }
+
+  checkAisPrefill(){
+    const aisDate = new Date(this.ITR_JSON.aisLastUploadedDownloadedDate);
+    const prefillDate = new Date(this.ITR_JSON.prefillDate);
+    const currentDate = new Date();
+    const sevenDaysAgo = new Date(currentDate);
+    sevenDaysAgo.setDate(currentDate.getDate() - 7);
+    if(this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID' ){
+      if ((this.ITR_JSON.aisSource === 'DOWNLOAD' && aisDate < sevenDaysAgo) ||
+        (this.ITR_JSON.prefillDataSource === 'DOWNLOAD' && prefillDate < sevenDaysAgo) ||
+        (this.ITR_JSON.aisSource === 'UPLOAD' && aisDate < sevenDaysAgo) ||
+        (this.ITR_JSON.prefillDataSource === 'UPLOAD' && prefillDate < sevenDaysAgo)) {
+        this.isDownloadAisPrefill = true;
+      } else {
+        this.isDownloadAisPrefill = false;
+      }
+    }else{
+      this.utilsService.showSnackBar('Please Download & Upload the latest AIS/Prefill from Portal !');
+    }
+  }
+
+  downloadAisPrefill(){
+    if(this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID' ){
+      const dialogRef = this.dialog.open(AisCredsDialogComponent, {
+        width: '500px',
+        data: {
+          name: this.customerName,
+          userId: this.data.userId,
+          mode: 'download'
+        },
+
+      });
+    }else{
+      this.utilsService.showSnackBar('Please verify your IT portal password to proceed,No IT portal’s Credentials Found');
+    }
+
   }
 
   // setting correct format dates

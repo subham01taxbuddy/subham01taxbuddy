@@ -29,6 +29,9 @@ export class AisCredsDialogComponent implements OnInit {
   newPassword: string;
   ngOnInit(): void {
     this.getUserCreds();
+    if(this.data.mode === 'download'){
+      this.verifyPassword();
+    }
   }
 
   private getUserCreds() {
@@ -79,7 +82,12 @@ export class AisCredsDialogComponent implements OnInit {
     let url = '/validate-it-password';
     this.userService.postMethod(url, request).subscribe((result: any) => {
       console.log(result);
-      this.utilsService.showSnackBar(result.message);
+      if(this.data.mode === 'download'){
+        this.utilsService.showSnackBar('Please Wait, we are downloading the AIS/Prefill from Portal !');
+      }else{
+        this.utilsService.showSnackBar(result.message);
+      }
+
       this.startTimer();
       this.showProgress = true;
     });

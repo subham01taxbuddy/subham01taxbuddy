@@ -159,6 +159,10 @@
                 </table>
               </div>
             </div>
+            <div class="prefTextContainer">
+              <span class="prefText">Prefill Last uploaded on {{ ITR_JSON?.prefillDate | date:'MMMM dd, yyyy' }}</span><br>
+              <span class="prefText">AIS Last uploaded on {{ITR_JSON?.aisLastUploadedDownloadedDate | date:'MMMM dd, yyyy'}}</span>
+            </div>
           </div>
 
           <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">

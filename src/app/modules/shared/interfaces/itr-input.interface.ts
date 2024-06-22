@@ -91,6 +91,7 @@ export interface ITR_JSON {
   prefillData: any;
   prefillDataSource: string;
   aisDataSource: string;
+  aisSource:string;
   everOptedNewRegime: OptedInNewRegime;
   everOptedOutOfNewRegime: OptedOutNewRegime;
   optionForCurrentAY: CurrentNewRegime;
