@@ -100,7 +100,7 @@ export class PrefillIdComponent implements OnInit {
           this.getUserDetailsByPAN(result.panNumber);
         }
 
-        this.checkAisPrefill();c
+        this.checkAisPrefill();
         if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
           this.isPasswordAvailable = true;
         }else{
