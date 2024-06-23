@@ -932,6 +932,12 @@ export class SummaryComponent implements OnInit {
     this.calculations();
   }
 
+  getAisDate(){
+    if(this.ITR_JSON.aisSource ==='DOWNLOAD' ){
+      return 'Prefill Last uploaded on Month DD, YYYY'
+    }
+  }
+
   getMastersData() {
     this.loading = true;
     const param = '/itrmaster';
@@ -6528,7 +6534,7 @@ export class SummaryComponent implements OnInit {
   setBusiness44ADA(){
     let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
       ?.filter(element => element?.businessType === 'PROFESSIONAL');
-    
+
     let tradeNameSet = new Set(professionalIncomes.map(item => item.tradeName));
 
     tradeNameSet.forEach(tradeName=>{
@@ -7292,7 +7298,7 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
-    
+
     this.setBusiness44ADA();
   }
 

@@ -91,6 +91,7 @@ export interface ITR_JSON {
   prefillData: any;
   prefillDataSource: string;
   aisDataSource: string;
+  aisSource:string;
   everOptedNewRegime: OptedInNewRegime;
   everOptedOutOfNewRegime: OptedOutNewRegime;
   optionForCurrentAY: CurrentNewRegime;
@@ -294,7 +295,6 @@ export interface equityAndDebtInterest {
   closingValue: any;
   totalGrossAmountPaid: any;
   totalGrossProceedsFromSale: any;
-  closingBalance: any;
   countryName: any;
 }
 

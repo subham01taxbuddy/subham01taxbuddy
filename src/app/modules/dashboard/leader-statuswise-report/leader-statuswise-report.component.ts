@@ -120,7 +120,11 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   grandTotal: any;
 
 
-  getStatusWiseReport() {
+  getStatusWiseReport=(): Promise<any> => {
+    if (!this.leaderId && !this.filerId) {
+      this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
+      return;
+    }
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
@@ -144,7 +148,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
     param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    return this.userMsService.getMethodNew(param).toPromise().then((response: any) => {
       if (response.success) {
         this.loading = false;
 
@@ -263,11 +267,11 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(()=>{
       this.data = null;
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   addSpaces(text: string): string {

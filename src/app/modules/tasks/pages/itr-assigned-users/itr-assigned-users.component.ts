@@ -1615,7 +1615,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search= (form?, isAgent?, pageChange?): Promise<any> =>{
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1689,9 +1689,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
     }
-    this.reportService.getMethod(param).subscribe(
-
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
@@ -1717,11 +1715,11 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
         this.loading = false;
 
-      }, error => {
+      }).catch(() =>{
         this.loading = false;
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      })
+      });
   }
 
 

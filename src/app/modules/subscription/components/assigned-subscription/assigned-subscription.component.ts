@@ -254,7 +254,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?) {
+  getAssignedSubscription=(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?):Promise <any> => {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
 
     if (!fromPageChange) {
@@ -344,8 +344,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     let apiURL = this.reportService.baseUrl + param;
     sessionStorage.setItem('apiURL', apiURL);
-    this.reportService.getMethod(param).subscribe(
-      (response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
         this.loading = false;
@@ -428,13 +427,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           }
         }
         this.sendTotalCount.emit(this.config.totalItems);
-      },
-      (error) => {
+      }).catch((error)=>{
         this.sendTotalCount.emit(0);
         this.loading = false;
         console.log('error during getting subscription info: ', error);
-      }
-    );
+      });
   }
 
   searchByName(pageNo = 0) {

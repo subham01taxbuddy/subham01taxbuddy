@@ -1,0 +1,18 @@
+<!-- <button [disabled]="isProcessing" (click)="handleClick()">
+  <ng-container *ngIf="!isProcessing; else loading">
+    <ng-content></ng-content>
+  </ng-container>
+  <ng-template #loading>
+    <span class="spinner"></span>
+  </ng-template>
+</button> -->
+
+
+<button [disabled]="isLoading" (click)="handleClick()" >
+  <span *ngIf="!isLoading; else loading">
+    <ng-content></ng-content>
+  </span>
+  <ng-template #loading>
+    <span>Loading...</span>
+  </ng-template>
+  </button>

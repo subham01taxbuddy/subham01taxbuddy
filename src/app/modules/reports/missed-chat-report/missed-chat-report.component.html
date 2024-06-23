@@ -80,9 +80,12 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="button-container">
-                        <button class="srch-btn-1" (click)="showReports()">
+                        <!-- <button class="srch-btn-1" (click)="showReports()">
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                        </button>
+                        </button> -->
+                        <app-custom-button class="srch-btn-1" [actions]="[showReports]">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                        </app-custom-button>
                         <button class="dwldBtn-1" [disabled]="loading"
                           *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
                           (click)="downloadReport()">

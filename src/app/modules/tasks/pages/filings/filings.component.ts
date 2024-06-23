@@ -278,7 +278,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchBy = object;
   }
 
-  myItrsList(pageNo, fromPageChange?) {
+  myItrsList(pageNo: number, fromPageChange?: boolean): Promise<any> {
     // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -368,8 +368,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
-      this.reportService.getMethod(param).subscribe(
-        (res: any) => {
+      return this.reportService.getMethod(param).toPromise().then((res: any) => {
           if (res.success == false) {
             this.toastMsgService.alert('error', res.message);
             this.myItrsGridOptions.api?.setRowData(
@@ -421,6 +420,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return resolve(false);
         }
       );
+    }).catch(()=>{
+      this.myItrsGridOptions.api?.setRowData(
+        this.createOnSalaryRowData([])
+      );
+      this.config.totalItems = 0;
+      this.toastMsgService.alert('error', 'No Data Found ');
+      this.loading =false;
     });
   }
 

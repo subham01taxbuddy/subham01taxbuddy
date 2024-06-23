@@ -320,6 +320,7 @@ export class UtilsService {
       prefillData: itrJson ? itrJson.prefillData : null,
       prefillDataSource: itrJson ? itrJson.prefillDataSource : null,
       aisDataSource: itrJson ? itrJson.aisDataSource : null,
+      aisSource:itrJson ? itrJson.aisSource : null,
       everOptedNewRegime: {
         acknowledgementNumber: '',
         assessmentYear: '',
