@@ -70,7 +70,6 @@ export class PrefillIdComponent implements OnInit {
       AppConstants.ITR_JSON,
       JSON.stringify(this.ITR_JSON)
     );
-    this.checkAisPrefill()
   }
 
   customerName: any;
@@ -101,6 +100,7 @@ export class PrefillIdComponent implements OnInit {
           this.getUserDetailsByPAN(result.panNumber);
         }
 
+        this.checkAisPrefill();c
         if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
           this.isPasswordAvailable = true;
         }else{
