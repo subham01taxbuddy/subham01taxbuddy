@@ -952,11 +952,7 @@ export class ScheduleFaComponent implements OnInit {
           // });
 
           formValueToSave.forEach((element) => {
-            element.countryName = this.getCountryNameFromCode(element.countryCode);
-          });
-
-          formValueToSave.forEach((element) => {
-            this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
+            this.Copy_ITR_JSON.foreignIncome?.foreignAssets[section].push(
               element
             );
           });
