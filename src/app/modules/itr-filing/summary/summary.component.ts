@@ -7063,7 +7063,7 @@ export class SummaryComponent implements OnInit {
       (result: any) => {
         this.loading = false;
         if (result.success) {
-          if (result.data.difference) {
+          if (result.data.difference && !result.data.reasonGiven) {
             this.showIncomeSourcePopup();
           } else {
             this.checkFilerAssignment();
