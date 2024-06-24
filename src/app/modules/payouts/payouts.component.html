@@ -52,7 +52,7 @@
                       [formControl]="serviceType"></app-service-drop-down>
                     </div>
                     <div class="col-sm-3">
-                      <label class="input__label">Reason of Approval</label>
+                      <label class="input__label">Manual Approval Reason</label>
                       <select class="select__box ogp_select custom-bg-new" (change)="reasonChanged()"
                         [(ngModel)]="selectedReason">
                         <option *ngFor="let drop of reasonList" class="un-select-list" [value]="drop.value">

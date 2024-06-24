@@ -75,7 +75,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   ];
   reasonList=[
     { value: 'ITR filed through Manual mode', name: 'ITR filed through Manual mode' },
-    { value: 'Discount more than 20%', name: ' Discount more than 20%' },
+    { value: 'Discount more than 20 percent', name: ' Discount more than 20%' },
     { value: 'Other services', name: 'Other services' },
   ]
   selectedReason:any;
@@ -323,7 +323,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
-    let reasonFilter = this.selectedReason ? `&manualApprovalReason = ${this.selectedReason}` : '';
+    let reasonFilter = this.selectedReason ? `&manualApprovalReason=${this.selectedReason}` : '';
     let serviceTypeFilter = this.serviceType.value ? `&serviceType=${this.serviceType.value}` : '';
 
     let userFilter = ''
@@ -769,9 +769,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Approval Reason',
+        headerName: 'Manual Approval Reason',
         field: 'manualApprovalReason',
-        width: 160,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -935,7 +935,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
     let invoices = selectedRows.map(item => Number(item.subscriptionId));
     let commissionPercentages = selectedRows.map(item =>item.slabwiseCommissionPercentage);
-    let manualApprovalReason = selectedRows.map(item =>item.manualApprovalReason);
+    let manualApprovalReasons = selectedRows.map(item =>item.manualApprovalReason);
 
     console.log('commissionPercentage',commissionPercentages)
     console.log('invoices',invoices)
@@ -946,6 +946,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
 
     let commissionPercentage = commissionPercentages[0];
+    let manualApprovalReason = manualApprovalReasons[0];
 
     let param = '/v2/partnerCommission';
     let request = {
@@ -1128,6 +1129,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.serviceType.setValue(null);
     this.filerId = null;
     this.leaderId = null;
+    this.selectedReason = null;
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
