@@ -306,7 +306,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           label: this.anyOtherIncomeDropdown[i].label,
           incomeType: this.anyOtherIncomeDropdown[i].value,
           incomeValue: [null, Validators.min(0)],
-          incomeDesc: [null],
+          incomeDesc: [null, Validators.maxLength(50)],
         })
       );
     }

@@ -366,7 +366,7 @@ export class HousePropertyComponent implements OnInit {
         eligible80EEAAmount: null,
 
         // property details
-        address: ['', Validators.required],
+        address: ['', [Validators.required, Validators.maxLength(50)]],
         city: [
           '',
           [Validators.required, Validators.pattern(AppConstants.charRegex)],
