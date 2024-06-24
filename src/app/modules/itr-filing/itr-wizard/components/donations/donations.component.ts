@@ -157,6 +157,7 @@ export class DonationsComponent implements OnInit {
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
 
+    this.pg80g = this.pg80gga = this.pg80ggc = 1;
     this.config80g = {
       itemsPerPage: 2,
       currentPage: this.pg80g,
