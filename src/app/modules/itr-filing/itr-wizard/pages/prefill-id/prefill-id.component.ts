@@ -7056,7 +7056,7 @@ export class PrefillIdComponent implements OnInit {
     const currentDate = new Date();
     const sevenDaysAgo = new Date(currentDate);
     sevenDaysAgo.setDate(currentDate.getDate() - 7);
-    if(this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID' ){
+    if(this.utilsService.isNonEmpty(this.userProfile?.itPortalPassword) && this.userProfile?.itPasswordVerificationStatus === 'VALID' ){
       if ((this.ITR_JSON.aisSource === 'DOWNLOAD' && aisDate < sevenDaysAgo) ||
         (this.ITR_JSON.prefillDataSource === 'DOWNLOAD' && prefillDate < sevenDaysAgo) ||
         (this.ITR_JSON.aisSource === 'UPLOAD' && aisDate < sevenDaysAgo) ||
