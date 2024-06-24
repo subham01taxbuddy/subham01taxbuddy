@@ -7146,7 +7146,7 @@ export class SummaryComponent implements OnInit {
                   this.utilsService.showSnackBar(
                     'You can only update the ITR file record when your status is "ITR confirmation received"'
                   );
-                } else {
+                } else if(this.isValidItr){
                   if (confirm('Are you sure you want to file the ITR?'))
                     this.fileITR();
                 }
