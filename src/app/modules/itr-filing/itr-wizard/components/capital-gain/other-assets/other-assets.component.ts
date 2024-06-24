@@ -9,11 +9,8 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Input } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { UntypedFormArray } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
-import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
-import { formatDate } from '@angular/common';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
 import * as moment from "moment/moment";
 
@@ -122,8 +119,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     } else {
       this.isDisable = false;
     }
-    this.assetList.sort((a,b)=>{
-      if(a.indexCostOfAcquisition > b.indexCostOfAcquisition){
+    this.assetList.sort((a, b) => {
+      if (a.indexCostOfAcquisition > b.indexCostOfAcquisition) {
         return -1
       } else {
         return 1;
@@ -185,8 +182,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAsset'].value){
+  updateValidations(formGroup) {
+    if (formGroup.controls['costOfNewAsset'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
       formGroup.controls['costOfNewAsset'].setValidators([Validators.required]);
@@ -198,7 +195,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       formGroup.controls['costOfNewAsset'].updateValueAndValidity();
     }
 
-    if(formGroup.controls['CGASAmount'].value){
+    if (formGroup.controls['CGASAmount'].value) {
       formGroup.controls['accountNumber'].setValidators([Validators.required]);
       formGroup.controls['accountNumber'].updateValueAndValidity();
       formGroup.controls['ifscCode'].setValidators([Validators.required]);
@@ -290,7 +287,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     console.log(this.goldCg);
   }
 
-  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+  depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
 
   // saving the cg
   saveCg() {
