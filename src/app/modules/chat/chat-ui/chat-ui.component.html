@@ -26,9 +26,9 @@
           <input type="text" placeholder="Search messages or users">
       </div> -->
 
-        <div class="user-list main-panel">
-            <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
-                [infiniteScrollThrottle]="20" (scrolled)="onScrollDown()">
+        <div class="user-list main-panel-chat">
+            <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
+            [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolled)="onScrollDown()">
                 <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)"
                     [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
                     <div class="row">

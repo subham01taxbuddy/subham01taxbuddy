@@ -21,7 +21,7 @@ interface Department {
 
 
 export class ChatUIComponent implements OnInit {
-    selector: string = ".main-panel";
+    selector: string = ".main-panel-chat";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
 
@@ -207,16 +207,9 @@ export class ChatUIComponent implements OnInit {
 
 
     onScrollDown() {
-        this.page = this.page + 1;;
+        this.page = this.page + 1;
         this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
 
-    // openUserChatFullScreen(){
-    //     this.isUserChatVisible = true;
-    //     if(this.userChatComp && this.userChatComp.selectedUser){
-    //        const selectedUser = this.userChatComp.selectedUser;
-    //        this.openUserChat(selectedUser);
-    //     }
-    // }
-}
+ }
