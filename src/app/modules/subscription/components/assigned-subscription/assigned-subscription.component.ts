@@ -99,6 +99,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   assignedFilerId: number;
   searchedEmail:any;
   userData :any;
+  selectedServiceType:any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -181,6 +182,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
       }
+
+      if(this.utilsService.isNonEmpty(params['userId']) && this.utilsService.isNonEmpty(params['serviceType']) ){
+        this.userId = params['userId'];
+        this.selectedServiceType = params['serviceType'];
+        this.getAssignedSubscription('','','','','','fromSummary')
+      }
     });
     if (
       !this.roles.includes('ROLE_ADMIN') &&
@@ -254,7 +261,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription=(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?):Promise <any> => {
+  getAssignedSubscription=(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?,fromSummary?):Promise <any> => {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
 
     if (!fromPageChange) {
@@ -318,6 +325,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     if (this.filerId && this.searchAsPrinciple === false) {
       userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    if(fromSummary){
+      this.searchParam.serviceType = this.selectedServiceType;
+      userIdFilter ='&userId=' + this.userId;
     }
 
     this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;

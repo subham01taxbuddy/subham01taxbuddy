@@ -1,0 +1,51 @@
+
+.mat-dialog-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.dialog-message {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.reason-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.centered-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.action-button {
+  min-width: 100px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button[disabled] {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.action-button:not([disabled]):hover {
+  background-color: #0056b3;
+}
+.mat-mdc-dialog-actions {
+  justify-content: center;
+}

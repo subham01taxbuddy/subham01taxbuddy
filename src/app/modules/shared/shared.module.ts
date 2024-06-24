@@ -63,6 +63,7 @@ import { UpdateCapacityComponent } from './components/update-capacity/update-cap
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
+import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -108,7 +109,8 @@ import { CustomButtonComponent } from './components/custom-button/custom-button.
         GenericSortingComponent,
         GenericUserFilterComponent,
         CalculatorModalComponent,
-        CustomButtonComponent
+        CustomButtonComponent,
+        IncomeSourceDialogComponent
     ],
     imports: [
         CommonModule,
@@ -171,7 +173,8 @@ import { CustomButtonComponent } from './components/custom-button/custom-button.
         GenericUserFilterComponent,
         UpdateNoJsonFilingDialogComponent,
         CalculatorModalComponent,
-        CustomButtonComponent
+        CustomButtonComponent,
+        IncomeSourceDialogComponent
     ],
     providers: [StorageService, Schedules, RequestManager]
 })
