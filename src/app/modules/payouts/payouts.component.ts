@@ -1129,7 +1129,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.serviceType.setValue(null);
     this.filerId = null;
     this.leaderId = null;
-    this.selectedReason = null;
+    this.selectedReason =null;
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
