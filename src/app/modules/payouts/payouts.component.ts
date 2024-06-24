@@ -73,6 +73,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     { value: 'initiated', name: 'Initiated' },
     { value: 'Failed', name: 'Failed' }
   ];
+  reasonList=[
+    { value: 'ITR filed through Manual mode', name: 'ITR filed through Manual mode' },
+    { value: 'Discount more than 20 percent', name: ' Discount more than 20%' },
+    { value: 'Other services', name: 'Other services' },
+  ]
+  selectedReason:any;
   selectedStatus: any;
   selectedPayoutStatus: any;
   searchVal: string = "";
@@ -241,10 +247,11 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     else if (this.searchVal !== "") {
       this.selectedStatus = '';
       this.selectedPayoutStatus = '';
+      this.selectedReason ='';
       this.getSearchList(key, this.searchVal);
-    } else if (this.selectedStatus || this.selectedPayoutStatus) {
+    } else if (this.selectedStatus || this.selectedPayoutStatus || this.selectedReason) {
       this.getSearchList(key, this.searchVal);
-    } else if (this.selectedStatus == '' || this.selectedPayoutStatus == '') {
+    } else if (this.selectedStatus == '' || this.selectedPayoutStatus == '' || this.selectedReason == '') {
       this.serviceCall('');
     }
   }
@@ -282,6 +289,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     // this.serviceCall(queryString);
   }
 
+  reasonChanged(){
+    this.config.currentPage = 1;
+    let queryString = '';
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
+      queryString = `&${this.key}=${this.searchVal}`;
+    }
+    this.searchVal = '';
+    this.key = ''
+  }
+
   serviceCall(queryString, pageChange?) {
     //https://dev-api.taxbuddy.com/report/bo/itr-filing-credit?fromDate=2022-01-10&toDate=2023-10-27&page=0&size=20' \
     if (!pageChange) {
@@ -306,6 +323,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+    let reasonFilter = this.selectedReason ? `&manualApprovalReason=${this.selectedReason}` : '';
     let serviceTypeFilter = this.serviceType.value ? `&serviceType=${this.serviceType.value}` : '';
 
     let userFilter = ''
@@ -319,7 +337,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${serviceTypeFilter}`;
+    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${serviceTypeFilter}${reasonFilter}`;
     this.reportService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
@@ -734,7 +752,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
             return filer;
           }
         }
-      }, {
+      },
+      {
         headerName: 'Approved Date',
         field: 'commissionPaymentApprovalDate',
         width: 120,
@@ -748,6 +767,18 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         cellRenderer: (data: any) => {
           return data.value ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : '-';
         }
+      },
+      {
+        headerName: 'Manual Approval Reason',
+        field: 'manualApprovalReason',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
       },
       {
         headerName: 'See/Add Notes',
@@ -904,6 +935,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
     let invoices = selectedRows.map(item => Number(item.subscriptionId));
     let commissionPercentages = selectedRows.map(item =>item.slabwiseCommissionPercentage);
+    let manualApprovalReasons = selectedRows.map(item =>item.manualApprovalReason);
 
     console.log('commissionPercentage',commissionPercentages)
     console.log('invoices',invoices)
@@ -914,12 +946,14 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
 
     let commissionPercentage = commissionPercentages[0];
+    let manualApprovalReason = manualApprovalReasons[0];
 
     let param = '/v2/partnerCommission';
     let request = {
       subscriptionIdList: invoices,
       commissionPaymentApprovalStatus: 'APPROVED',
-      commissionPercentage: commissionPercentage
+      commissionPercentage: commissionPercentage,
+      manualApprovalReason :manualApprovalReason
     };
     this.loading = true;
     this.itrMsService.putMethod(param, request).subscribe((result: any) => {
@@ -1036,6 +1070,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+    let reasonFilter = this.selectedReason ? `&manualApprovalReason = ${this.selectedReason}` : '';
 
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
@@ -1053,7 +1088,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       queryString = `&${this.key}=${this.searchVal}`;
     }
 
-    let param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}`;
+    let param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${reasonFilter}`;
 
 
     let fieldName = [
@@ -1079,6 +1114,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'invoicePaymentStatus', value: 'Realised/Unrealised' },
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
+      { key: 'manualApprovalReason ',value:'Reason' }
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
     this.loading = false;
@@ -1093,6 +1129,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.serviceType.setValue(null);
     this.filerId = null;
     this.leaderId = null;
+    this.selectedReason =null;
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
