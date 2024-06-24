@@ -1,20 +1,13 @@
 import {
   Component,
   OnInit,
-  Output,
-  EventEmitter,
   ViewChild,
   Input,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { GridApi, GridOptions, GridReadyEvent, RowNode, ValueSetterParams } from 'ag-grid-community';
+import { GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import {
   ITR_JSON,
-  OnSalary,
-  OtherThanSalary16A,
-  OtherThanSalary26QB,
-  OtherThanTDSTCS,
-  TCS,
   TaxPaid,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -25,6 +18,7 @@ import { SelectionComponent } from './selection-component/selection-component.co
 import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
 import { TdsTypeCellRenderer } from './tds-type-cell-renderer';
+import { UpdateIncomeSourcesComponent } from './update-income-sources/update-income-sources.component';
 
 @Component({
   selector: 'app-taxes-paid',
@@ -137,6 +131,12 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     return <GridOptions>{
       rowData: this.tdsDetailCreateRowData(type),
       columnDefs: this.tdsDetailCreateColumnDef(type),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      rowSelection: 'multiple',
+      isRowSelectable: (rowNode) => {
+        return rowNode.data ? true : false;
+      },
       pagination: true,
       paginationPageSize: 20,
       onGridReady(params: GridReadyEvent) {
@@ -193,6 +193,41 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.advanceMode = 'EDIT';
       this.advanceEditIndex = index;
     }
+  }
+
+  updateIncomeSources(type) {
+    let selectedRows = this.tdsOtherThanSalary16AGridOptions?.api?.getSelectedRows();
+    if (selectedRows && selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries to update the income sources');
+      return;
+    }
+    const dialogRefSelect = this.matDialog.open(UpdateIncomeSourcesComponent, {
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px',
+    });
+    dialogRefSelect.afterClosed().subscribe((result) => {
+      if (result?.status) {
+        let rowData = [];
+        this.tdsOtherThanSalary16AGridOptions.api?.forEachNode(node => rowData.push(node.data));
+        if (this.tdsOtherThanSalary16AGridOptions && rowData.length) {
+          rowData.forEach(element => {
+            selectedRows.forEach(item => {
+              item.headOfIncome = result.headOfIncome;
+              if (element.srNo === element.srNo) {
+                element = item;
+              }
+            });
+          });
+        }
+
+        this.taxPaid.otherThanSalary16A = rowData;
+        this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+        this.tdsOtherThanSalary16AGridOptions.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_OTHER_TYPE_CODE));
+        this.tdsOtherThanSalary16AGridOptions.api?.deselectAll();
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      }
+    });
   }
 
   addTaxesPaid(isEdit, index?) {
@@ -431,12 +466,43 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     var self = this;
     return [
       {
+        field: 'Update Income Sources',
+        headerCheckboxSelection: true,
+        headerCheckboxSelectionCurrentPageOnly: true,
+        width: 180,
+        hide: type != this.TDS_OTHER_TYPE_CODE,
+        suppressMovable: true,
+        checkboxSelection: (params) => {
+          if (type === this.TDS_OTHER_TYPE_CODE) {
+            return true;
+          } else {
+            return false
+          }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: this.getColumnName(type, 'deductorTAN'),
         field: 'deductorTAN',
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.deductorTAN;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -448,6 +514,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.deductorName;
         },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
       {
         headerName: this.getColumnName(type, 'totalAmountCredited'),
@@ -458,6 +532,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.totalAmountCredited;
         },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
       {
         headerName: this.getColumnName(type, 'totalTdsDeposited'),
@@ -467,6 +549,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.totalTdsDeposited;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {
@@ -481,6 +571,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           } else {
             return self.headOfIncomeDropdownTDS3.filter(element => element.code === params.data.headOfIncome)[0]?.name;
           }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
         },
       },
       {

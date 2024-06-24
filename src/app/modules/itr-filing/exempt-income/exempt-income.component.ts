@@ -31,14 +31,14 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       value: 'TAX_REFUND_INTEREST',
       label: 'Interest from Income tax refund',
     },
-    {
-      value: 'ROYALTY_US_80QQB',
-      label: 'Royalty for Books/Author/Publishers (80QQB)',
-    },
-    {
-      value: 'ROYALTY_US_80RRB',
-      label: 'Royalty Against Patent (80RRB)',
-    },
+    // {
+    //   value: 'ROYALTY_US_80QQB',
+    //   label: 'Royalty for Books/Author/Publishers (80QQB)',
+    // },
+    // {
+    //   value: 'ROYALTY_US_80RRB',
+    //   label: 'Royalty Against Patent (80RRB)',
+    // },
     {
       value: 'INTEREST_ACCRUED_10_11_I_P',
       label:
@@ -512,8 +512,8 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'TAX_REFUND_INTEREST' &&
         item.incomeType !== 'ANY_OTHER' &&
         item.incomeType !== 'FAMILY_PENSION' &&
-        item.incomeType !== 'ROYALTY_US_80RRB' &&
-        item.incomeType !== 'ROYALTY_US_80QQB' &&
+        // item.incomeType !== 'ROYALTY_US_80RRB' &&
+        // item.incomeType !== 'ROYALTY_US_80QQB' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' &&

@@ -58,9 +58,12 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <button class="srch-btn-1" [disabled]="loading" (click)="applyFilter()">
+                    <!-- <button class="srch-btn-1" [disabled]="loading" (click)="applyFilter()">
                       <i class="fas fa-search" aria-hidden="true"></i> Search
-                    </button>
+                    </button> -->
+                    <app-custom-button class="srch-btn-1" [actions]="[getRefundRequestList]" [actionParams]="[[0]]">
+                      <i class="fa fa-search" aria-hidden="true"></i> Search
+                    </app-custom-button>
                     <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">
                       Clear form
                     </button>

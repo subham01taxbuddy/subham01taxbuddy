@@ -22,8 +22,6 @@ import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service'
 import { IdleService } from 'src/app/services/idle-service';
 
 declare let $: any;
-declare function we_login(userId: string);
-declare function we_setAttribute(key: string, value: any);
 
 @Component({
   selector: 'app-login',
@@ -91,12 +89,6 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data));
       let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
       this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
-
-      we_login(res.data[0].userId.toString());
-      we_setAttribute('we_email', res.data[0].email);
-      we_setAttribute('we_phone', (res.data[0].callingNumber));
-      we_setAttribute('we_first_name', res.data[0].name);
-      we_setAttribute('User Id', parseInt(res.data[0].userId));
 
       //get logged in userID
       let userId = this.utilsService.getLoggedInUserID();

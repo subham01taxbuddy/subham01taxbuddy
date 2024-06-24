@@ -432,7 +432,7 @@ export class ItrValidationService {
                   }
                 });
               }
-              if (leavesEncashAmount > 300000) {
+              if (leavesEncashAmount > 2500000) {
                 const error = this.getErrorMessages('E45');
                 errorList.push(error);
               }

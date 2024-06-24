@@ -4124,6 +4124,9 @@ pagination-controls {
 }
 
 .back-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #F5F5FA;
   position: fixed;
   bottom: 0px;
@@ -4131,6 +4134,7 @@ pagination-controls {
   left: 0px;
   border-top: 1px solid #cccccc;
   padding-top: 5px;
+  transition: padding-left 0.3s; /* Smooth transition for padding */
 }
 
 .lgtBtn {

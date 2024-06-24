@@ -2459,6 +2459,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   shareComparison(){
     let param = '/api/send/comparison/pdf';
     let request = {
+      sendPdfToUser : true,
       oldRegime : this.oldSummaryIncome,
       newRegime : this.newSummaryIncome
     }

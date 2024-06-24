@@ -22,7 +22,6 @@ import { ServiceDropDownComponent } from 'src/app/modules/shared/components/serv
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { Location, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-declare function we_track(key: string, value: any);
 export interface User {
   name: string;
   userId: Number;
@@ -100,6 +99,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   assignedFilerId: number;
   searchedEmail:any;
   userData :any;
+  selectedServiceType:any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -182,6 +182,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
       }
+
+      if(this.utilsService.isNonEmpty(params['userId']) && this.utilsService.isNonEmpty(params['serviceType']) ){
+        this.userId = params['userId'];
+        this.selectedServiceType = params['serviceType'];
+        this.getAssignedSubscription('','','','','','fromSummary')
+      }
     });
     if (
       !this.roles.includes('ROLE_ADMIN') &&
@@ -255,7 +261,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?) {
+  getAssignedSubscription=(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?,fromSummary?):Promise <any> => {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
 
     if (!fromPageChange) {
@@ -321,6 +327,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    if(fromSummary){
+      this.searchParam.serviceType = this.selectedServiceType;
+      userIdFilter ='&userId=' + this.userId;
+    }
+
     this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
     // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
@@ -345,8 +356,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     let apiURL = this.reportService.baseUrl + param;
     sessionStorage.setItem('apiURL', apiURL);
-    this.reportService.getMethod(param).subscribe(
-      (response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
         this.loading = false;
@@ -429,13 +439,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           }
         }
         this.sendTotalCount.emit(this.config.totalItems);
-      },
-      (error) => {
+      }).catch((error)=>{
         this.sendTotalCount.emit(0);
         this.loading = false;
         console.log('error during getting subscription info: ', error);
-      }
-    );
+      });
   }
 
   searchByName(pageNo = 0) {
@@ -1030,9 +1038,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                     this.userMsService.spamPutMethod(param, reqBody).subscribe(
                       (res: any) => {
                         this.loading = false;
-                        // we_track('Cancel Subscription  ', {
-                        //   'User number ': subscription.mobileNumber,
-                        // });
+
                         this._toastMessageService.alert(
                           'success',
                           'Subscription will be Canceled/Deleted onces your Leader Approves it.'
@@ -1550,7 +1556,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   getToggleValue() {
     console.log('co-owner toggle', this.coOwnerToggle.value);
-    we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
     } else {

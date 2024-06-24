@@ -1,0 +1,56 @@
+.btn__primary {
+    background-color: #3E82CD;
+    color: #ffffff;
+    border: 1px solid #3E82CD;
+    padding: 8px 24px;
+    border-radius: 4px;
+    line-height: 28px;
+}
+
+.btn__primary:active,
+.btn__primary:focus,
+.btn__primary:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+}
+
+.btn__primary.btn__hover2:active,
+.btn__primary.btn__hover2:focus,
+.btn__primary.btn__hover2:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+    border-color: #ffffff;
+}
+
+.btn__primary.btn__hover3:active,
+.btn__primary.btn__hover3:focus,
+.btn__primary.btn__hover3:hover {
+    background-color: #242426;
+    color: #ffffff;
+    border-color: #242426;
+}
+
+.btn__white {
+    background-color: transparent;
+    color: #3E82CD;
+    border: 1.5px solid #3E82CD;
+    padding: 8px 24px;
+    border-radius: 4px;
+    line-height: 28px;
+}
+
+.btn__white:active,
+.btn__white:focus,
+.btn__white:hover {
+    background-color: #3E82CD;
+    color: #ffffff;
+    border-color: #3E82CD;
+}
+
+.btn__white.btn__hover2:active,
+.btn__white.btn__hover2:focus,
+.btn__white.btn__hover2:hover {
+    background-color: #242426;
+    color: #ffffff;
+    border-color: #242426;
+}

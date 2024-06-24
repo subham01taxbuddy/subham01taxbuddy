@@ -342,7 +342,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       );
       return;
     }
-    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length) {
+    if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.employers.length) {
       this.saveEmployerDetails(false);
     }
     if (index === -1) {
@@ -858,9 +858,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       const leaveEncashControl = allowance?.controls?.find((element) => {
         return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
       });
-      const fixedLimit = 300000;
+      const fixedLimit = 2500000;
 
-      // lower of 3 lakhs only applicable for non government employees if form values not present
+      // lower of 25 lakhs only applicable for non government employees if form values not present
       if (
         this.ITR_JSON.employerCategory === 'OTHER' ||
         this.ITR_JSON.employerCategory === 'PRIVATE' ||
@@ -1031,11 +1031,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
             return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
           });
           const leaveEncash = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0]?.taxableAmount);
-          const fixedLimit = 300000;
+          const fixedLimit = 2500000;
 
           let lowerOf = Math.min(leaveEncash, fixedLimit);
 
-          // lower of 3 lakhs only applicable for non government employees
+          // lower of 25 lakhs only applicable for non government employees
           if (
             this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
             this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&

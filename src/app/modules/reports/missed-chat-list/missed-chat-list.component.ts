@@ -143,7 +143,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     }
   }
 
-  showReports(pageNumber?) {
+  showReports = (pageNumber?): Promise<any> => {
   //https://uat-api.taxbuddy.com/report/bo/report/calling-report/
   //missed-chat-list?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
 
@@ -201,7 +201,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/missed-chat-list?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.missedChatList = response?.data?.content;
@@ -217,10 +217,10 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(fillingData) {

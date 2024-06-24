@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<hr>
+<div mat-dialog-content>
+  <p *ngIf="step === 'initial'" class="dialog-message">{{data.message}}</p>
+  <div *ngIf="step === 'reason'" class="reason-input">
+    <p>Please provide a reason for continuing with the same subscription:</p>
+    <mat-form-field>
+      <textarea matInput [(ngModel)]="reason" placeholder="Enter reason"></textarea>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="center" class="centered-actions">
+  <button mat-button class="action-button" (click)="onNoClick()">Cancel</button>
+  <button mat-button class="action-button" *ngIf="step === 'initial'" (click)="updateSubscription()">Update Subscription</button>
+  <button mat-button class="action-button" *ngIf="step === 'initial'" (click)="continue()">Continue</button>
+  <button mat-button class="action-button" *ngIf="step === 'reason'" (click)="saveReason()" [disabled]="!reason">Save</button>
+</div>

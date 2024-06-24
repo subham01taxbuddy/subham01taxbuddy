@@ -133,7 +133,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     }
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/filing-done-but-payment-not-received?fromDate=2024-01-30&toDate=2024-05-03&page=0&pageSize=5' \
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -175,7 +175,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/filing-done-but-payment-not-received?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.filingDoneReport = response?.data?.content;
@@ -196,12 +196,12 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.config.totalItems = 0;
       this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(fillingData) {

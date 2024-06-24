@@ -249,7 +249,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   this.getRefundRequestList(0);
   }
 
-  getRefundRequestList(pageNo, isUserId?, id?, fromPageChange?) {
+  getRefundRequestList=(pageNo, isUserId?, id?, fromPageChange?):Promise<any> => {
     // https://dev-api.taxbuddy.com/report/bo/refund/requests?page=0&size=20
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -323,7 +323,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
     this.loading = true;
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.cancelSubscriptionData = response;
         this.loading = false;
@@ -346,13 +346,11 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
           this.config.totalItems = 0;
           this._toastMessageService.alert("error", response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.refundListGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
         this.loading = false;
-      }
-    );
+      })
   }
 
   // pageChanged(event: any) {

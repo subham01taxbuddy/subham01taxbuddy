@@ -153,7 +153,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
-  search(fromPageChange?) {
+  search=(fromPageChange?):Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/subscription-adjustment?page=0&pageSize=20' \
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -189,7 +189,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
       });
     }
     this.loading = true;
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         console.log('SUBSCRIPTION Abutment RESPONSE:', response);
         this.allSubAdjustData = response;

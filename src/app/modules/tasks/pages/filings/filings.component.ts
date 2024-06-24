@@ -28,7 +28,6 @@ import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
 import {DomSanitizer} from "@angular/platform-browser";
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-filings',
@@ -279,7 +278,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchBy = object;
   }
 
-  myItrsList(pageNo, fromPageChange?) {
+  myItrsList(pageNo: number, fromPageChange?: boolean): Promise<any> {
     // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -367,8 +366,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
-      this.reportService.getMethod(param).subscribe(
-        (res: any) => {
+      return this.reportService.getMethod(param).toPromise().then((res: any) => {
           if (res.success == false) {
             this.toastMsgService.alert('error', res.message);
             this.myItrsGridOptions.api?.setRowData(
@@ -420,6 +418,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return resolve(false);
         }
       );
+    }).catch(()=>{
+      this.myItrsGridOptions.api?.setRowData(
+        this.createOnSalaryRowData([])
+      );
+      this.config.totalItems = 0;
+      this.toastMsgService.alert('error', 'No Data Found ');
+      this.loading =false;
     });
   }
 
@@ -1024,9 +1029,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               name: data?.fName + ' ' + data?.lName,
             },
           });
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
+
           // if (data.statusId !== 11) {
           //   this.router.navigate(['/eri'], {
           //     state:
@@ -1077,9 +1080,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return;
         } else {
           console.log('Data for revise return ', data);
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
 
           if (data.isEverified) {
             let disposable = this.dialog.open(ReviseReturnDialogComponent, {
@@ -1128,9 +1128,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1178,9 +1175,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1388,10 +1382,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success) {
-                we_track('Call', {
-                  'User Name': user.fName + ' ' + user.lName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -1532,9 +1522,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           const param = `/eri/v1/api`;
           let headerObj = {

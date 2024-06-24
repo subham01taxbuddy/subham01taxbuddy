@@ -30,7 +30,6 @@ import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
@@ -385,9 +384,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
+        pinned: 'left',
+        lockPosition:true,
+        suppressMovable: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
-        pinned: 'left',
         checkboxSelection: (params) => {
           if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
@@ -399,8 +400,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           return {
             textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },
@@ -987,10 +988,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-    we_track('Start Filing', {
-      'User Name': data?.name,
-      'User Number': data?.mobileNumber
-    });
+
   }
 
   async getUserProfile(userId) {
@@ -1144,10 +1142,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
           if (result.success) {
-            we_track('Call', {
-              'User Name': data?.name,
-              'User Phone number ': agent_number,
-            });
             this._toastMessageService.alert("success", result.message)
           } else {
             this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -1314,8 +1308,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
 
   }
-
-  search(form?, isAgent?, pageChange?) {
+  search= (form?, isAgent?, pageChange?): Promise<any> =>{
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1373,9 +1366,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-    this.userMsService.getMethodNew(param).subscribe(
-
-      (result: any) => {
+    return this.userMsService.getMethodNew(param).toPromise().then((result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
@@ -1401,11 +1392,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         }
         this.loading = false;
 
-      }, error => {
+      }).catch(() =>{
         this.loading = false;
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      })
+      });
   }
 
 

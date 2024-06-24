@@ -63,9 +63,12 @@
                     </div>
 
                     <div class="button-container mt-4">
-                      <button class="srch-btn-1" (click)="getSmeList()"><i class="fa fa-search" aria-hidden="true"></i>
+                      <!-- <button class="srch-btn-1" (click)="getSmeList()"><i class="fa fa-search" aria-hidden="true"></i>
                         Search
-                      </button>
+                      </button> -->
+                      <app-custom-button class="srch-btn-1" [actions]="[getSmeList]">
+                        <i class="fa fa-search" aria-hidden="true"></i> Search
+                      </app-custom-button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
                       </button>

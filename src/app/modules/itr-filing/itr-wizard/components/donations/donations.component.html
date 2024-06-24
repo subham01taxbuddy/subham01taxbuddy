@@ -25,7 +25,7 @@
                   <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
                 </div>
               </div>
-              <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : config;let i = index"
+              <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : getPageConfig();let i = index"
                 [formGroupName]="fieldGlobalIndex(i)">
                 <div class="col-10">
                   <div class="gray_box">
@@ -246,9 +246,10 @@
 
             <div class="col-sm-6">
               <table>
-                <tr *ngFor="let item of getDonationArray.controls | paginate : config"></tr>
+                <tr *ngFor="let item of getDonationArray.controls | paginate : getPageConfig()"></tr>
               </table>
-              <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+              <pagination-controls (pageChange)="pageChanged($event)" id="{{getPageConfig().id}}">
+              </pagination-controls>
             </div>
           </div>
         </div>

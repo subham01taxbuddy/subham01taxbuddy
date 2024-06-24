@@ -138,9 +138,7 @@ export class MoreOptionsDialogComponent implements OnInit {
             this.utilsService.showSnackBar(`User deleted successfully!`);
             // this.isDisable = true;
             this.dialogRef.close(true);
-            we_track('Delete User', {
-              'User Number': this.data?.mobileNumber,
-            });
+
           } else {
             this.utilsService.showSnackBar(res.message);
             // this.isDisable = false;
@@ -277,11 +275,7 @@ export class MoreOptionsDialogComponent implements OnInit {
                 this.utilsService.showSnackBar(
                   'Successfully opted the service type ' + this.selectedService
                 );
-                we_track('Other Service', {
-                  'User Name': this.data?.name,
-                  'User Number': this.data?.mobileNumber,
-                  'Opt for which service ': this.selectedService,
-                });
+
               } else {
                 this.utilsService.showSnackBar(res.message);
               }
@@ -356,7 +350,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       }
     }
 
-    if(('ITR' === this.data.serviceType && this.data.statusId !== 8) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
+    if(('ITR' === this.data.serviceType && this.data.statusId !== 8 && this.data.statusId !== 47) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
       this.loading = false;
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
@@ -525,9 +519,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.createRowData(res.data.statusList)
         );
         console.log(this.initialData);
-        we_track('ITR Status Journey', {
-          'User Number': this.data?.mobileNumber,
-        });
+
       },
       () => { }
     );
@@ -667,7 +659,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     // this.itrMsService.getMethod(param).subscribe(
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if (this.data.statusId != 11) {
+          if (this.data.statusId == 8 || this.data.statusId == 47) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
               height: 'auto',

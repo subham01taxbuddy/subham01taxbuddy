@@ -660,3 +660,15 @@ table {
   display: flex;
   align-items: center;
 }
+
+.prefTextContainer{
+  margin-left: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.prefText{
+  font-style: italic;
+  color: #0747A6;
+  font-size: 14px;
+  font-weight: bold;
+}

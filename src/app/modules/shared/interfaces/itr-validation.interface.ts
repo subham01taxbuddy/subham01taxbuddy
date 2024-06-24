@@ -326,7 +326,7 @@ export const ErrorMsgsSchedule = {
   MAX_44AD_RECIEPT_LIMIT_EXCEED: {
     code: 'MAX_44AD_RECIEPT_LIMIT_EXCEED',
     message: 'if the taxpayer has filed ITR-4 then the gross receipt/income U/S 44AD cannot be more than Rs. 2 crores',
-    relatedSchedule: 'otherSources',
+    relatedSchedule: 'businessIncome',
   },
   CG_GOLD_EXPENSE_CLAIM_INCORRECT: {
     code: 'CG_GOLD_EXPENSE_CLAIM_INCORRECT',
@@ -678,6 +678,11 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income balance sheet difference needs to be zero and select BOA as "Yes"',
     relatedSchedule: 'balanceSheet',
   },
+  NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO: {
+    code: 'NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO',
+    message: 'In case of Non Speculative Income balance sheet difference needs to be zero',
+    relatedSchedule: 'balanceSheet',
+  },
   NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES: {
     code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES',
     message: 'In case of Non Speculative Income select BOA as "Yes"',
@@ -799,5 +804,13 @@ export class ItrValidations {
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];
+  }
+
+  getMessage(errorCode: string, employerType: string){
+    if(errorCode === 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY'){
+      return ErrorMsgsSchedule[errorCode].message;
+    } else {
+      return ErrorMsgsSchedule[errorCode].message;
+    }
   }
 }

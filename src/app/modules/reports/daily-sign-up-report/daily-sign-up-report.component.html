@@ -41,9 +41,12 @@
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                 Clear form
               </button>
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
+              <!-- <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
                 <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Report
-              </button>
+              </button> -->
+              <app-custom-button class="srch-btn mvRth" [actions]="[showReports]">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+              </app-custom-button>
             </div>
           </div>
           <div class="row">

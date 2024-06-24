@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import {InterceptorSkipHeader} from "./token-interceptor";
 @Injectable({
   providedIn: 'root',
 })
 export class ItrMsService {
+
+  SINGLE_CG_URL = "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/itr/single-cg-calculate";
   headers: any;
   userObj: any;
   microService: string = '/itr';
@@ -114,6 +117,17 @@ export class ItrMsService {
     return this.httpClient.post<T>(
       environment.url + this.microService + param[0],
       param[1],
+      { headers: this.headers }
+    );
+  }
+
+  singelCgCalculate<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    // this.headers.append('Content-Type', 'application/json');
+    this.headers = this.headers.append(InterceptorSkipHeader, '');
+    return this.httpClient.post<T>(
+      this.SINGLE_CG_URL,
+      param[0],
       { headers: this.headers }
     );
   }

@@ -25,7 +25,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -803,10 +802,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success == true) {
-                we_track('Call', {
-                  'User Name': user.userName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -883,14 +878,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
               'Call status update successfully.'
             );
             if (statusId === 19) {
-              we_track('Call Status - Follow Up', {
-                'User Number': callInfo.userMobile,
-              });
             } else if (statusId === 18) {
               this.markAsScheduleCallDone(callInfo);
-              we_track('Call Status - Done', {
-                'User Number': callInfo.userMobile,
-              });
             }
             setTimeout(() => {
               this.search();
@@ -1025,7 +1014,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search=(form?, isAgent?, pageChange?): Promise<any> => {
     // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
     //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
     //
@@ -1106,7 +1095,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param = param + '&details=true'
     }
 
-    this.reportService.getMethod(param).subscribe((result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {
@@ -1136,9 +1125,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    }, error => {
+    }).catch(()=>{
       this.loading = false;
-    });
+    })
   }
 
   async downloadReport() {
