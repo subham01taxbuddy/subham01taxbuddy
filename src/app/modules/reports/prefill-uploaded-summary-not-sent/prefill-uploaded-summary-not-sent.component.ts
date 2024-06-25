@@ -227,6 +227,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
         panNumber: fillingData[i].panNumber,
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
+        serviceType :fillingData[i].serviceType,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
