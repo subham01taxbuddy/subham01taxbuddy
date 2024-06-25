@@ -64,6 +64,7 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
+import {ZipcodeDirective} from "./directives/zipcode.directive";
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -93,6 +94,7 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
+        ZipcodeDirective,
         AgTooltipComponent,
         NumbersOnlyDirective,
         ConfirmDialogComponent,
@@ -162,6 +164,7 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
+        ZipcodeDirective,
         AgTooltipComponent,
         NumbersOnlyDirective,
         ServiceDropDownComponent,
