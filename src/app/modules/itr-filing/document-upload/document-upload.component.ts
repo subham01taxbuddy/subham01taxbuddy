@@ -41,12 +41,12 @@ const TREE_DATA: FoodNode[] = [
     value: 'ITRU',
     children: [
       {
-          "item" : "2022-23",
-          "value" : "2022-23"
+        "item": "2022-23",
+        "value": "2022-23"
       },
       {
-          "item" : "2021-22",
-          "value" : "2021-22"
+        "item": "2021-22",
+        "value": "2021-22"
       }
     ]
   },
@@ -2922,17 +2922,17 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDoc: any;
   docType: any = [
-    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' ,newTree : 'ITRU' },
+    { value: 'FORM_16', label: 'Form 16', tree: 'ITR', newTree: 'ITRU' },
     { value: 'AADHAAR_FRONT', label: 'Aadhar front', tree: 'Common' },
     { value: 'AADHAAR_BACK', label: 'Aadhar back', tree: 'Common' },
     { value: 'PAN', label: 'Pan card', tree: 'Common' },
-    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' ,newTree : 'ITRU'},
-    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' ,newTree : 'ITRU'},
-    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' ,newTree : 'ITRU'},
+    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR', newTree: 'ITRU' },
     /* { value: null, label: 'Miscellaneous' } */];
   isPassProtected!: boolean;
   filePassword: any;
@@ -3003,7 +3003,7 @@ export class DocumentUploadComponent implements OnInit {
       this.checklistSelection.deselect(...descendants);
     }
     this.treeControl.toggle(node);
-    this.checkSameLevelSelecion(this.checklistSelection.selected);
+    this.checkSameLevelSelection(this.checklistSelection.selected);
 
     // // Force update for the parent
     // descendants.every(child => this.checklistSelection.isSelected(child));
@@ -3014,12 +3014,12 @@ export class DocumentUploadComponent implements OnInit {
   todoLeafItemSelectionToggle(node: CloudFlatNode): void {
     this.checklistSelection.toggle(node);
     console.log(this.checklistSelection.selected);
-    this.checkSameLevelSelecion(this.checklistSelection.selected);
+    this.checkSameLevelSelection(this.checklistSelection.selected);
 
     // this.checkAllParentsSelection(node);
   }
 
-  checkSameLevelSelecion(selectedArray: any) {
+  checkSameLevelSelection(selectedArray: any) {
     let getSelectedLevelArray = selectedArray.filter(
       (item: any) => item.level === selectedArray[selectedArray.length - 1].level
     );
@@ -3138,7 +3138,6 @@ export class DocumentUploadComponent implements OnInit {
       let param = '/gateway/custom-bot/is-password-protected'
       this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
         this.loading = false;
-        console.log('checkDocPassProtected responce =>', res)
         if (res.response === 'File is password protected!') {
           this.isPassProtected = true;
         }
@@ -3168,23 +3167,15 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDocuments(type: any, document: any, password?: any) {
     this.loading = true;
-    var s3ObjectUrl = `${this.userId}/${this.getSelectedItems()}/${document.name}`;
-    // if (type === 'PAN' || type === 'AADHAAR_BACK' || type === 'AADHAAR_FRONT') {
-    //   s3ObjectUrl = `${this.ITR_JSON.userId}/Common/${document.name}`;
-    // }
-    // else {
-    //   s3ObjectUrl = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${document.name}`;
-    // }
-
-    var pass;
-    //,"password":"' + (password ? password : null) + '"
+    let s3ObjectUrl = `${this.userId}/${this.getSelectedItems()}/${document.name}`;
+    let pass;
     if (password) {
       pass = '","password":"' + password + '"';
     }
     else {
       pass = '"';
     }
-    var documentTag = '';
+    let documentTag = '';
     if (this.selectedFileType) {
       documentTag = '","documentTag":"' + this.selectedFileType;
     }
@@ -3200,7 +3191,6 @@ export class DocumentUploadComponent implements OnInit {
     let param = '/itr/cloud/upload'
     this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
       this.loading = false;
-      console.log('uploadDocument responce =>', res)
       if (res.Failed === 'Failed to uploade file!') {
         this.utilsService.showSnackBar(res.Failed)
       } else if (res.Success === 'File successfully uploaded!') {

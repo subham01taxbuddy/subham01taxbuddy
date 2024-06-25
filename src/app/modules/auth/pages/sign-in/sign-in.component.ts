@@ -10,6 +10,7 @@ export class SignInComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // This is intentional
   }
 
 }
