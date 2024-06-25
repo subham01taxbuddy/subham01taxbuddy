@@ -29,6 +29,7 @@ import { ViewCallDetailsComponent } from './calling-reports/daily-calling-report
 import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/view-chat-links.component';
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
+import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
 
 @NgModule({
     imports: [
@@ -64,7 +65,8 @@ import { FilingSlaComponent } from './filing-sla/filing-sla.component';
         ViewCallDetailsComponent,
         ViewChatLinksComponent,
         ClientAddedFilingNotDoneComponent,
-        FilingSlaComponent
+        FilingSlaComponent,
+        PrefillUploadedSummaryNotSentComponent,
     ],
     providers: [JsonToCsvService]
 })
