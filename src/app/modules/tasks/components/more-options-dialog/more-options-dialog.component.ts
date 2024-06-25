@@ -12,7 +12,6 @@ import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
-declare function we_track(key: string, value: any);
 import { ReviseReturnDialogComponent } from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
 import {
   UpdateManualFilingDialogComponent
