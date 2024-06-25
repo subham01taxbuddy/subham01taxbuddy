@@ -848,6 +848,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           return;
         } else {
           console.log('data to active user', data);
+          let loggedInId = this.utilsService.getLoggedInUserID();
           this.loading = true;
           const param = `/leader-assignment?userId=${data.userId}&serviceType=${data.serviceType}&statusId=16`;
           this.userMsService.getMethod(param).subscribe(
@@ -855,7 +856,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               console.log('res after active ', result);
               this.loading = false;
               if (result.success == true) {
-                this.utilsService.showSnackBar('user activated successfully.');
+                if (this.roles.includes('ROLE_LEADER') && result.data.leaderUserId != loggedInId ) {
+                  this.reAssign(data,loggedInId);
+                }else{
+                  this.utilsService.showSnackBar('user activated successfully.');
+                }
               } else {
                 this.utilsService.showSnackBar(
                   'Error while Activate User, Please try again.'
@@ -883,6 +888,50 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+
+  reAssign(data,loggedInId) {
+    // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
+    this.loading = true
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        this.loading =false;
+        return;
+      } else {
+        this.loading = true;
+        let leaderFilter = '';
+          if (this.leaderId) {
+            leaderFilter += `&leaderUserId=${loggedInId}`
+          }
+        const param = `/v2/user-reassignment?userId=${data.userId}&serviceType=${data.serviceType}${leaderFilter}`
+        this.userMsService.getMethod(param).subscribe((res: any) => {
+          this.loading = false;
+          console.log(res);
+          this.utilsService.showSnackBar('user activated &  re assigned successfully.');
+          this.resetFilters();
+          this.loading = false;
+          if (res.success == false) {
+            this.utilsService.showSnackBar(res.error)
+            console.log(res.message)
+          }
+        }, error => {
+          this.loading = false;
+          this.utilsService.showSnackBar('Leader not found active, please try another.');
+          console.log(error);
+        })
+      }
+
+    },error => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
+    });
   }
 
   pageChanged(event) {
