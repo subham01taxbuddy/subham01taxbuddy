@@ -21,6 +21,7 @@ import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-n
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
+import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
 
 
 const routes: Routes = [
@@ -119,6 +120,10 @@ const routes: Routes = [
       {
         path:'filing-sla',
         component:FilingSlaComponent,
+      },
+      {
+        path:'prefill-uploaded-pending-summary',
+        component:PrefillUploadedSummaryNotSentComponent,
       }
     ],
 
