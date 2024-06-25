@@ -466,7 +466,7 @@ export class HousePropertyComponent implements OnInit {
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        name: [obj.name || '', [Validators.required]],
+        name: [obj.name || '', obj?.tdsClaimed ? [Validators.required] : [Validators.required, Validators.maxLength(50)]],
         panNumber: [
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],

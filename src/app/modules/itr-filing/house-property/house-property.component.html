@@ -542,7 +542,7 @@
 
                                   <mat-form-field class="input-field-width" appearance="outline">
                                     <input matInput name="ten[ii]" formControlName="name" pattern="[a-zA-Z ]*" required
-                                      maxlength="40" type="text" trim />
+                                           type="text" trim />
                                     <mat-error *ngIf="ten.get('name').hasError('required')">
                                       Enter tenant name.
                                     </mat-error>
