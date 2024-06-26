@@ -670,7 +670,7 @@ export const ErrorMsgsSchedule = {
   },
   BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO: {
     code: 'BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO',
-    message: 'In case of ITR 3 balance sheet difference needs to be zero or select BOA as "No"',
+    message: 'You are not required to maintain BOA, so either choose 44AA as No or else Fill the B/S and difference should be 0',
     relatedSchedule: 'balanceSheet',
   },
   NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO_AND_MAKE_44AA_FLAG_YES: {
