@@ -149,6 +149,8 @@ export interface ITR_JSON {
   winningsUS115BBJ: WinningUS115BBJ;
   scheduleESOP: ScheduleESOP;
 
+  manualUpdateReason: string;
+
 }
 
 export interface ScheduleESOP {

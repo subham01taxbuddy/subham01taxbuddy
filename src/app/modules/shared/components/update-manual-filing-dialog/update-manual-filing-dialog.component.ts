@@ -48,6 +48,8 @@ export class UpdateManualFilingDialogComponent implements OnInit {
     Validators.minLength(15),
   ]);
   eFillingDate = new UntypedFormControl('', Validators.required);
+
+  manualUpdateReason = new UntypedFormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   itrobj: any;
@@ -104,6 +106,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
               itrTokenNumber: '',
               filingTeamMemberId: this.data.filingTeamMemberId,
               filingSource: 'MANUALLY',
+              manualUpdateReason: this.manualUpdateReason.value
             };
             setTimeout(() => {
               const param = `${ApiEndpoints.itrMs.itrManuallyData}`;

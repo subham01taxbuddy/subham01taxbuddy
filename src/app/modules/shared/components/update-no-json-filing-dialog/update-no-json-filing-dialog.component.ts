@@ -37,6 +37,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   eFillingDate = new UntypedFormControl('', Validators.required);
   itrType = new UntypedFormControl('', Validators.required);
   returnType = new UntypedFormControl('', Validators.required);
+  manualUpdateReason = new UntypedFormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   userProfile: any;
@@ -267,7 +268,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
             itrType: `${this.itrType.value}`,
             itrTokenNumber: '',
             "filingTeamMemberId": this.data.callerAgentUserId,
-            filingSource: "MANUALLY"
+            filingSource: "MANUALLY",
+            manualUpdateReason: this.manualUpdateReason.value
           }
           console.log('Updated Data:', req)
           setTimeout(() => {
