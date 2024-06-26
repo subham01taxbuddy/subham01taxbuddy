@@ -39,15 +39,14 @@ export class AckSuccessComponent implements OnInit, OnDestroy {
   }
   getAckNumber() {
     if (this.utilsService.isNonEmpty(this.ITR_JSON.ackNumber)) {
-      return this.ITR_JSON.ackNumber
+      return this.ITR_JSON.ackNumber;
     } else if (this.utilsService.isNonEmpty(this.DIRECT_UPLOAD_RES)) {
       return this.DIRECT_UPLOAD_RES['ackNo'];
     } else {
-      this.ITR_JSON.ackNumber;
+      return this.ITR_JSON.ackNumber;
     }
   }
   previousRoute() {
-    // TODO
     this.router.navigate(['/pages/itr-filing/users']);
   }
 

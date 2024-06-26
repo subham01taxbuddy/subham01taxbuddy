@@ -119,7 +119,6 @@ const routes: Routes = [
       { path: 'validation-errors', component: ValidationErrorScreenComponent },
       // ],
       // },
-      // { path: 'direct-upload', component: DirectUploadComponent },
       // { path: 'acknowledgement', component: AcknowledgementComponent },
       // { path: 'team-itrs', canActivate: [RoleBaseAuthGuardService], component: MyTeamItrsComponent },
       // { path: 'delay', canActivate: [RoleBaseAuthGuardService], component: DelayComponent },

@@ -140,12 +140,10 @@
 
 .form-control {
     min-height: 44px;
-    border: none;
     border: 1.5px solid #D3D3D3;
     background-color: transparent;
     border-radius: 4px;
     padding: 8px 12px;
-    font-size: 14px;
     font-size: 14px;
 
     &:focus {
@@ -198,7 +196,6 @@
     font-weight: 500;
     line-height: 28px;
     border-radius: 4px;
-    padding: 8px 24px;
     text-align: center;
     padding: 0;
 }
