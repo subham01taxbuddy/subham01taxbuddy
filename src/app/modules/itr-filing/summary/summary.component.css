@@ -664,6 +664,7 @@ table {
 .prefTextContainer{
   margin-left: 10px;
   margin-bottom: 10px;
+  text-align: center;
 }
 .prefText{
   font-style: italic;

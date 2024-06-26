@@ -822,7 +822,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.existingCount = this.smeObj?.['partnerDetails'].additionalIdsCount;
     const totalCount = this.existingCount + this.newCount;
 
-    if (totalCount > 5) {
+    if (totalCount > 10) {
       this.additionalIdsCount.setValue(this.existingCount);
       this.additionalIdsCount.setErrors({ 'totalCountExceeded': true });
     }else {

@@ -159,10 +159,6 @@
                 </table>
               </div>
             </div>
-            <div class="prefTextContainer">
-              <span class="prefText">Prefill Last uploaded on {{ ITR_JSON?.prefillDate | date:'MMMM dd, yyyy' }}</span><br>
-              <span class="prefText">AIS Last uploaded on {{ITR_JSON?.aisLastUploadedDownloadedDate | date:'MMMM dd, yyyy'}}</span>
-            </div>
           </div>
 
           <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
@@ -219,6 +215,13 @@
               }}.00 of your tax return into your bank account number.
               <b>{{ bankArray?.accountNumber }}</b>
             </p>
+          </div>
+        </div>
+
+        <div class="row" style="display:flex; justify-content: center; align-items: center;">
+          <div class="prefTextContainer" style="">
+            <span class="prefText">Prefill Last uploaded on {{ ITR_JSON?.prefillDate | date:'MMMM dd, yyyy' }}</span><br>
+            <span class="prefText">AIS Last uploaded on {{ITR_JSON?.aisLastUploadedDownloadedDate | date:'MMMM dd, yyyy'}}</span>
           </div>
         </div>
 
@@ -305,7 +308,7 @@
                   class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
         <button type="button"
-          *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)' && isValidItr"
+          *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'"
           (click)="confirmSubmitITR()" class="btn grBut pull-right"
           [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'" style="background-color: red"
           [disabled]="!isValidateJson">

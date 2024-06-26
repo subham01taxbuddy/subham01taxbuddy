@@ -277,7 +277,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
           this.exemptIncomesDropdown[1].value === 'AGRI'
             ? [null]
             : [null, Validators.min(0)],
-        incomeDesc:[null]
+        incomeDesc:[null, Validators.maxLength(50)]
       });
       let filtered = this.ITR_JSON.exemptIncomes?.filter(element=> element.natureDesc !== 'AGRI');
       if(filtered?.length == 0) {
@@ -923,7 +923,11 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     const total =
       this.agriIncFormGroup.get('grossAgriculturalReceipts').value -
       otherKeystotal;
-    this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    if(total > 0) {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    } else {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(0);
+    }
     const exemptIncomes = this.getExemptIncomeArray;
 
     const agriIncome = exemptIncomes.controls.find((item) => {

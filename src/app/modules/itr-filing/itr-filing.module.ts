@@ -28,7 +28,6 @@ import { DelayComponent } from './delay/delay.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
-import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component';
 import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
@@ -159,7 +158,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         DelayComponent,
         FilingTasksComponent,
         ShowUserDocumnetsComponent,
-        UpdateManualFilingComponent,
         AddClientDialogComponent,
         PrefillDataComponent,
         CoOwnerComponent,

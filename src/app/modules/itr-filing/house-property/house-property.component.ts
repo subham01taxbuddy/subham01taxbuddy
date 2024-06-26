@@ -366,7 +366,7 @@ export class HousePropertyComponent implements OnInit {
         eligible80EEAAmount: null,
 
         // property details
-        address: ['', Validators.required],
+        address: ['', [Validators.required, Validators.maxLength(50)]],
         city: [
           '',
           [Validators.required, Validators.pattern(AppConstants.charRegex)],
@@ -466,7 +466,8 @@ export class HousePropertyComponent implements OnInit {
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        name: [obj.name || '', [Validators.required]],
+        name: [obj.name || '', obj?.tdsClaimed ? [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]
+            : [Validators.required, Validators.maxLength(50), Validators.pattern(AppConstants.charRegex)]],
         panNumber: [
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],
