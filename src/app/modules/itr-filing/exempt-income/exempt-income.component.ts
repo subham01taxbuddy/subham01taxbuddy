@@ -923,7 +923,11 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     const total =
       this.agriIncFormGroup.get('grossAgriculturalReceipts').value -
       otherKeystotal;
-    this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    if(total > 0) {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    } else {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(0);
+    }
     const exemptIncomes = this.getExemptIncomeArray;
 
     const agriIncome = exemptIncomes.controls.find((item) => {
