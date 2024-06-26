@@ -113,7 +113,6 @@ export class UpdateManualFilingDialogComponent implements OnInit {
               this.itrMsService.putMethod(param, req).subscribe(
                 (res: any) => {
                   console.log(res);
-                  this.updateStatus();
                   this.loading = false;
                   this.utilsService.showSnackBar(
                     'Manual Filing Details updated successfully'
@@ -148,37 +147,6 @@ export class UpdateManualFilingDialogComponent implements OnInit {
       //   }
       // });
     }
-  }
-
-  async updateStatus() {
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-      // this.utilsService.showSnackBar('There is no any active filing year available')
-      return;
-    }
-    const param = '/itr-status';
-    const request = {
-      statusId: 11, // ITR FILED
-      userId: this.data.userId,
-      assessmentYear: this.data.assessmentYear,
-      completed: true,
-      serviceType: 'ITR',
-    };
-
-    // this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(
-      (result) => {
-        console.log('##########################', result['statusId']);
-        // this.utilsService.showSnackBar('Filing status updated successfully.')
-        // this.sendValue.emit(result['statusId']);
-        // this.loading = false;
-      },
-      (err) => {
-        // this.loading = false;
-        // this.utilsService.showSnackBar('Failed to update Filing status.')
-      }
-    );
   }
 
   setFilingDate() {
