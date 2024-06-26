@@ -6,7 +6,7 @@ import { MatBottomSheet, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-
   templateUrl: './knowlarity-notification.component.html',
   styleUrls: ['./knowlarity-notification.component.scss']
 })
-export class KnowlarityNotificationComponent implements OnInit {
+export class KnowlarityNotificationComponent {
 
   phoneNumber = '';
   constructor(
@@ -19,8 +19,7 @@ export class KnowlarityNotificationComponent implements OnInit {
     }, 10000)
   }
 
-  ngOnInit(): void {
-  }
+
 
   close() {
     this.matBottomSheet.dismiss();

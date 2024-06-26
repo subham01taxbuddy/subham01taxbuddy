@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 export class KommunicateSsoService {
   iframe: HTMLIFrameElement;
 
-  constructor() { }
+ 
 
 
   loginKommunicateSdk(token) {

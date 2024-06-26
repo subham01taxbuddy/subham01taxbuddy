@@ -1,6 +1,6 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -40,7 +40,7 @@ export const MY_FORMATS = {
   ],
 })
 
-export class DeleteUserListComponent implements OnInit {
+export class DeleteUserListComponent {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -87,8 +87,6 @@ export class DeleteUserListComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
 
   clearValue() {
     this.mobileNumber.setValue('');
