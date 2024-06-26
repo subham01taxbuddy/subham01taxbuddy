@@ -120,47 +120,51 @@ export class MoreOptionsDialogComponent implements OnInit {
   //   })
   // }
 
-  deleteUser() {
-    // this.isDisable = true;
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        const param =
-        `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
-      this.userMsService.deleteMethod(param).subscribe(
+  deleteUser = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
         (res: any) => {
-          if (res.success) {
-            this.utilsService.showSnackBar(`User deleted successfully!`);
-            // this.isDisable = true;
-            this.dialogRef.close(true);
-
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
+            this.dialogRef.close({ event: 'close', data: 'success' });
+            return reject(res.error);
           } else {
-            this.utilsService.showSnackBar(res.message);
-            // this.isDisable = false;
+            const param = `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+            this.userMsService.deleteMethod(param).toPromise().then(
+              (res: any) => {
+                if (res.success) {
+                  this.utilsService.showSnackBar(`User deleted successfully!`);
+                  this.dialogRef.close(true);
+                  resolve(res);
+                } else {
+                  this.utilsService.showSnackBar(res.message);
+                  reject(res.message);
+                }
+              },
+              (error) => {
+                this.utilsService.showSnackBar(error.message);
+                this.dialogRef.close({ event: 'close', data: 'success' });
+                reject(error);
+              }
+            ).catch((error) => {
+              reject(error);
+            });
           }
         },
         (error) => {
-          // this.isDisable = false;
-          this.utilsService.showSnackBar(error.message);
-          this.dialogRef.close({ event: 'close', data: 'success' });
+          if (error.error && error.error.error) {
+            this.utilsService.showSnackBar(error.error.error);
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          } else {
+            this.utilsService.showSnackBar("An unexpected error occurred.");
+          }
+          reject(error);
         }
       );
-      }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
     });
+  };
 
-  }
 
   goToInvoice() {
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
@@ -354,7 +358,7 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
       return;
     }
-    
+
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
@@ -375,7 +379,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           }
         });
         if (itrSubscriptionFound) {
-          if('ITR' === this.data.serviceType) 
+          if('ITR' === this.data.serviceType)
             this.checkFilerAssignment(action);
           else if('ITRU' === this.data.serviceType){
             const query = {
@@ -393,7 +397,7 @@ export class MoreOptionsDialogComponent implements OnInit {
             "collectionName": "itr",
             "queryType": "FIND_ALL"
           };
-          
+
           this.reportService.query(query).subscribe(
             (res: any) => {
               if(res?.data?.length === 2)

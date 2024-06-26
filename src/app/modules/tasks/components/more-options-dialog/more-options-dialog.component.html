@@ -66,10 +66,13 @@
       (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button> -->
-    <button type="button" title="Delete User" class="delete-user more-new-button" *ngIf="isApplicable(['ROLE_ADMIN'])"
+    <!-- <button type="button" title="Delete User" class="delete-user more-new-button" *ngIf="isApplicable(['ROLE_ADMIN'])"
       (click)="deleteUser()">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
-    </button>
+    </button> -->
+    <app-custom-button  *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button" [actions]="[deleteUser]">
+      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
+    </app-custom-button>
   </span>
   <!-- might be below 'No JSON filing' changes required in april -->
   <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN'])">
