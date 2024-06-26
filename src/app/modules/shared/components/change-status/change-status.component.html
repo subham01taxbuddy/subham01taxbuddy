@@ -62,10 +62,16 @@
       </div>
 
       <div class="col-sm-3" *ngIf="! hideUndoButton">
-        <button class="update-button-new" (click)="addStatus()" tabindex="1">{{data.mode}}</button>
+        <!-- <button class="update-button-new" (click)="addStatus()" tabindex="1">{{data.mode}}</button> -->
+        <app-custom-button tabindex="1" class="update-button-new" [actions]="[addStatus]">
+          {{data.mode}}
+        </app-custom-button>
       </div>
       <div class="col-sm-3" *ngIf="hideUndoButton">
-        <button class="update-button-new" (click)="undoStatus()" tabindex="1">Undo Status</button>
+        <!-- <button class="update-button-new" (click)="undoStatus()" tabindex="1">Undo Status</button> -->
+        <app-custom-button tabindex="1" class="update-button-new" [actions]="[undoStatus]">
+          Undo Status
+        </app-custom-button>
       </div>
       <span class="note1 note" style="flex-basis: content; margin-left: 0px;" *ngIf="hideUndoButton">
         Note - Status will be changed to previous saved status

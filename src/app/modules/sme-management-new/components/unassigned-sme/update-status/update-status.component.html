@@ -25,9 +25,12 @@
     </div>
 
     <div class="card__col-xs-4 card__col-sm-14">
-      <button mat-raised-button color="primary" [disabled]="loading" (click)="addStatus()">
+      <!-- <button mat-raised-button color="primary" [disabled]="loading" (click)="addStatus()">
         Update
-      </button>
+      </button> -->
+      <app-custom-button class="update-button-new"   [actions]="[addStatus]">
+        Update
+      </app-custom-button>
     </div>
   </form>
 </mat-dialog-content>
