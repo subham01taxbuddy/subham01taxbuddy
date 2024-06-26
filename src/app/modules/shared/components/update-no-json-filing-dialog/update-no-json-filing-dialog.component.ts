@@ -279,7 +279,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               this.loading = false;
               if (res.success) {
                 this.utilsService.showSnackBar('Manual Filing Details updated successfully');
-                this.location.back();
+                this.dialogRef.close(true);
               } else {
                 this.utilsService.showSnackBar(res.message);
                 this.dialogRef.close(true);
