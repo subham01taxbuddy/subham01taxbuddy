@@ -690,7 +690,7 @@ export const ErrorMsgsSchedule = {
   },
   NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_NO: {
     code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_No',
-    message: 'In case of Non Speculative Income select BOA as "No"',
+    message: 'There is no non-speculative income, so choose "NO" for BOA under section 44AA.',
     relatedSchedule: 'personalInfo',
   },
   NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET: {
