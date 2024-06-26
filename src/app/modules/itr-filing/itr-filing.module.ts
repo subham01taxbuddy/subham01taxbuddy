@@ -100,7 +100,6 @@ import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
-import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
@@ -225,7 +224,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         BreakUpComponent,
         OtherDeductionsComponent,
         ExemptIncomeComponent,
-        AddAssetsComponent,
         ScheduleEsopComponent,
         NorDetailsDialogComponent,
         UpdateIncomeSourcesComponent

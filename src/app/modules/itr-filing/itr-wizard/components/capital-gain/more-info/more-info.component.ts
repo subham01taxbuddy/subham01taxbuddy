@@ -1,4 +1,3 @@
-import { result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { GridOptions, IsColumnFuncParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
@@ -8,7 +7,6 @@ import { ITR_JSON, PastYearLosses } from 'src/app/modules/shared/interfaces/itr-
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import * as moment from 'moment';
-import { data } from 'jquery';
 import { Location } from "@angular/common";
 
 
@@ -95,12 +93,7 @@ export class MoreInfoComponent implements OnInit {
         pinned: 'left',
         width: 100,
         valueGetter: (params: ValueGetterParams) => {
-          let rowIndex = params.node.rowIndex;
-          if (rowIndex >= 8) {
-            return params.data.assessmentPastYear;
-          } else {
-            return params.data.assessmentPastYear;
-          }
+          return params.data.assessmentPastYear;
         }
       },
       {
