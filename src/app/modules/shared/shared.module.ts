@@ -49,7 +49,6 @@ import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
-import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from './services/request-manager';
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
 import { AddAffiliateIdComponent } from './components/add-affiliate-id/add-affiliate-id.component';
@@ -98,7 +97,6 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         ConfirmDialogComponent,
         MyDialogComponent,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         AddAffiliateIdComponent,
         TwoDigitDecimaNumberDirective,
@@ -165,7 +163,6 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         AgTooltipComponent,
         NumbersOnlyDirective,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         TwoDigitDecimaNumberDirective,
         ViewDocumentsDialogComponent,
