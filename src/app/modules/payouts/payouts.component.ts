@@ -75,7 +75,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   ];
   reasonList=[
     { value: 'ITR filed through Manual mode', name: 'ITR filed through Manual mode' },
-    { value: 'Discount more than 20 percent', name: ' Discount more than 20%' },
+    { value: 'Discount more than 20 percent', name: 'Discount more than 20%' },
+    { value: 'Invoice Not Paid', name: 'Invoice Not Paid'},
     { value: 'Other services', name: 'Other services' },
   ]
   selectedReason:any;
