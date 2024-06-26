@@ -24,7 +24,6 @@ import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from "file-saver/dist/FileSaver";
 
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -962,9 +961,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
-    we_track('Tax Invoice Download', {
-      'User number': data.phone,
-    });
     // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;

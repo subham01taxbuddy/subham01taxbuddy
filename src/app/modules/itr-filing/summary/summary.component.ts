@@ -7063,7 +7063,7 @@ export class SummaryComponent implements OnInit {
       (result: any) => {
         this.loading = false;
         if (result.success) {
-          if (result.data.difference) {
+          if (result.data.difference && !result.data.reasonGiven) {
             this.showIncomeSourcePopup();
           } else {
             this.checkFilerAssignment();
@@ -7146,7 +7146,7 @@ export class SummaryComponent implements OnInit {
                   this.utilsService.showSnackBar(
                     'You can only update the ITR file record when your status is "ITR confirmation received"'
                   );
-                } else {
+                } else if(this.isValidItr){
                   if (confirm('Are you sure you want to file the ITR?'))
                     this.fileITR();
                 }

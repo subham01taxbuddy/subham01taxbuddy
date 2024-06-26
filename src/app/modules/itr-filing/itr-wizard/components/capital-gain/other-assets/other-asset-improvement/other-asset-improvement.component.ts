@@ -88,6 +88,13 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       this.requestManager.init();
       this.requestCompleted(value, this);
     });
+    this.goldCg.assetDetails.sort((a, b) => {
+      if (a.indexCostOfAcquisition > b.indexCostOfAcquisition) {
+        return -1
+      } else {
+        return 1;
+      }
+    })
   }
 
   requestManagerSubscription = null;

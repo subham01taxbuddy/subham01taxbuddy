@@ -308,7 +308,7 @@
                   class="fas fa-download"></i> Download XML</button> -->
         <!-- TODO -->
         <button type="button"
-          *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)' && isValidItr"
+          *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'"
           (click)="confirmSubmitITR()" class="btn grBut pull-right"
           [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'" style="background-color: red"
           [disabled]="!isValidateJson">

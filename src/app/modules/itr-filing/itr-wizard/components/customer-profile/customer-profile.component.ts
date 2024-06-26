@@ -1,5 +1,4 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
-import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
@@ -788,41 +787,6 @@ export class CustomerProfileComponent implements OnInit {
   }
   closeDialog() {
     this.deletedFileData = [];
-  }
-
-  updateManualFiling() {
-    let manulFiling = {
-      userId: this.ITR_JSON.userId,
-      itrId: this.ITR_JSON.itrId,
-      email: this.customerProfileForm.controls['email'].value,
-      contactNumber: this.customerProfileForm.controls['contactNumber'].value,
-      panNumber: this.customerProfileForm.controls['panNumber'].value,
-      aadharNumber: this.customerProfileForm.controls['aadharNumber'].value,
-      aadhaarEnrolmentId:
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
-      assesseeType: this.customerProfileForm.controls['assesseeType'].value,
-      assessmentYear: this.ITR_JSON.assessmentYear,
-      financialYear: this.ITR_JSON.financialYear,
-      isRevised: this.customerProfileForm.controls['isRevised'].value,
-      eFillingCompleted: true,
-      eFillingDate: '',
-      ackNumber: '',
-      itrType: this.customerProfileForm.controls['itrType'].value,
-      itrTokenNumber: '',
-      filingTeamMemberId:
-        this.customerProfileForm.controls['filingTeamMemberId'].value,
-      filingSource: 'MANUALLY',
-    };
-
-    let disposable = this.matDialog.open(UpdateManualFilingComponent, {
-      width: '50%',
-      height: 'auto',
-      data: manulFiling,
-    });
-
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
   }
 
   async getSmeList() {
