@@ -590,7 +590,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         label: [label],
         allowType: [allowance ? allowance : null],
         allowValue: [null],
-        description: [null]
+        description: [null, Validators.maxLength(50)]
       });
       exemptIncomesFormArray.push(formGroup);
       return
@@ -604,7 +604,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       label: [label],
       allowType: [allowance ? allowance.allowanceType : null],
       allowValue: [allowance ? allowance.exemptAmount : null],
-      description: [allowance ? allowance.description : null]
+      description: [allowance ? allowance.description : null, Validators.maxLength(50)]
     });
     exemptIncomesFormArray.push(formGroup);
   }

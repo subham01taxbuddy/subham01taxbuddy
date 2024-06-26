@@ -52,7 +52,7 @@ export class PrefillIdComponent implements OnInit {
   taxComputation: any;
   Copy_ITR_JSON: ITR_JSON;
   isPasswordAvailable: boolean = false;
-  isDownloadAisPrefill:boolean = false;
+  isDownloadAisPrefill: boolean = false;
 
   constructor(
     private router: Router,
@@ -101,9 +101,9 @@ export class PrefillIdComponent implements OnInit {
         }
 
         this.checkAisPrefill();
-        if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
+        if (this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID') {
           this.isPasswordAvailable = true;
-        }else{
+        } else {
           this.isPasswordAvailable = false;
         }
       });
@@ -1420,7 +1420,7 @@ export class PrefillIdComponent implements OnInit {
                 if (ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
-                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
                 } else if (
@@ -6815,6 +6815,8 @@ export class PrefillIdComponent implements OnInit {
           this.loading = false;
           if (result?.status === 'ok') {
             this.utilsService.showSnackBar(result.message);
+            this.showEriView = true;
+            this.router.navigate(['/itr-filing/itr/eri']);
           } else {
             this.utilsService.showSnackBar('Error in updating ERI');
             this.showEriView = true;
@@ -7050,13 +7052,13 @@ export class PrefillIdComponent implements OnInit {
     return this.isPasswordAvailable ? 'Password available for this user' : '';
   }
 
-  checkAisPrefill(){
+  checkAisPrefill() {
     const aisDate = new Date(this.ITR_JSON.aisLastUploadedDownloadedDate);
     const prefillDate = new Date(this.ITR_JSON.prefillDate);
     const currentDate = new Date();
     const sevenDaysAgo = new Date(currentDate);
     sevenDaysAgo.setDate(currentDate.getDate() - 7);
-    if(this.utilsService.isNonEmpty(this.userProfile?.itPortalPassword) && this.userProfile?.itPasswordVerificationStatus === 'VALID' ){
+    if (this.utilsService.isNonEmpty(this.userProfile?.itPortalPassword) && this.userProfile?.itPasswordVerificationStatus === 'VALID') {
       if ((this.ITR_JSON.aisSource === 'DOWNLOAD' && aisDate < sevenDaysAgo) ||
         (this.ITR_JSON.prefillDataSource === 'DOWNLOAD' && prefillDate < sevenDaysAgo) ||
         (this.ITR_JSON.aisSource === 'UPLOAD' && aisDate < sevenDaysAgo) ||
@@ -7065,13 +7067,13 @@ export class PrefillIdComponent implements OnInit {
       } else {
         this.isDownloadAisPrefill = false;
       }
-    }else{
+    } else {
       this.utilsService.showSnackBar('Please Download & Upload the latest AIS/Prefill from Portal !');
     }
   }
 
-  downloadAisPrefill(){
-    if(this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID' ){
+  downloadAisPrefill() {
+    if (this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID') {
       const dialogRef = this.dialog.open(AisCredsDialogComponent, {
         width: '500px',
         data: {
@@ -7081,7 +7083,7 @@ export class PrefillIdComponent implements OnInit {
         },
 
       });
-    }else{
+    } else {
       this.utilsService.showSnackBar('Please verify your IT portal password to proceed,No IT portal’s Credentials Found');
     }
 
