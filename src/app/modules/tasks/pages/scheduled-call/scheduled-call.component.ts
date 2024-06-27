@@ -12,7 +12,6 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UntypedFormControl } from '@angular/forms';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -245,7 +244,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         time: (!this.subPaidScheduleCallList.value) ? this.getCallTime(scheduleCalls[i]['scheduleCallTime']) : '',
         statusName: scheduleCalls[i]['statusName'],
         statusId: scheduleCalls[i]['statusId'],
-        scheduleCallType : scheduleCalls[i]['scheduleCallType'],
+        scheduleCallType: scheduleCalls[i]['scheduleCallType'],
         serviceType:
           scheduleCalls[i]['serviceType'] !== null
             ? scheduleCalls[i]['serviceType']
@@ -382,9 +381,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           } else if (params.data.statusId == 19) {
             return 'Follow-Up';
           }
-          else if(params.data.statusId == 17) {
+          else if (params.data.statusId == 17) {
             return 'Open';
-          } else if(params.data.statusId == 20) {
+          } else if (params.data.statusId == 20) {
             return 'Cancelled';
           }
         },
@@ -455,11 +454,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         },
         valueFormatter: function (params: any) {
           const valueMap = {
-              'business': 'Business Requirements',
-              'lower_deduction': 'LDC Service'
+            'business': 'Business Requirements',
+            'lower_deduction': 'LDC Service'
           };
           return valueMap[params.value] || params.value || '-';
-      }
+        }
       },
       {
         headerName: 'Re-Assign',
@@ -481,7 +480,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
         },
         width: 95,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -504,7 +503,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 65,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -527,7 +526,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
              </button>`;
         },
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -548,7 +547,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           </button>`;
         },
         width: 60,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -566,7 +565,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? true : false,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -599,7 +598,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         width: 150,
         hide: subPaidScheduleCallList ? false : true,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -942,7 +941,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.subPaidScheduleCallList.setValue(false);
@@ -963,17 +961,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
     this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
+
+    if (this.dataOnLoad) {
+      this.search();
     } else {
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
-        //clear grid for loaded data
-        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+      //clear grid for loaded data
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
     }
   }
 
@@ -1014,7 +1008,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  search=(form?, isAgent?, pageChange?): Promise<any> => {
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
     // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
     //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
     //
@@ -1125,7 +1119,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    }).catch(()=>{
+    }).catch(() => {
       this.loading = false;
     })
   }

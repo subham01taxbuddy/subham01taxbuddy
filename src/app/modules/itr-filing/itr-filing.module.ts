@@ -8,7 +8,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
-// import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 import { PersonalInformationComponent } from './itr-wizard/components/personal-information/personal-information.component';
@@ -19,9 +18,7 @@ import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-d
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
-import { DirectUploadComponent } from './direct-upload/direct-upload.component';
 import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
-import { BusinessComponent } from './business/business.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -30,7 +27,6 @@ import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component';
-import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
 import { BusinessIncomeComponent } from './business-income/business-income.component';
@@ -103,7 +99,6 @@ import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
-import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
@@ -147,9 +142,7 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         AckDelayComponent,
         AckFailureComponent,
         // UpdateStatusComponent,
-        DirectUploadComponent,
         MyAssignedItrsComponent,
-        BusinessComponent,
         // WhatsAppDialogComponent,
         // KommunicateDialogComponent,
         // FilingStatusDialogComponent,
@@ -160,7 +153,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         ShowUserDocumnetsComponent,
         AddClientDialogComponent,
         PrefillDataComponent,
-        CoOwnerComponent,
         DeleteConfirmationDialogComponent,
         NriDetailsDialogComponent,
         OtherInformationComponent,
@@ -230,7 +222,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         BreakUpComponent,
         OtherDeductionsComponent,
         ExemptIncomeComponent,
-        AddAssetsComponent,
         ScheduleEsopComponent,
         NorDetailsDialogComponent,
         UpdateIncomeSourcesComponent

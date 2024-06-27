@@ -357,16 +357,12 @@ a.text-l-green:hover {
 /* background */
 
 .sidebar__item:hover {
-    /* color: #05a3bc !important; */
     color: #00deff !important;
-      
-    /* color: orange !important; */
 }
 
 .sidebar__item_active {
-    /* color: #63b12d !important; */
-    color: #ffffff !important;  
-    font-weight:500 !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
 }
 
 

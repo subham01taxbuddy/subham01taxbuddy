@@ -74,6 +74,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
   }
 
+  isAisDocument(document){
+    return document.documentTag === 'AIS_JSON' || document.documentTag === 'AIS' || document.fileName.includes("_AIS_");
+  }
+
   gotoDrive(document) {
     this.loading = true;
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;

@@ -8,7 +8,6 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -17,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';

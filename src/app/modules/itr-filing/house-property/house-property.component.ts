@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
@@ -155,10 +155,10 @@ export class HousePropertyComponent implements OnInit {
   }
 
   usePersonalAddress = false;
-  toggleAddress(){
-    if(this.usePersonalAddress){
+  toggleAddress() {
+    if (this.usePersonalAddress) {
       let address = this.ITR_JSON.address.flatNo + ' ' + this.ITR_JSON.address.premisesName + ' ' +
-          this.ITR_JSON.address.area;
+        this.ITR_JSON.address.area;
       this.housePropertyForm.controls['address'].setValue(address);
       this.housePropertyForm.controls['city'].setValue(this.ITR_JSON.address.city);
 
@@ -177,11 +177,11 @@ export class HousePropertyComponent implements OnInit {
 
   markActive(index) {
     if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
-      if(this.housePropertyForm.valid) {
+      if (this.housePropertyForm.valid) {
         this.saveHpDetails(false);
       } else {
         this.utilsService.showSnackBar(
-            'To Switch/Add new property Please fill in all the mandatory fields in the current property'
+          'To Switch/Add new property Please fill in all the mandatory fields in the current property'
         );
         return;
       }
@@ -320,7 +320,7 @@ export class HousePropertyComponent implements OnInit {
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        isCoOwners:[false,Validators.required],
+        isCoOwners: [false, Validators.required],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -393,7 +393,7 @@ export class HousePropertyComponent implements OnInit {
       });
     } else {
       return this.fb.group({
-        isCoOwners:[false],
+        isCoOwners: [false],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -461,7 +461,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?:boolean, tanNumber?: string } = {}): UntypedFormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?: boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
@@ -488,8 +488,8 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  updateTenantForm(tenant:any){
-    if(tenant.controls['tdsClaimed'].value){
+  updateTenantForm(tenant: any) {
+    if (tenant.controls['tdsClaimed'].value) {
       tenant.controls['tanNumber'].enable();
       tenant.controls['panNumber'].setValue(null);
       tenant.controls['panNumber'].disable();
@@ -550,8 +550,8 @@ export class HousePropertyComponent implements OnInit {
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length-1] as UntypedFormGroup,
-          'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length - 1] as UntypedFormGroup,
+        'accordBtn3', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -567,33 +567,6 @@ export class HousePropertyComponent implements OnInit {
     this.calAnnualValue();
   }
 
-  coOwnerPanValidation() {
-    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
-    // This method is written in utils service for common usablity.
-    let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
-      'panNumber',
-      coOwner.value
-    );
-    let userPanExist = [];
-
-    if (coOwner.value instanceof Array) {
-      userPanExist = coOwner.value.filter(
-        (item) => item.panNumber === this.ITR_JSON.panNumber
-      );
-    }
-
-    if (panRepeat) {
-      this.utilsService.showSnackBar('Co-Owner already present with this PAN.');
-    } else if (userPanExist.length > 0) {
-      this.utilsService.showSnackBar(
-        'Co-Owners PAN can not be same with user PAN.'
-      );
-      panRepeat = true;
-    }
-
-    console.log('Form + coowner=', this.housePropertyForm.valid);
-    return panRepeat;
-  }
 
   calPercentage() {
     const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
@@ -758,8 +731,8 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'annualRentReceived'
       ].updateValueAndValidity();
-      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
-          ? this.currentIndex : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else {
       const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -780,12 +753,12 @@ export class HousePropertyComponent implements OnInit {
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
         tenant.push(this.createTenantForm(
-            {
-              name: element.name,
-              panNumber: element?.panNumber,
-              tanNumber: element?.tanNumber,
-              tdsClaimed: element?.tdsClaimed
-            }
+          {
+            name: element.name,
+            panNumber: element?.panNumber,
+            tanNumber: element?.tanNumber,
+            tdsClaimed: element?.tdsClaimed
+          }
         ));
       });
 
@@ -836,8 +809,8 @@ export class HousePropertyComponent implements OnInit {
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length-1] as UntypedFormGroup,
-          'accordBtn4', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length - 1] as UntypedFormGroup,
+        'accordBtn4', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -992,8 +965,8 @@ export class HousePropertyComponent implements OnInit {
         'interestAmount'
       ].updateValueAndValidity();
 
-      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
-          ? this.currentIndex : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
@@ -1069,9 +1042,9 @@ export class HousePropertyComponent implements OnInit {
       ) {
         hp.loans = [];
         let eligible80EEAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAmount'].value)
-            ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
         let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
-            ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
         let interestAmount = parseInt(this.housePropertyForm.controls['interestAmount']?.value) - eligible80EEAmount - eligible80EEAAmount;
         hp.loans.push({
           interestAmount:

@@ -5,7 +5,6 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { AddNewCourseComponent } from './add-new-course/add-new-course.component';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ReviewService } from '../review/services/review.service';
 import { AgTooltipComponent } from '../shared/components/ag-tooltip/ag-tooltip.component';
@@ -90,7 +89,6 @@ export class AcademyCoursesComponent implements OnInit {
   }
 
   getCourseList(pageChange?){
-    // 'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/course-data?page=0&pageSize=10' \
     if (!pageChange) {
       this.cacheManager.clearCache();
     }
@@ -144,7 +142,7 @@ export class AcademyCoursesComponent implements OnInit {
 
   createRowData(courseListData) {
     console.log('courseListData -> ', courseListData);
-    var courseListArray = [];
+    let courseListArray = [];
     for (let i = 0; i < courseListData.length; i++) {
       let courseListInfo = Object.assign({}, courseListArray[i], {
         courseName: courseListData[i].courseName,

@@ -41,9 +41,9 @@
                 mode="indeterminate"></mat-progress-spinner>
             </div>
             <div class="col-sm-9">
-              <label *ngFor="let file of filesUploaded" class="filename">
+              <div *ngFor="let file of filesUploaded" class="filename">
                 <i class="fa fa-check-circle" style="color: green" aria-hidden="true"></i>&nbsp;{{ file }}
-              </label>
+              </div>
               <br />
             </div>
           </div>

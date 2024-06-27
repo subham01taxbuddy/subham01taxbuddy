@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -7,7 +7,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './accept-email.component.html',
   styleUrls: ['./accept-email.component.scss']
 })
-export class AcceptEmailComponent implements OnInit {
+export class AcceptEmailComponent {
 
   emailAddress = new UntypedFormControl('', [Validators.required]);
   constructor(
@@ -15,8 +15,6 @@ export class AcceptEmailComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: MainDialogData,
   ) {
 
-  }
-  ngOnInit() {
   }
 
   getEmailAddress() {

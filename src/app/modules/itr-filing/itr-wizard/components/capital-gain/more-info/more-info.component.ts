@@ -1,4 +1,3 @@
-import { result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { GridOptions, IsColumnFuncParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
@@ -8,8 +7,7 @@ import { ITR_JSON, PastYearLosses } from 'src/app/modules/shared/interfaces/itr-
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { CustomDateComponent } from 'src/app/modules/shared/date.component';
 import * as moment from 'moment';
-import { data } from 'jquery';
-import {Location} from "@angular/common";
+import { Location } from "@angular/common";
 
 
 @Component({
@@ -54,7 +52,7 @@ export class MoreInfoComponent implements OnInit {
 
   createPastYearLoss(year) {
     return {
-      hasEdit:false,
+      hasEdit: false,
       pastYear: null,
       assessmentPastYear: year,
       dateofFilling: '',
@@ -95,12 +93,7 @@ export class MoreInfoComponent implements OnInit {
         pinned: 'left',
         width: 100,
         valueGetter: (params: ValueGetterParams) => {
-          let rowIndex = params.node.rowIndex;
-          if (rowIndex >= 8) {
-            return params.data.assessmentPastYear;
-          } else {
-            return params.data.assessmentPastYear;
-          }
+          return params.data.assessmentPastYear;
         }
       },
       {
@@ -143,8 +136,8 @@ export class MoreInfoComponent implements OnInit {
           }
         },
         valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-          var newValInt = parseInt(params.newValue);
-          var valueChanged = params.data.housePropertyLoss !== newValInt;
+          let newValInt = parseInt(params.newValue);
+          let valueChanged = params.data.housePropertyLoss !== newValInt;
           if (valueChanged) {
             params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
           }
@@ -188,8 +181,8 @@ export class MoreInfoComponent implements OnInit {
               }
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-              var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
+              let newValInt = parseInt(params.newValue);
+              let valueChanged = params.data.broughtForwordBusinessLoss !== newValInt;
               if (valueChanged) {
                 params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
@@ -220,8 +213,8 @@ export class MoreInfoComponent implements OnInit {
               }
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-              var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.speculativeBusinessLoss !== newValInt;
+              let newValInt = parseInt(params.newValue);
+              let valueChanged = params.data.speculativeBusinessLoss !== newValInt;
               if (valueChanged) {
                 params.data.speculativeBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
@@ -266,8 +259,8 @@ export class MoreInfoComponent implements OnInit {
               }
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-              var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.STCGLoss !== newValInt;
+              let newValInt = parseInt(params.newValue);
+              let valueChanged = params.data.STCGLoss !== newValInt;
               if (valueChanged) {
                 params.data.STCGLoss = newValInt ? newValInt : params.oldValue;
               }
@@ -300,8 +293,8 @@ export class MoreInfoComponent implements OnInit {
               }
             },
             valueSetter: (params: ValueSetterParams) => {  //to make sure user entered number only
-              var newValInt = parseInt(params.newValue);
-              var valueChanged = params.data.LTCGLoss !== newValInt;
+              let newValInt = parseInt(params.newValue);
+              let valueChanged = params.data.LTCGLoss !== newValInt;
               if (valueChanged) {
                 params.data.LTCGLoss = newValInt ? newValInt : params.oldValue;
               }
@@ -406,7 +399,6 @@ export class MoreInfoComponent implements OnInit {
   }
 
   continue() {
-    //reinitialise the objects so as to get the data updated in other tabs
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     let isError = false;

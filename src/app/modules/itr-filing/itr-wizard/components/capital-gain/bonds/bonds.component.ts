@@ -3,18 +3,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { GridOptions } from 'ag-grid-community';
 import { Bonds, Deduction, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BondsDebentureComponent } from '../bonds-debenture/bonds-debenture.component';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {Location} from "@angular/common";
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-bonds',
   templateUrl: './bonds.component.html',
   styleUrls: ['./bonds.component.scss']
 })
-export class BondsComponent implements OnInit {
+export class BondsComponent {
   public bondsGridOptions: GridOptions;
   public deductionGridOptions: GridOptions;
   public zeroBondsGridOptions: GridOptions;
@@ -70,7 +69,6 @@ export class BondsComponent implements OnInit {
     public utilsService: UtilsService,
     public matDialog: MatDialog,
     public snackBar: MatSnackBar,
-    private itrMsService: ItrMsService,
     public location: Location
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -135,8 +133,7 @@ export class BondsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
+
 
   getBondsTableData(rowsData) {
     this.bondsGridOptions = <GridOptions>{
@@ -698,24 +695,24 @@ export class BondsComponent implements OnInit {
     }
     console.log(zeroBondData);
     if (bondIndex >= 0) {
-      if(bondData.assetDetails.length > 0) {
+      if (bondData.assetDetails.length > 0) {
         this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
-      } else{
+      } else {
         this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
       }
     } else {
-      if(bondData.assetDetails.length > 0) {
+      if (bondData.assetDetails.length > 0) {
         this.Copy_ITR_JSON.capitalGain.push(bondData);
       }
     }
     if (zeroBondIndex >= 0) {
-      if(zeroBondData.assetDetails.length > 0) {
+      if (zeroBondData.assetDetails.length > 0) {
         this.Copy_ITR_JSON.capitalGain[zeroBondIndex] = zeroBondData;
       } else {
         this.Copy_ITR_JSON.capitalGain.splice(zeroBondIndex, 1);
       }
     } else {
-      if(zeroBondData.assetDetails.length) {
+      if (zeroBondData.assetDetails.length) {
         this.Copy_ITR_JSON.capitalGain.push(zeroBondData);
       }
     }

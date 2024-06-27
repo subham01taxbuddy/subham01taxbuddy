@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -8,9 +8,9 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   templateUrl: './add-affiliate-id.component.html',
   styleUrls: ['./add-affiliate-id.component.scss']
 })
-export class AddAffiliateIdComponent implements OnInit {
+export class AddAffiliateIdComponent {
   loginSMEInfo: any;
-  affiliateId = new UntypedFormControl('', [Validators.required,Validators.email])
+  affiliateId = new UntypedFormControl('', [Validators.required, Validators.email])
 
   constructor(
     public dialogRef: MatDialogRef<AddAffiliateIdComponent>,
@@ -20,8 +20,7 @@ export class AddAffiliateIdComponent implements OnInit {
     this.loginSMEInfo = userInfo[0];
   }
 
-  ngOnInit(): void {
-  }
+
 
   closeDialog(status) {
     let emailStr = this.affiliateId.value.replaceAll('@', 'at');

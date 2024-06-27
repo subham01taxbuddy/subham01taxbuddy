@@ -1,15 +1,12 @@
-import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
 import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
-import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { map, Observable, startWith } from 'rxjs';
 import { AddSubscriptionComponent } from './add-subscription/add-subscription.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SmeListDropDownComponent } from "../../../shared/components/sme-list-drop-down/sme-list-drop-down.component";

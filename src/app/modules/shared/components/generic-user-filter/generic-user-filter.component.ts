@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { AppConstants } from '../../constants';
 
@@ -7,7 +7,7 @@ import { AppConstants } from '../../constants';
   templateUrl: './generic-user-filter.component.html',
   styleUrls: ['./generic-user-filter.component.scss']
 })
-export class GenericUserFilterComponent implements OnInit {
+export class GenericUserFilterComponent {
   @Output() onChange = new EventEmitter();
   searchValue = new UntypedFormControl('');
   searchKey: any;
@@ -26,13 +26,8 @@ export class GenericUserFilterComponent implements OnInit {
     return this._clearUserFilter;
 
   }
-  constructor() {
 
-  }
-
-  ngOnInit(): void {
-  }
-  clearValue(){
+  clearValue() {
     this.searchValue.setValue('');
   }
   changeInput() {
@@ -62,7 +57,7 @@ export class GenericUserFilterComponent implements OnInit {
         this.searchValue.updateValueAndValidity();
         break;
       case 'invoiceNo':
-        this.searchValue.setValidators([Validators.required ]);
+        this.searchValue.setValidators([Validators.required]);
         this.searchValue.updateValueAndValidity();
         break;
       case 'emailId':

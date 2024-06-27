@@ -36,7 +36,6 @@
             </form>
         </div>
         <div class="col-sm-4">
-            <!-- <form class="example-form"> -->
             <mat-label> Which Document?:</mat-label>
             <mat-form-field appearance="outline" class="small-inp small-inp no-height">
                 <mat-label>Select option</mat-label>
@@ -44,28 +43,15 @@
                     [disabled]="isSelectFileTypeAvailable()">
                     <mat-option> Clear Selection</mat-option>
                     <mat-option *ngFor="let doc of docType" [value]="doc.value"
-                    [disabled]="!(doc.tree === this.getSelectedItems().split('/')[0] || doc.newTree === this.getSelectedItems().split('/')[0])">
+                        [disabled]="!(doc.tree === this.getSelectedItems().split('/')[0] || doc.newTree === this.getSelectedItems().split('/')[0])">
                         {{doc.label}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <!-- </form> -->
         </div>
         <div class="col-sm-12 spsTp bdrTp">
-            <!-- <select (change)="clearDocVal()" #typeOfDoc>
-      <option value="" disabled>Select option</option>
-      <option *ngFor="let doc of docType" [value]="doc.value">
-          {{doc.label}}
-      </option>
-  </select>&nbsp;<span style="color: red;">&#42;</span>&nbsp; -->
-
             <input type="file" id="input-file-id" hidden #file (change)="uploadFile($event)"
                 accept=".pdf, .jpg, .jpeg, .png, .xls, .doc, .xlsx, .docx">
-            <!-- <button class="sendBtn" mdButton (click)="upload()">Upload Media File</button> -->
-
-
-            <!-- <button [disabled]="!uploadDoc"
-      (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">Upload</button> -->
             <button class="upldBtn mvRth2" [disabled]="!getSelectedItems() || !selectedFileType || !uploadDoc"
                 title="Click to upload selected file"
                 (click)="checkDocPassProtected(selectedFileType, uploadDoc, filePassword)">
@@ -77,11 +63,11 @@
                 <mat-icon class="pd-10">attachment</mat-icon> Attach
             </button>
 
-            <label *ngIf="uploadDoc">{{uploadDoc.name}}</label>&nbsp;
+            <div *ngIf="uploadDoc">{{uploadDoc.name}}</div>&nbsp;
 
 
             <div *ngIf="isPassProtected" style="margin: 20px;">
-                <label><b>Enter Password :</b></label>
+                <div><b>Enter Password :</b></div>
                 <input type="text" placeholder="Enter Password" [(ngModel)]="filePassword">
             </div>
         </div>
@@ -89,8 +75,3 @@
     </div>
 
 </div>
-
-
-
-
-<!-- <h4>Basic mat-select</h4> -->
