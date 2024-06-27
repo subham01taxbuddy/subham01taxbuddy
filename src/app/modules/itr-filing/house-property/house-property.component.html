@@ -572,38 +572,38 @@
                                 </div>
                               </div>
 
-<!--                              <div class="hp4-3">-->
-<!--                                <div class="field">-->
-<!--                                  <div class="field-label">-->
-<!--                                    <span class="span">Whether TDS Credit is claimed </span>-->
-<!--                                  </div>-->
-<!--                                  <div class="custom-control custom-checkbox tenant-checkbox">-->
-<!--                                    <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
-<!--                                            type="checkbox" name="ten[i]" formControlName="tdsClaimed"-->
-<!--                                    (change)="updateTenantForm(ten)"/>-->
-<!--                                  </div>-->
-<!--                                </div>-->
-<!--                              </div>-->
+                              <div class="hp4-3">
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">Whether TDS Credit is claimed </span>
+                                  </div>
+                                  <div class="custom-control custom-checkbox tenant-checkbox">
+                                    <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                            type="checkbox" name="ten[i]" formControlName="tdsClaimed"
+                                    (change)="updateTenantForm(ten)"/>
+                                  </div>
+                                </div>
+                              </div>
 
-<!--                              <div class="hp4-3">-->
-<!--                                <div class="field">-->
-<!--                                  <div class="field-label">-->
-<!--                                    <span class="span">PAN/TAN of Tenant </span>-->
-<!--                                  </div>-->
+                              <div class="hp4-3">
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">PAN/TAN of Tenant </span>
+                                  </div>
 
-<!--                                  <mat-form-field appearance="outline" class="input-field-width">-->
-<!--                                    <input matInput name="ten[i]"-->
-<!--                                           matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."-->
-<!--                                      matTooltipClass="tab-tooltip" matTooltipPosition="above"-->
-<!--                                      formControlName="tanNumber" maxlength="10" type="text" trim upperCase-->
-<!--                                      matTooltipPosition="above" matTooltipClass="error-tooltip"-->
-<!--                                    [disabled]="ten.get('tdsClaimed').value !== true"/>-->
-<!--                                    <mat-error *ngIf="ten.get('tanNumber').hasError('pattern')">-->
-<!--                                      Enter valid TAN.-->
-<!--                                    </mat-error>-->
-<!--                                  </mat-form-field>-->
-<!--                                </div>-->
-<!--                              </div>-->
+                                  <mat-form-field appearance="outline" class="input-field-width">
+                                    <input matInput name="ten[i]"
+                                           matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
+                                      matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                      formControlName="tanNumber" maxlength="10" type="text" trim upperCase
+                                      matTooltipPosition="above" matTooltipClass="error-tooltip"
+                                    [disabled]="ten.get('tdsClaimed').value !== true"/>
+                                    <mat-error *ngIf="ten.get('tanNumber').hasError('pattern')">
+                                      Enter valid TAN.
+                                    </mat-error>
+                                  </mat-form-field>
+                                </div>
+                              </div>
 
 
                               <div class="hp4-4">
