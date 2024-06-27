@@ -15,6 +15,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { environment } from '../../../../../../environments/environment';
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-old-vs-new',
@@ -589,6 +590,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     //   ).controls['everOptedOutOfNewRegime'].disable();
     // }
   }
+
+  resultOld:any;
+  resultNew:any;
 
   ngOnInit(): void {
     this.loading = true;
@@ -1752,168 +1756,184 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       }
     } else {
       const param = '/tax/old-vs-new';
-      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-        (result: any) => {
-          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          console.log('result is=====', result);
-          this.newSummaryIncome = result.data.newRegime;
-          this.oldSummaryIncome = result.data.oldRegime;
 
-          this.particularsArray = [
-            {
-              label: 'Income from Salary',
-              old: this.oldSummaryIncome?.taxSummary.salary,
-              new: this.newSummaryIncome?.taxSummary.salary,
-              py: this.pySummary ? this.pySummary?.taxSummary.salary : 0,
-            },
-            {
-              label: 'Income from House Property',
-              old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
-              new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.housePropertyIncome : 0,
-            },
-            {
-              label: 'Income from Business and Profession',
-              old: this.getCrypto(this.oldSummaryIncome, 'business'),
-              new: this.getCrypto(this.newSummaryIncome, 'business'),
-              py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
-            },
-            {
-              label: 'Income from Capital Gains',
-              old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
-              new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
-              py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
-            },
-            //  {
-            //   label: 'Income from Crypto',
-            //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-            //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
-            // },
-            {
-              label: 'Income from Other Sources',
-              old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
-                + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
-              new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-                + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
-              py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-                + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
-            },
-            {
-              label: 'Total Headwise Income',
-              old: this.oldSummaryIncome?.taxSummary.totalIncome,
-              new: this.newSummaryIncome?.taxSummary.totalIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
-            },
-            {
-              label: 'CYLA',
-              old:
-                this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-              new:
-                this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-              py: this.pySummary ?
-                this.pySummary?.taxSummary.currentYearLossIFHP +
-                this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
-            },
-            {
-              label: 'BFLA',
-              old: Math.abs(
-                this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
-              ),
-              new: Math.abs(
-                this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
-              ),
-              py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
-            },
-            {
-              label: 'Gross Total Income',
-              old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
-              new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
-            },
-            {
-              label: 'Deduction',
-              old: this.oldSummaryIncome?.taxSummary.totalDeduction,
-              new: this.newSummaryIncome?.taxSummary.totalDeduction,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
-            },
-            {
-              label: 'Total Income',
-              old: this.oldSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
-              new: this.newSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalIncomeAfterDeductionIncludeSR : 0,
-            },
-            {
-              label: 'CFL',
-              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
-            },
-            {
-              label: 'Gross Tax Liability',
-              old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
-              new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-              py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
-            },
-            {
-              label: 'Interest and Fees - 234 A/B/C/F',
-              old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
-              new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-              py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
-            },
-            {
-              label: 'Aggregate Liability',
-              old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
-              new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-              py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
-            },
-            {
-              label: 'Tax Paid',
-              old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
-              new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
-            },
-            {
-              label: 'Tax Payable / (Refund)',
-              old:
-                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
-                  : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
-              new:
-                this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
-                  : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
-              py: this.pySummary ?
-                (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
-                  : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
-            },
-          ];
-
-          this.assessment = this.ITR_JSON.regime === 'NEW' ? this.newSummaryIncome : this.oldSummaryIncome;
-          this.setBfla();
-          this.setCgQuarterWiseBreakUp();
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'The below displayed calculations are as of Taxbuddys calculation'
-          );
+      forkJoin([
+        this.itrMsService.postMethod('/tax/old-regime', this.ITR_JSON),
+        this.itrMsService.postMethod('/tax/new-regime', this.ITR_JSON)
+      ]).subscribe({
+        next: ([data1, data2]) => {
+          this.resultOld = data1;
+          this.resultNew = data2;
+          // console.log('result is=====', data1, data2);
+          // Process the results
+          this.displayComparison();
         },
-        (error) => {
+        error: (error) => {
+          // this.error = error;
+          console.error('Error fetching data:', error);
           this.loading = false;
           this.errorMessage =
-            'We are processing your request, Please wait......';
+              'We are processing your request, Please wait......';
           if (error) {
             this.errorMessage =
-              'We are unable to display your summary,Please try again later.';
+                'We are unable to display your summary,Please try again later.';
           }
           console.log('In error method===', error);
+        },
+        complete: () => {
+          this.loading = false;
         }
-      );
+      });
+
     }
 
     this.dueDateCheck();
     this.allowNewRegime = this.ITR_JSON.isLate === 'N' && this.ITR_JSON.isRevised === 'Y';
+  }
+
+  displayComparison(){
+    this.newSummaryIncome = this.resultNew;
+    this.oldSummaryIncome = this.resultOld;
+
+    this.particularsArray = [
+      {
+        label: 'Income from Salary',
+        old: this.oldSummaryIncome?.taxSummary.salary,
+        new: this.newSummaryIncome?.taxSummary.salary,
+        py: this.pySummary ? this.pySummary?.taxSummary.salary : 0,
+      },
+      {
+        label: 'Income from House Property',
+        old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+        new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.housePropertyIncome : 0,
+      },
+      {
+        label: 'Income from Business and Profession',
+        old: this.getCrypto(this.oldSummaryIncome, 'business'),
+        new: this.getCrypto(this.newSummaryIncome, 'business'),
+        py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
+      },
+      {
+        label: 'Income from Capital Gains',
+        old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+        new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
+        py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
+      },
+      //  {
+      //   label: 'Income from Crypto',
+      //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+      //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+      // },
+      {
+        label: 'Income from Other Sources',
+        old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
+            + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+        new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+            + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+        py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
+                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+            + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+      },
+      {
+        label: 'Total Headwise Income',
+        old: this.oldSummaryIncome?.taxSummary.totalIncome,
+        new: this.newSummaryIncome?.taxSummary.totalIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
+      },
+      {
+        label: 'CYLA',
+        old:
+            this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+            this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+        new:
+            this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+            this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+        py: this.pySummary ?
+            this.pySummary?.taxSummary.currentYearLossIFHP +
+            this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
+      },
+      {
+        label: 'BFLA',
+        old: Math.abs(
+            this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+        ),
+        new: Math.abs(
+            this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+        ),
+        py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
+      },
+      {
+        label: 'Gross Total Income',
+        old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+        new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
+      },
+      {
+        label: 'Deduction',
+        old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+        new: this.newSummaryIncome?.taxSummary.totalDeduction,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
+      },
+      {
+        label: 'Total Income',
+        old: this.oldSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+        new: this.newSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalIncomeAfterDeductionIncludeSR : 0,
+      },
+      {
+        label: 'CFL',
+        old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+        new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+        py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
+      },
+      {
+        label: 'Gross Tax Liability',
+        old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+        new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+        py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
+      },
+      {
+        label: 'Interest and Fees - 234 A/B/C/F',
+        old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+        new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+        py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
+      },
+      {
+        label: 'Aggregate Liability',
+        old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+        new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+        py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
+      },
+      {
+        label: 'Tax Paid',
+        old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+        new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
+      },
+      {
+        label: 'Tax Payable / (Refund)',
+        old:
+            this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
+                : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
+        new:
+            this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
+                : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
+        py: this.pySummary ?
+            (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
+                : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
+      },
+    ];
+
+    this.assessment = this.ITR_JSON.regime === 'NEW' ? this.newSummaryIncome : this.oldSummaryIncome;
+    this.setBfla();
+    this.setCgQuarterWiseBreakUp();
+    this.loading = false;
+    this.utilsService.showSnackBar(
+        'The below displayed calculations are as of Taxbuddys calculation'
+    );
   }
 
   getITRType() {
