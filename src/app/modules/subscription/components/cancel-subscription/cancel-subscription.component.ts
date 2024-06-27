@@ -623,7 +623,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
           data: {
             userId: client.userId,
             clientName: client.name,
-            serviceType: client.serviceType,
+            serviceType: client.servicesType,
             clientMobileNumber: (client?.mobileNumber) ? (client?.mobileNumber) : ''
           }
         })
@@ -649,7 +649,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.servicesType
       }
     })
 
