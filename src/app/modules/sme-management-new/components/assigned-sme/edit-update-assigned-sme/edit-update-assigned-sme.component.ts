@@ -859,7 +859,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.isBankDetailsFormChange = true;
   }
 
-  updateSmeDetails() {
+  updateSmeDetails = async (): Promise<void> => {
     const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
 
     if (this.smeFormGroup.valid && this.roles.valid) {
@@ -1012,20 +1012,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if (this.callingNumber.valid) {
       this.smeObj.callingNumber = this.callingNumber.value;
-      this.serviceApiCall(this.smeObj);
-      setTimeout(() => {
+      try {
+        const res = await this.serviceApiCall(this.smeObj);
         if (this.updateSuccessful) {
-          this.loading = false;
-          this._toastMessageService.alert(
-            'success',
-            'SME details updated successfully'
-          );
+          this._toastMessageService.alert('success', 'SME details updated successfully');
           this.location.back();
         }
-      }, 500);
-    }else{
+      } catch (error) {
+        this._toastMessageService.alert('error', 'failed to update.');
+      }
+    } else {
       this.utilsService.showSnackBar('Please Enter Valid Calling Number');
-        return;
     }
   }
 
@@ -1097,13 +1094,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(date)
   }
 
-  verifyBankDetails() {
+  verifyBankDetails=():Promise<any> =>{
     if (this.bankDetailsFormGroup.valid) {
       this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-      this.userMsService.getMethod(param).subscribe((res: any) => {
+      return this.userMsService.getMethod(param).toPromise().then((res: any) => {
         this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
@@ -1124,6 +1121,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
           return;
         }
+      }).catch((error)=>{
+        this.loading = false;
+        console.log(error);
       });
     } else {
       this.bankDetailsFormGroup.markAllAsTouched();

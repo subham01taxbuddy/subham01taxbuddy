@@ -17,7 +17,7 @@ export class CustomButtonComponent {
   isLoading = false;
 
   async handleClick() {
-    if (this.disabled) return;
+    if (this.disabled || this.isLoading) return;
     this.isLoading = true;
     try {
       for (let i = 0; i < this.actions.length; i++) {
