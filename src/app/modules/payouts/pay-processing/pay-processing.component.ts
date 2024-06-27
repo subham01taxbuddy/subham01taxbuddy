@@ -295,6 +295,7 @@ export class PayProcessingComponent implements OnInit {
   addAdjustment(){
     this.loading =true;
     let param = '';
+    this.showMessage ='Adjustment Started Please Do Not Close the Screen or Move out'
     this.itrMsService.addAdjustment(param).subscribe((response: any) => {
       if (response.success) {
         // this.loading = false;
@@ -338,7 +339,8 @@ export class PayProcessingComponent implements OnInit {
       userId: userId,
       accountNumber:accountNumber
     };
-    this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
+
+    // this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
 
     let param = 'partner/payout/generate-csv';
     this.itrMsService.downloadLambda(param,request).subscribe((response: any) => {
