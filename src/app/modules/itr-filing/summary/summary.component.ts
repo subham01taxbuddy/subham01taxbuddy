@@ -7036,7 +7036,8 @@ export class SummaryComponent implements OnInit {
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
     // this.checkFilerAssignment();
-    this.checkIncomeOfSources();
+    this.checkFilerAssignment();
+    // this.checkIncomeOfSources(); // disabled for now
     //       // console.log(res, 'Paid');
     //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
     //       this.utilsService.showSnackBar(
