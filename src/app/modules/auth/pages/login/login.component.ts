@@ -140,6 +140,9 @@ export class LoginComponent implements OnInit {
       if(allowedUsers.filter(value => value === userNumber).length > 0){
         sessionStorage.setItem('CG_MODULE', 'YES');
       }
+      if(userNumber === "9324957908"){
+        sessionStorage.setItem("SOI", "true");
+      }
     }
   }
 
