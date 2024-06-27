@@ -15,7 +15,6 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
-import { FilingStatusDialogComponent } from 'src/app/modules/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
@@ -26,8 +25,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
-import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
-import {DomSanitizer} from "@angular/platform-browser";
+import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-filings',
@@ -81,7 +80,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   itrType = new UntypedFormControl('');
   returnType = new UntypedFormControl('');
   isEverified = new UntypedFormControl('');
-  paymentStatus = new  UntypedFormControl();
+  paymentStatus = new UntypedFormControl();
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
@@ -91,7 +90,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'true', name: 'True' },
     { value: 'false', name: 'False' },
   ];
-  paymentStatusValues=[
+  paymentStatusValues = [
     { value: 'Paid', name: 'Paid' },
     { value: 'Unpaid', name: 'Unpaid' },
   ]
@@ -367,47 +366,47 @@ export class FilingsComponent implements OnInit, OnDestroy {
       console.log('My Params:', param);
       param = param + `${userFilter}`;
       return this.reportService.getMethod(param).toPromise().then((res: any) => {
-          if (res.success == false) {
-            this.toastMsgService.alert('error', res.message);
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
-            this.config.totalItems = 0;
-          }
-          console.log('filingTeamMemberId: ', res);
-          // TODO Need to update the api here to get the proper data like user management
-          if (
-            res?.data?.content instanceof Array &&
-            res?.data?.content?.length > 0
-          ) {
-            this.itrDataList = res?.data?.content;
-            this.config.totalItems = res?.data?.totalElements;
-            this.myItrsGridOptions.api?.setRowData(
-              this?.createOnSalaryRowData(this?.itrDataList)
-            );
-            this.cacheManager.initializeCache(this?.itrDataList);
+        if (res.success == false) {
+          this.toastMsgService.alert('error', res.message);
+          this.myItrsGridOptions.api?.setRowData(
+            this.createOnSalaryRowData([])
+          );
+          this.config.totalItems = 0;
+        }
+        console.log('filingTeamMemberId: ', res);
+        // TODO Need to update the api here to get the proper data like user management
+        if (
+          res?.data?.content instanceof Array &&
+          res?.data?.content?.length > 0
+        ) {
+          this.itrDataList = res?.data?.content;
+          this.config.totalItems = res?.data?.totalElements;
+          this.myItrsGridOptions.api?.setRowData(
+            this?.createOnSalaryRowData(this?.itrDataList)
+          );
+          this.cacheManager.initializeCache(this?.itrDataList);
 
-            const currentPageNumber = pageNo + 1;
-            this.cacheManager.cachePageContent(
-              currentPageNumber,
-              this?.itrDataList
-            );
-            this.config.currentPage = currentPageNumber;
+          const currentPageNumber = pageNo + 1;
+          this.cacheManager.cachePageContent(
+            currentPageNumber,
+            this?.itrDataList
+          );
+          this.config.currentPage = currentPageNumber;
+        } else {
+          this.itrDataList = [];
+          this.config.totalItems = 0;
+          this.myItrsGridOptions.api?.setRowData(
+            this.createOnSalaryRowData([])
+          );
+          if (res.message) {
+            this.toastMsgService.alert('error', res.message);
           } else {
-            this.itrDataList = [];
-            this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
-            if (res.message) {
-              this.toastMsgService.alert('error', res.message);
-            } else {
-              this.toastMsgService.alert('error', 'No Data Found');
-            }
+            this.toastMsgService.alert('error', 'No Data Found');
           }
-          this.loading = false;
-          return resolve(true);
-        },
+        }
+        this.loading = false;
+        return resolve(true);
+      },
         (error) => {
           this.myItrsGridOptions.api?.setRowData(
             this.createOnSalaryRowData([])
@@ -418,13 +417,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return resolve(false);
         }
       );
-    }).catch(()=>{
+    }).catch(() => {
       this.myItrsGridOptions.api?.setRowData(
         this.createOnSalaryRowData([])
       );
       this.config.totalItems = 0;
       this.toastMsgService.alert('error', 'No Data Found ');
-      this.loading =false;
+      this.loading = false;
     });
   }
 
@@ -1060,16 +1059,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   }
 
-  openFilingStatusDialog(data) {
-    let disposable = this.dialog.open(FilingStatusDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data,
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
+
   openReviseReturnDialog(data) {
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
       (res: any) => {

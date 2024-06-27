@@ -42,9 +42,6 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
-import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
-import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
-import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
 import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
@@ -73,10 +70,7 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         MatSelectComponent,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
@@ -144,10 +138,7 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         AgGridModule,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,

@@ -113,7 +113,6 @@ const routes: Routes = [
       { path: 'validation-errors', component: ValidationErrorScreenComponent },
       // ],
       // },
-      // { path: 'acknowledgement', component: AcknowledgementComponent },
       // { path: 'team-itrs', canActivate: [RoleBaseAuthGuardService], component: MyTeamItrsComponent },
       // { path: 'delay', canActivate: [RoleBaseAuthGuardService], component: DelayComponent },
       // { path: 'tasks', component: FilingTasksComponent },

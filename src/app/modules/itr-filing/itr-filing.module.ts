@@ -17,7 +17,6 @@ import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
-import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -134,14 +133,10 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         TaxesPaidComponent,
         DeclarationComponent,
         SummaryComponent,
-        AcknowledgementComponent,
         AckSuccessComponent,
         AckDelayComponent,
         AckFailureComponent,
-        // UpdateStatusComponent,
-        // WhatsAppDialogComponent,
         // KommunicateDialogComponent,
-        // FilingStatusDialogComponent,
         DocumentUploadComponent,
         ReviseReturnDialogComponent,
         DelayComponent,
