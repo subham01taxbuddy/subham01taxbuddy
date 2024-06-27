@@ -214,7 +214,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           rowData.forEach(element => {
             selectedRows.forEach(item => {
               item.headOfIncome = result.headOfIncome;
-              if (element.srNo === element.srNo) {
+              if (element.srNo === item.srNo) {
                 element = item;
               }
             });

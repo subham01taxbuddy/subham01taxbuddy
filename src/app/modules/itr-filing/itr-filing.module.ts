@@ -18,7 +18,6 @@ import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-d
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
 import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
-import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
@@ -46,8 +45,6 @@ import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/s
 import { PagesModule } from 'src/app/pages/pages.module';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 import { OtherInformationComponent } from './itr-wizard/components/other-information/other-information.component';
-import { UnlistedSharesComponent } from './itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component';
-import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
 import { DonationsComponent } from './itr-wizard/components/donations/donations.component';
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
@@ -142,7 +139,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         AckDelayComponent,
         AckFailureComponent,
         // UpdateStatusComponent,
-        MyAssignedItrsComponent,
         // WhatsAppDialogComponent,
         // KommunicateDialogComponent,
         // FilingStatusDialogComponent,
@@ -156,8 +152,6 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         DeleteConfirmationDialogComponent,
         NriDetailsDialogComponent,
         OtherInformationComponent,
-        UnlistedSharesComponent,
-        DirectorInCompanyComponent,
         CapitalGainComponent,
         LandAndBuildingComponent,
         LabFormComponent,

@@ -12,9 +12,7 @@ import { formatDate, TitleCasePipe } from '@angular/common';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
-import { NonNullExpression } from 'typescript';
 import { AisCredsDialogComponent } from '../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component';
-import { Storage } from '@aws-amplify/storage';
 import { environment } from '../../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -78,10 +76,7 @@ export class PrefillIdComponent implements OnInit {
     this.utilsService
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
-        console.log(result);
-        (this.userProfile = result),
-          console.log(this.userProfile, 'USERPROFILE');
-
+        this.userProfile = result;
         this.customerName = this.utilsService.isNonEmpty(name)
           ? name
           : result.fName + ' ' + result.lName;
@@ -611,14 +606,13 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  updateInvestments(investments, ITR_Type) {
+  updateInvestments(investments) {
     console.log('investments', investments);
     let investmentNames: any;
     if (this.regime === 'OLD') {
       {
         investmentNames = investments.map((arr) => arr[0]);
         console.log('All investment Names => investmentNames', investmentNames);
-        // setting 80dd names with this logic
         let disabilities80U = '';
         {
           const disabilities80UArray = investments.find(
@@ -628,9 +622,6 @@ export class PrefillIdComponent implements OnInit {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
             disabilities80UArray?.[1] < 75000
-            // &&
-            // disabilities80UArray[1] !== 0 &&
-            // disabilities80UArray[1] !== null
           ) {
             disabilities80U = 'SELF_WITH_DISABILITY';
           } else if (
@@ -638,12 +629,9 @@ export class PrefillIdComponent implements OnInit {
             (disabilities80UArray[1] === 0 || disabilities80UArray[1] === null)
           ) {
             disabilities80U = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 1);
           }
         }
 
-        // setting 80dd names with this logic
         let disabilities80dd = '';
         {
           const disabilities80ddArray = investments.find(
@@ -654,9 +642,6 @@ export class PrefillIdComponent implements OnInit {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
           } else if (
             disabilities80ddArray?.[1] < 75000
-            // &&
-            // disabilities80ddArray[1] !== 0 &&
-            // disabilities80ddArray[1] !== null
           ) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
           } else if (
@@ -665,8 +650,6 @@ export class PrefillIdComponent implements OnInit {
               disabilities80ddArray[1] === null)
           ) {
             disabilities80dd = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 2);
           }
         }
 
@@ -681,25 +664,15 @@ export class PrefillIdComponent implements OnInit {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
           } else if (
             disabilities80DDBArray?.[1] < 40000
-            // &&  disabilities80DDBArray[1] !== 0 &&
-            // disabilities80DDBArray[1] !== null
           ) {
             disabilities80DDB = 'SELF_OR_DEPENDENT';
-          } else if (
-            disabilities80DDBArray &&
-            (disabilities80DDBArray[1] =
-              0 || disabilities80DDBArray[1] === null)
-          ) {
+          } else if (disabilities80DDBArray && (disabilities80DDBArray[1] === 0 || disabilities80DDBArray[1] === null)) {
             disabilities80DDB = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 3);
           }
         }
 
         //setting 80G fields
-        let donations80G = '';
         {
-          // 100% donation
           {
             const Don100Percent =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don100Percent
@@ -1353,7 +1326,7 @@ export class PrefillIdComponent implements OnInit {
                 if (
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
                 ) {
-                  this.ITR_Obj.isRevised === 'Y';
+                  this.ITR_Obj.isRevised = 'Y';
                 } else if (
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 17 &&
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 11
@@ -1456,15 +1429,9 @@ export class PrefillIdComponent implements OnInit {
                       ? (this.ITR_Obj.everOptedNewRegime.date =
                         this.parseAndFormatDate(
                           ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                        ))
-                      : null;
+                        )) : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
-                      ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].FilingStatus?.Form10IEAAckNo)
-                      : null;
+                    (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo) ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber = (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)) : null;
                   }
 
                   // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
@@ -2101,7 +2068,7 @@ export class PrefillIdComponent implements OnInit {
                   this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
                     .DeductUndChapVIA
                 ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-                this.updateInvestments(availableInvestments, this.ITR_Type);
+                this.updateInvestments(availableInvestments);
               } else {
                 console.log(
                   'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
@@ -4331,7 +4298,7 @@ export class PrefillIdComponent implements OnInit {
 
                 console.log('availableInvestments==>>', availableInvestments);
 
-                this.updateInvestments(availableInvestments, this.ITR_Type);
+                this.updateInvestments(availableInvestments);
               } else {
                 console.log(
                   'ITR OBJ => Investments => There are no details under investments in the ITR Obj'

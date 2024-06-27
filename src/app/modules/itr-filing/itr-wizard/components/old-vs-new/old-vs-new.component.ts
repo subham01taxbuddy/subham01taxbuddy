@@ -9,12 +9,10 @@ import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import {
-  FormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
   ValidationErrors,
-  AbstractControl,
 } from '@angular/forms';
 import { environment } from '../../../../../../environments/environment';
 
@@ -1619,13 +1617,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                  this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                  this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+                  this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
               },
               {
                 label: 'Total Headwise Income',
@@ -1795,13 +1793,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
                 .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
-              + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
                 .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-              + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
               py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
                 .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-                  + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+                + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
             },
             {
               label: 'Total Headwise Income',
@@ -2399,82 +2397,82 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     let capitalGains = this.assessment.summaryIncome.cgIncomeN.capitalGain;
 
     this.cgQuarterWiseBreakUp = {
-      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
     }
   }
 
-  downloadComparison(){
+  downloadComparison() {
     let param = '/api/download/comparison/pdf';
     let request = {
-      oldRegime : this.oldSummaryIncome,
-      newRegime : this.newSummaryIncome
+      oldRegime: this.oldSummaryIncome,
+      newRegime: this.newSummaryIncome
     }
     this.loading = true;
     this.itrMsService.downloadFileAsPost(param, 'application/pdf', request).subscribe(
-          (result) => {
-      console.log('pdf Result', result);
-      var FileSaver = require('file-saver');
-      //const fileURL = URL.createObjectURL(result);
-      const fileURL = webkitURL.createObjectURL(result);
-      window.open(fileURL);
-      let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';
-      console.log('fileName: ', fileName);
-      FileSaver.saveAs(fileURL, fileName);
-      this.loading = false;
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar(
+      (result) => {
+        console.log('pdf Result', result);
+        var FileSaver = require('file-saver');
+        //const fileURL = URL.createObjectURL(result);
+        const fileURL = webkitURL.createObjectURL(result);
+        window.open(fileURL);
+        let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';
+        console.log('fileName: ', fileName);
+        FileSaver.saveAs(fileURL, fileName);
+        this.loading = false;
+      }, (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
           'Failed to download PDF file, please try again.'
-      );
-    });
+        );
+      });
   }
-  shareComparison(){
+  shareComparison() {
     let param = '/api/send/comparison/pdf';
     let request = {
-      sendPdfToUser : true,
-      oldRegime : this.oldSummaryIncome,
-      newRegime : this.newSummaryIncome
+      sendPdfToUser: true,
+      oldRegime: this.oldSummaryIncome,
+      newRegime: this.newSummaryIncome
     }
     this.loading = true;
     this.itrMsService.postMethod(param, request).subscribe(
-          (result:any) => {
-      console.log('pdf Result', result);
-      this.utilsService.showSnackBar(result.message);
-      this.loading = false;
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar(
+      (result: any) => {
+        console.log('pdf Result', result);
+        this.utilsService.showSnackBar(result.message);
+        this.loading = false;
+      }, (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
           'Failed to send PDF file, please try again.'
-      );
-    });
+        );
+      });
   }
 }
 
