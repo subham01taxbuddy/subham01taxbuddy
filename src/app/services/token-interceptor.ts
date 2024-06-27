@@ -83,7 +83,7 @@ export class TokenInterceptor implements HttpInterceptor {
           Authorization: `Bearer ` + TOKEN,
         },
       });
-    } else if ((request.url.startsWith(environment.reviewUrl)) || (request.url.startsWith(environment.update_id)) || (request.url.startsWith(environment.get_adjustment)) || (request.url.startsWith(environment.add_adjustment)) || (request.url.startsWith(environment.get_tds)) || (request.url.startsWith(environment.adjustment)) || (request.url.startsWith(environment.get_adjustment_csv))) {
+    } else if ((request.url.startsWith(environment.reviewUrl)) || (request.url.startsWith(environment.update_id)) || (request.url.startsWith(environment.get_adjustment)) || (request.url.startsWith(environment.add_adjustment)) || (request.url.startsWith(environment.get_tds)) || (request.url.startsWith(environment.get_adjustment_csv))) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
@@ -122,7 +122,7 @@ export class TokenInterceptor implements HttpInterceptor {
           paymentMethod : paymentMethod,
         },
       });
-    }else if(request.url.startsWith(environment.upload_file)){
+    }else if(request.url.startsWith(environment.upload_file) || (request.url.startsWith(environment.adjustment)) ){
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
