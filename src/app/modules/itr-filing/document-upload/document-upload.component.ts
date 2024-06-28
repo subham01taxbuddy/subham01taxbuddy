@@ -11,16 +11,12 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ActivatedRoute } from '@angular/router';
 
-/**
- * Node for to-do item
- */
 export class FoodNode {
   children?: FoodNode[];
   item!: string;
   value!: string;
 }
 
-/** Flat to-do item node with expandable and level information */
 export class CloudFlatNode {
   item!: string;
   value!: string;
@@ -28,9 +24,6 @@ export class CloudFlatNode {
   expandable!: boolean;
 }
 
-/**
- * The Json object for to-do list data.
- */
 const TREE_DATA: FoodNode[] = [
   {
     item: 'Common',
@@ -2796,11 +2789,6 @@ const TREE_DATA: FoodNode[] = [
   },
 ];
 
-/**
- * Checklist database, it can build a tree structured Json object.
- * Each node in Json object represents a to-do item or a category.
- * If a node is a category, it has children items and new items can be added under the category.
- */
 @Injectable({ providedIn: 'root' })
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<FoodNode[]>([]);
@@ -2816,46 +2804,10 @@ export class ChecklistDatabase {
 
   initialize() {
     this.treeData = TREE_DATA;
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
     const data = TREE_DATA;
-
-    // Notify the change.
     this.dataChange.next(data);
   }
 
-  // public filter(filterText: string) {
-  //   let filteredTreeData;
-  //   if (filterText) {
-  //     // Filter the tree
-  //     function filter(array, text) {
-  //       const getChildren = (result, object) => {
-  //         if (object.item.toLowerCase() === text.toLowerCase()) {
-  //           result.push(object);
-  //           return result;
-  //         }
-  //         if (Array.isArray(object.children)) {
-  //           const children = object.children.reduce(getChildren, []);
-  //           if (children.length) result.push({ ...object, children });
-  //         }
-  //         return result;
-  //       };
-
-  //       return array.reduce(getChildren, []);
-  //     }
-
-  //     filteredTreeData = filter(this.treeData, filterText);
-  //   } else {
-  //     // Return the initial tree
-  //     filteredTreeData = this.treeData;
-  //   }
-
-  //   // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-  //   // file node as children.
-  //   const data = filteredTreeData;
-  //   // Notify the change.
-  //   this.dataChange.next(data);
-  // }
 }
 
 @Component({
@@ -2933,11 +2885,10 @@ export class DocumentUploadComponent implements OnInit {
     { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR', newTree: 'ITRU' },
     { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR', newTree: 'ITRU' },
     { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR', newTree: 'ITRU' },
-    /* { value: null, label: 'Miscellaneous' } */];
+  ];
   isPassProtected!: boolean;
   filePassword: any;
   loading: boolean = false;
-  // ITR_JSON: ITR_JSON;
   selectedFileType = null;
 
   @Output() uploadDocument = new EventEmitter<any>();
@@ -2958,9 +2909,6 @@ export class DocumentUploadComponent implements OnInit {
 
   hasNoContent = (_: number, _nodeData: CloudFlatNode) => _nodeData.item === '';
 
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
   transformer = (node: FoodNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode =
@@ -2976,7 +2924,6 @@ export class DocumentUploadComponent implements OnInit {
     return flatNode;
   };
 
-  /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: CloudFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
@@ -2985,7 +2932,6 @@ export class DocumentUploadComponent implements OnInit {
     return descAllSelected;
   }
 
-  /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: CloudFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child =>
@@ -2994,29 +2940,20 @@ export class DocumentUploadComponent implements OnInit {
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
   todoItemSelectionToggle(node: CloudFlatNode): void {
     this.checklistSelection.toggle(node);
-    // console.log(this.checklistSelection.selected);
     const descendants = this.treeControl.getDescendants(node);
     if (!this.checklistSelection.isSelected(node)) {
       this.checklistSelection.deselect(...descendants);
     }
     this.treeControl.toggle(node);
     this.checkSameLevelSelection(this.checklistSelection.selected);
-
-    // // Force update for the parent
-    // descendants.every(child => this.checklistSelection.isSelected(child));
-    // this.checkAllParentsSelection(node);
   }
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: CloudFlatNode): void {
     this.checklistSelection.toggle(node);
     console.log(this.checklistSelection.selected);
     this.checkSameLevelSelection(this.checklistSelection.selected);
-
-    // this.checkAllParentsSelection(node);
   }
 
   checkSameLevelSelection(selectedArray: any) {
@@ -3040,7 +2977,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /* Checks all the parents when a leaf node is selected/unselected */
   checkAllParentsSelection(node: CloudFlatNode): void {
     let parent: CloudFlatNode | null = this.getParentNode(node);
     while (parent) {
@@ -3049,7 +2985,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /** Check root node checked state and change it accordingly */
   checkRootNodeSelection(node: CloudFlatNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -3063,7 +2998,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /* Get the parent node of a node */
   getParentNode(node: CloudFlatNode): CloudFlatNode | null {
     console.log(this.checklistSelection.selected);
     const currentLevel = this.getLevel(node);
@@ -3089,17 +3023,6 @@ export class DocumentUploadComponent implements OnInit {
     return this.checklistSelection.selected.map(s => s.value).join('/');
   }
 
-  // filterChanged(filterText: string) {
-  //   console.log('filterChanged', filterText);
-  //   // ChecklistDatabase.filter method which actually filters the tree and gives back a tree structure
-  //   this._database.filter(filterText);
-  //   if (filterText) {
-  //     this.treeControl.expandAll();
-  //   } else {
-  //     this.treeControl.collapseAll();
-  //   }
-  // }
-
   clearDocVal() {
     console.log('selected=>', this.getSelectedItems(), this.selectedFileType);
     let event = {
@@ -3111,7 +3034,6 @@ export class DocumentUploadComponent implements OnInit {
     this.uploadDoc = null;
     this.filePassword = '';
     this.isPassProtected = false;
-    // this.selectedFileType = null;
   }
 
   uploadFile(event: Event) {
@@ -3153,7 +3075,6 @@ export class DocumentUploadComponent implements OnInit {
           this.isPassProtected = false;
           this.uploadDocuments(type, document)
         }
-        // this.uploadDocument(type, document)
       },
         error => {
           this.loading = false;

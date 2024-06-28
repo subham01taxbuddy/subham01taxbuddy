@@ -3958,7 +3958,6 @@ pagination-controls {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 6px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -3972,7 +3971,6 @@ pagination-controls {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 5px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
@@ -4295,7 +4293,6 @@ mat-step-header .mat-step-label.mat-step-label-active {
   align-items: center;
   padding: 19.4547px 29.1821px;
   gap: 19.45px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 400;
   font-size: 19px;

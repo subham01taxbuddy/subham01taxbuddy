@@ -22,6 +22,7 @@ import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-fi
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
+import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.component';
 
 
 const routes: Routes = [
@@ -80,6 +81,10 @@ const routes: Routes = [
       {
         path:'payment-received',
         component: PaymentReceivedComponent,
+      },
+      {
+        path:'itr-filed-users',
+        component: ItrFiledUsersComponent,
       },
       {
         path:'proforma-invoice',

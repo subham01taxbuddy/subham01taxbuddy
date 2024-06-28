@@ -142,7 +142,7 @@ export class MoreInfoComponent implements OnInit {
             params.data.housePropertyLoss = newValInt ? newValInt : params.oldValue;
           }
           //update total
-          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce(function (a, b) { return a + b; })
+          this.totalLoss.housePropertyLoss = this.pastYearLosses.map(i => i.housePropertyLoss).reduce((a, b) => a + b, 0)
 
           return valueChanged;
         },
@@ -187,7 +187,7 @@ export class MoreInfoComponent implements OnInit {
                 params.data.broughtForwordBusinessLoss = newValInt ? newValInt : params.oldValue;
               }
               //update total
-              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce(function (a, b) { return a + b; })
+              this.totalLoss.broughtForwordBusinessLoss = this.pastYearLosses.map(i => i.broughtForwordBusinessLoss).reduce((a, b) => a + b, 0)
 
               return valueChanged;
             },
@@ -220,8 +220,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce(function (a, b) { return a + b; })
-
+              this.totalLoss.speculativeBusinessLoss = this.pastYearLosses.map(i => i.speculativeBusinessLoss).reduce((a, b) => a + b, 0)
               return valueChanged;
             },
           },
@@ -266,7 +265,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce(function (a, b) { return a + b; })
+              this.totalLoss.STCGLoss = this.pastYearLosses.map(i => i.STCGLoss).reduce((a, b) => a + b, 0)
 
               return valueChanged;
             },
@@ -300,7 +299,7 @@ export class MoreInfoComponent implements OnInit {
               }
 
               //update total
-              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce(function (a, b) { return a + b; })
+              this.totalLoss.LTCGLoss = this.pastYearLosses.map(i => i.LTCGLoss).reduce((a, b) => a + b, 0)
 
               return valueChanged;
             },

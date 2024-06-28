@@ -30,6 +30,7 @@ import { ViewChatLinksComponent } from './missed-chat-report/view-chat-links/vie
 import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
+import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.component';
 
 @NgModule({
     imports: [
@@ -67,6 +68,7 @@ import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summa
         ClientAddedFilingNotDoneComponent,
         FilingSlaComponent,
         PrefillUploadedSummaryNotSentComponent,
+        ItrFiledUsersComponent
     ],
     providers: [JsonToCsvService]
 })
