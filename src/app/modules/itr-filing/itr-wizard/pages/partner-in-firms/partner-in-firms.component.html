@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="frameC">
   <h1 class="heading__title">Partner In Firms
   </h1>
@@ -14,13 +11,11 @@
             <div class="accordion-item">
               <h2 class="accordion-header accoHdclr" id="headingOne">
                 <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne">Firm Details</button>
+                  data-bs-target="#collapseOne">Firm Details</button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                 <div *ngIf="Copy_ITR_JSON.partnerFirms">
-                  <button
-                          class="new-add btnRt"
-                          (click)="addFirmDetails('Add firm details', 'ADD', null)">
+                  <button class="new-add btnRt" (click)="addFirmDetails('Add firm details', 'ADD', null)">
                     <i class="fa fa-plus" aria-hidden="true"></i> Add New Firm
                   </button>
                 </div>
@@ -30,13 +25,10 @@
                     <form [formGroup]="partnerInFirmForm">
                       <div formArrayName="firmArray">
                         <div class="card" *ngFor="let firm of firmArray.controls | paginate : config;let i = index"
-                                [formGroupName]="fieldGlobalIndex(i)">
+                          [formGroupName]="fieldGlobalIndex(i)">
 
                           <div class="col-sm-10">
-                            <mat-checkbox
-                                    color="primary"
-                                    name="hasEdit[i]"
-                                    formControlName="hasEdit">
+                            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
                               {{ firm.get("name").value }}
                             </mat-checkbox>
                           </div>
@@ -47,13 +39,8 @@
                                 <span class="span">Name of the Firm </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Name of the Firm"
-                                        name="name"
-                                        formControlName="name"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Name of the Firm" name="name" formControlName="name"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                             <div class="field">
@@ -61,13 +48,8 @@
                                 <span class="span">Pan of the Firm </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Pan of the Firm"
-                                        name="panNumber"
-                                        formControlName="panNumber"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Pan of the Firm" name="panNumber"
+                                  formControlName="panNumber" class="input-field" required />
                               </mat-form-field>
                             </div>
                           </div>
@@ -77,28 +59,17 @@
                                 <span class="span">Capital Balance </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Capital Balance"
-                                        name="capitalBalanceOn31stMarch"
-                                        formControlName="capitalBalanceOn31stMarch"
-                                        class="input-field"
-                                        required
-                                />
+                                <input matInput placeholder="Capital Balance" name="capitalBalanceOn31stMarch"
+                                  formControlName="capitalBalanceOn31stMarch" class="input-field" required />
                               </mat-form-field>
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Profit Ratio %  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Profit Ratio % </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Profit Ratio"
-                                        name="profitSharePercent"
-                                        formControlName="profitSharePercent"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Profit Ratio" name="profitSharePercent"
+                                  formControlName="profitSharePercent" class="input-field" required />
                               </mat-form-field>
                             </div>
                           </div>
@@ -108,88 +79,58 @@
                                 <span class="span">Profit </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Profit"
-                                        name="profitShareAmount"
-                                        formControlName="profitShareAmount"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Profit" name="profitShareAmount"
+                                  formControlName="profitShareAmount" class="input-field" required />
                               </mat-form-field>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Salary  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Salary </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Salary"
-                                        name="salary"
-                                        formControlName="salary"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Salary" name="salary" formControlName="salary"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                           </div>
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Bonus  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Bonus </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Bonus"
-                                        name="bonus"
-                                        formControlName="bonus"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Bonus" name="bonus" formControlName="bonus"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Commission  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Commission </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Commission"
-                                        name="commission"
-                                        formControlName="commission"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Commission" name="commission" formControlName="commission"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                           </div>
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Interest  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Interest </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Interest"
-                                        name="interest"
-                                        formControlName="interest"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Interest" name="interest" formControlName="interest"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Others  </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Others </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="Others"
-                                        name="others"
-                                        formControlName="others"
-                                        class="input-field"
-                                        required/>
+                                <input matInput placeholder="Others" name="others" formControlName="others"
+                                  class="input-field" required />
                               </mat-form-field>
                             </div>
                           </div>
@@ -202,20 +143,11 @@
                                   </div>
                                 </div>
                                 <div class="col-sm-4">
-                                  <mat-radio-group
-                                          name="{{ i + 'isLiableToAudit' }}"
-                                          formControlName="isLiableToAudit"
-                                  >
-                                    <mat-radio-button
-                                            [value]="'Y'"
-                                            style="margin-left: 0px"
-                                            labelPosition="before"
-                                    >Yes
+                                  <mat-radio-group name="{{ i + 'isLiableToAudit' }}" formControlName="isLiableToAudit">
+                                    <mat-radio-button [value]="'Y'" style="margin-left: 0px" labelPosition="before">Yes
                                     </mat-radio-button>
                                     &nbsp;&nbsp;&nbsp;
-                                    <mat-radio-button [value]="'N'" labelPosition="before"
-                                    >No</mat-radio-button
-                                    >
+                                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
                                   </mat-radio-group>
                                 </div>
                               </div>
@@ -230,20 +162,11 @@
                                   </div>
                                 </div>
                                 <div class="col-sm-4">
-                                  <mat-radio-group
-                                          name="{{ i + 'sec92EFirmFlag' }}"
-                                          formControlName="sec92EFirmFlag"
-                                  >
-                                    <mat-radio-button
-                                            [value]="'Y'"
-                                            style="margin-left: 0px"
-                                            labelPosition="before"
-                                    >Yes
+                                  <mat-radio-group name="{{ i + 'sec92EFirmFlag' }}" formControlName="sec92EFirmFlag">
+                                    <mat-radio-button [value]="'Y'" style="margin-left: 0px" labelPosition="before">Yes
                                     </mat-radio-button>
                                     &nbsp;&nbsp;&nbsp;
-                                    <mat-radio-button [value]="'N'" labelPosition="before"
-                                    >No</mat-radio-button
-                                    >
+                                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
                                   </mat-radio-group>
                                 </div>
                               </div>
@@ -253,26 +176,16 @@
                         <div class="container">
                           <div class="row spsTp">
                             <div class="col-sm-3">
-                              <button
-                                      type="submit"
-                                      class="delete-btn"
-                                      (click)="deleteFirms()"
-                                      [disabled]="!firmSelected()"
-                              >
+                              <button type="submit" class="delete-btn" (click)="deleteFirms()"
+                                [disabled]="!firmSelected()">
                                 <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                               </button>
                             </div>
                             <div class="col-sm-6">
-                              <table>
-                                <tr
-                                        *ngFor="
+                              <div *ngFor="
                                 let item of firmArray.controls | paginate : config
-                              "
-                                ></tr>
-                              </table>
-                              <pagination-controls
-                                      (pageChange)="pageChanged($event)"
-                              ></pagination-controls>
+                              "></div>
+                              <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                             </div>
                           </div>
                         </div>
@@ -293,8 +206,8 @@
           </div>
           <div class="box-right">
             <div class="rght-btn btn-padding">
-              <button [disabled]="partnerInFirmForm.invalid"
-                      (click)="saveFirmDetails($event)">Save & View Summary</button>
+              <button [disabled]="partnerInFirmForm.invalid" (click)="saveFirmDetails($event)">Save & View
+                Summary</button>
             </div>
           </div>
         </div>

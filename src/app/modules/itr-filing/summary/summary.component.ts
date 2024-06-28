@@ -14,7 +14,6 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
 import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
-import { FormControl } from '@angular/forms';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { IncomeSourceDialogComponent } from '../../shared/components/income-source-dialog/income-source-dialog.component';
 @Component({
@@ -933,8 +932,8 @@ export class SummaryComponent implements OnInit {
     this.calculations();
   }
 
-  getAisDate(){
-    if(this.ITR_JSON.aisSource ==='DOWNLOAD' ){
+  getAisDate() {
+    if (this.ITR_JSON.aisSource === 'DOWNLOAD') {
       return 'Prefill Last uploaded on Month DD, YYYY'
     }
   }
@@ -6527,25 +6526,25 @@ export class SummaryComponent implements OnInit {
 
   getBusinessNatureLabel(businessCode) {
     return this.natureOfBusiness?.find(
-        (item) => {
-          return item?.code === businessCode;
-        }
+      (item) => {
+        return item?.code === businessCode;
+      }
     )?.label
   }
-  setBusiness44ADA(){
+  setBusiness44ADA() {
     let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
       ?.filter(element => element?.businessType === 'PROFESSIONAL');
 
     let tradeNameSet = new Set(professionalIncomes.map(item => item.tradeName));
 
-    tradeNameSet.forEach(tradeName=>{
-      const profIncome = professionalIncomes.filter(income=>income.tradeName === tradeName);
+    tradeNameSet.forEach(tradeName => {
+      const profIncome = professionalIncomes.filter(income => income.tradeName === tradeName);
       this.business44ADADetails.push({
         businessSection: profIncome[0]?.businessType + '(44ADA)',
         natureOfBusinessCode: this.natureOfBusiness?.find(item => item?.code === profIncome[0]?.natureOfBusinessCode)?.label,
         tradeName: tradeName,
-        grossTurnover: profIncome.reduce((total, element) => total+ element.receipts, 0),
-        TaxableIncome: profIncome.reduce((total, element) => total+ element.presumptiveIncome, 0),
+        grossTurnover: profIncome.reduce((total, element) => total + element.receipts, 0),
+        TaxableIncome: profIncome.reduce((total, element) => total + element.presumptiveIncome, 0),
       });
     });
   }
@@ -6875,35 +6874,8 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         this.loading = false;
-        console.log('Response of send PDF:', res);
-        if (!res.success) {
-          this.utilsService.showSnackBar(res.message);
-        } else {
-          this.utilsService.showSnackBar(res.message);
-          //also update user status
-          // let statusParam = '/itr-status';
-          // let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
-
-          // let param2 = {
-          //   statusId: 7, //waiting for confirmation
-          //   userId: this.ITR_JSON.userId,
-          //   assessmentYear: this.ITR_JSON.assessmentYear,
-          //   completed: false,
-          //   serviceType: sType,
-          // };
-          // console.log('param2: ', param2);
-          // this.userMsService.postMethod(statusParam, param2).subscribe(
-          //   (res) => {
-          //     console.log('Status update response: ', res);
-          //     this.loading = false;
-          //     //this._toastMessageService.alert("success", "Status update successfully.");
-          //   },
-          //   (error) => {
-          //     this.loading = false;
-          //     //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-          //   }
-          // );
-        }
+        this.utilsService.showSnackBar(res.message);
+        this.utilsService.showSnackBar(res.message);
       },
       (error) => {
         this.loading = false;
@@ -7078,7 +7050,7 @@ export class SummaryComponent implements OnInit {
     );
   }
 
-  showIncomeSourcePopup(){
+  showIncomeSourcePopup() {
     const dialogRef = this.dialog.open(IncomeSourceDialogComponent, {
       data: {
         title: 'Income Source Mismatch',
@@ -7088,11 +7060,11 @@ export class SummaryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'updateSubscription') {
-        let serviceType = this.ITR_JSON.isITRU ? 'ITRU':'ITR'
+        let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR'
         this.router.navigate(['/subscription/assigned-subscription'], {
           queryParams: {
-            userId:this.ITR_JSON.userId,
-            serviceType:serviceType ,
+            userId: this.ITR_JSON.userId,
+            serviceType: serviceType,
           },
         });
 
@@ -7103,7 +7075,7 @@ export class SummaryComponent implements OnInit {
     });
   }
 
-  saveReason(result){
+  saveReason(result) {
     //http://localhost:9050/itr/subscription-sources
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
@@ -7113,12 +7085,12 @@ export class SummaryComponent implements OnInit {
       reasonText: result.reason,
       userId: loggedInId
     };
-    this.itrMsService.postMethod(param,requestBody).subscribe(
+    this.itrMsService.postMethod(param, requestBody).subscribe(
       (result: any) => {
         this.loading = false;
         if (result.success) {
           this.utilsService.showSnackBar('Reason saved. Please click "File ITR" button again to proceed.');
-        }else{
+        } else {
           this.utilsService.showSnackBar('Failed to save reason of income source mismatch.');
         }
       },
@@ -7146,7 +7118,7 @@ export class SummaryComponent implements OnInit {
                   this.utilsService.showSnackBar(
                     'You can only update the ITR file record when your status is "ITR confirmation received"'
                   );
-                } else if(this.isValidItr){
+                } else if (this.isValidItr) {
                   if (confirm('Are you sure you want to file the ITR?'))
                     this.fileITR();
                 }
@@ -7220,7 +7192,7 @@ export class SummaryComponent implements OnInit {
     this.http.get(url, { responseType: 'json' }).subscribe(
       (data: any) => {
         console.log(data);
-        if(data.success === false){
+        if (data.success === false) {
           this.utilsService.showSnackBar(data.message);
           return;
         }
@@ -7574,16 +7546,16 @@ export class SummaryComponent implements OnInit {
     return arrayToBeReturned;
   }
 
-  isOtherIncome(){
+  isOtherIncome() {
     return this.finalCalculations?.otherIncome?.otherIncomes?.dividendIncome ||
       this.finalCalculations?.otherIncome?.otherIncomes?.familyPension ||
-        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries &&
-            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries > 0) ||
-        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming &&
-            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
+      (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries &&
+        this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries > 0) ||
+      (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming &&
+        this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
   }
 }
 
