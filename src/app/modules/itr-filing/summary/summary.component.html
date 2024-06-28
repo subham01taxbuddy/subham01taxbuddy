@@ -130,14 +130,14 @@
               <span class="txLf">Jurisdiction of Residence: </span>
               <br />
               <div>
-                <table class="simple-table" *ngIf="
+                <table class="simple-table" aria-label="Jurisdiction of Residence" *ngIf="
                   finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls
                 ">
                   <thead>
                     <tr>
-                      <th>Sr. No</th>
-                      <th>Name</th>
-                      <th>TIN Number</th>
+                      <th id="srNo">Sr. No</th>
+                      <th id="name">Name</th>
+                      <th id="TinNumber">TIN Number</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -220,7 +220,7 @@
         </div>
 
         <div class="row" style="display:flex; justify-content: center; align-items: center;">
-          <div class="prefTextContainer" style="">
+          <div class="prefTextContainer">
             <span class="prefText">Prefill Last uploaded on {{ ITR_JSON?.prefillDate | date:'MMMM dd, yyyy'
               }}</span><br>
             <span class="prefText">AIS Last uploaded on {{ITR_JSON?.aisLastUploadedDownloadedDate | date:'MMMM dd,
@@ -292,42 +292,34 @@
     </div>
     <br />
     <hr />
-    <!-- <app-update-status [userId]="ITR_JSON.userId"></app-update-status> -->
-    <!-- <hr /> -->
-    <!-- <div _ngcontent-c4="" class="sub_btn mvBtU"><button _ngcontent-c4="" class="btn prvBut"
-        routerlink="/warning" type="button" tabindex="0" ng-reflect-router-link="/warning">Previous</button>
-      <button _ngcontent-c4="" class="btn grBut" type="button" style="cursor: pointer;"><i _ngcontent-c4=""
-          class="fas fa-download"></i> Download </button></div> -->
-
     <div class="flex flex-col ml-1 new-ml">
       <div class="sub_btn lwBtDn" *ngIf="show">
-        <!-- <button type="button" class="btn prvBut" (click)="previousRoute()"
-              [disabled]="isPreviousAvailable()">Previous</button> -->
-        <!-- <button type="button" *ngIf="ITR_JSON.eFillingCompleted" routerLink="/taxreturn" class="btn save"> Back
-              To My ITR(s)</button> -->
-
-        <!-- <button *ngIf="!ITR_JSON.eFillingCompleted" type="button" (click)="downloadXML()" class="btn grBut"
-                [disabled]="taxable && taxable > 0" [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"> <i
-                  class="fas fa-download"></i> Download XML</button> -->
-        <!-- TODO -->
         <button type="button" *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'"
           (click)="confirmSubmitITR()" class="btn grBut pull-right"
           [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'" style="background-color: red"
           [disabled]="!isValidateJson || (!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000)">
           File ITR
         </button>
-        <button type="button" [disabled]="!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000"
-          (click)="downloadPDF()" class="btn grBut">
+        <!-- <button *ngIf="isValidateJson" type="button" (click)="confirmSubmitITR()"
+              class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
+              [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
+              style="background-color: red;"> File
+              ITR</button> -->
+        <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
+              Download XML</button> -->
+        <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
+        <button type="button" (click)="downloadPDF()" class="btn grBut"
+        [disabled]="finalCalculations?.totalIncome >= 20000000">
           Download PDF
         </button>
 
         <button type="button" class="btn kommBut" (click)="sendPdf('both')"
-          [disabled]="!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000">
+        [disabled]="finalCalculations?.totalIncome >= 20000000">
           Send PDF to Kommunicate
         </button>
 
         <button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')"
-          [disabled]="!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000">
+        [disabled]="finalCalculations?.totalIncome >= 20000000">
           Send PDF to WhatsApp
         </button>
 
@@ -359,7 +351,7 @@
     <div class="container" *ngIf="show">
       <div class="row">
         <div class="col-sm-12">
-          <table>
+          <table aria-label="Computation of Income and Tax">
             <tbody>
               <tr>
                 <td colspan="4" class="padding-panel">
@@ -398,8 +390,8 @@
                         <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
                           <tbody>
                             <tr>
-                              <th>Particulars</th>
-                              <th *ngFor="
+                              <th id="particular">Particulars</th>
+                              <th id="employerNo" *ngFor="
                                 let salary of finalCalculations?.salary
                                   ?.employers;
                                 let i = index
@@ -690,7 +682,7 @@
                             </tr>
 
                             <tr>
-                              <th>7. Taxable Salary</th>
+                              <th id="taxableSalary">7. Taxable Salary</th>
                               <td *ngFor="
                                 let salary of finalCalculations?.salary
                                   ?.employers;
@@ -740,8 +732,8 @@
                         <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
                           <tbody>
                             <tr>
-                              <th>Particulars</th>
-                              <th *ngFor="
+                              <th id="particulars">Particulars</th>
+                              <th id="typeOfHp" *ngFor="
                                 let hp of finalCalculations?.houseProperties
                                   ?.houseProps;
                                 let i = index
@@ -832,7 +824,7 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>6. Net Income (3-4-5)</th>
+                              <th id="netincome">6. Net Income (3-4-5)</th>
                               <td *ngFor="
                                 let hp of finalCalculations?.houseProperties
                                   ?.houseProps;
@@ -845,7 +837,7 @@
                               </td>
                             </tr>
                             <tr *ngIf="hpPtiValue">
-                              <th>7. Income from PTI</th>
+                              <th id="incomeFromPTI">7. Income from PTI</th>
                               <td>
                                 Rs
                                 {{ hpPtiValue }}
@@ -1291,11 +1283,11 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold">Sr. No</th>
-                            <th style="font-weight: bold">Section</th>
-                            <th style="font-weight: bold">Name of Business</th>
-                            <th style="font-weight: bold">Business Code</th>
-                            <th style="font-weight: bold">Description</th>
+                            <th id="srNo" style="font-weight: bold">Sr. No</th>
+                            <th id="section" style="font-weight: bold">Section</th>
+                            <th id="nameOfBusiness" style="font-weight: bold">Name of Business</th>
+                            <th id="businessCode" style="font-weight: bold">Business Code</th>
+                            <th id="description" style="font-weight: bold">Description</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1328,26 +1320,26 @@
                               ?.GoodsDtlsUs44AE?.length > 0
                           ">
                             <tr>
-                              <th class="bxHed">44AE Income Details</th>
-                              <th class="bxHed"></th>
-                              <th class="bxHed"></th>
-                              <th class="bxHed"></th>
-                              <th class="bxHed"></th>
+                              <th id="44AE" class="bxHed">44AE Income Details</th>
+                              <th id="emptyOne" class="bxHed"></th>
+                              <th id="emptytwo" class="bxHed"></th>
+                              <th id="emptyThree" class="bxHed"></th>
+                              <th id="emptyFour" class="bxHed"></th>
                             </tr>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="regNo" style="font-weight: bold; width: 20%">
                                 Registration no. of goods carriage
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="ownedOrLeased" style="font-weight: bold; width: 20%">
                                 Whether owned/leased/hired
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="goodCarriage" style="font-weight: bold; width: 20%">
                                 Tonnage capacity of goods carriage
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="numberOfMonths" style="font-weight: bold; width: 20%">
                                 Number of months
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="presumptiveIncome" style="font-weight: bold; width: 20%">
                                 Presumptive Income
                               </th>
                             </tr>
@@ -2111,8 +2103,8 @@
                         <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
                           <tbody>
                             <tr>
-                              <th>Particulars</th>
-                              <th>Amount</th>
+                              <th id="particulars">Particulars</th>
+                              <th id="amount">Amount</th>
                             </tr>
                             <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
@@ -2122,7 +2114,7 @@
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.taxRefund
                             ">
-                              <th colspan="2">Interest Income</th>
+                              <th id="interestIncome" colspan="2">Interest Income</th>
                             </tr>
                             <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
@@ -2283,7 +2275,7 @@
                             </tr>
 
                             <tr *ngIf="isOtherIncome()">
-                              <th colspan="2">Other Income</th>
+                              <th id="otherIncome" colspan="2">Other Income</th>
                             </tr>
                             <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
@@ -2435,7 +2427,7 @@
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherPropertyWithoutConsideration
                             ">
-                              <th colspan="2">Gift Income</th>
+                              <th id="giftIncome" colspan="2">Gift Income</th>
                             </tr>
 
                             <tr *ngIf="
@@ -2623,8 +2615,8 @@
                             </tr>
 
                             <tr>
-                              <th>Total</th>
-                              <th>
+                              <th id="total">Total</th>
+                              <th id="otherIncomeTotal">
                                 Rs
                                 {{
                                 utilsService.currencyFormatter(
@@ -5956,16 +5948,16 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
                                 Name Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 25%">
+                              <th id="TanOfDeductor" style="font-weight: bold; width: 25%">
                                 TAN Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="tdsDeducted" style="font-weight: bold; width: 35%">
                                 Amount Of Which TDS Deducted
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="totalTaxAmount" style="font-weight: bold; width: 20%">
                                 Total Tax Amount
                               </th>
                             </tr>
@@ -5995,10 +5987,10 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmt">Total Amount</th>
+                              <th id="empty1"></th>
+                              <th id="empty2"></th>
+                              <th id="totalOnsalary">
                                 Rs.
                                 {{
                                 utilsService.currencyFormatter(
@@ -6017,16 +6009,16 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
                                 Name Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 25%">
+                              <th id="TanOfDeductor" style="font-weight: bold; width: 25%">
                                 TAN Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="tdsDeductedAmt" style="font-weight: bold; width: 35%">
                                 Amount Of Which TDS Deducted
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="totalTaxDeducted" style="font-weight: bold; width: 20%">
                                 Total Tax Deducted
                               </th>
                             </tr>
@@ -6056,10 +6048,10 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmount">Total Amount</th>
+                              <th id="emptyfive"></th>
+                              <th id="emptySix"></th>
+                              <th id="totalOtherThanSalary16A">
                                 Rs.
                                 {{
                                 finalCalculations?.taxPaid
@@ -6074,27 +6066,27 @@
                                 ?.otherThanSalary16AAmtCarriedFwd
                             ">
                               <tr>
-                                <th class="bxHed">
+                                <th id="tdsBfDetails" class="bxHed">
                                   TDS B/F Details
                                   <br />
                                   (Other Than Salary)
                                 </th>
-                                <th class="bxHed"></th>
-                                <th class="bxHed"></th>
-                                <th class="bxHed"></th>
+                                <th id="emptyseven" class="bxHed"></th>
+                                <th id="emptyEight" class="bxHed"></th>
+                                <th id="emptyNine" class="bxHed"></th>
                               </tr>
 
                               <tr>
-                                <th style="font-weight: bold; width: 20%">
+                                <th id="yearOfTdsDeducted" style="font-weight: bold; width: 20%">
                                   Year of TDS Deduction
                                 </th>
-                                <th style="font-weight: bold; width: 25%">
+                                <th id="tdsAmount" style="font-weight: bold; width: 25%">
                                   TDS Amount
                                 </th>
-                                <th style="font-weight: bold; width: 35%">
+                                <th id="income" style="font-weight: bold; width: 35%">
                                   Income
                                 </th>
-                                <th style="font-weight: bold; width: 20%">
+                                <th id="tdsCreditClaimed" style="font-weight: bold; width: 20%">
                                   TDS Credit claimed this year
                                 </th>
                               </tr>
@@ -6136,16 +6128,16 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
                                 Name Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 25%">
+                              <th id="panOfDeductor" style="font-weight: bold; width: 25%">
                                 PAN Of Deductor
                               </th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="AmtOfTdsDeducted" style="font-weight: bold; width: 35%">
                                 Amount Of Which TDS Deducted
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="totalTaxDeducted" style="font-weight: bold; width: 20%">
                                 Total Tax Deducted
                               </th>
                             </tr>
@@ -6175,10 +6167,10 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmount">Total Amount</th>
+                              <th id="empty18"></th>
+                              <th id="empty19"></th>
+                              <th id="totalOtherThanSalary26qb">
                                 Rs.
                                 {{
                                 finalCalculations?.taxPaid
@@ -6196,16 +6188,16 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="nemeOfCollector" style="font-weight: bold; width: 20%">
                                 Name Of Collector
                               </th>
-                              <th style="font-weight: bold; width: 25%">
+                              <th id="tanOfCollector" style="font-weight: bold; width: 25%">
                                 TAN Of Collector
                               </th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="AmtOftcsCollected" style="font-weight: bold; width: 35%">
                                 Amount Of Which TCS Collected
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="totalTaxCollected" style="font-weight: bold; width: 20%">
                                 Total Tax Collected
                               </th>
                             </tr>
@@ -6233,10 +6225,10 @@
                             </tr>
 
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmount">Total Amount</th>
+                              <th id="emptyTen"></th>
+                              <th id="emptyEleven"></th>
+                              <th id="totalTcs">
                                 Rs.
                                 {{ finalCalculations?.taxPaid?.totalTcs }}
                               </th>
@@ -6247,22 +6239,22 @@
                               finalCalculations?.taxPaid?.tcsBroughtFwdTDSAmt
                             ">
                               <tr>
-                                <th class="bxHed">TCS B/F Details</th>
-                                <th class="bxHed"></th>
-                                <th class="bxHed"></th>
-                                <th class="bxHed"></th>
+                                <th id="tcsBfDetails" class="bxHed">TCS B/F Details</th>
+                                <th id="empty12" class="bxHed"></th>
+                                <th id="empty13" class="bxHed"></th>
+                                <th id="empty14" class="bxHed"></th>
                               </tr>
                               <tr>
-                                <th style="font-weight: bold; width: 20%">
+                                <th id="yearOfTdsDeduction" style="font-weight: bold; width: 20%">
                                   Year of TDS Deduction
                                 </th>
-                                <th style="font-weight: bold; width: 25%">
+                                <th id="tdsAmount" style="font-weight: bold; width: 25%">
                                   TDS Amount
                                 </th>
-                                <th style="font-weight: bold; width: 35%">
+                                <th id="income" style="font-weight: bold; width: 35%">
                                   Income
                                 </th>
-                                <th style="font-weight: bold; width: 20%">
+                                <th id="tdsCreditClaimed" style="font-weight: bold; width: 20%">
                                   TDS credit claimed this year
                                 </th>
                               </tr>
@@ -6307,14 +6299,14 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="BRSCode" style="font-weight: bold; width: 20%">
                                 BRS Code
                               </th>
-                              <th style="font-weight: bold; width: 25%">Date</th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="date" style="font-weight: bold; width: 25%">Date</th>
+                              <th id="challanNo" style="font-weight: bold; width: 35%">
                                 Challan No.
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="taxDeposited" style="font-weight: bold; width: 20%">
                                 Tax Deposited
                               </th>
                             </tr>
@@ -6337,10 +6329,10 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmount">Total Amount</th>
+                              <th id="empty16"></th>
+                              <th id="empty17"></th>
+                              <th id="totalOtherThanTdsTcs">
                                 Rs.
                                 {{
                                 finalCalculations?.taxPaid?.totalOtherThanTDSTCS
@@ -6472,14 +6464,14 @@
                         <table class="table table-bordered table-striped table-hover">
                           <thead>
                             <tr>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="BrsCode" style="font-weight: bold; width: 20%">
                                 BRS Code
                               </th>
-                              <th style="font-weight: bold; width: 25%">Date</th>
-                              <th style="font-weight: bold; width: 35%">
+                              <th id="date" style="font-weight: bold; width: 25%">Date</th>
+                              <th id="challonNo" style="font-weight: bold; width: 35%">
                                 Challan No.
                               </th>
-                              <th style="font-weight: bold; width: 20%">
+                              <th id="taxdeposited" style="font-weight: bold; width: 20%">
                                 Tax Deposited
                               </th>
                             </tr>
@@ -6501,10 +6493,10 @@
                               </td>
                             </tr>
                             <tr>
-                              <th>Total Amount</th>
-                              <th></th>
-                              <th></th>
-                              <th>
+                              <th id="totalAmount">Total Amount</th>
+                              <th id="empty20"></th>
+                              <th id="emppty21"></th>
+                              <th id="taxesPaid">
                                 Rs.
                                 {{
                                 finalCalculations?.taxesPaidUS140B
@@ -6761,42 +6753,42 @@
                       <table class="table table-bordered table-striped table-hover" style="margin-bottom: 0px">
                         <thead class="table-header">
                           <tr class="table-head">
-                            <th style="font-weight: bold" colspan="1" rowspan="3">
+                            <th id="srNo" style="font-weight: bold" colspan="1" rowspan="3">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="3">
+                            <th id="assessmentYear" style="font-weight: bold" colspan="1" rowspan="3">
                               2. Assessment Year
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="3">
+                            <th id="defferredTax" style="font-weight: bold" colspan="1" rowspan="3">
                               3. Amount of Tax deferred brought forward from
                               earlier A.Y.
                             </th>
-                            <th style="font-weight: bold" colspan="5" rowspan="1">
+                            <th id="eventsOccured" style="font-weight: bold" colspan="5" rowspan="1">
                               4. Has any of the following events occurred during
                               the previous year relevant to current assessment
                               year
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="3">
+                            <th id="amountOfTaxPayable" style="font-weight: bold" colspan="1" rowspan="3">
                               7. Amount of tax payable in the current Assessment
                               Year
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="3">
+                            <th id="balanceAmountOfTax" style="font-weight: bold" colspan="1" rowspan="3">
                               8. Balance amount of tax deferred to be carried
                               forward to the next Assessment years Col (3 − 7)
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" colspan="2" rowspan="1">
+                            <th id="specifiedSecurity" style="font-weight: bold" colspan="2" rowspan="1">
                               Such specified security or sweat equity shares were
                               sold (Specify the date and amount of tax attributed
                               to such sale out of Col 3)
                             </th>
-                            <th style="font-weight: bold" colspan="2" rowspan="1">
+                            <th id="ceasedToTheEmployee" style="font-weight: bold" colspan="2" rowspan="1">
                               Ceased to be the employee of the employer who
                               allotted or transferred such specified security or
                               sweat equity share?
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="2">
+                            <th id="specifyDate" style="font-weight: bold" colspan="1" rowspan="2">
                               6. Forty-eight months have expired from the end of
                               the relevant assessment year in which specified
                               security or sweat equity shares referred to in the
@@ -6804,16 +6796,16 @@
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" colspan="1" rowspan="1">
+                            <th id="4i" style="font-weight: bold" colspan="1" rowspan="1">
                               (4i) Option Selected
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="1">
+                            <th id="4ii" style="font-weight: bold" colspan="1" rowspan="1">
                               (4ii) Total Amount of Tax Attributed out of the sale
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="1">
+                            <th id="5i" style="font-weight: bold" colspan="1" rowspan="1">
                               (5i) Option selected
                             </th>
-                            <th style="font-weight: bold" colspan="1" rowspan="1">
+                            <th id="5ii" style="font-weight: bold" colspan="1" rowspan="1">
                               (5ii) Date of Ceased to be employee
                             </th>
                           </tr>
@@ -8006,48 +7998,48 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNo" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="countryName" style="font-weight: bold" rowspan="2">
                               2. Country / Region Name
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="aipCode" style="font-weight: bold" rowspan="2">
                               3. ZIP Code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfEntity" style="font-weight: bold" rowspan="2">
                               4. Nature of entity
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="nameAndAddressOfEntity" style="font-weight: bold" rowspan="2">
                               5. Name and address of entity
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfInterest" style="font-weight: bold" rowspan="2">
                               6. Nature of interest
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="dateSinceHeld" style="font-weight: bold" rowspan="2">
                               7. Date since held
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="totalInvestment" style="font-weight: bold" rowspan="2">
                               8. Total investment
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="incomeAccured" style="font-weight: bold" rowspan="2">
                               9. Income accrued from such interest
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfIncome" style="font-weight: bold" rowspan="2">
                               10. Nature of Income
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="taxableIncome" style="font-weight: bold" rowspan="1" colspan="3">
                               11. Income taxable and offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="elevenAAmount" style="font-weight: bold" rowspan="1">
                               11a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="11b" style="font-weight: bold" rowspan="1">
                               11b. Schedule where in offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="11c" style="font-weight: bold" rowspan="1">
                               11c. Item number of Schedule
                             </th>
                           </tr>
@@ -8123,45 +8115,45 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNo" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="nameAndCode" style="font-weight: bold" rowspan="2">
                               2. Country / Region Name and code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="zipCode" style="font-weight: bold" rowspan="2">
                               3. Zip code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="addressOfProperty" style="font-weight: bold" rowspan="2">
                               4. Address of the property
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="ownerShip" style="font-weight: bold" rowspan="2">
                               5. Ownership
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="dateOfAcqusition" style="font-weight: bold" rowspan="2">
                               6. Date of acquisition
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="totalInvestment" style="font-weight: bold" rowspan="2">
                               7. Total investment
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="derivedIncome" style="font-weight: bold" rowspan="2">
                               8. Income derived from the property
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfIncome" style="font-weight: bold" rowspan="2">
                               9. Nature of income
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="taxableIncome" style="font-weight: bold" rowspan="1" colspan="3">
                               10. Income taxable and offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10a" style="font-weight: bold" rowspan="1">
                               10a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10b" style="font-weight: bold" rowspan="1">
                               10b. Schedule where offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10c" style="font-weight: bold" rowspan="1">
                               1oc. Item number of schedule
                             </th>
                           </tr>
@@ -8233,45 +8225,45 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNo" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="regionName" style="font-weight: bold" rowspan="2">
                               2. Country / Region Name and code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="zipCode" style="font-weight: bold" rowspan="2">
                               3. Zip code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfAsset" style="font-weight: bold" rowspan="2">
                               4. Nature of asset
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="ownership" style="font-weight: bold" rowspan="2">
                               5. Ownership
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="dateOfAcqusition" style="font-weight: bold" rowspan="2">
                               6. Date of acquisition
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="totalInvestment" style="font-weight: bold" rowspan="2">
                               7. Total investment
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="derivedIncome" style="font-weight: bold" rowspan="2">
                               8. Income derived from the asset
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfIncome" style="font-weight: bold" rowspan="2">
                               9. Nature of income
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="taxableIncome" style="font-weight: bold" rowspan="1" colspan="3">
                               10. Income taxable and offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10aAmount" style="font-weight: bold" rowspan="1">
                               10a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10bAmount" style="font-weight: bold" rowspan="1">
                               10b. Schedule where offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10cItem" style="font-weight: bold" rowspan="1">
                               1oc. Item number of schedule
                             </th>
                           </tr>
@@ -8342,50 +8334,50 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNO" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="NameOfInstitution" style="font-weight: bold" rowspan="2">
                               2. Name of the Institution in which the account is
                               held
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="AddressOfInstitution" style="font-weight: bold" rowspan="2">
                               3. Address of the Institution
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="countryName" style="font-weight: bold" rowspan="2">
                               4. Country/Region Name and Code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="zipCode" style="font-weight: bold" rowspan="2">
                               5. Zip Code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="nameOfAccountHolder" style="font-weight: bold" rowspan="2">
                               6. Name of the account holder
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="accountNumber" style="font-weight: bold" rowspan="2">
                               7. Account number
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="peakBalance" style="font-weight: bold" rowspan="2">
                               8. Peak Balance/ Investment during the year(in
                               rupees)
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="taxableAccuredIncome" style="font-weight: bold" rowspan="2">
                               9. Whether income accrued is taxable in your hands?
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="incomeAccuredInAccount" style="font-weight: bold" rowspan="2">
                               10. If (7) is yes, Income accrued in the account
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="incomeOffered" style="font-weight: bold" rowspan="1" colspan="3">
                               11. If (7) is yes, Income offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10aAmount" style="font-weight: bold" rowspan="1">
                               10a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10bAmount" style="font-weight: bold" rowspan="1">
                               10b. Schedule where offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="1ocItem" style="font-weight: bold" rowspan="1">
                               1oc. Item number of schedule
                             </th>
                           </tr>
@@ -8481,48 +8473,48 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNo" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="countryName" style="font-weight: bold" rowspan="2">
                               2. Country/Region Name and code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="zipCode" style="font-weight: bold" rowspan="2">
                               3. Zip Code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="trustName" style="font-weight: bold" rowspan="2">
                               4. Name and address of the trust
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="trusteesAddress" style="font-weight: bold" rowspan="2">
                               5. Name and address of trustees
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="settlorAddress" style="font-weight: bold" rowspan="2">
                               6. Name and address of Settlor
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="beneficiaryAddress" style="font-weight: bold" rowspan="2">
                               7. Name and address of Beneficiaries
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="dateOfPositionHeld" style="font-weight: bold" rowspan="2">
                               8. Date since position held
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="taxableDerivedIncome" style="font-weight: bold" rowspan="2">
                               9. Whether income derived is taxable in your hands?
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="incomeDerivedFromTrust" style="font-weight: bold" rowspan="2">
                               10. If (8) is yes, Income derived from the trust
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="incomeOfferedInReturn" style="font-weight: bold" rowspan="1" colspan="3">
                               11. If (8) is yes, Income offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10aAmount" style="font-weight: bold" rowspan="1">
                               10a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10bScheduled" style="font-weight: bold" rowspan="1">
                               10b. Schedule where offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="10cItem" style="font-weight: bold" rowspan="1">
                               10c. Item number of schedule
                             </th>
                           </tr>
@@ -8621,39 +8613,39 @@
                       ">
                         <thead>
                           <tr>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="srNo" style="font-weight: bold" rowspan="2">
                               1. Sr. No
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="countryName" style="font-weight: bold" rowspan="2">
                               2. Country/Region Name and code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="zipCode" style="font-weight: bold" rowspan="2">
                               3. Zip Code
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="nameOfAddress" style="font-weight: bold" rowspan="2">
                               4. Name and address of the person from whom derived
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="incomeDerived" style="font-weight: bold" rowspan="2">
                               5. Income derived
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="natureOfIncome" style="font-weight: bold" rowspan="2">
                               6. Nature of Income
                             </th>
-                            <th style="font-weight: bold" rowspan="2">
+                            <th id="taxableIncome" style="font-weight: bold" rowspan="2">
                               7. Whether taxable in your hands?
                             </th>
-                            <th style="font-weight: bold" rowspan="1" colspan="3">
+                            <th id="OfferedIncome" style="font-weight: bold" rowspan="1" colspan="3">
                               8. If (6) is yes, Income offered in this return
                             </th>
                           </tr>
                           <tr>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="8aAmount" style="font-weight: bold" rowspan="1">
                               8a. Amount
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="8bschedule" style="font-weight: bold" rowspan="1">
                               8b. Schedule where offered
                             </th>
-                            <th style="font-weight: bold" rowspan="1">
+                            <th id="8cItem" style="font-weight: bold" rowspan="1">
                               8c. Item number of schedule
                             </th>
                           </tr>
@@ -8855,9 +8847,6 @@
                         0
                       ">
                         Partnership firm details
-                        <!-- <span style="float: right">{{
-                  finalCalculations?.capitalGain?.totalCryptoIncome
-                }}</span> -->
                       </div>
                       <table class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.exemptIncome?.partnerFirms?.length >
@@ -8898,84 +8887,13 @@
               </tr>
             </tbody>
           </table>
-          <!-- </div>
-    </div> -->
-          <!-- **************************** Accordion End -->
-
-          <!-- --------------------- ITR 4 --------------------------------- -->
-
           <br />
-          <!-- </div> -->
-          <!-- <div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <b>Note:</b> * Negative value has been considered as zero for the purpose
-      of calculation of total income however provision for setoff and carry
-      forword will be taken care off as per ITR rules.
-    </div>
-  </div>
-  <div class="row" *ngIf="taxable && taxable > 0">
-    <div class="col-lg-3 col-md-3 col-sm-12">
-      <div class="incBx1">
-        <span class="inTex">Income Tax Payable:</span><br /><br />
-        <span class="inNo"
-          >{{ utilsService.currencyFormatter(taxable) }}.00</span
-        >
-      </div>
-    </div>
-    <div class="col-lg-9 col-md-9 col-sm-12 paIncTx1">
-      You must pay the balance tax before proceeding to e-filing. To pay your
-      tax
-      <a
-        href="https://onlineservices.tin.egov-nsdl.com/etaxnew/tdsnontds.jsp"
-        target="_new"
-        style="text-decoration: underline"
-        class="LkTx"
-        >Click here</a
-      ><br />
-      and select CHALLAN NO/ITNS 280 under NON-TDS/TCS Section
-    </div>
-  </div>
-
-  <div *ngIf="refund > 0">
-    <div class="col-lg-3 col-md-3 col-sm-12">
-      <div class="incBx1">
-        <span class="inTex">Income Tax Refund:</span><br /><br />
-        <span class="inRef"
-          >{{ utilsService.currencyFormatter(refund) }}.00</span
-        >
-      </div>
-    </div>
-    <div class="col-lg-9 col-md-9 col-sm-12 paIncTx1">
-      Great news...!!! You are getting refund of
-      {{ utilsService.currencyFormatter(refund) }}.00 of your tax return into
-      your bank account number. <b>{{ bankArray?.accountNumber }}</b>
-      <br />
-      <span style="font-size: 12px; font-style: italic"
-        ><b>Note:</b> Ensure that your bank account is correct & Pre-validated
-        to Income tax portal.
-        <span>
-          <a
-            href="https://blog.taxbuddy.com/index.php/pre-validate-bank-account/"
-            target="_blank"
-            style="color: #e98017 !important"
-            >Click here</a
-          ></span
-        >
-        to know How to Pre-validate Your Bank Account.</span
-      >
-    </div>
-  </div>
-  </div> -->
           <div class="sub_btn lwBtDn" *ngIf="show">
             <button type="button" *ngIf="isValidItr" (click)="confirmSubmitITR()" class="btn grBut pull-right"
               [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'" style="background-color: red"
               [disabled]="!isValidateJson">
               File ITR
             </button>
-            <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
-            Download XML
-        </button> -->
             <button type="button" (click)="downloadPDF()" class="btn grBut">
               Download PDF
             </button>

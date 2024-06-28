@@ -745,17 +745,18 @@ export class SharesAndEquityComponent
       this.buyDateBefore31stJan =
         new Date(purchaseDate) < new Date('02/01/2018');
 
-      securities.controls['sellOrBuyQuantity'].setValue(1);
-      securities.controls['purchaseValuePerUnit'].setValue(
-        securities.controls['purchaseCost'].value
-      );
-      securities.controls['sellValuePerUnit'].setValue(
-        securities.controls['sellValue'].value
-      );
+
       if (this.buyDateBefore31stJan && this.bondType === 'listed') {
         securities.controls['isinCode'].setValidators([Validators.required]);
         securities.controls['isinCode'].updateValueAndValidity();
       } else {
+        securities.controls['sellOrBuyQuantity'].setValue(1);
+        securities.controls['purchaseValuePerUnit'].setValue(
+            securities.controls['purchaseCost'].value
+        );
+        securities.controls['sellValuePerUnit'].setValue(
+            securities.controls['sellValue'].value
+        );
         securities.controls['isinCode'].setValue('');
         // securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
