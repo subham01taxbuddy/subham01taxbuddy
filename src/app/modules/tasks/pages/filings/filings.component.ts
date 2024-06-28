@@ -477,6 +477,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' },
       { key: 'filingFormatedDate', value: 'Filing Formatted Date' },
+      { key: 'manualUpdateReason', value:'Reason for Manual Update' },
     ];
     await this.genericCsvService.downloadReport(
       environment.url + '/report',
@@ -540,6 +541,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         itrSummaryJson: data[i].itrSummaryJson,
         itru: data[i].itru,
         paymentStatus: data[i].paymentStatus,
+        manualUpdateReason: data[i].manualUpdateReason
       });
     }
     return newData;
@@ -764,6 +766,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params?.data?.paymentStatus) {
             return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
+        headerName: 'Reason for Manual Update',
+        field: 'manualUpdateReason',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        width: 200,
+        valueGetter: function (params) {
+          if (params?.data?.manualUpdateReason) {
+            return params?.data?.manualUpdateReason;
           } else {
             return '-';
           }
