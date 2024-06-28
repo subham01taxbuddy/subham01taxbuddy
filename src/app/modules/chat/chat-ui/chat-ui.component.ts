@@ -96,12 +96,20 @@ export class ChatUIComponent implements OnInit {
     users = [];
 
     getCurrentTime(timestamp: any): string {
-        const now = new Date(timestamp)
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-        return formattedTime;
+        const now = new Date();
+        const messageDate = new Date(timestamp);
+
+        if (messageDate.toDateString() === now.toDateString()) {
+            const hours = messageDate.getHours();
+            const minutes = messageDate.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            return `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+        } else {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = months[messageDate.getMonth()];
+            const date = messageDate.getDate();
+            return `${month} ${date}`;
+        }
     }
 
     displaySystemMessage(message: any): boolean {

@@ -120,27 +120,35 @@ export class FloatingWidgetComponent implements OnInit {
     ];
 
     getCurrentTime(timestamp: any): string {
-        const now = new Date(timestamp)
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
-        return formattedTime;
+        const now = new Date();
+        const messageDate = new Date(timestamp);
+
+        if (messageDate.toDateString() === now.toDateString()) {
+            const hours = messageDate.getHours();
+            const minutes = messageDate.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            return `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+        } else {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = months[messageDate.getMonth()];
+            const date = messageDate.getDate();
+            return `${month} ${date}`;
+        }
     }
 
-    
+
 
     displaySystemMessage(message: any): boolean {
         if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
-          if (!message?.attributes?.showOnUI) {
-            return false;
-          }
-          if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
-            return true;
-          }
+            if (!message?.attributes?.showOnUI) {
+                return false;
+            }
+            if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
+                return true;
+            }
         }
         return true;
-      }
+    }
 
     ngOnInit(): void {
         this.page = 0;
@@ -148,10 +156,10 @@ export class FloatingWidgetComponent implements OnInit {
         console.log('full conversation list');
         this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            if(this.displaySystemMessage(newMessage)){
-            this.chatService.updateConversationList(newMessage,this.conversationList,this.selectedDepartmentId);
+            if (this.displaySystemMessage(newMessage)) {
+                this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
             }
-          });
+        });
 
     }
 
@@ -160,6 +168,9 @@ export class FloatingWidgetComponent implements OnInit {
             console.log('Scrolled down')
             this.page = this.page + 1;
             this.chatManager.conversationList(this.page, this.selectedDepartmentId);
+            setTimeout(() => {
+                this.handleConversationList();
+            }, 500);
         }
     }
 

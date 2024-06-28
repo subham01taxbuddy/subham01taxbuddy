@@ -295,40 +295,40 @@ export class ChatService {
       (conversation) => conversation.request_id === newMessage.recipient
     );
 
-    if (newMessage.attributes.departmentId === selectedDepartmentId){
+    if (newMessage.attributes.departmentId === selectedDepartmentId) {
 
-    if (existingConversationIndex !== -1) {
- 
-      const updatedConversation = {
-        image: newMessage.attributes.userFullname[0],
-        userFullName: newMessage.attributes.userFullname,
-        text: newMessage.text,
-        timestamp: newMessage.timestamp,
-        request_id: newMessage.recipient,
-        type: newMessage.type,
-        departmentId: newMessage.attributes.departmentId,
-        sender: newMessage.sender,
-        recipientFullName: newMessage.recipient_fullname,
-      };
+      if (existingConversationIndex !== -1) {
 
-      conversationLists[existingConversationIndex] = updatedConversation;
-      conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
-    } else {
-      const newConversation = {
-        image: newMessage.attributes.userFullname[0],
-        userFullName: newMessage.attributes.userFullname,
-        text: newMessage.text,
-        timestamp: newMessage.timestamp,
-        request_id: newMessage.recipient,
-        type: newMessage.type,
-        departmentId: newMessage.attributes.departmentId,
-        sender: newMessage.sender,
-        recipientFullName: newMessage.recipient_fullname,
-      };
-      conversationLists.unshift(newConversation);
+        const updatedConversation = {
+          image: newMessage.attributes.userFullname[0],
+          userFullName: newMessage.attributes.userFullname,
+          text: newMessage.text,
+          timestamp: newMessage.timestamp,
+          request_id: newMessage.recipient,
+          type: newMessage.type,
+          departmentId: newMessage.attributes.departmentId,
+          sender: newMessage.sender,
+          recipientFullName: newMessage.recipient_fullname,
+        };
+
+        conversationLists[existingConversationIndex] = updatedConversation;
+        conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
+      } else {
+        const newConversation = {
+          image: newMessage.attributes.userFullname[0],
+          userFullName: newMessage.attributes.userFullname,
+          text: newMessage.text,
+          timestamp: newMessage.timestamp,
+          request_id: newMessage.recipient,
+          type: newMessage.type,
+          departmentId: newMessage.attributes.departmentId,
+          sender: newMessage.sender,
+          recipientFullName: newMessage.recipient_fullname,
+        };
+        conversationLists.unshift(newConversation);
+      }
     }
   }
-}
 
   clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');
@@ -358,64 +358,42 @@ export class ChatService {
   }
 
   addMessageToDB(message: any) {
-    // let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-    // if (message.recipient === selectedUser.request_id) {
-    const messagesString = sessionStorage.getItem("fetchedMessages");
+    let messagesString = this.sessionStorageService.getItem('fetchedMessages');
+    let messages = messagesString ? JSON.parse(messagesString) : [];
 
-    if (messagesString) {
-      const messages = JSON.parse(messagesString);
-      const transformedMessages = messages.map(message => ({
-        content: message.content,
-        sender: message.sender,
-        timestamp: message.timestamp,
-        type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
-        message_id: message.message_id,
-        action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
-        conversWith: message.conversWith
-      }));
-      let m = {
-        content: message.text,
-        sender: message.sender,
-        timestamp: message.timestamp,
-        type: message.type,
-        senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
-        message_id: message.message_id,
-        action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
-        subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-        showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
-        conversWith: message.conversWith
-      };
+    let m = {
+      content: message.text,
+      sender: message.sender,
+      timestamp: message.timestamp,
+      type: message.type,
+      senderFullName: message.sender.startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
+      message_id: message.message_id,
+      action: message.attributes?.action || null,
+      subtype: message.attributes?.subtype || null,
+      showOnUI: message.attributes?.showOnUI || null,
+      conversWith: message.conversWith || message.recipient,
+      recipient: message.recipient,
+      recipient_fullname: message.recipient_fullname,
+      metadata: message.metadata || "",
+      channel_type: message.channel_type,
+      app_id: message.app_id
+    };
 
-      const user = localStorage.getItem("SELECTED_CHAT") ? JSON.parse(localStorage.getItem("SELECTED_CHAT")) : null;
-      console.log(' selected user details', user)
-      if ((user && m.sender === user.sender) || (m.sender === this.chat21UserID))
-        transformedMessages.push(m);
-      const msgString = this.sessionStorageService.getItem('fetchedMessages');
-      const oldMessageList = JSON.parse(msgString);
-      transformedMessages.forEach(element => {
-        if (!element.action) {
-          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-          element.action = filterOldMsg.length > 0 ? filterOldMsg[0].action : null;
-        }
-        if (!element.conversWith) {
-          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-          element.conversWith = filterOldMsg.length > 0 ? filterOldMsg[0].conversWith : null;
-        }
-        if (!element.showOnUI && !element.subtype) {
-          const filterOldMsg = oldMessageList.filter(data => data.message_id == element.message_id);
-          element.showOnUI = filterOldMsg.length > 0 ? filterOldMsg[0].showOnUI : null;
-          element.subtype = filterOldMsg.length > 0 ? filterOldMsg[0].subtype : null;
-        }
-      });
-      this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
-      return transformedMessages;
+    const existingMessageIndex = messages.findIndex(msg => msg.message_id === m.message_id);
+
+    if (existingMessageIndex !== -1) {
+      messages[existingMessageIndex] = { ...messages[existingMessageIndex], ...m };
+    } else {
+      messages.push(m);
     }
-    // }
-  }
 
+    messages.sort((a, b) => a.timestamp - b.timestamp);
+
+    this.sessionStorageService.setItem('fetchedMessages', messages, true);
+
+    return messages;
+  }
+  
   uuidv4() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
@@ -437,6 +415,24 @@ export class ChatService {
   callbackHandlers = new Map();
 
   chatSubscription = null;
+  pingInterval: any;
+  connectionCheckInterval: any;
+
+
+
+  // startPingInterval() {
+  //   this.pingInterval = setInterval(() => {
+  //     if (this.chatClient && this.chatClient.connected) {
+  //       this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
+  //     }
+  //   }, 10000);
+  // }
+
+  // stopPingInterval() {
+  //   if (this.pingInterval) {
+  //     clearInterval(this.pingInterval);
+  //   }
+  // }
   websocketConnection(chat21Token, requestId) {
 
     this.initChatVariables(requestId);
@@ -564,6 +560,18 @@ export class ChatService {
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       const messageJson = JSON.parse(message.toString());
+                      let fetchedMessages = this.sessionStorageService.getItem('fetchedMessages');
+                      fetchedMessages = JSON.parse(fetchedMessages);
+                      if (fetchedMessages) {
+                        fetchedMessages?.forEach(item => {
+                          if (item?.message_id === messageJson?.attributes?.action?.message_id) {
+                            item.action = messageJson?.attributes?.action
+                          }
+                        });
+                        this.sessionStorageService.setItem('fetchedMessages', fetchedMessages, true);
+                      }
+
+
                       if (this.lastMessageId != messageJson.message_id) {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
@@ -647,6 +655,8 @@ export class ChatService {
             });
           }
         }
+        // this.startPingInterval();
+
       }
     );
     this.chatClient.on("reconnect",
@@ -654,6 +664,9 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
+        // this.startPingInterval();
+
+
       }
     );
     this.chatClient.on("close",
@@ -777,18 +790,6 @@ export class ChatService {
       channel_type: "group"
     };
 
-
-    if (payloads?.message_id) {
-      let fetchedMessages: any = sessionStorage.getItem("fetchedMessages");
-      fetchedMessages = JSON.parse(fetchedMessages);
-      fetchedMessages?.forEach(item => {
-        if (item.message_id === payloads.message_id) {
-          item.action = payloads
-        }
-      });
-      this.sessionStorageService.setItem('fetchedMessages', fetchedMessages, true);
-    }
-
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
     this.chatClient.publish(dest_topic, payload, null, (err) => {
@@ -798,6 +799,10 @@ export class ChatService {
   }
 
   closeWebSocket() {
+    // this.stopPingInterval();
+    // if (this.connectionCheckInterval) {
+    //   clearInterval(this.connectionCheckInterval);
+    // }
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
