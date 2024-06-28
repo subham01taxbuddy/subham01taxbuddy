@@ -64,6 +64,9 @@ export class GenericCsvService {
       if(name === 'calling-report-list'){
         this.mapCallingReportDetails();
       }
+      if(name ==='prefill-uploaded-summary-not-sent-report'){
+        this.mapChatLink();
+      }
       this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");
@@ -76,6 +79,19 @@ export class GenericCsvService {
       element['recordingLink'] = `=HYPERLINK("${element.recordingLink}")`;
     });
   }
+
+  mapChatLink(){
+    this.data.forEach((element) => {
+        if (element.conversationId) {
+            let link  = `https://dashboard.kommunicate.io/conversations/${element.conversationId}`
+            element['conversationId'] = `=HYPERLINK("${link}")`;
+        }
+        if (element.whatsAppConversationId) {
+            let link = `https://dashboard.kommunicate.io/conversations/${element.whatsAppConversationId}`
+            element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
+        }
+    });
+}
 
   mapFiledItrDetails() {
     this.allResignedActiveSmeList?.forEach((item) => {
