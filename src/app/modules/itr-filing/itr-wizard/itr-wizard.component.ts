@@ -539,6 +539,11 @@ export class ItrWizardComponent implements OnInit {
     window.open(url, '_blank');
   }
 
+  goToProfile(){
+    let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
+    this.router.navigate([`pages/user-management/profile/` + this.ITR_JSON.userId], { queryParams: { 'serviceType': serviceType, }, queryParamsHandling: 'merge' });
+  }
+
   ngOnDestroy() {
     sessionStorage.removeItem('ITR_JSON');
     sessionStorage.removeItem('PREV_ITR_JSON');
