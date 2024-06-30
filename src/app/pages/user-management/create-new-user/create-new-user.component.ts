@@ -1,7 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { AppConstants } from './../../../modules/shared/constants';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -280,9 +280,7 @@ export class CreateNewUserComponent implements OnInit {
       Object.assign(finalReq, reqBody);
       //Ashwini: adding + in the country code since user facing app sends country code with +
       finalReq.countryCode = '+' + this.countryCode;
-      finalReq.cognitoId= cognitoData['userSub'],
-
-      console.log("request body : ", finalReq);
+      finalReq.cognitoId = cognitoData['userSub'];
       this.loading = true;
       let param = "/user_account";
       this.userService.postMethod(param, finalReq).subscribe((res: any) => {

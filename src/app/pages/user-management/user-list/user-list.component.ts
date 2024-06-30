@@ -259,7 +259,6 @@ export class UserListComponent {
           } else {
             return params.data.resident;
           }
-          return;
         },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",

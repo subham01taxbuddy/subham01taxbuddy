@@ -375,10 +375,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     if (this.coOwnerToggle.value && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    else {
-      param;
-    }
-
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
       this.key = null;
       this.searchVal = null;
