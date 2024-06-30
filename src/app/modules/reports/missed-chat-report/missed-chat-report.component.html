@@ -1,4 +1,3 @@
-<!-- Loading Section -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on
   and do not move away from the page...</span>
@@ -28,16 +27,6 @@
 
                   <div class="col-sm-12">
                     <div class="row">
-                      <!-- <div class="col-sm-3">
-                        <mat-label>Select Status</mat-label>
-                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                          <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
-                            <mat-option *ngFor="let drop of statusList" [value]="drop.value">
-                              {{ drop.name }}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div> -->
                       <div class="col-sm-4">
                         <mat-label>Select Role</mat-label>
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
@@ -80,9 +69,6 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="button-container">
-                        <!-- <button class="srch-btn-1" (click)="showReports()">
-                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                        </button> -->
                         <app-custom-button class="srch-btn-1" [actions]="[showReports]">
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                         </app-custom-button>
@@ -128,11 +114,9 @@
         <div class="count1"> Total Missed Chat Count: <span class="txClr1">{{totalNoOfMissedChat || 0}}</span></div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of missedChatReport | paginate:config"></tr>
-    </table>
+    <div *ngFor="let item of missedChatReport | paginate:config"></div>
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"
-    (rowClicked)="onSmeRowClicked($event)"></ag-grid-angular>
+      (rowClicked)="onSmeRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <!-- right side summary -->
 <aside class="aside-right">
     <button class="open-button" *ngIf="!displayPanel" (click)="openPanel()">
-        <img class="icoSum" src="assets/img/new/summary.png">
+        <img alt="summary" class="icoSum" src="assets/img/new/summary.png">
         <div class="txAln">Show Summary</div>
     </button>
     <div class="form-popup" id="myForm" *ngIf="displayPanel" [ngClass]="displayPanel ? 'show-panel' : 'hide-panel'">
@@ -9,18 +9,18 @@
             <div class="contents-wrapper">
                 <div class="contents">
                     <div class="field-text fw-bold">Summary</div>
-                    <a (click)="closePanel()"><img class="clos" src="assets/img/new/close.png" /></a>
+                    <a (click)="closePanel()"><img alt="close" class="clos" src="assets/img/new/close.png" /></a>
                 </div>
             </div>
-            <div class="note mb-2 mt-2 ml-2" >
-              <b>Note:</b>  click "Save all" to view accurate summary
+            <div class="note mb-2 mt-2 ml-2">
+                <b>Note:</b> click "Save all" to view accurate summary
             </div>
             <div class="space" *ngIf="type === 'salary'">
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Particulars</th>
-                            <th>All Employers</th>
+                            <th id="particulars">Particulars</th>
+                            <th id="employers">All Employers</th>
                         </tr>
                         <tr>
                             <td>17(1)</td>
@@ -69,8 +69,8 @@
                             </td>
                         </tr>
                         <tr class="border-top">
-                            <th>Taxable Salary</th>
-                            <th>₹
+                            <th id="taxableSalary">Taxable Salary</th>
+                            <th id="totalSalaryTaxableIncome">₹
                                 {{utilsService.currencyFormatter(summary.summaryIncome.summarySalaryIncome.totalSalaryTaxableIncome)}}
                             </th>
                         </tr>
@@ -82,9 +82,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>HP</th>
-                            <th>Ownership Category</th>
-                            <th>Net Income</th>
+                            <th id="hp">HP</th>
+                            <th id="ownership">Ownership Category</th>
+                            <th id="netIncome">Net Income</th>
                         </tr>
                         <tr *ngFor="let house of ITR_JSON.houseProperties; let i = index">
                             <td>{{i+1}}</td>
@@ -92,8 +92,8 @@
                             <td class="text-end">₹{{utilsService.currencyFormatter(house.taxableIncome)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th colspan="2">Total income from all HPs</th>
-                            <th class="text-end">
+                            <th id="totalIncome" colspan="2">Total income from all HPs</th>
+                            <th id="totalhpTaxableIncome" class="text-end">
                                 ₹{{utilsService.currencyFormatter(getTotalHpTaxableIncome())}}
                             </th>
                         </tr>
@@ -105,8 +105,8 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Source Type</th>
-                            <th>Net Income</th>
+                            <th id="sourceType">Source Type</th>
+                            <th id="netincome">Net Income</th>
                         </tr>
                         <tr>
                             <td>Interest Income</td>
@@ -139,8 +139,8 @@
                             </td>
                         </tr>
                         <tr class="border-top">
-                            <th>Total income</th>
-                            <th>₹
+                            <th id="totalIncome">Total income</th>
+                            <th id="totalOtherIncome">₹
                                 {{utilsService.currencyFormatter(getTotalOtherIncome())}}
                             </th>
                         </tr>
@@ -176,8 +176,8 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Non Speculative Income</th>
-                            <th>Amount</th>
+                            <th id="nonSpeculativeIncome">Non Speculative Income</th>
+                            <th id="amount">Amount</th>
                         </tr>
                         <tr>
                             <td>Gross Profit</td>
@@ -214,8 +214,8 @@
                             <td></td>
                         </tr>
                         <tr class="border-bottom">
-                            <th>Speculative Income</th>
-                            <th>Amount</th>
+                            <th id="speculativeIncome">Speculative Income</th>
+                            <th id="amount">Amount</th>
                         </tr>
                         <tr>
                             <td>Income from speculative activity</td>
@@ -231,9 +231,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gainType">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -261,11 +261,11 @@
                             <td>₹ {{utilsService.currencyFormatter(listedEquityShares.totalEquityLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalIncome">Net Capital Gain</th>
+                            <th id="equityNetSTCG">
                                 ₹{{utilsService.currencyFormatter(listedEquityShares.equityNetSTCG)}}
                             </th>
-                            <th>
+                            <th id="equityNetLTCG">
                                 ₹{{utilsService.currencyFormatter(listedEquityShares.equityNetLTCG)}}
                             </th>
                         </tr>
@@ -277,9 +277,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gainType">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -316,11 +316,11 @@
                             <td>₹ {{utilsService.currencyFormatter(otherAssets.totalOtherAssetLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalIncome">Net Capital Gain</th>
+                            <th id="totalOtherAssetsSTCG">
                                 ₹{{utilsService.currencyFormatter(otherAssets.totalOtherAssetsSTCG)}}
                             </th>
-                            <th>
+                            <th id="totalOtherAssetsLTCG">
                                 ₹{{utilsService.currencyFormatter(otherAssets.otherAssetNetLTCG)}}
                             </th>
                         </tr>
@@ -332,9 +332,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gainType">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -371,11 +371,11 @@
                             <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalGain">Net Capital Gain</th>
+                            <th id="totalSTCG">
                                 ₹{{utilsService.currencyFormatter(unlistedEquityShares.totalSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(unlistedEquityShares.netLTCG)}}
                             </th>
                         </tr>
@@ -387,9 +387,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gaintype">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -422,11 +422,11 @@
                             <td>₹ {{utilsService.currencyFormatter(zeroCouponBonds.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalGain">Net Capital Gain</th>
+                            <th id="totalSTCG">
                                 ₹{{utilsService.currencyFormatter(zeroCouponBonds.totalSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(zeroCouponBonds.netLTCG)}}
                             </th>
                         </tr>
@@ -438,9 +438,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gaintype">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -473,11 +473,11 @@
                             <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalGain">Net Capital Gain</th>
+                            <th id="totalSTCG">
                                 ₹{{utilsService.currencyFormatter(indexedBonds.totalSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(indexedBonds.netLTCG)}}
                             </th>
                         </tr>
@@ -490,9 +490,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gaintype">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -525,11 +525,11 @@
                             <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalGain">Net Capital Gain</th>
+                            <th id="totalSTCG">
                                 ₹{{utilsService.currencyFormatter(listedBonds.totalSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(listedBonds.netLTCG)}}
                             </th>
                         </tr>
@@ -541,9 +541,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Gain Type</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="gaintype">Gain Type</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Sale Value</td>
@@ -576,11 +576,11 @@
                             <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCapitalGain">Net Capital Gain</th>
+                            <th id="totalSTCG">
                                 ₹{{utilsService.currencyFormatter(unlistedBonds.totalSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(unlistedBonds.netLTCG)}}
                             </th>
                         </tr>
@@ -592,9 +592,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Type of Capital Gain</th>
-                            <th>Short Term</th>
-                            <th>Long Term</th>
+                            <th id="typeOfCg">Type of Capital Gain</th>
+                            <th id="shortTerm">Short Term</th>
+                            <th id="longTerm">Long Term</th>
                         </tr>
                         <tr>
                             <td>Full value of consideration <br>adopted as per section 50C</td>
@@ -627,11 +627,11 @@
                             <td>₹ {{utilsService.currencyFormatter(landAndBuilding.totalLTCGDeduction)}}</td>
                         </tr>
                         <tr class="border-top">
-                            <th>Net Capital Gain</th>
-                            <th>
+                            <th id="netCg">Net Capital Gain</th>
+                            <th id="netSTCG">
                                 ₹{{utilsService.currencyFormatter(landAndBuilding.netSTCG)}}
                             </th>
-                            <th>
+                            <th id="netLTCG">
                                 ₹{{utilsService.currencyFormatter(landAndBuilding.netLTCG)}}
                             </th>
                         </tr>
@@ -643,9 +643,9 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Particulars</th>
-                            <th>Gross Amount</th>
-                            <th>TDS Amount</th>
+                            <th id="particulars">Particulars</th>
+                            <th id="grossAmount">Gross Amount</th>
+                            <th id="tdsAmount">TDS Amount</th>
                         </tr>
                         <tr>
                             <td>Tax Deducted at<br>Source from Salary</td>
@@ -667,9 +667,9 @@
                             <td></td>
                         </tr>
                         <tr class="border-top border-bottom">
-                            <th>Particulars</th>
-                            <th>Gross Amount</th>
-                            <th>TCS Amount</th>
+                            <th id="particulars">Particulars</th>
+                            <th id="grossAmount">Gross Amount</th>
+                            <th id="tcsAmount">TCS Amount</th>
                         </tr>
                         <tr>
                             <td>Tax Collected at<br>Source(TCS)</td>
@@ -681,8 +681,8 @@
                             <td></td>
                         </tr>
                         <tr class="border-top border-bottom">
-                            <th colspan="2">Particulars</th>
-                            <th>Tax Amount</th>
+                            <th id="particulars" colspan="2">Particulars</th>
+                            <th id="taxAmount">Tax Amount</th>
                         </tr>
                         <tr>
                             <td colspan="2">Advance tax and<br>Self Assessment Tax</td>
@@ -693,8 +693,8 @@
                             <td></td>
                         </tr>
                         <tr class="border-top">
-                            <th colspan="2">Total Taxes Paid</th>
-                            <th>
+                            <th id="totalTaxesPaid" colspan="2">Total Taxes Paid</th>
+                            <th id="total">
                                 ₹{{utilsService.currencyFormatter(taxesPaid.total)}}
                             </th>
                         </tr>
@@ -706,8 +706,8 @@
                 <table class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
-                            <th>Particulars</th>
-                            <th>Amount</th>
+                            <th id="particulars">Particulars</th>
+                            <th id="amount">Amount</th>
                         </tr>
                         <tr>
                             <td>Immovable Assets</td>
@@ -732,8 +732,8 @@
                             <td></td>
                         </tr>
                         <tr class="border-top">
-                            <th>Total Amount</th>
-                            <th>₹{{utilsService.currencyFormatter(scheduleAL.total)}}</th>
+                            <th id="totalAmount">Total Amount</th>
+                            <th id="scheduleAlTotal">₹{{utilsService.currencyFormatter(scheduleAL.total)}}</th>
                         </tr>
                     </tbody>
                 </table>

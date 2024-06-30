@@ -27,7 +27,7 @@ export class RoleBaseAuthGuardService  {
   }
 
   checkHasPermission(userRoles, permissionRoles) {
-    var res = userRoles.filter(function (v) {
+    let res = userRoles.filter(function (v) {
       return permissionRoles.indexOf(v) > -1;
     });
 

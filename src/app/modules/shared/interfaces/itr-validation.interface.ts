@@ -800,17 +800,13 @@ export interface Schedules {
   providedIn: 'root',
 })
 export class ItrValidations {
-  constructor() {}
+  constructor() { }
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];
   }
 
-  getMessage(errorCode: string, employerType: string){
-    if(errorCode === 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY'){
-      return ErrorMsgsSchedule[errorCode].message;
-    } else {
-      return ErrorMsgsSchedule[errorCode].message;
-    }
+  getMessage(errorCode: string) {
+    return ErrorMsgsSchedule[errorCode].message;
   }
 }

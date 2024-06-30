@@ -59,9 +59,7 @@
     </div>
   </div>
 
-  <table>
-    <tr *ngFor="let item of paymentDoneReport | paginate : config"></tr>
-  </table>
+  <div *ngFor="let item of paymentDoneReport | paginate : config"></div>
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="paymentDoneReportGridOptions">
   </ag-grid-angular>

@@ -2,7 +2,7 @@
 <div class="tablejrn">
   <div class="row back">
     <div class="col-sm-11">
-      <label class="more">More options for: <span style="color: rgb(106, 123, 237);">{{ data.name }}</span></label>
+      <div class="more">More options for: <span style="color: rgb(106, 123, 237);">{{ data.name }}</span></div>
     </div>
     <div class="col-sm-1">
       <button mat-dialog-close tabindex="-1" class="tbd-btn-close close" (click)="closeDialog()">
@@ -78,8 +78,7 @@
       No JSON Filing
     </button>
   </span>
-  <span
-    *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER','ROLE_FILER'])" >
+  <span *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER','ROLE_FILER'])">
     <button type="button" title="update ITR-U filling" class="more-new-button"
       (click)="checkSubscription('itr-u-update')">
       <i class="fas fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;ITR-U Update

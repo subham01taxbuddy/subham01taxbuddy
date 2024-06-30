@@ -48,12 +48,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   loading!: boolean;
   financialYear = [
     {
-      assessmentYear : "2024-2025",
-      financialYear : "2023-2024"
+      assessmentYear: "2024-2025",
+      financialYear: "2023-2024"
     },
     {
-      assessmentYear : "2023-2024",
-      financialYear : "2022-2023"
+      assessmentYear: "2023-2024",
+      financialYear: "2022-2023"
     }];
   loggedInSme: any;
   allFilerList: any;
@@ -94,9 +94,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   partnerType: any;
   selectedSearchUserId: any;
   assignedFilerId: number;
-  searchedEmail:any;
-  userData :any;
-  selectedServiceType:any;
+  searchedEmail: any;
+  userData: any;
+  selectedServiceType: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -111,7 +111,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public location: Location,
-    private httpClient:HttpClient,
+    private httpClient: HttpClient,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
@@ -123,10 +123,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     this.subscriptionListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: show ? this.subscriptionCreateColumnDef(this.allFilerList , 'admin') : this.subscriptionCreateColumnDef(this.allFilerList,'regular'),
+      columnDefs: show ? this.subscriptionCreateColumnDef(this.allFilerList, 'admin') : this.subscriptionCreateColumnDef(this.allFilerList, 'regular'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => {},
+      onGridReady: (params) => { },
 
       sortable: true,
     };
@@ -161,12 +161,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }
     this.activatedRoute.queryParams.subscribe((params) => {
       console.log('99999999999999999:', params);
-      if(params['fromEdit']){
+      if (params['fromEdit']) {
         const apiUrl = sessionStorage.getItem('apiURL');
         console.log('apiurl : ', apiUrl);
-        if(apiUrl){
+        if (apiUrl) {
           const queryParams = this.splitQueryParameters(apiUrl);
-          this.getAssignedSubscription('','','','',queryParams)
+          this.getAssignedSubscription('', '', '', '', queryParams)
         }
       }
       if (
@@ -180,10 +180,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.advanceSearch();
       }
 
-      if(this.utilsService.isNonEmpty(params['userId']) && this.utilsService.isNonEmpty(params['serviceType']) ){
+      if (this.utilsService.isNonEmpty(params['userId']) && this.utilsService.isNonEmpty(params['serviceType'])) {
         this.userId = params['userId'];
         this.selectedServiceType = params['serviceType'];
-        this.getAssignedSubscription('','','','','','fromSummary')
+        this.getAssignedSubscription('', '', '', '', '', 'fromSummary')
       }
     });
     if (
@@ -258,7 +258,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription=(pageNo?, mobileNo?, userId?, fromPageChange?,queryParams?,fromSummary?):Promise <any> => {
+  getAssignedSubscription = (pageNo?, mobileNo?, userId?, fromPageChange?, queryParams?, fromSummary?): Promise<any> => {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
 
     if (!fromPageChange) {
@@ -284,16 +284,16 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     ) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = false;
-    }else if(this.roles.includes('ROLE_FILER') && this.agentId === loggedInSmeUserId ){
+    } else if (this.roles.includes('ROLE_FILER') && this.agentId === loggedInSmeUserId) {
       this.filerId = loggedInSmeUserId;
     }
 
     let userIdFilter = '';
-    if (userId || this.searchBy?.userId ) {
-      if(this.roles.includes('ROLE_FILER')){
+    if (userId || this.searchBy?.userId) {
+      if (this.roles.includes('ROLE_FILER')) {
         this.isAllowed = true;
       }
-      userIdFilter ='&userId=' + (this.searchBy?.userId || userId);
+      userIdFilter = '&userId=' + (this.searchBy?.userId || userId);
     }
 
     let mobileFilter = '';
@@ -324,123 +324,106 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    if(fromSummary){
+    if (fromSummary) {
       this.searchParam.serviceType = this.selectedServiceType;
-      userIdFilter ='&userId=' + this.userId;
+      userIdFilter = '&userId=' + this.userId;
     }
 
     this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
 
     var param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}${userIdFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    // if (Object.keys(this.searchBy).length) {
-    //   Object.keys(this.searchBy).forEach(key => {
-    //     param = param + '&' + key + '=' + this.searchBy[key];
-    //   });
-    // }
 
     this.loading = true;
 
-    if(queryParams){
-       param = `/bo/subscription-dashboard-new?${queryParams}`;
-    }else{
-      param;
+    if (queryParams) {
+      param = `/bo/subscription-dashboard-new?${queryParams}`;
     }
     let apiURL = this.reportService.baseUrl + param;
     sessionStorage.setItem('apiURL', apiURL);
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
-        console.log('SUBSCRIPTION RESPONSE:', response);
-        this.allSubscriptions = response;
-        this.loading = false;
-        if (response.success == false) {
-          this._toastMessageService.alert('error', response.message);
+      console.log('SUBSCRIPTION RESPONSE:', response);
+      this.allSubscriptions = response;
+      this.loading = false;
+      if (response.success == false) {
+        this._toastMessageService.alert('error', response.message);
+        this.subscriptionListGridOptions.api?.setRowData(
+          this.createRowData([])
+        );
+        this.config.totalItems = 0;
+      }
+      if (
+        response?.data?.content instanceof Array &&
+        response?.data?.content?.length > 0
+      ) {
+        this.subscriptionListGridOptions.api?.setRowData(
+          this.createRowData(response.data.content)
+        );
+        this.config.totalItems = response.data.totalElements;
+        this.cacheManager.initializeCache(response.data.content);
+
+        const currentPageNumber = response?.data?.number + 1;
+        this.cacheManager.cachePageContent(
+          currentPageNumber,
+          response.data.content
+        );
+        this.config.currentPage = currentPageNumber;
+        this.userId = response.data.content[0].userId;
+      } else {
+        if (response?.data?.content?.length === 0) {
+          this._toastMessageService.alert('error', 'Subscription not found');
+          this.config.totalItems = 0;
           this.subscriptionListGridOptions.api?.setRowData(
             this.createRowData([])
           );
+          return;
+        }
+        if (response?.data?.error === 'User not found') {
+          this._toastMessageService.alert(
+            'error',
+            'No user with this Mobile Number/Email found. ' +
+            'Please create user before creating subscription.'
+          );
+          this.isAllowed = false;
           this.config.totalItems = 0;
-        }
-        if (
-          response?.data?.content instanceof Array &&
-          response?.data?.content?.length > 0
-        ) {
           this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData(response.data.content)
+            this.createRowData([])
           );
-          this.config.totalItems = response.data.totalElements;
-          this.cacheManager.initializeCache(response.data.content);
-
-          const currentPageNumber = response?.data?.number + 1;
-          this.cacheManager.cachePageContent(
-            currentPageNumber,
-            response.data.content
+          return;
+        } else if (response?.data?.error === 'Subscription not found') {
+          this._toastMessageService.alert('error', response?.data?.error);
+          let filtered = this.roles.filter(
+            (item) =>
+              item === 'ROLE_ADMIN' ||
+              item === 'ROLE_LEADER' ||
+              item === 'ROLE_FILER'
           );
-          this.config.currentPage = currentPageNumber;
-
-          // this.selectedUserName = response.data[0].userName;
-          this.userId = response.data.content[0].userId;
-
-          // this.queryParam = `?userId=${this.userId}`;
-          // this.utilsService.sendMessage(this.queryParam);
+          this.isAllowed = filtered && filtered.length > 0 ? true : false;
+          this.config.totalItems = 0;
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData([])
+          );
+          return;
         } else {
-          // this.subscriptionListGridOptions.api?.setRowData(
-          //   this.createRowData([])
-          // );
-          // this.config.totalItems = 0;
-          if (response?.data?.content?.length === 0) {
-            this._toastMessageService.alert('error', 'Subscription not found');
-            this.config.totalItems = 0;
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            return;
-          }
-          if (response?.data?.error === 'User not found') {
-            this._toastMessageService.alert(
-              'error',
-              'No user with this Mobile Number/Email found. ' +
-                'Please create user before creating subscription.'
-            );
-            this.isAllowed = false;
-            this.config.totalItems = 0;
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            return;
-          } else if (response?.data?.error === 'Subscription not found') {
-            this._toastMessageService.alert('error', response?.data?.error);
-            let filtered = this.roles.filter(
-              (item) =>
-                item === 'ROLE_ADMIN' ||
-                item === 'ROLE_LEADER' ||
-                item === 'ROLE_FILER'
-            );
-            this.isAllowed = filtered && filtered.length > 0 ? true : false;
-            this.config.totalItems = 0;
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            return;
-          } else {
-            this._toastMessageService.alert('error', response?.data?.error);
-            this.isAllowed = false;
-            this.config.totalItems = 0;
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            return;
-          }
+          this._toastMessageService.alert('error', response?.data?.error);
+          this.isAllowed = false;
+          this.config.totalItems = 0;
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData([])
+          );
+          return;
         }
-        this.sendTotalCount.emit(this.config.totalItems);
-      }).catch((error)=>{
-        this.sendTotalCount.emit(0);
-        this.loading = false;
-        console.log('error during getting subscription info: ', error);
-      });
+      }
+      this.sendTotalCount.emit(this.config.totalItems);
+    }).catch((error) => {
+      this.sendTotalCount.emit(0);
+      this.loading = false;
+      console.log('error during getting subscription info: ', error);
+    });
   }
 
   searchByName(pageNo = 0) {
@@ -555,7 +538,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               this._toastMessageService.alert(
                 'error',
                 'No user with this mobile number found. ' +
-                  'Please create user before creating subscription.'
+                'Please create user before creating subscription.'
               );
               this.isAllowed = false;
               this.config.totalItems = 0;
@@ -587,12 +570,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               );
               return;
             }
-
-            this.subscriptionListGridOptions.api?.setRowData(
-              this.createRowData([])
-            );
-            this.config.totalItems = 0;
-            this.isAllowed = false;
           }
         },
         (error) => {
@@ -634,7 +611,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.router.navigate([], { queryParams: {} });
   }
 
-  subscriptionCreateColumnDef(List , view) {
+  subscriptionCreateColumnDef(List, view) {
     return [
       // {
       //   field: 'selection',
@@ -826,7 +803,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Delete Subscription',
         field: '',
         width: 120,
-         pinned: 'right',
+        pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -842,7 +819,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Update/Revise Subscription',
         field: '',
         width: 120,
-         pinned: 'right',
+        pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -865,7 +842,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         headerName: 'Create Coupon Code',
         field: '',
         width: 120,
-         pinned: 'right',
+        pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
         hide: view === 'admin' ? false : true,
@@ -935,8 +912,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         )
           ? subscriptionData[i].userSelectedPlan.servicesType
           : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
-          ? subscriptionData[i].smeSelectedPlan.servicesType
-          : '-',
+            ? subscriptionData[i].smeSelectedPlan.servicesType
+            : '-',
         startDate: subscriptionData[i].startDate,
         endDate: subscriptionData[i].endDate,
         invoiceNo: invoiceNumber.toString(),
@@ -958,16 +935,16 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         invoiceAmount: subscriptionData[i].promoApplied
           ? this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
             ? subscriptionData[i].smeSelectedPlan.totalAmount -
-              subscriptionData[i].promoApplied.discountedAmount
+            subscriptionData[i].promoApplied.discountedAmount
             : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
-            ? subscriptionData[i].userSelectedPlan.totalAmount -
+              ? subscriptionData[i].userSelectedPlan.totalAmount -
               subscriptionData[i].promoApplied.discountedAmount
-            : '-'
+              : '-'
           : this.utilsService.isNonEmpty(subscriptionData[i].smeSelectedPlan)
-          ? subscriptionData[i].smeSelectedPlan.totalAmount
-          : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
-          ? subscriptionData[i].userSelectedPlan.totalAmount
-          : '-',
+            ? subscriptionData[i].smeSelectedPlan.totalAmount
+            : this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan)
+              ? subscriptionData[i].userSelectedPlan.totalAmount
+              : '-',
         // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus,
@@ -1059,8 +1036,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                       }
                     );
                   }
-                },(error) => {
-                  this.loading=false;
+                }, (error) => {
+                  this.loading = false;
                   if (error.error && error.error.error) {
                     this.utilsService.showSnackBar(error.error.error);
                     this.getAssignedSubscription(this.config.currentPage);
@@ -1075,7 +1052,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.getAssignedSubscription(this.config.currentPage);
@@ -1140,7 +1117,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.getAssignedSubscription(this.config.currentPage);
@@ -1172,7 +1149,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        this.loading=false;
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.getAssignedSubscription(this.config.currentPage);
@@ -1184,7 +1161,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
-    this.loading=true;
+    this.loading = true;
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach((key) => {
         if (key === 'mobileNumber') {
@@ -1200,8 +1177,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
     //integrate new api to check active user
 
-    if(this.searchedEmail){
-      this.utilsService.getActiveUsers('',this.searchedEmail).subscribe((res:any) => {
+    if (this.searchedEmail) {
+      this.utilsService.getActiveUsers('', this.searchedEmail).subscribe((res: any) => {
         console.log(res);
         if (res.data) {
           if (res.data.content[0].active === false) {
@@ -1209,15 +1186,15 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               'error',
               'The Customer is in potential Users, please activate from there and then create subscription'
             );
-            this.loading=false;
+            this.loading = false;
             return;
           }
         } else {
           this.createSubMiddle()
         }
       })
-    }else if(this.mobileNumber) {
-      this.utilsService.getActiveUsers(this.mobileNumber,'').subscribe((res: any) => {
+    } else if (this.mobileNumber) {
+      this.utilsService.getActiveUsers(this.mobileNumber, '').subscribe((res: any) => {
         console.log(res);
         if (res.data) {
           if (res.data.content[0].active === false) {
@@ -1225,75 +1202,75 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               'error',
               'The Customer is in potential Users, please activate from there and then create subscription'
             );
-            this.loading=false;
+            this.loading = false;
             return;
           }
         } else {
           this.createSubMiddle()
         }
       });
-    }else if(this.selectedSearchUserId){
+    } else if (this.selectedSearchUserId) {
       this.createSubMiddle()
     }
 
 
   }
 
-  createSubMiddle(){
+  createSubMiddle() {
     if (this.searchedEmail) {
-      this.utilsService.getFilerIdByMobile('','',this.searchedEmail).subscribe((res: any) => {
+      this.utilsService.getFilerIdByMobile('', '', this.searchedEmail).subscribe((res: any) => {
         console.log(res);
-          if (res.data) {
-            this.userData = res?.data?.content;
-            const userIds = this.userData.map((user) => user.userId);
-            const uniqueUserIds = new Set(userIds);
-            if (uniqueUserIds.size !== 1) {
-              this._toastMessageService.alert(
-                'error',
-                'Found different user IDs for the same email. Unable to create subscription.'
-              );
-              this.loading=false;
-              return;
-            }else {
-              this.userId = res?.data?.content[0].userId;
-              this.assignedFilerId = res?.data?.content[0].filerUserId;
-              this.loading=false;
-              this.openAddSubscriptionDialog();
-            }
-          }else {
-            this.utilsService.getFilerIdByMobile('', 'ITR',this.searchedEmail).subscribe((res: any) => {
-              console.log(res);
-              if (res.data) {
-                this.userData = res?.data?.content;
-                const userIds = this.userData.map((user) => user.userId);
-                const uniqueUserIds = new Set(userIds);
-                if (uniqueUserIds.size !== 1) {
-                  this._toastMessageService.alert(
-                    'error',
-                    'Found different user IDs for the same email. Unable to create subscription.'
-                  );
-                  this.loading=false;
-                  return;
-                }else{
-                  this.userId = res?.data?.content[0].userId;
-                  this.assignedFilerId = res?.data?.content[0].filerUserId;
-                  this.loading=false;
-                  this.openAddSubscriptionDialog();
-                }
-              } else {
-                this._toastMessageService.alert('error', res.message);
-              }
-            })
+        if (res.data) {
+          this.userData = res?.data?.content;
+          const userIds = this.userData.map((user) => user.userId);
+          const uniqueUserIds = new Set(userIds);
+          if (uniqueUserIds.size !== 1) {
+            this._toastMessageService.alert(
+              'error',
+              'Found different user IDs for the same email. Unable to create subscription.'
+            );
+            this.loading = false;
+            return;
+          } else {
+            this.userId = res?.data?.content[0].userId;
+            this.assignedFilerId = res?.data?.content[0].filerUserId;
+            this.loading = false;
+            this.openAddSubscriptionDialog();
           }
+        } else {
+          this.utilsService.getFilerIdByMobile('', 'ITR', this.searchedEmail).subscribe((res: any) => {
+            console.log(res);
+            if (res.data) {
+              this.userData = res?.data?.content;
+              const userIds = this.userData.map((user) => user.userId);
+              const uniqueUserIds = new Set(userIds);
+              if (uniqueUserIds.size !== 1) {
+                this._toastMessageService.alert(
+                  'error',
+                  'Found different user IDs for the same email. Unable to create subscription.'
+                );
+                this.loading = false;
+                return;
+              } else {
+                this.userId = res?.data?.content[0].userId;
+                this.assignedFilerId = res?.data?.content[0].filerUserId;
+                this.loading = false;
+                this.openAddSubscriptionDialog();
+              }
+            } else {
+              this._toastMessageService.alert('error', res.message);
+            }
+          })
+        }
       });
-    } else if(this.mobileNumber) {
+    } else if (this.mobileNumber) {
       this.utilsService.getFilerIdByMobile(this.mobileNumber)
         .subscribe((res: any) => {
           console.log(res);
           if (res.data) {
             this.assignedFilerId = res?.data?.content[0].filerUserId;
             this.userId = res?.data?.content[0].userId;
-            this.loading=false;
+            this.loading = false;
             this.openAddSubscriptionDialog();
           } else {
             this.utilsService.getFilerIdByMobile(this.mobileNumber, 'ITR')
@@ -1302,19 +1279,19 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 if (res.data) {
                   this.assignedFilerId = res?.data?.content[0].filerUserId;
                   this.userId = res?.data?.content[0].userId;
-                  this.loading=false;
+                  this.loading = false;
                   this.openAddSubscriptionDialog();
                 } else {
                   this._toastMessageService.alert('error', res.message);
-                  this.loading=false;
+                  this.loading = false;
                 }
               });
           }
         });
-    }else if(this.selectedSearchUserId){
+    } else if (this.selectedSearchUserId) {
       this.userId = this.selectedSearchUserId;
       this.assignedFilerId = this?.loggedInSme[0]?.userId;
-      this.loading=false;
+      this.loading = false;
       this.openAddSubscriptionDialog();
     }
   }
@@ -1334,9 +1311,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             data: {
               userId: this.userId,
               mobileNo: this.mobileNumber,
-              email : this.searchedEmail,
+              email: this.searchedEmail,
               filerId: this.assignedFilerId,
-              assessmentYear:this.assessmentYear.value.assessmentYear
+              assessmentYear: this.assessmentYear.value.assessmentYear
             },
           });
           console.log('send data', data);
@@ -1356,13 +1333,13 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 queryParams: { assignedFilerId: this.assignedFilerId },
               });
               // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
-            }else{
+            } else {
               this.getAssignedSubscription(this.config.currentPage);
             }
           });
         }
-      },(error) => {
-        this.loading=false;
+      }, (error) => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.getAssignedSubscription(this.config.currentPage);
@@ -1568,7 +1545,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 export interface ConfirmModel {
   userId: number
   mobileNo: number
-  filerId:number
+  filerId: number
   assessmentYear: string
-  email:string
+  email: string
 }

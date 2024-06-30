@@ -913,14 +913,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
       this.loading = false;
-      if (result.success) {
-        // this.utilsService.showSnackBar(result.message)
-      } else {
-        // this.utilsService.showSnackBar(result.message)
-      }
     }, err => {
       this.loading = false;
-      // this.utilsService.showSnackBar('Failed to update the details.')
     });
   }
 
