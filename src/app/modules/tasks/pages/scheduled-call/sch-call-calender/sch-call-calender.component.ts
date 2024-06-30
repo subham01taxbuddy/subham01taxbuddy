@@ -246,10 +246,8 @@ export class SchCallCalenderComponent implements OnInit {
       let showScheduleTime = moment(mainScheduleData).utc().format('hh:mm:ss a')
       console.log('showScheduleTime', showScheduleTime)
 
-      if(this.data.allData.scheduleCallType){
-        param = param + '&scheduleCallType=' + this.data.allData.scheduleCallType ;
-      }else{
-        param
+      if (this.data.allData.scheduleCallType) {
+        param = param + '&scheduleCallType=' + this.data.allData.scheduleCallType;
       }
 
       this.userMsService.getMethodInfo(param).subscribe(response => {

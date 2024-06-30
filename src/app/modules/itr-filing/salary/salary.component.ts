@@ -714,6 +714,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
         this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
         this.ITR_JSON.employerCategory === 'PE' ||
+
         this.ITR_JSON.employerCategory === 'PESG'
       ) {
         this.firstProvisoError = true;
@@ -929,7 +930,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const ltaControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LTA';
           });
-          const LTA = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'LTA')[0]?.taxableAmount);
+          let LTAVal = formValues?.salary?.filter(item => item.salaryType === 'LTA')[0];
+          const LTA = LTAVal ? parseFloat(LTAVal?.taxableAmount) : 0;
           this.setValidator('LTA', Validators.max(LTA));
 
           if (ltaControl?.get('allowValue')?.errors &&
@@ -944,7 +946,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const gratuityControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'GRATUITY';
           });
-          const gratuity = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0]?.taxableAmount);
+          let gratVal = formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0];
+          const gratuity = gratVal ? parseFloat(gratVal?.taxableAmount) : 0;
           const fixedLimit = 2000000;
 
           let lowerOf = Math.min(gratuity, fixedLimit);
@@ -963,7 +966,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const pensionControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'COMMUTED_PENSION';
           });
-          const pension = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'COMMUTED_PENSION')[0]?.taxableAmount);
+          let pensionVal = formValues?.salary?.filter(item => item.salaryType === 'COMMUTED_PENSION')[0];
+          const pension = pensionVal ? parseFloat(pensionVal?.taxableAmount) : 0;
           this.setValidator('COMMUTED_PENSION', Validators.max(pension));
 
           if (pensionControl?.get('allowValue')?.errors &&
@@ -978,7 +982,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncashControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
           });
-          const leaveEncash = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0]?.taxableAmount);
+          let leaveVal = formValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0];
+          const leaveEncash = leaveVal ? parseFloat(leaveVal?.taxableAmount) : 0;
           const fixedLimit = 2500000;
 
           let lowerOf = Math.min(leaveEncash, fixedLimit);

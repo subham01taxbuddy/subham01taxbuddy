@@ -319,7 +319,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         if (response instanceof Array && response.length > 0) {
           this.searchParam.statusId = null;
           this.itrStatus = response;
-          this.itrStatus.sort((a,b)=> a.sequence - b.sequence);
+          this.itrStatus.sort((a, b) => a.sequence - b.sequence);
         } else {
           this.itrStatus = [];
         }
@@ -384,7 +384,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         pinned: 'left',
-        lockPosition:true,
+        lockPosition: true,
         suppressMovable: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
@@ -1127,12 +1127,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           this._toastMessageService.alert('error', "You don't have calling role.");
           return;
         }
-        if (this.coOwnerToggle.value == true) {
-          agent_number = agentNumber;
-        } else {
-          agent_number = agentNumber;
-          // agent_number = data.callerAgentNumber;
-        }
+        agent_number = agentNumber;
         const reqBody = {
           "agent_number": agent_number,
           "userId": data.userId,
@@ -1306,7 +1301,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
 
   }
-  search= (form?, isAgent?, pageChange?): Promise<any> =>{
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1365,36 +1360,36 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       param = param + `&leaderUserId=${this.agentId}`;
     }
     return this.userMsService.getMethodNew(param).toPromise().then((result: any) => {
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+      if (result.success == false) {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data['content']);
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(result.data['content']);
+      }
+      this.loading = false;
 
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-
-      }).catch(() =>{
-        this.loading = false;
-        this.config.totalItems = 0;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      });
+    }).catch(() => {
+      this.loading = false;
+      this.config.totalItems = 0;
+      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+    });
   }
 
 

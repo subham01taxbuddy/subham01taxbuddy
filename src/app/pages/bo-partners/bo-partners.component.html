@@ -80,9 +80,7 @@
         <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of boPartnersInfo | paginate : config"></tr>
-    </table>
+    <div *ngFor="let item of boPartnersInfo | paginate : config"></div>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="partnersGridOptions"
       (rowClicked)="onUsersRowClicked($event)">

@@ -39,7 +39,6 @@ export class RemoteConfigService {
     try {
       await AngularFireModule.initializeApp(environment.firebaseConfig),
         await this.remoteConfig.fetchAndActivate().then(() => {
-          console.log("Ashwini");
         });
       const remoteConfig = await getRemoteConfig();
       remoteConfig.settings.minimumFetchIntervalMillis = 6 * 3600 * 1000;//6 hours in msec

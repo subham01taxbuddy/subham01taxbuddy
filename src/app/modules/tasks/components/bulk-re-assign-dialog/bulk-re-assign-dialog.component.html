@@ -1,17 +1,17 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div>
-  <label style="font-size: 22px;
-font-weight: bold;"> Bulk Re-Assign </label><button style="float: right;" mat-dialog-close tabindex="-1"
+  <div style="font-size: 22px;
+font-weight: bold;"> Bulk Re-Assign </div><button style="float: right;" mat-dialog-close tabindex="-1"
     class="tbd-btn-close"><i class="fa fa-times" aria-hidden="true"></i></button>
   <div class="row" style="margin-top: 10px ;">
     <div class="col-sm-6">
-      <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </label>
+      <div style="font-size: 18px; font-weight:normal; color:#00AECA;"> From Filer : </div>
       <app-sme-list-drop-down (sendOwner)="fromSme1($event, true)" (sendFiler)="fromSme1($event, false)"
         listType="{{ownerDropDownType}}">
       </app-sme-list-drop-down>
     </div>
     <div class="col-sm-6">
-      <label style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </label>
+      <div style="font-size: 18px; font-weight:normal; color:#00AECA;"> To Filer : </div>
       <app-sme-list-drop-down (sendOwner)="fromSme2($event, true)" (sendFilerList)="fromSme2($event, false)"
         listType="ALL" [checkboxSelection]='true' [showOwnerList]=true>
       </app-sme-list-drop-down>

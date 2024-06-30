@@ -253,9 +253,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     if (this.coOwnerToggle.value) {
       param = param + '&searchAsCoOwner=true';
     }
-    else {
-      param;
-    }
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
       this.loading = false;
@@ -317,7 +314,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     }
   }
 
-  getSmeList=(isAgent?, pageChange?):Promise <any> => {
+  getSmeList = (isAgent?, pageChange?): Promise<any> => {
     //'https://dev-api.taxbuddy.com/report/bo/sme-details?page=0&pageSize=15&assigned=true'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -378,62 +375,58 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     if (this.coOwnerToggle.value && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    else {
-      param;
-    }
-
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        this.key = null;
-        this.searchVal = null;
-        console.log('sme list result -> ', result);
-        if (
-          Array.isArray(result?.data?.content) &&
-          result?.data?.content?.length > 0
-        ) {
-          this.loading = false;
-          this.smeInfo = result?.data?.content;
-          this.smeListLength = this?.smeInfo?.length;
-          this.config.totalItems = result?.data?.totalElements;
-
-          this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
-
-          const currentPageNumber = pageChange || this.searchParam.page + 1;
-          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.smeInfo));
-          this.config.currentPage = currentPageNumber;
-
-          console.log('smelist length no ', this.smeListLength);
-          this.smeListGridOptions.api?.setRowData(
-            this.createRowData(this.smeInfo)
-          );
-        } else {
-          this.loading = false;
-          this.config.totalItems = 0;
-          this.config.internalCount = 0;
-          this.config.externalCount = 0;
-          this.config.activeCount = 0;
-          this.config.inactiveCount = 0;
-          this.config.assignmentOnCount = 0;
-          this.config.assignmentOffCount = 0;
-          console.log('in else');
-          this._toastMessageService.alert(
-            'error',
-            'Fail to getting leads data, try after some time.'
-          );
-          this.smeListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-        }
-      }).catch((error)=>{
+      this.key = null;
+      this.searchVal = null;
+      console.log('sme list result -> ', result);
+      if (
+        Array.isArray(result?.data?.content) &&
+        result?.data?.content?.length > 0
+      ) {
         this.loading = false;
+        this.smeInfo = result?.data?.content;
+        this.smeListLength = this?.smeInfo?.length;
+        this.config.totalItems = result?.data?.totalElements;
+
+        this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.smeInfo));
+        this.config.currentPage = currentPageNumber;
+
+        console.log('smelist length no ', this.smeListLength);
+        this.smeListGridOptions.api?.setRowData(
+          this.createRowData(this.smeInfo)
+        );
+      } else {
+        this.loading = false;
+        this.config.totalItems = 0;
+        this.config.internalCount = 0;
+        this.config.externalCount = 0;
+        this.config.activeCount = 0;
+        this.config.inactiveCount = 0;
+        this.config.assignmentOnCount = 0;
+        this.config.assignmentOffCount = 0;
+        console.log('in else');
         this._toastMessageService.alert(
           'error',
           'Fail to getting leads data, try after some time.'
         );
-        console.log('Error during getting Leads data. -> ', error);
-      });
+        this.smeListGridOptions.api?.setRowData(
+          this.createRowData([])
+        );
+      }
+    }).catch((error) => {
+      this.loading = false;
+      this._toastMessageService.alert(
+        'error',
+        'Fail to getting leads data, try after some time.'
+      );
+      console.log('Error during getting Leads data. -> ', error);
+    });
   }
 
-  getCount=(from?, kay?, searchValue?, isAgent?):Promise <any> =>{
+  getCount = (from?, kay?, searchValue?, isAgent?): Promise<any> => {
     //https://uat-api.taxbuddy.com/report/sme-details-new/3000?page=0&size=30&assigned=true&onlyCount=true'
     //https://dev-api.taxbuddy.com/report/bo/sme-details?assigned=true&page=0&pageSize=5&onlyCount=true' \
     this.loading = true;
@@ -491,36 +484,36 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     }
 
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        if (result.success) {
-          this.loading = false;
-          this.config.totalItems = result?.data?.totalCount;
-          this.config.internalCount = result?.data?.internalCount;
-          this.config.externalCount = result?.data?.externalCount;
-          this.config.activeCount = result?.data?.activeCount;
-          this.config.inactiveCount = result?.data?.inactiveCount;
-          this.config.assignmentOnCount = result?.data?.assignmentOnCount;
-          this.config.assignmentOffCount = result?.data?.assignmentOffCount;
-        } else {
-          this.loading = false;
-          this.config.totalItems = 0;
-          this.config.internalCount = 0;
-          this.config.externalCount = 0;
-          this.config.activeCount = 0;
-          this.config.inactiveCount = 0;
-          this.config.assignmentOnCount = 0;
-          this.config.assignmentOffCount = 0;
-          this._toastMessageService.alert(
-            'error', 'Failed to get count.'
-          );
-        }
-
-      }).catch((error)=>{
+      if (result.success) {
         this.loading = false;
+        this.config.totalItems = result?.data?.totalCount;
+        this.config.internalCount = result?.data?.internalCount;
+        this.config.externalCount = result?.data?.externalCount;
+        this.config.activeCount = result?.data?.activeCount;
+        this.config.inactiveCount = result?.data?.inactiveCount;
+        this.config.assignmentOnCount = result?.data?.assignmentOnCount;
+        this.config.assignmentOffCount = result?.data?.assignmentOffCount;
+      } else {
+        this.loading = false;
+        this.config.totalItems = 0;
+        this.config.internalCount = 0;
+        this.config.externalCount = 0;
+        this.config.activeCount = 0;
+        this.config.inactiveCount = 0;
+        this.config.assignmentOnCount = 0;
+        this.config.assignmentOffCount = 0;
         this._toastMessageService.alert(
           'error', 'Failed to get count.'
         );
-        console.log('Error during getting count data. -> ', error);
-      });
+      }
+
+    }).catch((error) => {
+      this.loading = false;
+      this._toastMessageService.alert(
+        'error', 'Failed to get count.'
+      );
+      console.log('Error during getting count data. -> ', error);
+    });
   }
 
   async downloadReport() {
@@ -660,7 +653,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       });
 
   }
-  updatePrincipleName(){
+  updatePrincipleName() {
     this.utilsService.getFilersList();
     this.smeListGridOptions.api.setColumnDefs(
       this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));

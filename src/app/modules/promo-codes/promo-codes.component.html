@@ -26,16 +26,11 @@
                   This field is required</mat-error>
               </mat-form-field>
             </div>
-            <!-- <div class="row spsTp bdrTp"> -->
             <div class="col-6" *ngIf="false">
               <app-generic-sorting [sortingParameter]="sortMenus"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <!-- </div> -->
             <div class="col-sm-4">
-              <!-- <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
-                <i class="fa fa-search" aria-hidden="true"></i> Search
-              </button> -->
               <app-custom-button class="srch-btn" [actions]="[getPromoCodeList]">
                 <i class="fa fa-search" aria-hidden="true"></i> Search
               </app-custom-button>
@@ -51,11 +46,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 <div class="clearfix">
-
-  <!-- Table Below -->
-
   <div class="tableSpc">
     <div class="row">
       <div class="col-sm-8">
@@ -67,9 +58,7 @@
         <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of PromoCodeInfo | paginate : config"></tr>
-    </table>
+    <div *ngFor="let item of PromoCodeInfo | paginate : config"></div>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions"
       (rowClicked)="onPromoCodeRowClicked($event)">

@@ -19,8 +19,8 @@
                     <section class="example-section checkbox-right">
                       <div class="checkbox-group ">
                         <mat-checkbox class="ft-18 mb-4" [formControl]="deletedInvoiceList"
-                        *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')"
-                        (change)="onCheckBoxChange()">Deleted Proforma Invoice List</mat-checkbox>
+                          *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')"
+                          (change)="onCheckBoxChange()">Deleted Proforma Invoice List</mat-checkbox>
                       </div>
                     </section>
                   </div>
@@ -74,7 +74,7 @@
                   </div>
                   <div class="col-sm-3">
                     <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
+                      [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
                   </div>
                   <div class="col-sm-9">
                     <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
@@ -88,9 +88,6 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <!-- <button class="srch-btn-1" [disabled]="loading" (click)="getInvoice('isAgent','agentId')">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                    </button> -->
                     <app-custom-button class="srch-btn-1" [actions]="[getInvoice]">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
                     </app-custom-button>
@@ -142,9 +139,7 @@
           <div class="count1"> Total Count: <span class="txClr1">{{ totalInvoice }}</span></div>
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of invoiceInfo | paginate:config"></tr>
-      </table>
+      <div *ngFor="let item of invoiceInfo | paginate:config"></div>
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceListGridOptions"
         (rowClicked)="onInvoiceRowClicked($event)">
 

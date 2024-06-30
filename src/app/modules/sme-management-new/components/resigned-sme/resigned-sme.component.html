@@ -15,37 +15,35 @@
             <div class="col-sm-12">
               <div class="filter-box">
                 <div class="container-fluid">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                      (onChange)="searchByObject($event)"></app-generic-user-filter>
-                  </div>
-                  <div class="row mt-3">
-                    <div class="col-sm-6 spcTp">
-                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-                        (onChange)="sortByObject($event)"></app-generic-sorting>
-                    </div>
-
-                  </div>
-                  <div class="button-container">
-                    <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                    </button> -->
-                    <app-custom-button class="srch-btn-1" [actions]="[getSmeList]">
-                      <i class="fa fa-search" aria-hidden="true"></i> Search
-                    </app-custom-button>
-                    <button class="clrLnk-1" (click)="this.resetFilters()">
-                      Clear form
-                    </button>
-                  </div>
                   <div class="row">
-                    <div class="col-sm-12 mt-3 ">
-                      <span class="new-note1 note">
-                        Note : Please select required filters above and click on search to get information
-                      </span>
+                    <div class="col-sm-12">
+                      <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                        (onChange)="searchByObject($event)"></app-generic-user-filter>
+                    </div>
+                    <div class="row mt-3">
+                      <div class="col-sm-6 spcTp">
+                        <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                          (onChange)="sortByObject($event)"></app-generic-sorting>
+                      </div>
+
+                    </div>
+                    <div class="button-container">
+                      <app-custom-button class="srch-btn-1" [actions]="[getSmeList]">
+                        <i class="fa fa-search" aria-hidden="true"></i> Search
+                      </app-custom-button>
+                      <button class="clrLnk-1" (click)="this.resetFilters()">
+                        Clear form
+                      </button>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12 mt-3 ">
+                        <span class="new-note1 note">
+                          Note : Please select required filters above and click on search to get information
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
 
@@ -68,9 +66,7 @@
       </div>
     </div>
 
-    <table>
-      <tr *ngFor="let item of smeInfo | paginate : config"></tr>
-    </table>
+    <div *ngFor="let item of smeInfo | paginate : config"></div>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
       (rowClicked)="onSmeRowClicked($event)">
@@ -78,4 +74,3 @@
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>
-

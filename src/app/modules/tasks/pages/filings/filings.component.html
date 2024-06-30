@@ -83,10 +83,7 @@
                     </div>
                     <!-- Table Sorting inside filter ends -->
                     <div class="button-container">
-                      <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                        Search
-                      </button> -->
-                      <app-custom-button class="srch-btn-1"  [actions]="[myItrsList.bind(this)]" [actionParams]="[[0]]">
+                      <app-custom-button class="srch-btn-1" [actions]="[myItrsList.bind(this)]" [actionParams]="[[0]]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
                       <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
@@ -124,9 +121,7 @@
             <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
           </div>
         </div>
-        <table>
-          <tr *ngFor="let item of itrDataList | paginate:config"></tr>
-        </table>
+        <div *ngFor="let item of itrDataList | paginate:config"></div>
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="myItrsGridOptions"
           (rowClicked)="onRowClicked($event)">

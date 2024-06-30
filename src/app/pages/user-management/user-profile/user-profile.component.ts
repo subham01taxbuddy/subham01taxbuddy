@@ -550,7 +550,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   getGstType(gstCode: any) {
-    this.gstType.find((item: any) => item.label === gstCode).label
+    let gstType = this.gstType.find((item: any) => item.label === gstCode).label;
   }
 
   uploadBusinessLogo(files: any) {

@@ -18,8 +18,8 @@
                   <div class="col-sm-4 ">
                     <mat-label>Financial Year</mat-label>
                     <mat-form-field appearance="outline" class="customBg custom-bg-new small-inp no-height">
-                      <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off"
-                        (selectionChange)="setDates()">
+                      <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear"
+                        autocomplete="off" (selectionChange)="setDates()">
                         <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
                           {{item.label}}
                         </mat-option>
@@ -29,8 +29,8 @@
                   <div class="col-sm-4 spsTp">
                     <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                       <mat-label>From Date</mat-label>
-                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off"
-                        (dateChange)="setToDateValidation()" />
+                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate"
+                        autocomplete="off" (dateChange)="setToDateValidation()" />
                       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                       <mat-datepicker #picker1></mat-datepicker>
                       <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
@@ -62,9 +62,6 @@
                       (onChange)="searchByObject($event)"></app-generic-user-filter>
                   </div>
                   <div class="button-container">
-                    <!-- <button class="srch-btn-1" [disabled]="loading" (click)="getInvoices()">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                    </button> -->
                     <app-custom-button class="srch-btn-1" [actions]="[getInvoices]">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
                     </app-custom-button>
@@ -105,9 +102,7 @@
         </div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of invoiceInfo | paginate: config"></tr>
-    </table>
+    <div *ngFor="let item of invoiceInfo | paginate: config"></div>
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceListGridOptions"
       (rowClicked)="onInvoiceRowClicked($event)">
     </ag-grid-angular>
