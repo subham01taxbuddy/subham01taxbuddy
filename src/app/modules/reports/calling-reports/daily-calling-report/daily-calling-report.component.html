@@ -24,16 +24,6 @@
                   </div>
                   <div class="col-sm-12">
                     <div class="row">
-                      <!-- <div class="col-sm-3">
-                        <mat-label>Select Status</mat-label>
-                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                          <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
-                            <mat-option *ngFor="let drop of statusList" [value]="drop.value">
-                              {{ drop.name }}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div> -->
                       <div class="col-sm-4 ">
                         <mat-label>Select Role</mat-label>
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
@@ -80,9 +70,6 @@
                     </div>
                     <div class="col-sm-6">
                       <div class="button-container">
-                        <!-- <button class="srch-btn-1" (click)="showReports();getCallingCount()">
-                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                        </button> -->
                         <app-custom-button class="srch-btn-1" [actions]="[showReports,getCallingCount]">
                           <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                         </app-custom-button>
@@ -129,8 +116,6 @@
       </div>
       <div class="col-sm-12">
         <div class="tpMain">
-          <!-- <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
-          <span class="numTxBg1">{{ this.config.totalItems }}</span> -->
           <div class="row">
             <div class="col-sm-3">
               <div class="radius2">
@@ -159,32 +144,30 @@
             <div class="col-sm-6">
               <div class="radius2">
                 <div class="inBxM">
-                    <span class="numTxSm grTx1">{{ countData?.total_noOfMissedCall || 0 }}</span><br>
-                    <span class="TxSm">No of Missed Call</span>
+                  <span class="numTxSm grTx1">{{ countData?.total_noOfMissedCall || 0 }}</span><br>
+                  <span class="TxSm">No of Missed Call</span>
                 </div>
                 <div class="inBxM">
-                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnCalling || 0 }}</span><br>
-                    <span class="TxSm">Average time spent on calling</span>
+                  <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnCalling || 0 }}</span><br>
+                  <span class="TxSm">Average time spent on calling</span>
                 </div>
                 <div class="inBxM-N ">
-                    <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnConnectedCall || 0 }}</span><br>
-                    <span class="TxSm">Average time spent on connected call</span>
+                  <span class="numTxSm OrgTx">{{ countData?.total_AverageTimeSpentOnConnectedCall || 0 }}</span><br>
+                  <span class="TxSm">Average time spent on connected call</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of dailyCallingReport | paginate:parentConfig"></tr>
-      </table>
+      <div *ngFor="let item of dailyCallingReport | paginate:parentConfig"></div>
 
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="dailyCallingReportGridOptions"
-       (rowClicked)="onSmeRowClicked($event)">
+        (rowClicked)="onSmeRowClicked($event)">
 
       </ag-grid-angular>
 
-      <pagination-controls class="pagination1"  (pageChange)="pageChanged($event)"></pagination-controls>
+      <pagination-controls class="pagination1" (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
   </div>
 </div>
