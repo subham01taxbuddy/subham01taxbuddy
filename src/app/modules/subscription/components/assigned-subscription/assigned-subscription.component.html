@@ -19,7 +19,14 @@
             <div class="col-sm-12">
               <div class="filter-box">
                 <div class="row">
-                  <div class="col-sm-12 bckClr">
+                  <div class="col-sm-12" *ngIf="roles.includes('ROLE_LEADER')">
+                    <section class="example-section checkbox-right">
+                      <button class="srch-btn-1" (click)="deleteSub(template)"><i class="fa fa-trash fa-xs" aria-hidden="true"></i>
+                        Stale subscription Delete
+                      </button>
+                    </section>
+                  </div>
+                  <div class="col-sm-12 bckClr spcTp1">
                     <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
                       (sendPrincipleIndividual)="fromSme($event,false, true)"
                       (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
@@ -131,3 +138,33 @@
   </div>
 
 </div>
+
+
+<ng-template #template>
+  <div class="row">
+    <div class="col-12">
+      <h4 matDialogTitle>Delete Bulk Subscription&nbsp;
+        <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1">
+          <i class="fa fa-close"></i>
+        </button>
+      </h4>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mt-1">
+      <p>This will delete all the unpaid subscriptions of Not interested / Chat resolved and Backout status.</p>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+    <div class="col-sm-5">
+      <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+        [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
+    </div>
+    <div class="col-sm-4 text-right" style="margin-top: 1.5rem;">
+      <button class="tbd-btn" [disabled]="loading" (click)="deleteSubscriptions()">Delete</button>
+      <button class="tbd-btn" mat-dialog-close>Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
