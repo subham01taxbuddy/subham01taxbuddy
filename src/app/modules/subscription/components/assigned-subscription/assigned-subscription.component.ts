@@ -1,6 +1,6 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
-import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -1552,6 +1552,46 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     );
     this.loading = false;
     this.showCsvMessage = false;
+  }
+
+  deleteSub(templateRef){
+    this.dialogRef = this.dialog.open(templateRef, {
+      width: 'auto',
+      data: {
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.data === 'added') {
+          this.searchParam.serviceType = null;
+          if(this.config.totalItems != 0){
+            this.search(0);
+          }
+        }else{
+          this.searchParam.serviceType = null;
+        }
+      }
+    });
+
+  }
+
+  deleteSubscriptions=():Promise<any> =>{
+    //'https://uat-api.taxbuddy.com/itr/bulk-cancel-subscriptions?leaderUserId=14165&serviceType=ITR' \
+    this.loading = true;
+    const param = `/bulk-cancel-subscriptions?leaderUserId=${this?.loggedInSme[0]?.userId}&serviceType=${this.searchParam.serviceType}`
+    return this.itrService.putMethod(param).toPromise().then((response: any) => {
+      this.loading = false;
+      if(response.success){
+        this.utilsService.showSnackBar('Deleted Bulk Subscription Successful');
+        this.dialogRef.close({ event: 'close', data: 'added' });
+      }else{
+        this.utilsService.showSnackBar('Failed To Delete Bulk Subscription');
+      }
+    }).catch(()=>{
+      this.loading=false;
+      this.utilsService.showSnackBar('Error in Delete Bulk Subscription API')
+    })
   }
 
   getToggleValue() {
