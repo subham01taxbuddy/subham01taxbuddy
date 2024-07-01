@@ -309,17 +309,17 @@
               Download XML</button> -->
         <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"
-        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
+        [disabled]="!(ITR_JSON.itrSummaryJson != null || finalCalculations?.totalIncome < 20000000)">
           Download PDF
         </button>
 
         <button type="button" class="btn kommBut" (click)="sendPdf('both')"
-        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
+        [disabled]="!(ITR_JSON.itrSummaryJson != null || finalCalculations?.totalIncome < 20000000)">
           Send PDF to Kommunicate
         </button>
 
         <button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')"
-        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
+        [disabled]="!(ITR_JSON.itrSummaryJson != null || finalCalculations?.totalIncome < 20000000)">
           Send PDF to WhatsApp
         </button>
 
