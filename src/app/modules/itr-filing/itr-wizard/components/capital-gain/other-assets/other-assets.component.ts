@@ -586,6 +586,25 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
       },
       {
+        headerName: 'Source',
+        field: 'brokerName',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+        cellStyle: {
+          textAlign: 'center',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'bold',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
+        cellRenderer: (params)=> {
+          return params.data.brokerName === 'AIS' ? `<span style="color: #007bff;">${params.data.brokerName}</span>`
+              : `<span style="color: #91C561;">${params.data.brokerName}</span>`
+        }
+      },
+      {
         headerName: 'Indexed cost of Improvement',
         field: 'indexCostOfImprovement',
         width: 150,
