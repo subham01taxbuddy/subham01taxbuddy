@@ -798,7 +798,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     this.router.navigate(['/tasks/assigned-users-new']);
   }
 
-  updateSmeDetails() {
+  updateSmeDetails = (): Promise<any> => {
     //'https://uat-api.taxbuddy.com/user/v2/assistant-details' \
     this.markFormGroupTouched(this.smeFormGroup);
     if (this.smeFormGroup.valid) {
@@ -867,7 +867,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       };
 
       this.loading = true;
-      this.userMsService.postMethod(param, requestBody).subscribe(
+      return this.userMsService.postMethod(param, requestBody).toPromise().then(
         (res: any) => {
           console.log('Profile update response:', res);
           this.loading = false;
@@ -883,7 +883,9 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
           this.loading = false;
           this._toastMessageService.alert('error', 'Failed to update profile. Please try again.');
         }
-      );
+      ).catch(()=>{
+        this.loading = false;
+      });
     } else {
       this._toastMessageService.alert('error', 'Please fill in all required details correctly.');
     }

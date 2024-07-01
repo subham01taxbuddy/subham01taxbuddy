@@ -68,5 +68,6 @@ font-weight: bold;">Update Filing Details</div>
     </mat-form-field>
   </div>
 </div>
-<button class="tbd-btn pull-right" (click)="updateManualDetails()"
-  [disabled]="eFillingDate.status!='VALID'">Update</button>
+<app-custom-button [disabled]="eFillingDate.status !== 'VALID'" class="tbd-btn pull-right" [actions]="[updateManualDetails]">
+  Update
+</app-custom-button>
