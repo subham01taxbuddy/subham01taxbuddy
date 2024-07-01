@@ -15,7 +15,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { environment } from '../../../../../../environments/environment';
-import {forkJoin} from "rxjs";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: 'app-old-vs-new',
@@ -316,7 +316,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement89'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement89'
@@ -354,7 +354,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement90'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement90'
@@ -392,7 +392,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement91'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement91'
@@ -591,8 +591,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     // }
   }
 
-  resultOld:any;
-  resultNew:any;
+  resultOld: any;
+  resultNew: any;
 
   ngOnInit(): void {
     this.loading = true;
@@ -1773,10 +1773,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           console.error('Error fetching data:', error);
           this.loading = false;
           this.errorMessage =
-              'We are processing your request, Please wait......';
+            'We are processing your request, Please wait......';
           if (error) {
             this.errorMessage =
-                'We are unable to display your summary,Please try again later.';
+              'We are unable to display your summary,Please try again later.';
           }
           console.log('In error method===', error);
         },
@@ -1791,7 +1791,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.allowNewRegime = this.ITR_JSON.isLate === 'N' && this.ITR_JSON.isRevised === 'Y';
   }
 
-  displayComparison(){
+  displayComparison() {
     this.newSummaryIncome = this.resultNew;
     this.oldSummaryIncome = this.resultOld;
 
@@ -1828,14 +1828,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       {
         label: 'Income from Other Sources',
         old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
-            + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+          .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
         new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-            + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+          .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
         py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-            + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+          .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
       },
       {
         label: 'Total Headwise Income',
@@ -1846,22 +1846,22 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       {
         label: 'CYLA',
         old:
-            this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-            this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+          this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+          this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
         new:
-            this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-            this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+          this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+          this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
         py: this.pySummary ?
-            this.pySummary?.taxSummary.currentYearLossIFHP +
-            this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
+          this.pySummary?.taxSummary.currentYearLossIFHP +
+          this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
       },
       {
         label: 'BFLA',
         old: Math.abs(
-            this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+          this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
         ),
         new: Math.abs(
-            this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+          this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
         ),
         py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
       },
@@ -1916,14 +1916,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       {
         label: 'Tax Payable / (Refund)',
         old:
-            this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
-                : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
+          this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
+            : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
         new:
-            this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
-                : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
+          this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
+            : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
         py: this.pySummary ?
-            (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
-                : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
+          (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
+            : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
       },
     ];
 
@@ -1932,7 +1932,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.setCgQuarterWiseBreakUp();
     this.loading = false;
     this.utilsService.showSnackBar(
-        'The below displayed calculations are as of Taxbuddys calculation'
+      'The below displayed calculations are as of Taxbuddys calculation'
     );
   }
 
@@ -2360,16 +2360,28 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  setFilingDate(formGroup: any) {
-    var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
-    var lastSix = id.toString().substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
-    let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day);
+  setFilingDate(formGroup: any, ackNum?, ackDate?) {
+    if (ackNum && ackDate) {
+      var id = (formGroup as UntypedFormGroup).controls[ackNum].value;
+      var lastSix = id.toString().substr(id.length - 6);
+      var day = lastSix.slice(0, 2);
+      var month = lastSix.slice(2, 4);
+      var year = lastSix.slice(4, 6);
+      let dateString = `20${year}-${month}-${day}`;
+      console.log(dateString, year, month, day);
 
-    (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
+      (formGroup as UntypedFormGroup).controls[ackDate].setValue(moment(dateString).toDate());
+    } else {
+      var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
+      var lastSix = id.toString().substr(id.length - 6);
+      var day = lastSix.slice(0, 2);
+      var month = lastSix.slice(2, 4);
+      var year = lastSix.slice(4, 6);
+      let dateString = `20${year}-${month}-${day}`;
+      console.log(dateString, year, month, day);
+
+      (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
+    }
   }
 
   getCrypto(summary, type) {
