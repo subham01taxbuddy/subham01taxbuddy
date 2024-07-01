@@ -24,8 +24,9 @@ export class ScheduleFsiComponent implements OnInit {
     'OTHER',
   ];
   offeredForTaxIndValue: number;
+  countryNameCodeList: any;
 
-  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService) {}
+  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService) { }
 
   ngOnInit(): void {
     this.countryCodeList = [
@@ -495,7 +496,7 @@ export class ScheduleFsiComponent implements OnInit {
               taxPayable: element?.get('taxPayableNrmlProv')?.value,
               taxRelief:
                 element?.get('taxPaidOutInd')?.value <=
-                element?.get('taxPayableNrmlProv')?.value
+                  element?.get('taxPayableNrmlProv')?.value
                   ? element?.get('taxPaidOutInd')?.value
                   : element?.get('taxPayableNrmlProv')?.value,
               claimedDTAA: element?.get('relevantArticle')?.value,
@@ -580,4 +581,17 @@ export class ScheduleFsiComponent implements OnInit {
       }
     });
   }
+
+
+  filter(event): void {
+    if (event.target.value) {
+      const filterValue = event.target.value.toLowerCase();
+      this.countryNameCodeList = this.countryCodeList.filter(
+        item => item.toLowerCase().includes(filterValue));
+    } else {
+      this.countryNameCodeList = this.countryCodeList;
+    }
+  }
+
+
 }
