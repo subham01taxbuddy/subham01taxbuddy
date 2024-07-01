@@ -69,7 +69,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
   }
 
   updateManualDetails() {
-    if (this.eFillingDate.valid && this.ackNumber.valid) {
+    if (this.eFillingDate.valid && this.ackNumber.valid && this.manualUpdateReason.valid) {
       this.loading = true;
       // const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
       // this.itrMsService.getMethod(param1).subscribe((res: any) => {
