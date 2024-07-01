@@ -4,7 +4,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -87,9 +87,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   serviceEligibility: any;
   assignedFilerId: any;
   refundInvoiceDetails: any;
-  selectedITRUFy: any =[];
-  partnerType:any;
-  scheduledCallServiceTypes =[
+  selectedITRUFy: any = [];
+  partnerType: any;
+  scheduledCallServiceTypes = [
     {
       label: 'ITR',
       value: 'ITR',
@@ -107,8 +107,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       value: 'TPA',
     },
   ]
-  showScheduledFields:boolean =false;
-  scheduleCallTypes =[
+  showScheduledFields: boolean = false;
+  scheduleCallTypes = [
     {
       label: 'Business Requirements',
       value: 'business',
@@ -129,7 +129,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     private dialog: MatDialog,
     private reportService: ReportService,
     private route: ActivatedRoute,
-    private router:Router
+    private router: Router
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -210,43 +210,43 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getAllPlanInfo(this.serviceType);
     this.setFormValues(this.selectedUserInfo);
     this.isButtonDisable = true;
-    if(this.serviceType === 'ITR')
+    if (this.serviceType === 'ITR')
       this.defaultFinancialYear = this.financialYear[0].financialYear;
 
-    if(this.smeSelectedPlanId === 120){
-      this.showScheduledFields =true;
+    if (this.smeSelectedPlanId === 120) {
+      this.showScheduledFields = true;
     }
 
-    let gstServiceType = this.subscriptionObj?.servicesType ===  "GST" ? true : false;
+    let gstServiceType = this.subscriptionObj?.servicesType === "GST" ? true : false;
     if (this.serviceType === 'GST' || gstServiceType) {
       this.filteredFinancialYears = [{ financialYear: '2024-2025' }, ...this.financialYear];
-      console.log('updated FY ',this.filteredFinancialYears)
-    }else{
-      this.filteredFinancialYears= this.financialYear;
+      console.log('updated FY ', this.filteredFinancialYears)
+    } else {
+      this.filteredFinancialYears = this.financialYear;
     }
   }
 
-  printValue(){
+  printValue() {
     console.log(this.selectedCouponCodeSubscriptionIds, "subscriptionCouponCode")
   }
 
-  setAvailableCouponCodes(){
-    let param = '/bo/subscription/coupon-code?userId='+this.subscriptionObj.userId+'&isCouponCodeAvailable=true';
+  setAvailableCouponCodes() {
+    let param = '/bo/subscription/coupon-code?userId=' + this.subscriptionObj.userId + '&isCouponCodeAvailable=true';
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success && response.data.length > 0)
-            this.availableCouponCodes = response.data;
+        this.availableCouponCodes = response.data;
 
       console.log(this.availableCouponCodes, "this.availableCouponCodes")
 
     });
   }
 
-  setExistingCouponCode(){
+  setExistingCouponCode() {
     const couponCodeDetails = this.userSubscription?.concessionsApplied?.filter(item => item.title === 'Coupon Code');
-    if(couponCodeDetails?.length > 0) {
+    if (couponCodeDetails?.length > 0) {
       couponCodeDetails.forEach(couponCodeDetail => {
-        if(!this.availableCouponCodes.some(cd => cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId)){
+        if (!this.availableCouponCodes.some(cd => cd.couponCodeSubscriptionId === couponCodeDetail?.subscriptionId)) {
           this.availableCouponCodes.push({
             couponCodeSubscriptionId: couponCodeDetail?.subscriptionId,
             amount: couponCodeDetail.amount,
@@ -254,9 +254,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           });
         }
       });
-      this.selectedCouponCodeSubscriptionIds = couponCodeDetails?.map(item=>item.subscriptionId);
+      this.selectedCouponCodeSubscriptionIds = couponCodeDetails?.map(item => item.subscriptionId);
       this.couponCodeAppliedFlag = true;
-      this.couponCodeAmount = couponCodeDetails?.reduce((total, element)=>total+element.amount, 0);
+      this.couponCodeAmount = couponCodeDetails?.reduce((total, element) => total + element.amount, 0);
     } else {
       this.selectedCouponCodeSubscriptionIds = [];
       this.couponCodeAppliedFlag = false;
@@ -267,7 +267,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applyCouponCode=(selectedPlan):Promise<any> =>{
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = false;
-    if(this.selectedCouponCodeSubscriptionIds?.length === 0)
+    if (this.selectedCouponCodeSubscriptionIds?.length === 0)
       this.removeCouponCodeFlag = true;
 
     this.couponCodeAppliedFlag = true;
@@ -370,7 +370,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       if (response.success) {
         this.smeDetails = response.data[0];
         if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-          if (this.assignedFilerId && (this.serviceType === 'ITR' ||this.serviceType === 'ITRU' )) {
+          if (this.assignedFilerId && (this.serviceType === 'ITR' || this.serviceType === 'ITRU')) {
             this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
           }
         } else if (this.roles.includes('ROLE_FILER')) {
@@ -381,10 +381,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   getCodeFromLabelOnBlur() {
-    if (
-      this.utilsService.isNonEmpty(this.searchedPromoCode.value) &&
-      this.utilsService.isNonEmpty(this.searchedPromoCode.value)
-    ) {
+    if (this.utilsService.isNonEmpty(this.searchedPromoCode.value)) {
       let pCode = this.allPromoCodes.filter(
         (item: any) =>
           item.title.toLowerCase() ===
@@ -516,8 +513,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   otherInfoForm: UntypedFormGroup = this.fb.group({
     sacNumber: new UntypedFormControl('998232'),
     description: new UntypedFormControl(''),
-    scheduleCallService:new UntypedFormControl(''),
-    scheduleCallType:new UntypedFormControl(''),
+    scheduleCallService: new UntypedFormControl(''),
+    scheduleCallType: new UntypedFormControl(''),
   });
 
   get description() {
@@ -530,7 +527,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     return this.otherInfoForm.controls['scheduleCallService'] as UntypedFormControl;
   }
 
-  get scheduleCallType(){
+  get scheduleCallType() {
     return this.otherInfoForm.controls['scheduleCallType'] as UntypedFormControl;
   }
 
@@ -553,10 +550,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   isPromoRemoved = false;
   applyPromo=(selectedPlan):Promise<any> => {
     this.smeSelectedPlanId = selectedPlan;
-    if(this.selectedCouponCodeSubscriptionIds.length === 0)
+    if (this.selectedCouponCodeSubscriptionIds.length === 0)
       this.couponCodeAppliedFlag = true;
 
-    if(this.couponCodeAppliedFlag)
+    if (this.couponCodeAppliedFlag)
       this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
@@ -569,7 +566,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
       removePromoCode: false,
       removeCouponCode: this.removeCouponCodeFlag,
-      couponCodeSubscriptionIds:this.selectedCouponCodeSubscriptionIds
+      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
     return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
@@ -593,7 +590,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   removePromoCode=(selectedPlan):Promise<any> => {
     this.smeSelectedPlanId = selectedPlan;
-    if(this.selectedCouponCodeSubscriptionIds.length === 0)
+    if (this.selectedCouponCodeSubscriptionIds.length === 0)
       this.removeCouponCodeFlag = true;
     const param = `/subscription/recalculate`;
     const request = {
@@ -605,7 +602,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
       removePromoCode: true,
       removeCouponCode: this.removeCouponCodeFlag,
-      couponCodeSubscriptionIds:this.selectedCouponCodeSubscriptionIds
+      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
     return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
@@ -642,14 +639,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     });
   }
 
-  get concessionsApplied(){
-    return this?.userSubscription?.concessionsApplied?.filter(item=>item.title !== 'Coupon Code');
+  get concessionsApplied() {
+    return this?.userSubscription?.concessionsApplied?.filter(item => item.title !== 'Coupon Code');
   }
 
   totalCon: any;
   totalConcession() {
     let concession = 0;
-    this?.userSubscription?.concessionsApplied?.filter(item=>item.title !== 'Coupon Code').forEach((item) => {
+    this?.userSubscription?.concessionsApplied?.filter(item => item.title !== 'Coupon Code').forEach((item) => {
       concession += item.amount;
     });
     this.totalCon =
@@ -833,7 +830,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           console.log('this.selectedUserInfo:', this.selectedUserInfo);
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           this.setFormValues(this.selectedUserInfo);
-          if(this.serviceType === 'ITRU'){
+          if (this.serviceType === 'ITRU') {
             if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
               this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber);
             } else {
@@ -946,7 +943,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           );
           if (this.utilsService.isNonEmpty(serviceType)) {
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
-            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU' ))) {
+            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU'))) {
               this.allPlans.forEach((item: any) => {
                 item.disable = true;
                 if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
@@ -985,7 +982,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   applySmeSelectedPlan=(selectedPlan):Promise<any> =>{
     this.loading = true;
     this.smeSelectedPlanId = selectedPlan;
-    if(this.selectedCouponCodeSubscriptionIds.length === 0)
+    if (this.selectedCouponCodeSubscriptionIds.length === 0)
       this.removeCouponCodeFlag = true;
     const param = '/subscription/recalculate';
     const request = {
@@ -1073,37 +1070,37 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.invoiceForm.controls['gstin'].updateValueAndValidity();
   }
 
-  checkPreviousITRuSub(){
-     // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
-     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-     let filter = '';
-     if(this.roles.includes('ROLE_FILER')){
+  checkPreviousITRuSub() {
+    // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+    let filter = '';
+    if (this.roles.includes('ROLE_FILER')) {
       filter = '&email=' + this.emailAddress.value || this?.selectedUserInfo?.emailAddress
-     }else{
+    } else {
       filter = '&mobileNumber=' + this.unMaskedMobileNo
-     }
+    }
 
 
-     let userFilter = ''
-     if (this.roles.includes('ROLE_LEADER')) {
-       userFilter += `&leaderUserId=${loggedInSmeUserId}`;
+    let userFilter = ''
+    if (this.roles.includes('ROLE_LEADER')) {
+      userFilter += `&leaderUserId=${loggedInSmeUserId}`;
 
-     }
-     if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
-       userFilter += `&filerUserId=${loggedInSmeUserId}`;
-     }
+    }
+    if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
+      userFilter += `&filerUserId=${loggedInSmeUserId}`;
+    }
 
-     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
-       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
-     }
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
+    }
 
-     this.loading = true;
-     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
-     this.reportService.getMethod(param).subscribe((response: any) => {
+    this.loading = true;
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       // this.selectedITRUFy = response?.data?.content.map(sub => sub?.item?.financialYear);
       this.selectedITRUFy = response?.data?.content.filter(sub => sub?.item?.service === 'ITRU').map(sub => sub?.item?.financialYear);
-     })
+    })
   }
 
   isYearDisabled(year: string): boolean {
@@ -1116,10 +1113,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         (year) => year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
       );
 
-    } else if(this.service === 'ITR')
-        this.filteredFinancialYears = this.financialYear.slice(0, 1);
-      else
-        this.filteredFinancialYears = this.financialYear;
+    } else if (this.service === 'ITR')
+      this.filteredFinancialYears = this.financialYear.slice(0, 1);
+    else
+      this.filteredFinancialYears = this.financialYear;
 
 
     if (this.service === 'GST') {
@@ -1332,56 +1329,64 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               return;
             }
 
-            if ((this.service === 'ITRU' || this.service === 'ITR') &&
-                (!this.assessmentYear.value || typeof this.assessmentYear.value === 'undefined')) {
-              this.loading = false;
-              this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
-              reject("Financial year not selected.");
-              return;
-            }
+        if (this.service === 'ITRU' || this.service === 'ITR') {
+          if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined' || this.assessmentYear.value === 'undefined') {
+            this.loading = false;
+            this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
+            return;
+          }
+        }
+        if (this.showScheduledFields === true && (this.scheduleCallService.value === '' || typeof this.scheduleCallService.value === 'undefined' || this.scheduleCallService.value === 'undefined')) {
+          this.loading = false;
+          this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call ');
+          return;
+        }
+        if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
+          console.log(
+            'selectedPlanInfo -> ',
+            this.userSubscription.smeSelectedPlan.planId
+          );
 
-            if (this.showScheduledFields && (!this.scheduleCallService.value || typeof this.scheduleCallService.value === 'undefined')) {
-              this.loading = false;
-              this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call ');
-              reject("Service type not selected.");
-              return;
-            }
+          if (!this.couponCodeAppliedFlag)
+            this.selectedCouponCodeSubscriptionIds = [];
 
-            if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
-              let param = '/subscription';
-              let reqBody: any = {
-                userId: this.userSubscription.userId,
-                planId: this.userSubscription.smeSelectedPlan.planId,
-                selectedBy: 'SME',
-                smeUserId: this?.loggedInSme[0]?.userId,
-                item: {
-                  itemDescription: this.description?.value,
-                  quantity: this.userSubscription?.item[0]?.quantity,
-                  rate: this?.userSubscription?.payableSubscriptionAmount,
-                  cgstPercent: this?.userSubscription?.cgstPercent,
-                  cgstAmount: this?.userSubscription?.cgstAmount,
-                  igstAmount: this?.userSubscription?.igstAmount,
-                  igstPercent: this?.userSubscription?.igstPercent,
-                  sgstPercent: this?.userSubscription?.sgstPercent,
-                  sgstAmount: this?.userSubscription?.sgstAmount,
-                  amount: this?.userSubscription?.payableSubscriptionAmount,
-                  sacCode: this.sacNumber.value,
-                  financialYear: this.assessmentYear.value,
-                  service: this.service,
-                  serviceDetail: this.serviceDetail,
-                },
-                reminderEmail: this.reminderEmail.value,
-                reminderMobileNumber: this.reminderMobileNumber.value,
-                subscriptionId: this.subscriptionObj.subscriptionId,
-                removePromoCode: this.isPromoRemoved,
-                promoCode: this.selectedPromoCode,
-                couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
-                removeCouponCode: this.removeCouponCodeFlag
-              };
+          let param = '/subscription';
+          let reqBody: any = {
+            userId: this.userSubscription.userId,
+            planId: this.userSubscription.smeSelectedPlan.planId,
+            selectedBy: 'SME',
+            smeUserId: this?.loggedInSme[0]?.userId,
+            item: {
+              itemDescription: this.description?.value,
+              quantity: this.userSubscription?.item[0]?.quantity,
+              rate: this?.userSubscription?.payableSubscriptionAmount,
+              cgstPercent: this?.userSubscription?.cgstPercent,
+              cgstAmount: this?.userSubscription?.cgstAmount,
+              igstAmount: this?.userSubscription?.igstAmount,
+              igstPercent: this?.userSubscription?.igstPercent,
+              sgstPercent: this?.userSubscription?.sgstPercent,
+              sgstAmount: this?.userSubscription?.sgstAmount,
+              amount: this?.userSubscription?.payableSubscriptionAmount,
+              sacCode: this.sacNumber.value,
+              financialYear: this.assessmentYear.value,
+              service: this.service,
+              serviceDetail: this.serviceDetail,
+            },
+            reminderEmail: this.reminderEmail.value,
+            reminderMobileNumber: this.reminderMobileNumber.value,
+            subscriptionId: this.subscriptionObj.subscriptionId,
+            removePromoCode: this.isPromoRemoved,
+            promoCode: this.selectedPromoCode,
+            couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
+            removeCouponCode: this.removeCouponCodeFlag
+          };
 
               if (this.scheduleCallService.value) {
                 reqBody.serviceType = this.scheduleCallService.value;
               }
+          if (this.scheduleCallService.value) {
+            reqBody.serviceType = this.scheduleCallService.value
+          }
 
               if (this.scheduleCallType.value) {
                 reqBody.item.scheduleCallType = this.scheduleCallType.value;
@@ -1437,9 +1442,53 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           reject(error);
         }
       );
+          if (this.scheduleCallType.value) {
+            reqBody.item.scheduleCallType = this.scheduleCallType.value
+          }
+          console.log('Req Body: ', reqBody);
+          let requestData = JSON.parse(JSON.stringify(reqBody));
+          this.itrService.postMethod(param, requestData).subscribe(
+            (res: any) => {
+              this.loading = false;
+              let invoiceTypeDetails;
+              if (this.invoiceAmount > this.userSubscription?.payableSubscriptionAmount) {
+                invoiceTypeDetails = 'Downgrade'
+              } else {
+                invoiceTypeDetails = 'Upgrade'
+              }
+
+              this.toastMessage.alert('success', 'Subscription created successfully.');
+              this.location.back();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.error.error === 'BAD_REQUEST') {
+                this.toastMessage.alert('error', error.error.message);
+              } else {
+                this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+              }
+              this.router.navigate(['/subscription/assigned-subscription'], {
+                queryParams: { fromEdit: true },
+              })
+            }
+          );
+        } else {
+          this.toastMessage.alert('error', 'Please select Plan & Pincode');
+          this.loading = false;
+        }
+      }
+    }, (error) => {
+      this.loading = false;
+      if (error.error && error.error.error) {
+        this.utilsService.showSnackBar(error.error.error);
+        this.router.navigate(['/subscription/assigned-subscription'], {
+          queryParams: { fromEdit: true },
+        })
+      } else {
+        this.utilsService.showSnackBar("An unexpected error occurred.");
+      }
     });
   }
-
 
   ngOnDestroy() {
     sessionStorage.removeItem('subscriptionObject');
@@ -1566,5 +1615,5 @@ export interface userInfo {
   subscriptionAssigneeId: number;
   smeSelectedPlan: any;
   item: any;
-  servicesType:any;
+  servicesType: any;
 }

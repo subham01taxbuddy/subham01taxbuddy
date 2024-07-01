@@ -165,7 +165,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   calculateTotal(): number {
     let total = 0;
     if (this.adjustmentDetails?.adjustmentHistory) {
-      for (const item of this.adjustmentDetails?.adjustmentHistory) {
+      for (let item of this.adjustmentDetails?.adjustmentHistory) {
         total += item.commisionAdjusted;
       }
       return total;

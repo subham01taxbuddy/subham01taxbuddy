@@ -22,11 +22,10 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
-import {GridApi, GridOptions, RowGroupingDisplayType} from 'ag-grid-community';
+import { GridApi, GridOptions, RowGroupingDisplayType } from 'ag-grid-community';
 import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
-import { AddAssetsComponent } from './add-assets/add-assets.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import {MatPaginator} from "@angular/material/paginator";
+import { MatPaginator } from "@angular/material/paginator";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -99,11 +98,11 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     );
 
     let asset = this.Copy_ITR_JSON.immovableAsset;
-    console.log('assets',asset)
-    if(asset){
+    console.log('assets', asset)
+    if (asset) {
       this.immovableAssets = asset
-    }else{
-      this.immovableAssets =[];
+    } else {
+      this.immovableAssets = [];
     }
 
 
@@ -156,7 +155,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     // this.immovableAssetForm = this.createImmovableAssetForm(0);
     this.stateDropdown = this.stateDropdownMaster;
 
-     this.immovableAssetForm = this.initForm();
+    this.immovableAssetForm = this.initForm();
 
     if (this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach((obj) => {
@@ -254,32 +253,20 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           element.markAsDirty();
           element.markAllAsTouched();
           this.utilsService.showSnackBar(
-              'To Switch/Add New Asset Please fill in all the mandatory fields in the current Asset'
+            'To Switch/Add New Asset Please fill in all the mandatory fields in the current Asset'
           );
           return;
         }
       });
     }
 
-    // const dialogRefSelect = this.matDialog.open(AddAssetsComponent, {
-    //   closeOnNavigation: true,
-    //   disableClose: false,
-    //   width: '800px',
-    // });
-    //
-    // dialogRefSelect.afterClosed().subscribe((result) => {
-    //   if (result !== undefined) {
-    //     this.immovableAssets.push(result.data);
-    //     this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
-    //   }
-    // });
   }
 
 
   activeIndex = 0;
-  markActive(index){
+  markActive(index) {
     this.activeIndex = index;
-    setTimeout(()=>{
+    setTimeout(() => {
       let assetsArray = this.immovableAssetForm.get('immovableAssetArray') as UntypedFormArray;
       let value = assetsArray.controls[index].value;
       assetsArray.controls[index].reset();
@@ -296,7 +283,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   }
 
   @ViewChild('paginator') paginator: MatPaginator;
-  getTotalCount(){
+  getTotalCount() {
     return (<UntypedFormArray>this.immovableAssetForm.get('immovableAssetArray')).controls.length;
   }
 
@@ -321,7 +308,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     immovableAssetArray.push(
       this.createImmovableAssetForm(immovableAssetArray.length, item)
     );
-    this.activeIndex = immovableAssetArray.length -1;
+    this.activeIndex = immovableAssetArray.length - 1;
     this.immovableAssetForm.markAsTouched();
     this.immovableAssetForm.updateValueAndValidity();
 
@@ -410,13 +397,13 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     }
   }
 
-  changeMode(){
+  changeMode() {
     this.mode = 'VIEW';
     const immovableAssetArray = <UntypedFormArray>(
-        this.immovableAssetForm.get('immovableAssetArray')
+      this.immovableAssetForm.get('immovableAssetArray')
     );
-    if(!immovableAssetArray.controls[this.activeIndex].valid){
-      immovableAssetArray.controls.splice(this.activeIndex,1);
+    if (!immovableAssetArray.controls[this.activeIndex].valid) {
+      immovableAssetArray.controls.splice(this.activeIndex, 1);
     }
   }
 
@@ -470,8 +457,8 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           debounceMs: 0
         },
         valueGetter: function nameFromCode(params) {
-          return params.data.flatNo +','+params.data.premisesName +','+params.data.road+','+params.data.area
-          +','+params.data.city+','+params.data.state+'('+params.data.pinCode+')';
+          return params.data.flatNo + ',' + params.data.premisesName + ',' + params.data.road + ',' + params.data.area
+            + ',' + params.data.city + ',' + params.data.state + '(' + params.data.pinCode + ')';
         },
       },
       {
@@ -534,7 +521,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     return `₹ ${amount.toLocaleString()}`;
   }
 
-  onAssetsRowClicked(params:any){
+  onAssetsRowClicked(params: any) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
@@ -551,7 +538,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     }
   }
 
-  editAsset(data){
+  editAsset(data) {
     this.mode = 'EDIT';
     this.activeIndex = this.immovableAssets.indexOf(data);
   }

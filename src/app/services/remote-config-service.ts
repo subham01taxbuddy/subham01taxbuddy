@@ -39,7 +39,6 @@ export class RemoteConfigService {
     try {
       await AngularFireModule.initializeApp(environment.firebaseConfig),
         await this.remoteConfig.fetchAndActivate().then(() => {
-          console.log("Ashwini");
         });
       const remoteConfig = await getRemoteConfig();
       remoteConfig.settings.minimumFetchIntervalMillis = 6 * 3600 * 1000;//6 hours in msec
@@ -49,7 +48,6 @@ export class RemoteConfigService {
           let tempValue = getValue(remoteConfig, 'adminGlobalConfig');
           let tempObject = JSON.parse(JSON.stringify(tempValue));
           let tempValueParse = JSON.parse(tempObject._value);
-          // this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempValueParse));
           return tempValueParse;
         case AppConstants.SCHEDULE_CALL_REMOTE_CONFIG:
           let scheduleCallJson = getValue(remoteConfig, 'scheduleCallJson');
@@ -85,11 +83,7 @@ export class RemoteConfigService {
   // The get method is use for decrypt the value.
   get(keys) {
     const abc = sessionStorage.getItem(keys);
-    if (environment.production && abc !== null && abc !== undefined && abc !== '') {
-      return abc;
-    } else {
-      return abc;
-    }
+    return abc;
   }
 
   setLocalStorageItem(key, value) {
@@ -104,11 +98,7 @@ export class RemoteConfigService {
 
   getLocalStorageItem(keys) {
     const abc = localStorage.getItem(keys);
-    if (environment.production && abc !== null && abc !== undefined && abc !== '') {
-      return abc;
-    } else {
-      return abc;
-    }
+    return abc;
   }
 
 }

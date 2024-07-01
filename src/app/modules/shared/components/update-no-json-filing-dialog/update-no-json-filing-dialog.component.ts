@@ -37,6 +37,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   eFillingDate = new UntypedFormControl('', Validators.required);
   itrType = new UntypedFormControl('', Validators.required);
   returnType = new UntypedFormControl('', Validators.required);
+  manualUpdateReason = new UntypedFormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
   userProfile: any;
@@ -267,7 +268,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
             itrType: `${this.itrType.value}`,
             itrTokenNumber: '',
             "filingTeamMemberId": this.data.callerAgentUserId,
-            filingSource: "MANUALLY"
+            filingSource: "MANUALLY",
+            manualUpdateReason: this.manualUpdateReason.value
           }
           console.log('Updated Data:', req)
           setTimeout(() => {
@@ -276,10 +278,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
               console.log(res);
               this.loading = false;
               if (res.success) {
-                if(this.data.statusId !== 47)
-                  this.updateStatus();
                 this.utilsService.showSnackBar('Manual Filing Details updated successfully');
-                this.location.back();
+                this.dialogRef.close(true);
               } else {
                 this.utilsService.showSnackBar(res.message);
                 this.dialogRef.close(true);
@@ -301,29 +301,6 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
         }
       });
 
-  }
-
-  async updateStatus() {
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-      // this.utilsService.showSnackBar('There is no any active filing year available')
-      return;
-    }
-    const param = '/itr-status'
-    const request = {
-      "statusId": 11, // ITR FILED
-      "userId": this.data.userId,
-      "assessmentYear": currentFyDetails[0].assessmentYear,
-      "completed": true,
-      "serviceType": "ITR"
-    }
-
-    // this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe(result => {
-      console.log('##########################', result['statusId']);
-    }, err => {
-    })
   }
 
   setFilingDate() {

@@ -402,7 +402,7 @@ export class ScheduleFaComponent implements OnInit {
             countryCode: null,
             nameOfInstitution: null,
             addressOfInstitution: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             account: this.fb.array([
               this.fb.group({
                 hasEdit: null,
@@ -423,7 +423,7 @@ export class ScheduleFaComponent implements OnInit {
             countryCode: null,
             nameOfInstitution: null,
             addressOfInstitution: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             account: this.fb.array([
               this.fb.group({
                 accountNumber: null,
@@ -447,7 +447,7 @@ export class ScheduleFaComponent implements OnInit {
             countryCode: null,
             nameOfEntity: null,
             addressOfEntity: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             natureOfEntity: null,
             dateOfInterest: null,
             initialValue: null,
@@ -464,7 +464,7 @@ export class ScheduleFaComponent implements OnInit {
             countryCode: null,
             nameOfInstitution: null,
             addressOfInstitution: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             dateOfContract: null,
             cashValue: null,
             totalGrossAmountPaid: null,
@@ -478,7 +478,7 @@ export class ScheduleFaComponent implements OnInit {
             natureOfEntity: null,
             nameOfEntity: null,
             address: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             natureOfInterest: null,
             date: null,
             totalInvestments: null,
@@ -495,7 +495,7 @@ export class ScheduleFaComponent implements OnInit {
             countryName: null,
             countryCode: null,
             address: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             ownerShip: null,
             date: null,
             totalInvestments: null,
@@ -511,7 +511,7 @@ export class ScheduleFaComponent implements OnInit {
           this.fb.group({
             countryName: null,
             countryCode: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             natureOfAsstes: null,
             ownerShip: null,
             date: null,
@@ -530,7 +530,7 @@ export class ScheduleFaComponent implements OnInit {
             countryCode: null,
             institutionName: null,
             address: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             account: this.fb.array([
               this.fb.group({
                 accountHolderName: null,
@@ -550,7 +550,7 @@ export class ScheduleFaComponent implements OnInit {
           this.fb.group({
             countryName: null,
             countryCode: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             trustName: null,
             trustAddress: null,
             trusteesName: null,
@@ -572,7 +572,7 @@ export class ScheduleFaComponent implements OnInit {
           this.fb.group({
             countryName: null,
             countryCode: null,
-            zipCode: [null, [Validators.maxLength(8), Validators.minLength(8)]],
+            zipCode: [null, [Validators.maxLength(8)]],
             name: null,
             address: null,
             natureOfIncome: null,
@@ -635,7 +635,7 @@ export class ScheduleFaComponent implements OnInit {
           institutionName: [group?.institutionName],
           addressOfInstitution: [group?.addressOfInstitution],
           address: [group?.address],
-          zipCode: [group?.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [group?.zipCode, [Validators.maxLength(8)]],
           account: this.fb.array([]),
         });
         const accountFormArray = formGroup?.get('account') as UntypedFormArray;
@@ -693,7 +693,7 @@ export class ScheduleFaComponent implements OnInit {
           countryCode: item.countryCode,
           nameOfEntity: item.nameOfEntity,
           addressOfEntity: item.addressOfEntity,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           natureOfEntity: item.natureOfEntity,
           dateOfInterest: item.dateOfInterest,
           initialValue: item.initialValue,
@@ -709,7 +709,7 @@ export class ScheduleFaComponent implements OnInit {
           countryName: this.getCountryNameFromCode(item.countryCode),
           nameOfInstitution: item.nameOfInstitution,
           addressOfInstitution: item.addressOfInstitution,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           dateOfContract: item.dateOfContract,
           cashValue: item.cashValue,
           totalGrossAmountPaid: item.totalGrossAmountPaid,
@@ -723,7 +723,7 @@ export class ScheduleFaComponent implements OnInit {
           natureOfEntity: item.natureOfEntity,
           nameOfEntity: item.nameOfEntity,
           address: item.address,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           natureOfInterest: item.natureOfInterest,
           date: item.date,
           totalInvestments: item.totalInvestments,
@@ -739,7 +739,7 @@ export class ScheduleFaComponent implements OnInit {
           countryName: this.getCountryNameFromCode(item.countryCode),
           countryCode: item.countryCode,
           address: item.address,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           ownerShip: item.ownerShip,
           date: item.date,
           totalInvestments: item.totalInvestments,
@@ -754,7 +754,7 @@ export class ScheduleFaComponent implements OnInit {
         const formGroup = this.fb.group({
           countryName: this.getCountryNameFromCode(item.countryCode),
           countryCode: item.countryCode,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           natureOfAsstes: item.natureOfAsstes,
           ownerShip: item.ownerShip,
           date: item.date,
@@ -770,7 +770,7 @@ export class ScheduleFaComponent implements OnInit {
         const formGroup = this.fb.group({
           countryName: this.getCountryNameFromCode(item.countryCode),
           countryCode: item.countryCode,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           trustName: item.trustName,
           trustAddress: item.trustAddress,
           trusteesName: item.trusteesName,
@@ -791,7 +791,7 @@ export class ScheduleFaComponent implements OnInit {
         const formGroup = this.fb.group({
           countryName: this.getCountryNameFromCode(item.countryCode),
           countryCode: item.countryCode,
-          zipCode: [item.zipCode, [Validators.maxLength(8), Validators.minLength(8)]],
+          zipCode: [item.zipCode, [Validators.maxLength(8)]],
           name: item.name,
           address: item.address,
           natureOfIncome: item.natureOfIncome,
@@ -946,10 +946,9 @@ export class ScheduleFaComponent implements OnInit {
 
           // have to implement later if required
           // console.log(formValueToSave);
-          // formValueToSave.forEach((element) => {
-          //   const split = element.countryCode.split(':');
-          //   (element.countryCode = split[0]), (element.countryName = split[1]);
-          // });
+          formValueToSave.forEach((element) => {
+            element.countryName = this.getCountryNameFromCode(element.countryCode);
+          });
 
           formValueToSave.forEach((element) => {
             this.Copy_ITR_JSON.foreignIncome?.foreignAssets[section].push(

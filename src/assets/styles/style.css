@@ -14,19 +14,9 @@ section {
   display: block;
 }
 
-/* Css updates 02 Apr 2023 */
-.card {
-  /* padding: 30px; */
-  /* margin-top:50px; */
-}
-
 .spBlw {
   margin-bottom: 150px !important;
 }
-
-/* Css updates 02 Apr 2023 */
-
-
 
 .mandatory_icon {
   color: red;
@@ -44,13 +34,6 @@ section {
   text-align: center !important;
 }
 
-/*
-em {
-  font-style: italic;
-}
-strong {
-  font-weight: 700;
-}*/
 
 table {
   border-collapse: collapse;
@@ -80,7 +63,6 @@ table {
 
 .header,
 .wrapper {
-  /*max-width: 980px;*/
   margin: auto;
 }
 
@@ -217,7 +199,6 @@ ul {
 .sidebar__item {
   display: block;
   padding: 17px 0 12px;
-  /*height: 84px;*/
   width: 100%;
   text-align: center;
   text-decoration: none;
@@ -287,8 +268,8 @@ ul {
 
 .tab__item_active {
   font-weight: 400;
-  border-bottom-width: 3px;
   border-bottom: 2px solid #04a4bc !important;
+  border-bottom-width: 3px;
 }
 
 .tab__link {
@@ -369,10 +350,6 @@ ul {
 .expander__text-span_active {
   display: none;
 }
-
-/*.expander_active .expander__text-span {
-  display: none;
-}*/
 
 .expander_active .expander__text-span_active {
   display: inline-block;
@@ -806,7 +783,6 @@ ul {
 
 .popup-bill-invoice-modal .modal-header,
 .popup-bill-invoice-modal .modal-footer {
-  min-height: unset;
   padding: 0px 25px 0px 30px;
   line-height: 20px;
   min-height: 20px;
@@ -1447,10 +1423,4 @@ ul {
 
 .closeSideBar {
   width: 78px !important;
-  /* display: none !important; */
-}
-
-.sidebar__item_active {
-  /* color: #c3fff7 !important;
-  background-color:#0f58a7; */
 }

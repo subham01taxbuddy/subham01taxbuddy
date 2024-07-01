@@ -42,14 +42,10 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
-import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
-import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
-import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
 import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
-import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from './services/request-manager';
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
 import { AddAffiliateIdComponent } from './components/add-affiliate-id/add-affiliate-id.component';
@@ -64,6 +60,7 @@ import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
+import {ZipcodeDirective} from "./directives/zipcode.directive";
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -73,10 +70,7 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         MatSelectComponent,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
@@ -93,12 +87,12 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
+        ZipcodeDirective,
         AgTooltipComponent,
         NumbersOnlyDirective,
         ConfirmDialogComponent,
         MyDialogComponent,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         AddAffiliateIdComponent,
         TwoDigitDecimaNumberDirective,
@@ -144,10 +138,7 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         AgGridModule,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
@@ -162,10 +153,10 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
         UpdateManualFilingDialogComponent,
         CurrencyPipe,
         DigitsOnlyDirective,
+        ZipcodeDirective,
         AgTooltipComponent,
         NumbersOnlyDirective,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         TwoDigitDecimaNumberDirective,
         ViewDocumentsDialogComponent,

@@ -323,10 +323,6 @@
                           </span>
                         </td>
                       </tr>
-                      <!-- <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
-                        <td class="bdrBtm2">Promo Code:</td>
-                        <td class="bdrBtm2"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
-                      </tr> -->
                     </tbody>
                   </table>
                   <div class="col-sm-12">
@@ -480,7 +476,7 @@
                   <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
                     <tbody>
                       <tr>
-                        <th>Refund Details</th>
+                        <th id="refundDetails">Refund Details</th>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

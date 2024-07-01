@@ -45,16 +45,10 @@
     </div>
 
     <div class="form-group clearfix">
-      <button type="submit" (click)="otpValidationMethod()" class="btn whiteTxt uppercase loginbt"
+      <button type="submit" (click)="otpValidationMethod()" class="btn whiteTxt uppercase loginBtn"
         [style.cursor]="busy ?'not-allowed':'pointer'" [disabled]="busy">{{busy ? 'Validating
         OTP...':'SUBMIT'}}</button>
     </div>
-
-    <!-- Didn't receive a OTP? <br>
-    <a (click)="resendOTP()" class="fgt_txt" [class]="counter != 0 ? 'resend-disable':'resend-enable'"
-      style="font-size: 14px"> Resend OTP via SMS
-    </a> &nbsp;&nbsp;<span *ngIf="counter != 0 " style="font-size: 12px">{{countDown | async}}
-      sec</span> -->
   </form>
 
 

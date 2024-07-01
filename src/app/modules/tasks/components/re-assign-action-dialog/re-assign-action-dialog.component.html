@@ -1,8 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div *ngIf="data.mode !== 'leaderAssignment'">
-  <label style="font-size: 18px;
-      font-weight: bold;">Bulk Re-Assignment For Filer </label><button style="float: right;" mat-dialog-close
+  <div style="font-size: 18px;
+      font-weight: bold;">Bulk Re-Assignment For Filer </div><button style="float: right;" mat-dialog-close
     tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
   <div class="row spsTp bdrTp">
     <div class="clo-sm-12">
@@ -53,8 +53,8 @@
 </ng-template>
 
 <div *ngIf="data.mode === 'leaderAssignment'">
-  <label style="font-size: 18px;
-    font-weight: bold;">Bulk Re-Assignment For Leader </label>
+  <div style="font-size: 18px;
+    font-weight: bold;">Bulk Re-Assignment For Leader </div>
   <button style="float: right;" mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times"
       aria-hidden="true"></i></button>
 
@@ -66,22 +66,21 @@
     <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_ADMIN')">
       <div class="col-sm-6" *ngIf="data.data[0].serviceType !== 'ITR'">
         <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromLeader($event)"
-        [showOwnerList]="true"></app-leader-list-dropdown>
+          [showOwnerList]="true"></app-leader-list-dropdown>
       </div>
       <div *ngIf="data.data[0].serviceType === 'ITR'">
-        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-        [selectedLeader]=data.data[0] (sendPrincipleIndividual)="fromPrinciple($event)"
-        (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [selectedLeader]=data.data[0]
+          (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
       </div>
     </div>
     <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_LEADER')">
       <div class="col-sm-6" *ngIf="data.data[0].serviceType !== 'ITR'">
         <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromLeader($event)"
-        [showOwnerList]="true"></app-leader-list-dropdown>
+          [showOwnerList]="true"></app-leader-list-dropdown>
       </div>
       <div *ngIf="data.data[0].serviceType === 'ITR'">
-        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader] =true
-        (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader]=true
+          (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
       </div>
     </div>
     <div class="col-sm-3">

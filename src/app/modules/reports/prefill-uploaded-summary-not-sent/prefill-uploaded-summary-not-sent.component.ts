@@ -227,6 +227,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
         panNumber: fillingData[i].panNumber,
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
+        serviceType :fillingData[i].serviceType,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -477,6 +478,8 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       { key: 'statusName', value: 'Status' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'filerName', value: 'Filer Name' },
+      { key: 'conversationId', value:'kommunicate chat Link'},
+      { key: 'whatsAppConversationId', value:'WhatsApp chat Link'},
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'prefill-uploaded-summary-not-sent-report', fieldName, {});
     this.loading = false;

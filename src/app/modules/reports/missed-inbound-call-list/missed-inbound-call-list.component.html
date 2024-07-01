@@ -1,6 +1,6 @@
-
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on and do not move away from the page...</span>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on
+  and do not move away from the page...</span>
 
 
 <div class="main-1">
@@ -51,9 +51,6 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <!-- <button class="srch-btn-1" (click)="showReports()">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                    </button> -->
                     <app-custom-button class="srch-btn-1" [actions]="[showReports]">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                     </app-custom-button>
@@ -85,11 +82,9 @@
         </div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of missedInboundCallList | paginate:config"></tr>
-    </table>
+      <div *ngFor="let item of missedInboundCallList | paginate:config"></div>
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallListGridOptions"
-    (rowClicked)="onRowClicked($event)"></ag-grid-angular>
+      (rowClicked)="onRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>

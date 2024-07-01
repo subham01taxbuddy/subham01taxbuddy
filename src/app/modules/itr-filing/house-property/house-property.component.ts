@@ -1,10 +1,9 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
   UntypedFormArray,
-  UntypedFormControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -31,7 +30,6 @@ export class HousePropertyComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
-  // isCoOwners = new UntypedFormControl(false);
   hpView: string = 'FORM';
   propertyTypeDropdown = [
     {
@@ -155,10 +153,10 @@ export class HousePropertyComponent implements OnInit {
   }
 
   usePersonalAddress = false;
-  toggleAddress(){
-    if(this.usePersonalAddress){
+  toggleAddress() {
+    if (this.usePersonalAddress) {
       let address = this.ITR_JSON.address.flatNo + ' ' + this.ITR_JSON.address.premisesName + ' ' +
-          this.ITR_JSON.address.area;
+        this.ITR_JSON.address.area;
       this.housePropertyForm.controls['address'].setValue(address);
       this.housePropertyForm.controls['city'].setValue(this.ITR_JSON.address.city);
 
@@ -177,11 +175,11 @@ export class HousePropertyComponent implements OnInit {
 
   markActive(index) {
     if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
-      if(this.housePropertyForm.valid) {
+      if (this.housePropertyForm.valid) {
         this.saveHpDetails(false);
       } else {
         this.utilsService.showSnackBar(
-            'To Switch/Add new property Please fill in all the mandatory fields in the current property'
+          'To Switch/Add new property Please fill in all the mandatory fields in the current property'
         );
         return;
       }
@@ -320,7 +318,7 @@ export class HousePropertyComponent implements OnInit {
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        isCoOwners:[false,Validators.required],
+        isCoOwners: [false, Validators.required],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -393,7 +391,7 @@ export class HousePropertyComponent implements OnInit {
       });
     } else {
       return this.fb.group({
-        isCoOwners:[false],
+        isCoOwners: [false],
         propertyType: ['', Validators.required],
         principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
@@ -461,12 +459,13 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?:boolean, tanNumber?: string } = {}): UntypedFormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?: boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        name: [obj.name || '', obj?.tdsClaimed ? [Validators.required] : [Validators.required, Validators.maxLength(50)]],
+        name: [obj.name || '', obj?.tdsClaimed ? [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]
+          : [Validators.required, Validators.maxLength(50), Validators.pattern(AppConstants.charRegex)]],
         panNumber: [
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],
@@ -487,8 +486,8 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  updateTenantForm(tenant:any){
-    if(tenant.controls['tdsClaimed'].value){
+  updateTenantForm(tenant: any) {
+    if (tenant.controls['tdsClaimed'].value) {
       tenant.controls['tanNumber'].enable();
       tenant.controls['panNumber'].setValue(null);
       tenant.controls['panNumber'].disable();
@@ -549,8 +548,8 @@ export class HousePropertyComponent implements OnInit {
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length-1] as UntypedFormGroup,
-          'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length - 1] as UntypedFormGroup,
+        'accordBtn3', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -559,40 +558,11 @@ export class HousePropertyComponent implements OnInit {
     console.log('Remove Index', index);
     const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
     coOwner.removeAt(index);
-    // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
-    // And this Control is used for Yes/No Type question for showing the details of CoOwners
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    coOwner.length === 0 ? this.housePropertyForm.controls['isCoOwners'].setValue(false) : null;
+    if (coOwner.length === 0)
+      this.housePropertyForm.controls['isCoOwners'].setValue(false);
     this.calAnnualValue();
   }
 
-  coOwnerPanValidation() {
-    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
-    // This method is written in utils service for common usablity.
-    let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
-      'panNumber',
-      coOwner.value
-    );
-    let userPanExist = [];
-
-    if (coOwner.value instanceof Array) {
-      userPanExist = coOwner.value.filter(
-        (item) => item.panNumber === this.ITR_JSON.panNumber
-      );
-    }
-
-    if (panRepeat) {
-      this.utilsService.showSnackBar('Co-Owner already present with this PAN.');
-    } else if (userPanExist.length > 0) {
-      this.utilsService.showSnackBar(
-        'Co-Owners PAN can not be same with user PAN.'
-      );
-      panRepeat = true;
-    }
-
-    console.log('Form + coowner=', this.housePropertyForm.valid);
-    return panRepeat;
-  }
 
   calPercentage() {
     const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
@@ -643,14 +613,7 @@ export class HousePropertyComponent implements OnInit {
   mode = 'ADD';
   viewForm = false;
   addHousingIncome() {
-    // ASHISH HULWAN because of new view changes changes the below values as per need
-    // this.housingView = 'INITIAL';
-    // if(this.isSelfOccupied >= this.maxSopAllowed){
-    //       this.utilsService.showSnackBar('You cannot add more than '+ this.maxSopAllowed + ' self occupied properties' );
-    //        return;
-    // }
     this.hpView = 'FORM';
-    // this.housingView = 'FORM';
     this.mode = 'ADD';
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.controls['country'].setValue('91');
@@ -757,8 +720,8 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'annualRentReceived'
       ].updateValueAndValidity();
-      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
-          ? this.currentIndex : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else {
       const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
@@ -779,12 +742,12 @@ export class HousePropertyComponent implements OnInit {
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
         tenant.push(this.createTenantForm(
-            {
-              name: element.name,
-              panNumber: element?.panNumber,
-              tanNumber: element?.tanNumber,
-              tdsClaimed: element?.tdsClaimed
-            }
+          {
+            name: element.name,
+            panNumber: element?.panNumber,
+            tanNumber: element?.tanNumber,
+            tdsClaimed: element?.tdsClaimed
+          }
         ));
       });
 
@@ -835,8 +798,8 @@ export class HousePropertyComponent implements OnInit {
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length-1] as UntypedFormGroup,
-          'accordBtn4', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length - 1] as UntypedFormGroup,
+        'accordBtn4', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -950,13 +913,6 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['state'].reset();
         this.housePropertyForm.controls['pinCode'].reset();
         this.housePropertyForm.controls['country'].reset();
-        // this.housePropertyForm.controls['isCoOwners'].disable();
-        // this.housePropertyForm.controls['coOwners'].disable();
-
-        //   for (var control in this.housePropertyForm.controls) {
-        //     this.housePropertyForm.controls[control].disable();
-        // }
-        // this.housePropertyForm.disable();
         this.chekIsSOPAdded();
         return;
       }
@@ -991,8 +947,8 @@ export class HousePropertyComponent implements OnInit {
         'interestAmount'
       ].updateValueAndValidity();
 
-      this.firstSOPIndex = (this.firstSOPIndex > 0  && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
-          ? this.currentIndex : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
@@ -1040,11 +996,6 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHpDetails(apiCall: boolean) {
-    // this.Copy_ITR_JSON = JSON.parse(
-    //   sessionStorage.getItem(AppConstants.ITR_JSON)
-    // );
-
-    console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     if ((this.housePropertyForm.valid && apiCall) || !apiCall) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
       if (
@@ -1068,9 +1019,9 @@ export class HousePropertyComponent implements OnInit {
       ) {
         hp.loans = [];
         let eligible80EEAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAmount'].value)
-            ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
         let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
-            ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
         let interestAmount = parseInt(this.housePropertyForm.controls['interestAmount']?.value) - eligible80EEAmount - eligible80EEAAmount;
         hp.loans.push({
           interestAmount:
@@ -1086,12 +1037,8 @@ export class HousePropertyComponent implements OnInit {
       if (!this.Copy_ITR_JSON.houseProperties) {
         this.Copy_ITR_JSON.houseProperties = [];
       }
-      // this.Copy_ITR_JSON.houseProperties = [];
-      // this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
-      // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
-      // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       if (apiCall) {
         this.serviceCall('SAVE', this.Copy_ITR_JSON);
       } else {
@@ -1109,7 +1056,6 @@ export class HousePropertyComponent implements OnInit {
 
   maxSopAllowed = 2;
   saveHouseProperty(view, mode = 'ADD') {
-    //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -1164,28 +1110,6 @@ export class HousePropertyComponent implements OnInit {
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
-      // if (this.housePropertyForm.controls['isCoOwners'].value) {
-      //   let sum = 0;
-      //   for (let i = 0; i < hp.coOwners.length; i++) {
-      //     sum = sum + hp.coOwners[i].percentage;
-      //   }
-      //   const myPer = 100 - sum;
-      //   if (sum < 100) {
-      //     hp.coOwners.push({
-      //       name: '',
-      //       panNumber: '',
-      //       isSelf: true,
-      //       percentage: Number(myPer)
-      //     });
-      //   }
-      // } else {
-      //   hp.coOwners.push({
-      //     name: '',
-      //     panNumber: '',
-      //     isSelf: true,
-      //     percentage: 100
-      //   });
-      // }
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
 
       if (
@@ -1226,11 +1150,10 @@ export class HousePropertyComponent implements OnInit {
         this.Copy_ITR_JSON.houseProperties.push(hp);
       } else {
         this.Copy_ITR_JSON.houseProperties.splice(this.currentIndex, 1, hp);
-      } // this.ITR_JSON.houseProperties.splice(this.currentIndex, 1, hp)
+      }
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
-      // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
       this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
       this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
@@ -1242,7 +1165,6 @@ export class HousePropertyComponent implements OnInit {
   isSelfOccupied = 0;
   sopInterestClaimed = 0;
   serviceCall(ref, request) {
-    // this.utilsService.openLoaderDialog();
     this.loading = true;
     const param = `/itr/itr-type`;
     this.itrMsService.postMethod(param, request).subscribe(
@@ -1273,17 +1195,12 @@ export class HousePropertyComponent implements OnInit {
             this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
             this.housePropertyForm.controls['loans'] = this.fb.array([]);
 
-            // this.isHomeLoan.setValue(false);
             this.housePropertyForm.controls['isCoOwners'].setValue(false);
             this.utilsService.smoothScrollToTop();
-
-            // this.chekIsSOPAdded();
-            // Commented by ASHISH HULWAN because of new design view changes
             this.housingView = '';
             this.viewForm = false;
 
             if (this.ITR_JSON.houseProperties.length !== 0) {
-              // this.hpView = 'TABLE';
               this.goBack();
             } else {
               this.hpView = 'FORM';
@@ -1292,8 +1209,6 @@ export class HousePropertyComponent implements OnInit {
             this.utilsService.showSnackBar(
               'House Property income updated successfully.'
             );
-            // TODO
-            // this.RuleServiceCall();
 
             if (ref === 'DELETE') {
               this.utilsService.showSnackBar(
@@ -1306,7 +1221,6 @@ export class HousePropertyComponent implements OnInit {
           (error) => {
             this.utilsService.smoothScrollToTop();
             this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-            // this.utilsService.disposable.unsubscribe();
             this.utilsService.showSnackBar('Failed to update Rental income.');
             this.loading = false;
           }
@@ -1322,10 +1236,8 @@ export class HousePropertyComponent implements OnInit {
   cancelHpForm() {
     this.housePropertyForm.reset();
     this.housePropertyForm.controls['isCoOwners'].setValue(false);
-    // this.isHomeLoan.setValue(false);
     this.housePropertyForm.controls['tenant'] = this.fb.array([]);
     this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
-    // this.housePropertyForm.controls['loans'] = this.fb.array([]);
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
       this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&

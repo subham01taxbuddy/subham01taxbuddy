@@ -220,6 +220,7 @@ export class SidebarComponent {
         // { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
+        { name : 'ITR Filed Users', url: '/reports/itr-filed-users',roles: [] },
       ]
     },
     {

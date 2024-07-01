@@ -403,61 +403,17 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   createDeductionsFormGroup() {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
-    if (type === 2 || type === 3) {
-      return this.fb.group({
-        entertainmentAllow: [
-          null,
-          Validators.compose([
-            Validators.pattern(AppConstants.numericRegex),
-            Validators.max(5000),
-          ]),
-        ],
-        professionalTax: [
-          null,
-          {
-            validators: Validators.compose([
-              Validators.max(this.limitPT),
-              Validators.pattern(AppConstants.numericRegex),
-            ]),
-            updateOn: 'change',
-          },
-        ],
-        standardDeduction: [
-          50000,
-          {
-            validators: Validators.compose([Validators.max(50000)]),
-            updateOn: 'change',
-          },
-        ],
-      });
-    } else {
-      return this.fb.group({
-        entertainmentAllow: [
-          null,
-          Validators.compose([
-            Validators.pattern(AppConstants.numericRegex),
-            Validators.max(5000),
-          ]),
-        ],
-        professionalTax: [
-          null,
-          {
-            validators: Validators.compose([
-              Validators.max(this.limitPT),
-              Validators.pattern(AppConstants.numericRegex),
-            ]),
-            updateOn: 'change',
-          },
-        ],
-        standardDeduction: [
-          50000,
-          {
-            validators: Validators.compose([Validators.max(50000)]),
-            updateOn: 'change',
-          },
-        ],
-      });
-    }
+    return this.fb.group({
+      entertainmentAllow: [null, Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(5000),]),],
+      professionalTax: [null, {
+        validators: Validators.compose([Validators.max(this.limitPT), Validators.pattern(AppConstants.numericRegex),]),
+        updateOn: 'change',
+      },],
+      standardDeduction: [50000, {
+        validators: Validators.compose([Validators.max(50000)]),
+        updateOn: 'change',
+      },],
+    });
   }
 
   get getSalaryArray() {
@@ -497,19 +453,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
   createAllowanceFormGroup() {
     let type = parseInt(this.ITR_JSON.itrType);
     let allowanceArray = this.createAllowanceArray();
-    if (type === 2 || type === 3) {
-      return this.fb.group({
-        vrsLastYear: [false],
-        sec89: [false],
-        allowances: allowanceArray,
-      });
-    } else {
-      return this.fb.group({
-        vrsLastYear: [false],
-        sec89: [false],
-        allowances: allowanceArray,
-      });
-    }
+    return this.fb.group({
+      vrsLastYear: [false],
+      sec89: [false],
+      allowances: allowanceArray,
+    });
   }
 
   validateExemptIncomes(event: any) {
@@ -582,15 +530,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.changeAllowancesType();
   }
 
-  addExemptIncome(allowance?,fromEvent?) {
-    if(fromEvent){
-      let label=''
+  addExemptIncome(allowance?, fromEvent?) {
+    if (fromEvent) {
+      let label = ''
       let exemptIncomesFormArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
       const formGroup = this.fb.group({
         label: [label],
         allowType: [allowance ? allowance : null],
         allowValue: [null],
-        description: [null]
+        description: [null, Validators.maxLength(50)]
       });
       exemptIncomesFormArray.push(formGroup);
       return
@@ -604,7 +552,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       label: [label],
       allowType: [allowance ? allowance.allowanceType : null],
       allowValue: [allowance ? allowance.exemptAmount : null],
-      description: [allowance ? allowance.description : null]
+      description: [allowance ? allowance.description : null, Validators.maxLength(50)]
     });
     exemptIncomesFormArray.push(formGroup);
   }
@@ -766,6 +714,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
         this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
         this.ITR_JSON.employerCategory === 'PE' ||
+
         this.ITR_JSON.employerCategory === 'PESG'
       ) {
         this.firstProvisoError = true;
@@ -981,7 +930,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const ltaControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LTA';
           });
-          const LTA = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'LTA')[0]?.taxableAmount);
+          let LTAVal = formValues?.salary?.filter(item => item.salaryType === 'LTA')[0];
+          const LTA = LTAVal ? parseFloat(LTAVal?.taxableAmount) : 0;
           this.setValidator('LTA', Validators.max(LTA));
 
           if (ltaControl?.get('allowValue')?.errors &&
@@ -996,7 +946,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const gratuityControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'GRATUITY';
           });
-          const gratuity = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0]?.taxableAmount);
+          let gratVal = formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0];
+          const gratuity = gratVal ? parseFloat(gratVal?.taxableAmount) : 0;
           const fixedLimit = 2000000;
 
           let lowerOf = Math.min(gratuity, fixedLimit);
@@ -1015,7 +966,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const pensionControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'COMMUTED_PENSION';
           });
-          const pension = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'COMMUTED_PENSION')[0]?.taxableAmount);
+          let pensionVal = formValues?.salary?.filter(item => item.salaryType === 'COMMUTED_PENSION')[0];
+          const pension = pensionVal ? parseFloat(pensionVal?.taxableAmount) : 0;
           this.setValidator('COMMUTED_PENSION', Validators.max(pension));
 
           if (pensionControl?.get('allowValue')?.errors &&
@@ -1030,7 +982,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncashControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
           });
-          const leaveEncash = parseFloat(formValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0]?.taxableAmount);
+          let leaveVal = formValues?.salary?.filter(item => item.salaryType === 'LEAVE_ENCASHMENT')[0];
+          const leaveEncash = leaveVal ? parseFloat(leaveVal?.taxableAmount) : 0;
           const fixedLimit = 2500000;
 
           let lowerOf = Math.min(leaveEncash, fixedLimit);
@@ -1327,7 +1280,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }
 
     if (
-      this.utilsService.isNonZero(totalAllowExempt) ||
       this.utilsService.isNonZero(totalAllowExempt)
     ) {
       this.localEmployer?.allowance?.push({
@@ -1635,7 +1587,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       }
 
       if (
-        this.utilsService.isNonZero(totalAllowExempt) ||
         this.utilsService.isNonZero(totalAllowExempt)
       ) {
         this.localEmployer?.allowance?.push({
@@ -2113,45 +2064,45 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
   onBifurcationUpdated(result) {
     this.invalid = false;
-    if(result.type === 'HRAexemptValue'){
-      const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-        allowancesArray.controls.forEach((control: FormGroup, index: number) => {
-            const allowType = control.get('allowType').value;
-            if (allowType === 'HOUSE_RENT') {
-                control.get('allowValue').setValue(result.value);
-            }
-        });
-        return;
-    }else if(result.type ==='leaveExemptValue'){
+    if (result.type === 'HRAexemptValue') {
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
       allowancesArray.controls.forEach((control: FormGroup, index: number) => {
-          const allowType = control.get('allowType').value;
-          if (allowType === 'LEAVE_ENCASHMENT') {
-              control.get('allowValue').setValue(result.value);
-          }
+        const allowType = control.get('allowType').value;
+        if (allowType === 'HOUSE_RENT') {
+          control.get('allowValue').setValue(result.value);
+        }
       });
       return;
-    }else if (result.type === 'GRATUITYexemptValue') {
-      this.addExemptIncome('GRATUITY','fromEvent');
+    } else if (result.type === 'leaveExemptValue') {
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
-      allowancesArray.controls.forEach((control: FormGroup) => {
-          const allowType = control.get('allowType').value;
-          if (allowType === 'GRATUITY') {
-              control.get('allowValue').setValue(result.value);
-          }
+      allowancesArray.controls.forEach((control: FormGroup, index: number) => {
+        const allowType = control.get('allowType').value;
+        if (allowType === 'LEAVE_ENCASHMENT') {
+          control.get('allowValue').setValue(result.value);
+        }
       });
       return;
-  } else if (result.type === 'PENSIONexemptValue') {
-      this.addExemptIncome('COMMUTED_PENSION' ,'fromEvent');
+    } else if (result.type === 'GRATUITYexemptValue') {
+      this.addExemptIncome('GRATUITY', 'fromEvent');
       const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
       allowancesArray.controls.forEach((control: FormGroup) => {
-          const allowType = control.get('allowType').value;
-          if (allowType === 'COMMUTED_PENSION') {
-              control.get('allowValue').setValue(result.value);
-          }
+        const allowType = control.get('allowType').value;
+        if (allowType === 'GRATUITY') {
+          control.get('allowValue').setValue(result.value);
+        }
       });
-    return;
-  }
+      return;
+    } else if (result.type === 'PENSIONexemptValue') {
+      this.addExemptIncome('COMMUTED_PENSION', 'fromEvent');
+      const allowancesArray = this.allowanceFormGroup.get('allowances') as FormArray;
+      allowancesArray.controls.forEach((control: FormGroup) => {
+        const allowType = control.get('allowType').value;
+        if (allowType === 'COMMUTED_PENSION') {
+          control.get('allowValue').setValue(result.value);
+        }
+      });
+      return;
+    }
     this.totalGrossSalary = parseFloat(result.secOneTotal || 0) + parseFloat(result.secTwoTotal || 0) + parseFloat(result.secThreeTotal || 0);
     this.getSalaryArray.controls.forEach(element => {
       if (element.get('salaryType').value === 'SEC17_1') {
@@ -2418,9 +2369,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }
 
     if (
-      this.utilsService.isNonZero(totalAllowExempt) ||
-      this.utilsService.isNonZero(totalAllowExempt)
-    ) {
+      this.utilsService.isNonZero(totalAllowExempt)) {
       this.localEmployer?.allowance?.push({
         allowanceType: 'ALL_ALLOWANCES',
         taxableAmount: 0,

@@ -1,7 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { MatDialog } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -16,7 +15,7 @@ import { MoreOptionsDialogComponent } from 'src/app/modules/tasks/components/mor
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -45,7 +44,6 @@ export class UserListComponent implements OnInit {
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private router: Router,
     private http: HttpClient,
     private dialog: MatDialog,
     private itrMsService: ItrMsService,
@@ -70,8 +68,6 @@ export class UserListComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
 
   clearValue() {
     this.searchVal = "";
@@ -263,7 +259,6 @@ export class UserListComponent implements OnInit {
           } else {
             return params.data.resident;
           }
-          return;
         },
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -286,7 +281,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 85,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -309,7 +304,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 60,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -322,7 +317,7 @@ export class UserListComponent implements OnInit {
         headerName: "Review",
         field: "isReviewGiven",
         width: 75,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: (params: any) => {
           return `<input type='checkbox' data-action-type="isReviewGiven" ${params.data.isReviewGiven ? 'checked' : ''} />`;
         },
@@ -344,7 +339,7 @@ export class UserListComponent implements OnInit {
            </button>`;
         },
         width: 65,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
@@ -438,7 +433,7 @@ export class UserListComponent implements OnInit {
     })
   }
 
- 
+
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
       width: '50%',

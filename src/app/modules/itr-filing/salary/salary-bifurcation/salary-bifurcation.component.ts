@@ -445,7 +445,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       salaryType: [obj?.salaryType || null, Validators.required],
       taxableAmount: [obj?.taxableAmount || 0, Validators.required],
       exemptAmount: [obj?.exemptAmount || null],
-      description: [obj?.description || null],
+      description: [obj?.description || null, Validators.maxLength(50)],
     })
   }
 
@@ -455,7 +455,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       perquisiteType: [obj?.perquisiteType || null, Validators.required],
       taxableAmount: [obj?.taxableAmount || 0, Validators.required],
       exemptAmount: [obj?.exemptAmount || null],
-      description: [obj?.description || null],
+      description: [obj?.description || null, Validators.maxLength(50)],
     })
   }
 
@@ -465,7 +465,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       salaryType: [obj?.salaryType || null, Validators.required],
       taxableAmount: [obj?.taxableAmount || 0, Validators.required],
       exemptAmount: [obj?.exemptAmount || null],
-      description: [obj?.description || null],
+      description: [obj?.description || null, Validators.maxLength(50)],
     })
   }
 

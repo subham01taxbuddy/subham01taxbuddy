@@ -81,9 +81,6 @@
 
                     <!-- Adding new content in filter ends -->
                     <div class="button-container">
-                      <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                        Search
-                      </button> -->
                       <app-custom-button class="srch-btn-1" [actions]="[search]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
@@ -128,9 +125,7 @@
             <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
           </div>
         </div>
-        <table>
-          <tr *ngFor="let item of userInfo | paginate:config"></tr>
-        </table>
+        <div *ngFor="let item of userInfo | paginate:config"></div>
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
           (rowClicked)="onUsersRowClicked($event)">

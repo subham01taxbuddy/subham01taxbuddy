@@ -670,7 +670,7 @@ export const ErrorMsgsSchedule = {
   },
   BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO: {
     code: 'BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO',
-    message: 'In case of ITR 3 balance sheet difference needs to be zero or select BOA as "No"',
+    message: 'You are not required to maintain BOA, so either choose 44AA as No or else Fill the B/S and difference should be 0',
     relatedSchedule: 'balanceSheet',
   },
   NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO_AND_MAKE_44AA_FLAG_YES: {
@@ -690,7 +690,7 @@ export const ErrorMsgsSchedule = {
   },
   NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_NO: {
     code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_No',
-    message: 'In case of Non Speculative Income select BOA as "No"',
+    message: 'There is no non-speculative income, so choose "NO" for BOA under section 44AA.',
     relatedSchedule: 'personalInfo',
   },
   NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET: {
@@ -800,17 +800,13 @@ export interface Schedules {
   providedIn: 'root',
 })
 export class ItrValidations {
-  constructor() {}
+  constructor() { }
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];
   }
 
-  getMessage(errorCode: string, employerType: string){
-    if(errorCode === 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY'){
-      return ErrorMsgsSchedule[errorCode].message;
-    } else {
-      return ErrorMsgsSchedule[errorCode].message;
-    }
+  getMessage(errorCode: string) {
+    return ErrorMsgsSchedule[errorCode].message;
   }
 }

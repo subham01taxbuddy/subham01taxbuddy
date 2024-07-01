@@ -42,6 +42,10 @@ export class MoreOptionsDialogComponent implements OnInit {
   showInvoiceButton: boolean;
   navigateToInvoice: boolean
   partnerType: any;
+  filerId: number;
+  agentId: number;
+  leaderId: number;
+  searchAsPrinciple: boolean = false;
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
@@ -361,8 +365,34 @@ export class MoreOptionsDialogComponent implements OnInit {
 
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInSmeUserId;
+    }
+
+    if (this.loggedInUserRoles.includes('ROLE_FILER') && this.partnerType === 'PRINCIPAL') {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = true;
+    } else if (this.loggedInUserRoles.includes('ROLE_FILER') && this.partnerType === 'INDIVIDUAL') {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = false;
+    }else if(this.loggedInUserRoles.includes('ROLE_FILER')){
+      this.filerId = loggedInSmeUserId;
+    }
+
+    let userFilter = '';
+    if (this.leaderId && !this.filerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter;
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter +  userFilter;
+
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.data.content instanceof Array && response.data.content.length > 0) {

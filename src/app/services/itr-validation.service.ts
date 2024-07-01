@@ -13,7 +13,7 @@ export class ItrValidationService {
   constructor(
     private itrValidations: ItrValidations,
     private utilService: UtilsService
-  ) {}
+  ) { }
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
@@ -702,32 +702,32 @@ export class ItrValidationService {
                     (equity) =>
                       equity?.gainType === 'LONG'
                         ? !equity?.gainType ||
-                          equity?.algorithm !== 'cgSharesMF' ||
-                          !equity?.sellDate ||
-                          !equity?.sellOrBuyQuantity ||
-                          !equity?.sellValuePerUnit ||
-                          !equity?.sellValue ||
-                          !equity?.purchaseDate ||
-                          !equity?.purchaseValuePerUnit ||
-                          !equity?.purchaseCost ||
-                          equity?.isinCode === null ||
-                          equity?.isinCode === undefined ||
-                          equity?.fmvAsOn31Jan2018 === null ||
-                          equity?.fmvAsOn31Jan2018 === undefined ||
-                          !equity?.grandFatheredValue ||
-                          equity?.totalFairMarketValueOfCapitalAsset === null ||
-                          equity?.totalFairMarketValueOfCapitalAsset ===
-                            undefined ||
-                          !equity?.capitalGain
+                        equity?.algorithm !== 'cgSharesMF' ||
+                        !equity?.sellDate ||
+                        !equity?.sellOrBuyQuantity ||
+                        !equity?.sellValuePerUnit ||
+                        !equity?.sellValue ||
+                        !equity?.purchaseDate ||
+                        !equity?.purchaseValuePerUnit ||
+                        !equity?.purchaseCost ||
+                        equity?.isinCode === null ||
+                        equity?.isinCode === undefined ||
+                        equity?.fmvAsOn31Jan2018 === null ||
+                        equity?.fmvAsOn31Jan2018 === undefined ||
+                        !equity?.grandFatheredValue ||
+                        equity?.totalFairMarketValueOfCapitalAsset === null ||
+                        equity?.totalFairMarketValueOfCapitalAsset ===
+                        undefined ||
+                        !equity?.capitalGain
                         : !equity?.gainType ||
-                          equity?.algorithm !== 'cgSharesMF' ||
-                          !equity?.sellDate ||
-                          !equity?.sellOrBuyQuantity ||
-                          !equity?.sellValuePerUnit ||
-                          !equity?.sellValue ||
-                          !equity?.purchaseDate ||
-                          !equity?.purchaseValuePerUnit ||
-                          !equity?.purchaseCost
+                        equity?.algorithm !== 'cgSharesMF' ||
+                        !equity?.sellDate ||
+                        !equity?.sellOrBuyQuantity ||
+                        !equity?.sellValuePerUnit ||
+                        !equity?.sellValue ||
+                        !equity?.purchaseDate ||
+                        !equity?.purchaseValuePerUnit ||
+                        !equity?.purchaseCost
                   );
 
                   //Ashwini: commented the error code. Looks invalid. Need to check again
@@ -993,7 +993,7 @@ export class ItrValidationService {
           (profitLossAC[nonSpecIndex]?.netProfitfromNonSpeculativeIncome ===
             0 ||
             profitLossAC[nonSpecIndex]?.netProfitfromNonSpeculativeIncome ===
-              null)
+            null)
         ) {
           delete profitLossAC[nonSpecIndex];
         }
@@ -1259,7 +1259,7 @@ export class ItrValidationService {
 
   getItrValidationErrorMappring(errors: any) {
     const errorList: ItrValidationObject[] = [];
-    errors.forEach(err=>{
+    errors.forEach(err => {
       const error = this.getErrorMessages(err);
       errorList.push(error);
     });

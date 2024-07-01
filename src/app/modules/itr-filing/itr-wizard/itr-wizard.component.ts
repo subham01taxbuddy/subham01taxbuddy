@@ -2,19 +2,14 @@ import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface
 import {
   Component,
   OnInit,
-  ViewChild,
-  AfterContentChecked,
-  Output,
-  EventEmitter,
   ChangeDetectorRef,
-  HostListener,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrValidationService } from 'src/app/services/itr-validation.service';
 import { Schedules } from '../../shared/interfaces/schedules';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { fromEvent, Subscription } from 'rxjs';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
@@ -26,10 +21,7 @@ import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
-import {NavbarService} from "../../../services/navbar.service";
-import {SidebarService} from "../../../services/sidebar.service";
-import {SummaryConversionService} from "../../../services/summary-conversion.service";
+import { SummaryConversionService } from "../../../services/summary-conversion.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -57,11 +49,9 @@ export class ItrWizardComponent implements OnInit {
   constructor(
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
-    private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router,
     private location: Location,
-    private cdRef: ChangeDetectorRef,
     public schedules: Schedules,
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
@@ -69,15 +59,6 @@ export class ItrWizardComponent implements OnInit {
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
-
-  // @HostListener('window:popstate', ['$event'])
-  // onBrowserBackBtnClose(event: Event) {
-  //   console.log('back button pressed');
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   this.utilsService.showSnackBar('Do not user browser back button');
-  //   //this.router.navigate(['/home'],  {replaceUrl:true});
-  // }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -205,10 +186,10 @@ export class ItrWizardComponent implements OnInit {
       this.router.navigate(['/itr-filing/itr/old-vs-new']);
       return;
     }
-    this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
+    this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result: any) => {
       console.log(result);
       // if(result.success){
- 
+
       if (result.data.errors.length > 0) {
         let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
         this.breadcrumb = null;
@@ -218,26 +199,26 @@ export class ItrWizardComponent implements OnInit {
           state: { validationErrors: errorMapping },
         });
       } else {
-        if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
+        if (!this.ITR_JSON.systemFlags.hasAgricultureIncome) {
           this.ITR_JSON.agriculturalDetails = null;
           this.ITR_JSON.agriculturalLandDetails = null;
           this.ITR_JSON.agriculturalIncome = null;
         }
-        if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
+        if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
           this.ITR_JSON.schedule5a = null;
         }
-        if(this.ITR_JSON.partnerInFirmFlag === 'N'){
+        if (this.ITR_JSON.partnerInFirmFlag === 'N') {
           this.ITR_JSON.partnerFirms = [];
         }
         this.ITR_JSON = this.itrValidationService.removeNullProperties(
-            this.ITR_JSON
+          this.ITR_JSON
         );
         this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
-            this.ITR_JSON
+          this.ITR_JSON
         );
         sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
         );
 
         this.breadcrumb = null;
@@ -246,7 +227,7 @@ export class ItrWizardComponent implements OnInit {
         this.router.navigate(['/itr-filing/itr/old-vs-new']);
       }
 
-      
+
       // }
     });
 
@@ -393,19 +374,7 @@ export class ItrWizardComponent implements OnInit {
           }
         } else {
           //for add more info when capital gain is selected
-          if (scheduleInfoEvent.schedule.schedule === 'capitalGain') {
-            this.componentsList.splice(
-              index,
-              0,
-              scheduleInfoEvent.schedule.schedule
-            );
-          } else {
-            this.componentsList.splice(
-              index,
-              0,
-              scheduleInfoEvent.schedule.schedule
-            );
-          }
+          this.componentsList.splice(index, 0, scheduleInfoEvent.schedule.schedule);
         }
       }
     } else {
@@ -470,7 +439,7 @@ export class ItrWizardComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
 
   async startCalling() {
@@ -516,7 +485,7 @@ export class ItrWizardComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {});
+    disposable.afterClosed().subscribe((result) => { });
   }
 
   onUploadedJson(uploadedJson: any) {
@@ -568,6 +537,11 @@ export class ItrWizardComponent implements OnInit {
       })
       .toString();
     window.open(url, '_blank');
+  }
+
+  goToProfile(){
+    let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
+    this.router.navigate([`pages/user-management/profile/` + this.ITR_JSON.userId], { queryParams: { 'serviceType': serviceType, }, queryParamsHandling: 'merge' });
   }
 
   ngOnDestroy() {

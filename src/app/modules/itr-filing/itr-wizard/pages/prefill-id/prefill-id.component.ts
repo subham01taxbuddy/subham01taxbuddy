@@ -12,9 +12,7 @@ import { formatDate, TitleCasePipe } from '@angular/common';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
-import { NonNullExpression } from 'typescript';
 import { AisCredsDialogComponent } from '../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component';
-import { Storage } from '@aws-amplify/storage';
 import { environment } from '../../../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -52,7 +50,7 @@ export class PrefillIdComponent implements OnInit {
   taxComputation: any;
   Copy_ITR_JSON: ITR_JSON;
   isPasswordAvailable: boolean = false;
-  isDownloadAisPrefill:boolean = false;
+  isDownloadAisPrefill: boolean = false;
 
   constructor(
     private router: Router,
@@ -61,7 +59,6 @@ export class PrefillIdComponent implements OnInit {
     private userService: UserMsService,
     public utilsService: UtilsService,
     private dialog: MatDialog,
-    private aisDialog: MatDialog,
     private titlecasePipe: TitleCasePipe,
     private httpClient: HttpClient
   ) {
@@ -78,10 +75,7 @@ export class PrefillIdComponent implements OnInit {
     this.utilsService
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
-        console.log(result);
-        (this.userProfile = result),
-          console.log(this.userProfile, 'USERPROFILE');
-
+        this.userProfile = result;
         this.customerName = this.utilsService.isNonEmpty(name)
           ? name
           : result.fName + ' ' + result.lName;
@@ -101,9 +95,9 @@ export class PrefillIdComponent implements OnInit {
         }
 
         this.checkAisPrefill();
-        if(this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID' ){
+        if (this.utilsService.isNonEmpty(result.itPortalPassword) && result.itPasswordVerificationStatus === 'VALID') {
           this.isPasswordAvailable = true;
-        }else{
+        } else {
           this.isPasswordAvailable = false;
         }
       });
@@ -611,14 +605,13 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  updateInvestments(investments, ITR_Type) {
+  updateInvestments(investments) {
     console.log('investments', investments);
     let investmentNames: any;
     if (this.regime === 'OLD') {
       {
         investmentNames = investments.map((arr) => arr[0]);
         console.log('All investment Names => investmentNames', investmentNames);
-        // setting 80dd names with this logic
         let disabilities80U = '';
         {
           const disabilities80UArray = investments.find(
@@ -628,9 +621,6 @@ export class PrefillIdComponent implements OnInit {
             disabilities80U = 'SELF_WITH_SEVERE_DISABILITY';
           } else if (
             disabilities80UArray?.[1] < 75000
-            // &&
-            // disabilities80UArray[1] !== 0 &&
-            // disabilities80UArray[1] !== null
           ) {
             disabilities80U = 'SELF_WITH_DISABILITY';
           } else if (
@@ -638,12 +628,9 @@ export class PrefillIdComponent implements OnInit {
             (disabilities80UArray[1] === 0 || disabilities80UArray[1] === null)
           ) {
             disabilities80U = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 1);
           }
         }
 
-        // setting 80dd names with this logic
         let disabilities80dd = '';
         {
           const disabilities80ddArray = investments.find(
@@ -654,9 +641,6 @@ export class PrefillIdComponent implements OnInit {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_SEVERE_DISABILITY';
           } else if (
             disabilities80ddArray?.[1] < 75000
-            // &&
-            // disabilities80ddArray[1] !== 0 &&
-            // disabilities80ddArray[1] !== null
           ) {
             disabilities80dd = 'DEPENDENT_PERSON_WITH_DISABILITY';
           } else if (
@@ -665,8 +649,6 @@ export class PrefillIdComponent implements OnInit {
               disabilities80ddArray[1] === null)
           ) {
             disabilities80dd = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 2);
           }
         }
 
@@ -681,25 +663,15 @@ export class PrefillIdComponent implements OnInit {
             disabilities80DDB = 'SELF_OR_DEPENDENT_SENIOR_CITIZEN';
           } else if (
             disabilities80DDBArray?.[1] < 40000
-            // &&  disabilities80DDBArray[1] !== 0 &&
-            // disabilities80DDBArray[1] !== null
           ) {
             disabilities80DDB = 'SELF_OR_DEPENDENT';
-          } else if (
-            disabilities80DDBArray &&
-            (disabilities80DDBArray[1] =
-              0 || disabilities80DDBArray[1] === null)
-          ) {
+          } else if (disabilities80DDBArray && (disabilities80DDBArray[1] === 0 || disabilities80DDBArray[1] === null)) {
             disabilities80DDB = null;
-            // need to implement this later where the whole object is deleted if amount is 0.
-            // this.ITR_Obj.disabilities.splice(0, 3);
           }
         }
 
         //setting 80G fields
-        let donations80G = '';
         {
-          // 100% donation
           {
             const Don100Percent =
               this.uploadedJson[this.ITR_Type].Schedule80G?.Don100Percent
@@ -1353,7 +1325,7 @@ export class PrefillIdComponent implements OnInit {
                 if (
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
                 ) {
-                  this.ITR_Obj.isRevised === 'Y';
+                  this.ITR_Obj.isRevised = 'Y';
                 } else if (
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 17 &&
                   ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 11
@@ -1420,7 +1392,7 @@ export class PrefillIdComponent implements OnInit {
                 if (ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'Y') {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'OLD';
                 } else if (
-                    ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
+                  ItrJSON[this.ITR_Type].FilingStatus?.OptOutNewTaxRegime === 'N'
                 ) {
                   this.ITR_Obj.optionForCurrentAY.currentYearRegime = 'NEW';
                 } else if (
@@ -1443,35 +1415,20 @@ export class PrefillIdComponent implements OnInit {
                   }
 
                   // setting first question details
-                  {
-                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                      ?.AssessmentYear
-                      ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
-                      : null;
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                      ? (this.ITR_Obj.everOptedNewRegime.date =
-                        this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                        ))
-                      : null;
-
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
-                      ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].FilingStatus?.Form10IEAAckNo)
-                      : null;
+                  if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear) {
+                    this.ITR_Obj.everOptedNewRegime.assessmentYear =
+                      ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear;
                   }
 
+                  if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate) {
+                    (this.ITR_Obj.everOptedNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate));
+                  }
+
+                  if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)
+                    this.ITR_Obj.everOptedNewRegime.acknowledgementNumber = (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo);
                   // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-                  sessionStorage.setItem(
-                    AppConstants.ITR_JSON,
-                    JSON.stringify(this.ITR_Obj)
-                  );
+                  sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
                 }
 
                 //  everOptedOutOfNewRegime
@@ -1490,56 +1447,30 @@ export class PrefillIdComponent implements OnInit {
 
                   // setting second question details
                   {
-                    ItrJSON[this.ITR_Type].FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                      this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear = ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear;
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                        this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                        ))
-                      : null;
+                    if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate)
+                      this.ITR_Obj.everOptedOutOfNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate);
 
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].FilingStatus?.Form10IEAAckNo)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)
+                      this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber = ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo;
                   }
 
-                  sessionStorage.setItem(
-                    AppConstants.ITR_JSON,
-                    JSON.stringify(this.ITR_Obj)
-                  );
+                  sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
                 }
 
-                this.ITR_Obj.regime =
-                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                this.ITR_Obj.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                this.regime =
-                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                this.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                  ? (this.ITR_Obj.optionForCurrentAY.date =
-                    this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate
-                    ))
-                  : null;
-                ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo
-                  ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)
-                  : null;
+                if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate)
+                  this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.Form10IEADate);
 
-                sessionStorage.setItem(
-                  AppConstants.ITR_JSON,
-                  JSON.stringify(this.ITR_Obj)
-                );
+                if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo)
+                  this.ITR_Obj.optionForCurrentAY.acknowledgementNumber = ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAAckNo;
+
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
               }
 
               // HAVE TO SET THE RES STATUS MANUALLY AS THIS KEY IS NOT AVAILABLE IN JSON AS OF 14/04/23 AND ONLY "RESIDENT" ARE ALLOWED UNDER ITR1 & ITR4
@@ -1573,15 +1504,9 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              this.ITR_Obj.aadharNumber =
-                ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
+              this.ITR_Obj.aadharNumber = ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-              (this.ITR_Obj.aadhaarEnrolmentId =
-                ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId),
-                // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
-                this.parseAndFormatDate(
-                  ItrJSON[this.ITR_Type].PersonalInfo?.DOB
-                );
+              this.ITR_Obj.aadhaarEnrolmentId = ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId;
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -1589,22 +1514,13 @@ export class PrefillIdComponent implements OnInit {
             {
               // ADDRESS DETAILS -
               {
-                this.ITR_Obj.address.pinCode =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.PinCode;
-                this.ITR_Obj.address.country =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.CountryCode;
-                this.ITR_Obj.address.state =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.StateCode;
-                this.ITR_Obj.address.city =
-                  ItrJSON[
-                    this.ITR_Type
-                  ].PersonalInfo.Address?.CityOrTownOrDistrict;
-                this.ITR_Obj.address.flatNo =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceNo;
-                this.ITR_Obj.address.premisesName =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceName;
-                this.ITR_Obj.address.area =
-                  ItrJSON[this.ITR_Type].PersonalInfo.Address?.RoadOrStreet +
+                this.ITR_Obj.address.pinCode = ItrJSON[this.ITR_Type].PersonalInfo.Address?.PinCode;
+                this.ITR_Obj.address.country = ItrJSON[this.ITR_Type].PersonalInfo.Address?.CountryCode;
+                this.ITR_Obj.address.state = ItrJSON[this.ITR_Type].PersonalInfo.Address?.StateCode;
+                this.ITR_Obj.address.city = ItrJSON[this.ITR_Type].PersonalInfo.Address?.CityOrTownOrDistrict;
+                this.ITR_Obj.address.flatNo = ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceNo;
+                this.ITR_Obj.address.premisesName = ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceName;
+                this.ITR_Obj.address.area = ItrJSON[this.ITR_Type].PersonalInfo.Address?.RoadOrStreet +
                   ItrJSON[this.ITR_Type].PersonalInfo.Address?.LocalityOrArea;
               }
 
@@ -2101,7 +2017,7 @@ export class PrefillIdComponent implements OnInit {
                   this.uploadedJson[this.ITR_Type][this.ITR14_IncomeDeductions]
                     .DeductUndChapVIA
                 ).filter(([key, value]) => key !== 'TotalChapVIADeductions');
-                this.updateInvestments(availableInvestments, this.ITR_Type);
+                this.updateInvestments(availableInvestments);
               } else {
                 console.log(
                   'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
@@ -2658,14 +2574,7 @@ export class PrefillIdComponent implements OnInit {
               } else if (this.ITR_Obj.isRevised === 'Y') {
                 if (
                   ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.ReturnFileSec === 17
-                ) {
-                  this.ITR_Obj.isRevised === 'Y';
-                } else if (
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.ReturnFileSec !== 17 &&
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.ReturnFileSec !== 11
+                    ?.ReturnFileSec !== 17 && ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReturnFileSec !== 11
                 ) {
                   this.ITR_Obj.isRevised = 'N';
                 } else if (
@@ -2680,40 +2589,23 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              this.ITR_Obj.email =
-                ItrJSON[
-                  this.ITR_Type
-                ].PartA_GEN1.PersonalInfo?.Address?.EmailAddress;
+              this.ITR_Obj.email = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.EmailAddress;
 
-              this.ITR_Obj.family[0].fName =
-                ItrJSON[
-                  this.ITR_Type
-                ].PartA_GEN1.PersonalInfo?.AssesseeName?.FirstName;
+              this.ITR_Obj.family[0].fName = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AssesseeName?.FirstName;
 
-              this.ITR_Obj.family[0].mName =
-                ItrJSON[
-                  this.ITR_Type
-                ].PartA_GEN1.PersonalInfo?.AssesseeName?.MiddleName;
+              this.ITR_Obj.family[0].mName = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AssesseeName?.MiddleName;
 
-              this.ITR_Obj.family[0].lName =
-                ItrJSON[
-                  this.ITR_Type
-                ].PartA_GEN1.PersonalInfo?.AssesseeName?.SurNameOrOrgName;
+              this.ITR_Obj.family[0].lName = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AssesseeName?.SurNameOrOrgName;
 
-              this.ITR_Obj.family[0].fatherName =
-                ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
+              this.ITR_Obj.family[0].fatherName = ItrJSON[this.ITR_Type].Verification.Declaration?.FatherName;
 
-              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
-                ? (this.ITR_Obj.orgITRAckNum =
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo)
+              ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo ?
+                (this.ITR_Obj.orgITRAckNum = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo)
                 : (this.ITR_Obj.orgITRAckNum = null);
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
-                ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                    ?.OrigRetFiledDate
-                ))
-                : (this.ITR_Obj.orgITRDate = null);
+                ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                  ?.OrigRetFiledDate)) : (this.ITR_Obj.orgITRDate = null);
 
               // SETTING REGIME TYPE FOR ITR2
               if (this.ITR_Type === 'ITR2') {
@@ -2787,117 +2679,61 @@ export class PrefillIdComponent implements OnInit {
 
                   // setting first question details
                   {
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.NewTaxRegimeDtls?.AssessmentYear
-                      ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                      this.ITR_Obj.everOptedNewRegime.assessmentYear = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear;
 
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.Form10IEADate
-                      ? (this.ITR_Obj.everOptedNewRegime.date =
-                        this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                            ?.Form10IEADate
-                        ))
-                      : null;
 
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.Form10IEAAckNo
-                      ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate)
+                      this.ITR_Obj.everOptedNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate);
+
+
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
+                      this.ITR_Obj.everOptedNewRegime.acknowledgementNumber = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo;
                   }
 
                   // Have to remove this later and keep only one function that sets the whole JSON in the ITR object
-                  sessionStorage.setItem(
-                    AppConstants.ITR_JSON,
-                    JSON.stringify(this.ITR_Obj)
-                  );
+                  sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
                 }
 
                 //  everOptedOutOfNewRegime
                 {
                   //Setting 1st question as yes / no
-                  if (
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.OptedOutNewTaxRegime === 'Y'
-                  ) {
-                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                      true;
+                  if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegime === 'Y') {
+                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime = true;
                   } else {
-                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                      false;
+                    this.ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime = false;
                   }
 
                   // setting second question details
                   {
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                      this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear;
 
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.Form10IEADate
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                        this.parseAndFormatDate(
-                          ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                            ?.Form10IEADate
-                        ))
-                      : null;
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate)
+                      this.ITR_Obj.everOptedOutOfNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate);
 
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.Form10IEAAckNo
-                      ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                        ItrJSON[
-                          this.ITR_Type
-                        ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
-                      : null;
+                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
+                      this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo;
                   }
 
-                  sessionStorage.setItem(
-                    AppConstants.ITR_JSON,
-                    JSON.stringify(this.ITR_Obj)
-                  );
+                  sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
                 }
 
-                this.ITR_Obj.regime =
-                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                this.ITR_Obj.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                this.regime =
-                  this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                this.regime = this.ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate
-                  ? (this.ITR_Obj.optionForCurrentAY.date =
-                    this.parseAndFormatDate(
-                      ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                        ?.Form10IEADate
-                    ))
-                  : null;
-                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo
-                  ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                    ItrJSON[
-                      this.ITR_Type
-                    ].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
-                  : null;
+                if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate)
+                  this.ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEADate);
 
-                sessionStorage.setItem(
-                  AppConstants.ITR_JSON,
-                  JSON.stringify(this.ITR_Obj)
-                );
+                if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo)
+                  this.ITR_Obj.optionForCurrentAY.acknowledgementNumber = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAAckNo;
+
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_Obj));
               }
 
               // SETTING RESIDENTIAL STATUS
-              const residentialStatusJson =
-                ItrJSON[this.ITR_Type].PartA_GEN1.FilingStatus
-                  ?.ResidentialStatus;
+              const residentialStatusJson = ItrJSON[this.ITR_Type].PartA_GEN1.FilingStatus?.ResidentialStatus;
 
               if (residentialStatusJson === 'RES') {
                 this.ITR_Obj.residentialStatus = 'RESIDENT';
@@ -2915,9 +2751,7 @@ export class PrefillIdComponent implements OnInit {
               {
                 let jsonEmployerCategory: any;
                 if (ItrJSON[this.ITR_Type].ScheduleS?.Salaries) {
-                  jsonEmployerCategory =
-                    ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]
-                      ?.NatureOfEmployment;
+                  jsonEmployerCategory = ItrJSON[this.ITR_Type].ScheduleS?.Salaries[0]?.NatureOfEmployment;
                 } else {
                   jsonEmployerCategory = 'OTH';
                 }
@@ -2945,17 +2779,9 @@ export class PrefillIdComponent implements OnInit {
                 }
               }
 
-              this.ITR_Obj.aadharNumber =
-                ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
+              this.ITR_Obj.aadharNumber = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
 
-              (this.ITR_Obj.aadhaarEnrolmentId =
-                ItrJSON[
-                  this.ITR_Type
-                ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
-                // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-                this.parseAndFormatDate(
-                  ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
-                );
+              this.ITR_Obj.aadhaarEnrolmentId = ItrJSON[this.ITR_Type]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId;
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -2963,10 +2789,7 @@ export class PrefillIdComponent implements OnInit {
             {
               // ADDRESS DETAILS -
               {
-                this.ITR_Obj.address.pinCode =
-                  ItrJSON[
-                    this.ITR_Type
-                  ].PartA_GEN1.PersonalInfo?.Address?.PinCode;
+                this.ITR_Obj.address.pinCode = ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.Address?.PinCode;
 
                 this.ITR_Obj.address.country =
                   ItrJSON[
@@ -4151,14 +3974,6 @@ export class PrefillIdComponent implements OnInit {
                 );
               }
 
-              // OTHER THAN SALARY 16A - have to add two more options of CG, NA for headOfIncome option
-              // {
-              // const otherThanSalary16A =
-              //   this.ITR_Type === 'ITR2'
-              //     ? 'TDSonOthThanSal'
-              //     : 'TDSonOthThanSalDtls';
-              // console.log('otherThanSalary16A', otherThanSalary16A);
-
               const jsonOtherThanSalaryTDS: Array<object> =
                 ItrJSON[this.ITR_Type]?.ScheduleTDS2?.TDSOthThanSalaryDtls;
 
@@ -4183,10 +3998,7 @@ export class PrefillIdComponent implements OnInit {
                     uniqueTDSCerNo: null,
                     taxDeduction: null,
                     totalAmountCredited: GrossAmount,
-                    headOfIncome:
-                      HeadOfIncome === 'CG'
-                        ? (HeadOfIncome = 'OS')
-                        : (HeadOfIncome = 'OS'),
+                    headOfIncome: HeadOfIncome = 'OS',
                   };
                 };
 
@@ -4227,10 +4039,7 @@ export class PrefillIdComponent implements OnInit {
                   uniqueTDSCerNo: null,
                   taxDeduction: null,
                   totalAmountCredited: GrossAmount,
-                  headOfIncome:
-                    HeadOfIncome === 'CG'
-                      ? (HeadOfIncome = 'OS')
-                      : (HeadOfIncome = 'OS'),
+                  headOfIncome: HeadOfIncome = 'OS',
                 };
               };
 
@@ -4242,46 +4051,6 @@ export class PrefillIdComponent implements OnInit {
                 JSON.stringify(this.ITR_Obj)
               );
             }
-
-            // TCS - TAX COLLECTED AT SOURCE
-            // {
-            //   const jsonTCS = ItrJSON[this.ITR_Type]?.ScheduleTCS?.TCS;
-
-            //   if (!jsonTCS || jsonTCS.length === 0) {
-            //     this.ITR_Obj.taxPaid.tcs = [];
-            //     console.log(
-            //       'There are no TCS tax paid other than salary details in the JSON that you have provided'
-            //     );
-            //   } else {
-            //     this.ITR_Obj.taxPaid.tcs = jsonTCS?.map(
-            //       ({
-            //         TCSCurrFYDtls: { TCSAmtCollOwnHand },
-            //         TCSClaimedThisYearDtls: {
-            //           TCSAmtCollOthrHands: { TCSAmtCollSpouseOrOthrHand },
-            //         },
-            //         TCSCreditOwner,
-            //         EmployerOrDeductorOrCollectTAN,
-            //         AmtCarriedFwd,
-            //       }) => {
-            //         return {
-            //           id: null,
-            //           srNo: null,
-            //           collectorName: EmployerOrDeductorOrCollectTAN,
-            //           collectorTAN: EmployerOrDeductorOrCollectTAN,
-            //           totalAmountPaid: TCSAmtCollSpouseOrOthrHand,
-            //           totalTaxCollected: 0,
-            //           totalTcsDeposited: TCSAmtCollSpouseOrOthrHand,
-            //           taxDeduction: null,
-            //         };
-            //       }
-            //     );
-            //   }
-
-            //   sessionStorage.setItem(
-            //     AppConstants.ITR_JSON,
-            //     JSON.stringify(this.ITR_Obj)
-            //   );
-            // }
 
             // Advance and self assessment tax
             {
@@ -4331,7 +4100,7 @@ export class PrefillIdComponent implements OnInit {
 
                 console.log('availableInvestments==>>', availableInvestments);
 
-                this.updateInvestments(availableInvestments, this.ITR_Type);
+                this.updateInvestments(availableInvestments);
               } else {
                 console.log(
                   'ITR OBJ => Investments => There are no details under investments in the ITR Obj'
@@ -6815,6 +6584,8 @@ export class PrefillIdComponent implements OnInit {
           this.loading = false;
           if (result?.status === 'ok') {
             this.utilsService.showSnackBar(result.message);
+            this.showEriView = true;
+            this.router.navigate(['/itr-filing/itr/eri']);
           } else {
             this.utilsService.showSnackBar('Error in updating ERI');
             this.showEriView = true;
@@ -7050,13 +6821,13 @@ export class PrefillIdComponent implements OnInit {
     return this.isPasswordAvailable ? 'Password available for this user' : '';
   }
 
-  checkAisPrefill(){
+  checkAisPrefill() {
     const aisDate = new Date(this.ITR_JSON.aisLastUploadedDownloadedDate);
     const prefillDate = new Date(this.ITR_JSON.prefillDate);
     const currentDate = new Date();
     const sevenDaysAgo = new Date(currentDate);
     sevenDaysAgo.setDate(currentDate.getDate() - 7);
-    if(this.utilsService.isNonEmpty(this.userProfile?.itPortalPassword) && this.userProfile?.itPasswordVerificationStatus === 'VALID' ){
+    if (this.utilsService.isNonEmpty(this.userProfile?.itPortalPassword) && this.userProfile?.itPasswordVerificationStatus === 'VALID') {
       if ((this.ITR_JSON.aisSource === 'DOWNLOAD' && aisDate < sevenDaysAgo) ||
         (this.ITR_JSON.prefillDataSource === 'DOWNLOAD' && prefillDate < sevenDaysAgo) ||
         (this.ITR_JSON.aisSource === 'UPLOAD' && aisDate < sevenDaysAgo) ||
@@ -7065,13 +6836,13 @@ export class PrefillIdComponent implements OnInit {
       } else {
         this.isDownloadAisPrefill = false;
       }
-    }else{
+    } else {
       this.utilsService.showSnackBar('Please Download & Upload the latest AIS/Prefill from Portal !');
     }
   }
 
-  downloadAisPrefill(){
-    if(this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID' ){
+  downloadAisPrefill() {
+    if (this.utilsService.isNonEmpty(this.userProfile.itPortalPassword) && this.userProfile.itPasswordVerificationStatus === 'VALID') {
       const dialogRef = this.dialog.open(AisCredsDialogComponent, {
         width: '500px',
         data: {
@@ -7081,7 +6852,7 @@ export class PrefillIdComponent implements OnInit {
         },
 
       });
-    }else{
+    } else {
       this.utilsService.showSnackBar('Please verify your IT portal password to proceed,No IT portal’s Credentials Found');
     }
 

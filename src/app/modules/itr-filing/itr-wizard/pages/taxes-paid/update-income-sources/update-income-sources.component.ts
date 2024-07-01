@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -24,8 +24,7 @@ export class UpdateIncomeSourcesComponent {
     this.headOfIncome = new FormControl('', [Validators.required]);
   }
 
-  ngOnInit(): void {
-  }
+
 
   update(status) {
     let data = {

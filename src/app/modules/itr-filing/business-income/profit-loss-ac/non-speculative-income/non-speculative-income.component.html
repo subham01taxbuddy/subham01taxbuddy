@@ -68,9 +68,8 @@
                       </form>
                       <div class="row spsTp bdrTp" style="align-items: center">
                         <div class="col-sm-6 txt-center">
-                          <table>
-                            <tr *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config"></tr>
-                          </table>
+                          <div *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config">
+                          </div>
                           <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                         </div>
                       </div>
@@ -150,9 +149,9 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount" digitsOnly
-                                    matInput name="finishedGoodsClosingStock" class="input-field" required type="number"
-                                    trim (blur)="calculateIncome()" />
+                                  <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount"
+                                    digitsOnly matInput name="finishedGoodsClosingStock" class="input-field" required
+                                    type="number" trim (blur)="calculateIncome()" />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -177,9 +176,9 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount" digitsOnly
-                                    matInput name="finishedGoodsOpeningStock" class="input-field" required type="number"
-                                    trim (blur)="calculateIncome()" />
+                                  <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount"
+                                    digitsOnly matInput name="finishedGoodsOpeningStock" class="input-field" required
+                                    type="number" trim (blur)="calculateIncome()" />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -229,7 +228,8 @@
                             <button (click)="clearForm()" class="btn btn__white">Cancel</button>
                           </div>
                           <div class="box-right">
-                            <button (click)="saveManualEntry()" class="btn btn__primary" [disabled]="!selectedFormGroup.valid">Save
+                            <button (click)="saveManualEntry()" class="btn btn__primary"
+                              [disabled]="!selectedFormGroup.valid">Save
                               Details
                             </button>
                           </div>
@@ -242,7 +242,7 @@
                   <div class="accordion-item mt-3">
                     <h2 class="accordion-header" id="heading4">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapse5">Profit & Loss Account</button>
+                        data-bs-target="#collapse5">Profit & Loss Account</button>
                     </h2>
                     <div id="collapse5" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body">
@@ -257,7 +257,7 @@
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input readonly type="text" matInput class="input-field" value="{{totalOtherIncomes}}"
-                                         id="exampleInputEmail1" aria-describedby="emailHelp">
+                                    id="exampleInputEmail1" aria-describedby="emailHelp">
                                 </mat-form-field>
                               </div>
                             </div>
@@ -273,7 +273,7 @@
                                       <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
                                     </button>
                                     <button class="ml-3 btn btn__add btn__default"
-                                            (click)="addIncomeForm(this.newIncomes)">
+                                      (click)="addIncomeForm(this.newIncomes)">
                                       Add
                                       Another</button>
                                   </div>
@@ -283,7 +283,7 @@
                             </div>
                             <div class="row gray_box" formArrayName="incomes">
                               <div class="col-12 mb-2" *ngFor="let income of incomes?.controls; let i = index"
-                                   [formGroupName]="i">
+                                [formGroupName]="i">
                                 <div class="div-6">
                                   <div class="col-sm-1">
                                     <mat-checkbox name="hasIncome[i]" formControlName="hasIncome" class="chkSpc">
@@ -295,9 +295,9 @@
                                     <div class="form-control-wrapper">
                                       <mat-form-field appearance="outline" class="small-inp no-height">
                                         <mat-select placeholder="Income Type" formControlName="type" name="type"
-                                                    (selectionChange)="changeIncomes()">
+                                          (selectionChange)="changeIncomes()">
                                           <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
-                                                      [disabled]="(type.key != 'ANY_OTHER')?type.disabled:false">
+                                            [disabled]="(type.key != 'ANY_OTHER')?type.disabled:false">
                                             {{ type.value }}
                                           </mat-option>
                                         </mat-select>
@@ -309,8 +309,8 @@
                                     </div>
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
-                                             (change)="calculateNetProfit()" placeholder="Income Amount"
-                                             formControlName="amount" maxlength="14" />
+                                        (change)="calculateNetProfit()" placeholder="Income Amount"
+                                        formControlName="amount" maxlength="14" />
                                     </mat-form-field>
                                   </div>
                                 </div>
@@ -318,9 +318,9 @@
                                   <div><span class="normal_text">Description</span>
                                   </div>
                                   <mat-form-field class="input-field-width" appearance="outline"
-                                                  class="small-inp no-height">
+                                    class="small-inp no-height">
                                     <input matInput class="input-field" placeholder="description"
-                                           formControlName="description" [required]="
+                                      formControlName="description" [required]="
                                         income.get('type').value === 'ANY_OTHER'" />
                                   </mat-form-field>
                                 </div>
@@ -334,8 +334,8 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly type="text" matInput class="input-field" value="{{totalOtherExpenses}}"
-                                         id="exampleInputEmail1" aria-describedby="emailHelp">
+                                  <input readonly type="text" matInput class="input-field"
+                                    value="{{totalOtherExpenses}}" id="exampleInputEmail1" aria-describedby="emailHelp">
                                 </mat-form-field>
                               </div>
                             </div>
@@ -351,7 +351,7 @@
                                       <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
                                     </button>
                                     <button class="ml-3 btn btn__add btn__default"
-                                            (click)="addExpenseForm(this.newExpenses)">
+                                      (click)="addExpenseForm(this.newExpenses)">
                                       Add
                                       Another</button>
                                   </div>
@@ -361,7 +361,7 @@
                             </div>
                             <div class="row gray_box" formArrayName="expenses">
                               <div class="col-12 mb-2" *ngFor="let expense of expenses?.controls; let i = index"
-                                   [formGroupName]="i">
+                                [formGroupName]="i">
                                 <div class="div-6">
                                   <div class="col-sm-1">
                                     <mat-checkbox name="hasExpense[i]" formControlName="hasExpense" class="chkSpc">
@@ -373,9 +373,9 @@
                                     <div class="form-control-wrapper">
                                       <mat-form-field appearance="outline" class="small-inp no-height">
                                         <mat-select placeholder="expense Type" formControlName="expenseType"
-                                                    name="expenseType" (selectionChange)="changed()">
+                                          name="expenseType" (selectionChange)="changed()">
                                           <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
-                                                      [disabled]="(type.key !='OTHER_EXPENSES')? type.disabled:false">
+                                            [disabled]="(type.key !='OTHER_EXPENSES')? type.disabled:false">
                                             {{ type.value }}
                                           </mat-option>
                                         </mat-select>
@@ -387,8 +387,8 @@
                                     </div>
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
-                                             (change)="calculateNetProfit()" placeholder="Expense Amount"
-                                             formControlName="expenseAmount" maxlength="14" />
+                                        (change)="calculateNetProfit()" placeholder="Expense Amount"
+                                        formControlName="expenseAmount" maxlength="14" />
                                     </mat-form-field>
                                   </div>
                                 </div>
@@ -397,7 +397,7 @@
                                   </div>
                                   <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
                                     <input matInput class="input-field" placeholder="description"
-                                           formControlName="description" [required]="
+                                      formControlName="description" [required]="
                                         expense.get('expenseType').value === 'OTHER_EXPENSES'
                                       " />
                                   </mat-form-field>
@@ -415,7 +415,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input readonly type="text" matInput class="input-field" value="{{totalNetProfit}}"
-                                       id="exampleInputEmail1" aria-describedby="emailHelp">
+                                  id="exampleInputEmail1" aria-describedby="emailHelp">
                               </mat-form-field>
                             </div>
                           </div>

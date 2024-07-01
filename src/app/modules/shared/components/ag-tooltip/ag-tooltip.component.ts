@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
@@ -19,7 +19,7 @@ export class AgTooltipComponent implements ICellRendererAngularComp {
   public data: any;
   public toolTip: string;
 
-  constructor() { }
+
 
   agInit(params: ToolTipParams): void {
     this.params = params;

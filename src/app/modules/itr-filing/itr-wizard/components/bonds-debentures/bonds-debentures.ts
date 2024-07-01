@@ -1,10 +1,9 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
-  Input,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -52,7 +51,8 @@ export class BondsDebentures
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private elementRef: ElementRef,
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -589,7 +589,7 @@ export class BondsDebentures
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxGold = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -718,7 +718,7 @@ export class BondsDebentures
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -966,8 +966,8 @@ export class BondsDebentures
 
   calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
-        this.deductionForm.controls['costOfNewAssets'].valid &&
-        this.deductionForm.controls['investmentInCGAccount'].valid;
+      this.deductionForm.controls['costOfNewAssets'].valid &&
+      this.deductionForm.controls['investmentInCGAccount'].valid;
     if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;

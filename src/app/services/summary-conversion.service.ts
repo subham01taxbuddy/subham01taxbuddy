@@ -111,10 +111,6 @@ export class SummaryConversionService {
                                     : 'N';
                         } else if (ITR_Obj.isRevised === 'Y') {
                             if (
-                                ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec === 17
-                            ) {
-                                ITR_Obj.isRevised === 'Y';
-                            } else if (
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 17 &&
                                 ItrJSON[this.ITR_Type]?.FilingStatus?.ReturnFileSec !== 11
                             ) {
@@ -216,30 +212,14 @@ export class SummaryConversionService {
 
                                 // setting first question details
                                 {
-                                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                                        ?.AssessmentYear
-                                        ? (ITR_Obj.everOptedNewRegime.assessmentYear =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                                        ITR_Obj.everOptedNewRegime.assessmentYear = ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear;
 
-                                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                                        ?.Form10IEDtls?.Form10IEDate
-                                        ? (ITR_Obj.everOptedNewRegime.date =
-                                            this.parseAndFormatDate(
-                                                ItrJSON[this.ITR_Type].FilingStatus
-                                                    ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                                            ))
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate)
+                                        ITR_Obj.everOptedNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate);
 
-                                    ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
-                                        ?.Form10IEDtls?.Form10IEAckNo
-                                        ? (ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                        ITR_Obj.everOptedNewRegime.acknowledgementNumber = ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo;
                                 }
 
                             }
@@ -247,64 +227,36 @@ export class SummaryConversionService {
                             //  everOptedOutOfNewRegime
                             {
                                 //Setting 1st question as yes / no
-                                if (
-                                    ItrJSON[this.ITR_Type]?.FilingStatus
-                                        ?.OptedOutNewTaxRegime === 'Y'
-                                ) {
-                                    ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                                        true;
+                                if (ItrJSON[this.ITR_Type]?.FilingStatus?.OptedOutNewTaxRegime === 'Y') {
+                                    ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime = true;
                                 } else {
-                                    ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime =
-                                        false;
+                                    ITR_Obj.everOptedOutOfNewRegime.everOptedOutOfNewRegime = false;
                                 }
 
                                 // setting second question details
                                 {
-                                    ItrJSON[this.ITR_Type].FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                                        ITR_Obj.everOptedOutOfNewRegime.assessmentYear = ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear;
 
-                                    ItrJSON[this.ITR_Type].FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.date =
-                                            this.parseAndFormatDate(
-                                                ItrJSON[this.ITR_Type].FilingStatus
-                                                    ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                                                    ?.Form10IEDate
-                                            ))
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate)
+                                        ITR_Obj.everOptedOutOfNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls.Form10IEDtls?.Form10IEDate);
 
-                                    ItrJSON[this.ITR_Type].FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                        ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                                            ItrJSON[this.ITR_Type].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo;
                                 }
 
                             }
 
-                            ITR_Obj.regime =
-                                ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                            ITR_Obj.regime = ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                            this.regime =
-                                ITR_Obj.optionForCurrentAY?.currentYearRegime;
+                            this.regime = ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                            ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
-                                ? (ITR_Obj.optionForCurrentAY.date =
-                                    this.parseAndFormatDate(
-                                        ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
-                                    ))
-                                : null;
-                            ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo
-                                ? (ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
-                                : null;
+                            if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate)
+                                ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate);
+
+                            if (ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
+                                ITR_Obj.optionForCurrentAY.acknowledgementNumber = ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo;
 
 
                         }
@@ -356,16 +308,12 @@ export class SummaryConversionService {
                     {
                         // ADDRESS DETAILS -
                         {
-                            ITR_Obj.address.pinCode =
-                                ItrJSON[this.ITR_Type].PersonalInfo.Address?.PinCode;
-                            ITR_Obj.address.country =
-                                ItrJSON[this.ITR_Type].PersonalInfo.Address?.CountryCode;
-                            ITR_Obj.address.state =
-                                ItrJSON[this.ITR_Type].PersonalInfo.Address?.StateCode;
-                            ITR_Obj.address.city =
-                                ItrJSON[
-                                    this.ITR_Type
-                                ].PersonalInfo.Address?.CityOrTownOrDistrict;
+                            ITR_Obj.address.pinCode = ItrJSON[this.ITR_Type].PersonalInfo.Address?.PinCode;
+                            ITR_Obj.address.country = ItrJSON[this.ITR_Type].PersonalInfo.Address?.CountryCode;
+                            ITR_Obj.address.state = ItrJSON[this.ITR_Type].PersonalInfo.Address?.StateCode;
+                            ITR_Obj.address.city = ItrJSON[
+                                this.ITR_Type
+                            ].PersonalInfo.Address?.CityOrTownOrDistrict;
                             ITR_Obj.address.flatNo =
                                 ItrJSON[this.ITR_Type].PersonalInfo.Address?.ResidenceNo;
                             ITR_Obj.address.premisesName =
@@ -1367,11 +1315,6 @@ export class SummaryConversionService {
                         } else if (ITR_Obj.isRevised === 'Y') {
                             if (
                                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                    ?.ReturnFileSec === 17
-                            ) {
-                                ITR_Obj.isRevised === 'Y';
-                            } else if (
-                                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                                     ?.ReturnFileSec !== 17 &&
                                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                                     ?.ReturnFileSec !== 11
@@ -1498,30 +1441,14 @@ export class SummaryConversionService {
 
                                 // setting first question details
                                 {
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.NewTaxRegimeDtls?.AssessmentYear
-                                        ? (ITR_Obj.everOptedNewRegime.assessmentYear =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                                        ITR_Obj.everOptedNewRegime.assessmentYear = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear;
 
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                                        ? (ITR_Obj.everOptedNewRegime.date =
-                                            this.parseAndFormatDate(
-                                                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                                    ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                                            ))
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate)
+                                        ITR_Obj.everOptedNewRegime.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate);
 
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
-                                        ? (ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                        ITR_Obj.everOptedNewRegime.acknowledgementNumber = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo;
                                 }
 
                             }
@@ -1542,31 +1469,16 @@ export class SummaryConversionService {
 
                                 // setting second question details
                                 {
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                                        ITR_Obj.everOptedOutOfNewRegime.assessmentYear = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear;
 
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.date =
-                                            this.parseAndFormatDate(
-                                                ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                                    ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                                                    ?.Form10IEDate
-                                            ))
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate)
+                                        ITR_Obj.everOptedOutOfNewRegime.date =
+                                            this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls.Form10IEDtls?.Form10IEDate);
 
-                                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                        ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
-                                        ? (ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                                            ItrJSON[
-                                                this.ITR_Type
-                                            ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
-                                        : null;
+                                    if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                                        ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
+                                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo;
                                 }
 
                             }
@@ -1577,19 +1489,11 @@ export class SummaryConversionService {
                             this.regime =
                                 ITR_Obj.optionForCurrentAY?.currentYearRegime;
 
-                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate
-                                ? (ITR_Obj.optionForCurrentAY.date =
-                                    this.parseAndFormatDate(
-                                        ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                                            ?.Form10IEDate
-                                    ))
-                                : null;
-                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo
-                                ? (ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                                    ItrJSON[
-                                        this.ITR_Type
-                                    ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
-                                : null;
+                            if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate)
+                                ITR_Obj.optionForCurrentAY.date = this.parseAndFormatDate(ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate);
+
+                            if (ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
+                                ITR_Obj.optionForCurrentAY.acknowledgementNumber = ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo;
 
                         }
 
@@ -1647,14 +1551,8 @@ export class SummaryConversionService {
                         ITR_Obj.aadharNumber =
                             ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
 
-                        (ITR_Obj.aadhaarEnrolmentId =
-                            ItrJSON[
-                                this.ITR_Type
-                            ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
-                            // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-                            this.parseAndFormatDate(
-                                ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
-                            );
+                        ITR_Obj.aadhaarEnrolmentId = ItrJSON[this.ITR_Type]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId;
+                        // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
                         ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
                     }
 
@@ -2875,10 +2773,7 @@ export class SummaryConversionService {
                                     uniqueTDSCerNo: null,
                                     taxDeduction: null,
                                     totalAmountCredited: GrossAmount,
-                                    headOfIncome:
-                                        HeadOfIncome === 'CG'
-                                            ? (HeadOfIncome = 'OS')
-                                            : (HeadOfIncome = 'OS'),
+                                    headOfIncome: HeadOfIncome = 'OS',
                                 };
                             };
 
@@ -2915,10 +2810,7 @@ export class SummaryConversionService {
                                 uniqueTDSCerNo: null,
                                 taxDeduction: null,
                                 totalAmountCredited: GrossAmount,
-                                headOfIncome:
-                                    HeadOfIncome === 'CG'
-                                        ? (HeadOfIncome = 'OS')
-                                        : (HeadOfIncome = 'OS'),
+                                headOfIncome: HeadOfIncome = 'OS',
                             };
                         };
 
@@ -5692,7 +5584,7 @@ export class SummaryConversionService {
                         disabilities80DDB = 'SELF_OR_DEPENDENT';
                     } else if (
                         disabilities80DDBArray &&
-                        (disabilities80DDBArray[1] =
+                        (disabilities80DDBArray[1] ===
                             0 || disabilities80DDBArray[1] === null)
                     ) {
                         disabilities80DDB = null;

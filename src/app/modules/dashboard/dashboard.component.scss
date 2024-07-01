@@ -1,17 +1,16 @@
-
-  //rohit new css for new UI
-.main-1{
+//rohit new css for new UI
+.main-1 {
   background: #FBFBFB;
 }
 
-.rowClr-1{
+.rowClr-1 {
   background: #FFF !important;
   box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.06);
   padding: 10px 10px 10px 10px;
   border-top: 1px solid #c8c8c8;
 }
 
-.filter-box{
+.filter-box {
   width: 100%;
   height: auto;
   display: inline-flex;
@@ -22,14 +21,15 @@
   border-radius: 4px;
   border: 1px solid #8CBDF2;
 }
+
 .button-container {
   margin-top: 20px;
   display: inline-flex;
   justify-content: right;
-  gap:10px;
+  gap: 10px;
 }
 
-.dwldBtn-1{
+.dwldBtn-1 {
   display: flex;
   height: 48px;
   padding: 8px 24px;
@@ -38,14 +38,15 @@
   border-radius: 4px;
   border: 1px solid #2D8EF9;
   color: #2D8EF9;
-  font-family: DM Sans;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
   letter-spacing: -0.28px
 }
-.clrLnk-1{
+
+.clrLnk-1 {
   display: flex;
   height: 48px;
   padding: 8px 24px;
@@ -54,14 +55,14 @@
   border-radius: 4px;
   border: 1px solid #2D8EF9;
   color: #2D8EF9;
-  font-family: DM Sans;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
   letter-spacing: -0.28px;
 }
-.srch-btn-1{
+
+.srch-btn-1 {
   display: flex;
   height: 48px;
   padding: 8px 24px;
@@ -70,14 +71,16 @@
   border-radius: 4px;
   background: #2D8EF9;
   color: #FFF;
-  font-family: DM Sans;
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
   letter-spacing: -0.28px;
 }
-.new-table-container{
+
+.new-table-container {
   background: #FBFBFB;
   margin-right: 50px;
   margin-top: 50px;
@@ -85,24 +88,26 @@
   margin-bottom: 40px;
 }
 
-.txtH-1{
-color: var(--black-100, #1C1C1C);
-font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-font-family: DM Sans;
-font-size: 20px;
-font-style: normal;
-font-weight: 700;
-line-height: 36px; /* 180% */
-background-color: #FBFBFB ;
+.txtH-1 {
+  color: var(--black-100, #1C1C1C);
+  font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
+
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px;
+  /* 180% */
+  background-color: #FBFBFB;
 }
 
-.count-chips-container{
-margin-top: 15px;
-// display: flex;
-// align-items: flex-start;
-// gap: 9px;
+.count-chips-container {
+  margin-top: 15px;
+  // display: flex;
+  // align-items: flex-start;
+  // gap: 9px;
 }
-.count-radius-1{
+
+.count-radius-1 {
   // display: flex;
   // width: 171px;
   height: 93px;
@@ -115,31 +120,34 @@ margin-top: 15px;
   background: #FFF;
 }
 
-.numTxSm-11{
+.numTxSm-11 {
   color: #494949;
   font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-  font-family: DM Sans;
+
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
-.text-TxSm-1{
+
+.text-TxSm-1 {
   color: #494949;
   font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-  font-family: DM Sans;
+
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
 }
-.table-radiusTab-1{
-  padding: 12px ;
+
+.table-radiusTab-1 {
+  padding: 12px;
   margin-top: 15px;
   height: auto;
   background: var(--secondary-primary-white, #FFF);
 }
-.TxHd-12{
+
+.TxHd-12 {
   background: #EFF6FF;
   height: 47px;
   flex-shrink: 0;
@@ -148,22 +156,23 @@ margin-top: 15px;
   padding-bottom: 12px;
 }
 
-.TxHd-13{
+.TxHd-13 {
   font-size: 18px;
   color: #21415b;
   font-weight: 600;
   margin-right: 10px;
 }
 
-.header-text-1{
+.header-text-1 {
   color: #284446;
   font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-  font-family: DM Sans;
+
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
+
 .d-flex {
   display: flex;
 }
@@ -175,69 +184,76 @@ margin-top: 15px;
 .justify-content-between {
   justify-content: space-between;
 }
-.total-box{
+
+.total-box {
   display: flex;
-height: 36px;
-width: 52px;
-padding: 8px 10px;
-align-items: center;
-gap: 8px;
-border-radius: 4px 0px 0px 4px;
-background: #CEE5FF;
+  height: 36px;
+  width: 52px;
+  padding: 8px 10px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px 0px 0px 4px;
+  background: #CEE5FF;
 }
-.total-box-text{
-color: #2D8EF9;
-font-family: DM Sans;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: 28px; /* 200% */
+
+.total-box-text {
+  color: #2D8EF9;
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  /* 200% */
 }
-.total-box-value{
+
+.total-box-value {
   display: flex;
-height: 36px;
-width: 34px;
-padding: 8px;
-align-items: center;
-gap: 8px;
-border-radius: 0px 4px 4px 0px;
-background: #2D8EF9;
+  height: 36px;
+  width: 34px;
+  padding: 8px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 0px 4px 4px 0px;
+  background: #2D8EF9;
 }
-.total-value{
+
+.total-value {
   color: #FFF;
-font-family: DM Sans;
-font-size: 14px;
-font-style: normal;
-font-weight: 700;
-line-height: 28px; /* 200% */
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  /* 200% */
 }
-.col-text-container{
-display: flex;
-// width: 682px;
-// align-items: flex-start;
-border: 1px solid #CFE4FF;
-height: 47px;
-flex: 1 0 0;
+
+.col-text-container {
+  display: flex;
+  // width: 682px;
+  // align-items: flex-start;
+  border: 1px solid #CFE4FF;
+  height: 47px;
+  flex: 1 0 0;
 }
-.col-txt-1{
+
+.col-txt-1 {
   align-items: center;
 }
 
-.original-text{
-margin-left: 15px;
-color: #284446;
-font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-font-family: DM Sans;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
+.original-text {
+  margin-left: 15px;
+  color: #284446;
+  font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
+
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
-.new-hieght{
+.new-hieght {
   display: flex;
   flex-direction: row;
-  height: 59x ;
   padding: 18px;
   align-items: flex-start;
   gap: 10px;
@@ -245,10 +261,12 @@ line-height: normal;
   border: 1px solid #ADD4FF;
   background: #FFF;
 }
-.table-header-row th{
+
+.table-header-row th {
   background: #EAEAEA;
   border: 1px solid #DEDEDE;
 }
-.table-header-row td{
+
+.table-header-row td {
   border: 1px solid #DEDEDE;
 }

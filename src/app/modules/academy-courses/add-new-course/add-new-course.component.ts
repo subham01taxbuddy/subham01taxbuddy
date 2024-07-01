@@ -72,7 +72,7 @@ export class AddNewCourseComponent implements OnInit {
     if (this.courseForm.valid) {
       this.loading = true;
       let param = `course-data`;
-      var convertedTime = moment(this.courseForm.get('time').value, 'hh:mm A').format('HH:mm')
+      let convertedTime = moment(this.courseForm.get('time').value, 'hh:mm A').format('HH:mm')
       const request = {
         courseName: this.courseForm.get('courseName').value,
         topics: this.courseForm.get('topics').value,

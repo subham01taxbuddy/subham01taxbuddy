@@ -5,9 +5,7 @@
     <p><span style="float: right;">Total Count: <b>{{this.config.totalItems}}</b></span></p><br>
     <div class="card__row" style="margin-top:0px;">
       <div class="card__row">
-        <table>
-          <tr *ngFor="let item of eriExceptionList | paginate:config"></tr>
-        </table>
+        <div *ngFor="let item of eriExceptionList | paginate:config"></div>
         <ag-grid-angular class="ag-theme-balham" [gridOptions]="eriExceptionGridOptions"
           (rowClicked)="onSignupExceptionClicked($event)">
         </ag-grid-angular>

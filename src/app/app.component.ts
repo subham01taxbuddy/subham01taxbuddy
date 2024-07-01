@@ -84,12 +84,10 @@ export class AppComponent {
                   serviceWorkerRegistration,
                   // vapidKey: environment.vapidKey,
                 }).then((value) => {
-                  console.log('recvd token as=> ', value);
                   sessionStorage.setItem('webToken', value);
                 }).catch(error => {
                   console.log("error", error.code);
                   if (error.code === 'messaging/permission-blocked') {
-                    // alert("Yay!!!");
                   }
                 })
               } else {
@@ -106,7 +104,6 @@ export class AppComponent {
         tap(it => console.log('FCM', it)),
       );
     } else {
-      console.log('messaging not initialise');
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
@@ -121,7 +118,7 @@ export class AppComponent {
     });
 
     let cgPermission = sessionStorage.getItem('CG_MODULE');
-    if(!cgPermission){
+    if (!cgPermission) {
       sessionStorage.setItem('CG_MODULE', 'NO');
     }
   }
@@ -135,8 +132,6 @@ export class AppComponent {
   subscribeTimer() {
     this.subscription = timer(0, 1000).pipe(map(() => new Date()), share())
       .subscribe(time => {
-        let currentTime = moment(time).valueOf();
-        // console.log('currentTime', currentTime)
         this.mangeFilerSessionAtDayChange();
       });
   }
@@ -195,7 +190,6 @@ export class AppComponent {
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 
-        //Ashwini:check if this is needed
         NavbarService.getInstance(this.http).logout();
 
       })

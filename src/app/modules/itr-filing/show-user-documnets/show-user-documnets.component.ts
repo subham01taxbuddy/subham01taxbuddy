@@ -74,6 +74,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
   }
 
+  isAisDocument(document) {
+    return document.documentTag === 'AIS_JSON' || document.documentTag === 'AIS' || document.fileName.includes("_AIS_");
+  }
+
   gotoDrive(document) {
     this.loading = true;
     const param = `/cloud/signed-s3-url?cloudFileId=${document.cloudFileId}`;
@@ -235,12 +239,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     for (let counter = 0; counter < folders.length; counter++) {
       let document = folders[counter];
       let fileUrl;
-      if (document.isPasswordProtected) {
-        // fileUrl = document.passwordProtectedFileUrl;
-        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      } else {
-        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      }
+      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
       const fileData: any = await this.getFile(fileUrl);
       const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
       let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);

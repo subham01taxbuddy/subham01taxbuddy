@@ -42,7 +42,7 @@ export class AgGridMaterialSelectEditorComponent implements  AgEditorComponent {
     public value!: string;
     @ViewChild('select') select: any;
 
-    constructor() { }
+   
 
  
 

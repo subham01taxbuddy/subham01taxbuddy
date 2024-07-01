@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -9,7 +9,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './approve-reject.component.html',
   styleUrls: ['./approve-reject.component.scss']
 })
-export class ApproveRejectComponent implements OnInit {
+export class ApproveRejectComponent {
   loading!: boolean;
   itrStatus: any = [];
   callers: any = [];
@@ -23,8 +23,6 @@ export class ApproveRejectComponent implements OnInit {
     private utilService: UtilsService,
   ) { }
 
-  ngOnInit() {
-  }
 
   closeDialog() {
     this.dialogRef.close(false);
@@ -59,8 +57,8 @@ export class ApproveRejectComponent implements OnInit {
             }
           );
         }
-      },error => {
-        this.loading=false;
+      }, error => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilService.showSnackBar(error.error.error);
           this.dialogRef.close(true);

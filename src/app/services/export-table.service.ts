@@ -8,7 +8,7 @@ declare global {
 @Injectable()
 export class ExportTableService {
 
-  constructor() { }
+ 
 
   downloadExcel(report_id, report_name) {
     tableToExcel(report_id, this.createFileName(report_name))

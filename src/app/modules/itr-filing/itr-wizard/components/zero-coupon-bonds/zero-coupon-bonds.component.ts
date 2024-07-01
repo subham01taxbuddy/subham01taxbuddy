@@ -6,7 +6,7 @@ import {
   Output,
   SimpleChanges, ViewChild,
 } from '@angular/core';
-import {NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -341,7 +341,7 @@ export class ZeroCouponBondsComponent
               this.saveManualEntry();
             } else {
               this.utilsService.showSnackBar(
-                  'Please make sure all the details are properly entered.'
+                'Please make sure all the details are properly entered.'
               );
               this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
               subscription.unsubscribe();
@@ -353,7 +353,7 @@ export class ZeroCouponBondsComponent
           this.saveManualEntry();
         } else {
           this.utilsService.showSnackBar(
-              'Please make sure all the details are properly entered.'
+            'Please make sure all the details are properly entered.'
           );
           this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
         }
@@ -899,7 +899,7 @@ export class ZeroCouponBondsComponent
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxGold = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -1028,7 +1028,7 @@ export class ZeroCouponBondsComponent
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -1144,11 +1144,11 @@ export class ZeroCouponBondsComponent
           this.saveAndNext.emit(false);
         }
       );
-    } else{
+    } else {
       this.loading = false;
       $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
-          'Please verify the form and try again.'
+        'Please verify the form and try again.'
       );
     }
   }
@@ -1263,7 +1263,7 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+  depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
@@ -1285,8 +1285,8 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+  updateValidations(formGroup) {
+    if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
       formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
@@ -1298,7 +1298,7 @@ export class ZeroCouponBondsComponent
       formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
-    if(formGroup.controls['investmentInCGAccount'].value){
+    if (formGroup.controls['investmentInCGAccount'].value) {
       formGroup.controls['accountNumber'].setValidators([Validators.required]);
       formGroup.controls['accountNumber'].updateValueAndValidity();
       formGroup.controls['ifscCode'].setValidators([Validators.required]);
@@ -1317,8 +1317,8 @@ export class ZeroCouponBondsComponent
 
   calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
-        this.deductionForm.controls['costOfNewAssets'].valid &&
-        this.deductionForm.controls['investmentInCGAccount'].valid;
+      this.deductionForm.controls['costOfNewAssets'].valid &&
+      this.deductionForm.controls['investmentInCGAccount'].valid;
     if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
@@ -1392,7 +1392,7 @@ export class ZeroCouponBondsComponent
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
-    }else if(this.deduction && this.deductionForm.invalid){
+    } else if (this.deduction && this.deductionForm.invalid) {
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
