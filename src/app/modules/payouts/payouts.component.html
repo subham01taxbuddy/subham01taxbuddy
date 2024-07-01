@@ -102,9 +102,13 @@
                       </div>
                     </div>
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search"
+                      <!-- <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search"
                           aria-hidden="true"></i> Search
-                      </button>
+                      </button> -->
+                      <app-custom-button class="srch-btn-1" [disabled]="loading" [actions]="[advanceSearch]" [actionParams]="[[advanceSearchKey.value]]">
+                        <i class="fa fa-search" aria-hidden="true"></i> Search
+                      </app-custom-button>
+
                       <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                         <i class="fa fa-download" aria-hidden="true"></i> Download File
                       </button>
@@ -134,7 +138,10 @@
             <span class="table-info-text">Payout Details based on search:</span>
           </div>
           <div class="col-sm-3" *ngIf="isEditAllowed">
-            <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>
+            <!-- <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>-->
+            <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[approveSelected]">
+              Approve
+            </app-custom-button>
             <span class="txblw">Select checkbox(below) then Approve the entries.</span>
           </div>
 
