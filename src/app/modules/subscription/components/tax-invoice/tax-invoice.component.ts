@@ -561,9 +561,10 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  downloadInvoicesSummary() {
+  downloadInvoicesSummary=():Promise<any> =>{
     // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Paid&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
+      this.loading=true;
       let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
@@ -605,7 +606,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response: any) => {
+      return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
+        this.loading=false;
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -615,7 +617,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      });
+      }).catch(()=>{
+        this.loading =false;
+      })
     }
 
   }
@@ -901,7 +905,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
@@ -922,7 +926,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
@@ -962,8 +966,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
     // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
-    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
       pdf => {
         this.loading = false;
