@@ -159,7 +159,7 @@
   <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
     <div class="col-sm-5">
       <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-        [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
+        [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
     </div>
     <div class="col-sm-4 text-right" style="margin-top: 1.5rem;">
       <button class="tbd-btn" [disabled]="loading" (click)="deleteSubscriptions()">Delete</button>
