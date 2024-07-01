@@ -146,45 +146,57 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
     });
   }
 
-  reAssign(){
+  reAssign = (): Promise<any> => {
     //PUT 'https://uat-api.taxbuddy.com/gateway/reassign-meeting?userId=1244
     // &newSmeUserId=5334&updateRequestId=dgfbhdzgfbdagbdagdafbdf' \
-
-    this.utilsService.getUserCurrentStatus(this.data.allData.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close();
-        return;
-      } else {
-        this.loading=true;
-        let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.leaderId}&updateRequestId=${this.data.allData.id}`;
-        this.userMsService.spamPutMethod(param).subscribe((response: any) => {
-          if (response.success) {
-            this.loading=false;
-            this.utilsService.showSnackBar(response.message);
-            this.utilsService.showSnackBar("Call Reassigned Successfully");
+    return new Promise((resolve, reject) => {
+      this.utilsService.getUserCurrentStatus(this.data.allData.userId).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
             this.dialogRef.close();
-          }else{
-            this.loading=false;
-            this.utilsService.showSnackBar(response.message);
-            this.dialogRef.close();
+            return reject(res.error);
+          } else {
+            this.loading = true;
+            let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.leaderId}&updateRequestId=${this.data.allData.id}`;
+            this.userMsService.spamPutMethod(param).toPromise().then(
+              (response: any) => {
+                this.loading = false;
+                if (response.success) {
+                  this.utilsService.showSnackBar(response.message);
+                  this.utilsService.showSnackBar("Call Reassigned Successfully");
+                  this.dialogRef.close();
+                  resolve(response);
+                } else {
+                  this.utilsService.showSnackBar(response.message);
+                  this.dialogRef.close();
+                  reject(response.message);
+                }
+              },
+              (error) => {
+                this.loading = false;
+                this.utilsService.showSnackBar('Failed to Reassign Call');
+                this.dialogRef.close();
+                reject(error);
+              }
+            ).catch((error) => {
+              this.loading = false;
+              reject(error);
+            });
           }
         },
-        error => {
-          this.loading=false;
-          this.utilsService.showSnackBar('Failed to Reassign Call ');
-          this.dialogRef.close();
-        });
-      }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close();
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
+        (error) => {
+          this.loading = false;
+          if (error.error && error.error.error) {
+            this.utilsService.showSnackBar(error.error.error);
+            this.dialogRef.close();
+          } else {
+            this.utilsService.showSnackBar("An unexpected error occurred.");
+          }
+          reject(error);
+        }
+      );
     });
   }
 

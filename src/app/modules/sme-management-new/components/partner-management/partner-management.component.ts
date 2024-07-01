@@ -360,13 +360,13 @@ export class PartnerManagementComponent implements OnInit {
     }
   }
 
-  verifyBankDetails() {
+  verifyBankDetails=():Promise<any>  =>{
     if (this.bankDetailsFormGroup.valid) {
       this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-      this.userMsService.getMethod(param).subscribe((res: any) => {
+      return this.userMsService.getMethod(param).toPromise().then((res: any) => {
         this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
@@ -387,6 +387,8 @@ export class PartnerManagementComponent implements OnInit {
           this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
           return;
         }
+      }).catch(() =>{
+        this.loading = false;
       });
     } else {
       this.bankDetailsFormGroup.markAllAsTouched();
@@ -422,7 +424,7 @@ export class PartnerManagementComponent implements OnInit {
     this.router.navigate(['/tasks/assigned-users-new']);
   }
 
-  updateSmeDetails(){
+  updateSmeDetails=():Promise<any> =>{
     //'https://uat-api.taxbuddy.com/user/v2/partner-details' \
     if(this.partnerForm.valid && this.bankDetailsFormGroup.valid){
 
@@ -469,7 +471,7 @@ export class PartnerManagementComponent implements OnInit {
       };
 
       this.loading = true;
-      this.userMsService.putMethod(param, requestBody).subscribe(
+      return this.userMsService.putMethod(param, requestBody).toPromise().then(
         (res: any) => {
           console.log('Profile update response:', res);
           this.loading = false;
