@@ -311,7 +311,7 @@
           *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'"
           (click)="confirmSubmitITR()" class="btn grBut pull-right"
           [style.cursor]="!isValidateJson ? 'not-allowed' : 'pointer'" style="background-color: red"
-          [disabled]="!isValidateJson">
+          [disabled]="!isValidateJson || (!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000)">
           File ITR
         </button>
         <!-- <button *ngIf="isValidateJson" type="button" (click)="confirmSubmitITR()"
@@ -322,24 +322,31 @@
         <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
               Download XML</button> -->
         <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
-        <button type="button" (click)="downloadPDF()" class="btn grBut">
+        <button type="button" (click)="downloadPDF()" class="btn grBut"
+        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
           Download PDF
         </button>
-        <button type="button" class="btn kommBut" (click)="sendPdf('both')">
+
+        <button type="button" class="btn kommBut" (click)="sendPdf('both')"
+        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
           Send PDF to Kommunicate
         </button>
 
-        <button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')">
+        <button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')"
+        [disabled]="ITR_JSON.itrSummaryJson || finalCalculations?.totalIncome < 20000000">
           Send PDF to WhatsApp
         </button>
+
         <button *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'" type="button"
           class="btn whatsAppBut" style="background-color: #05a3bc; border: #05a3bc solid 1px" (click)="downloadJson()">
           Download JSON
         </button>
+
         <button *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'" type="button"
           (click)="validateITR()" class="btn grBut" style="background-color: orange">
           Validate ITR
         </button>
+
         <button *ngIf="
           ITR_JSON.itrSummaryJson &&
           this.utilsService.isNonEmpty(ITR_JSON.itrSummaryJson)
