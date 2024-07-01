@@ -5550,7 +5550,7 @@ export class PrefillIdComponent implements OnInit {
                 nameOfEntity: element?.NameOfEntity,
                 address: element?.AddressOfEntity,
                 natureOfInterest: element?.NatureOfInt,
-                date: element?.DateHeld,
+                date: moment(element?.DateHeld).toISOString(),
                 totalInvestments: element?.TotalInvestment,
                 accruedIncome: element?.IncFromInt,
                 amount: element?.IncTaxAmt,
