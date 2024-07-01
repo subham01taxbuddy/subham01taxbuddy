@@ -28,45 +28,51 @@ export class ApproveRejectComponent {
     this.dialogRef.close(false);
   }
 
-  updateSubscription(action) {
-    this.utilService.getUserCurrentStatus(this.data.userInfo.userId).subscribe(
-      (res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilService.showSnackBar(res.error);
-          this.dialogRef.close(true);
-          return;
-        } else {
-          this.loading = true;
-          let param = `/itr/subscription`;
-          let reqBody = {
-            "subscriptionId": this.data.userInfo.subscriptionId,
-            "cancellationStatus": action
-          };
-          this.userService.spamPutMethod(param, reqBody).subscribe(
-            (res: any) => {
-              this.loading = false;
-              if (action === 'APPROVED') {
+  updateSubscription=(action: string): Promise<any> =>{
+    this.loading = true;
+    return new Promise((resolve, reject) => {
+      this.utilService.getUserCurrentStatus(this.data.userInfo.userId).subscribe(
+        (res: any) => {
+          if (res.error) {
+            this.utilService.showSnackBar(res.error);
+            this.dialogRef.close(true);
+            this.loading = false;
+            reject(res.error);
+          } else {
+            let param = `/itr/subscription`;
+            let reqBody = {
+              "subscriptionId": this.data.userInfo.subscriptionId,
+              "cancellationStatus": action
+            };
+            this.userService.spamPutMethod(param, reqBody).subscribe(
+              (res: any) => {
+                this.loading = false;
+                this.toastMessage.alert('success', 'Cancel Subscription Updated Successfully.');
+                this.dialogRef.close(true);
+                resolve(res);
+              },
+              (error) => {
+                this.loading = false;
+                this.toastMessage.alert('error', 'Failed to Update Cancel Subscription.');
+                reject(error);
               }
-              this.toastMessage.alert('success', 'Cancel Subscription Updated Successfully.');
-              this.dialogRef.close(true);
-            },
-            (error) => {
-              this.loading = false;
-              this.toastMessage.alert('error', 'Failed to Update Cancel Subscription.');
-            }
-          );
+            );
+          }
+        },
+        (error) => {
+          this.loading = false;
+          if (error.error && error.error.error) {
+            this.utilService.showSnackBar(error.error.error);
+            this.dialogRef.close(true);
+          } else {
+            this.utilService.showSnackBar("An unexpected error occurred.");
+          }
+          reject(error);
         }
-      }, error => {
-        this.loading = false;
-        if (error.error && error.error.error) {
-          this.utilService.showSnackBar(error.error.error);
-          this.dialogRef.close(true);
-        } else {
-          this.utilService.showSnackBar("An unexpected error occurred.");
-        }
-      });
+      );
+    });
   }
+
 }
 
 export interface ConfirmModel {
