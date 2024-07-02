@@ -10,13 +10,11 @@
           </div>
         </div>
         <div class="col-sm-5">
-          <button class="new-add mvRth1 new-add-tp-spc width-1" [disabled]="childInfoCount >= 10" (click)="addAssistant()"><i aria-hidden="true"
-            class="fa fa-plus"></i> Add Assistant  </button>
+          <button class="new-add mvRth1 new-add-tp-spc width-1" [disabled]="childInfoCount >= 10"
+            (click)="addAssistant()"><i aria-hidden="true" class="fa fa-plus"></i> Add Assistant </button>
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of childInfo | paginate:config"></tr>
-      </table>
+      <div *ngFor="let item of childInfo | paginate:config"></div>
 
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="childListGridOptions"
         (rowClicked)="onSmeRowClicked($event)">

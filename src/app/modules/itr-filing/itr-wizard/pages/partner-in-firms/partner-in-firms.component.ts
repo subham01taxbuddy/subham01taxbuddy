@@ -2,9 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   UntypedFormArray,
   UntypedFormBuilder,
-  FormControl,
   UntypedFormGroup,
-  Validators,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';

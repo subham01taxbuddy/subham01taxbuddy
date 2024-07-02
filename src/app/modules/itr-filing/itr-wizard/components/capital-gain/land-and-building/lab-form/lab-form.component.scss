@@ -1,7 +1,7 @@
 .itarium-mat-error {
-    font-style: italic;
-    margin-top: -18px;
-    text-align: right;
+  font-style: italic;
+  margin-top: -18px;
+  text-align: right;
 }
 
 .addLandBtn {
@@ -12,17 +12,17 @@
 
 .addLandBtn:hover {
   background-color: #c4e1ed;
-  color:#000000!important;
+  color: #000000 !important;
 }
 
 .inpSp {
-    margin-left: -12px;
-    margin-right: -38px;
+  margin-left: -12px;
+  margin-right: -38px;
 }
 
-.spBlw{
-    margin-top: -25px;
-    margin-bottom: 25px;
+.spBlw {
+  margin-top: -25px;
+  margin-bottom: 25px;
 }
 
 
@@ -31,51 +31,45 @@
 }
 
 .mvChk {
-  margin-left: 0px!important;
-  margin-right:10px!important;
+  margin-left: 0px !important;
+  margin-right: 10px !important;
 }
 
 .text-style {
-    background: #bdc3c7;
-    font-weight: 600;
-    padding: 10px;
+  background: #bdc3c7;
+  font-weight: 600;
+  padding: 10px;
 }
 
 .top {
-    margin-top: 21px;
+  margin-top: 21px;
 }
 
 .invalid {
-    border: 1px solid #f00;
+  border: 1px solid #f00;
 }
 
 .sectionTitle {
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 17px;
   line-height: 150%;
-  /* identical to box height, or 26px */
-
   letter-spacing: -0.022em;
-
   color: #1E1E1E;
   margin-bottom: 20px;
 }
 
-.subTitle{
-  font-family: 'Inter';
+.subTitle {
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
-  /* identical to box height, or 24px */
   letter-spacing: -0.019em;
   color: #1E1E1E;
 }
 
 .card {
-  margin-top:0px;
+  margin-top: 0px;
   margin-bottom: 20px;
   background: #ffffff;
   border: 1px solid #F5F5FA;
@@ -83,40 +77,39 @@
 }
 
 .cardup {
-  padding: 10px!important;
+  padding: 10px !important;
 }
 
 .cardYes {
   background: #FBFBFD;
-  border: 1px solid #F5F5FA!important;
+  border: 1px solid #F5F5FA !important;
   border-radius: 10px;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
 .mat-radio-label {
-  margin-left: 8px!important;
+  margin-left: 8px !important;
 }
 
 .delete-btn {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 6px;
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   text-align: center;
   color: #E20000;
   padding: 10px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 }
 
 .delete-btn:disabled {
   background: #F5F5F5;
   border: 1px solid #BDBDBD;
   color: #BDBDBD;
-  padding:10px;
-  margin-bottom:20px;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 .btnGry {
@@ -127,16 +120,19 @@
   border-radius: 5px;
   margin-left: -15px;
 }
-.mvrl{
+
+.mvrl {
   margin-left: -100px;
   margin-top: -22px;
 }
-.note{
+
+.note {
   color: #b60000;
   font-style: italic;
   font-size: 14px;
-  line-height:1.5;
+  line-height: 1.5;
 }
+
 .new-note {
   white-space: normal;
   word-wrap: break-word;

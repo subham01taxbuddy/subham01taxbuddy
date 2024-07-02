@@ -237,49 +237,65 @@ export class SchCallCalenderComponent implements OnInit {
     this.scheduleCallRemoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.SCHEDULE_CALL_REMOTE_CONFIG);
   }
 
-  scheduleCall() {
-    if (this.date && this.time && this.scheduleForm.valid) {
-      var mainScheduleData = moment(this.time).tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss.SSS') + "Z";
-      this.loading = true;
-      let param = '/gateway/setup-meeting?title=' + this.scheduleForm['controls']['title'].value + '&description=' + this.scheduleForm['controls']['description'].value + '&scheduleDate=' + mainScheduleData + '&userId=' + this.data.allData.userId + '&serviceType=' + this.data.allData.serviceType + '&smeUserId=' + this.data.allData.leaderUserId;
+  scheduleCall = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      if (this.date && this.time && this.scheduleForm.valid) {
+        const mainScheduleData = moment(this.time).tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss.SSS') + "Z";
+        this.loading = true;
+        let param = '/gateway/setup-meeting?title=' + this.scheduleForm['controls']['title'].value +
+                    '&description=' + this.scheduleForm['controls']['description'].value +
+                    '&scheduleDate=' + mainScheduleData +
+                    '&userId=' + this.data.allData.userId +
+                    '&serviceType=' + this.data.allData.serviceType +
+                    '&smeUserId=' + this.data.allData.leaderUserId;
 
-      let showScheduleTime = moment(mainScheduleData).utc().format('hh:mm:ss a')
-      console.log('showScheduleTime', showScheduleTime)
+        const showScheduleTime = moment(mainScheduleData).utc().format('hh:mm:ss a');
+        console.log('showScheduleTime', showScheduleTime);
 
-      if(this.data.allData.scheduleCallType){
-        param = param + '&scheduleCallType=' + this.data.allData.scheduleCallType ;
-      }else{
-        param
-      }
-
-      this.userMsService.getMethodInfo(param).subscribe(response => {
-        if (response['data']) {
-          if (response['data']['response'] && response['success']) {
-            if (response['data']['response'].toLocaleLowerCase() === 'sent') {
-              this.utilService.showSnackBar('Your appointment with tax expert has been schedule for ' + (new Date(mainScheduleData)).toLocaleDateString() + ' date and '
-                + showScheduleTime + ' time');
-              setTimeout(() => {
-                this.dialogRef.close(true);
-                this.loading = false;
-              }, 4000);
-
-            } else {
-              this.utilService.showSnackBar(response['data']['response'].toString());
-              this.loading = false;
-            }
-          }
-        } else {
-          this.utilService.showSnackBar(response['error']);
-          this.loading = false;
+        if (this.data.allData.scheduleCallType) {
+          param = param + '&scheduleCallType=' + this.data.allData.scheduleCallType;
         }
-      },
-        error => {
-          this.utilService.showSnackBar('Failed to set up meeting with tax expert');
-          this.loading = false;
-        })
-    }
-  }
 
+        this.userMsService.getMethodInfo(param).toPromise().then(
+          (response: any) => {
+            if (response['data']) {
+              if (response['data']['response'] && response['success']) {
+                if (response['data']['response'].toLocaleLowerCase() === 'sent') {
+                  this.utilService.showSnackBar('Your appointment with tax expert has been scheduled for ' +
+                    (new Date(mainScheduleData)).toLocaleDateString() + ' date and ' + showScheduleTime + ' time');
+
+                  setTimeout(() => {
+                    this.dialogRef.close(true);
+                    this.loading = false;
+                  }, 4000);
+
+                  resolve(response);
+                } else {
+                  this.utilService.showSnackBar(response['data']['response'].toString());
+                  this.loading = false;
+                  reject(response['data']['response'].toString());
+                }
+              } else {
+                this.utilService.showSnackBar(response['error']);
+                this.loading = false;
+                reject(response['error']);
+              }
+            }
+          },
+          (error) => {
+            this.utilService.showSnackBar('Failed to set up meeting with tax expert');
+            this.loading = false;
+            reject(error);
+          }
+        ).catch((error) => {
+          this.loading = false;
+          reject(error);
+        });
+      } else {
+        reject('Invalid form data');
+      }
+    });
+  };
 
 }
 

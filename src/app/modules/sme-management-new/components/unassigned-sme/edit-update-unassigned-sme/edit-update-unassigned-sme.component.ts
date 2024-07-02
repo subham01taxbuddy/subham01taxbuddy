@@ -713,126 +713,124 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     );
   }
 
-  updateSmeDetails() {
-    //https://uat-api.taxbuddy.com/user/v2/assigned-sme-details
-    this.markFormGroupTouched(this.smeFormGroup);
-    if(this.smeFormGroup.valid){
-    let parentId: any
-    let parentName: any
-    if (this.signedInRole.includes('ROLE_ADMIN') && this.leaderId) {
-      parentId = this.leaderId;
-      parentName = this.leaderName;
-    }else{
-      parentId = this.smeObj.parentId;
-      parentName = this.smeObj.parentName;
-    }
+  updateSmeDetails = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.markFormGroupTouched(this.smeFormGroup);
+      if (this.smeFormGroup.valid) {
+        let parentId: any;
+        let parentName: any;
+        if (this.signedInRole.includes('ROLE_ADMIN') && this.leaderId) {
+          parentId = this.leaderId;
+          parentName = this.leaderName;
+        } else {
+          parentId = this.smeObj.parentId;
+          parentName = this.smeObj.parentName;
+        }
 
-    if( this.smeObj.roles=null){
-      this.smeObj.roles=[];
-    }
+        if (this.smeObj.roles == null) {
+          this.smeObj.roles = [];
+        }
 
-    if (this.filerIndividual.value === true || this.filerPrinciple.value === true) {
-      this.smeObj.roles = [];
-      this.smeObj.roles.push('ROLE_FILER');
+        if (this.filerIndividual.value === true || this.filerPrinciple.value === true) {
+          this.smeObj.roles = [];
+          this.smeObj.roles.push('ROLE_FILER');
+        }
 
-    }
+        if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
+          this.utilsService.showSnackBar('Please select at least one ITR type');
+          return reject('Please select at least one ITR type');
+        }
 
-    if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
-      this.utilsService.showSnackBar('Please select at least one ITR type');
-      return;
-    }
+        const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "PRINCIPAL" : "INDIVIDUAL";
+        const today = new Date();
+        const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
 
-    const partnerType = this.additionalIdsRequired.value && this.additionalIdsCount.value ? "PRINCIPAL" : "INDIVIDUAL";
-    const today = new Date();
-    const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+        const param = `/v2/assigned-sme-details`;
 
-    const param = `/v2/assigned-sme-details`;
+        this.loading = true;
 
-      this.loading = true;
+        let finalReq: any = {
+          userId: this.smeObj.userId,
+          name: this.name.value,
+          smeOriginalEmail: this.smeOriginalEmail.value,
+          mobileNumber: this.mobileNumber.value,
+          callingNumber: this.callingNumber.value,
+          serviceType: this.smeObj.serviceType,
+          roles: this.smeObj.roles,
+          languages: this.getSelectedLanguages(),
+          qualification: this.qualification?.value,
+          referredBy: this.referredBy.value,
+          pinCode: this.pinCode.value,
+          state: this.state.value,
+          botId: this.smeObj.botId,
+          displayName: this.smeObj.displayName || this.name.value,
+          active: this.smeObj.active,
+          joiningDate: formattedDate,
+          internal: this.internal.value ? true : this.external.value ? false : null,
+          assignmentStart: this.smeObj.assignmentStart,
+          itrTypes: this.itrTypes.value,
+          roundRobinCount: this.smeObj.roundRobinCount,
+          assessmentYears: this.smeObj.assessmentYears,
+          parentId: parentId,
+          parentName: parentName,
+          roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
+          isLeader: this.smeObj.isLeader,
+          isAdmin: this.smeObj.isAdmin,
+          isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true : false,
+          partnerType: partnerType || this.smeObj.partnerType,
+          skillSetPlanIdList: this.smeObj.skillSetPlanIdList,
+          partnerDetails: this.smeObj.partnerDetails,
+          inactivityTimeInMinutes: 15
+        };
 
-      let finalReq: any = {
-        userId : this.smeObj.userId,
-        name: this.name.value,
-        smeOriginalEmail: this.smeOriginalEmail.value,
-        mobileNumber: this.mobileNumber.value,
-        callingNumber: this.callingNumber.value,
-        serviceType: this.smeObj.serviceType,
-        roles: this.smeObj.roles,
-        languages: this.getSelectedLanguages(),
-        qualification: this.qualification?.value,
-        referredBy: this.referredBy.value,
-        pinCode:this.pinCode.value,
-        state: this.state.value,
-        botId: this.smeObj.botId,
-        displayName: this.smeObj.displayName || this.name.value,
-        active: this.smeObj.active,
-        joiningDate: formattedDate,
-        internal: this.internal.value ? true : this.external.value ? false:null,
-        assignmentStart: this.smeObj.assignmentStart,
-        itrTypes: this.itrTypes.value,
-        roundRobinCount: this.smeObj.roundRobinCount,
-        assessmentYears: this.smeObj.assessmentYears,
-        parentId: parentId ,
-        parentName: parentName,
-        roundRobinOwnerCount: this.smeObj.roundRobinOwnerCount,
-        isLeader: this.smeObj.isLeader,
-        isAdmin: this.smeObj.isAdmin,
-        isFiler: (this.filerIndividual.value === true || this.filerPrinciple.value === true) ? true :false ,
-        partnerType : partnerType || this.smeObj.partnerType,
-        skillSetPlanIdList:this.smeObj.skillSetPlanIdList,
-        partnerDetails: this.smeObj.partnerDetails,
-        inactivityTimeInMinutes:15
-      };
+        finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
+        finalReq.partnerDetails['additionalIdsCount'] = this.additionalIdsCount.value;
+        finalReq.partnerDetails['gstin'] = this.gstin.value;
+        finalReq.partnerDetails['pan'] = this.pan.value;
+        finalReq.partnerDetails['pinCode'] = this.pinCode.value;
 
-      finalReq.partnerDetails['additionalIdsRequired'] = this.additionalIdsRequired.value;
-      finalReq.partnerDetails['additionalIdsCount'] = this.additionalIdsCount.value;
-      finalReq.partnerDetails['gstin'] = this.gstin.value;
-      finalReq.partnerDetails['pan'] = this.pan.value;
-      finalReq.partnerDetails['pinCode'] = this.pinCode.value;
+        finalReq.partnerDetails['signedNDAUrl'] = this.urls['signedNDAInput'] || '';
+        finalReq.partnerDetails['certificateOfPracticeUrl'] = this.urls['certificateOfPracticeUrl'] || '';
+        finalReq.partnerDetails['aadhaarUrl'] = this.urls['aadhaarUrl'] || '';
+        finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '';
+        finalReq.partnerDetails['passbookOrCancelledChequeUrl'] = this.urls['passbookOrCancelledChequeInput'] || '';
+        finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '';
+        finalReq.partnerDetails['gstUrl'] = this.urls['gstinInput'] || '';
+        finalReq.partnerDetails['partnerType'] = partnerType || '';
 
-      finalReq.partnerDetails['signedNDAUrl'] = this.urls['signedNDAInput'] || '',
-      finalReq.partnerDetails['certificateOfPracticeUrl']=this.urls['certificateOfPracticeUrl'] || '',
-      finalReq.partnerDetails['aadhaarUrl']= this.urls['aadhaarUrl'] || '',
-      finalReq.partnerDetails['panUrl'] = this.urls['panInput'] || '',
-      finalReq.partnerDetails['passbookOrCancelledChequeUrl'] =  this.urls['passbookOrCancelledChequeInput'] || '',
-      finalReq.partnerDetails['cvUrl'] = this.urls['cvInput'] || '',
-      finalReq.partnerDetails['gstUrl'] = this.urls['gstinInput'] || '',
-      finalReq.partnerDetails['partnerType'] = partnerType || ''
-      // console.log('reqBody', requestBody);
-      // let requestData = JSON.parse(JSON.stringify(finalReq));
-      // console.log('requestData', requestData);
-      this.userMsService.postMethod(param, finalReq).subscribe(
-        (res: any) => {
-          console.log('SME assignment updated', res);
-          this.loading = false;
-          if (res.success === false) {
-            this._toastMessageService.alert(
-              'false',
-              'failed to update sme details '
-            );
-          } else {
-            this._toastMessageService.alert(
-              'success',
-              'sme details updated successfully'
-            );
-            setTimeout(() => {
+        this.userMsService.postMethod(param, finalReq).toPromise().then(
+          (res: any) => {
+            console.log('SME assignment updated', res);
+            this.loading = false;
+            if (res.success === false) {
+              this._toastMessageService.alert('false', 'failed to update sme details ');
+              reject('failed to update sme details');
+            } else {
+              this._toastMessageService.alert('success', 'sme details updated successfully');
+              setTimeout(() => {
                 this.loading = false;
                 this.location.back();
-            }, 1200);
+              }, 1200);
+              resolve(res);
+            }
+          },
+          (error) => {
+            this._toastMessageService.alert('error', 'failed to update.');
+            this.loading = false;
+            reject(error);
           }
-        },
-        (error) => {
-          this._toastMessageService.alert('error', 'failed to update.');
+        ).catch((error) => {
           this.loading = false;
-        }
-      );
-    }else{
-      this._toastMessageService.alert(
-        'false',
-        'please fill all required details '
-      );
-    }
-  }
+          this._toastMessageService.alert('error', 'An unexpected error occurred.');
+          reject(error);
+        });
+      } else {
+        this._toastMessageService.alert('false', 'please fill all required details ');
+        reject('please fill all required details');
+      }
+    });
+  };
+
 
   markFormGroupTouched(formGroup: UntypedFormGroup) {
     Object.values(formGroup.controls).forEach(control => {

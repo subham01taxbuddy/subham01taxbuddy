@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<label style="font-size: 18px;
-font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</label><button style="float: right;"
+<div style="font-size: 18px;
+font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</div><button style="float: right;"
   mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div>Scheduled call time : {{data.allData.scheduleCallTime | date:'d/M/yy, h:mm a':'UTC'}}</div>
 <div class="row spsTp bdrTp">
@@ -17,7 +17,10 @@ font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</lab
     </mat-form-field>
   </div>
   <div class="col-sm-3">
-    <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading || disableReAssign">Re-Assign
-      Call</button>
+    <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading || disableReAssign">Re-Assign
+      Call</button> -->
+    <app-custom-button class="tbd-btn save-btn spsTp2" [disabled]="loading || disableReAssign"  [actions]="[reAssign]">
+      Re-Assign Call
+    </app-custom-button>
   </div>
 </div>

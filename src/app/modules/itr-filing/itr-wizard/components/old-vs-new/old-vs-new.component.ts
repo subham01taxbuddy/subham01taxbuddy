@@ -9,14 +9,13 @@ import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import {
-  FormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators,
   ValidationErrors,
-  AbstractControl,
 } from '@angular/forms';
 import { environment } from '../../../../../../environments/environment';
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: 'app-old-vs-new',
@@ -317,7 +316,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement89'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement89'
@@ -355,7 +354,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement90'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement90'
@@ -393,7 +392,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         if (Number(value) > 0) {
           this.summaryToolReliefsForm.controls[
             'acknowledgement91'
-          ].setValidators(Validators.required);
+          ].setValidators([Validators.required, Validators.pattern(AppConstants.numericRegex)]);
 
           this.summaryToolReliefsForm.controls[
             'acknowledgement91'
@@ -591,6 +590,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     //   ).controls['everOptedOutOfNewRegime'].disable();
     // }
   }
+
+  resultOld: any;
+  resultNew: any;
 
   ngOnInit(): void {
     this.loading = true;
@@ -1619,13 +1621,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                  this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+                  this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
                 py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
                   .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB +
-                    this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+                  this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
               },
               {
                 label: 'Total Headwise Income',
@@ -1754,154 +1756,21 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       }
     } else {
       const param = '/tax/old-vs-new';
-      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-        (result: any) => {
-          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          console.log('result is=====', result);
-          this.newSummaryIncome = result.data.newRegime;
-          this.oldSummaryIncome = result.data.oldRegime;
 
-          this.particularsArray = [
-            {
-              label: 'Income from Salary',
-              old: this.oldSummaryIncome?.taxSummary.salary,
-              new: this.newSummaryIncome?.taxSummary.salary,
-              py: this.pySummary ? this.pySummary?.taxSummary.salary : 0,
-            },
-            {
-              label: 'Income from House Property',
-              old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
-              new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.housePropertyIncome : 0,
-            },
-            {
-              label: 'Income from Business and Profession',
-              old: this.getCrypto(this.oldSummaryIncome, 'business'),
-              new: this.getCrypto(this.newSummaryIncome, 'business'),
-              py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
-            },
-            {
-              label: 'Income from Capital Gains',
-              old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
-              new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
-              py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
-            },
-            //  {
-            //   label: 'Income from Crypto',
-            //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-            //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
-            // },
-            {
-              label: 'Income from Other Sources',
-              old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
-              + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
-              new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-              + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
-              py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
-                  + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
-            },
-            {
-              label: 'Total Headwise Income',
-              old: this.oldSummaryIncome?.taxSummary.totalIncome,
-              new: this.newSummaryIncome?.taxSummary.totalIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
-            },
-            {
-              label: 'CYLA',
-              old:
-                this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-              new:
-                this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
-                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
-              py: this.pySummary ?
-                this.pySummary?.taxSummary.currentYearLossIFHP +
-                this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
-            },
-            {
-              label: 'BFLA',
-              old: Math.abs(
-                this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
-              ),
-              new: Math.abs(
-                this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
-              ),
-              py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
-            },
-            {
-              label: 'Gross Total Income',
-              old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
-              new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
-              py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
-            },
-            {
-              label: 'Deduction',
-              old: this.oldSummaryIncome?.taxSummary.totalDeduction,
-              new: this.newSummaryIncome?.taxSummary.totalDeduction,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
-            },
-            {
-              label: 'Total Income',
-              old: this.oldSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
-              new: this.newSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalIncomeAfterDeductionIncludeSR : 0,
-            },
-            {
-              label: 'CFL',
-              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
-            },
-            {
-              label: 'Gross Tax Liability',
-              old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
-              new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
-              py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
-            },
-            {
-              label: 'Interest and Fees - 234 A/B/C/F',
-              old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
-              new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
-              py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
-            },
-            {
-              label: 'Aggregate Liability',
-              old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
-              new: this.newSummaryIncome?.taxSummary.agrigateLiability,
-              py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
-            },
-            {
-              label: 'Tax Paid',
-              old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
-              new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
-              py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
-            },
-            {
-              label: 'Tax Payable / (Refund)',
-              old:
-                this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
-                  : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
-              new:
-                this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
-                  : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
-              py: this.pySummary ?
-                (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
-                  : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
-            },
-          ];
-
-          this.assessment = this.ITR_JSON.regime === 'NEW' ? this.newSummaryIncome : this.oldSummaryIncome;
-          this.setBfla();
-          this.setCgQuarterWiseBreakUp();
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'The below displayed calculations are as of Taxbuddys calculation'
-          );
+      forkJoin([
+        this.itrMsService.postMethod('/tax/old-regime', this.ITR_JSON),
+        this.itrMsService.postMethod('/tax/new-regime', this.ITR_JSON)
+      ]).subscribe({
+        next: ([data1, data2]) => {
+          this.resultOld = data1;
+          this.resultNew = data2;
+          // console.log('result is=====', data1, data2);
+          // Process the results
+          this.displayComparison();
         },
-        (error) => {
+        error: (error) => {
+          // this.error = error;
+          console.error('Error fetching data:', error);
           this.loading = false;
           this.errorMessage =
             'We are processing your request, Please wait......';
@@ -1910,12 +1779,166 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               'We are unable to display your summary,Please try again later.';
           }
           console.log('In error method===', error);
+        },
+        complete: () => {
+          this.loading = false;
         }
-      );
+      });
+
     }
 
     this.dueDateCheck();
     this.allowNewRegime = this.ITR_JSON.isLate === 'N' && this.ITR_JSON.isRevised === 'Y';
+  }
+
+  displayComparison() {
+    this.newSummaryIncome = this.resultNew;
+    this.oldSummaryIncome = this.resultOld;
+
+    this.particularsArray = [
+      {
+        label: 'Income from Salary',
+        old: this.oldSummaryIncome?.taxSummary.salary,
+        new: this.newSummaryIncome?.taxSummary.salary,
+        py: this.pySummary ? this.pySummary?.taxSummary.salary : 0,
+      },
+      {
+        label: 'Income from House Property',
+        old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+        new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.housePropertyIncome : 0,
+      },
+      {
+        label: 'Income from Business and Profession',
+        old: this.getCrypto(this.oldSummaryIncome, 'business'),
+        new: this.getCrypto(this.newSummaryIncome, 'business'),
+        py: this.pySummary ? this.getCrypto(this.pySummary, 'business') : 0,
+      },
+      {
+        label: 'Income from Capital Gains',
+        old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+        new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
+        py: this.pySummary ? this.getCrypto(this.pySummary, 'capitalGains') : 0,
+      },
+      //  {
+      //   label: 'Income from Crypto',
+      //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+      //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+      // },
+      {
+        label: 'Income from Other Sources',
+        old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
+          .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+        new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
+          .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ,
+        py: this.pySummary ? this.pySummary?.summaryIncome.summaryOtherIncome
+          .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB
+          + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BBJ : 0,
+      },
+      {
+        label: 'Total Headwise Income',
+        old: this.oldSummaryIncome?.taxSummary.totalIncome,
+        new: this.newSummaryIncome?.taxSummary.totalIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalIncome : 0,
+      },
+      {
+        label: 'CYLA',
+        old:
+          this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+          this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+        new:
+          this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+          this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+        py: this.pySummary ?
+          this.pySummary?.taxSummary.currentYearLossIFHP +
+          this.pySummary?.taxSummary.currentYearIFBFSetOff : 0,
+      },
+      {
+        label: 'BFLA',
+        old: Math.abs(
+          this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+        ),
+        new: Math.abs(
+          this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+        ),
+        py: this.pySummary ? Math.abs(this.pySummary?.taxSummary.totalBroughtForwordSetOff) : 0,
+      },
+      {
+        label: 'Gross Total Income',
+        old: this.oldSummaryIncome?.taxSummary.grossTotalIncome,
+        new: this.newSummaryIncome?.taxSummary.grossTotalIncome,
+        py: this.pySummary ? this.pySummary?.taxSummary.grossTotalIncome : 0,
+      },
+      {
+        label: 'Deduction',
+        old: this.oldSummaryIncome?.taxSummary.totalDeduction,
+        new: this.newSummaryIncome?.taxSummary.totalDeduction,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalDeduction : 0,
+      },
+      {
+        label: 'Total Income',
+        old: this.oldSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+        new: this.newSummaryIncome?.taxSummary.totalIncomeAfterDeductionIncludeSR,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalIncomeAfterDeductionIncludeSR : 0,
+      },
+      {
+        label: 'CFL',
+        old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+        new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+        py: this.pySummary ? getCFL(this.pySummary?.totalLossCarriedForwardedToFutureYears) : 0,
+      },
+      {
+        label: 'Gross Tax Liability',
+        old: this.oldSummaryIncome?.taxSummary.grossTaxLiability,
+        new: this.newSummaryIncome?.taxSummary.grossTaxLiability,
+        py: this.pySummary ? this.pySummary?.taxSummary.grossTaxLiability : 0,
+      },
+      {
+        label: 'Interest and Fees - 234 A/B/C/F',
+        old: this.oldSummaryIncome?.taxSummary.interestAndFeesPayable,
+        new: this.newSummaryIncome?.taxSummary.interestAndFeesPayable,
+        py: this.pySummary ? this.pySummary?.taxSummary.interestAndFeesPayable : 0,
+      },
+      {
+        label: 'Aggregate Liability',
+        old: this.oldSummaryIncome?.taxSummary.agrigateLiability,
+        new: this.newSummaryIncome?.taxSummary.agrigateLiability,
+        py: this.pySummary ? this.pySummary?.taxSummary.agrigateLiability : 0,
+      },
+      {
+        label: 'Tax Paid',
+        old: this.oldSummaryIncome?.taxSummary.totalTaxesPaid,
+        new: this.newSummaryIncome?.taxSummary.totalTaxesPaid,
+        py: this.pySummary ? this.pySummary?.taxSummary.totalTaxesPaid : 0,
+      },
+      {
+        label: 'Tax Payable / (Refund)',
+        old:
+          this.oldSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.oldSummaryIncome?.taxSummary.taxpayable
+            : '(' + this.oldSummaryIncome?.taxSummary?.taxRefund + ')',
+        new:
+          this.newSummaryIncome?.taxSummary?.taxpayable !== 0 ? this.newSummaryIncome?.taxSummary?.taxpayable
+            : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
+        py: this.pySummary ?
+          (this.pySummary?.taxSummary?.taxpayable !== 0 ? this.pySummary?.taxSummary?.taxpayable
+            : '(' + this.pySummary?.taxSummary?.taxRefund + ')') : 0,
+      },
+    ];
+
+    this.assessment = this.ITR_JSON.regime === 'NEW' ? this.newSummaryIncome : this.oldSummaryIncome;
+    this.setBfla();
+    this.setCgQuarterWiseBreakUp();
+    this.loading = false;
+    this.utilsService.showSnackBar(
+      'The below displayed calculations are as of Taxbuddys calculation'
+    );
+  }
+
+  isIncomeMoreThan2Cr(){
+    return this.oldSummaryIncome?.taxSummary.grossTotalIncome > 20000000 ||
+        this.newSummaryIncome?.taxSummary.grossTotalIncome > 20000000;
   }
 
   getITRType() {
@@ -2342,16 +2365,28 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  setFilingDate(formGroup: any) {
-    var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
-    var lastSix = id.toString().substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
-    let dateString = `20${year}-${month}-${day}`;
-    console.log(dateString, year, month, day);
+  setFilingDate(formGroup: any, ackNum?, ackDate?) {
+    if (ackNum && ackDate) {
+      var id = (formGroup as UntypedFormGroup).controls[ackNum].value;
+      var lastSix = id.toString().substr(id.length - 6);
+      var day = lastSix.slice(0, 2);
+      var month = lastSix.slice(2, 4);
+      var year = lastSix.slice(4, 6);
+      let dateString = `20${year}-${month}-${day}`;
+      console.log(dateString, year, month, day);
 
-    (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
+      (formGroup as UntypedFormGroup).controls[ackDate].setValue(moment(dateString).toDate());
+    } else {
+      var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
+      var lastSix = id.toString().substr(id.length - 6);
+      var day = lastSix.slice(0, 2);
+      var month = lastSix.slice(2, 4);
+      var year = lastSix.slice(4, 6);
+      let dateString = `20${year}-${month}-${day}`;
+      console.log(dateString, year, month, day);
+
+      (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
+    }
   }
 
   getCrypto(summary, type) {
@@ -2399,82 +2434,82 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     let capitalGains = this.assessment.summaryIncome.cgIncomeN.capitalGain;
 
     this.cgQuarterWiseBreakUp = {
-      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
 
-      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-03-31T18:30:00.000Z", this.fyStartYear+"-06-15T18:30:00.000Z"),
-      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-06-15T18:30:00.000Z", this.fyStartYear+"-09-15T18:30:00.000Z"),
-      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-09-15T18:30:00.000Z", this.fyStartYear+"-12-15T18:30:00.000Z"),
-      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear+"-12-15T18:30:00.000Z", this.fyEndYear+"-03-15T18:30:00.000Z"),
-      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, this.fyEndYear+"-03-15T18:30:00.000Z", this.fyEndYear+"-03-31T18:30:00.000Z"),
+      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-03-31T18:30:00.000Z", this.fyStartYear + "-06-15T18:30:00.000Z"),
+      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-06-15T18:30:00.000Z", this.fyStartYear + "-09-15T18:30:00.000Z"),
+      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-09-15T18:30:00.000Z", this.fyStartYear + "-12-15T18:30:00.000Z"),
+      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, this.fyStartYear + "-12-15T18:30:00.000Z", this.fyEndYear + "-03-15T18:30:00.000Z"),
+      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, this.fyEndYear + "-03-15T18:30:00.000Z", this.fyEndYear + "-03-31T18:30:00.000Z"),
     }
   }
 
-  downloadComparison(){
+  downloadComparison() {
     let param = '/api/download/comparison/pdf';
     let request = {
-      oldRegime : this.oldSummaryIncome,
-      newRegime : this.newSummaryIncome
+      oldRegime: this.oldSummaryIncome,
+      newRegime: this.newSummaryIncome
     }
     this.loading = true;
     this.itrMsService.downloadFileAsPost(param, 'application/pdf', request).subscribe(
-          (result) => {
-      console.log('pdf Result', result);
-      var FileSaver = require('file-saver');
-      //const fileURL = URL.createObjectURL(result);
-      const fileURL = webkitURL.createObjectURL(result);
-      window.open(fileURL);
-      let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';
-      console.log('fileName: ', fileName);
-      FileSaver.saveAs(fileURL, fileName);
-      this.loading = false;
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar(
+      (result) => {
+        console.log('pdf Result', result);
+        var FileSaver = require('file-saver');
+        //const fileURL = URL.createObjectURL(result);
+        const fileURL = webkitURL.createObjectURL(result);
+        window.open(fileURL);
+        let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';
+        console.log('fileName: ', fileName);
+        FileSaver.saveAs(fileURL, fileName);
+        this.loading = false;
+      }, (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
           'Failed to download PDF file, please try again.'
-      );
-    });
+        );
+      });
   }
-  shareComparison(){
+  shareComparison() {
     let param = '/api/send/comparison/pdf';
     let request = {
-      sendPdfToUser : true,
-      oldRegime : this.oldSummaryIncome,
-      newRegime : this.newSummaryIncome
+      sendPdfToUser: true,
+      oldRegime: this.oldSummaryIncome,
+      newRegime: this.newSummaryIncome
     }
     this.loading = true;
     this.itrMsService.postMethod(param, request).subscribe(
-          (result:any) => {
-      console.log('pdf Result', result);
-      this.utilsService.showSnackBar(result.message);
-      this.loading = false;
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar(
+      (result: any) => {
+        console.log('pdf Result', result);
+        this.utilsService.showSnackBar(result.message);
+        this.loading = false;
+      }, (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
           'Failed to send PDF file, please try again.'
-      );
-    });
+        );
+      });
   }
 }
 

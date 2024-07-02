@@ -1,12 +1,12 @@
 import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UntypedFormControl } from '@angular/forms';
@@ -40,7 +40,7 @@ export const MY_FORMATS = {
   ],
 })
 
-export class DeleteUserListComponent implements OnInit {
+export class DeleteUserListComponent {
 
   loading!: boolean;
   usersGridOptions: GridOptions;
@@ -87,8 +87,6 @@ export class DeleteUserListComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
 
   clearValue() {
     this.mobileNumber.setValue('');
@@ -108,7 +106,7 @@ export class DeleteUserListComponent implements OnInit {
     this.maxStartDate = this.toDate.value;
   }
 
-  getUserSearchList=(pageNo):Promise<any> =>{
+  getUserSearchList = (pageNo): Promise<any> => {
 
     const fromDateValue = this.fromDate.value;
     const toDateValue = this.toDate.value;
@@ -130,7 +128,8 @@ export class DeleteUserListComponent implements OnInit {
       }
       if (fromDate) {
         dynamicUrl += "from=" + fromDate
-      } if (toDate) {
+      }
+      if (toDate) {
         dynamicUrl += "&to=" + toDate
       }
       if (!dynamicUrl) {
@@ -150,7 +149,7 @@ export class DeleteUserListComponent implements OnInit {
         }
         this.loading = false;
         return resolve(true)
-      }).catch((err)=>{
+      }).catch((err) => {
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
         return resolve(false)
@@ -256,9 +255,9 @@ export class DeleteUserListComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
-      let deleteUserInfo: any = Object.assign({}, userArray[i], {
+      let deleteUserInfo: any = Object.assign({}, ...userArray[i], {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].userName,

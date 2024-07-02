@@ -9,7 +9,7 @@ export class SidebarService {
 
   isLoading = new Subject<boolean>();
 
-  constructor() { }
+ 
 
   open() {
     this.isLoading.next(true);

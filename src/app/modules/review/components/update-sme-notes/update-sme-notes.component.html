@@ -33,7 +33,7 @@
 
     <mat-dialog-actions align="center">
       <button mat-raised-button style="margin-top: 0px;" color="primary" (click)="updateComment()"
-        [disabled]="smeReviewForm.invalid" tabindex="1">{{data.title}}</button>
+        [disabled]="smeReviewForm.invalid" >{{data.title}}</button>
       <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
   </form>
@@ -60,7 +60,7 @@
 
     <mat-dialog-actions align="center">
       <button mat-raised-button style="margin-top: 0px;" color="primary" (click)="updateStatus()"
-        [disabled]="updateStatusForm.invalid" tabindex="1">{{data.title}}</button>
+        [disabled]="updateStatusForm.invalid" >{{data.title}}</button>
       <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
   </form>

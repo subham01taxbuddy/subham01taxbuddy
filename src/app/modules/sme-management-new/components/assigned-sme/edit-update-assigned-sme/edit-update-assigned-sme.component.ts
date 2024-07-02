@@ -87,7 +87,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   accountTypeDropdown: any;
   isBankValid: boolean;
   validateBankDetails: any;
-  hideAssignmentOnOff: boolean;
+  hideAssignmentOnOff: boolean = false;
   disableItrService: boolean;
   disableTpaService: boolean;
   disableNoticeService: boolean;
@@ -97,10 +97,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeDetails: any;
   isBankDetailsFormChange: boolean;
   roundRobinData: any = {};
-  isReadOnly:boolean =false;
+  isReadOnly: boolean = false;
   activeCaseMaxCapacity = new UntypedFormControl('')
-  isDisabled:boolean =false;
-  urls:any;
+  isDisabled: boolean = false;
+  urls: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -140,53 +140,53 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
-    this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
-    this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : false;
-    this.loggedInSmeRoles.includes('ROLE_ADMIN') ? this.isDisabled  = true : false;
+    this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : this.hideAssignmentOnOff = false;
+    this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : this.hideSectionForAdmin = false;
+    this.loggedInSmeRoles.includes('ROLE_ADMIN') ? this.isDisabled = true : this.isDisabled = false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       this.getAccountType();
     }
-    if(this.smeObj.serviceEligibility_ITR?.assignmentStart){
+    if (this.smeObj.serviceEligibility_ITR?.assignmentStart) {
       this.assignmentToggle.setValue(true);
       this.getRoundRobinCount();
-      this.isReadOnly =true;
-    }else{
+      this.isReadOnly = true;
+    } else {
       this.assignmentToggle.setValue(false);
-      this.isReadOnly =false
+      this.isReadOnly = false
     }
 
   }
 
   assignmentFormGroup: UntypedFormGroup = this.fb.group({
     itrCount: ['', [Validators.required, Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_ITR),
-      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_ITR),]],
+    Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_ITR),]],
 
     tpaCount: ['', [Validators.required,
-      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_TPA),
-      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_TPA),
+    Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_TPA),
+    Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_TPA),
     ]],
     noticeCount: ['', [Validators.required,
-      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_NOTICE),
-      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_NOTICE),
+    Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_NOTICE),
+    Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_NOTICE),
     ]],
     gstCount: ['', [Validators.required,
-      Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_GST),
-      Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_GST),
+    Validators.min(this.roundRobinData?.lowestRoundRobinLeaderCount_GST),
+    Validators.max(this.roundRobinData?.highestRoundRobinLeaderCount_GST),
     ]],
   });
 
-  getRoundRobinCount(){
-  // 'https://uat-api.taxbuddy.com/user/round-robin-details?role=ROLE_LEADER'
+  getRoundRobinCount() {
+    // 'https://uat-api.taxbuddy.com/user/round-robin-details?role=ROLE_LEADER'
     this.loading = true;
-    let param ='/round-robin-details?role=ROLE_LEADER'
-    this.userMsService.getMethod(param).subscribe((response:any) => {
+    let param = '/round-robin-details?role=ROLE_LEADER'
+    this.userMsService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success && response.data) {
         this.roundRobinData = response.data;
         this.initializeInputValues();
-        console.log('round',this.roundRobinData)
+        console.log('round', this.roundRobinData)
       } else {
         this.roundRobinData = null;
         this.utilsService.showSnackBar('No round robin data found');
@@ -205,7 +205,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.assignmentFormGroup.controls['gstCount'].setValue(this.roundRobinData?.lowestRoundRobinLeaderCount_GST);
   }
 
-  planIdList:any = []
+  planIdList: any = []
   getPlanDetails() {
     this.loading = true;
     let param = '/plans-master?serviceType=ITR&isActive=true';
@@ -246,7 +246,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
             if (element.planId === item) {
               this.irtTypeCapability.push(element.planId);
               this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
+                this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
               })
             }
           });
@@ -375,25 +375,25 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       "passbookOrCancelledChequeInput": this.smeObj?.['partnerDetails']?.passbookOrCancelledChequeUrl,
       "cvInput": this.smeObj?.['partnerDetails']?.cvUrl,
       "gstinInput": this.smeObj?.['partnerDetails']?.gstUrl,
-      "zipInput" : this.smeObj?.['partnerDetails']?.zipUrl
+      "zipInput": this.smeObj?.['partnerDetails']?.zipUrl
     };
 
   }
 
-  openDocument(documentType: string ,url) {
-    if(url){
+  openDocument(documentType: string, url) {
+    if (url) {
       const parts = url.split('/');
       const lastPart = parts[parts.length - 1];
       const fileNameWithParams = lastPart.split('?')[0];
-      let newFileName= decodeURIComponent(fileNameWithParams);
-      console.log(newFileName,"New File Name");
+      let newFileName = decodeURIComponent(fileNameWithParams);
+      console.log(newFileName, "New File Name");
       this.getViewSignedUrl(fileNameWithParams)
-    }else{
-      this._toastMessageService.alert('error',`${documentType} URL not found`);
+    } else {
+      this._toastMessageService.alert('error', `${documentType} URL not found`);
     }
   }
 
-  getViewSignedUrl(name){
+  getViewSignedUrl(name) {
     let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
     this.itrMsService.getMethod(param).subscribe(
       (result: any) => {
@@ -413,7 +413,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (url) {
       window.open(url, '_blank');
     } else {
-      this._toastMessageService.alert('error',` URL not found`);
+      this._toastMessageService.alert('error', ` URL not found`);
     }
   }
 
@@ -423,21 +423,21 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   setPlanDetails() {
     if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
-        this.itrPlanList.forEach(item => {
-            this.smeObj?.['skillSetPlanIdList'].forEach(element => {
-                if(element === 138){
-                    const businessAndProfessionControl =  this.itrTypeForm.controls['138'];
-                    if (businessAndProfessionControl) {
-                        businessAndProfessionControl.setValue(true);
-                    }
-                } else {
-                    if (item.planId === element && element != 138) {
-                        const planId = item.planId.toString();
-                        this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
-                    }
-                }
-            })
+      this.itrPlanList.forEach(item => {
+        this.smeObj?.['skillSetPlanIdList'].forEach(element => {
+          if (element === 138) {
+            const businessAndProfessionControl = this.itrTypeForm.controls['138'];
+            if (businessAndProfessionControl) {
+              businessAndProfessionControl.setValue(true);
+            }
+          } else {
+            if (item.planId === element && element != 138) {
+              const planId = item.planId.toString();
+              this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
+            }
+          }
         })
+      })
     }
   }
 
@@ -510,7 +510,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     pdToggle: new UntypedFormControl(''),
     mfToggle: new UntypedFormControl(''),
     otherToggle: new UntypedFormControl(''),
-    assignmentToggle :new UntypedFormControl('')
+    assignmentToggle: new UntypedFormControl('')
   })
 
   get itr() {
@@ -567,7 +567,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get otherToggle() {
     return this.services.controls['otherToggle'] as UntypedFormControl
   }
-  get assignmentToggle(){
+  get assignmentToggle() {
     return this.services.controls['assignmentToggle'] as UntypedFormControl
   }
 
@@ -602,13 +602,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     const index = this.smeObj['skillSetPlanIdList'].indexOf(plan.planId);
 
     if (itrTypeControl.value && index === -1) {
-        this.smeObj['skillSetPlanIdList'].push(plan.planId);
+      this.smeObj['skillSetPlanIdList'].push(plan.planId);
     } else if (!itrTypeControl.value && index !== -1) {
-        this.smeObj['skillSetPlanIdList'].splice(index, 1);
+      this.smeObj['skillSetPlanIdList'].splice(index, 1);
     }
 
     console.log(this.smeObj['skillSetPlanIdList']);
-}
+  }
 
   getItrTypeName(planId: number): string {
     const plan = this.itrPlanList.find(plan => plan.planId === planId);
@@ -739,8 +739,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeObj['assignmentOffByLeader'] = !assignment.value;
   }
 
-  laderAssignment(leaderAssignment : UntypedFormControl){
-    if(leaderAssignment.value === true){
+  laderAssignment(leaderAssignment: UntypedFormControl) {
+    if (leaderAssignment.value === true) {
       this.getRoundRobinCount();
     }
   }
@@ -825,7 +825,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (totalCount > 10) {
       this.additionalIdsCount.setValue(this.existingCount);
       this.additionalIdsCount.setErrors({ 'totalCountExceeded': true });
-    }else {
+    } else {
       this.additionalIdsCount.setValue(totalCount);
       this.additionalIdsCount.setErrors(null)
     }
@@ -859,7 +859,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.isBankDetailsFormChange = true;
   }
 
-  updateSmeDetails() {
+  updateSmeDetails = async (): Promise<void> => {
     const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
 
     if (this.smeFormGroup.valid && this.roles.valid) {
@@ -872,69 +872,69 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         return;
       }
     }
-    if(this.smeObj?.roles.includes('ROLE_LEADER') && this.loggedInSmeRoles.includes('ROLE_ADMIN')){
-      if(this.assignmentToggle.value === true){
-        if(this.assignmentFormGroup.valid){
-          this.smeObj['serviceEligibility_ITR']={
-            "assignmentStart":true,
-            "roundRobinLeaderCount":this.assignmentFormGroup.controls['itrCount'].value,
-            "botId":this.smeObj?.serviceEligibility_ITR?.botId || null,
-            "botName":this.smeObj?.serviceEligibility_ITR?.botName || null,
-            "roundRobinCount":this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
+    if (this.smeObj?.roles.includes('ROLE_LEADER') && this.loggedInSmeRoles.includes('ROLE_ADMIN')) {
+      if (this.assignmentToggle.value === true) {
+        if (this.assignmentFormGroup.valid) {
+          this.smeObj['serviceEligibility_ITR'] = {
+            "assignmentStart": true,
+            "roundRobinLeaderCount": this.assignmentFormGroup.controls['itrCount'].value,
+            "botId": this.smeObj?.serviceEligibility_ITR?.botId || null,
+            "botName": this.smeObj?.serviceEligibility_ITR?.botName || null,
+            "roundRobinCount": this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
           }
-          this.smeObj['serviceEligibility_TPA']={
-            "assignmentStart":true,
-            "roundRobinLeaderCount":this.assignmentFormGroup.controls['tpaCount'].value,
-            "botId":this.smeObj?.serviceEligibility_TPA?.botId || null,
-            "botName":this.smeObj?.serviceEligibility_TPA?.botName || null,
-            "roundRobinCount":this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
+          this.smeObj['serviceEligibility_TPA'] = {
+            "assignmentStart": true,
+            "roundRobinLeaderCount": this.assignmentFormGroup.controls['tpaCount'].value,
+            "botId": this.smeObj?.serviceEligibility_TPA?.botId || null,
+            "botName": this.smeObj?.serviceEligibility_TPA?.botName || null,
+            "roundRobinCount": this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
           }
-          this.smeObj['serviceEligibility_NOTICE']={
-            "assignmentStart":true,
-            "roundRobinLeaderCount":this.assignmentFormGroup.controls['noticeCount'].value,
-            "botId":this.smeObj?.serviceEligibility_NOTICE?.botId || null,
-            "botName":this.smeObj?.serviceEligibility_NOTICE?.botName || null,
-            "roundRobinCount":this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
+          this.smeObj['serviceEligibility_NOTICE'] = {
+            "assignmentStart": true,
+            "roundRobinLeaderCount": this.assignmentFormGroup.controls['noticeCount'].value,
+            "botId": this.smeObj?.serviceEligibility_NOTICE?.botId || null,
+            "botName": this.smeObj?.serviceEligibility_NOTICE?.botName || null,
+            "roundRobinCount": this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
           }
-          this.smeObj['serviceEligibility_GST']={
-            "assignmentStart":true,
-            "roundRobinLeaderCount":this.assignmentFormGroup.controls['gstCount'].value,
-            "botId":this.smeObj?.serviceEligibility_GST?.botId || null,
-            "botName":this.smeObj?.serviceEligibility_GST?.botName || null,
-            "roundRobinCount":this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
+          this.smeObj['serviceEligibility_GST'] = {
+            "assignmentStart": true,
+            "roundRobinLeaderCount": this.assignmentFormGroup.controls['gstCount'].value,
+            "botId": this.smeObj?.serviceEligibility_GST?.botId || null,
+            "botName": this.smeObj?.serviceEligibility_GST?.botName || null,
+            "roundRobinCount": this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
           }
-        }else{
+        } else {
           this.utilsService.showSnackBar('Fill the required count value');
           return;
         }
-      }else{
-        this.smeObj['serviceEligibility_ITR']={
-          "assignmentStart":false,
-          "roundRobinLeaderCount":this.assignmentFormGroup.controls['itrCount'].value,
-          "botId":this.smeObj?.serviceEligibility_ITR?.botId || null,
-          "botName":this.smeObj?.serviceEligibility_ITR?.botName || null,
-          "roundRobinCount":this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
+      } else {
+        this.smeObj['serviceEligibility_ITR'] = {
+          "assignmentStart": false,
+          "roundRobinLeaderCount": this.assignmentFormGroup.controls['itrCount'].value,
+          "botId": this.smeObj?.serviceEligibility_ITR?.botId || null,
+          "botName": this.smeObj?.serviceEligibility_ITR?.botName || null,
+          "roundRobinCount": this.smeObj?.serviceEligibility_ITR?.roundRobinCount || 0,
         }
-        this.smeObj['serviceEligibility_TPA']={
-          "assignmentStart":false,
-          "roundRobinLeaderCount":this.assignmentFormGroup.controls['tpaCount'].value,
-          "botId":this.smeObj?.serviceEligibility_TPA?.botId || null,
-          "botName":this.smeObj?.serviceEligibility_TPA?.botName || null,
-          "roundRobinCount":this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
+        this.smeObj['serviceEligibility_TPA'] = {
+          "assignmentStart": false,
+          "roundRobinLeaderCount": this.assignmentFormGroup.controls['tpaCount'].value,
+          "botId": this.smeObj?.serviceEligibility_TPA?.botId || null,
+          "botName": this.smeObj?.serviceEligibility_TPA?.botName || null,
+          "roundRobinCount": this.smeObj?.serviceEligibility_TPA?.roundRobinCount || 0,
         }
-        this.smeObj['serviceEligibility_NOTICE']={
-          "assignmentStart":false,
-          "roundRobinLeaderCount":this.assignmentFormGroup.controls['noticeCount'].value,
-          "botId":this.smeObj?.serviceEligibility_NOTICE?.botId || null,
-          "botName":this.smeObj?.serviceEligibility_NOTICE?.botName || null,
-          "roundRobinCount":this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
+        this.smeObj['serviceEligibility_NOTICE'] = {
+          "assignmentStart": false,
+          "roundRobinLeaderCount": this.assignmentFormGroup.controls['noticeCount'].value,
+          "botId": this.smeObj?.serviceEligibility_NOTICE?.botId || null,
+          "botName": this.smeObj?.serviceEligibility_NOTICE?.botName || null,
+          "roundRobinCount": this.smeObj?.serviceEligibility_NOTICE?.roundRobinCount || 0,
         }
-        this.smeObj['serviceEligibility_GST']={
-          "assignmentStart":false,
-          "roundRobinLeaderCount":this.assignmentFormGroup.controls['gstCount'].value,
-          "botId":this.smeObj?.serviceEligibility_GST?.botId || null,
-          "botName":this.smeObj?.serviceEligibility_GST?.botName || null,
-          "roundRobinCount":this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
+        this.smeObj['serviceEligibility_GST'] = {
+          "assignmentStart": false,
+          "roundRobinLeaderCount": this.assignmentFormGroup.controls['gstCount'].value,
+          "botId": this.smeObj?.serviceEligibility_GST?.botId || null,
+          "botName": this.smeObj?.serviceEligibility_GST?.botName || null,
+          "roundRobinCount": this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
         }
       }
     }
@@ -958,9 +958,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         return;
       }
       const value = this.activeCaseMaxCapacity.value;
-      if (value && value > 0){
-        this.smeObj['activeCaseMaxCapacity']= this.activeCaseMaxCapacity.value
-      }else{
+      if (value && value > 0) {
+        this.smeObj['activeCaseMaxCapacity'] = this.activeCaseMaxCapacity.value
+      } else {
         this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be empty or zero');
         return;
       }
@@ -971,12 +971,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       }
     }
 
-    if (this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL"){
-     this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
+    if (this.smeObj?.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] == "PRINCIPAL") {
+      this.smeObj['partnerDetails'].additionalIdsCount = this.additionalIdsCount.value;
     }
 
-    if(!this.isDisabled && this.smeObj?.roles.includes('ROLE_FILER') &&  this.smeObj?.['partnerType'] == "PRINCIPAL" ){
-      if(!this.additionalIdsCount.value || !this.additionalIdsCount.valid ){
+    if (!this.isDisabled && this.smeObj?.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] == "PRINCIPAL") {
+      if (!this.additionalIdsCount.value || !this.additionalIdsCount.valid) {
         this.utilsService.showSnackBar('Please select Proper Value of additional IDs count,Number must be between 1 to 5 for additional IDs count');
         return;
       }
@@ -1012,20 +1012,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
     if (this.callingNumber.valid) {
       this.smeObj.callingNumber = this.callingNumber.value;
-      this.serviceApiCall(this.smeObj);
-      setTimeout(() => {
+      try {
+        const res = await this.serviceApiCall(this.smeObj);
         if (this.updateSuccessful) {
-          this.loading = false;
-          this._toastMessageService.alert(
-            'success',
-            'SME details updated successfully'
-          );
+          this._toastMessageService.alert('success', 'SME details updated successfully');
           this.location.back();
         }
-      }, 500);
-    }else{
+      } catch (error) {
+        this._toastMessageService.alert('error', 'failed to update.');
+      }
+    } else {
       this.utilsService.showSnackBar('Please Enter Valid Calling Number');
-        return;
     }
   }
 
@@ -1097,13 +1094,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(date)
   }
 
-  verifyBankDetails() {
+  verifyBankDetails=():Promise<any> =>{
     if (this.bankDetailsFormGroup.valid) {
       this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-      this.userMsService.getMethod(param).subscribe((res: any) => {
+      return this.userMsService.getMethod(param).toPromise().then((res: any) => {
         this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
@@ -1124,6 +1121,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
           return;
         }
+      }).catch((error)=>{
+        this.loading = false;
+        console.log(error);
       });
     } else {
       this.bankDetailsFormGroup.markAllAsTouched();
@@ -1172,9 +1172,9 @@ export interface SmeObj {
   state: string,
   smeOriginalEmail: string
   services: any
-  serviceEligibility_ITR:any
-  serviceEligibility_TPA:any
-  serviceEligibility_NOTICE:any
-  serviceEligibility_GST:any
-  activeCaseMaxCapacity:any;
+  serviceEligibility_ITR: any
+  serviceEligibility_TPA: any
+  serviceEligibility_NOTICE: any
+  serviceEligibility_GST: any
+  activeCaseMaxCapacity: any;
 }

@@ -25,12 +25,4 @@ export class SecurityDeductionComponent implements OnInit {
     });
   }
 
-  saveDetails() {
-    
-  }
-
-  clearDetails() {
-    
-  }
-
 }

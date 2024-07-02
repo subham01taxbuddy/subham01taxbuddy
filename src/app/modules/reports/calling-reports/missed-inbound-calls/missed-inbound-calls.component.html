@@ -24,10 +24,6 @@
                     {{ obj.label }}
                   </mat-option>
                 </mat-select>
-                <!-- <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
-                  </mat-error> -->
-                <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
-                      sure want to create FIXED pricing promo code?</mat-hint> -->
               </mat-form-field>
             </div>
             <div class="col-sm-4 spsTp">
@@ -85,14 +81,9 @@
         Missed Inbound Call Details:
       </div>
     </div>
-    <!-- <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
-  </div> -->
   </div>
 
-  <table>
-    <tr *ngFor="let item of missedInboundCallingReport | paginate : config"></tr>
-  </table>
+  <div *ngFor="let item of missedInboundCallingReport | paginate : config"> </div>
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallGridOptions"
     (rowClicked)="onRowClicked($event)">

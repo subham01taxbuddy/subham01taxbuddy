@@ -41,9 +41,9 @@
                 mode="indeterminate"></mat-progress-spinner>
             </div>
             <div class="col-sm-9">
-              <label *ngFor="let file of filesUploaded" class="filename">
+              <div *ngFor="let file of filesUploaded" class="filename">
                 <i class="fa fa-check-circle" style="color: green" aria-hidden="true"></i>&nbsp;{{ file }}
-              </label>
+              </div>
               <br />
             </div>
           </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="col-5">
               <button class="btn__upload float-right" (click)="downloadTemplate()">
-                <img src="assets/img/tabler_template.svg" /> Download Taxbuddy Template</button>
+                <img alt="download" src="assets/img/tabler_template.svg" /> Download Taxbuddy Template</button>
             </div>
           </div>
           <hr style="border-top:1px solid #cccccc; margin-top: 20px; padding-bottom: 20px">

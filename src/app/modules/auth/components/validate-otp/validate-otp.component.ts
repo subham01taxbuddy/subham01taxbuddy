@@ -1,4 +1,4 @@
-import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@aws-amplify/auth';
 declare let $: any;
@@ -13,12 +13,12 @@ export class ValidateOtpComponent implements OnInit {
   @Input() username: any;
   @Output() sendValue = new EventEmitter<any>();
   otpForm!: UntypedFormGroup;
-  isError: Boolean = false;
-  isOtpSent: Boolean = false;
-  busy: Boolean = false;
+  isError: boolean = false;
+  isOtpSent: boolean = false;
+  busy: boolean = false;
 
   hide = true;
-  errorMessage: String = '';
+  errorMessage: string = '';
   public myColors = ['#DD2C00', '#FF6D00', '#FFD600', '#AEEA00', '#00C853'];
   public strengthLabels = ['(Very weak)', '(Weak)', '(Ok)', '(Strong)', '(Very strong!)'];
   counterAPICall = 0;
@@ -51,10 +51,6 @@ export class ValidateOtpComponent implements OnInit {
             username: res
           }
           this.sendValue.emit(sendData);
-          // this.sendData.childView = 'FORGOT_PASSWORD';
-          // this.sendData.username = res;
-          // this.sendValue.emit(this.sendData);
-          console.log('Forgot pass confirm:', res);
         })
         .catch(err => {
           this.busy = false;
@@ -69,22 +65,21 @@ export class ValidateOtpComponent implements OnInit {
 
   resendOTP() {
     this.isError = false;
-    // if (this.otpMode === 'FORGOT_PASSWORD') {
-      Auth.forgotPassword(this.username)
-        .then(res => {
-          console.log('FORGOT_PASSWORD code resent successfully:', res);
-          this.busy = false;
-          this.isOtpSent = true;
-          setTimeout(() => {
-            this.isOtpSent = false;
-          }, 4000);
-        })
-        .catch(err => {
-          this.busy = false;
-          this.isError = true;
-          this.errorMessage = err.message;
-          console.log('FORGOT_PASSWORD code resent failure:', err);
-        });
+    Auth.forgotPassword(this.username)
+      .then(res => {
+        console.log('FORGOT_PASSWORD code resent successfully:', res);
+        this.busy = false;
+        this.isOtpSent = true;
+        setTimeout(() => {
+          this.isOtpSent = false;
+        }, 4000);
+      })
+      .catch(err => {
+        this.busy = false;
+        this.isError = true;
+        this.errorMessage = err.message;
+        console.log('FORGOT_PASSWORD code resent failure:', err);
+      });
     // }
   }
 }

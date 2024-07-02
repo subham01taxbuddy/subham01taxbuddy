@@ -42,14 +42,10 @@ import { CurrencyPipe } from 'src/app/pipes/currency.pipe';
 import { DigitsOnlyDirective } from './directives/digits-only.directive';
 import { AgTooltipComponent } from './components/ag-tooltip/ag-tooltip.component';
 import { NumbersOnlyDirective } from './directives/numbers-only.directive';
-import { WhatsAppDialogComponent } from '../itr-filing/whats-app-dialog/whats-app-dialog.component';
-import { FilingStatusDialogComponent } from '../itr-filing/filing-status-dialog/filing-status-dialog.component';
-import { UpdateStatusComponent } from '../itr-filing/update-status/update-status.component';
 import { Schedules } from './interfaces/schedules';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
-import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from './services/request-manager';
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
 import { AddAffiliateIdComponent } from './components/add-affiliate-id/add-affiliate-id.component';
@@ -65,6 +61,7 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
 import {ZipcodeDirective} from "./directives/zipcode.directive";
+import { AddManualUpdateReasonComponent } from './components/add-manual-update-reason/add-manual-update-reason.component';
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -74,10 +71,7 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         MatSelectComponent,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
@@ -100,7 +94,6 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         ConfirmDialogComponent,
         MyDialogComponent,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         AddAffiliateIdComponent,
         TwoDigitDecimaNumberDirective,
@@ -112,7 +105,8 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         GenericUserFilterComponent,
         CalculatorModalComponent,
         CustomButtonComponent,
-        IncomeSourceDialogComponent
+        IncomeSourceDialogComponent,
+        AddManualUpdateReasonComponent
     ],
     imports: [
         CommonModule,
@@ -146,10 +140,7 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         AgGridModule,
         MatInputComponent,
         AgGridMaterialSelectEditorComponent,
-        WhatsAppDialogComponent,
         UserNotesComponent,
-        FilingStatusDialogComponent,
-        UpdateStatusComponent,
         KommunicateDialogComponent,
         ItrActionsComponent,
         DocumentViewerComponent,
@@ -168,7 +159,6 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         AgTooltipComponent,
         NumbersOnlyDirective,
         ServiceDropDownComponent,
-        CoOwnerListDropDownComponent,
         LeaderListDropdownComponent,
         TwoDigitDecimaNumberDirective,
         ViewDocumentsDialogComponent,
@@ -177,7 +167,8 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         UpdateNoJsonFilingDialogComponent,
         CalculatorModalComponent,
         CustomButtonComponent,
-        IncomeSourceDialogComponent
+        IncomeSourceDialogComponent,
+        AddManualUpdateReasonComponent
     ],
     providers: [StorageService, Schedules, RequestManager]
 })

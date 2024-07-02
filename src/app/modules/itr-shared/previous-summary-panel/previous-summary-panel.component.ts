@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from '../../shared/constants';
 import { ITR_JSON } from '../../shared/interfaces/itr-input.interface';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './previous-summary-panel.component.html',
   styleUrls: ['./previous-summary-panel.component.scss']
 })
-export class PreviousSummaryPanelComponent implements OnInit {
+export class PreviousSummaryPanelComponent {
 
   @Input() type: string;
 
@@ -38,8 +38,7 @@ export class PreviousSummaryPanelComponent implements OnInit {
     private summaryHelper: SummaryHelperService,
   ) { }
 
-  ngOnInit(): void {
-  }
+
 
   setSummaryData() {
     if (this.type !== 'scheduleAL' && this.type !== 'taxesPaid' && this.type !== 'listedEquityShares' && this.type !== 'profitLossAccount' && this.type !== 'houseProperty' && this.type !== 'presumptiveIncome')

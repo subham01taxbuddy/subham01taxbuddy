@@ -1,18 +1,18 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="">
-  <!--  <main>-->
   <div class="frame-wrapper-2A">
     <form [formGroup]="generalDonationForm">
       <div class="accordion-item">
         <h2 class="accordion-header" *ngIf="false">
-          <button id="accordBtn1" *ngIf="type === '80g'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-            aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
-          <button id="accordBtn2" *ngIf="type === '80gga'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-            aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
+          <button id="accordBtn1" *ngIf="type === '80g'" type="button" class="accordion-button collapsed"
+            data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#donation">Deduction related to
+            Donation</button>
+          <button id="accordBtn2" *ngIf="type === '80gga'" type="button" class="accordion-button collapsed"
+            data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#donation">Deduction related to
+            Donation</button>
         </h2>
         <div>
-          <!--            <div id="donation">-->
           <div class="accordion__item-body">
             <div class="gray_container" formArrayName="donationArray">
               <div class="div-6">
@@ -25,7 +25,8 @@
                   <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
                 </div>
               </div>
-              <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : getPageConfig();let i = index"
+              <div class="row"
+                *ngFor="let donation of getDonationArray.controls | paginate : getPageConfig();let i = index"
                 [formGroupName]="fieldGlobalIndex(i)">
                 <div class="col-10">
                   <div class="gray_box">
@@ -101,7 +102,9 @@
                     </div>
                     <div class="div-6">
                       <div class="form-field">
-                        <div><span class="span">Donation Amount(In Cash) </span> <span class="text-wrapper-3">{{type === '80ggc' ? 'Cash donations are not eligible for deduction' : '*upto 2000 allowed in cash'}}</span>
+                        <div><span class="span">Donation Amount(In Cash) </span> <span class="text-wrapper-3">{{type ===
+                            '80ggc' ? 'Cash donations are not eligible for deduction' : '*upto 2000 allowed in
+                            cash'}}</span>
                         </div>
                         <mat-form-field appearance="outline" class="no-height small-inp">
                           <input formControlName="amountInCash" name="amountInCash[i]" matInput
@@ -245,9 +248,8 @@
             </div>
 
             <div class="col-sm-6">
-              <table>
-                <tr *ngFor="let item of getDonationArray.controls | paginate : getPageConfig()"></tr>
-              </table>
+              <div *ngFor="let item of getDonationArray.controls | paginate : getPageConfig()">
+              </div>
               <pagination-controls (pageChange)="pageChanged($event)" id="{{getPageConfig().id}}">
               </pagination-controls>
             </div>
@@ -256,5 +258,4 @@
       </div>
     </form>
   </div>
-  <!--  </main>-->
 </div>

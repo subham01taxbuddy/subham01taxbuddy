@@ -1,10 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="page-wrapper">
-<main>
-<div class="frameC">
-  <h1 class="heading__title">More Information - Schedule Assets & Liability (AL)
-  </h1>
-  <div class="space">
+  <main>
+    <div class="frameC">
+      <h1 class="heading__title">More Information - Schedule Assets & Liability (AL)
+      </h1>
+      <div class="space">
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
             <div class="accordion-item">
@@ -20,32 +20,27 @@
                 <div style="padding: 20px;">
                   <div class="Bx4R" *ngIf="mode !== 'EDIT'">
                     <button type="button" class=" btn btn__default btn__add addAno" (click)="addMore()">
-                       Add more
+                      Add more
                     </button>
                   </div>
                   <div *ngIf="mode === 'VIEW'">
-                    <table>
-                      <tr *ngFor="let item of immovableAssets | paginate:config"></tr>
-                    </table>
-                    <ag-grid-angular
-                      style="width: 100%; height: 150%"
-                     class="ag-theme-balham topSps"
-                     [gridOptions]="immovableAssetGridOptions"
-                     [groupDisplayType]="groupDisplayType"
-                     [animateRows]="true"
-                      (rowClicked)="onAssetsRowClicked($event)"></ag-grid-angular>
-                    <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+                    <div *ngFor="let item of immovableAssets | paginate:config">
+                    </div>
+                    <ag-grid-angular style="width: 100%; height: 150%" class="ag-theme-balham topSps"
+                      [gridOptions]="immovableAssetGridOptions" [groupDisplayType]="groupDisplayType"
+                      [animateRows]="true" (rowClicked)="onAssetsRowClicked($event)"></ag-grid-angular>
                   </div>
                 </div>
 
                 <div *ngIf="mode === 'EDIT'">
-                  <div class="div-3"
-                       *ngFor="let salary of immovableAssetArray.controls;let i = index">
+                  <div class="div-3" *ngFor="let salary of immovableAssetArray.controls;let i = index">
                     <div class="contents-wrapper">
                       <div [ngClass]="i === activeIndex ? 'contents-selected' : 'contents'" style="cursor: pointer;">
-                        <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'" (click)="$event.stopPropagation();markActive(i)">Entry {{i+1}}</div>
+                        <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"
+                          (click)="$event.stopPropagation();markActive(i)">Entry {{i+1}}</div>
                         <div class="group" (click)="deleteIndex(i)">
-                          <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
+                          <i class="fa fa-trash-o delbt"
+                            [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
                         </div>
                       </div>
                     </div>
@@ -59,53 +54,62 @@
                     <div class="accordion__item-body">
                       <div formArrayName="immovableAssetArray">
                         <div *ngFor="let item of immovableAssetArray.controls | slice:0:activeIndex+1;
-                          let i=index"
-                          [formGroupName]="activeIndex">
+                          let i=index" [formGroupName]="activeIndex">
                           <div *ngIf="activeIndex === i">
                             <div class="asset-container">
                               <div class="div-6">
                                 <div class="form-field">
                                   <div><span class="span">Description </span> </div>
                                   <mat-form-field class="description" appearance="outline">
-                                    <input type="text" trim matInput placeholder="Asset Description" name="description[activeIndex]"
-                                      formControlName="description" class="input-field" maxlength="50" required />
+                                    <input type="text" trim matInput placeholder="Asset Description"
+                                      name="description[activeIndex]" formControlName="description" class="input-field"
+                                      maxlength="50" required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Amount (Cost) </span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Amount (Cost) </span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input digitsOnly trim matInput placeholder="Amount" name="amount[activeIndex]" formControlName="amount"
-                                      class="input-field" maxlength="50" required />
+                                    <input digitsOnly trim matInput placeholder="Amount" name="amount[activeIndex]"
+                                      formControlName="amount" class="input-field" maxlength="50" required />
                                   </mat-form-field>
                                 </div>
                               </div>
                               <div class="div-6">
                                 <div class="form-field">
-                                  <div> <span class="span">Flat/Door/Block No</span> <span class="text-wrapper-2">*</span></div>
+                                  <div> <span class="span">Flat/Door/Block No</span> <span
+                                      class="text-wrapper-2">*</span></div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo[activeIndex]"
-                                      formControlName="flatNo" class="input-field" maxlength="50" required />
+                                    <input type="text" trim matInput placeholder="Flat/Door/Block No."
+                                      name="flatNo[activeIndex]" formControlName="flatNo" class="input-field"
+                                      maxlength="50" required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Premises name</span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Premises name</span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Premises name" name="premisesName[activeIndex]"
-                                      formControlName="premisesName" class="input-field" maxlength="50" required />
+                                    <input type="text" trim matInput placeholder="Premises name"
+                                      name="premisesName[activeIndex]" formControlName="premisesName"
+                                      class="input-field" maxlength="50" required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Road / Street</span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Road / Street</span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Road / Street" name="road[activeIndex]"
-                                      formControlName="road" class="input-field" maxlength="50" required />
+                                    <input type="text" trim matInput placeholder="Road / Street"
+                                      name="road[activeIndex]" formControlName="road" class="input-field" maxlength="50"
+                                      required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Area/ Locality</span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Area/ Locality</span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Area/ Locality" name="area[activeIndex]"
-                                      formControlName="area" class="input-field" maxlength="50" required />
+                                    <input type="text" trim matInput placeholder="Area/ Locality"
+                                      name="area[activeIndex]" formControlName="area" class="input-field" maxlength="50"
+                                      required />
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -113,16 +117,20 @@
                                 <div class="form-field">
                                   <div><span class="span">PIN Code </span> <span class="text-wrapper-2">*</span></div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" matInput placeholder="PIN code" name="pinCode[activeIndex]" formControlName="pinCode"
-                                      class="input-field" maxlength="6" minlength="6" trim digitsOnly
-                                      (blur)="updateDataByPincode(immovableAssetArray.controls[activeIndex])" required />
-                                    <mat-error *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('pattern')">
+                                    <input type="text" matInput placeholder="PIN code" name="pinCode[activeIndex]"
+                                      formControlName="pinCode" class="input-field" maxlength="6" minlength="6" trim
+                                      digitsOnly (blur)="updateDataByPincode(immovableAssetArray.controls[activeIndex])"
+                                      required />
+                                    <mat-error
+                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('pattern')">
                                       Enter 6 digit PIN code.
                                     </mat-error>
-                                    <mat-error *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('minLength')">
+                                    <mat-error
+                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('minLength')">
                                       Enter 6 digit PIN code.
                                     </mat-error>
-                                    <mat-error *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('maxLength')">
+                                    <mat-error
+                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('maxLength')">
                                       Enter 6 digit PIN code.
                                     </mat-error>
                                   </mat-form-field>
@@ -130,18 +138,22 @@
                                 <div class="form-field">
                                   <div><span class="span">City </span> <span class="text-wrapper-2">*</span></div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="City/Taluka/District" name="city[activeIndex]"
-                                      formControlName="city" class="input-field" maxlength="50" required />
-                                    <mat-error *ngIf="immovableAssetArray.controls[activeIndex].get('city').hasError('pattern')">
+                                    <input type="text" trim matInput placeholder="City/Taluka/District"
+                                      name="city[activeIndex]" formControlName="city" class="input-field" maxlength="50"
+                                      required />
+                                    <mat-error
+                                      *ngIf="immovableAssetArray.controls[activeIndex].get('city').hasError('pattern')">
                                       Enter valid city name.</mat-error>
                                   </mat-form-field>
                                 </div>
                               </div>
                               <div class="div-6">
                                 <div class="form-field">
-                                  <div><span class="span">Select state </span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Select state </span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select placeholder="Select state" name="state[activeIndex]" formControlName="state" required>
+                                    <mat-select placeholder="Select state" name="state[activeIndex]"
+                                      formControlName="state" required>
                                       <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                         {{ state.stateName | titlecase }}
                                       </mat-option>
@@ -149,10 +161,11 @@
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Select country </span> <span class="text-wrapper-2">*</span></div>
+                                  <div><span class="span">Select country </span> <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select placeholder="Select country" name="country[activeIndex]" formControlName="country"
-                                      required>
+                                    <mat-select placeholder="Select country" name="country[activeIndex]"
+                                      formControlName="country" required>
                                       <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
                                         {{ country.countryName | titlecase }}
                                       </mat-option>
@@ -165,9 +178,8 @@
                         </div>
                       </div>
 
-                      <mat-paginator #paginator *ngIf="false"
-                                     [pageIndex]="activeIndex" [length]="getTotalCount()"
-                                     [pageSize]="1"></mat-paginator>
+                      <mat-paginator #paginator *ngIf="false" [pageIndex]="activeIndex" [length]="getTotalCount()"
+                        [pageSize]="1"></mat-paginator>
 
                       <div class="out-box">
                         <div class="box-left">
@@ -203,8 +215,8 @@
                           </div>
                           <div class="col-sm-6">
                             <mat-form-field appearance="outline" class="movable-assets">
-                              <input matInput class="input-field" name="jwelleryAmount" formControlName="jwelleryAmount" maxlength="14"
-                                digitsOnly placeholder="Amount" />
+                              <input matInput class="input-field" name="jwelleryAmount" formControlName="jwelleryAmount"
+                                maxlength="14" digitsOnly placeholder="Amount" />
                               <mat-error *ngIf="movableAssetsForm?.controls['jwelleryAmount'].hasError('required')">
                                 Enter Amount.
                               </mat-error>
@@ -216,19 +228,21 @@
                           </div>
                           <div class="col-sm-6 mt-3">
                             <mat-form-field appearance="outline" class="movable-assets">
-                              <input matInput class="input-field" name="artWorkAmount" formControlName="artWorkAmount" maxlength="14"
-                                digitsOnly matTooltip="Archaeological collections, drawings, paintings, sculpture, any work of art"
+                              <input matInput class="input-field" name="artWorkAmount" formControlName="artWorkAmount"
+                                maxlength="14" digitsOnly
+                                matTooltip="Archaeological collections, drawings, paintings, sculpture, any work of art"
                                 matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Amount" />
                             </mat-form-field>
                           </div>
                           <div class="col-sm-6 mt-3">
-                            <span class="span"> 3. Vehicles, yachts, boats and aircraft</span> <span class="text-wrapper-2">*</span>
+                            <span class="span"> 3. Vehicles, yachts, boats and aircraft</span> <span
+                              class="text-wrapper-2">*</span>
                           </div>
                           <div class="col-sm-6 mt-3">
                             <mat-form-field appearance="outline" class="movable-assets">
-                              <input matInput class="input-field" name="vehicleAmount" formControlName="vehicleAmount" maxlength="14"
-                                digitsOnly matTooltip="Vehicles, yachts, boats and aircrafts" matTooltipClass="tab-tooltip"
-                                matTooltipPosition="above" placeholder="Amount" />
+                              <input matInput class="input-field" name="vehicleAmount" formControlName="vehicleAmount"
+                                maxlength="14" digitsOnly matTooltip="Vehicles, yachts, boats and aircrafts"
+                                matTooltipClass="tab-tooltip" matTooltipPosition="above" placeholder="Amount" />
                             </mat-form-field>
                           </div>
                           <div class="col-sm-6 mt-3">
@@ -267,8 +281,8 @@
                             </div>
                             <div class="col-sm-6 mt-3">
                               <mat-form-field appearance="outline" class="movable-assets">
-                                <input matInput class="input-field" name="insuranceAmount" formControlName="insuranceAmount"
-                                  maxlength="14" digitsOnly placeholder="Amount" />
+                                <input matInput class="input-field" name="insuranceAmount"
+                                  formControlName="insuranceAmount" maxlength="14" digitsOnly placeholder="Amount" />
                               </mat-form-field>
                             </div>
                             <div class="col-sm-6 mt-3">
@@ -342,9 +356,9 @@
             <div class="btn__primary" (click)="saveAll()">Save & View Summary</div>
           </div>
         </div>
-  </div>
-</div>
-</main>
-<app-side-summary-panel type="scheduleAL"></app-side-summary-panel>
-<app-previous-summary-panel type="scheduleAL" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
+      </div>
+    </div>
+  </main>
+  <app-side-summary-panel type="scheduleAL"></app-side-summary-panel>
+  <app-previous-summary-panel type="scheduleAL" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 </div>

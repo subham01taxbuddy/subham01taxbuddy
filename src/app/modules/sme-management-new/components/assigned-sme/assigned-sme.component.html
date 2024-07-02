@@ -26,7 +26,7 @@
                     <div class="row">
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select Role</mat-label>
-                        <mat-form-field appearance="outline"  class="custom-bg-new small-inp no-height">
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
                             [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
                             <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value"
@@ -38,7 +38,7 @@
                       </div>
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select Language</mat-label>
-                        <mat-form-field appearance="outline"  class="custom-bg-new small-inp no-height">
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select [formControl]="selectedLangControl" (selectionChange)="onLangChange($event)">
                             <mat-option *ngFor="let lang of langList" [value]="lang">
                               {{ lang }}
@@ -48,7 +48,7 @@
                       </div>
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select ITR Capability</mat-label>
-                        <mat-form-field appearance="outline"  class="custom-bg-new small-inp no-height">
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select [formControl]="selectedITRCapabilityControl">
                             <mat-option *ngFor="let capability of itrCapabilities" [value]="capability.planId"
                               (click)="getPlanFilterValue(capability)">
@@ -71,9 +71,6 @@
                   </div>
                   <!-- Table Sorting inside filter ends -->
                   <div class="button-container">
-                    <!-- <button class="srch-btn-1" (click)="advanceSearch()"><i class="fa fa-search" aria-hidden="true"></i>
-                      Search
-                    </button> -->
                     <app-custom-button class="srch-btn-1" [actions]="[getSmeList,getCount]">
                       <i class="fa fa-search" aria-hidden="true"></i> Search
                     </app-custom-button>
@@ -158,9 +155,7 @@
 
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of smeInfo | paginate:config"></tr>
-      </table>
+      <div *ngFor="let item of smeInfo | paginate:config"></div>
 
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions"
         (rowClicked)="onSmeRowClicked($event)">
@@ -172,5 +167,3 @@
   </div>
 
 </div>
-
-

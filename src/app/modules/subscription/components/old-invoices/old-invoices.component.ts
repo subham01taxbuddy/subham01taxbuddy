@@ -420,13 +420,13 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
           console.log('params', params)
           if (params?.data?.invoiceNo == null) {
             return `<button type="button" class="action_icon add_button" disabled title="Download Invoice" style="border: none;
-              background: transparent; font-size: 16px; cursor:not-allowed"">
+              background: transparent; font-size: 16px; cursor:not-allowed"" [disabled]="loading">
               <i class="fa fa-download" aria-hidden="true"></i>
               </button>`;
 
           } else {
             return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer">
+              background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
               <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
               </button>`;
           }
@@ -451,19 +451,19 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
           if (params.data.paymentStatus === 'Paid') {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed">
+            background: transparent; font-size: 16px; cursor:not-allowed" [disabled]="loading">
             <i class="fa fa-bell" aria-hidden="true"></i>
            </button>`;
           } else if (params.data.invoiceNo == null) {
             return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
             style="border: none;
-            background: transparent; font-size: 16px; cursor:not-allowed">
+            background: transparent; font-size: 16px; cursor:not-allowed" [disabled]="loading">
             <i class="fa fa-bell" aria-hidden="true"></i>
            </button>`;
           } else {
             return `<button type="button" class="action_icon add_button" title="Mail reminder"
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
             <i class="fa fa-bell" aria-hidden="true" data-action-type="mail-reminder"></i>
            </button>`;
           }
@@ -498,7 +498,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
             <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },

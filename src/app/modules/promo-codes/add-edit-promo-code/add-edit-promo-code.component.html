@@ -190,8 +190,9 @@
     </mat-dialog-content>
 
     <mat-dialog-actions class="centered">
-        <button mat-raised-button [ngClass]="'add-button'" (click)="addEdit()" tabindex="1">{{data.mode==='edit'?'Update
-            Promo Code':data.title}}</button>
+        <app-custom-button [ngClass]="'add-button'" class="tbd-btn" [disabled]="loading" [actions]="[addEdit]">
+          {{data.mode==='edit' ? 'Update Promo Code' : data.title}}
+        </app-custom-button>
         <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
     </mat-dialog-actions>
 </form>

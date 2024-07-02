@@ -2,7 +2,6 @@ import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ColDef, GridOptions } from 'ag-grid-community';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -45,9 +44,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    migrationSource:null,
-    panNumber:null,
-    name:null,
+    migrationSource: null,
+    panNumber: null,
+    name: null,
   }
   showCsvMessage: boolean;
   dataOnLoad = true;
@@ -62,7 +61,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   searchAsPrinciple: boolean = false;
   partnerType: any;
-  migrationList =[
+  migrationList = [
     { value: 'Registered', name: 'Registered' },
     { value: 'ITR Filed', name: 'ITR Filed' }
   ]
@@ -103,15 +102,15 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
-        { value: 'panNumber', name: 'PAN Number'},
-        { value: 'name', name: 'Name'},
+        { value: 'panNumber', name: 'PAN Number' },
+        { value: 'name', name: 'Name' },
       ]
     } else {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
-        { value: 'mobileNumber', name: 'Mobile No'},
-        { value: 'panNumber', name: 'PAN Number'},
-        { value: 'name', name: 'Name'},
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'panNumber', name: 'PAN Number' },
+        { value: 'name', name: 'Name' },
       ]
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
@@ -203,7 +202,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  search=(form?, isAgent?, pageChange?): Promise<any> =>{
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
     //'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -231,11 +230,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
 
-    if(this.searchBy?.panNumber){
+    if (this.searchBy?.panNumber) {
       this.searchParam.panNumber = this.searchBy?.panNumber
     }
 
-    if(this.searchBy?.name){
+    if (this.searchBy?.name) {
       this.searchParam.name = this.searchBy?.name
     }
 
@@ -269,41 +268,37 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         param = param + sortByJson;
       }
     }
-    else {
-      param;
-    }
-
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        this.loading = false;
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+      this.loading = false;
+      if (result.success == false) {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.userInfoLength = this.userInfo?.length;
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(this.createRowData(result.data['content']));
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(result.data['content']));
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.userInfoLength = this.userInfo?.length;
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(this.createRowData(result.data['content']));
-
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(result.data['content']));
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-      }).catch(()=>{
-        this.loading = false;
-        this._toastMessageService.alert('error', 'error')
-      })
+      }
+      this.loading = false;
+    }).catch(() => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'error')
+    })
   }
 
   async downloadReport() {
@@ -482,13 +477,13 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           const source = params.data.source.toLowerCase();
 
           if (source.includes("itr-filed")) {
-              return 'ITR Filed';
+            return 'ITR Filed';
           } else if (source.includes("itr-interested") ||
-                     source.includes("registered-users") ||
-                     source.includes("tpa-paid")) {
-              return 'Registered';
+            source.includes("registered-users") ||
+            source.includes("tpa-paid")) {
+            return 'Registered';
           } else {
-              return 'NA';
+            return 'NA';
           }
         }
 
@@ -856,9 +851,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
               console.log('res after active ', result);
               this.loading = false;
               if (result.success == true) {
-                if (this.roles.includes('ROLE_LEADER') && result.data.leaderUserId != loggedInId ) {
-                  this.reAssign(data,loggedInId);
-                }else{
+                if (this.roles.includes('ROLE_LEADER') && result.data.leaderUserId != loggedInId) {
+                  this.reAssign(data, loggedInId);
+                } else {
                   this.utilsService.showSnackBar('user activated successfully.');
                 }
               } else {
@@ -891,21 +886,21 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
 
-  reAssign(data,loggedInId) {
+  reAssign(data, loggedInId) {
     // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
     this.loading = true
     this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
       console.log(res);
       if (res.error) {
         this.utilsService.showSnackBar(res.error);
-        this.loading =false;
+        this.loading = false;
         return;
       } else {
         this.loading = true;
         let leaderFilter = '';
-          if (this.leaderId) {
-            leaderFilter += `&leaderUserId=${loggedInId}`
-          }
+        if (this.leaderId) {
+          leaderFilter += `&leaderUserId=${loggedInId}`
+        }
         const param = `/v2/user-reassignment?userId=${data.userId}&serviceType=${data.serviceType}${leaderFilter}`
         this.userMsService.getMethod(param).subscribe((res: any) => {
           this.loading = false;
@@ -924,7 +919,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         })
       }
 
-    },error => {
+    }, error => {
       this.loading = false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);

@@ -550,7 +550,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   getGstType(gstCode: any) {
-    this.gstType.find((item: any) => item.label === gstCode).label
+    let gstType = this.gstType.find((item: any) => item.label === gstCode).label;
   }
 
   uploadBusinessLogo(files: any) {
@@ -647,84 +647,98 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  updateUserProfile() {
-    this.utilsService
-      .getUserCurrentStatus(this.userInfo.userId)
-      .subscribe((res: any) => {
-        console.log(res);
-        if (res.error) {
-          this.utilsService.showSnackBar(res.error);
-          this.getUserInfo(this.userId);
-          return;
-        } else {
-          console.log(
-            'user profile valid -> ',
-            this.userProfileForm.valid,
-            ' GST valid -> ',
-            this.gstForm.valid
-          );
-          console.log(
-            'user profile form -> ',
-            this.userProfileForm,
-            ' GST form -> ',
-            this.gstForm
-          );
-          this.userProfileForm.controls['mobileNumber'].setValue(
-            this.unMaskedMobileNo
-          );
-          if (this.userProfileForm.valid && this.gstForm.valid) {
-            console.log('Before User Info : -> ', this.userInfo);
-
-            Object.assign(this.userInfo, this.userProfileForm.value);
-            this.userInfo.gstDetails = this.gstForm.value;
-            console.log('After User Info : -> ', this.userInfo);
-            this.loading = true;
-            //'https://uat-api.taxbuddy.com/user/profile/12383?serviceType=GST'
-            let param =
-              '/profile/' +
-              this.userInfo.userId +
-              '?serviceType=' +
-              this.serviceType;
-            this.userService.putMethod(param, this.userInfo).subscribe(
-              (res) => {
-                this.maskMobileNumber(this.unMaskedMobileNo);
-                this._toastMessageService.alert(
-                  'success',
-                  this.userInfo.fName + "'s profile updated successfully."
-                );
-                this.loading = false;
-                this.location.back();
-              },
-              (error) => {
-                let errorMessage =
-                  error.error && error.error.message
-                    ? error.error.message
-                    : 'Internal server error.';
-                this._toastMessageService.alert(
-                  'error',
-                  'merchant detail - ' + errorMessage
-                );
-                this.loading = false;
-                this.getUserInfo(this.userId);
-              }
-            );
+  updateUserProfile = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.utilsService.getUserCurrentStatus(this.userInfo.userId).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
+            this.getUserInfo(this.userId);
+            return reject(res.error);
           } else {
-            $('input.ng-invalid').first().focus();
-            return;
-          }
-        }
-      }, (error) => {
-        this.loading = false;
-        if (error.error && error.error.error) {
-          this._toastMessageService.alert("error", error.error.error);
-          this.getUserInfo(this.userId);
-        } else {
-          this._toastMessageService.alert("error", "An unexpected error occurred.");
-        }
-      }
-      );
+            console.log(
+              'user profile valid -> ',
+              this.userProfileForm.valid,
+              ' GST valid -> ',
+              this.gstForm.valid
+            );
+            console.log(
+              'user profile form -> ',
+              this.userProfileForm,
+              ' GST form -> ',
+              this.gstForm
+            );
+            this.userProfileForm.controls['mobileNumber'].setValue(
+              this.unMaskedMobileNo
+            );
+            if (this.userProfileForm.valid && this.gstForm.valid) {
+              console.log('Before User Info : -> ', this.userInfo);
 
-  }
+              Object.assign(this.userInfo, this.userProfileForm.value);
+              this.userInfo.gstDetails = this.gstForm.value;
+              console.log('After User Info : -> ', this.userInfo);
+              this.loading = true;
+              let param =
+                '/profile/' +
+                this.userInfo.userId +
+                '?serviceType=' +
+                this.serviceType;
+              this.userService
+                .putMethod(param, this.userInfo)
+                .toPromise()
+                .then(
+                  (res) => {
+                    this.maskMobileNumber(this.unMaskedMobileNo);
+                    this._toastMessageService.alert(
+                      'success',
+                      this.userInfo.fName + "'s profile updated successfully."
+                    );
+                    this.loading = false;
+                    this.location.back();
+                    resolve(res);
+                  },
+                  (error) => {
+                    let errorMessage =
+                      error.error && error.error.message
+                        ? error.error.message
+                        : 'Internal server error.';
+                    this._toastMessageService.alert(
+                      'error',
+                      'merchant detail - ' + errorMessage
+                    );
+                    this.loading = false;
+                    this.getUserInfo(this.userId);
+                    reject(error);
+                  }
+                )
+                .catch((error) => {
+                  this.loading = false;
+                  reject(error);
+                });
+            } else {
+              $('input.ng-invalid').first().focus();
+              return reject('Invalid userProfileForm or gstForm');
+            }
+          }
+        },
+        (error) => {
+          this.loading = false;
+          if (error.error && error.error.error) {
+            this._toastMessageService.alert('error', error.error.error);
+            this.getUserInfo(this.userId);
+          } else {
+            this._toastMessageService.alert(
+              'error',
+              'An unexpected error occurred.'
+            );
+          }
+          reject(error);
+        }
+      );
+    });
+  };
+
 
   getS3Image(imagePath: any) {
     return new Promise((resolve, reject) => {

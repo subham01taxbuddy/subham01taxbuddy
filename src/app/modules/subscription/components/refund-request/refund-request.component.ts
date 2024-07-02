@@ -12,7 +12,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ApproveRejectComponent } from '../approve-reject/approve-reject.component';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
@@ -581,7 +580,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;" [disabled]="loading">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -604,7 +603,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
@@ -629,7 +628,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           if (params.data.status === 'IN_PROGRESS') {
             return `<button type="button" class="action_icon add_button" title="Initiate refund for this user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;" [disabled]="loading">
               <i class="fa fa-spinner" aria-hidden="true" data-action-type="initiate-refund"></i>
              </button>`;
           } else {
@@ -658,7 +657,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           if (params.data.status === 'IN_PROGRESS') {
             return `<button type="button" class="action_icon add_button" title="revert/undo refund for this user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:red;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:red;" [disabled]="loading">
               <i class="fa fa-undo" aria-hidden="true" data-action-type="revert-refund"></i>
              </button>`;
           } else {
@@ -827,17 +826,20 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         });
         this.dialogRef.afterClosed().subscribe(result => {
           if (result === 'YES') {
+            this.loading = true;
             this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
               console.log(res);
               if (res.error) {
                 this.utilService.showSnackBar(res.error);
                 this.getRefundRequestList(0);
+                this.loading = false;
                 return;
               } else {
                 this.loading = true;
                 let id = data.id
                 let param = `/refund-request?id=${id}`;
                 this.itrService.deleteMethod(param).subscribe((response: any) => {
+                  this.loading = false;
                   if (response.success) {
                     this.loading = false;
                     console.log('response', response);
@@ -893,11 +895,13 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         });
         this.dialogRef.afterClosed().subscribe(result => {
           if (result === 'YES') {
+            this.loading = true;
             this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
               console.log(res);
               if (res.error) {
                 this.utilService.showSnackBar(res.error);
                 this.getRefundRequestList(0);
+                this.loading = false;
                 return;
               } else {
                 this.loading = true;
@@ -908,6 +912,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
             };
             this.reviewService.postMethod(param, request).subscribe(
               (response: any) => {
+                this.loading = false;
                 if (response.success) {
                   this.loading = false;
                   console.log('response', response);
