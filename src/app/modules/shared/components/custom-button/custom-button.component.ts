@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-custom-button',

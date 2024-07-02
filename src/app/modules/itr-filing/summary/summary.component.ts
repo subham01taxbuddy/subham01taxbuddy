@@ -16,6 +16,7 @@ import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.
 import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { IncomeSourceDialogComponent } from '../../shared/components/income-source-dialog/income-source-dialog.component';
+import { AddManualUpdateReasonComponent } from '../../shared/components/add-manual-update-reason/add-manual-update-reason.component';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -7003,27 +7004,42 @@ export class SummaryComponent implements OnInit {
   }
 
   confirmSubmitITR() {
-    // const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
-    // this.itrMsService.getMethod(param).subscribe(
-    //   (res: any) => {
-    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-    // this.checkFilerAssignment();
-    this.checkIncomeOfSources();
-    //       // console.log(res, 'Paid');
-    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-    //       this.utilsService.showSnackBar(
-    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-    //       );
-    //     } else {
-    //       this.utilsService.showSnackBar(
-    //         'Please make sure that the payment has been made by the user to proceed ahead'
-    //       );
-    //     }
-    //   },
-    //   (error) => {
-    //     this.utilsService.showSnackBar(error);
-    //   }
-    // );
+    if (this.ITR_JSON?.itrSummaryJson) {
+      const dialogRef = this.dialog.open(AddManualUpdateReasonComponent, {
+        width: '60vw',
+        height: '50vh',
+        data: {
+          title: 'Add Manual Update Reason',
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.status) {
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+          this.ITR_JSON['manualUpdateReason'] = result.reason;
+          this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+            (result: any) => {
+              this.loading = false;
+              this.ITR_JSON = result;
+              sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+              this.utilsService.showSnackBar(
+                'Reason saved successfully'
+              );
+              this.checkIncomeOfSources();
+            },
+            (error) => {
+              this.loading = false;
+              this.ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+              this.utilsService.showSnackBar(
+                'Failed to save the manual update reason, please try again.'
+              );
+            }
+          );
+        }
+      });
+    } else {
+      this.checkIncomeOfSources();
+    }
   }
 
   checkIncomeOfSources() {
