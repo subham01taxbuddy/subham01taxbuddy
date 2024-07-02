@@ -130,7 +130,8 @@
               <span class="txLf">Jurisdiction of Residence: </span>
               <br />
               <div>
-                <table class="simple-table" aria-label="Jurisdiction of Residence" *ngIf="
+                <table aria-label="Jurisdiction of residence" class="simple-table"
+                  aria-label="Jurisdiction of Residence" *ngIf="
                   finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls
                 ">
                   <thead>
@@ -300,14 +301,6 @@
           [disabled]="!isValidateJson || (!ITR_JSON.itrSummaryJson && finalCalculations?.totalIncome >= 20000000)">
           File ITR
         </button>
-        <!-- <button *ngIf="isValidateJson" type="button" (click)="confirmSubmitITR()"
-              class="btn grBut pull-right" [disabled]="(taxable && taxable > 0) || isPreviousAvailable()"
-              [style.cursor]="((taxable && taxable > 0) || isPreviousAvailable()) ? 'not-allowed':'pointer'"
-              style="background-color: red;"> File
-              ITR</button> -->
-        <!-- <button type="button" (click)="downloadXML()" class="btn grBut" style="background-color: orange;">
-              Download XML</button> -->
-        <!--  [disabled]="taxable && taxable > 0"  [style.cursor]="(taxable && taxable > 0) ? 'not-allowed':'pointer'"  *ngIf="ITR_JSON.isDefective === 'Y'" -->
         <button type="button" (click)="downloadPDF()" class="btn grBut"
           [disabled]="!(ITR_JSON.itrSummaryJson != null || finalCalculations?.totalIncome < 20000000)">
           Download PDF
@@ -384,7 +377,8 @@
                 </mat-expansion-panel-header>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="Income from Salary" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px">
                     <thead>
                       <tr>
                         <th id="particular">Particulars</th>
@@ -728,7 +722,8 @@
                 </mat-expansion-panel-header>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="Income from HP" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px">
                     <thead>
                       <tr>
                         <th id="particulars">Particulars</th>
@@ -884,8 +879,8 @@
 
                 <!-- spec non-spec -->
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px"
-                    *ngIf="ITR_JSON.business?.businessDescription?.length > 0">
+                  <table aria-label="Income from Business" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px" *ngIf="ITR_JSON.business?.businessDescription?.length > 0">
                     <thead>
                       <tr>
                         <th>Nature Of Business Code</th>
@@ -915,7 +910,8 @@
                   </table>
                 </div>
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px" *ngIf="
+                  <table aria-label="business Income" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px" *ngIf="
                           (finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncome
                             ?.grossTurnover &&
@@ -1015,7 +1011,8 @@
                 </div>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px" *ngIf="
+                  <table aria-label="Business Income Details" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px" *ngIf="
                           finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.business44AD?.length > 0 ||
                           finalCalculations?.businessIncome
@@ -1149,7 +1146,8 @@
                         finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       ">
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="summary Income" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px">
                     <tbody>
                       <tr>
                         <th>Salary</th>
@@ -1231,7 +1229,7 @@
                     ?.totalCryptoIncome
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Crypto Details" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.businessIncome?.businessIncomeDetails
                           ?.crypto?.cryptoDetails &&
                         finalCalculations?.businessIncome?.businessIncomeDetails
@@ -1283,7 +1281,7 @@
                     ?.business44AE?.totalPresInc
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Business 44AE" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.businessIncome?.businessIncomeDetails
                           ?.business44AE?.businessDetails?.length > 0
                       ">
@@ -1410,7 +1408,8 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="short Term App Slab Rate" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
                           ?.ShortTermAppSlabRate?.length > 0
                       ">
@@ -1474,7 +1473,7 @@
                     }}</span>
                 </div>
 
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Short Term Deemed" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
                           ?.shortTermDeemed?.length > 0
                       " style="margin-bottom: 0px">
@@ -1553,7 +1552,7 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Short Term 15 Per" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
                           ?.ShortTerm15Per?.length > 0
                       ">
@@ -1620,7 +1619,7 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Short Term 30 per" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
                           ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
@@ -1692,7 +1691,8 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Short Term Spl Rate DTAA" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
                           ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
@@ -1760,7 +1760,7 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Long Term 10 Per" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.longTerm?.LongTerm10Per
                           .length > 0
                       ">
@@ -1824,7 +1824,7 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Long Term 20 per" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.longTerm?.LongTerm20Per
                           ?.length > 0
                       ">
@@ -1887,7 +1887,7 @@
                     }}</span>
                 </div>
 
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Long Term Deemed" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.longTerm?.longTermDeemed
                           ?.length > 0
                       " style="margin-bottom: 0px">
@@ -1968,7 +1968,8 @@
                     ?.LongTermSplRateDTAATotal
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Long Term Spl Rate DTAA" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.capitalGain?.longTerm
                           ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
@@ -2035,7 +2036,7 @@
                     )
                     }}</span>
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Cg Crypto Details" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.capitalGain?.crypto?.cryptoDetails
                           ?.length > 0
                       ">
@@ -2106,7 +2107,8 @@
                 </mat-expansion-panel-header>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="Income from Other Sources" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px">
                     <tbody>
                       <tr>
                         <th id="particulars">Particulars</th>
@@ -2690,7 +2692,8 @@
                   </div>
                 </mat-expansion-panel-header>
                 <!-- summary json uploaded -->
-                <table class="table table-bordered table-striped table-hover" style="margin-top: 20px" *ngIf="
+                <table aria-label="Losses of Current Year SetOff" class="table table-bordered table-striped table-hover"
+                  style="margin-top: 20px" *ngIf="
                         !ITR_JSON.isItrSummaryJsonEdited &&
                         ITR_JSON.itrSummaryJson
                       ">
@@ -2754,8 +2757,8 @@
                 </table>
 
                 <!-- if json not uploaded -->
-                <table class="table table-bordered table-striped table-hover" style="margin-top: 20px"
-                  *ngIf="!ITR_JSON.itrSummaryJson">
+                <table aria-label="With Json" class="table table-bordered table-striped table-hover"
+                  style="margin-top: 20px" *ngIf="!ITR_JSON.itrSummaryJson">
                   <tbody>
                     <tr>
                       <th><b>Head/Source of Income</b></th>
@@ -3259,7 +3262,8 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                <table aria-label="Brought forword Losses setOff" class="table table-bordered table-striped table-hover"
+                  style="margin-top: 20px">
                   <thead>
                     <tr>
                       <th><b>Losses Of Last Year </b></th>
@@ -3456,7 +3460,8 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" *ngIf="finalCalculations?.ScheduleBFLA">
+                <table aria-label="Schedule BFLA" class="table table-bordered table-striped table-hover"
+                  *ngIf="finalCalculations?.ScheduleBFLA">
                   <thead>
                     <tr>
                       <th style="font-weight: bold">1. Sr. No</th>
@@ -4222,7 +4227,8 @@
                 </mat-expansion-panel-header>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="Deduction Under Chapter VI-A"
+                    class="table table-bordered table-striped table-hover" style="margin-top: 20px">
                     <tbody>
                       <tr>
                         <th><b>Particular</b></th>
@@ -4372,7 +4378,8 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                <table aria-label="Losses to be Carried Forward" class="table table-bordered table-striped table-hover"
+                  style="margin-top: 20px">
                   <thead>
                     <tr>
                       <th>
@@ -4538,7 +4545,8 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                <table aria-label="Losses to be Carried Forward (CFL)"
+                  class="table table-bordered table-striped table-hover" style="margin-top: 20px">
                   <thead>
                     <tr>
                       <th>
@@ -5474,7 +5482,8 @@
                 </mat-expansion-panel-header>
 
                 <div>
-                  <table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+                  <table aria-label="Total Tax" class="table table-bordered table-striped table-hover"
+                    style="margin-top: 20px">
                     <thead>
                       <tr>
                         <th><b>Particular</b></th>
@@ -5666,7 +5675,7 @@
                     </div>
                   </div>
                 </mat-expansion-panel-header>
-                <table class="table table-bordered table-striped table-hover accoTab">
+                <table aria-label="Tax Relief" class="table table-bordered table-striped table-hover accoTab">
                   <tbody>
                     <tr>
                       <th><b>Particular</b></th>
@@ -5759,7 +5768,7 @@
                     </div>
                   </div>
                 </mat-expansion-panel-header>
-                <table class="table table-bordered table-hover accoTab">
+                <table aria-label="Interest and Fee Payable" class="table table-bordered table-hover accoTab">
                   <tbody>
                     <tr>
                       <th><b>Particular</b></th>
@@ -5952,7 +5961,7 @@
                 <!-- SALARY TDS -->
                 <div>
                   <div class="bxHed">TDS (On Salary)</div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="Tax Paid" class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
@@ -6013,7 +6022,7 @@
                 <!-- OTHER THAN SALARY -->
                 <div>
                   <div class="bxHed">TDS (Other Than Salary)</div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="TDS Other Than Salary" class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
@@ -6132,7 +6141,8 @@
 
                 <div>
                   <div class="bxHed">TDS (Other Than Salary 26QB)</div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="TDS (Other Than salary 26QB)"
+                    class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="nameOfDeductor" style="font-weight: bold; width: 20%">
@@ -6192,7 +6202,7 @@
                 <!-- tcs -->
                 <div>
                   <div class="bxHed">TCS</div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="TCS" class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="nemeOfCollector" style="font-weight: bold; width: 20%">
@@ -6303,7 +6313,8 @@
                   <div class="bxHed">
                     Advance / Self Assessment Tax Paid
                   </div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table caria-label="Advance/Self Assessment Tax Paid"
+                    lass="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="BRSCode" style="font-weight: bold; width: 20%">
@@ -6466,7 +6477,7 @@
                   <div class="bxHed">
                     Self Assessment Tax Paid
                   </div>
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="Self Assessment Tax Paid" class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th id="BrsCode" style="font-weight: bold; width: 20%">
@@ -6536,7 +6547,7 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover">
+                <table aria-label="Schedule AMT" class="table table-bordered table-striped table-hover">
                   <thead>
                     <tr>
                       <th style="font-weight: bold" colspan="1">
@@ -6652,7 +6663,8 @@
                   AMT Credit Brought Forward)
                 </div>
 
-                <table class="table table-bordered table-striped table-hover" style="margin-bottom: 0px">
+                <table aria-label="Schedule AMT Details" class="table table-bordered table-striped table-hover"
+                  style="margin-bottom: 0px">
                   <thead>
                     <tr>
                       <th style="font-weight: bold" colspan="1">Sr. No</th>
@@ -6755,7 +6767,8 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" style="margin-bottom: 0px">
+                <table aria-label="Schedule ESOP" class="table table-bordered table-striped table-hover"
+                  style="margin-bottom: 0px">
                   <thead class="table-header">
                     <tr class="table-head">
                       <th id="srNo" style="font-weight: bold" colspan="1" rowspan="3">
@@ -6958,7 +6971,7 @@
                   </div>
                 </mat-expansion-panel-header>
 
-                <table class="table table-bordered table-striped table-hover" *ngFor="
+                <table aria-label="Schedule PTI" class="table table-bordered table-striped table-hover" *ngFor="
                         let pti of finalCalculations?.SchedulePTI
                           ?.SchedulePTIDtls;
                         let i = index
@@ -7348,7 +7361,7 @@
                 <div class="bxHed" *ngIf="finalCalculations?.ScheduleFSIDtls?.length > 0">
                   Schedule FSI
                 </div>
-                <table class="table table-bordered table-striped table-hover"
+                <table aria-label="Schedule FSI" class="table table-bordered table-striped table-hover"
                   *ngIf="finalCalculations?.ScheduleFSIDtls?.length > 0">
                   <thead>
                     <tr>
@@ -7517,7 +7530,7 @@
                       ">
                   Schedule TR (Summary of tax relief claimed)
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Schedule TR" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleTR1?.ScheduleTR?.length > 0
                       ">
                   <thead>
@@ -7583,7 +7596,7 @@
                   beneficial interest) at any time during the calendar year
                   ending as on 31st December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Schedule FA" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA?.DetailsForiegnBank
                           ?.length > 0
                       ">
@@ -7677,7 +7690,7 @@
                   beneficial interest) at any time during the calendar year
                   ending as on 31st December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Schedule FA Details" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA?.DtlsForeignCustodialAcc
                           ?.length > 0
                       ">
@@ -7782,7 +7795,8 @@
                   time during the calendar year ending as on 31st December,
                   2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Foreign Equity Debt Interest" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.ScheduleFA
                           ?.DtlsForeignEquityDebtInterest?.length > 0
                       ">
@@ -7904,7 +7918,8 @@
                   at any time during the calendar year ending as on 31st
                   December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Foreign cash Value Insurance" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.ScheduleFA
                           ?.DtlsForeignCashValueInsurance?.length > 0
                       ">
@@ -7997,7 +8012,7 @@
                   (including any beneficial interest) at any time during the
                   calendar year ending as on 31st December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Fanancial Interest" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA?.DetailsFinancialInterest
                           ?.length > 0
                       ">
@@ -8114,7 +8129,8 @@
                   beneficial interest) at any time during the calendar year
                   ending as on 31st December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="immovable Property Details" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.ScheduleFA?.DetailsImmovableProperty
                           ?.length > 0
                       ">
@@ -8224,7 +8240,7 @@
                   beneficial interest) at any time during the calendar year
                   ending as on 31st December, 2022
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Other Asset Details" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA?.DetailsOthAssets
                           ?.length > 0
                       ">
@@ -8333,7 +8349,8 @@
                   during the calendar year ending as on 31st December, 2022
                   and which has not been included in A to D above.
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Signing Authority Account Details"
+                  class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA
                           ?.DetailsOfAccntsHvngSigningAuth?.length > 0
                       ">
@@ -8472,7 +8489,7 @@
                   outside India, in which you are a trustee, beneficiary or
                   settlor
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Details of trusts" class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA
                           ?.DetailsOfTrustOutIndiaTrustee?.length > 0
                       ">
@@ -8612,7 +8629,8 @@
                   above and, (ii) income under the head business or
                   profession
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Other Income outside the India"
+                  class="table table-bordered table-striped table-hover" *ngIf="
                         finalCalculations?.ScheduleFA
                           ?.DetailsOfOthSourcesIncOutsideIndia?.length > 0
                       ">
@@ -8755,7 +8773,7 @@
                         (ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails) ||
                         passThroughInc
                       ">
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="Exempt Income with json" class="table table-bordered table-striped table-hover">
                     <tbody>
                       <tr>
                         <th><b>Particular</b></th>
@@ -8797,7 +8815,7 @@
                   </table>
                 </div>
                 <div *ngIf="!ITR_JSON.itrSummaryJson">
-                  <table class="table table-bordered table-striped table-hover">
+                  <table aria-label="Exempt Income without Jsom" class="table table-bordered table-striped table-hover">
                     <tbody>
                       <tr>
                         <th><b>Particular</b></th>
@@ -8853,7 +8871,8 @@
                       ">
                   Partnership firm details
                 </div>
-                <table class="table table-bordered table-striped table-hover" *ngIf="
+                <table aria-label="Partnership Firm Details" class="table table-bordered table-striped table-hover"
+                  *ngIf="
                         finalCalculations?.exemptIncome?.partnerFirms?.length >
                         0
                       ">

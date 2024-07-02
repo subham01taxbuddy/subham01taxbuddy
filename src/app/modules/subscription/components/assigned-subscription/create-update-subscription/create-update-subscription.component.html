@@ -229,7 +229,8 @@
                           (click)="applySmeSelectedPlan(smeSelectedPlanId)">
                           Apply
                         </button> -->
-                        <app-custom-button style="margin-top: 25px;" class="save-user-info" [disabled]="loading" [actions]="[applySmeSelectedPlan]" [actionParams]="[[smeSelectedPlanId]]">
+                        <app-custom-button style="margin-top: 25px;" class="save-user-info" [disabled]="loading"
+                          [actions]="[applySmeSelectedPlan]" [actionParams]="[[smeSelectedPlanId]]">
                           Apply
                         </app-custom-button>
                         &nbsp;
@@ -276,7 +277,7 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="breakup-container-2">
-                  <table>
+                  <table aria-label="Price Plan Breakup">
                     <thead>
                       <tr>
                         <th class="bdrBtm1">Particulars</th>
@@ -356,7 +357,8 @@
                           [disabled]="!smeSelectedPlanId">
                           Apply Code
                         </button> -->
-                        <app-custom-button class="save-all"  [disabled]="!smeSelectedPlanId" [actions]="[applyPromo,onNgModelChange]" [actionParams]="[[smeSelectedPlanId]]">
+                        <app-custom-button class="save-all" [disabled]="!smeSelectedPlanId"
+                          [actions]="[applyPromo,onNgModelChange]" [actionParams]="[[smeSelectedPlanId]]">
                           Apply Code
                         </app-custom-button>
                       </div>
@@ -365,7 +367,8 @@
                           (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
                           <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
                         </button> -->
-                        <app-custom-button type="reset" class="delete-icon-btn"  [disabled]="!selectedPromoCode" [actions]="[removePromoCode,onNgModelChange]" [actionParams]="[[smeSelectedPlanId]]">
+                        <app-custom-button type="reset" class="delete-icon-btn" [disabled]="!selectedPromoCode"
+                          [actions]="[removePromoCode,onNgModelChange]" [actionParams]="[[smeSelectedPlanId]]">
                           <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
                         </app-custom-button>
                       </div>
@@ -391,18 +394,14 @@
                         </mat-form-field>
                       </div>
                       <div class="col-sm-3">
-                        <!-- <button class="save-user-info" (click)="applyCouponCode(smeSelectedPlanId)">
-                          Apply Coupon Code
-                        </button> -->
-                        <app-custom-button class="save-user-info" [actions]="[applyCouponCode]" [actionParams]="[[smeSelectedPlanId]]">
+                        <app-custom-button class="save-user-info" [actions]="[applyCouponCode]"
+                          [actionParams]="[[smeSelectedPlanId]]">
                           Apply Coupon Code
                         </app-custom-button>
                       </div>
                       <div class="col-sm-1">
-                        <!-- <button class="delete-icon-btn" (click)="removeCouponCode(smeSelectedPlanId)" type="reset">
-                          <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
-                        </button> -->
-                        <app-custom-button type="reset" class="delete-icon-btn" [actions]="[removeCouponCode]" [actionParams]="[[smeSelectedPlanId]]">
+                        <app-custom-button type="reset" class="delete-icon-btn" [actions]="[removeCouponCode]"
+                          [actionParams]="[[smeSelectedPlanId]]">
                           <i class="fa fa-trash fa-xs" aria-hidden="true"></i>
                         </app-custom-button>
                       </div>
@@ -418,7 +417,7 @@
               <div class="col-sm-12">
                 <div class="breakup-container-2">
 
-                  <table>
+                  <table aria-label="price Details">
                     <thead>
                       <tr>
                         <th class="bdrBtm1">Final Amount To Pay</th>
@@ -473,7 +472,7 @@
                   </div>
 
                   <!-- start refund details -->
-                  <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
+                  <table aria-label="Refund Details" class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
                     <tbody>
                       <tr>
                         <th id="refundDetails">Refund Details</th>
@@ -597,22 +596,14 @@
               </button>
             </div>
             <div style=" flex: 1 0 0; text-align: right;">
-              <!-- <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
-                *ngIf="userSubscription?.payableSubscriptionAmount >= 0">
-                <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate
-                Invoice' : 'Save'}}
-              </button>
-              <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
-                *ngIf="userSubscription?.payableSubscriptionAmount < 0">
-                <i class="fas fa-wallet"></i> Save & Issue Refund Request
-              </button> -->
-
-              <app-custom-button  *ngIf="userSubscription?.payableSubscriptionAmount >= 0" class="save-all" [disabled]="loading" [actions]="[updateSubscription]">
+              <app-custom-button *ngIf="userSubscription?.payableSubscriptionAmount >= 0" class="save-all"
+                [disabled]="loading" [actions]="[updateSubscription]">
                 <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate
                 Invoice' : 'Save'}}
               </app-custom-button>
 
-              <app-custom-button *ngIf="userSubscription?.payableSubscriptionAmount < 0" class="save-all" [disabled]="loading" [actions]="[updateSubscription]">
+              <app-custom-button *ngIf="userSubscription?.payableSubscriptionAmount < 0" class="save-all"
+                [disabled]="loading" [actions]="[updateSubscription]">
                 <i class="fas fa-wallet"></i> Save & Issue Refund Request
               </app-custom-button>
             </div>
