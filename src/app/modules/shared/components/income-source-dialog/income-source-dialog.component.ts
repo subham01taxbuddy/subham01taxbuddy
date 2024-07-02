@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {UtilsService} from "../../../../services/utils.service";
 
 @Component({
   selector: 'app-income-source-dialog',
@@ -11,7 +12,8 @@ export class IncomeSourceDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<IncomeSourceDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private utils: UtilsService
   ) {}
 
   onNoClick(): void {
@@ -27,6 +29,10 @@ export class IncomeSourceDialogComponent {
   }
 
   saveReason(): void {
-    this.dialogRef.close({ action: 'continue', reason: this.reason });
+    if(this.utils.isNonEmpty(this.reason)) {
+      this.dialogRef.close({action: 'continue', reason: this.reason});
+    } else {
+      this.utils.showSnackBar("Reason is mandatory. Please fill in reason");
+    }
   }
 }
