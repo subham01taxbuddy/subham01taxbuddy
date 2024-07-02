@@ -264,7 +264,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     }
   }
 
-  applyCouponCode(selectedPlan) {
+  applyCouponCode=(selectedPlan):Promise<any> =>{
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = false;
     if (this.selectedCouponCodeSubscriptionIds?.length === 0)
@@ -284,7 +284,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       removeCouponCode: this.removeCouponCodeFlag,
       couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
-    this.itrService.postMethod(param, request).subscribe((res: any) => {
+    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -297,10 +297,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.utilsService.showSnackBar(
         `Coupon Code applied successfully!`
       );
-    });
+    }).catch(()=>{
+      this.loading =false;
+    })
   }
 
-  removeCouponCode(selectedPlan) {
+  removeCouponCode=(selectedPlan):Promise<any> => {
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = true;
     this.couponCodeAppliedFlag = false;
@@ -316,7 +318,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
     };
 
-    this.itrService.postMethod(param, request).subscribe((res: any) => {
+    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -546,7 +548,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   isPromoRemoved = false;
-  applyPromo(selectedPlan) {
+  applyPromo=(selectedPlan):Promise<any> => {
     this.smeSelectedPlanId = selectedPlan;
     if (this.selectedCouponCodeSubscriptionIds.length === 0)
       this.couponCodeAppliedFlag = true;
@@ -566,7 +568,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       removeCouponCode: this.removeCouponCodeFlag,
       couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
-    this.itrService.postMethod(param, request).subscribe((res: any) => {
+    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -580,10 +582,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} applied successfully!`
       );
-    });
+    }).catch(()=>{
+      this.loading = false;
+      this.utilsService.showSnackBar('Something went wrong!');
+    })
   }
 
-  removePromoCode(selectedPlan) {
+  removePromoCode=(selectedPlan):Promise<any> => {
     this.smeSelectedPlanId = selectedPlan;
     if (this.selectedCouponCodeSubscriptionIds.length === 0)
       this.removeCouponCodeFlag = true;
@@ -599,7 +604,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       removeCouponCode: this.removeCouponCodeFlag,
       couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
-    this.itrService.postMethod(param, request).subscribe((res: any) => {
+    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -613,7 +618,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.getRefundProcessedInvoices();
       this.setFinalPricing();
       this.setExistingCouponCode();
-    });
+    }).catch(()=>{
+      this.loading = false;
+    })
   }
 
   getExactPromoDiscount() {
@@ -972,7 +979,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     );
   }
 
-  applySmeSelectedPlan(selectedPlan) {
+  applySmeSelectedPlan=(selectedPlan):Promise<any> =>{
     this.loading = true;
     this.smeSelectedPlanId = selectedPlan;
     if (this.selectedCouponCodeSubscriptionIds.length === 0)
@@ -990,7 +997,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       removeCouponCode: this.removeCouponCodeFlag
     };
 
-    this.itrService.postMethod(param, request).subscribe(
+    return this.itrService.postMethod(param, request).toPromise().then(
       (response: any) => {
         this.loading = false;
         console.log('SME Selected plan:', response);
@@ -1041,7 +1048,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       (error) => {
         this.loading = false;
       }
-    );
+    ).catch(()=>{
+      this.loading = false;
+    })
   }
 
   onUpdateGstNoValidation() {
@@ -1203,7 +1212,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     });
   }
 
-  updateUserDetails() {
+  updateUserDetails=():Promise<any> => {
     let param = `/profile/${this.userSubscription.userId}?serviceType=${this.serviceType}`;
     if (this.personalInfoForm.controls['gstNo'].value) {
       if (!this.selectedUserInfo.gstDetails) {
@@ -1285,7 +1294,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.loading = true;
     let requestData = JSON.parse(JSON.stringify(reqBody));
     console.log('requestData', requestData);
-    this.userService.putMethod(param, reqBody).subscribe(
+    return this.userService.putMethod(param, reqBody).toPromise().then(
       (res: any) => {
         this.loading = false;
         this.loading = false;
@@ -1295,128 +1304,124 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.toastMessage.alert('error', 'failed to update.');
         this.loading = false;
       }
-    );
+    ).catch(()=>{
+      this.loading = false;
+    })
   }
 
-  updateSubscription() {
-    this.loading = true;
-    this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
-
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        return;
-      } else {
-        this.loading = true;
-        if (this.selectedCouponCodeSubscriptionIds.length > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice => invoice.paymentStatus === 'Paid'))) {
-          this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
-          this.loading = false;
-          return;
-        }
-
-        if (this.service === 'ITRU' || this.service === 'ITR') {
-          if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined' || this.assessmentYear.value === 'undefined') {
+  updateSubscription = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
             this.loading = false;
-            this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
-            return;
-          }
-        }
-        if (this.showScheduledFields === true && (this.scheduleCallService.value === '' || typeof this.scheduleCallService.value === 'undefined' || this.scheduleCallService.value === 'undefined')) {
-          this.loading = false;
-          this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call ');
-          return;
-        }
-        if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
-          console.log(
-            'selectedPlanInfo -> ',
-            this.userSubscription.smeSelectedPlan.planId
-          );
-
-          if (!this.couponCodeAppliedFlag)
-            this.selectedCouponCodeSubscriptionIds = [];
-
-          let param = '/subscription';
-          let reqBody: any = {
-            userId: this.userSubscription.userId,
-            planId: this.userSubscription.smeSelectedPlan.planId,
-            selectedBy: 'SME',
-            smeUserId: this?.loggedInSme[0]?.userId,
-            item: {
-              itemDescription: this.description?.value,
-              quantity: this.userSubscription?.item[0]?.quantity,
-              rate: this?.userSubscription?.payableSubscriptionAmount,
-              cgstPercent: this?.userSubscription?.cgstPercent,
-              cgstAmount: this?.userSubscription?.cgstAmount,
-              igstAmount: this?.userSubscription?.igstAmount,
-              igstPercent: this?.userSubscription?.igstPercent,
-              sgstPercent: this?.userSubscription?.sgstPercent,
-              sgstAmount: this?.userSubscription?.sgstAmount,
-              amount: this?.userSubscription?.payableSubscriptionAmount,
-              sacCode: this.sacNumber.value,
-              financialYear: this.assessmentYear.value,
-              service: this.service,
-              serviceDetail: this.serviceDetail,
-            },
-            reminderEmail: this.reminderEmail.value,
-            reminderMobileNumber: this.reminderMobileNumber.value,
-            subscriptionId: this.subscriptionObj.subscriptionId,
-            removePromoCode: this.isPromoRemoved,
-            promoCode: this.selectedPromoCode,
-            couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
-            removeCouponCode: this.removeCouponCodeFlag
-          };
-
-          if (this.scheduleCallService.value) {
-            reqBody.serviceType = this.scheduleCallService.value
-          }
-
-          if (this.scheduleCallType.value) {
-            reqBody.item.scheduleCallType = this.scheduleCallType.value
-          }
-          console.log('Req Body: ', reqBody);
-          let requestData = JSON.parse(JSON.stringify(reqBody));
-          this.itrService.postMethod(param, requestData).subscribe(
-            (res: any) => {
+            reject(res.error);
+          } else {
+            if (this.selectedCouponCodeSubscriptionIds.length > 0 && (this.userSubscription?.payableSubscriptionAmount < 0 || this.userSubscription?.invoiceDetail?.some(invoice => invoice.paymentStatus === 'Paid'))) {
+              this.utilsService.showSnackBar("If you apply a coupon code, it is not possible to generate a subscription with a negative amount.");
               this.loading = false;
-              let invoiceTypeDetails;
-              if (this.invoiceAmount > this.userSubscription?.payableSubscriptionAmount) {
-                invoiceTypeDetails = 'Downgrade'
-              } else {
-                invoiceTypeDetails = 'Upgrade'
-              }
+              reject("Negative amount with coupon code");
+            } else if (this.service === 'ITRU' || this.service === 'ITR') {
+              if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined') {
+                this.loading = false;
+                this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
+                reject("Missing Financial Year");
+              } else if (this.showScheduledFields === true && (this.scheduleCallService.value === '' || typeof this.scheduleCallService.value === 'undefined')) {
+                this.loading = false;
+                this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call');
+                reject("Missing Service Type");
+              } else if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
+                console.log('selectedPlanInfo -> ', this.userSubscription.smeSelectedPlan.planId);
 
-              this.toastMessage.alert('success', 'Subscription created successfully.');
-              this.location.back();
-            },
-            (error) => {
-              this.loading = false;
-              if (error.error.error === 'BAD_REQUEST') {
-                this.toastMessage.alert('error', error.error.message);
+                if (!this.couponCodeAppliedFlag) this.selectedCouponCodeSubscriptionIds = [];
+
+                let param = '/subscription';
+                let reqBody: any = {
+                  userId: this.userSubscription.userId,
+                  planId: this.userSubscription.smeSelectedPlan.planId,
+                  selectedBy: 'SME',
+                  smeUserId: this?.loggedInSme[0]?.userId,
+                  item: {
+                    itemDescription: this.description?.value,
+                    quantity: this.userSubscription?.item[0]?.quantity,
+                    rate: this?.userSubscription?.payableSubscriptionAmount,
+                    cgstPercent: this?.userSubscription?.cgstPercent,
+                    cgstAmount: this?.userSubscription?.cgstAmount,
+                    igstAmount: this?.userSubscription?.igstAmount,
+                    igstPercent: this?.userSubscription?.igstPercent,
+                    sgstPercent: this?.userSubscription?.sgstPercent,
+                    sgstAmount: this?.userSubscription?.sgstAmount,
+                    amount: this?.userSubscription?.payableSubscriptionAmount,
+                    sacCode: this.sacNumber.value,
+                    financialYear: this.assessmentYear.value,
+                    service: this.service,
+                    serviceDetail: this.serviceDetail,
+                  },
+                  reminderEmail: this.reminderEmail.value,
+                  reminderMobileNumber: this.reminderMobileNumber.value,
+                  subscriptionId: this.subscriptionObj.subscriptionId,
+                  removePromoCode: this.isPromoRemoved,
+                  promoCode: this.selectedPromoCode,
+                  couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
+                  removeCouponCode: this.removeCouponCodeFlag
+                };
+
+                if (this.scheduleCallService.value) reqBody.serviceType = this.scheduleCallService.value;
+                if (this.scheduleCallType.value) reqBody.item.scheduleCallType = this.scheduleCallType.value;
+
+                console.log('Req Body: ', reqBody);
+                let requestData = JSON.parse(JSON.stringify(reqBody));
+
+                this.itrService.postMethod(param, requestData).subscribe(
+                  (res: any) => {
+                    this.loading = false;
+                    let invoiceTypeDetails = this.invoiceAmount > this.userSubscription?.payableSubscriptionAmount ? 'Downgrade' : 'Upgrade';
+
+                    this.toastMessage.alert('success', 'Subscription created successfully.');
+                    this.location.back();
+                    resolve('resolved');
+                  },
+                  (error) => {
+                    this.loading = false;
+                    if (error.error.error === 'BAD_REQUEST') {
+                      this.toastMessage.alert('error', error.error.message);
+                    } else {
+                      this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+                    }
+                    this.router.navigate(['/subscription/assigned-subscription'], {
+                      queryParams: { fromEdit: true },
+                    });
+                    reject(error);
+                  }
+                );
               } else {
-                this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+                this.toastMessage.alert('error', 'Please select Plan & Pincode');
+                this.loading = false;
+                reject("Missing Plan & Pincode");
               }
-              this.router.navigate(['/subscription/assigned-subscription'], {
-                queryParams: { fromEdit: true },
-              })
             }
-          );
-        } else {
-          this.toastMessage.alert('error', 'Please select Plan & Pincode');
+          }
+        },
+        (error) => {
           this.loading = false;
+          if (error.error && error.error.error) {
+            this.utilsService.showSnackBar(error.error.error);
+            this.router.navigate(['/subscription/assigned-subscription'], {
+              queryParams: { fromEdit: true },
+            });
+            reject(error.error.error);
+          } else {
+            this.utilsService.showSnackBar("An unexpected error occurred.");
+            reject("Unexpected error");
+          }
         }
-      }
-    }, (error) => {
-      this.loading = false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.router.navigate(['/subscription/assigned-subscription'], {
-          queryParams: { fromEdit: true },
-        })
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
+      );
     });
   }
+
 
   ngOnDestroy() {
     sessionStorage.removeItem('subscriptionObject');
@@ -1478,8 +1483,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     });
   }
 
-  onNgModelChange() {
-    this.changesMade = true;
+  onNgModelChange=():Promise<any> =>{
+    return new Promise((resolve) => {
+      console.log('NgModel changed');
+      this.changesMade = true;
+    });
   }
 
   cancel() {

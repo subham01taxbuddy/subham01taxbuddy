@@ -655,8 +655,8 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   }
   updatePrincipleName() {
     this.utilsService.getFilersList();
-    this.smeListGridOptions.api.setColumnDefs(
-      this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
+    this.smeListGridOptions?.api?.setColumnDefs(
+      this?.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
   }
 
   smeCreateColumnDef(allFilerList, itrPlanList) {
@@ -1156,6 +1156,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
   resetFilters() {
     this.cacheManager.clearCache();
+    this.config.currentPage = 1;
     this.clearUserFilter = moment.now().valueOf();
     this.selectRole.setValue(null);
     this.selectedLangControl.setValue(null);
@@ -1163,7 +1164,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     const loggedInSmeUserId = this.loggedInSme[0].userId
     this.searchParam.page = 0;
     this.searchParam.pageSize = 15;
-    this.config.currentPage = 1;
     this.key = null;
     this.searchVal = null;
     this.showError = false;

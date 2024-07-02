@@ -124,47 +124,51 @@ export class MoreOptionsDialogComponent implements OnInit {
   //   })
   // }
 
-  deleteUser() {
-    // this.isDisable = true;
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        const param =
-        `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
-      this.userMsService.deleteMethod(param).subscribe(
+  deleteUser = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
         (res: any) => {
-          if (res.success) {
-            this.utilsService.showSnackBar(`User deleted successfully!`);
-            // this.isDisable = true;
-            this.dialogRef.close(true);
-
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
+            this.dialogRef.close({ event: 'close', data: 'success' });
+            return reject(res.error);
           } else {
-            this.utilsService.showSnackBar(res.message);
-            // this.isDisable = false;
+            const param = `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+            this.userMsService.deleteMethod(param).toPromise().then(
+              (res: any) => {
+                if (res.success) {
+                  this.utilsService.showSnackBar(`User deleted successfully!`);
+                  this.dialogRef.close(true);
+                  resolve(res);
+                } else {
+                  this.utilsService.showSnackBar(res.message);
+                  reject(res.message);
+                }
+              },
+              (error) => {
+                this.utilsService.showSnackBar(error.message);
+                this.dialogRef.close({ event: 'close', data: 'success' });
+                reject(error);
+              }
+            ).catch((error) => {
+              reject(error);
+            });
           }
         },
         (error) => {
-          // this.isDisable = false;
-          this.utilsService.showSnackBar(error.message);
-          this.dialogRef.close({ event: 'close', data: 'success' });
+          if (error.error && error.error.error) {
+            this.utilsService.showSnackBar(error.error.error);
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          } else {
+            this.utilsService.showSnackBar("An unexpected error occurred.");
+          }
+          reject(error);
         }
       );
-      }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
     });
+  };
 
-  }
 
   goToInvoice() {
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {

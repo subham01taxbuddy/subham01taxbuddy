@@ -239,6 +239,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     this.objSrn = obj ? obj.srn : srn;
     const assetsForm = this.fb.group({
       srn: [obj ? obj.srn : srn],
+      brokerName: [(obj && obj?.brokerName !== 'AIS') ? obj.brokerName : 'Manual'],
       hasEdit: [obj ? obj.hasEdit : false],
       purchaseDate: [obj ? obj.purchaseDate : '', [Validators.required]],
       sellDate: [obj ? obj.sellDate : '', [Validators.required]],

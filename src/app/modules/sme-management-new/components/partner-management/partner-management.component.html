@@ -173,10 +173,14 @@
               </mat-form-field>
             </div>
             <div class="row mt-3 verifyBank">
-              <button class="col-2 verify-button "
+              <!-- <button class="col-2 verify-button "
                 [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
                 (click)="verifyBankDetails()">verify
-              </button>
+              </button> -->
+              <app-custom-button class="col-2 verify-button" [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
+                    [actions]="[verifyBankDetails]">
+                    verify
+              </app-custom-button>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xm-12 mt-3">
               <mat-label> PAN Number * </mat-label>
@@ -323,7 +327,10 @@
             <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
           </div>
           <div style=" flex: 1 0 0; text-align: right;">
-            <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button>
+            <!-- <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button> -->
+            <app-custom-button class="save-all"  [actions]="[updateSmeDetails]">
+              Save & Go Back to Table
+            </app-custom-button>
           </div>
         </div>
 

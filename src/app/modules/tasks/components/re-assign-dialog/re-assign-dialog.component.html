@@ -20,6 +20,9 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</div><button style="float: ri
     </div>
   </div>
   <div class="col-sm-3">
-    <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assign</button>
+    <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assign</button> -->
+    <app-custom-button class="tbd-btn save-btn spsTp2"  [actions]="[reAssign]">
+      Re-Assign
+    </app-custom-button>
   </div>
 </div>

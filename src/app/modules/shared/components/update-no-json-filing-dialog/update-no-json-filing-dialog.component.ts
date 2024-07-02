@@ -59,7 +59,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     });
   }
 
-  updateManualDetails() {
+  updateManualDetails=():Promise<any> =>{
     const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);
     const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);
     if (ackNumberLastTwoDigits !== assessmentYearLastTwoDigits) {
@@ -112,7 +112,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
         const param =
           `/itr?userId=${this.data.userId}&assessmentYear=${this.data.assessmentYear}` +
           itrFilter;
-        this.itrMsService.getMethod(param).subscribe(
+        return this.itrMsService.getMethod(param).toPromise().then(
           async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
