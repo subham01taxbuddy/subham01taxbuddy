@@ -1,4 +1,3 @@
-<!--previous year right side summary -->
 <aside class="aside-right">
     <button class="open-pre-button" *ngIf="!displayPanel" (click)="openPanel()">
         <img alt="summary" class="icoSum" src="assets/img/new/summary.png">
@@ -13,7 +12,7 @@
                 </div>
             </div>
             <div class="space" *ngIf="type === 'salary'">
-                <table class="table table-borderless f-size">
+                <table aria-label="salary details" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="particulars">Particulars</th>
@@ -76,7 +75,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'houseProperty'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Hp Details" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="hp">HP</th>
@@ -99,7 +98,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'otherIncome'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Other Income" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="sourceType">Source Type</th>
@@ -134,7 +133,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'presumptiveIncome'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Presumptive Income" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th>Type Of Presumptive Income</th>
@@ -157,7 +156,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'profitLossAccount'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Profit Loss Account" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="nonSpeculativeIncome">Non Speculative Income</th>
@@ -212,7 +211,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'listedEquityShares'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Listed Equity Shares" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -258,7 +257,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'otherAssets'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Other Assets" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -313,7 +312,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'unlistedEquityShares'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Unlisted Equity Shares" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -368,7 +367,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'zeroCouponBonds'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Zero Coupon Bonds" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -419,7 +418,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'indexedBonds'">
-                <table class="table table-borderless f-size">
+                <table aria-label="indexed Bonds" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -471,7 +470,7 @@
 
 
             <div class="space" *ngIf="type === 'listedBonds'">
-                <table class="table table-borderless f-size">
+                <table aria-label="Listed Bonds" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -522,7 +521,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'unlistedBonds'">
-                <table class="table table-borderless f-size">
+                <table  aria-label="unlisted Bonds" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="gainType">Gain Type</th>
@@ -573,7 +572,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'landAndBuilding'">
-                <table class="table table-borderless f-size">
+                <table  aria-label="Land and Building" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="typeOfCapitalGain">Type of Capital Gain</th>
@@ -624,7 +623,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'taxesPaid'">
-                <table class="table table-borderless f-size">
+                <table  aria-label="Taxes Paid" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="particular">Particulars</th>
@@ -687,7 +686,7 @@
             </div>
 
             <div class="space" *ngIf="type === 'scheduleAL'">
-                <table class="table table-borderless f-size">
+                <table  aria-label="Schedule Al" class="table table-borderless f-size">
                     <tbody>
                         <tr class="border-bottom">
                             <th id="particular">Particulars</th>
