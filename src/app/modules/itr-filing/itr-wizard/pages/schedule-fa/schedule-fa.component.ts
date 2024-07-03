@@ -1385,7 +1385,7 @@ export class ScheduleFaComponent implements OnInit {
 
   displayFn = (country: any): string => {
     if (country) {
-      let b = this.countryNameCodeList?.filter(o => o.code === country)[0];
+      let b = this.countryCodeList?.filter(o => o.code.toString() === country.toString())[0];
       return b ? `${b?.code}:${b?.name}` : '';
     } else {
       return '';
