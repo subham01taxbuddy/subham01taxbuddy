@@ -2205,62 +2205,244 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  gotoSummary() {
-    this.loading = true;
+  // gotoSummary() {
+  //   this.loading = true;
 
-    //section89
-    this.updatingReliefSections(
-      'section89',
-      'acknowledgement89',
-      'acknowledgementDate89'
-    );
+  //   //section89
+  //   this.updatingReliefSections(
+  //     'section89',
+  //     'acknowledgement89',
+  //     'acknowledgementDate89'
+  //   );
 
-    // section90
-    this.updatingReliefSections(
-      'section90',
-      'acknowledgement90',
-      'acknowledgementDate90'
-    );
+  //   // section90
+  //   this.updatingReliefSections(
+  //     'section90',
+  //     'acknowledgement90',
+  //     'acknowledgementDate90'
+  //   );
 
-    // section91
-    this.updatingReliefSections(
-      'section91',
-      'acknowledgement91',
-      'acknowledgementDate91'
-    );
+  //   // section91
+  //   this.updatingReliefSections(
+  //     'section91',
+  //     'acknowledgement91',
+  //     'acknowledgementDate91'
+  //   );
 
-    // setting other
-    this.ITR_JSON.optionForCurrentAY =
-      this.regimeSelectionForm.getRawValue().optionForCurrentAY;
+  //   // setting other
+  //   this.ITR_JSON.optionForCurrentAY =
+  //     this.regimeSelectionForm.getRawValue().optionForCurrentAY;
 
-    if (this.itrType === '3' || this.itrType === '4') {
-      this.ITR_JSON.everOptedOutOfNewRegime =
-        this.regimeSelectionForm.value.everOptedOutOfNewRegime;
+  //   if (this.itrType === '3' || this.itrType === '4') {
+  //     this.ITR_JSON.everOptedOutOfNewRegime =
+  //       this.regimeSelectionForm.value.everOptedOutOfNewRegime;
 
-      this.ITR_JSON.everOptedNewRegime =
-        this.regimeSelectionForm.value.everOptedNewRegime;
-    }
+  //     this.ITR_JSON.everOptedNewRegime =
+  //       this.regimeSelectionForm.value.everOptedNewRegime;
+  //   }
 
-    this.ITR_JSON.regime =
-      this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
+  //   this.ITR_JSON.regime =
+  //     this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
 
-    // saving - calling the save api
-    if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
-      this.submitted = false;
+  //   // saving - calling the save api
+  //   if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
+  //     this.submitted = false;
 
-      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
-        this.ITR_JSON = JSON.parse(
-          sessionStorage.getItem(AppConstants.ITR_JSON)
-        );
-        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
+  //     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+  //       this.ITR_JSON = JSON.parse(
+  //         sessionStorage.getItem(AppConstants.ITR_JSON)
+  //       );
+  //       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+  //         sessionStorage.setItem(
+  //           AppConstants.ITR_JSON,
+  //           JSON.stringify(this.ITR_JSON)
+  //         );
+  //         this.loading = false;
+  //         this.nextBreadcrumb.emit('Summary');
+  //         this.router.navigate(['/itr-filing/itr/summary']);
+  //         console.log(this.itrType, 'ITR Type as per JSON');
+  //       } else {
+  //         //save ITR object
+  //         this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+  //           (result) => {
+  //             sessionStorage.setItem(
+  //               AppConstants.ITR_JSON,
+  //               JSON.stringify(this.ITR_JSON)
+  //             );
+  //             this.loading = false;
+  //             this.utilsService.showSnackBar(
+  //               'Regime selection updated successfully.'
+  //             );
+  //             this.nextBreadcrumb.emit('Summary');
+  //             this.router.navigate(['/itr-filing/itr/summary']);
+  //           },
+  //           (error) => {
+  //             this.utilsService.showSnackBar(
+  //               'Failed to update regime selection.'
+  //             );
+  //             this.loading = false;
+  //           }
+  //         );
+  //       }
+  //     } else {
+  //       //save ITR object
+  //       this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+  //         (result) => {
+  //           sessionStorage.setItem(
+  //             AppConstants.ITR_JSON,
+  //             JSON.stringify(this.ITR_JSON)
+  //           );
+  //           this.loading = false;
+  //           this.utilsService.showSnackBar(
+  //             'Regime selection updated successfully.'
+  //           );
+  //           this.nextBreadcrumb.emit('Summary');
+  //           this.router.navigate(['/itr-filing/itr/summary']);
+  //         },
+  //         (error) => {
+  //           this.utilsService.showSnackBar(
+  //             'Failed to update regime selection.'
+  //           );
+  //           this.loading = false;
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     this.submitted = true;
+  //     this.utilsService.showSnackBar(
+  //       'Please fill all required details to continue'
+  //     );
+  //     Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
+  //       const control = this.regimeSelectionForm.get(key);
+
+  //       if (control instanceof UntypedFormGroup) {
+  //         Object.keys(control.controls).forEach((nestedKey) => {
+  //           const nestedControl = control.get(nestedKey);
+  //           const controlErrors: ValidationErrors = nestedControl.errors;
+
+  //           if (controlErrors != null) {
+  //             console.log('Key control: ' + key + '.' + nestedKey);
+
+  //             Object.keys(controlErrors).forEach((keyError) => {
+  //               console.log(
+  //                 'Key control: ' +
+  //                 key +
+  //                 '.' +
+  //                 nestedKey +
+  //                 ', keyError: ' +
+  //                 keyError +
+  //                 ', err value: ',
+  //                 controlErrors[keyError]
+  //               );
+  //             });
+  //           }
+  //         });
+  //       }
+
+  //       // const controlErrors: ValidationErrors = this.regimeSelectionForm.get([
+  //       //   key,
+  //       // ]).errors;
+  //       // if (controlErrors != null) {
+  //       //   console.log(this.regimeSelectionForm);
+  //       //   Object.keys(controlErrors).forEach((keyError) => {
+  //       //     console.log(
+  //       //       'Key control: ' +
+  //       //         key +
+  //       //         ', keyError: ' +
+  //       //         keyError +
+  //       //         ', err value: ',
+  //       //       controlErrors[keyError]
+  //       //     );
+  //       //   });
+  //       // }
+  //     });
+  //     this.loading = false;
+  //   }
+  // }
+
+  gotoSummary = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+
+      //section89
+      this.updatingReliefSections(
+        'section89',
+        'acknowledgement89',
+        'acknowledgementDate89'
+      );
+
+      // section90
+      this.updatingReliefSections(
+        'section90',
+        'acknowledgement90',
+        'acknowledgementDate90'
+      );
+
+      // section91
+      this.updatingReliefSections(
+        'section91',
+        'acknowledgement91',
+        'acknowledgementDate91'
+      );
+
+      // setting other
+      this.ITR_JSON.optionForCurrentAY =
+        this.regimeSelectionForm.getRawValue().optionForCurrentAY;
+
+      if (this.itrType === '3' || this.itrType === '4') {
+        this.ITR_JSON.everOptedOutOfNewRegime =
+          this.regimeSelectionForm.value.everOptedOutOfNewRegime;
+
+        this.ITR_JSON.everOptedNewRegime =
+          this.regimeSelectionForm.value.everOptedNewRegime;
+      }
+
+      this.ITR_JSON.regime =
+        this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
+
+      // saving - calling the save api
+      if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
+        this.submitted = false;
+
+        if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+          this.ITR_JSON = JSON.parse(
+            sessionStorage.getItem(AppConstants.ITR_JSON)
           );
-          this.loading = false;
-          this.nextBreadcrumb.emit('Summary');
-          this.router.navigate(['/itr-filing/itr/summary']);
-          console.log(this.itrType, 'ITR Type as per JSON');
+          if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+            this.loading = false;
+            this.nextBreadcrumb.emit('Summary');
+            this.router.navigate(['/itr-filing/itr/summary']);
+            resolve();
+            return;
+          } else {
+            //save ITR object
+            this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
+              (result) => {
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_JSON)
+                );
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Regime selection updated successfully.'
+                );
+                this.nextBreadcrumb.emit('Summary');
+                this.router.navigate(['/itr-filing/itr/summary']);
+                resolve();
+              },
+              (error) => {
+                this.utilsService.showSnackBar(
+                  'Failed to update regime selection.'
+                );
+                this.loading = false;
+                reject(error);
+              }
+            );
+          }
         } else {
           //save ITR object
           this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
@@ -2275,89 +2457,53 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               );
               this.nextBreadcrumb.emit('Summary');
               this.router.navigate(['/itr-filing/itr/summary']);
+              resolve();
             },
             (error) => {
               this.utilsService.showSnackBar(
                 'Failed to update regime selection.'
               );
               this.loading = false;
+              reject(error);
             }
           );
         }
       } else {
-        //save ITR object
-        this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-          (result) => {
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_JSON)
-            );
-            this.loading = false;
-            this.utilsService.showSnackBar(
-              'Regime selection updated successfully.'
-            );
-            this.nextBreadcrumb.emit('Summary');
-            this.router.navigate(['/itr-filing/itr/summary']);
-          },
-          (error) => {
-            this.utilsService.showSnackBar(
-              'Failed to update regime selection.'
-            );
-            this.loading = false;
-          }
+        this.submitted = true;
+        this.utilsService.showSnackBar(
+          'Please fill all required details to continue'
         );
+        Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
+          const control = this.regimeSelectionForm.get(key);
+
+          if (control instanceof UntypedFormGroup) {
+            Object.keys(control.controls).forEach((nestedKey) => {
+              const nestedControl = control.get(nestedKey);
+              const controlErrors: ValidationErrors = nestedControl.errors;
+
+              if (controlErrors != null) {
+                console.log('Key control: ' + key + '.' + nestedKey);
+
+                Object.keys(controlErrors).forEach((keyError) => {
+                  console.log(
+                    'Key control: ' +
+                    key +
+                    '.' +
+                    nestedKey +
+                    ', keyError: ' +
+                    keyError +
+                    ', err value: ',
+                    controlErrors[keyError]
+                  );
+                });
+              }
+            });
+          }
+        });
+        this.loading = false;
+        resolve();
       }
-    } else {
-      this.submitted = true;
-      this.utilsService.showSnackBar(
-        'Please fill all required details to continue'
-      );
-      Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
-        const control = this.regimeSelectionForm.get(key);
-
-        if (control instanceof UntypedFormGroup) {
-          Object.keys(control.controls).forEach((nestedKey) => {
-            const nestedControl = control.get(nestedKey);
-            const controlErrors: ValidationErrors = nestedControl.errors;
-
-            if (controlErrors != null) {
-              console.log('Key control: ' + key + '.' + nestedKey);
-
-              Object.keys(controlErrors).forEach((keyError) => {
-                console.log(
-                  'Key control: ' +
-                  key +
-                  '.' +
-                  nestedKey +
-                  ', keyError: ' +
-                  keyError +
-                  ', err value: ',
-                  controlErrors[keyError]
-                );
-              });
-            }
-          });
-        }
-
-        // const controlErrors: ValidationErrors = this.regimeSelectionForm.get([
-        //   key,
-        // ]).errors;
-        // if (controlErrors != null) {
-        //   console.log(this.regimeSelectionForm);
-        //   Object.keys(controlErrors).forEach((keyError) => {
-        //     console.log(
-        //       'Key control: ' +
-        //         key +
-        //         ', keyError: ' +
-        //         keyError +
-        //         ', err value: ',
-        //       controlErrors[keyError]
-        //     );
-        //   });
-        // }
-      });
-      this.loading = false;
-    }
+    });
   }
 
   setFilingDate(formGroup: any, ackNum?, ackDate?) {

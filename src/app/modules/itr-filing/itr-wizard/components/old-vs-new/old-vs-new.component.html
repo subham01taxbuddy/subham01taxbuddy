@@ -872,8 +872,13 @@
 <div class="flex justify-between p-[30px] back-foot">
   <button (click)="goBack()" class="lgtBtn">Back to Sources</button>
 
-  <button (click)="gotoSummary()" class="darkBtn">
+  <!-- <button (click)="gotoSummary()" class="darkBtn">
     <span class="adjust">Save & Next</span>
     <i class="material-icons icoAd">arrow_right_alt </i>
-  </button>
+  </button> -->
+  <app-custom-button class="darkBtn" [disabled]="loading" [actions]="[gotoSummary]">
+    <span class="adjust">Save & Next</span>
+    <i class="material-icons icoAd">arrow_right_alt</i>
+  </app-custom-button>
+
 </div>
