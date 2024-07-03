@@ -117,11 +117,12 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
 
   note = async (): Promise<any> => {
     return new Promise((resolve, reject) => {
-      if (this.serviceType.valid && this.noteDetails.valid) {
-        try {
-          let fyList = []
-          this.utilsService.getStoredFyList().then(data => {
-            fyList = data;
+      let fyList = [];
+      this.utilsService.getStoredFyList().then(data => {
+        fyList = data
+
+        if (this.serviceType.valid && this.noteDetails.valid) {
+          try {
 
             const currentFyDetails = fyList.filter(
               (item: any) => item.isFilingActive
@@ -165,15 +166,15 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
               this.utilsService.showSnackBar('Error while adding note, please try again.');
               reject(error);
             });
-          });
-        } catch (error) {
-          this.utilsService.showSnackBar('An unexpected error occurred.');
-          reject(error);
+          } catch (error) {
+            this.utilsService.showSnackBar('An unexpected error occurred.');
+            reject(error);
+          }
+        } else {
+          this.serviceType.markAllAsTouched();
+          reject('Invalid serviceType or noteDetails');
         }
-      } else {
-        this.serviceType.markAllAsTouched();
-        reject('Invalid serviceType or noteDetails');
-      }
+      });
     });
   };
 
