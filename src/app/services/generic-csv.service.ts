@@ -197,6 +197,12 @@ export class GenericCsvService {
             //   resolve(0);
             // }
           }
+          if(param.includes('promocodes')){
+            if (result?.content.length > 0) {
+              this.data = [...this.data, ...result.content]
+              resolve(result.totalPages);
+            }
+          }
         }, error => {
           resolve(0);
         });
