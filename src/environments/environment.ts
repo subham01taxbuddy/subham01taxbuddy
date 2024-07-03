@@ -10,7 +10,6 @@ export const environment = {
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
 	addClientThroughEportal: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/efiling/add-eri",
 	isValidItr: false,
-	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment: 'UAT',
 	admin_id: 3000,
 	webportal_url: 'https://uat-itr.taxbuddy.com',

@@ -33,7 +33,7 @@ export class AddSubscriptionComponent implements OnInit {
   isAllowed: boolean = true;
   smeDetails: any
   serviceEligibility: any;
-  itrUServiceEligibility:any;
+  itrUServiceEligibility: any;
   showMessage = '';
   partnerType: any;
   searchAsPrinciple: boolean = false;
@@ -104,24 +104,24 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
-    this.loading =true;
+    this.loading = true;
     const defaultPlansForFilers = [137, 160];
     if (defaultPlansForFilers.includes(plan.planId) && this.roles.includes('ROLE_FILER')) {
       this.loading = false;
       return true;
-  }
-    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && (plan.servicesType === 'ITR' || plan.servicesType ==='ITRU'))) {
+    }
+    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && (plan.servicesType === 'ITR' || plan.servicesType === 'ITRU'))) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
         this.onlyServiceITR = true;
-        this.loading=false;
+        this.loading = false;
         return this.smeDetails?.skillSetPlanIdList.includes(planId);
       }
-      this.loading=false;
+      this.loading = false;
       return false;
     } else {
       this.onlyServiceITR = false;
-      this.loading=false;
+      this.loading = false;
       return true;
     }
   }
@@ -177,50 +177,52 @@ export class AddSubscriptionComponent implements OnInit {
     let futureParam
     if (this.roles.includes('ROLE_FILER') || userId) {
       futureParam = `/bo/future-year-subscription-exists?userId=${userId}`
-    }else{
+    } else {
       futureParam = `/bo/future-year-subscription-exists?mobileNumber=${number}`
     }
 
-  let url = number ? '/bo/subscription/coupon-code-exists?mobileNumber='+number+'&serviceType=TPA':
-  '/bo/subscription/coupon-code-exists?userId='+userId+'&serviceType=TAP';
+    let url = number ? '/bo/subscription/coupon-code-exists?mobileNumber=' + number + '&serviceType=TPA' :
+      '/bo/subscription/coupon-code-exists?userId=' + userId + '&serviceType=TAP';
 
-  this.reportService.getMethod(url).subscribe(
-    (response: any) => {
-      if (response?.success && response?.data?.couponCodeExists)
-        this.disableTpaSubPlan = response.data;
-      this.loading = true;
-      this.reportService.getMethod(futureParam).subscribe((response: any) => {
-      this.disableItrSubPlan = response.data.itrSubscriptionExists;
+    this.reportService.getMethod(url).subscribe(
+      (response: any) => {
+        if (response?.success && response?.data?.couponCodeExists)
+          this.disableTpaSubPlan = response.data;
+        this.loading = true;
+        this.reportService.getMethod(futureParam).subscribe((response: any) => {
+          this.disableItrSubPlan = response.data.itrSubscriptionExists;
 
-      this.loading = true;
-      if(! this.roles.includes('ROLE_FILER') && this.data.email){
-        filter = '&email=' + this.data.email
-      }
-      let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
-      this.reportService.getMethod(param).subscribe((response: any) => {
-        this.loading = false;
-        this.allSubscriptions = response.data.content
-        if (this.allSubscriptions && this.allSubscriptions.length) {
-          let smeSelectedPlan = [];
-          smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
-            if (data) return data;
-          })];
-          smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
-            if (data) return data;
-          })];
-          if (smeSelectedPlan.length) {
-            let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
-            this.disableItrSubPlan = itrPlanDetails.length > 0;
-            this.service = itrPlanDetails[0]?.servicesType;
-            this.serviceDetails = itrPlanDetails[0]?.name;
-            let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
-            this.tpaService = TpaPlanDetails[0]?.servicesType;
-            this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+          this.loading = true;
+          if (!this.roles.includes('ROLE_FILER') && this.data.email) {
+            filter = '&email=' + this.data.email
           }
-        }
-      })
-    });
-  });
+          let param = `/bo/subscription-dashboard-new?page=0&pageSize=20&assessmentYear=${this.data.assessmentYear}${userFilter}${filter}`;
+          this.reportService.getMethod(param).subscribe((response: any) => {
+            this.loading = false;
+            this.allSubscriptions = response.data.content
+            if (this.allSubscriptions && this.allSubscriptions.length) {
+              let smeSelectedPlan = [];
+              if (this.allSubscriptions) {
+                smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions.map((item: any) => item?.smeSelectedPlan).filter(data => {
+                  if (data) return data;
+                })];
+                smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions.map((item: any) => item?.userSelectedPlan).filter(data => {
+                  if (data) return data;
+                })];
+              }
+              if (smeSelectedPlan.length) {
+                let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+                this.disableItrSubPlan = itrPlanDetails.length > 0;
+                this.service = itrPlanDetails[0]?.servicesType;
+                this.serviceDetails = itrPlanDetails[0]?.name;
+                let TpaPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'TPA')
+                this.tpaService = TpaPlanDetails[0]?.servicesType;
+                this.tpaServiceDetails = TpaPlanDetails[0]?.name;
+              }
+            }
+          })
+        });
+      });
   }
 
 
@@ -393,7 +395,7 @@ export class AddSubscriptionComponent implements OnInit {
     });
   }
 
-  removeCancelSubscription=():Promise<any> =>{
+  removeCancelSubscription = (): Promise<any> => {
     // https://dev-api.taxbuddy.com/itr/subscription/cancellation?subscriptionId=2427
     const param = '/subscription/cancellation?subscriptionId=' + this.cancelSubscriptionData?.subscriptionId
     this.loading = true;
