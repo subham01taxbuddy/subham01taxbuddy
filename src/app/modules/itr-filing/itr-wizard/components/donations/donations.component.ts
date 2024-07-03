@@ -474,12 +474,28 @@ export class DonationsComponent implements OnInit {
   }
 
   pageChanged(event) {
-    this.pg80g = event;
+
     if (this.type === '80g') {
+      this.pg80g = event;
       this.config80g = {
         id: 'd80g',
         itemsPerPage: 2,
         currentPage: this.pg80g,
+      };
+    }
+    if (this.type === '80gga') {
+      this.pg80gga = event;
+      this.config80g = {
+        id: 'd80gga',
+        itemsPerPage: 2,
+        currentPage: this.pg80gga,
+      };
+    }if (this.type === '80ggc') {
+      this.pg80ggc = event;
+      this.config80g = {
+        id: 'd80ggc',
+        itemsPerPage: 2,
+        currentPage: this.pg80ggc,
       };
     }
   }
