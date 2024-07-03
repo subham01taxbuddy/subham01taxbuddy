@@ -32,7 +32,7 @@ export class PayoutAdjustmentComponent implements OnInit {
 
   ngOnInit() { }
 
-  search=():Promise<any> =>{
+  search = (): Promise<any> => {
     //https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/?userId=10488'
     this.loading = true;
     let userId = this.filerId || this.leaderId;
@@ -53,7 +53,7 @@ export class PayoutAdjustmentComponent implements OnInit {
             this.adjustmentDetails = null;
             this.utilsService.showSnackBar(response.message);
           }
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
           this.adjustmentDetails = null;
           this.utilsService.showSnackBar(
@@ -122,7 +122,7 @@ export class PayoutAdjustmentComponent implements OnInit {
     }
   }
 
-  saveAdjustment=(amount, reason):Promise<any> => {
+  saveAdjustment = (amount, reason): Promise<any> => {
     // https://2hifgwy53ui62fbhnucv77mjdq0rcslo.lambda-url.ap-south-1.on.aws/'
     console.log('values from save ', amount, reason);
     let userId = this.agentId;
@@ -150,7 +150,7 @@ export class PayoutAdjustmentComponent implements OnInit {
         setTimeout(() => {
           this.dialogRef.close({ event: 'close', data: 'added' });
         }, 2000);
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this.utilsService.showSnackBar(
           'There is some issue to Add Adjustment.'
@@ -161,7 +161,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   calculateTotal(): number {
     let total = 0;
     if (this.adjustmentDetails?.adjustmentHistory) {
-      for (let item of this.adjustmentDetails?.adjustmentHistory) {
+      for (let item of this.adjustmentDetails.adjustmentHistory) {
         total += item.commisionAdjusted;
       }
       return total;
@@ -169,10 +169,12 @@ export class PayoutAdjustmentComponent implements OnInit {
   }
   calculateAdditionTotal(): number {
     let total = 0;
-    for (const item of this.adjustmentDetails?.adjustmentAdditions) {
-      total += item.adjustmentadditionAmount;
+    if (this.adjustmentDetails?.adjustmentAdditions) {
+      for (const item of this.adjustmentDetails.adjustmentAdditions) {
+        total += item.adjustmentadditionAmount;
+      }
+      return total;
     }
-    return total;
   }
 
   generateFile = (): Promise<any> => {

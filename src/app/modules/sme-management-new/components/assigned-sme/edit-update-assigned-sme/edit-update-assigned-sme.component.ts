@@ -403,10 +403,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         } else {
           this.utilsService.showSnackBar(`Something went wrong while getting URL`);
         }
-      }),
+      },
       (err: any) => {
         this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
-      }
+      });
   }
 
   open(url) {
