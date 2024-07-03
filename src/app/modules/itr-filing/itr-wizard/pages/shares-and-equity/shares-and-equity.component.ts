@@ -449,7 +449,7 @@ export class SharesAndEquityComponent
   }
 
   async saveManualEntry() {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       //this is commented now because the on change event is working properly on submit click
       // this.calculateTotalCG(this.selectedFormGroup, true).then(()=>{
       //   console.log("This is here");
@@ -752,10 +752,10 @@ export class SharesAndEquityComponent
       } else {
         securities.controls['sellOrBuyQuantity'].setValue(1);
         securities.controls['purchaseValuePerUnit'].setValue(
-            securities.controls['purchaseCost'].value
+          securities.controls['purchaseCost'].value
         );
         securities.controls['sellValuePerUnit'].setValue(
-            securities.controls['sellValue'].value
+          securities.controls['sellValue'].value
         );
         securities.controls['isinCode'].setValue('');
         // securities.controls['nameOfTheUnits'].setValue('');
@@ -939,8 +939,8 @@ export class SharesAndEquityComponent
             ? []
             : [this.deductionForm.getRawValue()],
       };
-      return new Promise(async (resolve, reject) => {
-        await this.itrMsService.singelCgCalculate(request).subscribe(
+      return new Promise((resolve, reject) => {
+        this.itrMsService.singelCgCalculate(request).subscribe(
           (res: any) => {
             this.loading = false;
             if (res?.assetDetails[0]?.capitalGain) {
