@@ -1936,6 +1936,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     );
   }
 
+  isIncomeMoreThan2Cr(){
+    return this.oldSummaryIncome?.taxSummary.grossTotalIncome > 20000000 ||
+        this.newSummaryIncome?.taxSummary.grossTotalIncome > 20000000;
+  }
+
   getITRType() {
     this.loading = true;
 

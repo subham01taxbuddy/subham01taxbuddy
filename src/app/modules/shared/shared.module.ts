@@ -61,6 +61,7 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
 import {ZipcodeDirective} from "./directives/zipcode.directive";
+import { AddManualUpdateReasonComponent } from './components/add-manual-update-reason/add-manual-update-reason.component';
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -104,7 +105,8 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         GenericUserFilterComponent,
         CalculatorModalComponent,
         CustomButtonComponent,
-        IncomeSourceDialogComponent
+        IncomeSourceDialogComponent,
+        AddManualUpdateReasonComponent
     ],
     imports: [
         CommonModule,
@@ -165,7 +167,8 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         UpdateNoJsonFilingDialogComponent,
         CalculatorModalComponent,
         CustomButtonComponent,
-        IncomeSourceDialogComponent
+        IncomeSourceDialogComponent,
+        AddManualUpdateReasonComponent
     ],
     providers: [StorageService, Schedules, RequestManager]
 })

@@ -10,7 +10,6 @@ export const environment = {
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
 	addClientThroughEportal: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/efiling/add-eri",
 	isValidItr: false,
-	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment: 'UAT',
 	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",

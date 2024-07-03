@@ -5,7 +5,7 @@
   <div *ngIf="step === 'reason'" class="reason-input">
     <p>Please provide a reason for continuing with the same subscription:</p>
     <mat-form-field>
-      <textarea matInput [(ngModel)]="reason" placeholder="Enter reason"></textarea>
+      <textarea matInput [(ngModel)]="reason" placeholder="Enter reason" required></textarea>
     </mat-form-field>
   </div>
 </div>
