@@ -7025,7 +7025,11 @@ export class SummaryComponent implements OnInit {
               this.utilsService.showSnackBar(
                 'Reason saved successfully'
               );
-              this.checkFilerAssignment();
+              if(sessionStorage.getItem("SOI") === "true") {
+                this.checkIncomeOfSources(); // disabled for now
+              } else {
+                this.checkFilerAssignment();
+              }
               // this.checkIncomeOfSources(); // disabled for now
             },
             (error) => {
@@ -7039,7 +7043,11 @@ export class SummaryComponent implements OnInit {
         }
       });
     } else {
-      this.checkFilerAssignment();
+      if(sessionStorage.getItem("SOI") === "true") {
+        this.checkIncomeOfSources(); // disabled for now
+      } else {
+        this.checkFilerAssignment();
+      }
       // this.checkIncomeOfSources(); // disabled for now
     }
   }
