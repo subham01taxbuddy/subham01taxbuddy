@@ -1,9 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div style="font-size: 18px; font-weight: bold">Update Filing Details</div>
-<button mat-dialog-close tabindex="-1" class="tbd-btn-close">
-  <i class="fa fa-times" aria-hidden="true"></i>
-</button>
-<div class="card__row">
+<div style="font-size: 18px; font-weight: bold">Update Filing Details
+  <button mat-dialog-close tabindex="-1" style="float: right;" class="tbd-btn-close">
+    <i class="fa fa-times" aria-hidden="true"></i>
+  </button>
+</div>
+
+<div class="card__row mt-3">
   <div class="card__col-xs-12 card__col-sm-6">
     <mat-form-field appearance="outline">
       <mat-label>Ack Number</mat-label>
@@ -36,7 +38,12 @@
 </div>
 
 <!-- <div class="footer__buttons clearfix" style="margin-top: 40px;"> -->
-<button class="tbd-btn pull-right" (click)="updateManualDetails()">
+<!-- <button class="tbd-btn pull-right" (click)="updateManualDetails()">
   Update
-</button>
+</button> -->
+
+<app-custom-button class="tbd-btn pull-right" [actions]="[updateManualDetails]">
+  Update
+</app-custom-button>
+
 <!-- </div> -->

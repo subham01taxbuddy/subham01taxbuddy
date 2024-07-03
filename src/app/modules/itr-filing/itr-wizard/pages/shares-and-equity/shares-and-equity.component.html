@@ -357,8 +357,12 @@
                         <button class="btn btn__white" (click)="clearForm()">cancel</button>
                       </div>
                       <div class="box-right">
-                        <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
-                                 selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button>
+                        <!-- <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button> -->
+                        <app-custom-button class="btn btn__primary" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined" [actions]="[onSaveClick]" [actionParams]="[[true]]">
+                           Save Details
+                        </app-custom-button>
                       </div>
                     </div>
 

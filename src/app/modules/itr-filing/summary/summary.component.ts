@@ -6867,141 +6867,244 @@ export class SummaryComponent implements OnInit {
     //}
   }
 
-  sendPdf(channel) {
+  sendPdf=(channel):Promise<any>  => {
     // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both
     this.loading = true;
     let itrId = this.ITR_JSON.itrId;
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;
-    this.itrMsService.getMethod(param).subscribe(
+    return this.itrMsService.getMethod(param).toPromise().then(
       (res: any) => {
         this.loading = false;
         this.utilsService.showSnackBar(res.message);
         this.utilsService.showSnackBar(res.message);
-      },
-      (error) => {
+      }).catch((error)=>{
         this.loading = false;
         this.utilsService.showSnackBar(error);
-      }
-    );
+      })
   }
 
-  downloadPDF() {
-    let detailsRequired = false;
-    let finalCalculations = this.finalCalculations;
-    let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
-    let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
-    if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
-      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: {
-          title: 'Confirmation',
-          message: 'Do you want detailed listed securities data ?',
-        },
-      });
-      this.dialogRef.afterClosed().subscribe(result => {
-        if (result === 'YES') {
-          detailsRequired = true;
-          this.downloadSummaryPdf(detailsRequired);
-        } else {
-          detailsRequired = false;
-          this.downloadSummaryPdf(detailsRequired);
-        }
-      });
-    } else {
-      this.downloadSummaryPdf(detailsRequired);
-    }
-  }
+  // downloadPDF() {
+  //   let detailsRequired = false;
+  //   let finalCalculations = this.finalCalculations;
+  //   let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+  //   let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+  //   if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
+  //     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  //       data: {
+  //         title: 'Confirmation',
+  //         message: 'Do you want detailed listed securities data ?',
+  //       },
+  //     });
+  //     this.dialogRef.afterClosed().subscribe(result => {
+  //       if (result === 'YES') {
+  //         detailsRequired = true;
+  //         this.downloadSummaryPdf(detailsRequired);
+  //       } else {
+  //         detailsRequired = false;
+  //         this.downloadSummaryPdf(detailsRequired);
+  //       }
+  //     });
+  //   } else {
+  //     this.downloadSummaryPdf(detailsRequired);
+  //   }
+  // }
 
-  downloadSummaryPdf(detailsRequired) {
-    // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
-    // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
-    this.loading = true;
-    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
-      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-        const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
-        this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
-          (result) => {
-            console.log('PDF Result', result);
-            const fileURL = webkitURL.createObjectURL(result);
-            window.open(fileURL);
-            this.loading = false;
-            // Commented both routes as its currently option is for download xml file
-            // this.router.navigate(['itr-result/success']);
+  // downloadSummaryPdf(detailsRequired) {
+  //   // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
+  //   // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
+  //   this.loading = true;
+  //   if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+  //     if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+  //       const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
+  //       this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
+  //         (result) => {
+  //           console.log('PDF Result', result);
+  //           const fileURL = webkitURL.createObjectURL(result);
+  //           window.open(fileURL);
+  //           this.loading = false;
+  //           // Commented both routes as its currently option is for download xml file
+  //           // this.router.navigate(['itr-result/success']);
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           if (error.status === 403) {
+  //             alert('403 Download PDF');
+  //           } else {
+  //             // this.router.navigate(['itr-result/failure']);
+  //             this.utilsService.showSnackBar(
+  //               'Failed to download PDF report, please try again.'
+  //             );
+  //           }
+  //         }
+  //       );
+  //     } else if (this.ITR_JSON.isItrSummaryJsonEdited === true) {
+  //       const param =
+  //         '/api/txbdyReport?userId=' +
+  //         this.ITR_JSON.userId +
+  //         '&itrId=' +
+  //         this.ITR_JSON.itrId +
+  //         '&assessmentYear=' +
+  //         this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+  //       this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+  //         (result) => {
+  //           console.log('PDF Result', result);
+  //           const fileURL = webkitURL.createObjectURL(result);
+  //           window.open(fileURL);
+
+  //           this.loading = false;
+  //           // Commented both routes as its currently option is for download xml file
+  //           // this.router.navigate(['itr-result/success']);
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           if (error.status === 403) {
+  //             alert('403 Download PDF');
+  //           } else {
+  //             // this.router.navigate(['itr-result/failure']);
+  //             this.utilsService.showSnackBar(
+  //               'Failed to download PDF report, please try again.'
+  //             );
+  //           }
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     const param =
+  //       '/api/txbdyReport?userId=' +
+  //       this.ITR_JSON.userId +
+  //       '&itrId=' +
+  //       this.ITR_JSON.itrId +
+  //       '&assessmentYear=' +
+  //       this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+  //     this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+  //       (result) => {
+  //         console.log('PDF Result', result);
+  //         const fileURL = webkitURL.createObjectURL(result);
+  //         window.open(fileURL);
+
+  //         this.loading = false;
+  //         // Commented both routes as its currently option is for download xml file
+  //         // this.router.navigate(['itr-result/success']);
+  //       },
+  //       (error) => {
+  //         this.loading = false;
+  //         if (error.status === 403) {
+  //           alert('403 Download PDF');
+  //         } else {
+  //           // this.router.navigate(['itr-result/failure']);
+  //           this.utilsService.showSnackBar(
+  //             'Failed to download PDF report, please try again.'
+  //           );
+  //         }
+  //       }
+  //     );
+  //   }
+  // }
+
+  downloadPDF = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let detailsRequired = false;
+      let finalCalculations = this.finalCalculations;
+      let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+      let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+
+      if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Confirmation',
+            message: 'Do you want detailed listed securities data ?',
           },
-          (error) => {
-            this.loading = false;
-            if (error.status === 403) {
-              alert('403 Download PDF');
-            } else {
-              // this.router.navigate(['itr-result/failure']);
-              this.utilsService.showSnackBar(
-                'Failed to download PDF report, please try again.'
-              );
-            }
+        });
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            detailsRequired = true;
+            this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
+          } else {
+            detailsRequired = false;
+            this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
           }
-        );
-      } else if (this.ITR_JSON.isItrSummaryJsonEdited === true) {
-        const param =
-          '/api/txbdyReport?userId=' +
-          this.ITR_JSON.userId +
-          '&itrId=' +
-          this.ITR_JSON.itrId +
-          '&assessmentYear=' +
-          this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+        });
+      } else {
+        this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
+      }
+    });
+  }
+
+  downloadSummaryPdf(detailsRequired): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+          const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
+          this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
+            (result) => {
+              console.log('PDF Result', result);
+              const fileURL = webkitURL.createObjectURL(result);
+              window.open(fileURL);
+              this.loading = false;
+              resolve();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.status === 403) {
+                alert('403 Download PDF');
+              } else {
+                this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
+              }
+              reject(error);
+            }
+          );
+        } else {
+          const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
+                        '&itrId=' + this.ITR_JSON.itrId +
+                        '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+                        '&detailsRequired=' + detailsRequired;
+          this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+            (result) => {
+              console.log('PDF Result', result);
+              const fileURL = webkitURL.createObjectURL(result);
+              window.open(fileURL);
+              this.loading = false;
+              resolve();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.status === 403) {
+                alert('403 Download PDF');
+              } else {
+                this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
+              }
+              reject(error);
+            }
+          );
+        }
+      } else {
+        const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
+                      '&itrId=' + this.ITR_JSON.itrId +
+                      '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+                      '&detailsRequired=' + detailsRequired;
         this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
           (result) => {
             console.log('PDF Result', result);
             const fileURL = webkitURL.createObjectURL(result);
             window.open(fileURL);
-
             this.loading = false;
-            // Commented both routes as its currently option is for download xml file
-            // this.router.navigate(['itr-result/success']);
+            resolve();
           },
           (error) => {
             this.loading = false;
             if (error.status === 403) {
               alert('403 Download PDF');
             } else {
-              // this.router.navigate(['itr-result/failure']);
-              this.utilsService.showSnackBar(
-                'Failed to download PDF report, please try again.'
-              );
+              this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
             }
+            reject(error);
           }
         );
       }
-    } else {
-      const param =
-        '/api/txbdyReport?userId=' +
-        this.ITR_JSON.userId +
-        '&itrId=' +
-        this.ITR_JSON.itrId +
-        '&assessmentYear=' +
-        this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
-      this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
-        (result) => {
-          console.log('PDF Result', result);
-          const fileURL = webkitURL.createObjectURL(result);
-          window.open(fileURL);
-
-          this.loading = false;
-          // Commented both routes as its currently option is for download xml file
-          // this.router.navigate(['itr-result/success']);
-        },
-        (error) => {
-          this.loading = false;
-          if (error.status === 403) {
-            alert('403 Download PDF');
-          } else {
-            // this.router.navigate(['itr-result/failure']);
-            this.utilsService.showSnackBar(
-              'Failed to download PDF report, please try again.'
-            );
-          }
-        }
-      );
-    }
+    });
   }
+
 
   confirmSubmitITR() {
     if (this.ITR_JSON?.itrSummaryJson) {
@@ -7202,95 +7305,174 @@ export class SummaryComponent implements OnInit {
       });
   }
 
-  validateITR() {
-    let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
-    console.log(url);
-    this.http.get(url, { responseType: 'json' }).subscribe(
-      (data: any) => {
-        console.log(data);
-        if (data.success === false) {
-          this.utilsService.showSnackBar(data.message);
-          return;
-        }
-        this.itrJsonForFileItr = data;
-        // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
-        this.loading = true;
-        let formCode = this.ITR_JSON.itrType;
-        let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
-        let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
-        const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+  // validateITR() {
+  //   let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
+  //   console.log(url);
+  //   this.http.get(url, { responseType: 'json' }).subscribe(
+  //     (data: any) => {
+  //       console.log(data);
+  //       if (data.success === false) {
+  //         this.utilsService.showSnackBar(data.message);
+  //         return;
+  //       }
+  //       this.itrJsonForFileItr = data;
+  //       // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
+  //       this.loading = true;
+  //       let formCode = this.ITR_JSON.itrType;
+  //       let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+  //       let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+  //       const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
 
-        let headerObj = {
-          panNumber: this.ITR_JSON.panNumber,
-          assessmentYear: this.ITR_JSON.assessmentYear,
-          userId: this.ITR_JSON.userId.toString(),
-        };
-        sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+  //       let headerObj = {
+  //         panNumber: this.ITR_JSON.panNumber,
+  //         assessmentYear: this.ITR_JSON.assessmentYear,
+  //         userId: this.ITR_JSON.userId.toString(),
+  //       };
+  //       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
 
-        this.itrMsService.postMethodForEri(param, data).subscribe(
-          (res: any) => {
-            this.loading = false;
-            console.log('validate ITR response =>', res);
-            if (this.utilsService.isNonEmpty(res)) {
-              if (res && res.successFlag) {
-                if (
-                  data.messages instanceof Array &&
-                  data.messages.length > 0
-                ) {
-                  this.utilsService.showSnackBar(data.messages[0].desc);
+  //       this.itrMsService.postMethodForEri(param, data).subscribe(
+  //         (res: any) => {
+  //           this.loading = false;
+  //           console.log('validate ITR response =>', res);
+  //           if (this.utilsService.isNonEmpty(res)) {
+  //             if (res && res.successFlag) {
+  //               if (
+  //                 data.messages instanceof Array &&
+  //                 data.messages.length > 0
+  //               ) {
+  //                 this.utilsService.showSnackBar(data.messages[0].desc);
+  //               } else {
+  //                 this.isValidateJson = true;
+  //                 this.utilsService.showSnackBar(
+  //                   'ITR JSON validated successfully.'
+  //                 );
+  //               }
+  //             } else {
+  //               if (res.errors instanceof Array && res.errors.length > 0) {
+  //                 let errors = res.errors.map((error) => error.code).join(', ');
+  //                 console.log(errors, 'errors');
+  //                 this.utilsService.showSnackBar(
+  //                   res.errors[0].desc ? res.errors[0].desc : errors
+  //                 );
+  //               } else if (
+  //                 res.messages instanceof Array &&
+  //                 res.messages.length > 0
+  //               ) {
+  //                 let errors = res.messages
+  //                   .map((error) => error.desc)
+  //                   .join(', ');
+  //                 console.log(errors, 'errors');
+  //                 this.utilsService.showSnackBar(errors);
+  //               }
+  //             }
+  //           } else {
+  //             this.utilsService.showSnackBar(
+  //               'Response is null, try after some time.'
+  //             );
+  //           }
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           this.isValidateJson = false;
+  //           this.utilsService.showSnackBar(
+  //             'Something went wrong, try after some time.'
+  //           );
+  //         }
+  //       );
+  //     },
+  //     (error) => {
+  //       console.log(error.error.message);
+  //       this.loading = false;
+  //       this.isValidateJson = false;
+  //       if (error.error.message) {
+  //         this.utilsService.showSnackBar(error.error.message);
+  //       } else {
+  //         this.utilsService.showSnackBar(
+  //           'Something went wrong, try after some time.'
+  //         );
+  //       }
+  //     }
+  //   );
+  // }
+
+  validateITR = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
+      console.log(url);
+      this.http.get(url, { responseType: 'json' }).subscribe(
+        (data: any) => {
+          console.log(data);
+          if (data.success === false) {
+            this.utilsService.showSnackBar(data.message);
+            return reject(data.message);
+          }
+          this.itrJsonForFileItr = data;
+          this.loading = true;
+          let formCode = this.ITR_JSON.itrType;
+          let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+          let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+          const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+
+          let headerObj = {
+            panNumber: this.ITR_JSON.panNumber,
+            assessmentYear: this.ITR_JSON.assessmentYear,
+            userId: this.ITR_JSON.userId.toString(),
+          };
+          sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
+          this.itrMsService.postMethodForEri(param, data).subscribe(
+            (res: any) => {
+              this.loading = false;
+              console.log('validate ITR response =>', res);
+              if (this.utilsService.isNonEmpty(res)) {
+                if (res && res.successFlag) {
+                  if (data.messages instanceof Array && data.messages.length > 0) {
+                    this.utilsService.showSnackBar(data.messages[0].desc);
+                  } else {
+                    this.isValidateJson = true;
+                    this.utilsService.showSnackBar('ITR JSON validated successfully.');
+                  }
+                  resolve();
                 } else {
-                  this.isValidateJson = true;
-                  this.utilsService.showSnackBar(
-                    'ITR JSON validated successfully.'
-                  );
+                  let errors = '';
+                  if (res.errors instanceof Array && res.errors.length > 0) {
+                    errors = res.errors.map((error) => error.code).join(', ');
+                    console.log(errors, 'errors');
+                    this.utilsService.showSnackBar(res.errors[0].desc ? res.errors[0].desc : errors);
+                  } else if (res.messages instanceof Array && res.messages.length > 0) {
+                    errors = res.messages.map((error) => error.desc).join(', ');
+                    console.log(errors, 'errors');
+                    this.utilsService.showSnackBar(errors);
+                  }
+                  reject(errors);
                 }
               } else {
-                if (res.errors instanceof Array && res.errors.length > 0) {
-                  let errors = res.errors.map((error) => error.code).join(', ');
-                  console.log(errors, 'errors');
-                  this.utilsService.showSnackBar(
-                    res.errors[0].desc ? res.errors[0].desc : errors
-                  );
-                } else if (
-                  res.messages instanceof Array &&
-                  res.messages.length > 0
-                ) {
-                  let errors = res.messages
-                    .map((error) => error.desc)
-                    .join(', ');
-                  console.log(errors, 'errors');
-                  this.utilsService.showSnackBar(errors);
-                }
+                const errorMessage = 'Response is null, try after some time.';
+                this.utilsService.showSnackBar(errorMessage);
+                reject(errorMessage);
               }
-            } else {
-              this.utilsService.showSnackBar(
-                'Response is null, try after some time.'
-              );
+            },
+            (error) => {
+              this.loading = false;
+              this.isValidateJson = false;
+              const errorMessage = 'Something went wrong, try after some time.';
+              this.utilsService.showSnackBar(errorMessage);
+              reject(errorMessage);
             }
-          },
-          (error) => {
-            this.loading = false;
-            this.isValidateJson = false;
-            this.utilsService.showSnackBar(
-              'Something went wrong, try after some time.'
-            );
-          }
-        );
-      },
-      (error) => {
-        console.log(error.error.message);
-        this.loading = false;
-        this.isValidateJson = false;
-        if (error.error.message) {
-          this.utilsService.showSnackBar(error.error.message);
-        } else {
-          this.utilsService.showSnackBar(
-            'Something went wrong, try after some time.'
           );
+        },
+        (error) => {
+          console.log(error.error.message);
+          this.loading = false;
+          this.isValidateJson = false;
+          const errorMessage = error.error.message || 'Something went wrong, try after some time.';
+          this.utilsService.showSnackBar(errorMessage);
+          reject(errorMessage);
         }
-      }
-    );
+      );
+    });
   }
+
 
   downloadJson() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
@@ -7313,25 +7495,47 @@ export class SummaryComponent implements OnInit {
     )[0].label;
   }
 
-  updateManually() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    console.log('UPDATE MANUALLY', this.ITR_JSON);
-    let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: this.ITR_JSON,
-    });
+  // updateManually() {
+  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  //   console.log('UPDATE MANUALLY', this.ITR_JSON);
+  //   let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+  //     width: '50%',
+  //     height: 'auto',
+  //     data: this.ITR_JSON,
+  //   });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+  //   disposable.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //   });
 
-    sessionStorage.setItem(
-      AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
-    );
-    console.log('UPDATE MANUALLY', this.ITR_JSON);
+  //   sessionStorage.setItem(
+  //     AppConstants.ITR_JSON,
+  //     JSON.stringify(this.ITR_JSON)
+  //   );
+  //   console.log('UPDATE MANUALLY', this.ITR_JSON);
+  // }
+
+  updateManually = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      console.log('UPDATE MANUALLY', this.ITR_JSON);
+      let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: this.ITR_JSON,
+      });
+
+      disposable.afterClosed().subscribe((result) => {
+        console.log('The dialog was closed');
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        console.log('UPDATE MANUALLY', this.ITR_JSON);
+        resolve();
+      }, (error) => {
+        reject(error);
+      });
+    });
   }
+
 
   getBusinessDetails() {
     const incomes =
