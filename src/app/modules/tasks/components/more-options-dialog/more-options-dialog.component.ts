@@ -700,6 +700,9 @@ export class MoreOptionsDialogComponent implements OnInit {
             });
 
             disposable.afterClosed().subscribe((result) => {
+              if (result) {
+                this.dialog.closeAll();
+              }
             });
           } else {
             this.utilsService.showSnackBar(

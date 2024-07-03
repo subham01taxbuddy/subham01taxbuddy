@@ -279,6 +279,7 @@ export class ReAssignActionDialogComponent implements OnInit {
   closeErrorTable() {
     this.dialogRef.close({ event: 'close', data: 'success' });
     this.dialogRef1.close();
+    this.dialog.closeAll();
   }
 
   progressMessage: string = '';
