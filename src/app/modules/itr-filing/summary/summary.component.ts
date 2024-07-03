@@ -7025,7 +7025,8 @@ export class SummaryComponent implements OnInit {
               this.utilsService.showSnackBar(
                 'Reason saved successfully'
               );
-              this.checkIncomeOfSources();
+              this.checkFilerAssignment();
+              // this.checkIncomeOfSources(); // disabled for now
             },
             (error) => {
               this.loading = false;
@@ -7038,7 +7039,8 @@ export class SummaryComponent implements OnInit {
         }
       });
     } else {
-      this.checkIncomeOfSources();
+      this.checkFilerAssignment();
+      // this.checkIncomeOfSources(); // disabled for now
     }
   }
 
