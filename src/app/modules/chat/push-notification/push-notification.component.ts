@@ -1,6 +1,7 @@
-import { Component, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChatManager } from '../chat-manager';
+import { ChatService } from '../chat.service';
 
 @Component({
   selector: 'app-push-notification',
@@ -8,6 +9,7 @@ import { ChatManager } from '../chat-manager';
   styleUrls: ['./push-notification.component.scss']
 })
 export class PushNotificationComponent {
+  @Output() notificationClicked = new EventEmitter<any>();
   messageSent: string = '';
   notifications: any[] = [];
   maxNotifications = 5;
@@ -18,6 +20,7 @@ export class PushNotificationComponent {
     private chatManager: ChatManager,
     private changeDetectorRef: ChangeDetectorRef,
     public dialogRef: MatDialogRef<PushNotificationComponent>,
+    private chatService: ChatService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
@@ -27,6 +30,28 @@ export class PushNotificationComponent {
     // setTimeout(() => {
     //   this.dialogRef.close();
     // }, 60000);
+  }
+
+  openChat(notification: any, event: Event){
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLButtonElement) {
+      return;  
+    }
+   const user = {
+    request_id: notification.recipient,
+    departmentId: notification.attributes.departmentId,
+    userFullName: notification.attributes.userFullname,
+    image: notification.attributes.userFullname[0]
+   };
+
+   this.dialogRef.close();
+
+ 
+   setTimeout(() => {
+    this.chatService.openUserChat(user);
+    this.chatService.fetchMessages(user.request_id)
+    this.removeNotification(notification);
+  }, 0);
+    
   }
 
 
@@ -57,15 +82,20 @@ export class PushNotificationComponent {
       }
     }
   }
-    sendMessage(notification: any) {
-    const message = notification.messageSent.trim();
-    if (message) {
-      this.chatManager.sendMessage(message, notification.recipient);
-      this.removeNotification(notification);
-     }
+    sendMessage(notification: any,event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+      
+      const message = notification.messageSent.trim();
+      if (message) {
+        this.chatManager.sendMessage(message, notification.recipient);
+        this.removeNotification(notification);
+        notification.messageSent = ''; // Clear the input field after sending
+      }
   }
 
-  closeNotification(notification){
+  closeNotification(notification: any, event: Event){
+    event.stopPropagation();
    this.removeNotification(notification);
   }
 }

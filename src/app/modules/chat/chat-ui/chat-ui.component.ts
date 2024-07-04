@@ -6,7 +6,7 @@ import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
-
+ 
 interface Department {
     name: string,
     id: any

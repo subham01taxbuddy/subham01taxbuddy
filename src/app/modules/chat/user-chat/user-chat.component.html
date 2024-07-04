@@ -289,7 +289,7 @@
     <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
       (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize></textarea>
 
-    <button type="button" (click)="sendMessage()">
+    <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
     </button>
   </div>

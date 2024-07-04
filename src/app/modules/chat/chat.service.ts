@@ -54,6 +54,9 @@ export class ChatService {
   private newMessageReceived = new Subject<any>();
   newMessageReceived$ = this.newMessageReceived.asObservable();
 
+  private openChatSubject = new Subject<any>();
+  openChat$ = this.openChatSubject.asObservable();
+
   lastMessageId: any;
   subject: any;
 
@@ -66,6 +69,11 @@ export class ChatService {
     this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
+
+
+  openUserChat(user: any){
+    this.openChatSubject.next(user);
+   }
 
   registerMessageReceived(messageReceivedCallback) {
     this.onConversationUpdatedCallbacks.set(0, messageReceivedCallback);
