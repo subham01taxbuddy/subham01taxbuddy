@@ -24,6 +24,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, AfterViewInit {
   searchedPromoCode = new UntypedFormControl('', Validators.required);
+  searchedCouponCode =  new UntypedFormControl('');
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
   service: string;
@@ -264,10 +265,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     }
   }
 
-  applyCouponCode=(selectedPlan):Promise<any> =>{
+  applyCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = false;
-    if (this.selectedCouponCodeSubscriptionIds?.length === 0)
+    if(this.selectedCouponCodeSubscriptionIds?.length === 0)
       this.removeCouponCodeFlag = true;
 
     this.couponCodeAppliedFlag = true;
@@ -284,7 +285,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       removeCouponCode: this.removeCouponCodeFlag,
       couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
     };
-    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -297,12 +298,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.utilsService.showSnackBar(
         `Coupon Code applied successfully!`
       );
-    }).catch(()=>{
-      this.loading =false;
-    })
+    });
   }
 
-  removeCouponCode=(selectedPlan):Promise<any> => {
+  removeCouponCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
     this.removeCouponCodeFlag = true;
     this.couponCodeAppliedFlag = false;
@@ -318,7 +317,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
     };
 
-    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -548,12 +547,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   isPromoRemoved = false;
-  applyPromo=(selectedPlan):Promise<any> => {
+  applyPromo(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
-    if (this.selectedCouponCodeSubscriptionIds.length === 0)
+    if(this.selectedCouponCodeSubscriptionIds.length === 0)
       this.couponCodeAppliedFlag = true;
 
-    if (this.couponCodeAppliedFlag)
+    if(this.couponCodeAppliedFlag)
       this.couponCodeAppliedFlag = true;
 
     const param = `/subscription/recalculate`;
@@ -566,9 +565,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
       removePromoCode: false,
       removeCouponCode: this.removeCouponCodeFlag,
-      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
+      couponCodeSubscriptionIds:this.selectedCouponCodeSubscriptionIds
     };
-    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -582,15 +581,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} applied successfully!`
       );
-    }).catch(()=>{
-      this.loading = false;
-      this.utilsService.showSnackBar('Something went wrong!');
-    })
+    });
   }
 
-  removePromoCode=(selectedPlan):Promise<any> => {
+  removePromoCode(selectedPlan) {
     this.smeSelectedPlanId = selectedPlan;
-    if (this.selectedCouponCodeSubscriptionIds.length === 0)
+    if(this.selectedCouponCodeSubscriptionIds.length === 0)
       this.removeCouponCodeFlag = true;
     const param = `/subscription/recalculate`;
     const request = {
@@ -602,9 +598,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       promoCode: this.selectedPromoCode,
       removePromoCode: true,
       removeCouponCode: this.removeCouponCodeFlag,
-      couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds
+      couponCodeSubscriptionIds:this.selectedCouponCodeSubscriptionIds
     };
-    return this.itrService.postMethod(param, request).toPromise().then((res: any) => {
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -618,10 +614,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.getRefundProcessedInvoices();
       this.setFinalPricing();
       this.setExistingCouponCode();
-    }).catch(()=>{
-      this.loading = false;
-    })
+    });
   }
+
 
   getExactPromoDiscount() {
     return this.userSubscription?.promoApplied?.discountedAmount;
@@ -1510,11 +1505,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     });
   }
 
-  onNgModelChange=():Promise<any> =>{
-    return new Promise((resolve) => {
-      console.log('NgModel changed');
-      this.changesMade = true;
-    });
+  onNgModelChange() {
+    this.changesMade = true;
   }
 
   cancel() {
