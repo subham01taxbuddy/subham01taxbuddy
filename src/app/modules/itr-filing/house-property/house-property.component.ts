@@ -465,6 +465,8 @@ export class HousePropertyComponent implements OnInit {
 
     if (control.value && (pattern1.test(control.value) || pattern2.test(control.value))) {
       return null; // Valid
+    } else if(!control.value){
+      return null;
     }
     return { patternInvalid: true }; // Invalid
   }
@@ -481,7 +483,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [obj.tanNumber, this.patternValidator]
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator]
       });
     } else {
       return this.fb.group({
@@ -491,7 +493,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator,]
       });
     }
   }
