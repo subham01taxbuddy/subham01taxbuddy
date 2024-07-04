@@ -10,8 +10,7 @@ export class ZipcodeDirective {
         this.autocomplete = 'off'
     }
     @HostListener('keypress', ['$event']) public disableKeys(e: any) {
-        this.document.all ? e.keyCode : e.keyCode
-        return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode == 88 || e.keyCode == 120 // keycodes for x and X
+        return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode >= 65 && e.keyCode <= 90 || e.keyCode >= 97 && e.keyCode <= 122 // keycodes for x and X
     }
 
     @HostListener('paste', ['$event'])
