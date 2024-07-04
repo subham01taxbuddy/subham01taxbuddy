@@ -91,7 +91,7 @@
                               </mat-form-field>
                             </div>
                           </div>
-                          
+
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
@@ -199,7 +199,9 @@
                               <mat-select name="allowType[i]" formControlName="allowType"
                                 (selectionChange)="validateExemptIncomes($event);changeAllowancesType()">
                                 <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
-                                  [value]="exempt.value" [disabled]="exempt['disabled']" class="custom-dropdown-option">
+                                  [value]="exempt.value"
+                                  [disabled]="(exempt.value!= 'ANY_OTHER')?exempt['disabled']:false"
+                                  class="custom-dropdown-option">
                                   {{ exempt.label }}
                                 </mat-option>
                               </mat-select>
