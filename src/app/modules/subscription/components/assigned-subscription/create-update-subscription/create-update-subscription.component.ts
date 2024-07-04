@@ -1332,6 +1332,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
               if (this.assessmentYear.value === '' || typeof this.assessmentYear.value === 'undefined' || this.assessmentYear.value === 'undefined') {
                 this.loading = false;
                 this.toastMessage.alert('error', 'Please select Financial Year For ' + (this.service === 'ITR' ? 'ITR' : 'ITR-U') + ' subscription');
+                reject("Financial Year Missing");
                 return;
               }
             }
@@ -1339,6 +1340,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             if (this.showScheduledFields === true && (this.scheduleCallService.value === '' || typeof this.scheduleCallService.value === 'undefined' || this.scheduleCallService.value === 'undefined')) {
               this.loading = false;
               this.toastMessage.alert('error', 'Please Select Service Type For Scheduled Call ');
+              reject("Scheduled Call Service Type");
               return;
             }
 
