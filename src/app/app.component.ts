@@ -50,6 +50,14 @@ export class AppComponent {
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
+        let softwareUpdateAvailable = sessionStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
+        if (softwareUpdateAvailable === 'true') {
+          sessionStorage.removeItem('SOFTWARE_UPDATE_AVAIlABLE');
+          window.location.reload();
+          navigator.serviceWorker.getRegistration('/').then(function (registration) {
+            registration.update();
+          });
+        }
         if (
           event.id === 1 &&
           event.url === event.urlAfterRedirects
@@ -69,7 +77,8 @@ export class AppComponent {
 
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
-        this.reloadWindow();
+        sessionStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
+        // this.reloadWindow();
       })
     }
 
