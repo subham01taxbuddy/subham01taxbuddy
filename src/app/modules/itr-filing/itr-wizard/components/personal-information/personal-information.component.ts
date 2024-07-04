@@ -3,7 +3,6 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  OnChanges,
   Input,
   SimpleChanges, ElementRef,
 } from '@angular/core';
@@ -13,7 +12,6 @@ import {
   UntypedFormBuilder,
   UntypedFormArray,
   ValidationErrors,
-  FormControl,
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
@@ -24,7 +22,6 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import {
   DateAdapter,
   MAT_DATE_LOCALE,
@@ -2786,7 +2783,7 @@ export class PersonalInformationComponent implements OnInit {
   openAcc() {
     const accordionButton = document.getElementById('bankButtonId');
     if (accordionButton) {
-      if (accordionButton.getAttribute("aria-expanded") === "false"){
+      if (accordionButton.getAttribute("aria-expanded") === "false") {
         accordionButton.click();
       }
 
