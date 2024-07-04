@@ -658,8 +658,8 @@ export class CustomerProfileComponent implements OnInit {
     // }
 
     const accord = document.getElementById('accordBtn');
-    if(accord){
-      if (accord.getAttribute("aria-expanded") === "false"){
+    if (accord) {
+      if (accord.getAttribute("aria-expanded") === "false") {
         accord.click();
       }
 
@@ -899,24 +899,9 @@ export class CustomerProfileComponent implements OnInit {
     this.filingTeamMembers = await this.utilsService.getStoredSmeList();
   }
 
-  // file: File;
-  // fileName: any;
-  // showProgress: boolean;
-  // uploaded: number;
-  // showError: boolean;
-  // filesize: string;
-  // loaded: string;
-  // fileAttr = 'Choose File';
   upload() {
     document.getElementById('input-file-id').click();
   }
-
-  // onUploadFile(event) {
-  //   let fileList: FileList = event.target.files;
-  //   this.file = FileList = event.target.files;
-  //   console.log("My fileList after Select==", fileList[0].name)
-  //   this.fileName = fileList[0].name;
-  // }
 
   uploadFile(file: FileList) {
     console.log('File', file);
