@@ -7120,7 +7120,7 @@ export class SummaryComponent implements OnInit {
         if (result.status) {
           this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
           this.ITR_JSON['manualUpdateReason'] = result.reason;
-          this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+          this.utilsService.saveManualUpdateReason(this.ITR_JSON).subscribe(
             (result: any) => {
               this.loading = false;
               this.ITR_JSON = result;
