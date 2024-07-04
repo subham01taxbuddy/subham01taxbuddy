@@ -77,6 +77,7 @@ export class AppComponent {
 
     if (this.swUpdate.isEnabled) {
       this.swUpdate.available.subscribe(() => {
+        console.log('SOFTWARE_UPDATE_AVAIlABLE')
         sessionStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
         // this.reloadWindow();
       })
