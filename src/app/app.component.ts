@@ -80,7 +80,7 @@ export class AppComponent {
 
     if (this.swUpdate.isEnabled) {
       console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
-      localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
+      // localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       this.swUpdate.available.subscribe(() => {
         console.log('SOFTWARE_UPDATE_AVAIlABLE')
         localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
