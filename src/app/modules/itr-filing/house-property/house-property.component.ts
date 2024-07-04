@@ -3,7 +3,7 @@ import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
-  UntypedFormArray,
+  UntypedFormArray, AbstractControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -459,6 +459,16 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  patternValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const pattern1 = AppConstants.panNumberRegex;
+    const pattern2 = AppConstants.tanNumberRegex;
+
+    if (control.value && (pattern1.test(control.value) || pattern2.test(control.value))) {
+      return null; // Valid
+    }
+    return { patternInvalid: true }; // Invalid
+  }
+
   createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?: boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
@@ -471,7 +481,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
+        tanNumber: [obj.tanNumber, this.patternValidator]
       });
     } else {
       return this.fb.group({
