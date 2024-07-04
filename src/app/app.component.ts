@@ -241,7 +241,6 @@ export class AppComponent {
           registration.update();
         });
       }
-
     });
   }
 }
