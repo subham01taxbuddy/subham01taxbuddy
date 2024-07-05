@@ -509,8 +509,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
         if(this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1 ){
           this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
-        }else{
-          this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink'))
         }
 
         if (this.invoiceData.length == 0) {
