@@ -949,6 +949,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
+        hide : hidePaymentLink ? true : false,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
