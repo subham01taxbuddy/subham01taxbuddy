@@ -380,6 +380,11 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
+    if(this.roles.includes('ROLE_FILER')){
+      this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink'))
+    }else{
+      this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList))
+    }
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
