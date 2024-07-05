@@ -40,7 +40,8 @@ export class PushNotificationComponent {
     request_id: notification.recipient,
     departmentId: notification.attributes.departmentId,
     userFullName: notification.attributes.userFullname,
-    image: notification.attributes.userFullname[0]
+    image: notification.attributes.userFullname[0],
+    departmentName: notification.attributes.departmentName
    };
 
    this.dialogRef.close();
@@ -49,6 +50,7 @@ export class PushNotificationComponent {
    setTimeout(() => {
     this.chatService.openUserChat(user);
     this.chatService.fetchMessages(user.request_id)
+    this.chatService.initRxjsWebsocket(user.request_id);
     this.removeNotification(notification);
   }, 0);
     
