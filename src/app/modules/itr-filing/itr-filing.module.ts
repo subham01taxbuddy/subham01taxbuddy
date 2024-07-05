@@ -8,7 +8,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ItrFilingRoutingModule } from './itr-filing.routing';
 import { CustomerProfileComponent } from './itr-wizard/components/customer-profile/customer-profile.component';
 import { ItrFilingComponent } from './itr-filing.component';
-// import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { ItrWizardComponent } from './itr-wizard/itr-wizard.component';
 import { PersonalInformationComponent } from './itr-wizard/components/personal-information/personal-information.component';
@@ -18,20 +17,14 @@ import { OtherIncomeComponent } from './other-income/other-income.component';
 import { InvestmentsDeductionsComponent } from './itr-wizard/pages/investments-deductions/investments-deductions.component';
 import { DeclarationComponent } from './declaration/declaration.component';
 import { SummaryComponent } from './summary/summary.component';
-import { AcknowledgementComponent } from './acknowledgement/acknowledgement.component';
-import { DirectUploadComponent } from './direct-upload/direct-upload.component';
-import { MyAssignedItrsComponent } from './my-assigned-itrs/my-assigned-itrs.component';
-import { BusinessComponent } from './business/business.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ReviseReturnDialogComponent } from './revise-return-dialog/revise-return-dialog.component';
 import { DelayComponent } from './delay/delay.component';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { FilingTasksComponent } from './filing-tasks/filing-tasks.component';
 import { ShowUserDocumnetsComponent } from './show-user-documnets/show-user-documnets.component';
-import { UpdateManualFilingComponent } from './update-manual-filing/update-manual-filing.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PrefillDataComponent } from './itr-wizard/pages/prefill-id/components/prefill-data/prefill-data.component';
-import { CoOwnerComponent } from './house-property/co-owner/co-owner.component';
 import { DeleteConfirmationDialogComponent } from './components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { NriDetailsDialogComponent } from './components/nri-details-dialog/nri-details-dialog.component';
 import { BusinessIncomeComponent } from './business-income/business-income.component';
@@ -51,8 +44,6 @@ import { SourceOfIncomesComponent } from './itr-wizard/pages/source-of-incomes/s
 import { PagesModule } from 'src/app/pages/pages.module';
 import { AllPersonalInformationComponent } from './itr-wizard/pages/all-personal-information/all-personal-information.component';
 import { OtherInformationComponent } from './itr-wizard/components/other-information/other-information.component';
-import { UnlistedSharesComponent } from './itr-wizard/components/other-information/unlisted-shares/unlisted-shares.component';
-import { DirectorInCompanyComponent } from './itr-wizard/components/other-information/director-in-company/director-in-company.component';
 import { DonationsComponent } from './itr-wizard/components/donations/donations.component';
 import { MedicalExpensesComponent } from './itr-wizard/components/medical-expenses/medical-expenses.component';
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
@@ -104,10 +95,10 @@ import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
-import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/update-income-sources/update-income-sources.component';
 
 @NgModule({
     imports: [
@@ -124,117 +115,106 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         ItrSharedModule,
         NgxExtendedPdfViewerModule
     ],
-  providers: [
-    DatePipe,
-    { provide: MAT_DIALOG_DATA, useValue: {} },
-    { provide: MatDialogRef, useValue: {} },
-  ],
-  declarations: [
-    ItrFilingComponent,
-    CustomerProfileComponent,
-    ItrWizardComponent,
-    PersonalInformationComponent,
-    SalaryComponent,
-    HousePropertyComponent,
-    OtherIncomeComponent,
-    InvestmentsDeductionsComponent,
-    // AddDonationDialogComponent,
-    TaxesPaidComponent,
-    DeclarationComponent,
-    SummaryComponent,
-    AcknowledgementComponent,
-    AckSuccessComponent,
-    AckDelayComponent,
-    AckFailureComponent,
-    // UpdateStatusComponent,
-    DirectUploadComponent,
-    MyAssignedItrsComponent,
-    BusinessComponent,
-    // WhatsAppDialogComponent,
-    // FilingStatusDialogComponent,
-    DocumentUploadComponent,
-    ReviseReturnDialogComponent,
-    DelayComponent,
-    FilingTasksComponent,
-    ShowUserDocumnetsComponent,
-    UpdateManualFilingComponent,
-    AddClientDialogComponent,
-    PrefillDataComponent,
-    CoOwnerComponent,
-    DeleteConfirmationDialogComponent,
-    NriDetailsDialogComponent,
-    OtherInformationComponent,
-    UnlistedSharesComponent,
-    DirectorInCompanyComponent,
-    CapitalGainComponent,
-    LandAndBuildingComponent,
-    LabFormComponent,
-    AddInvestmentDialogComponent,
-    EquityMfComponent,
-    ListedUnlistedDialogComponent,
-    InvestmentDialogComponent,
-    OtherAssetsComponent,
-    OtherAssetsDialogComponent,
-    OtherImprovementDialogComponent,
-    MoreInfoComponent,
-    ScheduleALComponent,
-    BondsDebentureComponent,
-    BondsComponent,
-    BusinessIncomeComponent,
-    PresumptiveIncomeComponent,
-    PresumptiveBusinessIncomeComponent,
-    PresumptiveProfessionalIncomeComponent,
-    ProfitLossAcComponent,
-    BalanceSheetComponent,
-    BusinessDialogComponent,
-    ProfessionalDialogComponent,
-    NonSpeculativeIncomeComponent,
-    SpeculativeIncomeComponent,
-    AddUpdateTradingComponent,
-    DepreciationDialogComponent,
-    PrefillIdComponent,
-    SourceOfIncomesComponent,
-    AllPersonalInformationComponent,
-    DonationsComponent,
-    MedicalExpensesComponent,
-    InvestmentsDeductionsComponent,
-    ForeignIncomeComponent,
-    UploadDocComponent,
-    TdsOnSalaryComponent,
-    TdsOtherThanSalaryComponent,
-    TcsComponent,
-    AdvanceTaxPaidComponent,
-    AllBusinessIncomeComponent,
-    AddClientsComponent,
-    ZeroCouponBondsComponent,
-    BondsDebentureComponent,
-    AllSalaryIncomeComponent,
-    SecurityDeductionComponent,
-    SharesAndEquityComponent,
-    MoreInformationComponent,
-    OtherAssetImprovementComponent,
-    FileParserComponent,
-    ScheduleCflComponent,
-    OldVsNewComponent,
-    SelectionComponent,
-    TdsTypeCellRenderer,
-    BusinessInputAutocompleteComponent,
-    ScheduleFsiComponent,
-    ScheduleTrComponent,
-    ScheduleFaComponent,
-    CryptoVdaComponent,
-    PartnerInFirmsComponent,
-    BifurcationComponent,
-    SalaryBifurcationComponent,
-    CalculatorsComponent,
-    BreakUpComponent,
-    OtherDeductionsComponent,
-    ExemptIncomeComponent,
-    AddAssetsComponent,
-    ScheduleEsopComponent,
-    NorDetailsDialogComponent
-  ],
-
-  exports: [CustomerProfileComponent]
+    providers: [
+        DatePipe,
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+    ],
+    declarations: [
+        ItrFilingComponent,
+        CustomerProfileComponent,
+        ItrWizardComponent,
+        PersonalInformationComponent,
+        SalaryComponent,
+        HousePropertyComponent,
+        OtherIncomeComponent,
+        InvestmentsDeductionsComponent,
+        // AddDonationDialogComponent,
+        TaxesPaidComponent,
+        DeclarationComponent,
+        SummaryComponent,
+        AckSuccessComponent,
+        AckDelayComponent,
+        AckFailureComponent,
+        // KommunicateDialogComponent,
+        DocumentUploadComponent,
+        ReviseReturnDialogComponent,
+        DelayComponent,
+        FilingTasksComponent,
+        ShowUserDocumnetsComponent,
+        AddClientDialogComponent,
+        PrefillDataComponent,
+        DeleteConfirmationDialogComponent,
+        NriDetailsDialogComponent,
+        OtherInformationComponent,
+        CapitalGainComponent,
+        LandAndBuildingComponent,
+        LabFormComponent,
+        AddInvestmentDialogComponent,
+        EquityMfComponent,
+        ListedUnlistedDialogComponent,
+        InvestmentDialogComponent,
+        OtherAssetsComponent,
+        OtherAssetsDialogComponent,
+        OtherImprovementDialogComponent,
+        MoreInfoComponent,
+        ScheduleALComponent,
+        BondsDebentureComponent,
+        BondsComponent,
+        BusinessIncomeComponent,
+        PresumptiveIncomeComponent,
+        PresumptiveBusinessIncomeComponent,
+        PresumptiveProfessionalIncomeComponent,
+        ProfitLossAcComponent,
+        BalanceSheetComponent,
+        BusinessDialogComponent,
+        ProfessionalDialogComponent,
+        NonSpeculativeIncomeComponent,
+        SpeculativeIncomeComponent,
+        AddUpdateTradingComponent,
+        DepreciationDialogComponent,
+        PrefillIdComponent,
+        SourceOfIncomesComponent,
+        AllPersonalInformationComponent,
+        DonationsComponent,
+        MedicalExpensesComponent,
+        InvestmentsDeductionsComponent,
+        ForeignIncomeComponent,
+        UploadDocComponent,
+        TdsOnSalaryComponent,
+        TdsOtherThanSalaryComponent,
+        TcsComponent,
+        AdvanceTaxPaidComponent,
+        AllBusinessIncomeComponent,
+        AddClientsComponent,
+        ZeroCouponBondsComponent,
+        BondsDebentureComponent,
+        AllSalaryIncomeComponent,
+        SecurityDeductionComponent,
+        SharesAndEquityComponent,
+        MoreInformationComponent,
+        OtherAssetImprovementComponent,
+        FileParserComponent,
+        ScheduleCflComponent,
+        OldVsNewComponent,
+        SelectionComponent,
+        TdsTypeCellRenderer,
+        BusinessInputAutocompleteComponent,
+        ScheduleFsiComponent,
+        ScheduleTrComponent,
+        ScheduleFaComponent,
+        CryptoVdaComponent,
+        PartnerInFirmsComponent,
+        BifurcationComponent,
+        SalaryBifurcationComponent,
+        CalculatorsComponent,
+        BreakUpComponent,
+        OtherDeductionsComponent,
+        ExemptIncomeComponent,
+        ScheduleEsopComponent,
+        NorDetailsDialogComponent,
+        UpdateIncomeSourcesComponent
+    ],
+    exports: [CustomerProfileComponent]
 })
 export class ItrFilingModule {}

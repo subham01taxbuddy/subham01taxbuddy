@@ -1,17 +1,15 @@
 import { AppConstants } from './../../../shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import Auth from '@aws-amplify/auth';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import { MatDialog } from '@angular/material/dialog';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { StorageService } from 'src/app/modules/shared/services/storage.service';
 import { AppSetting } from 'src/app/modules/shared/app.setting';
-import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-what-app/validate-otp-by-what-app.component';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
@@ -23,8 +21,6 @@ import { environment } from 'src/environments/environment';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
 declare let $: any;
-declare function we_login(userId: string);
-declare function we_setAttribute(key: string, value: any);
 
 @Component({
   selector: 'app-login',
@@ -49,7 +45,6 @@ export class LoginComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private roleBaseAuthGaurdService: RoleBaseAuthGuardService,
     private userMsService: UserMsService,
-    private dialog: MatDialog,
     public utilsService: UtilsService,
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
@@ -95,12 +90,6 @@ export class LoginComponent implements OnInit {
       let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
       this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
 
-      we_login(res.data[0].userId.toString());
-      we_setAttribute('we_email', res.data[0].email);
-      we_setAttribute('we_phone', (res.data[0].callingNumber));
-      we_setAttribute('we_first_name', res.data[0].name);
-      we_setAttribute('User Id', parseInt(res.data[0].userId));
-
       //get logged in userID
       let userId = this.utilsService.getLoggedInUserID();
       //register sme login
@@ -130,6 +119,26 @@ export class LoginComponent implements OnInit {
       } else {
         if (roles.length > 0)
           this._toastMessageService.alert("error", "Access Denied.");
+      }
+
+      //Ashwini: check for specific users and allow the CG module for them
+      let userNumber = this.form.value.user;
+      let allowedUsers = [
+        //Gitanjali -
+        "9324957899",
+        // Divya-
+        "9324957908",
+        // Ankita-
+        "9594746347",
+        // Pratik
+        "9324501969",
+        // Astha -
+        "9773011936",
+        // UAT admin
+        "0014082016"
+      ];
+      if (allowedUsers.filter(value => value === userNumber).length > 0) {
+        sessionStorage.setItem('CG_MODULE', 'YES');
       }
     }
   }
@@ -344,34 +353,6 @@ export class LoginComponent implements OnInit {
       sessionStorage.setItem('itrFilingDueDate', result.data.itrFilingDueDate);
     });
   }
-
-  sendOtpOnWhatapp(values: any) {
-    this.form.controls['passphrase'].setValidators(null);
-    this.form.controls['passphrase'].updateValueAndValidity();
-    let disposable = this.dialog.open(ValidateOtpByWhatAppComponent, {
-      width: '47%',
-      height: 'auto',
-      data: {
-        userName: values
-      }
-    })
-
-    disposable.afterClosed().subscribe(result => {
-      // window.open('https://wa.me/919321908755?text=OTP%20WEB')
-    })
-
-  }
-
-  /*  getFyList() {
-     let param = '/filing-dates';
-     this.itrMsService.getMethod(param).subscribe((res: any) => {
-       if (res && res.success && res.data instanceof Array) {
-         sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-       }
-     }, error => {
-       console.log('Error during getting all PromoCodes: ', error)
-     })
-   } */
 
   async getAgentList() {
     await this.utilsService.getStoredAgentList();

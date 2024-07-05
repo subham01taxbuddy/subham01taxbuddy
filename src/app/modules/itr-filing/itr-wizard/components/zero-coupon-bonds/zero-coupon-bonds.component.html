@@ -12,7 +12,7 @@
 
 
             <div>
-              <form [formGroup]="selectedFormGroup">
+              <form [formGroup]="selectedFormGroup" #formDirective="ngForm">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading1">
                     <button id="accordBtn1" type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -107,6 +107,9 @@
                                     <mat-error *ngIf="selectedFormGroup.get('purchaseCost').hasError('required')">Please
                                       enter cost of acquisition</mat-error>
                                   </mat-form-field>
+                                  <div class="note new-note align-center">
+                                    <b>Note:</b> Click on tab button after entering buy value to get the gain amount
+                                  </div>
                                 </div>
                               </div>
 
@@ -167,7 +170,10 @@
                           <button class="btn btn__white" (click)="clearForm()">Cancel</button>
                         </div>
                         <div class="box-right">
-                          <button class="btn btn__primary" (click)="saveManualEntry()">Save Details</button>
+                          <button class="btn btn__primary" (click)="saveManualEntry()"[disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
+                                 selectedFormGroup?.controls['capitalGain'].value === undefined">
+                            Save Details
+                          </button>
                         </div>
                       </div>
                     </div>

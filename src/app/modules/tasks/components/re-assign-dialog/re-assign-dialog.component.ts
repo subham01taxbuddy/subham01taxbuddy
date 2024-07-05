@@ -2,7 +2,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-re-assign-dialog',
   templateUrl: './re-assign-dialog.component.html',
@@ -142,63 +141,76 @@ export class ReAssignDialogComponent implements OnInit {
     }
   }
 
-  reAssign() {
-    // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        if (this.leaderId || this.filerId) {
-          this.loading = true;
-          let leaderFilter = '';
-          if (this.leaderId) {
-            leaderFilter += `&leaderUserId=${this.leaderId}`
-          }
-          let filerFilter = '';
-          if (this.filerId) {
-            leaderFilter = '';
-            filerFilter += `&filerUserId=${this.filerId}`
-          }
-          const param = `/v2/user-reassignment?userId=${this.data.userId}&serviceType=${this.serviceType}${leaderFilter}${filerFilter}`
-          this.userMsService.getMethod(param).subscribe((res: any) => {
-            console.log(res);
-            we_track('Re-assign', {
-              'User Name': this.data?.userInfo?.name,
-              'User Number': this.data?.userInfo?.mobileNumber,
-              'From filer ': this.data?.userInfo?.filerName,
-              'From Owner': this.data?.userInfo?.ownerName,
-              'To filer ': this.reAssignedFilerName,
-              'To Owner': this.reAssignedOwnerName
-            });
-            this.utilsService.showSnackBar('User re assigned successfully.');
-            this.loading = false;
-            this.dialogRef.close({ event: 'close', data: 'success' });
-            if (res.success == false) {
-              this.utilsService.showSnackBar(res.error)
-              console.log(res.message)
-            }
-          }, error => {
-            this.loading = false;
-            this.utilsService.showSnackBar('Filer not found active, please try another.');
-            console.log(error);
-            this.dialogRef.close({ event: 'close', data: 'success' });
-          })
+  reAssign = (): Promise<any> => {
+  // 'https://uat-api.taxbuddy.com/user/v2/user-reassignment?userId=13621&serviceType=ITR&filerUserId=14198'
+   return new Promise((resolve, reject) => {
+    this.loading = true;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          this.loading = false;
+          return reject(res.error);
         } else {
-          this.utilsService.showSnackBar('Please select leader/Filer Name');
+          if (this.leaderId || this.filerId) {
+            this.loading = true;
+            let leaderFilter = '';
+            if (this.leaderId) {
+              leaderFilter += `&leaderUserId=${this.leaderId}`;
+            }
+            let filerFilter = '';
+            if (this.filerId) {
+              leaderFilter = '';
+              filerFilter += `&filerUserId=${this.filerId}`;
+            }
+            const param = `/v2/user-reassignment?userId=${this.data.userId}&serviceType=${this.serviceType}${leaderFilter}${filerFilter}`;
+
+            this.userMsService.getMethod(param).toPromise().then(
+              (res: any) => {
+                this.loading = false;
+                console.log(res);
+
+                if (res.success === false) {
+                  this.utilsService.showSnackBar(res.error);
+                  console.log(res.message);
+                } else {
+                  this.utilsService.showSnackBar('User re-assigned successfully.');
+                }
+                this.dialogRef.close({ event: 'close', data: 'success' });
+                resolve(res);
+              },
+              (error) => {
+                this.loading = false;
+                this.utilsService.showSnackBar('Filer not found active, please try another.');
+                console.log(error);
+                this.dialogRef.close({ event: 'close', data: 'success' });
+                reject(error);
+              }
+            ).catch((error) => {
+              this.loading = false;
+              reject(error);
+            });
+          } else {
+            this.loading = false;
+            this.utilsService.showSnackBar('Please select leader/Filer Name');
+            reject(new Error('Please select leader/Filer Name'));
+          }
         }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar("An unexpected error occurred.");
+        }
+        reject(error);
       }
-    }, error => {
-      this.loading = false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
-    });
+    );
+   });
   }
 
 }

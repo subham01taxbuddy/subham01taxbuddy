@@ -11,16 +11,12 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ActivatedRoute } from '@angular/router';
 
-/**
- * Node for to-do item
- */
 export class FoodNode {
   children?: FoodNode[];
   item!: string;
   value!: string;
 }
 
-/** Flat to-do item node with expandable and level information */
 export class CloudFlatNode {
   item!: string;
   value!: string;
@@ -28,9 +24,6 @@ export class CloudFlatNode {
   expandable!: boolean;
 }
 
-/**
- * The Json object for to-do list data.
- */
 const TREE_DATA: FoodNode[] = [
   {
     item: 'Common',
@@ -41,12 +34,12 @@ const TREE_DATA: FoodNode[] = [
     value: 'ITRU',
     children: [
       {
-          "item" : "2022-23",
-          "value" : "2022-23"
+        "item": "2022-23",
+        "value": "2022-23"
       },
       {
-          "item" : "2021-22",
-          "value" : "2021-22"
+        "item": "2021-22",
+        "value": "2021-22"
       }
     ]
   },
@@ -2796,11 +2789,6 @@ const TREE_DATA: FoodNode[] = [
   },
 ];
 
-/**
- * Checklist database, it can build a tree structured Json object.
- * Each node in Json object represents a to-do item or a category.
- * If a node is a category, it has children items and new items can be added under the category.
- */
 @Injectable({ providedIn: 'root' })
 export class ChecklistDatabase {
   dataChange = new BehaviorSubject<FoodNode[]>([]);
@@ -2816,46 +2804,10 @@ export class ChecklistDatabase {
 
   initialize() {
     this.treeData = TREE_DATA;
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
     const data = TREE_DATA;
-
-    // Notify the change.
     this.dataChange.next(data);
   }
 
-  // public filter(filterText: string) {
-  //   let filteredTreeData;
-  //   if (filterText) {
-  //     // Filter the tree
-  //     function filter(array, text) {
-  //       const getChildren = (result, object) => {
-  //         if (object.item.toLowerCase() === text.toLowerCase()) {
-  //           result.push(object);
-  //           return result;
-  //         }
-  //         if (Array.isArray(object.children)) {
-  //           const children = object.children.reduce(getChildren, []);
-  //           if (children.length) result.push({ ...object, children });
-  //         }
-  //         return result;
-  //       };
-
-  //       return array.reduce(getChildren, []);
-  //     }
-
-  //     filteredTreeData = filter(this.treeData, filterText);
-  //   } else {
-  //     // Return the initial tree
-  //     filteredTreeData = this.treeData;
-  //   }
-
-  //   // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-  //   // file node as children.
-  //   const data = filteredTreeData;
-  //   // Notify the change.
-  //   this.dataChange.next(data);
-  // }
 }
 
 @Component({
@@ -2922,22 +2874,21 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDoc: any;
   docType: any = [
-    { value: 'FORM_16', label: 'Form 16', tree: 'ITR' ,newTree : 'ITRU' },
+    { value: 'FORM_16', label: 'Form 16', tree: 'ITR', newTree: 'ITRU' },
     { value: 'AADHAAR_FRONT', label: 'Aadhar front', tree: 'Common' },
     { value: 'AADHAAR_BACK', label: 'Aadhar back', tree: 'Common' },
     { value: 'PAN', label: 'Pan card', tree: 'Common' },
-    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR',newTree : 'ITRU' },
-    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR' ,newTree : 'ITRU'},
-    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR' ,newTree : 'ITRU'},
-    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR' ,newTree : 'ITRU'},
-    /* { value: null, label: 'Miscellaneous' } */];
+    { value: 'BANK_STATEMENT', label: 'Bank Statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'CAPITAL_GAIN_STATEMENT', label: 'Capital Gain Statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'SALE_AGREEMENT', label: 'Sale agreement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'PURCHASE_AGREEMENT', label: 'Purchase agreement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'FOREIGN_INCOME_STATEMENT', label: 'Foreign income statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'LOAN_STATEMENT', label: 'Loan statement', tree: 'ITR', newTree: 'ITRU' },
+    { value: 'FORM_26_AS', label: 'Form 26', tree: 'ITR', newTree: 'ITRU' },
+  ];
   isPassProtected!: boolean;
   filePassword: any;
   loading: boolean = false;
-  // ITR_JSON: ITR_JSON;
   selectedFileType = null;
 
   @Output() uploadDocument = new EventEmitter<any>();
@@ -2958,9 +2909,6 @@ export class DocumentUploadComponent implements OnInit {
 
   hasNoContent = (_: number, _nodeData: CloudFlatNode) => _nodeData.item === '';
 
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
   transformer = (node: FoodNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode =
@@ -2976,7 +2924,6 @@ export class DocumentUploadComponent implements OnInit {
     return flatNode;
   };
 
-  /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: CloudFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected = descendants.every(child =>
@@ -2985,7 +2932,6 @@ export class DocumentUploadComponent implements OnInit {
     return descAllSelected;
   }
 
-  /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: CloudFlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child =>
@@ -2994,32 +2940,23 @@ export class DocumentUploadComponent implements OnInit {
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
   todoItemSelectionToggle(node: CloudFlatNode): void {
     this.checklistSelection.toggle(node);
-    // console.log(this.checklistSelection.selected);
     const descendants = this.treeControl.getDescendants(node);
     if (!this.checklistSelection.isSelected(node)) {
       this.checklistSelection.deselect(...descendants);
     }
     this.treeControl.toggle(node);
-    this.checkSameLevelSelecion(this.checklistSelection.selected);
-
-    // // Force update for the parent
-    // descendants.every(child => this.checklistSelection.isSelected(child));
-    // this.checkAllParentsSelection(node);
+    this.checkSameLevelSelection(this.checklistSelection.selected);
   }
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: CloudFlatNode): void {
     this.checklistSelection.toggle(node);
     console.log(this.checklistSelection.selected);
-    this.checkSameLevelSelecion(this.checklistSelection.selected);
-
-    // this.checkAllParentsSelection(node);
+    this.checkSameLevelSelection(this.checklistSelection.selected);
   }
 
-  checkSameLevelSelecion(selectedArray: any) {
+  checkSameLevelSelection(selectedArray: any) {
     let getSelectedLevelArray = selectedArray.filter(
       (item: any) => item.level === selectedArray[selectedArray.length - 1].level
     );
@@ -3040,7 +2977,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /* Checks all the parents when a leaf node is selected/unselected */
   checkAllParentsSelection(node: CloudFlatNode): void {
     let parent: CloudFlatNode | null = this.getParentNode(node);
     while (parent) {
@@ -3049,7 +2985,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /** Check root node checked state and change it accordingly */
   checkRootNodeSelection(node: CloudFlatNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -3063,7 +2998,6 @@ export class DocumentUploadComponent implements OnInit {
     }
   }
 
-  /* Get the parent node of a node */
   getParentNode(node: CloudFlatNode): CloudFlatNode | null {
     console.log(this.checklistSelection.selected);
     const currentLevel = this.getLevel(node);
@@ -3089,17 +3023,6 @@ export class DocumentUploadComponent implements OnInit {
     return this.checklistSelection.selected.map(s => s.value).join('/');
   }
 
-  // filterChanged(filterText: string) {
-  //   console.log('filterChanged', filterText);
-  //   // ChecklistDatabase.filter method which actually filters the tree and gives back a tree structure
-  //   this._database.filter(filterText);
-  //   if (filterText) {
-  //     this.treeControl.expandAll();
-  //   } else {
-  //     this.treeControl.collapseAll();
-  //   }
-  // }
-
   clearDocVal() {
     console.log('selected=>', this.getSelectedItems(), this.selectedFileType);
     let event = {
@@ -3111,7 +3034,6 @@ export class DocumentUploadComponent implements OnInit {
     this.uploadDoc = null;
     this.filePassword = '';
     this.isPassProtected = false;
-    // this.selectedFileType = null;
   }
 
   uploadFile(event: Event) {
@@ -3138,7 +3060,6 @@ export class DocumentUploadComponent implements OnInit {
       let param = '/gateway/custom-bot/is-password-protected'
       this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
         this.loading = false;
-        console.log('checkDocPassProtected responce =>', res)
         if (res.response === 'File is password protected!') {
           this.isPassProtected = true;
         }
@@ -3154,7 +3075,6 @@ export class DocumentUploadComponent implements OnInit {
           this.isPassProtected = false;
           this.uploadDocuments(type, document)
         }
-        // this.uploadDocument(type, document)
       },
         error => {
           this.loading = false;
@@ -3168,23 +3088,15 @@ export class DocumentUploadComponent implements OnInit {
 
   uploadDocuments(type: any, document: any, password?: any) {
     this.loading = true;
-    var s3ObjectUrl = `${this.userId}/${this.getSelectedItems()}/${document.name}`;
-    // if (type === 'PAN' || type === 'AADHAAR_BACK' || type === 'AADHAAR_FRONT') {
-    //   s3ObjectUrl = `${this.ITR_JSON.userId}/Common/${document.name}`;
-    // }
-    // else {
-    //   s3ObjectUrl = `${this.ITR_JSON.userId}/ITR/${this.utilsService.getCloudFy(this.ITR_JSON.financialYear)}/Original/ITR Filing Docs/${document.name}`;
-    // }
-
-    var pass;
-    //,"password":"' + (password ? password : null) + '"
+    let s3ObjectUrl = `${this.userId}/${this.getSelectedItems()}/${document.name}`;
+    let pass;
     if (password) {
       pass = '","password":"' + password + '"';
     }
     else {
       pass = '"';
     }
-    var documentTag = '';
+    let documentTag = '';
     if (this.selectedFileType) {
       documentTag = '","documentTag":"' + this.selectedFileType;
     }
@@ -3200,7 +3112,6 @@ export class DocumentUploadComponent implements OnInit {
     let param = '/itr/cloud/upload'
     this.userMsService.postMethodInfo(param, formData).subscribe((res: any) => {
       this.loading = false;
-      console.log('uploadDocument responce =>', res)
       if (res.Failed === 'Failed to uploade file!') {
         this.utilsService.showSnackBar(res.Failed)
       } else if (res.Success === 'File successfully uploaded!') {

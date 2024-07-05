@@ -18,6 +18,7 @@ import { ChatManager } from "../../../chat/chat-manager";
 import { PushNotificationComponent } from 'src/app/modules/chat/push-notification/push-notification.component';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
+import {Subscription} from "rxjs";
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -41,6 +42,8 @@ export class NavbarComponent implements DoCheck {
   loggedInUserId: number;
   showAffiliateBtn = false;
   showCopyLinkButton = false;
+  affLink:any;
+  showAffButton = false;
 
   loading: boolean = false;
   nav: boolean;
@@ -146,10 +149,20 @@ export class NavbarComponent implements DoCheck {
     }
   }
 
+  subscription: Subscription;
+
   ngAfterViewInit() {
     if (this.router.url.startsWith('/itr-filing/itr')) {
       this.close();
     }
+    this.subscription = this.sidebarService.isLoading
+        .subscribe((state) => {
+          if (!state) {
+            this.nav = true;
+          } else {
+            this.nav =  false;
+          }
+        });
   }
 
   open() {
@@ -172,10 +185,15 @@ export class NavbarComponent implements DoCheck {
       this.loading = false;
       if (response.success) {
         if (response.data.affiliateId) {
-          this.userAffiliateID = response.data.affiliateId
-          return;
+          this.userAffiliateID = response.data.affiliateId;
         } else {
           this.showAffiliateBtn = true;
+        }
+        if(response.data.referralLink){
+          this.affLink = response.data.referralLink;
+          this.showAffButton = true;
+        }else{
+          this.showAffButton = false;
         }
       } else {
         this.loading = false;
@@ -309,6 +327,18 @@ export class NavbarComponent implements DoCheck {
     document.body.removeChild(textarea);
     this._toastMessageService.alert("success", 'Link copied to clipboard!');
 
+  }
+
+  copyAffiliateLink() {
+    const textarea = document.createElement('textarea');
+    textarea.value = this.affLink;
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(textarea);
+    this._toastMessageService.alert("success", 'Affiliate Link copied to clipboard!');
   }
 
 

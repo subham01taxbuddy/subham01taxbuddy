@@ -4,9 +4,9 @@ import {
   Input,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges, ViewChild,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -26,6 +26,7 @@ import { GridOptions } from "ag-grid-community";
 export class ZeroCouponBondsComponent
   extends WizardNavigation
   implements OnInit {
+  @ViewChild('formDirective') formDirective: NgForm;
   step = 1;
   @Output() onSave = new EventEmitter();
   bondsForm: UntypedFormGroup;
@@ -300,13 +301,13 @@ export class ZeroCouponBondsComponent
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       dateOfImprovement: [item ? item.dateOfImprovement : null],
       costOfImprovement: [
-        item ? item.costOfImprovement : null,
+        item ? item.costOfImprovement : 0,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
       indexCostOfImprovement: [item ? item.indexCostOfImprovement : null],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
-      sellExpense: [item ? item.sellExpense : null],
+      sellExpense: [item ? item.sellExpense : 0],
       gainType: [item ? item.gainType : null],
       capitalGain: [item ? item.capitalGain : null],
       purchaseValuePerUnit: [item ? item.purchaseValuePerUnit : null],
@@ -323,7 +324,41 @@ export class ZeroCouponBondsComponent
     this.selectedFormGroup.reset();
     let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
+    this.formDirective.resetForm();
+    this.selectedFormGroup.controls['capitalGain'].setValue(null);
+    this.selectedFormGroup.controls['capitalGain'].updateValueAndValidity();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
+  }
+
+  onSaveClick() {
+    // event.preventDefault();
+    setTimeout(() => {
+      if (this.selectedFormGroup.pending) {
+        // Wait for all async validators to complete
+        let subscription = this.selectedFormGroup.statusChanges.subscribe(status => {
+          if (status !== 'PENDING') {
+            if (this.selectedFormGroup.valid) {
+              this.saveManualEntry();
+            } else {
+              this.utilsService.showSnackBar(
+                'Please make sure all the details are properly entered.'
+              );
+              this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+              subscription.unsubscribe();
+            }
+          }
+        });
+      } else {
+        if (this.selectedFormGroup.valid) {
+          this.saveManualEntry();
+        } else {
+          this.utilsService.showSnackBar(
+            'Please make sure all the details are properly entered.'
+          );
+          this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, "btn", this.elementRef);
+        }
+      }
+    }, 200);
   }
 
   saveManualEntry() {
@@ -670,7 +705,8 @@ export class ZeroCouponBondsComponent
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
-      const param = '/singleCgCalculate';
+      this.selectedFormGroup.markAsPending();
+      this.loading = true;
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
@@ -696,7 +732,7 @@ export class ZeroCouponBondsComponent
           },
         ],
       };
-      this.itrMsService.postMethod(param, request).subscribe(
+      this.itrMsService.singelCgCalculate(request).subscribe(
         (res: any) => {
           this.loading = false;
           if (res.assetDetails[0].capitalGain) {
@@ -708,6 +744,7 @@ export class ZeroCouponBondsComponent
           }
           this.updateDeductionUI();
           this.calculateDeductionGain();
+          this.selectedFormGroup.markAsPristine();
         },
         (error) => {
           this.loading = false;
@@ -862,7 +899,7 @@ export class ZeroCouponBondsComponent
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxGold = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -991,7 +1028,7 @@ export class ZeroCouponBondsComponent
           ].assetDetails.map((element) => element.srn);
           if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
+              (previousValue > currentValue ? previousValue : currentValue), 0
             );
           }
         }
@@ -1107,11 +1144,11 @@ export class ZeroCouponBondsComponent
           this.saveAndNext.emit(false);
         }
       );
-    } else{
+    } else {
       this.loading = false;
       $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
-          'Please verify the form and try again.'
+        'Please verify the form and try again.'
       );
     }
   }
@@ -1226,7 +1263,7 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+  depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
@@ -1248,8 +1285,8 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+  updateValidations(formGroup) {
+    if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
       formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
@@ -1261,7 +1298,7 @@ export class ZeroCouponBondsComponent
       formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
-    if(formGroup.controls['investmentInCGAccount'].value){
+    if (formGroup.controls['investmentInCGAccount'].value) {
       formGroup.controls['accountNumber'].setValidators([Validators.required]);
       formGroup.controls['accountNumber'].updateValueAndValidity();
       formGroup.controls['ifscCode'].setValidators([Validators.required]);
@@ -1280,8 +1317,8 @@ export class ZeroCouponBondsComponent
 
   calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
-        this.deductionForm.controls['costOfNewAssets'].valid &&
-        this.deductionForm.controls['investmentInCGAccount'].valid;
+      this.deductionForm.controls['costOfNewAssets'].valid &&
+      this.deductionForm.controls['investmentInCGAccount'].valid;
     if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
@@ -1355,7 +1392,7 @@ export class ZeroCouponBondsComponent
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
-    }else if(this.deduction && this.deductionForm.invalid){
+    } else if (this.deduction && this.deductionForm.invalid) {
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;

@@ -73,10 +73,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
       multi: true,
     },
     {
-      provide: SETTINGS, useFactory: () => { minimumFetchIntervalMillis: 60000 }
+      provide: SETTINGS, useFactory: () => { minimumFetchIntervalMillis: getRemoteConfigValue() }
     },
     { provide: SERVICE_WORKER, useFactory: () => typeof navigator !== 'undefined' && navigator.serviceWorker?.register('firebase-messaging-sw.js', { scope: '__' }) || undefined },
   ],
   bootstrap: [AppComponent]
  })
 export class AppModule { }
+function getRemoteConfigValue() {
+  return 60000;
+}
+

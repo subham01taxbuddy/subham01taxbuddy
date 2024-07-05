@@ -173,10 +173,14 @@
               </mat-form-field>
             </div>
             <div class="row mt-3 verifyBank">
-              <button class="col-2 verify-button "
+              <!-- <button class="col-2 verify-button "
                 [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
                 (click)="verifyBankDetails()">verify
-              </button>
+              </button> -->
+              <app-custom-button class="col-2 verify-button" [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
+                    [actions]="[verifyBankDetails]">
+                    verify
+              </app-custom-button>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xm-12 mt-3">
               <mat-label> PAN Number * </mat-label>
@@ -253,7 +257,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-5">
+            <!-- <div class="col-sm-5">
               <div class="card" style="margin-top: 10px;">
                 <b style="font-size: 18px">ITR's Type can Handle: </b>
                 <div class="row">
@@ -268,7 +272,25 @@
                   </section>
                 </div>
               </div>
+            </div> -->
+            <div class="col-sm-5">
+              <div class="card" style="margin-top: 10px;">
+                  <b style="font-size: 18px">ITR's Type can Handle: </b>
+                  <div class="row">
+                      <section class="example-section">
+                          <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
+                              <p>
+                                  <mat-checkbox [disabled]="isDisabled" [formControl]="getItrTypeControl(itrType)"
+                                      (change)="onItrTypeCheckboxChange(itrType)">
+                                      <span class="spacer">{{ getItrTypeName(itrType) }}</span>
+                                  </mat-checkbox>
+                              </p>
+                          </div>
+                      </section>
+                  </div>
+              </div>
             </div>
+
            </div>
         </div>
         <div class="row">
@@ -305,7 +327,10 @@
             <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
           </div>
           <div style=" flex: 1 0 0; text-align: right;">
-            <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button>
+            <!-- <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button> -->
+            <app-custom-button class="save-all"  [actions]="[updateSmeDetails]">
+              Save & Go Back to Table
+            </app-custom-button>
           </div>
         </div>
 

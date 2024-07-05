@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
@@ -43,17 +44,16 @@
                     </div>
                   </div>
 
-                  <!-- Table Togle Inside Filter starts -->
                   <div class="row">
                     <div class="col-sm-6 spcTp">
                       <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                         (onChange)="sortByObject($event)"></app-generic-sorting>
                     </div>
                   </div>
-                  <!-- Table Togle Inside Filter ends -->
                   <div class="button-container">
-                    <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                    </button>
+                    <app-custom-button class="srch-btn-1" [actions]="[search]">
+                      <i class="fa fa-search" aria-hidden="true"></i> Search
+                    </app-custom-button>
                     <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                       <i class="fa fa-download" aria-hidden="true"></i> Download File
                     </button>
@@ -86,9 +86,7 @@
         </div>
       </div>
 
-      <table>
-        <tr *ngFor="let item of userInfo   | paginate:config"></tr>
-      </table>
+      <div *ngFor="let item of userInfo   | paginate:config"></div>
 
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="adjustmentListGridOptions"
         (rowClicked)="onSubscriptionRowClicked($event)">

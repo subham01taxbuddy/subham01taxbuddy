@@ -1,0 +1,21 @@
+<div class="form-field">
+    <div class="field-label">
+        <span class="span">Select Head of Income</span><span class="text-wrapper-2">*</span>
+    </div>
+    <mat-form-field appearance="outline">
+        <mat-select [formControl]="headOfIncome" required>
+            <mat-option *ngFor="let dropdown of headOfIncomeDropdownTDS2" [value]="dropdown.code"
+                matTooltip="{{ dropdown.name }}" matTooltipClass="tab-tooltip" matTooltipPosition="above">
+                {{ dropdown.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div class="out-box">
+        <div class="box-left">
+            <button class="btn btn__white" (click)="update(false)">cancel</button>
+        </div>
+        <div class="box-right">
+            <button class="btn btn__primary" (click)="update(true)">Update</button>
+        </div>
+    </div>
+</div>

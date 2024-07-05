@@ -1,99 +1,108 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take a few minutes, please hold on and not move away from the page...</span>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take a few minutes, please hold on
+  and not move away from the page...</span>
 
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
-        <mat-accordion class="headers-align">
-          <mat-expansion-panel [expanded]="!dataOnLoad">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <mat-icon> arrow_forward_ios </mat-icon>
-                Filter - ITR Filing & Revenue Report:
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="filter-box">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <section class="example-section checkbox-right">
-                        <div class="checkbox-group ">
-                          <mat-checkbox [formControl]="leaderView" [disabled]="disableCheckboxes"
-                            *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')"
-                            (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
-                        </div>
-                      </section>
-                    </div>
-                    <div class="col-sm-12 bckClr spcTp1">
-                      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                        (sendPrincipleIndividual)="fromSme($event,false, true)"
-                        (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-                    </div>
-                    <div class="col-sm-12">
-                      <div class="row">
-                        <div class="col-sm-4">
-                          <mat-label>Select Role</mat-label>
-                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                            <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
-                              [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
-                              <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value"
-                                (click)="getRoleValue(drop)">
-                                {{ drop.name }}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-
-                        <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                            <mat-label>From Date</mat-label>
-                            <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
-                              [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                            <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                          </mat-form-field>
-                        </div>
-                        <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
-                            <mat-label>To Date</mat-label>
-                            <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
-                              [max]="maxEndDate" autocomplete="off" />
-                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                            <mat-datepicker #picker2></mat-datepicker>
-                            <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                            <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                          </mat-form-field>
-                        </div>
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]="!dataOnLoad">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter - ITR Filing & Revenue Report:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="filter-box">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <section class="example-section checkbox-right">
+                      <div class="checkbox-group ">
+                        <mat-checkbox [formControl]="leaderView" [disabled]="disableCheckboxes"
+                          *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')"
+                          (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
                       </div>
-                    </div>
-                    <div class="button-container">
-                      <button class="srch-btn-1" (click)="showReports()">
-                        <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                      </button>
-                      <button class="dwldBtn-1" [disabled]="loading"
-                        *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
-                        (click)="downloadReport()">
-                        <i class="fa fa-download" aria-hidden="true"></i> Download File
-                      </button>
-                      <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
-                    </div>
+                    </section>
+                  </div>
+                  <div class="col-sm-12 bckClr spcTp1">
+                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                      (sendPrincipleIndividual)="fromSme($event,false, true)"
+                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                  </div>
+                  <div class="col-sm-12">
                     <div class="row">
-                      <div class="col-sm-12">
-                        <span class="new-note1 note">
-                          Note : Please select required filters Above and click on Show Reports to get information
-                        </span>
+                      <div class="col-sm-4">
+                        <mat-label>Select Role</mat-label>
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                          <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                            [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                            <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value"
+                              (click)="getRoleValue(drop)">
+                              {{ drop.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-sm-4 spsTp">
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                          <mat-label>From Date</mat-label>
+                          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                            [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>
+                          <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4 spsTp">
+                        <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                          <mat-label>To Date</mat-label>
+                          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                            [max]="maxEndDate" autocomplete="off" />
+                          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                          <mat-datepicker #picker2></mat-datepicker>
+                          <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                          <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                        </mat-form-field>
                       </div>
                     </div>
                   </div>
-
+                  <div class="row">
+                    <div class="col-sm-6 tpSpc">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="button-container">
+                        <app-custom-button class="srch-btn-1" [actions]="[showReports,getFilingCount]">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                        </app-custom-button>
+                        <button class="dwldBtn-1" [disabled]="loading"
+                          *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                          (click)="downloadReport()">
+                          <i class="fa fa-download" aria-hidden="true"></i> Download File
+                        </button>
+                        <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12 mt-3">
+                      <span class="new-note1 note">
+                        Note : Please select required filters Above and click on Show Reports to get information
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
+              </div>
             </div>
-          </mat-expansion-panel>
-        </mat-accordion>
+
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
 
 
     </div>
@@ -112,13 +121,65 @@
           <div class="count1"> Total ITR Filed Count: <span class="txClr1">{{ totalItrFiledCount || 0}}</span></div>
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of itrFillingReport | paginate:config"></tr>
-      </table>
+      <div class="col-sm-12">
+        <div class="tpMain">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr1 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-1</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr1Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-1</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr2 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-2</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr2Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-2</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr3 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-3</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr3Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-3</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="radius2">
+                <div class="inBxL">
+                  <span class="numTxSm grTx1">{{ countData?.totalItr4 || 0 }}</span><br>
+                  <span class="TxSm">Total Count ITR-4</span>
+                </div>
+                <div class="inBxR">
+                  <span class="numTxSm OrgTx">{{ countData?.totalItr4Payment || 0 }}</span><br>
+                  <span class="TxSm">Revenue ITR-4</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+        <div *ngFor="let item of itrFillingReport | paginate:config"></div>
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="itrFillingReportGridOptions">
       </ag-grid-angular>
       <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
   </div>
 </div>
-

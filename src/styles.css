@@ -17,11 +17,9 @@
 .ag-theme-balham .ag-header-group-cell {
   padding-left: 12px;
   padding-right: 12px;
-  /* background: #E4E4E4; */
 }
 
 .ag-theme-balham .ag-header {
-  /* background-color: #E4E4E4; */
   border-bottom: none;
 }
 
@@ -44,8 +42,6 @@
 
 .ag-header {
   height: 50px !important;
-  /* padding-top: 5px !important; */
-  /* background: #E4E4E4; */
 }
 
 .ag-root-wrapper-body.ag-layout-normal {
@@ -53,9 +49,6 @@
   height: 100%;
 }
 
-.ag-header-cell-label .ag-header-cell-text {
-  white-space: normal !important;
-}
 
 .ag-theme-balham .ag-header-cell-label {
   justify-content: center;
@@ -106,18 +99,12 @@
 }
 
 .newAG .ag-root-wrapper-body.ag-layout-normal {
-  /* border: 1px solid #8CBDF2; */
   background-color: white;
   border-radius: 8px 8px 0px 0px;
   border: 1px solid rgba(85, 86, 90, 0.12);
 
 
 }
-
-/* .newAG  .ag-row {
-  height: 50px !important;
-  line-height: 50px !important;
-} */
 
 .newAG .ag-body-viewport.ag-selectable.ag-layout-normal.ag-row-no-animation {
   border: none;
@@ -126,27 +113,23 @@
 .newAG .ag-header {
   border-bottom: solid 1px;
   border-bottom-color: rgba(85, 86, 90, 0.12);
-  /* border-bottom-color: var(--ag-border-color, #8CBDF2); */
 }
 
 .newAG .ag-header-viewport {
   background-color: #FCFCFC !important;
   padding-top: 5px !important;
-  /* border: 1px solid #8CBDF2 !important; */
 }
 
 .newAG .ag-pinned-right-header {
   background-color: #FCFCFC !important;
   padding-top: 5px !important;
   border-left: none !important;
-  /* border: 1px solid #8CBDF2 !important; */
 }
 
 .newAG .ag-pinned-left-header {
   background-color: #FCFCFC !important;
   padding-top: 5px !important;
   border-right: none !important;
-  /* border: 1px solid #8CBDF2 !important; */
 }
 
 .newAG .ag-pinned-right-cols-container {
@@ -168,7 +151,6 @@
 
 .ag-theme-balham .ag-header-cell::after,
 .ag-theme-balham .ag-header-group-cell::after {
-  /* content: ""; */
   position: absolute;
   z-index: 1;
   display: block;
@@ -179,70 +161,47 @@
 }
 
 .newAG .ag-ltr .ag-header-select-all {
-  /* margin-right: 12px; */
   margin-left: 15px;
 }
 
-/* .ag-theme-balham .ag-row:nth-child(odd) {
-  background-color: rgba(251, 238, 211, 0.49);
-} */
-
-/* .ag-theme-balham .ag-row-odd:nth-child(2n) {
-  background-color:rgba(251, 238, 211, 0.49);
-} */
-
 * {
   font-family: 'DM Sans', sans-serif;
-}
-
-/*CSS changes by Sushma Start */
-/*
-.txt-center {
-  text-align: center;
-}
-
-.display-flex {
-  display: flex !important;
-}
-
-.ml30 {
-  margin-left: 30px;
 }
 
 .headers-align {
   .mat-expansion-panel {
     margin-bottom: 28px;
 
-  .mat-expanded {
+    .mat-expanded {
 
-  .mat-expansion-panel-header-title {
-    font-weight: 500;
-    font-size: 21.2451px;
-    line-height: 150%;
-    letter-spacing: -0.022em;
-    color: #FF6B00;
+      .mat-expansion-panel-header-title {
+        font-weight: 500;
+        font-size: 21.2451px;
+        line-height: 150%;
+        letter-spacing: -0.022em;
+        color: #FF6B00;
 
-    .mat-icon {
-      color: #00AECA;
-      transform: rotate(90deg);
-      margin-right: 14px;
+        .mat-icon {
+          color: #00AECA;
+          transform: rotate(90deg);
+          margin-right: 14px;
+        }
+      }
+    }
+
+    .mat-expansion-panel-header-title {
+      font-weight: 500;
+      font-size: 21.2451px;
+      line-height: 150%;
+      letter-spacing: -0.022em;
+      color: #1E1E1E;
+
+      .mat-icon {
+        color: #00AECA;
+        margin-right: 14px;
+      }
     }
   }
-}
-
-.mat-expansion-panel-header-title {
-    font-weight: 500;
-    font-size: 21.2451px;
-    line-height: 150%;
-    letter-spacing: -0.022em;
-    color: #1E1E1E;
-
-    .mat-icon {
-      color: #00AECA;
-      margin-right: 14px;
-    }
-  }
-}
 }
 
 .mat-expanded {
@@ -281,10 +240,10 @@
 mat-label {
   display: block;
   font-weight: 500;
-  font-size: 14.4296px;
+  font-size: 13px;
   line-height: 14px;
   letter-spacing: -0.009em;
-  color: #07070C;
+  color: #9a9a9a;
   flex: none;
   order: 0;
   flex-grow: 0;
@@ -296,26 +255,44 @@ mat-label {
   background: #FFFFFF;
   border-radius: 6.62375px;
 
-.mat-form-field-wrapper {
-// padding-bottom: 0px !important;
+  .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
 
-.mat-form-field-flex {
-  .mat-form-field-infix {
-    padding: 0.4em 0 !important;
-    margin-bottom: 5px;
+    .mat-form-field-flex {
+      .mat-form-field-infix {
+        padding: 0.4em 0 !important;
+        margin-bottom: 5px;
 
-  .mat-input-element {
-    font-weight: 400;
-    font-size: 12.6259px;
-    line-height: 14px;
-    color: #9A9AAF;
+        .mat-input-element {
+          font-weight: 400;
+          font-size: 12.6259px;
+          line-height: 14px;
+          color: #9A9AAF;
+        }
+
+        .mat-select {
+          .mat-select-trigger {
+            .mat-select-value {
+              .mat-select-value-text {
+                .mat-select-min-line {
+                  font-weight: 400;
+                  font-size: 12.6259px;
+                  line-height: 14px;
+                  color: #9A9AAF;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
+}
 
-.mat-select {
-      .mat-select-trigger {
-      .mat-select-value {
-      .mat-select-value-text {
-      .mat-select-min-line {
+.mat-radio-group {
+  .mat-radio-button {
+    .mat-radio-label {
+      .mat-radio-label-content {
         font-weight: 400;
         font-size: 12.6259px;
         line-height: 14px;
@@ -323,35 +300,17 @@ mat-label {
       }
     }
   }
-}
-}
-}
-}
-}
-}
 
-.mat-radio-group {
-.mat-radio-button {
-.mat-radio-label {
-.mat-radio-label-content {
-  font-weight: 400;
-  font-size: 12.6259px;
-  line-height: 14px;
-  color: #9A9AAF;
-}
-}
-}
-
-.mat-radio-checked {
-.mat-radio-label {
-.mat-radio-label-content {
-  font-weight: 400;
-  font-size: 12.6259px;
-  line-height: 14px;
-  color: #07070C;
-}
-}
-}
+  .mat-radio-checked {
+    .mat-radio-label {
+      .mat-radio-label-content {
+        font-weight: 400;
+        font-size: 12.6259px;
+        line-height: 14px;
+        color: #07070C;
+      }
+    }
+  }
 }
 
 .card__row {
@@ -359,21 +318,21 @@ mat-label {
 }
 
 .hide-close {
-mat-expansion-panel-header {
-  pointer-events: none;
+  mat-expansion-panel-header {
+    pointer-events: none;
 
-mat-panel-title {
-mat-icon {
-  pointer-events: visiblefill !important;
-}
-}
+    mat-panel-title {
+      mat-icon {
+        pointer-events: visiblefill !important;
+      }
+    }
 
-.edit {
-button {
-  pointer-events: visiblefill !important;
-}
-}
-}
+    .edit {
+      button {
+        pointer-events: visiblefill !important;
+      }
+    }
+  }
 }
 
 .save-btn {
@@ -425,22 +384,22 @@ button {
 .edit-head {
   width: 132px;
 
-.edit-donation {
-  background: #E5F2F6;
-  border: 0.5px solid #D9D9D9;
-  border-radius: 3px;
-  display: flex;
-  padding: 5px 4px;
+  .edit-donation {
+    background: #E5F2F6;
+    border: 0.5px solid #D9D9D9;
+    border-radius: 3px;
+    display: flex;
+    padding: 5px 4px;
 
-.mat-icon {
-  height: 15px;
-  width: 19px;
-}
+    .mat-icon {
+      height: 15px;
+      width: 19px;
+    }
 
-.material-icons {
-  font-size: 14px;
-}
-}
+    .material-icons {
+      font-size: 14px;
+    }
+  }
 }
 
 .head-title {
@@ -448,8 +407,9 @@ button {
   font-weight: 500;
   margin-left: 30px;
   color: #000000;
-}*/
+}
 
+*/
 /*CSS changes by Sushma End */
 
 .left-sidebar.fixed {
@@ -1899,8 +1859,6 @@ main {
 }
 
 
-.frameC .frame-wrapper-3 {}
-
 .styAlrt {
   padding: 8px !important;
   width: 98%;
@@ -2017,8 +1975,6 @@ main {
   letter-spacing: 0;
   line-height: 28px;
 }
-
-.frameC .frame-wrapper-4 {}
 
 .frameC .contents-14 {
   display: inline-flex;
@@ -4002,7 +3958,6 @@ pagination-controls {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 6px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -4016,7 +3971,6 @@ pagination-controls {
   background: #FFE1E1;
   border: 1px solid #E20000;
   border-radius: 5px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
@@ -4115,7 +4069,6 @@ pagination-controls {
   padding: 0 24px;
   border-radius: 6px;
   transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
-  /* border: 1px solid #E3E3E3; */
 }
 
 .mat-expansion-panel:not([class*=mat-elevation-z]) {
@@ -4124,6 +4077,9 @@ pagination-controls {
 }
 
 .back-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #F5F5FA;
   position: fixed;
   bottom: 0px;
@@ -4131,6 +4087,7 @@ pagination-controls {
   left: 0px;
   border-top: 1px solid #cccccc;
   padding-top: 5px;
+  transition: padding-left 0.3s;
 }
 
 .lgtBtn {
@@ -4336,7 +4293,6 @@ mat-step-header .mat-step-label.mat-step-label-active {
   align-items: center;
   padding: 19.4547px 29.1821px;
   gap: 19.45px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 400;
   font-size: 19px;
@@ -4372,7 +4328,6 @@ mat-step-header .mat-step-label.mat-step-label-active {
   padding: 0 24px;
   border-radius: 6px;
   transition: height 225ms cubic-bezier(0.4, 0, 0.2, 1);
-  /* border: 1px solid #E3E3E3; */
 }
 
 .mat-expansion-panel-header:hover {
@@ -5788,9 +5743,9 @@ select {
   cursor: pointer;
   flex-shrink: 0;
   height: 1.5rem;
+  transition: background, box-shadow var(--animation-input, .2s) ease-in-out;
   transition-duration: .3s;
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-  transition: background, box-shadow var(--animation-input, .2s) ease-in-out;
   width: 3rem
 }
 
@@ -12839,8 +12794,8 @@ body[dir=rtl] .checkbox[checked=true] {
 .kmIcon {
   background-color: #ffffff;
   padding: 5px;
-  border-radius:8px;
-  border:1px solid #cccccc;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
@@ -12875,14 +12830,14 @@ body[dir=rtl] .checkbox[checked=true] {
   margin-bottom: 10px;
 }
 
-.ag-cell-label-container{
+.ag-cell-label-container {
   padding: 0 !important;
 }
 
-.duration-checkbox{
-  .mat-mdc-checkbox{
-    .mdc-form-field{
-      .mdc-checkbox{
+.duration-checkbox {
+  .mat-mdc-checkbox {
+    .mdc-form-field {
+      .mdc-checkbox {
         .mat-mdc-checkbox-touch-target {
           position: absolute;
           top: 0% !important;
@@ -12913,6 +12868,6 @@ body[dir=rtl] .checkbox[checked=true] {
 }
 
 
-body.no-scroll{
+body.no-scroll {
   overflow: hidden;
 }

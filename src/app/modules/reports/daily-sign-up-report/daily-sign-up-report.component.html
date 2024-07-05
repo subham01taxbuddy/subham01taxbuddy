@@ -41,9 +41,9 @@
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                 Clear form
               </button>
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
-                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Report
-              </button>
+              <app-custom-button class="srch-btn mvRth" [actions]="[showReports]">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+              </app-custom-button>
             </div>
           </div>
           <div class="row">
@@ -67,28 +67,13 @@
         Daily Sign-Up Report Details:
       </div>
     </div>
-    <!-- <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
-  </div> -->
   </div>
 
-  <table>
-    <tr *ngFor="let item of dailySignUpList  | paginate : config"></tr>
-  </table>
+  <div *ngFor="let item of dailySignUpList  | paginate : config"></div>
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="dailySignUpListGridOptions">
   </ag-grid-angular>
-  <!-- <div *ngIf="totals">
-    <div class="ag-theme-alpine">
-      <ag-grid-angular
-        [rowData]="[totals]"
-        [columnDefs]="totalColumnDefs"
-        [domLayout]="domLayout"
-      ></ag-grid-angular>
-    </div>
-  </div> -->
-
-  <div *ngIf="config.totalItems > 1">
+    <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 

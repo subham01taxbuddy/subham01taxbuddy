@@ -7,6 +7,7 @@ import { UtilsService } from './utils.service';
 import { environment } from '../../environments/environment';
 import { NavbarService } from "./navbar.service";
 import { UserMsService } from "./user-ms.service";
+import { VendorService } from './vendor.service';
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 @Injectable()
@@ -15,7 +16,8 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     public utilsService: UtilsService,
-    private userMsService: UserMsService
+    private userMsService: UserMsService,
+    private vendorService : VendorService,
   ) { }
 
   private tokenExpired(token: string) {
@@ -81,7 +83,7 @@ export class TokenInterceptor implements HttpInterceptor {
           Authorization: `Bearer ` + TOKEN,
         },
       });
-    } else if ((request.url.startsWith(environment.reviewUrl)) || (request.url.startsWith(environment.update_id)) || (request.url.startsWith(environment.get_adjustment)) || (request.url.startsWith(environment.add_adjustment)) || (request.url.startsWith(environment.get_tds)) || (request.url.startsWith(environment.adjustment)) || (request.url.startsWith(environment.get_adjustment_csv))) {
+    } else if ((request.url.startsWith(environment.reviewUrl)) || (request.url.startsWith(environment.update_id)) || (request.url.startsWith(environment.get_adjustment)) || (request.url.startsWith(environment.add_adjustment)) || (request.url.startsWith(environment.get_tds)) || (request.url.startsWith(environment.get_adjustment_csv))) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
@@ -110,14 +112,17 @@ export class TokenInterceptor implements HttpInterceptor {
         },
       });
     }else if (request.url.startsWith(environment.download_file)){
+      let vendor = this.vendorService.getVendor();
+      let paymentMethod = this.vendorService.getPaymentMethod()
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,
           environment: environment.payOutEnv,
-          vendor: "Razorpay"
+          vendor: vendor,
+          paymentMethod : paymentMethod,
         },
       });
-    }else if(request.url.startsWith(environment.upload_file)){
+    }else if(request.url.startsWith(environment.upload_file) || (request.url.startsWith(environment.adjustment)) ){
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ` + TOKEN,

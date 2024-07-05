@@ -57,6 +57,12 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  selectedStatus = new UntypedFormControl();
+  statusList = [
+    { value: 'Doc_uploaded', name: 'Doc uploaded' },
+    { value: 'Waiting_For_Confirmation', name: 'Waiting for confirmation' },
+    { value: 'ITR_confirmation_received', name: 'ITR confirmation received' },
+  ];
 
   constructor(
     public datePipe: DatePipe,
@@ -132,7 +138,7 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
     }
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/documents-uploaded-filing-not-done?fromDate=2024-01-30&toDate=2024-05-03&page=0&pageSize=5' \
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -171,10 +177,15 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${statusFilter}`;
+
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.filingDoneReport = response?.data?.content;
@@ -195,12 +206,12 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.config.totalItems = 0;
       this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(fillingData) {
@@ -351,7 +362,12 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    let statusFilter ='';
+    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+      statusFilter += `&statusName=${this.selectedStatus.value}`;
+    }
+
+    param = `/bo/documents-uploaded-filing-not-done?fromDate=${fromDate}&toDate=${toDate}${userFilter}${statusFilter}`;
 
     let fieldName = [
       { key: 'name', value: 'Name' },
@@ -373,6 +389,7 @@ export class DocumentsUploadedFilingNotDoneComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
+    this.selectedStatus.setValue(null);
     this?.smeDropDown?.resetDropdown();
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());

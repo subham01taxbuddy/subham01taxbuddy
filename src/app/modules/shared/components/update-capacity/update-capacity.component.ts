@@ -69,36 +69,48 @@ export class UpdateCapacityComponent implements OnInit {
     }
   }
 
-  updateCapacity(status) {
+  updateCapacity = (status: boolean): Promise<any> => {
     //https://uat-api.taxbuddy.com/user/v2/update-max-capacity?filerUserId=14147&activeCaseMaxCapacity=55
-    if (status) {
-      const value = this.activeCaseMaxCapacity.value;
-      if (value && value > 0){
-        let param = '/v2/update-max-capacity?filerUserId=' + this.data.data.userId + '&activeCaseMaxCapacity=' + this.activeCaseMaxCapacity.value;
-        this.loading = true;
-        this.userService.putMethod(param, '').subscribe(
-          (res: any) => {
-            this.loading = false;
-            if (res.success) {
-              this.toastMessage.alert('success', 'Active Capacity updated successfully');
+    return new Promise((resolve, reject) => {
+      if (status) {
+        const value = this.activeCaseMaxCapacity.value;
+        if (value && value > 0) {
+          let param = '/v2/update-max-capacity?filerUserId=' + this.data.data.userId + '&activeCaseMaxCapacity=' + this.activeCaseMaxCapacity.value;
+          this.loading = true;
+          this.userService.putMethod(param, '').toPromise().then(
+            (res: any) => {
+              this.loading = false;
+              if (res.success) {
+                this.toastMessage.alert('success', 'Active Capacity updated successfully');
+                this.dialogRef.close(status);
+                resolve(res);
+              } else {
+                this.dialogRef.close(status);
+                this.toastMessage.alert('error', res.message);
+                reject(res);
+              }
+            },
+            (error) => {
               this.dialogRef.close(status);
-            } else {
-              this.dialogRef.close(status);
-              this.toastMessage.alert('error', res.message);
+              this.toastMessage.alert('error', 'failed to update.');
+              this.loading = false;
+              reject(error);
             }
-          },
-          (error) => {
+          ).catch((error) => {
             this.dialogRef.close(status);
             this.toastMessage.alert('error', 'failed to update.');
             this.loading = false;
-          }
-        );
-      }else{
-        this.toastMessage.alert('error', 'please enter valid case limit value.');
+            reject(error);
+          });
+        } else {
+          this.toastMessage.alert('error', 'please enter valid case limit value.');
+          reject('Invalid case limit value');
+        }
+      } else {
+        this.dialogRef.close(status);
+        resolve('Dialog closed without update');
       }
-    } else {
-      this.dialogRef.close(status);
-    }
+    });
   }
 
 

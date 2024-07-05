@@ -1,0 +1,8 @@
+<button [disabled]="isLoading || disabled" (click)="handleClick()">
+  <span *ngIf="!isLoading; else loading">
+    <ng-content></ng-content>
+  </span>
+  <ng-template #loading>
+    <span>Loading...</span>
+  </ng-template>
+</button>

@@ -31,14 +31,14 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       value: 'TAX_REFUND_INTEREST',
       label: 'Interest from Income tax refund',
     },
-    {
-      value: 'ROYALTY_US_80QQB',
-      label: 'Royalty for Books/Author/Publishers (80QQB)',
-    },
-    {
-      value: 'ROYALTY_US_80RRB',
-      label: 'Royalty Against Patent (80RRB)',
-    },
+    // {
+    //   value: 'ROYALTY_US_80QQB',
+    //   label: 'Royalty for Books/Author/Publishers (80QQB)',
+    // },
+    // {
+    //   value: 'ROYALTY_US_80RRB',
+    //   label: 'Royalty Against Patent (80RRB)',
+    // },
     {
       value: 'INTEREST_ACCRUED_10_11_I_P',
       label:
@@ -277,7 +277,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
           this.exemptIncomesDropdown[1].value === 'AGRI'
             ? [null]
             : [null, Validators.min(0)],
-        incomeDesc:[null]
+        incomeDesc:[null, Validators.maxLength(50)]
       });
       let filtered = this.ITR_JSON.exemptIncomes?.filter(element=> element.natureDesc !== 'AGRI');
       if(filtered?.length == 0) {
@@ -512,8 +512,8 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'TAX_REFUND_INTEREST' &&
         item.incomeType !== 'ANY_OTHER' &&
         item.incomeType !== 'FAMILY_PENSION' &&
-        item.incomeType !== 'ROYALTY_US_80RRB' &&
-        item.incomeType !== 'ROYALTY_US_80QQB' &&
+        // item.incomeType !== 'ROYALTY_US_80RRB' &&
+        // item.incomeType !== 'ROYALTY_US_80QQB' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' &&
         item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' &&
@@ -586,7 +586,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
           natureDesc: exempt.controls['incomeType'].value,
-          OthNatOfInc: exempt.controls['incomeDesc']?.value,
+          othNatOfInc: exempt.controls['incomeDesc']?.value,
           amount: exempt.controls['incomeValue'].value,
         });
         // totalAllowExempt = totalAllowExempt + Number(this.exemptIncomesGridOptions.rowData[i].amount);
@@ -624,7 +624,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = true;
       this.Copy_ITR_JSON.exemptIncomes.push({
         natureDesc: 'AGRI',
-        OthNatOfInc: '',
+        othNatOfInc: '',
         amount: agriIncome.netAgriculturalIncome,
       })
     } else {
@@ -824,7 +824,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
                 this.exemptIncomesDropdown[1].value === 'AGRI'
                     ? [null]
                     : [this.ITR_JSON.exemptIncomes[i].amount, Validators.min(0)],
-            incomeDesc: this.ITR_JSON.exemptIncomes[i].details,
+            incomeDesc: this.ITR_JSON.exemptIncomes[i].othNatOfInc,
           });
           exemptIncomesFormArray.push(formGroup);
         }
@@ -923,7 +923,11 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     const total =
       this.agriIncFormGroup.get('grossAgriculturalReceipts').value -
       otherKeystotal;
-    this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    if(total > 0) {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
+    } else {
+      this.agriIncFormGroup.get('netAgriculturalIncome').setValue(0);
+    }
     const exemptIncomes = this.getExemptIncomeArray;
 
     const agriIncome = exemptIncomes.controls.find((item) => {

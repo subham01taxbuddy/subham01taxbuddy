@@ -24,7 +24,6 @@
   background-color: #ffffff;
   padding: 15px;
   margin-top: 15px;
-  box-shadow: 2px 5px #fafafa;
   border: 1px solid #eaeaea;
   height: auto;
   box-shadow: 1px 2px #e4e4ff;
@@ -35,7 +34,6 @@
   background-color: #ffffff;
   padding: 15px;
   margin-top: 0px;
-  box-shadow: 2px 5px #fafafa;
   border: 1px solid #eaeaea;
   height: 100px;
   margin-bottom: 0px;
@@ -287,14 +285,14 @@ flex-direction:row;
 }
 
 .table-container {
-  max-height: 400px; /* Set the maximum height for the container */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  white-space: nowrap; /* Prevent table cells from wrapping */
+  white-space: nowrap;
+  max-height: 100vh !important;
+  position: relative;
 }
 
 .table-container table {
-  min-width: 100%; /* Set the minimum width of the table to ensure horizontal scrolling */
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .dwldBtn11 {
@@ -334,12 +332,12 @@ flex-direction:row;
   border: 1px solid #8CBDF2;
 }
 .button-container {
-  margin-top: 20px;
+  // margin-top: 20px;
   display: inline-flex;
   justify-content: right;
   gap:10px;
-  border-top: 1px solid #cacaca;
-  padding-top: 20px;
+  // border-top: 1px solid #cacaca;
+  // padding-top: 20px;
 }
 
 .dwldBtn-1{
@@ -351,7 +349,7 @@ flex-direction:row;
   border-radius: 4px;
   border: 1px solid #2D8EF9;
   color: #2D8EF9;
-  font-family: DM Sans;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -367,7 +365,7 @@ flex-direction:row;
   border-radius: 4px;
   border: 1px solid #2D8EF9;
   color: #2D8EF9;
-  font-family: DM Sans;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -383,7 +381,7 @@ flex-direction:row;
   border-radius: 4px;
   background: #2D8EF9;
   color: #FFF;
-  font-family: DM Sans;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -393,7 +391,7 @@ flex-direction:row;
 .new-table-container{
   background: #FBFBFB;
   margin-right: 50px;
-  margin-top: 50px;
+  margin-top: 30px;
   margin-left: 50px;
   margin-bottom: 40px;
 }
@@ -401,7 +399,7 @@ flex-direction:row;
 .txtH-1{
 color: var(--black-100, #1C1C1C);
 font-feature-settings: 'cv11' on, 'cv01' on, 'ss01' on;
-font-family: DM Sans;
+
 font-size: 20px;
 font-style: normal;
 font-weight: 700;
@@ -435,7 +433,7 @@ gap: 18px;
 
 .numTxSm-11{
 color: #2B3674;
-font-family: DM Sans;
+
 font-size: 24px;
 font-style: normal;
 font-weight: 700;
@@ -444,7 +442,7 @@ letter-spacing: -0.48px;
 }
 .text-TxSm-1{
 color: #7683AC;
-font-family: DM Sans;
+
 font-size: 16px;
 font-style: normal;
 font-weight: 500;
@@ -454,7 +452,7 @@ letter-spacing: -0.32px;
 .table-radiusTab-1{
   padding: 15px 15px 25px 15px;
   margin-top: -20px;
-  height: auto;
+  height: 80%;
   border-radius: 20px;
   border: 1px solid #DEDEDE;
   background: var(--secondary-primary-white, #FFF);
@@ -467,16 +465,44 @@ th.sticky-column,
 td.sticky-column {
   position: sticky;
   left: 0;
+  top:0;
 }
 
-th.sticky-column:nth-child(1),
+
 td.sticky-column:nth-child(1) {
   left: 0;
   z-index: 2;
+  top:0;
 }
 
-th.sticky-column:nth-child(2),
+
 td.sticky-column:nth-child(2) {
   left:55px;
   z-index: 1;
+  top:0;
+}
+
+.table-radiusTab-1 {
+  overflow-y: auto;
+}
+.table-container {
+  position: relative;
+}
+
+thead th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #FFF;
+}
+th.sticky-column:nth-child(1){
+  left:0px;
+  z-index: 5;
+  top:0;
+}
+
+th.sticky-column:nth-child(2){
+  left:55px;
+  z-index: 5;
+  top:0;
 }

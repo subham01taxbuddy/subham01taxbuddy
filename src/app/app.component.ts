@@ -53,6 +53,17 @@ export class AppComponent {
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
+        let softwareUpdateAvailable = localStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
+        console.log('Software update available key',softwareUpdateAvailable)
+
+        if (softwareUpdateAvailable === 'true') {
+          console.log('remove Software update available key')
+          localStorage.removeItem('SOFTWARE_UPDATE_AVAIlABLE');
+          window.location.reload();
+          navigator.serviceWorker.getRegistration('/').then(function (registration) {
+            registration.update();
+          });
+        }
         if (
           event.id === 1 &&
           event.url === event.urlAfterRedirects
@@ -71,8 +82,12 @@ export class AppComponent {
       });
 
     if (this.swUpdate.isEnabled) {
+      console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
+      // localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       this.swUpdate.available.subscribe(() => {
-        this.reloadWindow();
+        console.log('SOFTWARE_UPDATE_AVAIlABLE')
+        localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
+        // this.reloadWindow();
       })
     }
 
@@ -87,12 +102,10 @@ export class AppComponent {
                   serviceWorkerRegistration,
                   // vapidKey: environment.vapidKey,
                 }).then((value) => {
-                  console.log('recvd token as=> ', value);
                   sessionStorage.setItem('webToken', value);
                 }).catch(error => {
                   console.log("error", error.code);
                   if (error.code === 'messaging/permission-blocked') {
-                    // alert("Yay!!!");
                   }
                 })
               } else {
@@ -109,7 +122,6 @@ export class AppComponent {
         tap(it => console.log('FCM', it)),
       );
     } else {
-      console.log('messaging not initialise');
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
@@ -122,6 +134,11 @@ export class AppComponent {
       this.timedOut = false;
       console.log('im awake!');
     });
+
+    let cgPermission = sessionStorage.getItem('CG_MODULE');
+    if (!cgPermission) {
+      sessionStorage.setItem('CG_MODULE', 'NO');
+    }
   }
 
   ngOnDestroy() {
@@ -133,8 +150,6 @@ export class AppComponent {
   subscribeTimer() {
     this.subscription = timer(0, 1000).pipe(map(() => new Date()), share())
       .subscribe(time => {
-        let currentTime = moment(time).valueOf();
-        // console.log('currentTime', currentTime)
         this.mangeFilerSessionAtDayChange();
       });
   }
@@ -194,7 +209,6 @@ export class AppComponent {
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 
-        //Ashwini:check if this is needed
         NavbarService.getInstance(this.http).logout();
 
       })
@@ -237,8 +251,6 @@ export class AppComponent {
           registration.update();
         });
       }
-
     });
-
   }
 }

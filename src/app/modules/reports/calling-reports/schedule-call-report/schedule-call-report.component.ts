@@ -4,14 +4,10 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
-import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 
@@ -109,7 +105,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
     }
   }
 
-  showReports(pageChange?) {
+  showReports = (pageChange?): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/schedule-call-report?leaderUserId=1064
     if(!pageChange){
       this.cacheManager.clearCache();
@@ -135,7 +131,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
 
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/schedule-call-report?${data}${userFilter}`;
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.scheduleCallingReport = response?.data?.content;
@@ -151,7 +147,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });

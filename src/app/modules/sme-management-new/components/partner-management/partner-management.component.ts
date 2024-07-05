@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -112,28 +112,33 @@ export class PartnerManagementComponent implements OnInit {
     return this.languageForm.get(lang) as UntypedFormControl;
   }
 
-  getItrTypeControl(itrType: string): UntypedFormControl {
-    return this.itrTypeForm.get(itrType) as UntypedFormControl;
+  getItrTypeControl(planId: number): UntypedFormControl {
+    return this.itrTypeForm.get(planId.toString()) as UntypedFormControl;
   }
 
   onItrTypeCheckboxChange(itrType: string) {
-    const itrTypeControl = this.getItrTypeControl(itrType);
-    let planId = this.skillSetPlanIdList['skillSetPlanIdList'] || [];
-
-    if (itrTypeControl.value) {
-        const selectedPlan = this.itrPlanList.find(element => element.name === itrType);
-        if (selectedPlan) {
-            planId.push(selectedPlan.planId);
-        }
-    } else {
-        const index = planId.indexOf(itrType);
-        if (index !== -1) {
-            planId.splice(index, 1);
-        }
+    if (!this.partnerInfo['skillSetPlanIdList']) {
+        this.partnerInfo['skillSetPlanIdList'] = [];
     }
-    this.skillSetPlanIdList['skillSetPlanIdList'] = planId;
+
+    const plan = this.itrPlanList.find(plan => plan.planId === itrType);
+    if (!plan) return;
+
+    const itrTypeControl = this.getItrTypeControl(plan.planId);
+    if (!itrTypeControl) return;
+
+    const index = this.partnerInfo['skillSetPlanIdList'].indexOf(plan.planId);
+
+    if (itrTypeControl.value && index === -1) {
+        this.partnerInfo['skillSetPlanIdList'].push(plan.planId);
+    } else if (!itrTypeControl.value && index !== -1) {
+        this.partnerInfo['skillSetPlanIdList'].splice(index, 1);
+    }
+
+    console.log(this.partnerInfo['skillSetPlanIdList']);
   }
 
+  planIdList:any = []
   getPlanDetails() {
     this.loading = true;
     let param = '/plans-master?serviceType=ITR&isActive=true';
@@ -144,9 +149,9 @@ export class PartnerManagementComponent implements OnInit {
         if (this.itrPlanList.length) {
           this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
           this.itrPlanList.forEach(element => {
-            this.irtTypeCapability.push(element.name);
+            this.irtTypeCapability.push(element.planId);
             this.irtTypeCapability.forEach((itrType) => {
-              this.itrTypeForm.addControl(itrType, new UntypedFormControl(false));
+              this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
             })
           });
           this.setPlanDetails();
@@ -157,6 +162,11 @@ export class PartnerManagementComponent implements OnInit {
         this.utilsService.showSnackBar('Failed to get selected plan details');
       });
 
+  }
+
+  getItrTypeName(planId: number): string {
+    const plan = this.itrPlanList.find(plan => plan.planId === planId);
+    return plan ? plan.name : '';
   }
 
   setLanguageCheckboxes(languageProficiencies: string[]) {
@@ -176,12 +186,19 @@ export class PartnerManagementComponent implements OnInit {
     this.itrPlanList) {
       this.itrPlanList.forEach(item => {
         this.partnerInfo?.['skillSetPlanIdList'].forEach(element => {
-          if (item.planId === element) {
-            const name = item.name;
-            this.itrTypeForm.setControl(name, new UntypedFormControl(true));
-          }
+            if(element === 138){
+                const businessAndProfessionControl =  this.itrTypeForm.controls['138'];
+                if (businessAndProfessionControl) {
+                    businessAndProfessionControl.setValue(true);
+                }
+            } else {
+                if (item.planId === element && element != 138) {
+                    const planId = item.planId.toString();
+                    this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
+                }
+            }
         })
-      })
+    })
     }
   }
 
@@ -343,13 +360,13 @@ export class PartnerManagementComponent implements OnInit {
     }
   }
 
-  verifyBankDetails() {
+  verifyBankDetails=():Promise<any>  =>{
     if (this.bankDetailsFormGroup.valid) {
       this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-      this.userMsService.getMethod(param).subscribe((res: any) => {
+      return this.userMsService.getMethod(param).toPromise().then((res: any) => {
         this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
@@ -370,6 +387,8 @@ export class PartnerManagementComponent implements OnInit {
           this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
           return;
         }
+      }).catch(() =>{
+        this.loading = false;
       });
     } else {
       this.bankDetailsFormGroup.markAllAsTouched();
@@ -405,7 +424,7 @@ export class PartnerManagementComponent implements OnInit {
     this.router.navigate(['/tasks/assigned-users-new']);
   }
 
-  updateSmeDetails(){
+  updateSmeDetails=():Promise<any> =>{
     //'https://uat-api.taxbuddy.com/user/v2/partner-details' \
     if(this.partnerForm.valid && this.bankDetailsFormGroup.valid){
 
@@ -452,7 +471,7 @@ export class PartnerManagementComponent implements OnInit {
       };
 
       this.loading = true;
-      this.userMsService.putMethod(param, requestBody).subscribe(
+      return this.userMsService.putMethod(param, requestBody).toPromise().then(
         (res: any) => {
           console.log('Profile update response:', res);
           this.loading = false;

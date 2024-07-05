@@ -11,7 +11,6 @@ import * as JSZip from "jszip";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { saveAs } from "file-saver/dist/FileSaver";
 
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-show-user-documnets',
   templateUrl: './show-user-documnets.component.html',
@@ -73,6 +72,10 @@ export class ShowUserDocumnetsComponent implements OnInit {
     let roles = this.utilsService.getUserRoles();
     let filtered = roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
+  }
+
+  isAisDocument(document) {
+    return document.documentTag === 'AIS_JSON' || document.documentTag === 'AIS' || document.fileName.includes("_AIS_");
   }
 
   gotoDrive(document) {
@@ -236,12 +239,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     for (let counter = 0; counter < folders.length; counter++) {
       let document = folders[counter];
       let fileUrl;
-      if (document.isPasswordProtected) {
-        // fileUrl = document.passwordProtectedFileUrl;
-        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      } else {
-        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      }
+      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
       const fileData: any = await this.getFile(fileUrl);
       const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
       let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
@@ -288,10 +286,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
         this.utilsService.showSnackBar('Failed to download document');
       }
     );
-    we_track('Cloud Download', {
-      'User Number': this.mobileNumber,
-      'File URL': signedUrl,
-    });
   }
 
 
@@ -338,10 +332,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
       console.log(res);
       if (res['signedUrl']) {
         this.docUrl = res['signedUrl'];
-        we_track('Cloud View', {
-          'User Number': this.mobileNumber,
-          'File URL': this.docUrl,
-        });
       } else {
         this.utilsService.showSnackBar(res.response);
       }

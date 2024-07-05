@@ -1,5 +1,5 @@
 import { UntypedFormControl, Validators } from '@angular/forms';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -10,7 +10,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
   templateUrl: './role-update.component.html',
   styleUrls: ['./role-update.component.scss']
 })
-export class RoleUpdateComponent implements OnInit {
+export class RoleUpdateComponent {
   notes = [];
   userRoles: any = [
     { label: 'User', value: 'ROLE_USER' },
@@ -40,8 +40,6 @@ export class RoleUpdateComponent implements OnInit {
   }
 
 
-  ngOnInit() {
-  }
 
   updateUserRole() {
     console.log("user Role: ", this.userRole, this.userRole.value);

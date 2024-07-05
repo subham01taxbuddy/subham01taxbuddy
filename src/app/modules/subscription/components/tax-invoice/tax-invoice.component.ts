@@ -13,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Observable, map, startWith } from 'rxjs';
 import { AppConstants } from "../../../shared/constants";
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
@@ -25,7 +24,6 @@ import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from "file-saver/dist/FileSaver";
 
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -407,7 +405,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
 
-  getInvoice(pageChange?) {
+  getInvoice=(pageChange?):Promise<any> => {
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-25&page=0&pageSize=20&paymentStatus=Paid' \
 
     if (!pageChange) {
@@ -490,7 +488,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.invoiceData = response.data.content;
@@ -515,14 +513,12 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         this.gridApi?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }, (error) => {
+    }).catch(()=>{
       this.gridApi?.setRowData(this.createRowData([]));
       this.totalInvoice = 0
       this.config.totalItems = 0;
       this.loading = false;
-    }
-    );
-
+    });
   }
 
   createRowData(userInvoices) {
@@ -565,9 +561,10 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  downloadInvoicesSummary() {
+  downloadInvoicesSummary=():Promise<any> =>{
     // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Paid&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
+      this.loading=true;
       let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
@@ -609,7 +606,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response: any) => {
+      return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
+        this.loading=false;
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -619,7 +617,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      });
+      }).catch(()=>{
+        this.loading =false;
+      })
     }
 
   }
@@ -905,7 +905,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
@@ -926,7 +926,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
@@ -965,12 +965,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
-    we_track('Tax Invoice Download', {
-      'User number': data.phone,
-    });
     // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
-    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
       pdf => {
         this.loading = false;

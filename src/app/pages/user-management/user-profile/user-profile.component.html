@@ -134,7 +134,7 @@
                   Address</button>
               </div>
 
-              <table>
+              <table aria-label="Address Details">
                 <tr>
                   <th>Id</th>
                   <th>Address Type</th>
@@ -192,7 +192,7 @@
                 <button style="float: right;" (click)="openDialog('Add Bank Info','Add', null,'','Bank')">Add Bank
                   Info</button>
               </div>
-              <table>
+              <table aria-label="Bank Info">
                 <tr>
                   <th>IFSC Code</th>
                   <th>Bank</th>
@@ -306,17 +306,17 @@
             </div>
             <div class="row mt-3">
               <div class="col-sm-4 mt-2">
-                <label><b>Business Logo: </b></label><br><br>
+                <div><b>Business Logo: </b></div><br><br>
                 <input type="file" (change)="uploadBusinessLogo($event)">
               </div>
 
               <div class="col-sm-4 mt-2">
-                <label><b>Business Signature: </b></label><br><br>
+                <div><b>Business Signature: </b></div><br><br>
                 <input type="file" (change)="uploadBusinessSignature($event)">
               </div>
 
               <div class="col-sm-4 mt-2">
-                <label><b>GST Certificate: </b></label><br><br>
+                <div><b>GST Certificate: </b></div><br><br>
                 <input type="file" (change)="uploadGstCertificate($event)">
               </div>
             </div>
@@ -328,8 +328,10 @@
 
           </div>
           <div style=" flex: 1 0 0; text-align: right;">
-            <button [disabled]="loading" class="save-all" (click)="updateUserProfile()">Update Details</button>
-
+            <!-- <button [disabled]="loading" class="save-all" (click)="updateUserProfile()">Update Details</button> -->
+            <app-custom-button class="save-all" [actions]="[updateUserProfile]">
+              Update Details
+            </app-custom-button>
           </div>
         </div>
       </div>

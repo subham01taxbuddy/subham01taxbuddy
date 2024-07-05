@@ -14,8 +14,9 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { AckSuccessComponent } from '../acknowledgement/ack-success/ack-success.component';
 import { UpdateManualFilingDialogComponent } from '../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component';
-import { UntypedFormControl } from '@angular/forms';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { IncomeSourceDialogComponent } from '../../shared/components/income-source-dialog/income-source-dialog.component';
+import { AddManualUpdateReasonComponent } from '../../shared/components/add-manual-update-reason/add-manual-update-reason.component';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
@@ -930,6 +931,12 @@ export class SummaryComponent implements OnInit {
     }
 
     this.calculations();
+  }
+
+  getAisDate() {
+    if (this.ITR_JSON.aisSource === 'DOWNLOAD') {
+      return 'Prefill Last uploaded on Month DD, YYYY'
+    }
   }
 
   getMastersData() {
@@ -3809,278 +3816,240 @@ export class SummaryComponent implements OnInit {
               LossCFFromPrev7thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev6thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev5thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev4thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.DateOfFiling,
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.BrtFwdBusLoss,
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFFromPrev3rdYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail?.DateOfFiling,
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFPrevAssmntYear: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               LossCFCurrentAssmntYear: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.DateOfFiling,
                 hpLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalHPPTILossCF,
                 broughtForwardBusLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.BrtFwdBusLoss,
                 BusLossOthThanSpecifiedLossCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.BusLossOthThanSpecLossCF,
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.LossFrmSpecifiedBusCF,
                 stcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalSTCGPTILossCF,
                 ltcgLoss:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.TotalLTCGPTILossCF,
                 OthSrcLossRaceHorseCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.OthSrcLossRaceHorseCF,
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
-                    ?.LossFrmSpecBusCF,
-              },
-              LossCFCurrentAssmntYear2023: {
-                dateOfFiling:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.DateOfFiling,
-                hpLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.TotalHPPTILossCF,
-                broughtForwardBusLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.BrtFwdBusLoss,
-                BusLossOthThanSpecifiedLossCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.BusLossOthThanSpecLossCF,
-                LossFrmSpecifiedBusCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.LossFrmSpecifiedBusCF,
-                stcgLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.TotalSTCGPTILossCF,
-                ltcgLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
-                    ?.TotalLTCGPTILossCF,
-                OthSrcLossRaceHorseCF:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
-                    ?.OthSrcLossRaceHorseCF,
-                lossFromSpeculativeBus:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.LossCFCurrentAssmntYear2024?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
@@ -6558,25 +6527,25 @@ export class SummaryComponent implements OnInit {
 
   getBusinessNatureLabel(businessCode) {
     return this.natureOfBusiness?.find(
-        (item) => {
-          return item?.code === businessCode;
-        }
+      (item) => {
+        return item?.code === businessCode;
+      }
     )?.label
   }
-  setBusiness44ADA(){
+  setBusiness44ADA() {
     let professionalIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
       ?.filter(element => element?.businessType === 'PROFESSIONAL');
-    
+
     let tradeNameSet = new Set(professionalIncomes.map(item => item.tradeName));
 
-    tradeNameSet.forEach(tradeName=>{
-      const profIncome = professionalIncomes.filter(income=>income.tradeName === tradeName);
+    tradeNameSet.forEach(tradeName => {
+      const profIncome = professionalIncomes.filter(income => income.tradeName === tradeName);
       this.business44ADADetails.push({
         businessSection: profIncome[0]?.businessType + '(44ADA)',
         natureOfBusinessCode: this.natureOfBusiness?.find(item => item?.code === profIncome[0]?.natureOfBusinessCode)?.label,
         tradeName: tradeName,
-        grossTurnover: profIncome.reduce((total, element) => total+ element.receipts, 0),
-        TaxableIncome: profIncome.reduce((total, element) => total+ element.presumptiveIncome, 0),
+        grossTurnover: profIncome.reduce((total, element) => total + element.receipts, 0),
+        TaxableIncome: profIncome.reduce((total, element) => total + element.presumptiveIncome, 0),
       });
     });
   }
@@ -6898,190 +6867,359 @@ export class SummaryComponent implements OnInit {
     //}
   }
 
-  sendPdf(channel) {
+  sendPdf=(channel):Promise<any>  => {
     // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both
     this.loading = true;
     let itrId = this.ITR_JSON.itrId;
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;
-    this.itrMsService.getMethod(param).subscribe(
+    return this.itrMsService.getMethod(param).toPromise().then(
       (res: any) => {
         this.loading = false;
-        console.log('Response of send PDF:', res);
-        if (!res.success) {
-          this.utilsService.showSnackBar(res.message);
-        } else {
-          this.utilsService.showSnackBar(res.message);
-          //also update user status
-          // let statusParam = '/itr-status';
-          // let sType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
-
-          // let param2 = {
-          //   statusId: 7, //waiting for confirmation
-          //   userId: this.ITR_JSON.userId,
-          //   assessmentYear: this.ITR_JSON.assessmentYear,
-          //   completed: false,
-          //   serviceType: sType,
-          // };
-          // console.log('param2: ', param2);
-          // this.userMsService.postMethod(statusParam, param2).subscribe(
-          //   (res) => {
-          //     console.log('Status update response: ', res);
-          //     this.loading = false;
-          //     //this._toastMessageService.alert("success", "Status update successfully.");
-          //   },
-          //   (error) => {
-          //     this.loading = false;
-          //     //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
-          //   }
-          // );
-        }
-      },
-      (error) => {
+        this.utilsService.showSnackBar(res.message);
+        this.utilsService.showSnackBar(res.message);
+      }).catch((error)=>{
         this.loading = false;
         this.utilsService.showSnackBar(error);
-      }
-    );
+      })
   }
 
-  downloadPDF() {
-    let detailsRequired = false;
-    let finalCalculations = this.finalCalculations;
-    let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
-    let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
-    if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
-      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: {
-          title: 'Confirmation',
-          message: 'Do you want detailed listed securities data ?',
-        },
-      });
-      this.dialogRef.afterClosed().subscribe(result => {
-        if (result === 'YES') {
-          detailsRequired = true;
-          this.downloadSummaryPdf(detailsRequired);
-        } else {
-          detailsRequired = false;
-          this.downloadSummaryPdf(detailsRequired);
-        }
-      });
-    } else {
-      this.downloadSummaryPdf(detailsRequired);
-    }
-  }
+  // downloadPDF() {
+  //   let detailsRequired = false;
+  //   let finalCalculations = this.finalCalculations;
+  //   let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+  //   let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+  //   if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
+  //     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  //       data: {
+  //         title: 'Confirmation',
+  //         message: 'Do you want detailed listed securities data ?',
+  //       },
+  //     });
+  //     this.dialogRef.afterClosed().subscribe(result => {
+  //       if (result === 'YES') {
+  //         detailsRequired = true;
+  //         this.downloadSummaryPdf(detailsRequired);
+  //       } else {
+  //         detailsRequired = false;
+  //         this.downloadSummaryPdf(detailsRequired);
+  //       }
+  //     });
+  //   } else {
+  //     this.downloadSummaryPdf(detailsRequired);
+  //   }
+  // }
 
-  downloadSummaryPdf(detailsRequired) {
-    // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
-    // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
-    this.loading = true;
-    if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
-      if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-        const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
-        this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
-          (result) => {
-            console.log('PDF Result', result);
-            const fileURL = webkitURL.createObjectURL(result);
-            window.open(fileURL);
-            this.loading = false;
-            // Commented both routes as its currently option is for download xml file
-            // this.router.navigate(['itr-result/success']);
+  // downloadSummaryPdf(detailsRequired) {
+  //   // http://uat-api.taxbuddy.com/txbdyitr/txbdyReport?userId={userId}&itrId={itrId}&assessmentYear={assessmentYear}
+  //   // https://api.taxbuddy.com/itr/summary/json/pdf/download?itrId={itrId}
+  //   this.loading = true;
+  //   if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+  //     if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+  //       const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
+  //       this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
+  //         (result) => {
+  //           console.log('PDF Result', result);
+  //           const fileURL = webkitURL.createObjectURL(result);
+  //           window.open(fileURL);
+  //           this.loading = false;
+  //           // Commented both routes as its currently option is for download xml file
+  //           // this.router.navigate(['itr-result/success']);
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           if (error.status === 403) {
+  //             alert('403 Download PDF');
+  //           } else {
+  //             // this.router.navigate(['itr-result/failure']);
+  //             this.utilsService.showSnackBar(
+  //               'Failed to download PDF report, please try again.'
+  //             );
+  //           }
+  //         }
+  //       );
+  //     } else if (this.ITR_JSON.isItrSummaryJsonEdited === true) {
+  //       const param =
+  //         '/api/txbdyReport?userId=' +
+  //         this.ITR_JSON.userId +
+  //         '&itrId=' +
+  //         this.ITR_JSON.itrId +
+  //         '&assessmentYear=' +
+  //         this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+  //       this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+  //         (result) => {
+  //           console.log('PDF Result', result);
+  //           const fileURL = webkitURL.createObjectURL(result);
+  //           window.open(fileURL);
+
+  //           this.loading = false;
+  //           // Commented both routes as its currently option is for download xml file
+  //           // this.router.navigate(['itr-result/success']);
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           if (error.status === 403) {
+  //             alert('403 Download PDF');
+  //           } else {
+  //             // this.router.navigate(['itr-result/failure']);
+  //             this.utilsService.showSnackBar(
+  //               'Failed to download PDF report, please try again.'
+  //             );
+  //           }
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     const param =
+  //       '/api/txbdyReport?userId=' +
+  //       this.ITR_JSON.userId +
+  //       '&itrId=' +
+  //       this.ITR_JSON.itrId +
+  //       '&assessmentYear=' +
+  //       this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+  //     this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+  //       (result) => {
+  //         console.log('PDF Result', result);
+  //         const fileURL = webkitURL.createObjectURL(result);
+  //         window.open(fileURL);
+
+  //         this.loading = false;
+  //         // Commented both routes as its currently option is for download xml file
+  //         // this.router.navigate(['itr-result/success']);
+  //       },
+  //       (error) => {
+  //         this.loading = false;
+  //         if (error.status === 403) {
+  //           alert('403 Download PDF');
+  //         } else {
+  //           // this.router.navigate(['itr-result/failure']);
+  //           this.utilsService.showSnackBar(
+  //             'Failed to download PDF report, please try again.'
+  //           );
+  //         }
+  //       }
+  //     );
+  //   }
+  // }
+
+  downloadPDF = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let detailsRequired = false;
+      let finalCalculations = this.finalCalculations;
+      let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+      let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+
+      if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Confirmation',
+            message: 'Do you want detailed listed securities data ?',
           },
-          (error) => {
-            this.loading = false;
-            if (error.status === 403) {
-              alert('403 Download PDF');
-            } else {
-              // this.router.navigate(['itr-result/failure']);
-              this.utilsService.showSnackBar(
-                'Failed to download PDF report, please try again.'
-              );
-            }
+        });
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            detailsRequired = true;
+            this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
+          } else {
+            detailsRequired = false;
+            this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
           }
-        );
-      } else if (this.ITR_JSON.isItrSummaryJsonEdited === true) {
-        const param =
-          '/api/txbdyReport?userId=' +
-          this.ITR_JSON.userId +
-          '&itrId=' +
-          this.ITR_JSON.itrId +
-          '&assessmentYear=' +
-          this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
+        });
+      } else {
+        this.downloadSummaryPdf(detailsRequired).then(resolve).catch(reject);
+      }
+    });
+  }
+
+  downloadSummaryPdf(detailsRequired): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+        if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
+          const param = '/summary/json/pdf/download?itrId=' + this.ITR_JSON.itrId;
+          this.itrMsService.downloadJsonFile(param, 'application/pdf').subscribe(
+            (result) => {
+              console.log('PDF Result', result);
+              const fileURL = webkitURL.createObjectURL(result);
+              window.open(fileURL);
+              this.loading = false;
+              resolve();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.status === 403) {
+                alert('403 Download PDF');
+              } else {
+                this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
+              }
+              reject(error);
+            }
+          );
+        } else {
+          const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
+                        '&itrId=' + this.ITR_JSON.itrId +
+                        '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+                        '&detailsRequired=' + detailsRequired;
+          this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
+            (result) => {
+              console.log('PDF Result', result);
+              const fileURL = webkitURL.createObjectURL(result);
+              window.open(fileURL);
+              this.loading = false;
+              resolve();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.status === 403) {
+                alert('403 Download PDF');
+              } else {
+                this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
+              }
+              reject(error);
+            }
+          );
+        }
+      } else {
+        const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
+                      '&itrId=' + this.ITR_JSON.itrId +
+                      '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+                      '&detailsRequired=' + detailsRequired;
         this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
           (result) => {
             console.log('PDF Result', result);
             const fileURL = webkitURL.createObjectURL(result);
             window.open(fileURL);
-
             this.loading = false;
-            // Commented both routes as its currently option is for download xml file
-            // this.router.navigate(['itr-result/success']);
+            resolve();
           },
           (error) => {
             this.loading = false;
             if (error.status === 403) {
               alert('403 Download PDF');
             } else {
-              // this.router.navigate(['itr-result/failure']);
-              this.utilsService.showSnackBar(
-                'Failed to download PDF report, please try again.'
-              );
+              this.utilsService.showSnackBar('Failed to download PDF report, please try again.');
             }
+            reject(error);
           }
         );
       }
-    } else {
-      const param =
-        '/api/txbdyReport?userId=' +
-        this.ITR_JSON.userId +
-        '&itrId=' +
-        this.ITR_JSON.itrId +
-        '&assessmentYear=' +
-        this.ITR_JSON.assessmentYear + '&detailsRequired=' + detailsRequired;
-      this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
-        (result) => {
-          console.log('PDF Result', result);
-          const fileURL = webkitURL.createObjectURL(result);
-          window.open(fileURL);
+    });
+  }
 
-          this.loading = false;
-          // Commented both routes as its currently option is for download xml file
-          // this.router.navigate(['itr-result/success']);
-        },
-        (error) => {
-          this.loading = false;
-          if (error.status === 403) {
-            alert('403 Download PDF');
-          } else {
-            // this.router.navigate(['itr-result/failure']);
-            this.utilsService.showSnackBar(
-              'Failed to download PDF report, please try again.'
-            );
-          }
+
+  confirmSubmitITR() {
+    if (this.ITR_JSON?.itrSummaryJson) {
+      const dialogRef = this.dialog.open(AddManualUpdateReasonComponent, {
+        width: '60vw',
+        height: '50vh',
+        data: {
+          title: 'Add Manual Update Reason',
         }
-      );
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.status) {
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+          this.ITR_JSON['manualUpdateReason'] = result.reason;
+          this.utilsService.saveManualUpdateReason(this.ITR_JSON).subscribe(
+            (result: any) => {
+              this.loading = false;
+              this.ITR_JSON = result;
+              sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+              this.utilsService.showSnackBar(
+                'Reason saved successfully'
+              );
+              this.checkIncomeOfSources();
+            },
+            (error) => {
+              this.loading = false;
+              this.ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+              this.utilsService.showSnackBar(
+                'Failed to save the manual update reason, please try again.'
+              );
+            }
+          );
+        }
+      });
+    } else {
+      this.checkIncomeOfSources();
     }
   }
 
-  confirmSubmitITR() {
-    // const param = `/subscription-payment-status?userId=${this.ITR_JSON.userId}&serviceType=ITR`;
-    // this.itrMsService.getMethod(param).subscribe(
-    //   (res: any) => {
-    //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-    this.checkFilerAssignment();
-    //       // console.log(res, 'Paid');
-    //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
-    //       this.utilsService.showSnackBar(
-    //         'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
-    //       );
-    //     } else {
-    //       this.utilsService.showSnackBar(
-    //         'Please make sure that the payment has been made by the user to proceed ahead'
-    //       );
-    //     }
-    //   },
-    //   (error) => {
-    //     this.utilsService.showSnackBar(error);
-    //   }
-    // );
+  checkIncomeOfSources() {
+    //http://localhost:9050/itr/check-subscription-sources?itrId=34296
+    this.loading = true;
+    const param = `/check-subscription-sources?itrId=${this.ITR_JSON.itrId}`;
+
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        this.loading = false;
+        if (result.success) {
+          if (result.data.difference && !result.data.reasonGiven) {
+            this.showIncomeSourcePopup();
+          } else {
+            this.checkFilerAssignment();
+          }
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to get income source validation.');
+        this.utilsService.smoothScrollToTop();
+      }
+    );
+  }
+
+  showIncomeSourcePopup() {
+    const dialogRef = this.dialog.open(IncomeSourceDialogComponent, {
+      data: {
+        title: 'Income Source Mismatch',
+        message: 'Your sources of income do not match with your subscription plan. Would you like to update your subscription or continue with the same subscription?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'updateSubscription') {
+        let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR'
+        this.router.navigate(['/subscription/assigned-subscription'], {
+          queryParams: {
+            userId: this.ITR_JSON.userId,
+            serviceType: serviceType,
+          },
+        });
+
+      } else if (result && result.action === 'continue') {
+        this.saveReason(result);
+        console.log('Reason for continuing:', result.reason);
+      }
+    });
+  }
+
+  saveReason(result) {
+    //http://localhost:9050/itr/subscription-sources
+    this.loading = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    const param = `/subscription-sources`;
+    const requestBody = {
+      itrId: this.ITR_JSON.itrId,
+      reasonText: result.reason,
+      userId: loggedInId
+    };
+    this.itrMsService.postMethod(param, requestBody).subscribe(
+      (result: any) => {
+        this.loading = false;
+        if (result.success) {
+          this.utilsService.showSnackBar('Reason saved. Please click "File ITR" button again to proceed.');
+        } else {
+          this.utilsService.showSnackBar('Failed to save reason of income source mismatch.');
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to save reason of income source mismatch.');
+        this.utilsService.smoothScrollToTop();
+      }
+    );
+
   }
 
   checkFilerAssignment() {
@@ -7099,7 +7237,7 @@ export class SummaryComponent implements OnInit {
                   this.utilsService.showSnackBar(
                     'You can only update the ITR file record when your status is "ITR confirmation received"'
                   );
-                } else {
+                } else if (this.isValidItr) {
                   if (confirm('Are you sure you want to file the ITR?'))
                     this.fileITR();
                 }
@@ -7167,91 +7305,174 @@ export class SummaryComponent implements OnInit {
       });
   }
 
-  validateITR() {
-    let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
-    console.log(url);
-    this.http.get(url, { responseType: 'json' }).subscribe(
-      (data: any) => {
-        console.log(data);
-        this.itrJsonForFileItr = data;
-        // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
-        this.loading = true;
-        let formCode = this.ITR_JSON.itrType;
-        let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
-        let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
-        const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+  // validateITR() {
+  //   let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
+  //   console.log(url);
+  //   this.http.get(url, { responseType: 'json' }).subscribe(
+  //     (data: any) => {
+  //       console.log(data);
+  //       if (data.success === false) {
+  //         this.utilsService.showSnackBar(data.message);
+  //         return;
+  //       }
+  //       this.itrJsonForFileItr = data;
+  //       // https://api.taxbuddy.com/itr/eri/validate-itr-json?formCode={formCode}&ay={ay}&filingTypeCd={filingTypeCd}
+  //       this.loading = true;
+  //       let formCode = this.ITR_JSON.itrType;
+  //       let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+  //       let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+  //       const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
 
-        let headerObj = {
-          panNumber: this.ITR_JSON.panNumber,
-          assessmentYear: this.ITR_JSON.assessmentYear,
-          userId: this.ITR_JSON.userId.toString(),
-        };
-        sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+  //       let headerObj = {
+  //         panNumber: this.ITR_JSON.panNumber,
+  //         assessmentYear: this.ITR_JSON.assessmentYear,
+  //         userId: this.ITR_JSON.userId.toString(),
+  //       };
+  //       sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
 
-        this.itrMsService.postMethodForEri(param, data).subscribe(
-          (res: any) => {
-            this.loading = false;
-            console.log('validate ITR response =>', res);
-            if (this.utilsService.isNonEmpty(res)) {
-              if (res && res.successFlag) {
-                if (
-                  data.messages instanceof Array &&
-                  data.messages.length > 0
-                ) {
-                  this.utilsService.showSnackBar(data.messages[0].desc);
+  //       this.itrMsService.postMethodForEri(param, data).subscribe(
+  //         (res: any) => {
+  //           this.loading = false;
+  //           console.log('validate ITR response =>', res);
+  //           if (this.utilsService.isNonEmpty(res)) {
+  //             if (res && res.successFlag) {
+  //               if (
+  //                 data.messages instanceof Array &&
+  //                 data.messages.length > 0
+  //               ) {
+  //                 this.utilsService.showSnackBar(data.messages[0].desc);
+  //               } else {
+  //                 this.isValidateJson = true;
+  //                 this.utilsService.showSnackBar(
+  //                   'ITR JSON validated successfully.'
+  //                 );
+  //               }
+  //             } else {
+  //               if (res.errors instanceof Array && res.errors.length > 0) {
+  //                 let errors = res.errors.map((error) => error.code).join(', ');
+  //                 console.log(errors, 'errors');
+  //                 this.utilsService.showSnackBar(
+  //                   res.errors[0].desc ? res.errors[0].desc : errors
+  //                 );
+  //               } else if (
+  //                 res.messages instanceof Array &&
+  //                 res.messages.length > 0
+  //               ) {
+  //                 let errors = res.messages
+  //                   .map((error) => error.desc)
+  //                   .join(', ');
+  //                 console.log(errors, 'errors');
+  //                 this.utilsService.showSnackBar(errors);
+  //               }
+  //             }
+  //           } else {
+  //             this.utilsService.showSnackBar(
+  //               'Response is null, try after some time.'
+  //             );
+  //           }
+  //         },
+  //         (error) => {
+  //           this.loading = false;
+  //           this.isValidateJson = false;
+  //           this.utilsService.showSnackBar(
+  //             'Something went wrong, try after some time.'
+  //           );
+  //         }
+  //       );
+  //     },
+  //     (error) => {
+  //       console.log(error.error.message);
+  //       this.loading = false;
+  //       this.isValidateJson = false;
+  //       if (error.error.message) {
+  //         this.utilsService.showSnackBar(error.error.message);
+  //       } else {
+  //         this.utilsService.showSnackBar(
+  //           'Something went wrong, try after some time.'
+  //         );
+  //       }
+  //     }
+  //   );
+  // }
+
+  validateITR = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
+      console.log(url);
+      this.http.get(url, { responseType: 'json' }).subscribe(
+        (data: any) => {
+          console.log(data);
+          if (data.success === false) {
+            this.utilsService.showSnackBar(data.message);
+            return reject(data.message);
+          }
+          this.itrJsonForFileItr = data;
+          this.loading = true;
+          let formCode = this.ITR_JSON.itrType;
+          let ay = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
+          let filingTypeCD = this.ITR_JSON.isRevised === 'N' ? 'O' : 'R';
+          const param = `/eri/validate-itr-json?formCode=${formCode}&ay=${ay}&filingTypeCd=${filingTypeCD}`;
+
+          let headerObj = {
+            panNumber: this.ITR_JSON.panNumber,
+            assessmentYear: this.ITR_JSON.assessmentYear,
+            userId: this.ITR_JSON.userId.toString(),
+          };
+          sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
+          this.itrMsService.postMethodForEri(param, data).subscribe(
+            (res: any) => {
+              this.loading = false;
+              console.log('validate ITR response =>', res);
+              if (this.utilsService.isNonEmpty(res)) {
+                if (res && res.successFlag) {
+                  if (data.messages instanceof Array && data.messages.length > 0) {
+                    this.utilsService.showSnackBar(data.messages[0].desc);
+                  } else {
+                    this.isValidateJson = true;
+                    this.utilsService.showSnackBar('ITR JSON validated successfully.');
+                  }
+                  resolve();
                 } else {
-                  this.isValidateJson = true;
-                  this.utilsService.showSnackBar(
-                    'ITR JSON validated successfully.'
-                  );
+                  let errors = '';
+                  if (res.errors instanceof Array && res.errors.length > 0) {
+                    errors = res.errors.map((error) => error.code).join(', ');
+                    console.log(errors, 'errors');
+                    this.utilsService.showSnackBar(res.errors[0].desc ? res.errors[0].desc : errors);
+                  } else if (res.messages instanceof Array && res.messages.length > 0) {
+                    errors = res.messages.map((error) => error.desc).join(', ');
+                    console.log(errors, 'errors');
+                    this.utilsService.showSnackBar(errors);
+                  }
+                  reject(errors);
                 }
               } else {
-                if (res.errors instanceof Array && res.errors.length > 0) {
-                  let errors = res.errors.map((error) => error.code).join(', ');
-                  console.log(errors, 'errors');
-                  this.utilsService.showSnackBar(
-                    res.errors[0].desc ? res.errors[0].desc : errors
-                  );
-                } else if (
-                  res.messages instanceof Array &&
-                  res.messages.length > 0
-                ) {
-                  let errors = res.messages
-                    .map((error) => error.desc)
-                    .join(', ');
-                  console.log(errors, 'errors');
-                  this.utilsService.showSnackBar(errors);
-                }
+                const errorMessage = 'Response is null, try after some time.';
+                this.utilsService.showSnackBar(errorMessage);
+                reject(errorMessage);
               }
-            } else {
-              this.utilsService.showSnackBar(
-                'Response is null, try after some time.'
-              );
+            },
+            (error) => {
+              this.loading = false;
+              this.isValidateJson = false;
+              const errorMessage = 'Something went wrong, try after some time.';
+              this.utilsService.showSnackBar(errorMessage);
+              reject(errorMessage);
             }
-          },
-          (error) => {
-            this.loading = false;
-            this.isValidateJson = false;
-            this.utilsService.showSnackBar(
-              'Something went wrong, try after some time.'
-            );
-          }
-        );
-      },
-      (error) => {
-        console.log(error.error.message);
-        this.loading = false;
-        this.isValidateJson = false;
-        if (error.error.message) {
-          this.utilsService.showSnackBar(error.error.message);
-        } else {
-          this.utilsService.showSnackBar(
-            'Something went wrong, try after some time.'
           );
+        },
+        (error) => {
+          console.log(error.error.message);
+          this.loading = false;
+          this.isValidateJson = false;
+          const errorMessage = error.error.message || 'Something went wrong, try after some time.';
+          this.utilsService.showSnackBar(errorMessage);
+          reject(errorMessage);
         }
-      }
-    );
+      );
+    });
   }
+
 
   downloadJson() {
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
@@ -7274,25 +7495,47 @@ export class SummaryComponent implements OnInit {
     )[0].label;
   }
 
-  updateManually() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    console.log('UPDATE MANUALLY', this.ITR_JSON);
-    let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: this.ITR_JSON,
-    });
+  // updateManually() {
+  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  //   console.log('UPDATE MANUALLY', this.ITR_JSON);
+  //   let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+  //     width: '50%',
+  //     height: 'auto',
+  //     data: this.ITR_JSON,
+  //   });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+  //   disposable.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //   });
 
-    sessionStorage.setItem(
-      AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
-    );
-    console.log('UPDATE MANUALLY', this.ITR_JSON);
+  //   sessionStorage.setItem(
+  //     AppConstants.ITR_JSON,
+  //     JSON.stringify(this.ITR_JSON)
+  //   );
+  //   console.log('UPDATE MANUALLY', this.ITR_JSON);
+  // }
+
+  updateManually = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      console.log('UPDATE MANUALLY', this.ITR_JSON);
+      let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: this.ITR_JSON,
+      });
+
+      disposable.afterClosed().subscribe((result) => {
+        console.log('The dialog was closed');
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+        console.log('UPDATE MANUALLY', this.ITR_JSON);
+        resolve();
+      }, (error) => {
+        reject(error);
+      });
+    });
   }
+
 
   getBusinessDetails() {
     const incomes =
@@ -7326,7 +7569,7 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
-    
+
     this.setBusiness44ADA();
   }
 
@@ -7523,16 +7766,16 @@ export class SummaryComponent implements OnInit {
     return arrayToBeReturned;
   }
 
-  isOtherIncome(){
+  isOtherIncome() {
     return this.finalCalculations?.otherIncome?.otherIncomes?.dividendIncome ||
       this.finalCalculations?.otherIncome?.otherIncomes?.familyPension ||
-        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries &&
-            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries > 0) ||
-        (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming &&
-            this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
-        this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
+      (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries &&
+        this.finalCalculations?.otherIncome?.otherIncomes?.winningFromLotteries > 0) ||
+      (this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming &&
+        this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
+      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
   }
 }
 

@@ -108,7 +108,6 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     }
     else {
       this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
-      return;
     }
 
   }
@@ -120,7 +119,11 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   grandTotal: any;
 
 
-  getStatusWiseReport() {
+  getStatusWiseReport = (): Promise<any> => {
+    if (!this.leaderId && !this.filerId) {
+      this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
+      return;
+    }
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
@@ -144,7 +147,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
     param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    return this.userMsService.getMethodNew(param).toPromise().then((response: any) => {
       if (response.success) {
         this.loading = false;
 
@@ -244,7 +247,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
         const selectedServiceMap = columnMap[this.selectedService.value];
 
-         if (selectedServiceMap) {
+        if (selectedServiceMap) {
           this.columns = Object.values(selectedServiceMap);
           this.dataKeys = Object.values(selectedServiceMap);
           this.data = response?.data?.content[0];
@@ -257,17 +260,17 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       } else {
         this.data = null;
         this.grandTotal = null;
-        this.dataKeys =null;
-        this.columns= null;
-        this.grandTotalKeys=null;
+        this.dataKeys = null;
+        this.columns = null;
+        this.grandTotalKeys = null;
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() => {
       this.data = null;
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   addSpaces(text: string): string {
@@ -443,18 +446,16 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
-
-    // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'status-wise-report', fieldName, {});
     this.loading = false;
-}
+  }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
-    this.grandTotal =null;
-    this.dataKeys =null;
-    this.columns= null;
-    this.grandTotalKeys=null;
+    this.grandTotal = null;
+    this.dataKeys = null;
+    this.columns = null;
+    this.grandTotalKeys = null;
     this.selectedService.setValue(this.serviceTypes[0].value);
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -464,7 +465,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     }
     else {
       this.data = null;
-      this.grandTotal =null;
+      this.grandTotal = null;
     }
 
   }

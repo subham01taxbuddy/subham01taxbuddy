@@ -1,22 +1,23 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<label style="font-size: 18px;
-font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
+<div style="font-size: 18px;
+font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</div>
 <button style="float: right;" mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times"
     aria-hidden="true"></i></button>
 
 <div class="row">
-  <span *ngIf="!showDetails" class="note1" style="margin-top: 10px; margin-left: 0px;">select Financial year for ITR-U Update</span>
+  <span *ngIf="!showDetails" class="note1" style="margin-top: 10px; margin-left: 0px;">select Financial year for ITR-U
+    Update</span>
   <div style="display: inline;" *ngIf="hideYears">
-    <!-- <span>
-      <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2020-2021')"> FY-2020-2021
-      </button>
-    </span> -->
     <span>
-      <button type="button" title="Financial Year" class="tbd-btn-small" [class.disabled-button]="!enabledYears.includes('2021-2022')" [disabled]="!enabledYears.includes('2021-2022')" (click)="selectedFy('2021-2022')">FY-2021-2022
+      <button type="button" title="Financial Year" class="tbd-btn-small"
+        [class.disabled-button]="!enabledYears.includes('2021-2022')" [disabled]="!enabledYears.includes('2021-2022')"
+        (click)="selectedFy('2021-2022')">FY-2021-2022
       </button>
     </span>
     <span>
-      <button type="button" title="Financial Year" class="tbd-btn-small" [class.disabled-button]="!enabledYears.includes('2022-2023')" [disabled]="!enabledYears.includes('2022-2023')" (click)="selectedFy('2022-2023')">FY-2022-2023
+      <button type="button" title="Financial Year" class="tbd-btn-small"
+        [class.disabled-button]="!enabledYears.includes('2022-2023')" [disabled]="!enabledYears.includes('2022-2023')"
+        (click)="selectedFy('2022-2023')">FY-2022-2023
       </button>
     </span>
   </div>
@@ -71,6 +72,9 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
 
   </div>
   <div class="footer__buttons clearfix" style="margin-top: 25px;">
-    <button class="tbd-btn" [disabled]="eFillingDate.status !== 'VALID'" (click)="updateItrUDetails()">Update</button>
+    <!-- <button class="tbd-btn" [disabled]="eFillingDate.status !== 'VALID'" (click)="updateItrUDetails()">Update</button> -->
+    <app-custom-button [disabled]="eFillingDate.status !== 'VALID'" class="tbd-btn" [actions]="[updateItrUDetails]">
+      Update
+    </app-custom-button>
   </div>
 </div>

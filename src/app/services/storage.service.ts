@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  constructor() { }
+ 
 
   setItem(key: any, value: any, isStringify: boolean = false) {
     value = isStringify ? JSON.stringify(value) : value;
@@ -31,7 +31,7 @@ export class LocalStorageService {
   providedIn: 'root',
 })
 export class SessionStorageService {
-  constructor() { }
+ 
 
   setItem(key: any, value: any, isStringify: boolean = false) {
     value = isStringify ? JSON.stringify(value) : value;

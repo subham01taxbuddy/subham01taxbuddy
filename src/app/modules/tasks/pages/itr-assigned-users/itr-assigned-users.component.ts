@@ -19,7 +19,6 @@ import { ServiceDropDownComponent } from '../../../shared/components/service-dro
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UntypedFormControl } from '@angular/forms';
 import { BulkReAssignDialogComponent } from '../../components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
@@ -32,8 +31,6 @@ import * as moment from 'moment';
 import { DomSanitizer } from "@angular/platform-browser";
 import {ChatManager} from "../../../chat/chat-manager";
 import { ChatService } from 'src/app/modules/chat/chat.service';
-
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-itr-assigned-users',
@@ -149,7 +146,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
     this.requestManager.init();
     this.requestManagerSubscription = this.requestManager.requestCompleted.subscribe((value: any) => {
-      this.requestCompleted(value);
+      this.requestCompleted(value, this);
     });
   }
 
@@ -166,6 +163,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     } else {
@@ -173,6 +171,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     }
@@ -227,7 +226,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any) {
+  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
@@ -236,9 +235,9 @@ export class ItrAssignedUsersComponent implements OnInit {
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-        if (this.rowData.openItrId === 0) {
+        if (self.rowData.openItrId === 0) {
           this.loading = true;
-          let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
+          let profile = await this.getUserProfile(self.rowData.userId).catch(error => {
             this.loading = false;
             console.log(error);
             this.utilsService.showSnackBar(error.error.detail);
@@ -263,9 +262,9 @@ export class ItrAssignedUsersComponent implements OnInit {
             sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
             this.router.navigate(['/itr-filing/itr'], {
               state: {
-                userId: this.rowData.userId,
-                panNumber: this.rowData.panNumber,
-                eriClientValidUpto: this.rowData.eriClientValidUpto,
+                userId: self.rowData.userId,
+                panNumber: self.rowData.panNumber,
+                eriClientValidUpto: self.rowData.eriClientValidUpto,
                 name: this.rowData.name
               }
             });
@@ -275,8 +274,9 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.loading = false;
           console.log('end');
         } else {
-          let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
-          const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
+          let itrFilter = self.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${self.rowData.openItrId}` : '';
+          let assessmentYear = self.rowData.serviceType === 'ITRU' ? '2023-2024' : self.rowData.assessmentYear;
+          const param = `/itr?userId=${self.rowData.userId}&assessmentYear=${assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
@@ -396,10 +396,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           }
 
           if (data.serviceType === 'ITRU') {
-            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23" || item1.financialYear === "2022-2023")))) {
               itrSubscriptionFound = true;
               return;
-            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23")))) {
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2021-2022" || item1.financialYear === "2022-23" || item1.financialYear === "2022-2023")))) {
               itrSubscriptionFound = true;
               return;
             }
@@ -553,14 +553,17 @@ export class ItrAssignedUsersComponent implements OnInit {
         width: 110,
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
+        lockPosition:true,
+        suppressMovable: true,
         checkboxSelection: (params) => {
           return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
+            textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },
@@ -1166,6 +1169,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         leaderUserId: userData[i].leaderUserId,
         paymentStatus: userData[i].paymentStatus,
         aisProvided: userData[i].aisProvided,
+        everified: userData[i].everified
       })
       userArray.push(userInfo);
     }
@@ -1299,10 +1303,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.loading = true;
         this.requestManager.addRequest(this.LIFECYCLE,
           this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-        we_track('Start Filing', {
-          'User Name': data?.name,
-          'User Number': data?.mobileNumber
-        });
       }
     }, error => {
       this.loading = false;
@@ -1329,7 +1329,11 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if (data.statusId != 11) {
+        if(data.everified === false){
+          this.utilsService.showSnackBar(
+            'Please complete e-verification before starting with revised return'
+          );
+        } else if (data.statusId == 11 || data.statusId == 8 || data.statusId == 47) {
           let disposable = this.dialog.open(ReviseReturnDialogComponent, {
             width: '50%',
             height: 'auto',
@@ -1348,10 +1352,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             }
             console.log('The dialog was closed', result);
           });
-        } else {
-          this.utilsService.showSnackBar(
-            'Please complete e-verification before starting with revised return'
-          );
         }
       }
     }, error => {
@@ -1437,10 +1437,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             (result: any) => {
               this.loading = false;
               if (result.success) {
-                we_track('Call', {
-                  'User Name': data?.name,
-                  'User Phone number ': agent_number,
-                });
                 this._toastMessageService.alert('success', result.message);
               } else {
                 this.utilsService.showSnackBar(
@@ -1602,7 +1598,6 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.getStatus();
     this.clearUserFilter = moment.now().valueOf();
@@ -1631,7 +1626,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search= (form?, isAgent?, pageChange?): Promise<any> =>{
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1705,9 +1700,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
     }
-    this.reportService.getMethod(param).subscribe(
-
-      (result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
@@ -1733,11 +1726,11 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
         this.loading = false;
 
-      }, error => {
+      }).catch(() =>{
         this.loading = false;
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      })
+      });
   }
 
   closeChat() {

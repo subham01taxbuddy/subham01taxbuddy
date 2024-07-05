@@ -19,33 +19,32 @@
               <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="container-fluid">
-                  <div class="row">
-                    <div class="col-sm-6 bckClr">
-                      <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
-                        [showOwnerList]="true"></app-leader-list-dropdown>
+                    <div class="row">
+                      <div class="col-sm-6 bckClr">
+                        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+                          [showOwnerList]="true"></app-leader-list-dropdown>
+                      </div>
+                      <div class="button-container">
+                        <app-custom-button class="srch-btn-1" [actions]="[showReports]">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                        </app-custom-button>
+                        <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()"
+                          *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
+                          <i class="fa fa-download" aria-hidden="true"></i> Download File
+                        </button>
+                        <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()"
+                          *ngIf="!roles?.includes('ROLE_FILER')">
+                          Clear form
+                        </button>
+                      </div>
                     </div>
-                    <div class="button-container">
-                      <button class="srch-btn-1" [disabled]="loading" (click)="showReports()"
-                        *ngIf="!roles?.includes('ROLE_FILER')">
-                        <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                      </button>
-                      <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()"
-                        *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
-                        <i class="fa fa-download" aria-hidden="true"></i> Download File
-                      </button>
-                      <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()"
-                        *ngIf="!roles?.includes('ROLE_FILER')">
-                        Clear form
-                      </button>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <span class="new-note1 note">
+                          Note : Please select required filters Above and click on Show Reports to get information
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <span class="new-note1 note">
-                        Note : Please select required filters Above and click on Show Reports to get information
-                      </span>
-                    </div>
-                  </div>
                   </div>
                 </div>
               </div>
@@ -69,9 +68,7 @@
           <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
         </div>
       </div>
-      <table>
-        <tr *ngFor="let item of scheduleCallingReport | paginate:config"></tr>
-      </table>
+      <div *ngFor="let item of scheduleCallingReport | paginate:config"></div>
 
       <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="scheduleCallingReportGridOptions">
       </ag-grid-angular>

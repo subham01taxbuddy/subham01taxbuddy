@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import {InterceptorSkipHeader} from "./token-interceptor";
 @Injectable({
   providedIn: 'root',
 })
 export class ItrMsService {
+
+  SINGLE_CG_URL = "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/itr/single-cg-calculate";
   headers: any;
   userObj: any;
   microService: string = '/itr';
@@ -118,6 +121,17 @@ export class ItrMsService {
     );
   }
 
+  singelCgCalculate<T>(...param: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    // this.headers.append('Content-Type', 'application/json');
+    this.headers = this.headers.append(InterceptorSkipHeader, '');
+    return this.httpClient.post<T>(
+      this.SINGLE_CG_URL,
+      param[0],
+      { headers: this.headers }
+    );
+  }
+
   postMethodForEri<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
@@ -206,6 +220,23 @@ export class ItrMsService {
     this.headers.append('Authorization', 'Bearer ' + TOKEN);
     return this.http
       .get(environment.url + this.microService + param, {
+        headers: this.headers,
+        responseType: 'blob',
+      })
+      .pipe(
+        map((response) => {
+          return new Blob([response], { type: fileType });
+        })
+      );
+  }
+  downloadFileAsPost(param: any, fileType: any, request:any) {
+    console.log('get Param', param);
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    this.headers = new Headers();
+    this.headers.append('Authorization', 'Bearer ' + TOKEN);
+    return this.http
+      .post(environment.url + this.microService + param, request, {
         headers: this.headers,
         responseType: 'blob',
       })

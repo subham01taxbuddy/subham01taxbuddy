@@ -34,19 +34,13 @@ import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.
 import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
 import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
-import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
-import {LabFormComponent} from "./itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component";
-import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
+import { ExemptIncomeComponent } from "./exempt-income/exempt-income.component";
+import { LabFormComponent } from "./itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component";
+import { BondsDebentureComponent } from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 
 const routes: Routes = [
   {
-    // path: '',
-    // component: ItrWizardComponent,
-    // children: [
-    // { path: 'my-itrs', component: MyAssignedItrsComponent },
-    // { path: 'customer-profile', component: CustomerProfileComponent },
-    // {
     path: 'itr',
     component: ItrWizardComponent,
     children: [
@@ -119,8 +113,6 @@ const routes: Routes = [
       { path: 'validation-errors', component: ValidationErrorScreenComponent },
       // ],
       // },
-      // { path: 'direct-upload', component: DirectUploadComponent },
-      // { path: 'acknowledgement', component: AcknowledgementComponent },
       // { path: 'team-itrs', canActivate: [RoleBaseAuthGuardService], component: MyTeamItrsComponent },
       // { path: 'delay', canActivate: [RoleBaseAuthGuardService], component: DelayComponent },
       // { path: 'tasks', component: FilingTasksComponent },
@@ -138,4 +130,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ItrFilingRoutingModule {}
+export class ItrFilingRoutingModule { }

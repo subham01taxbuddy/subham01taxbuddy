@@ -326,7 +326,7 @@ export const ErrorMsgsSchedule = {
   MAX_44AD_RECIEPT_LIMIT_EXCEED: {
     code: 'MAX_44AD_RECIEPT_LIMIT_EXCEED',
     message: 'if the taxpayer has filed ITR-4 then the gross receipt/income U/S 44AD cannot be more than Rs. 2 crores',
-    relatedSchedule: 'otherSources',
+    relatedSchedule: 'businessIncome',
   },
   CG_GOLD_EXPENSE_CLAIM_INCORRECT: {
     code: 'CG_GOLD_EXPENSE_CLAIM_INCORRECT',
@@ -670,7 +670,7 @@ export const ErrorMsgsSchedule = {
   },
   BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO: {
     code: 'BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO',
-    message: 'In case of ITR 3 balance sheet difference needs to be zero or select BOA as "No"',
+    message: 'You are not required to maintain BOA, so either choose 44AA as No or else Fill the B/S and difference should be 0',
     relatedSchedule: 'balanceSheet',
   },
   NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO_AND_MAKE_44AA_FLAG_YES: {
@@ -678,15 +678,75 @@ export const ErrorMsgsSchedule = {
     message: 'In case of Non Speculative Income balance sheet difference needs to be zero and select BOA as "Yes"',
     relatedSchedule: 'balanceSheet',
   },
+  NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO: {
+    code: 'NON_SPECULATIVE_INCOME_BS_DIFF_NEEDS_ZERO',
+    message: 'In case of Non Speculative Income balance sheet difference needs to be zero',
+    relatedSchedule: 'balanceSheet',
+  },
   NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES: {
     code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_YES',
     message: 'In case of Non Speculative Income select BOA as "Yes"',
     relatedSchedule: 'personalInfo',
   },
+  NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_NO: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_MAKE_44AA_FLAG_No',
+    message: 'There is no non-speculative income, so choose "NO" for BOA under section 44AA.',
+    relatedSchedule: 'personalInfo',
+  },
+  NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET: {
+    code: 'NON_SPECULATIVE_INCOME_NEEDS_BALANCE_SHEET',
+    message: 'In case of Non Speculative Income, please fill balance sheet',
+    relatedSchedule: 'balanceSheet',
+  },
+  IMMOVABLE_PROPERTY_INCOMPLETE: {
+    code: 'IMMOVABLE_PROPERTY_INCOMPLETE',
+    message: 'Please fill all immovable asset details in schedule AL',
+    relatedSchedule: 'moreInformation',
+  },
   FOREIGN_INCOME_TR_SECTION_NOT_FOUND: {
     code: 'FOREIGN_INCOME_TR_SECTION_NOT_FOUND',
     message: 'To claim tax relief against foreign income, please select tax relief section in schedule TR',
     relatedSchedule: 'foreignIncome',
+  },
+  TDS_INCOME_HEAD_MISSING: {
+    code: 'TDS_INCOME_HEAD_MISSING',
+    message: 'Source of income head is missing in TDS entry, please update in schedule Taxes Paid',
+    relatedSchedule: 'taxesPaid',
+  },
+  NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY: {
+    code: 'NPS_EMPLOYEE_CONTRI_MORE_THAN_SALARY',
+    message: '80CCD1 investment declared exceeds the allowed value',
+    relatedSchedule: 'investmentsDeductions',
+  },
+  NPS_EMPLOYER_CONTRI_INCORRECT: {
+    code: 'NPS_EMPLOYER_CONTRI_INCORRECT',
+    message: '80CCD2 investment is not allowed for pensioners',
+    relatedSchedule: 'investmentsDeductions',
+  },
+  NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY: {
+    code: 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY',
+    message: '80CCD2 investment declared exceeds the allowed value',
+    relatedSchedule: 'investmentsDeductions',
+  },
+  TDS_SALARY_MORE_THAN_AMT: {
+    code: 'TDS_SALARY_MORE_THAN_AMT',
+    message: 'TDS on salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_16A_MORE_THAN_AMT: {
+    code: 'TDS_16A_MORE_THAN_AMT',
+    message: 'TDS other than salary is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TDS_26QB_MORE_THAN_AMT: {
+    code: 'TDS_26QB_MORE_THAN_AMT',
+    message: 'TDS on sale/rent of property is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
+  },
+  TCS_MORE_THAN_AMT: {
+    code: 'TCS_MORE_THAN_AMT',
+    message: 'TCS collected is more than the amount credited',
+    relatedSchedule: 'taxesPaid',
   }
 };
 export interface Schedules {
@@ -740,9 +800,13 @@ export interface Schedules {
   providedIn: 'root',
 })
 export class ItrValidations {
-  constructor() {}
+  constructor() { }
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];
+  }
+
+  getMessage(errorCode: string) {
+    return ErrorMsgsSchedule[errorCode].message;
   }
 }

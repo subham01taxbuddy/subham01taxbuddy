@@ -54,9 +54,9 @@
 
                     <!-- Adding new content in filter ends -->
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
-                        Search
-                      </button>
+                      <app-custom-button class="srch-btn-1" [actions]="[search]">
+                        <i class="fa fa-search" aria-hidden="true"></i> Search
+                      </app-custom-button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
                       </button>
@@ -70,10 +70,10 @@
                     </div>
                     <div class="right"
                       *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
-                      <button class="bulk-buttons bulk" style="float:right"
+                      <button class="bulk-buttons bulk" style="float:right" [disabled]="loading"
                         (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
                           Re-Assignment to Filer</span></button>
-                      <button class="bulk-buttons bulk spRt" style="float:right"
+                      <button class="bulk-buttons bulk spRt" style="float:right" [disabled]="loading"
                         (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
                           Re-Assignment to Leader</span></button>
                     </div>
@@ -100,9 +100,7 @@
             <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
           </div>
         </div>
-        <table>
-          <tr *ngFor="let item of userInfo | paginate:config"></tr>
-        </table>
+        <div *ngFor="let item of userInfo | paginate:config"></div>
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
           (rowClicked)="onUsersRowClicked($event)">

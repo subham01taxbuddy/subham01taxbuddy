@@ -8,7 +8,6 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -17,7 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
@@ -26,7 +24,6 @@ import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.s
 import { saveAs } from "file-saver/dist/FileSaver";
 import * as moment from 'moment';
 import { HttpClient } from '@angular/common/http';
-declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
   parse: {
@@ -406,7 +403,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.config.totalItems = 0;
   }
 
-  getInvoice(isCoOwner?, agentId?, pageChange?) {
+  getInvoice=(isCoOwner?, agentId?, pageChange?):Promise<any> =>{
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-24&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -494,7 +491,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.invoiceData = response.data.content;
@@ -520,14 +517,12 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.gridApi?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }, (error) => {
+    }).catch(()=>{
       this.gridApi?.setRowData(this.createRowData([]));
       this.totalInvoice = 0
       this.config.totalItems = 0;
       this.loading = false;
-    }
-    );
-
+    });
   }
 
   createRowData(userInvoices) {
@@ -568,7 +563,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  downloadInvoicesSummary() {
+  downloadInvoicesSummary=():Promise<any>  => {
     // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
       let fromDate = this.datePipe.transform(
@@ -622,7 +617,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response: any) => {
+      return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -632,7 +627,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      });
+      }).catch(()=>{
+        this.loading=false;
+      })
     }
   }
 
@@ -728,7 +725,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       {
         headerName: 'Email',
         field: 'email',
-        width: 150,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -892,7 +889,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           } else {
             return `<button type="button" class="action_icon add_button" title="Mail reminder"
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
             <i class="fa fa-bell" aria-hidden="true" data-action-type="mail-reminder"></i>
            </button>`;
           }
@@ -929,7 +926,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           if (!params.data.paymentLink) {
             return `<button type="button" class="action_icon add_button" title="By clicking on Generate Link you will be able to create razor pay link."
             style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
+            background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;" [disabled]="loading">
             <i class="fa-thin fa-link fa-beat" data-action-type="generate-link"></i>
            </button>`;
           } else {
@@ -949,7 +946,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer">
+            background: transparent; font-size: 16px; cursor:pointer" [disabled]="loading">
          <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
         </button>`;
         },
@@ -970,7 +967,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
-            style="border: none;
+            style="border: none; [disabled]="loading"
             background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
             <i class="fa-solid fa-phone" data-action-type="place-call"></i>
            </button>`;
@@ -986,7 +983,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
@@ -1065,9 +1062,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
-        we_track('Send Reminder', {
-          'User number ': data.phone,
-        });
+
         console.log('Email sent response: ', result);
         this._toastMessageService.alert(
           'success',
@@ -1091,9 +1086,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
-        we_track('Send Reminder', {
-          'User number ': data.phone,
-        });
+
         console.log('WhatsAPP sent response: ', result);
         this._toastMessageService.alert(
           'success',
@@ -1112,12 +1105,10 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
-    we_track('Proforma Invoice Download', {
-      'User number': data.phone,
-    });
+
     // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
-    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
       pdf => {
         this.loading = false;
@@ -1168,10 +1159,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success == true) {
-                we_track('Call', {
-                  'User Name': user?.billTo,
-                  'User Phone number ': agentNumber,
-                });
                 this._toastMessageService.alert('success', result.message);
               }
             },

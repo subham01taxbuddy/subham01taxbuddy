@@ -7,39 +7,27 @@
   </div>
   <h3>IT portal’s Credentials for {{data.name}}</h3>
 </div>
-<div onmousedown='return false;' onselectstart='return false;'>
+<div>
   <b>Password Status:</b> {{passwordStatus}}<br>
   <b>Password:</b> {{showPassword ? password : maskedPassword}}
   <button class="btn-small" *ngIf="passwordAvailable">
-    &nbsp;<i
-    alt="show"
-    class="fa fa fa-eye"
-    (click)="viewPassword()"
-    [class.hide]="showPassword"
-  ></i>&nbsp;
+    &nbsp;<i alt="show" class="fa fa fa-eye" (click)="viewPassword()" [class.hide]="showPassword"></i>&nbsp;
   </button> &nbsp;&nbsp;&nbsp;
   <button class="btn-small" *ngIf="passwordAvailable">
-    &nbsp;<i
-    alt="copy"
-    class="fa fa-regular fa-copy"
-    (click)="copyPassword()"
-    [class.hide]="showPassword"
-  ></i>&nbsp;
+    &nbsp;<i alt="copy" class="fa fa-regular fa-copy" (click)="copyPassword()" [class.hide]="showPassword"></i>&nbsp;
   </button><br><br>
-  <button *ngIf="passwordAvailable" class="col-sm-6" (click)="verifyPassword()">Verify Password</button>
+  <button *ngIf="passwordAvailable" class="action-buttons col-sm-4" (click)="verifyPassword()">Verify Password</button>
   <mat-checkbox [(ngModel)]="updateClicked" [ngModelOptions]="{standalone: true}">Update Password</mat-checkbox>
 </div>
 <div *ngIf="updateClicked">
 
   <mat-label style="color: #07070c">Income Tax Portal Password</mat-label>
-  <mat-form-field appearance="outline" >
-    <input matInput [(ngModel)] = "newPassword"
-           [ngModelOptions]="{standalone: true}"
-      placeholder="Password"
-      appearance="outline"/>
+  <mat-form-field appearance="outline">
+    <input matInput [(ngModel)]="newPassword" [ngModelOptions]="{standalone: true}" placeholder="Password"
+      appearance="outline" />
   </mat-form-field>
   <div class="col-sm-12">
-    <button (click)="updatePassword()">Update & Verify</button>&nbsp;&nbsp;
+    <button class="action-buttons col-sm-4" (click)="updatePassword()">Update & Verify</button>&nbsp;&nbsp;
   </div>
 </div>
 <div *ngIf="showProgress">

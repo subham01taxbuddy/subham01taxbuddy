@@ -1,4 +1,5 @@
-<form [formGroup]="assetsForm" class="scroll" style="padding: 0 40px">
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<form [formGroup]="assetsForm" class="scroll" style="padding: 0 40px" #formDirective="ngForm">
 
   <div class="accordion__item-body">
 
@@ -28,6 +29,7 @@
                 [max]="maxPurchaseDate" />
               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
               <mat-datepicker #purchaseDate></mat-datepicker>
+              <mat-hint>In Case of modification to AIS entry, Kindly verify the Buy Date</mat-hint>
             </mat-form-field>
           </div>
 
@@ -76,7 +78,7 @@
                 <input matInput digitsOnly formControlName="purchaseCost" placeholder="Buy Value" name="purchaseCost[i]"
                   class="input-field" maxlength="14"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  (blur)="calculateGainType()" />
+                  (change)="calculateGainType()" />
 
                 <!-- <mat-error
                     *ngIf="
@@ -87,6 +89,9 @@
                     >Enter valid amount.</mat-error
                   > -->
               </mat-form-field>
+              <div class="note new-note align-center">
+                <b>Note:</b> Click on tab button after entering buy value to get the gain amount
+              </div>
             </div>
           </div>
           <div class="div-6" *ngIf="assetsForm.controls['gainType'].value === 'LONG'">
@@ -226,7 +231,7 @@
       <button class="btn btn__white" (click)="clearForm()">cancel</button>
     </div>
     <div class="box-right">
-      <button class="btn btn__primary" (click)="saveCg()">Save Details</button>
+      <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="!assetsForm.valid">Save Details</button>
     </div>
   </div>
 

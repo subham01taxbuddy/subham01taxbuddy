@@ -9,6 +9,7 @@
 
 /.angular
 /.vscode
+/.scannerwork
 # dependencies
 /node_modules
 

@@ -72,8 +72,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     { value: 'Unpaid', name: 'Unpaid' },
     { value: 'Adjusted', name: 'Adjusted' },
     { value: 'initiated', name: 'Initiated' },
-    { value: 'failed', name: 'Failed' }
+    { value: 'Failed', name: 'Failed' }
   ];
+  reasonList=[
+    { value: 'ITR filed through Manual mode', name: 'ITR filed through Manual mode' },
+    { value: 'Discount more than 20 percent', name: 'Discount more than 20%' },
+    { value: 'Invoice Not Paid', name: 'Invoice Not Paid'},
+    { value: 'Existing commission is not approved', name: 'Existing commission is not Approved'},
+    { value: 'Other services', name: 'Other services' },
+  ]
+  selectedReason:any;
   selectedStatus: any;
   selectedPayoutStatus: any;
   searchVal: string = "";
@@ -237,30 +245,45 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     return '-';
   }
 
-  advanceSearch(key: any) {
+  advanceSearch = (key: any): Promise<void> => {
+    this.loading = true;
     this.user_data = [];
+
+    let searchPromise: Promise<void>;
+
     if (this.leaderId || this.filerId) {
-      this.serviceCall('');
-    }
-    else if (this.searchVal !== "") {
+      searchPromise = this.serviceCall('');
+    } else if (this.searchVal !== "") {
       this.selectedStatus = '';
       this.selectedPayoutStatus = '';
-      this.getSearchList(key, this.searchVal);
-    } else if (this.selectedStatus || this.selectedPayoutStatus) {
-      this.getSearchList(key, this.searchVal);
-    } else if (this.selectedStatus == '' || this.selectedPayoutStatus == '') {
-      this.serviceCall('');
+      this.selectedReason = '';
+      searchPromise = this.getSearchList(key, this.searchVal);
+    } else if (this.selectedStatus || this.selectedPayoutStatus || this.selectedReason) {
+      searchPromise = this.getSearchList(key, this.searchVal);
+    } else if (this.selectedStatus === '' || this.selectedPayoutStatus === '' || this.selectedReason === '') {
+      searchPromise = this.serviceCall('');
+    } else {
+      this.loading = false;
+      return Promise.resolve();
     }
+
+    return searchPromise.finally(() => {
+      this.loading = false;
+    });
   }
 
-  getSearchList(key: any, searchValue: any) {
-    this.searchVal = searchValue;
-    this.key = key;
-    let queryString = '';
-    if (this.utilsService.isNonEmpty(searchValue)) {
-      queryString = `&${key}=${searchValue}`;
-    }
-    this.serviceCall(queryString);
+  getSearchList(key: any, searchValue: any): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.searchVal = searchValue;
+      this.key = key;
+      let queryString = '';
+      if (this.utilsService.isNonEmpty(searchValue)) {
+        queryString = `&${key}=${searchValue}`;
+      }
+      this.serviceCall(queryString)
+        .then(resolve)
+        .catch(reject);
+    });
   }
 
   statusChanged() {
@@ -286,70 +309,83 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     // this.serviceCall(queryString);
   }
 
-  serviceCall(queryString, pageChange?) {
-    //https://dev-api.taxbuddy.com/report/bo/itr-filing-credit?fromDate=2022-01-10&toDate=2023-10-27&page=0&size=20' \
-    if (!pageChange) {
-      this.cacheManager.clearCache();
+  reasonChanged(){
+    this.config.currentPage = 1;
+    let queryString = '';
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
+      queryString = `&${this.key}=${this.searchVal}`;
     }
-    this.loading = true;
-    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+    this.searchVal = '';
+    this.key = ''
+  }
 
-    let loggedInId = this.utilsService.getLoggedInUserID();
-    if (this.roles.includes('ROLE_LEADER')) {
-      this.leaderId = loggedInId
-    }
+  serviceCall(queryString: string, pageChange?: boolean): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (!pageChange) {
+        this.cacheManager.clearCache();
+      }
+      this.loading = true;
+      let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+      let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
-    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
-      this.filerId = loggedInId;
-      this.searchAsPrinciple = true;
-    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
-      this.filerId = loggedInId;
-      this.searchAsPrinciple = false;
-    }
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      if (this.roles.includes('ROLE_LEADER')) {
+        this.leaderId = loggedInId;
+      }
 
-    let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-    let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
-    let serviceTypeFilter = this.serviceType.value ? `&serviceType=${this.serviceType.value}` : '';
+      if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+        this.filerId = loggedInId;
+        this.searchAsPrinciple = true;
+      } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+        this.filerId = loggedInId;
+        this.searchAsPrinciple = false;
+      }
 
-    let userFilter = ''
-    if (this.leaderId && !this.filerId) {
-      userFilter += `&leaderUserId=${this.leaderId}`;
-    }
-    if (this.filerId && this.searchAsPrinciple === true) {
-      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
-    }
-    if (this.filerId && this.searchAsPrinciple === false) {
-      userFilter += `&filerUserId=${this.filerId}`;
-    }
+      let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+      let reasonFilter = this.selectedReason ? `&manualApprovalReason=${this.selectedReason}` : '';
+      let serviceTypeFilter = this.serviceType.value ? `&serviceType=${this.serviceType.value}` : '';
 
-    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${serviceTypeFilter}`;
-    this.reportService.getMethod(param).subscribe((result: any) => {
-      this.loading = false;
-      console.log(result);
-      if (result.success) {
-        this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.allFilerList, this.allLeaderList));
-        this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
-        this.userInfo = result.data.content;
-        this.config.totalItems = result.data.totalElements;
-        this.cacheManager.initializeCache(result.data.content);
+      let userFilter = '';
+      if (this.leaderId && !this.filerId) {
+        userFilter += `&leaderUserId=${this.leaderId}`;
+      }
+      if (this.filerId && this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+      }
+      if (this.filerId && this.searchAsPrinciple === false) {
+        userFilter += `&filerUserId=${this.filerId}`;
+      }
 
-        const currentPageNumber = pageChange || this.config.currentPage;
-        this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
-        this.config.currentPage = currentPageNumber;
-      } else {
+      const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage - 1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${serviceTypeFilter}${reasonFilter}`;
+      this.reportService.getMethod(param).subscribe((result: any) => {
+        this.loading = false;
+        if (result.success) {
+          this.usersGridOptions.api?.setColumnDefs(this.usersCreateColumnDef(this.allFilerList, this.allLeaderList));
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
+          this.userInfo = result.data.content;
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data.content);
+
+          const currentPageNumber = pageChange || this.config.currentPage;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
+          this.config.currentPage = currentPageNumber;
+          resolve();
+        } else {
+          this.usersGridOptions.api?.setRowData([]);
+          this.userInfo = [];
+          this.config.totalItems = 0;
+          this.utilsService.showSnackBar(result.message);
+          reject(result.message);
+        }
+      }, error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Data not found');
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
         this.config.totalItems = 0;
-        this.utilsService.showSnackBar(result.message);
-      }
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Data not found');
-      // this.utilsService.showSnackBar(error.error.message);
-      this.usersGridOptions.api?.setRowData([]);
-      this.userInfo = [];
-      this.config.totalItems = 0;
+        reject(error);
+      });
     });
   }
 
@@ -738,7 +774,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
             return filer;
           }
         }
-      }, {
+      },
+      {
         headerName: 'Approved Date',
         field: 'commissionPaymentApprovalDate',
         width: 120,
@@ -754,6 +791,18 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       },
       {
+        headerName: 'Manual Approval Reason',
+        field: 'manualApprovalReason',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
         headerName: 'See/Add Notes',
         editable: false,
         suppressMenu: true,
@@ -761,7 +810,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
           <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
@@ -783,7 +832,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#2dd35c;">
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer; color:#2dd35c;" [disabled]="loading">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -806,7 +855,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Invoice" style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
+            background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
             <i class="fa-regular fa-receipt" style="color: #ff9500;" data-action-type="invoice"></i>
            </button>`;
         },
@@ -829,7 +878,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           if (params.data.slabwiseCommissionPaymentStatus == 'Unpaid' && params.data.slabwiseCommissionPaymentApprovalStatus == 'APPROVED') {
             return `<button type="button" class="action_icon add_button" title="disapprove payout " style="border: none;
-            background: transparent; font-size: 16px; cursor:pointer;">
+            background: transparent; font-size: 16px; cursor:pointer;" [disabled]="loading">
             <i class="fas fa-thumbs-down" style="color: #00ff00;" data-action-type="disapprove"></i>
            </button>`;
           } else {
@@ -898,7 +947,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
   }
 
-  approveSelected() {
+  approveSelected=():Promise<any> =>{
     // new api for approval 13-5-24- 'https://uat-api.taxbuddy.com/itr/v2/partnerCommission' \
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
@@ -908,6 +957,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
     let invoices = selectedRows.map(item => Number(item.subscriptionId));
     let commissionPercentages = selectedRows.map(item =>item.slabwiseCommissionPercentage);
+    let manualApprovalReasons = selectedRows.map(item =>item.manualApprovalReason);
 
     console.log('commissionPercentage',commissionPercentages)
     console.log('invoices',invoices)
@@ -918,24 +968,26 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
 
     let commissionPercentage = commissionPercentages[0];
+    let manualApprovalReason = manualApprovalReasons[0];
 
     let param = '/v2/partnerCommission';
     let request = {
       subscriptionIdList: invoices,
       commissionPaymentApprovalStatus: 'APPROVED',
-      commissionPercentage: commissionPercentage
+      commissionPercentage: commissionPercentage,
+      manualApprovalReason :manualApprovalReason
     };
     this.loading = true;
-    this.itrMsService.putMethod(param, request).subscribe((result: any) => {
+    return this.itrMsService.putMethod(param, request).toPromise().then((result: any) => {
       this.loading = false;
       if (result.success) {
         this.utilsService.showSnackBar('Payouts approved successfully');
         this.serviceCall('');
       }
-    }, error => {
+    }).catch((error)=>{
       this.loading = false;
       this.utilsService.showSnackBar('Error in processing payouts. Please try after some time.');
-    });
+    })
   }
 
   isChatOpen = false;
@@ -1047,6 +1099,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+    let reasonFilter = this.selectedReason ? `&manualApprovalReason = ${this.selectedReason}` : '';
 
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
@@ -1064,7 +1117,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       queryString = `&${this.key}=${this.searchVal}`;
     }
 
-    let param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}`;
+    let param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}${reasonFilter}`;
 
 
     let fieldName = [
@@ -1090,6 +1143,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       { key: 'invoicePaymentStatus', value: 'Realised/Unrealised' },
       { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
       { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
+      { key: 'manualApprovalReason ',value:'Reason' }
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
     this.loading = false;
@@ -1104,6 +1158,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.serviceType.setValue(null);
     this.filerId = null;
     this.leaderId = null;
+    this.selectedReason =null;
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;

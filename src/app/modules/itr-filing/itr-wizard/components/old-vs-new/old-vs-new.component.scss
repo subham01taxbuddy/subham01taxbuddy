@@ -1,5 +1,4 @@
 .particular-label {
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -8,7 +7,6 @@
   color: #000000;
 }
 .particular-value {
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -19,7 +17,6 @@
 }
 
 .question-label {
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 19px;
@@ -33,7 +30,6 @@
 }
 
 .option-label {
-  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -54,8 +50,33 @@
 }
 
 .text-bold-center{
-  font-weight: 500; 
+  font-weight: 500;
   text-align: center;
   font-size: 14px;
 }
 
+.comp-title {
+  float: right;
+  padding: 10px;
+}
+.darkBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10%;
+  background-color: #1b67ba;
+  border-color: #1b67ba;
+  color: #ffffff;
+  border-radius: 6px;
+  height: 50px;
+  width: 230px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 500 !important;
+}
+
+.darkBtn:hover {
+  background-color: #ffffff;
+  color: #1b67ba;
+  border: 1px solid #1b67ba;
+}

@@ -782,7 +782,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     if (incomeType === 'cash') {
       this.amountEight = this.selectedFormGroup.controls['cashReceipts'].value;
       this.maxEightAmt = this.selectedFormGroup.controls['cashReceipts'].value;
-      this.amountEight = Math.round(Number((this.amountEight / 100) * 50));
+      this.amountEight = Math.ceil(Number((this.amountEight / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['cashMinIncome'].setValue(this.amountEight);
@@ -799,7 +799,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     } else if (incomeType === 'bank') {
       this.amountSix = this.selectedFormGroup.controls['bankReceipts'].value;
       this.maxSixAmt = this.selectedFormGroup.controls['bankReceipts'].value;
-      this.amountSix = Math.round(Number((this.amountSix / 100) * 50));
+      this.amountSix = Math.ceil(Number((this.amountSix / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['bankMinIncome'].setValue(this.amountSix);
@@ -816,7 +816,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     } else if (incomeType === 'anyOther') {
       this.amountEightAnyOther = this.selectedFormGroup.controls['anyOtherMode'].value;
       this.maxEightAnyOtherAmt = this.selectedFormGroup.controls['anyOtherMode'].value;
-      this.amountEightAnyOther = Math.round(Number((this.amountEightAnyOther / 100) * 50));
+      this.amountEightAnyOther = Math.ceil(Number((this.amountEightAnyOther / 100) * 50));
 
       if (setValue) {
         this.selectedFormGroup.controls['anyOtherMinIncome'].setValue(this.amountEightAnyOther);

@@ -76,10 +76,10 @@ export class TdsOnSalaryComponent implements OnInit {
     if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
-    if (!this.Copy_ITR_JSON.taxPaid?.onSalary.length) {
+    if (!this.Copy_ITR_JSON.taxPaid?.onSalary?.length) {
       srn = 0;
     } else {
-      srn = this.Copy_ITR_JSON.taxPaid?.onSalary.length;
+      srn = this.Copy_ITR_JSON.taxPaid?.onSalary?.length;
     }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
@@ -157,7 +157,7 @@ export class TdsOnSalaryComponent implements OnInit {
     } else {
       this.loading = false;
       this.utilsService.showSnackBar(
-        'Failed to save tax on salary tax paid data.'
+        'Please fill in all the mandatory fields.'
       );
     }
   }

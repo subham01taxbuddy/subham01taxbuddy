@@ -26,7 +26,6 @@ ul {
   justify-content: center;
   align-items: center;
   gap: 19.45px;
-  font-family: "DM Sans";
   font-style: normal;
   font-weight: 400;
   font-size: 19px;
@@ -146,7 +145,7 @@ background: #3E82CD;
 .sub-title-text{
 flex: 1 0 0;
 color: #FFF;
-font-family: DM Sans;
+
 font-size: 17px;
 font-style: normal;
 font-weight: 700;
@@ -184,7 +183,7 @@ line-height: 28px; /* 164.706% */
   }
   .header-text-1{
   color: #303030;
-  font-family: DM Sans;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 700;
@@ -209,7 +208,7 @@ line-height: 28px; /* 164.706% */
 .role-header{
 align-self: stretch;
 color: #242426;
-font-family: DM Sans;
+
 font-size: 14px;
 font-style: normal;
 font-weight: 400;
@@ -230,7 +229,7 @@ align-self: stretch;
   border-radius: 4px;
   border: 1.5px solid #3E82CD;
   color: #3E82CD;
-  font-family: DM Sans;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -239,14 +238,14 @@ align-self: stretch;
 
 .save-all{
 // display: flex;
-padding: 8px 24px;
+padding: 15px;
 align-items: flex-start;
 gap: 16px;
 border-radius: 4px;
 border: 1.5px solid #3E82CD;
 background: #3E82CD;
 color: #FFF;
-font-family: DM Sans;
+
 font-size: 12px;
 font-style: normal;
 font-weight: 500;
@@ -280,4 +279,23 @@ line-height: 28px; /* 233.333% */
 .non-clickable {
   pointer-events: none;
   cursor: not-allowed;
+}
+.document-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.document-item {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.document-title {
+  margin-bottom: 5px;
+}
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0
 }

@@ -107,7 +107,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  showReports(pageNumber?) {
+  showReports = (pageNumber?): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/
     //calling-report/daily-sign-up-report?pageSize=20&fromDate=2023-12-19&toDate=2023-12-19&page=0
     if (!pageNumber) {
@@ -133,7 +133,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/daily-sign-up-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.dailySignUpList = response?.data?.content;
@@ -177,10 +177,10 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(() =>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    });
+    })
   }
 
   createRowData(signUpData) {

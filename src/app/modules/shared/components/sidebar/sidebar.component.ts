@@ -36,6 +36,7 @@ export class SidebarComponent {
 
   openOtherMenu() {
     this.openSidebar = true;
+    this.sidebarService.open();
   }
 
   ngAfterViewInit() {
@@ -198,6 +199,7 @@ export class SidebarComponent {
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Filing SLA', url: '/reports/filing-sla', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
@@ -205,7 +207,9 @@ export class SidebarComponent {
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
         { name: 'Filing Done But Unpaid', url: '/reports/filling-done-payment-not-received', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Prefill Summary Pending', url: '/reports/prefill-uploaded-pending-summary', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Client Added But UnFiled', url: '/reports/client-added-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
 
       ]
     },
@@ -216,6 +220,7 @@ export class SidebarComponent {
         // { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
+        { name : 'ITR Filed Users', url: '/reports/itr-filed-users',roles: [] },
       ]
     },
     {

@@ -97,7 +97,8 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
 
   subscription: Subscription
 
-  subscribeToEmitter(componentRef){
+
+    subscribeToEmitter(componentRef){
     //this may not be needed for us
     // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
@@ -107,6 +108,11 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
       this.initList();
       this.ngOnInit();
     });
+    child.nextBreadcrumb.subscribe((breadcrumb:string)=>{
+      console.log(breadcrumb);
+      this.hideOutlet = true;
+      this.nextBreadcrumb.emit('');
+    })
   }
 
   unsubscribe(){

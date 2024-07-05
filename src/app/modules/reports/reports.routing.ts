@@ -19,6 +19,10 @@ import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up
 import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
 import { FillingDonePaymentNotReceivedComponent } from './filling-done-payment-not-received/filling-done-payment-not-received.component';
 import { DocumentsUploadedFilingNotDoneComponent } from './documents-uploaded-filing-not-done/documents-uploaded-filing-not-done.component';
+import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-done/client-added-filing-not-done.component';
+import { FilingSlaComponent } from './filing-sla/filing-sla.component';
+import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
+import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.component';
 
 
 const routes: Routes = [
@@ -79,6 +83,10 @@ const routes: Routes = [
         component: PaymentReceivedComponent,
       },
       {
+        path:'itr-filed-users',
+        component: ItrFiledUsersComponent,
+      },
+      {
         path:'proforma-invoice',
         component:ProformaInvoiceComponent,
       },
@@ -109,6 +117,18 @@ const routes: Routes = [
       {
         path:'documents-uploaded-filing-not-done',
         component:DocumentsUploadedFilingNotDoneComponent,
+      },
+      {
+        path:'client-added-filing-not-done',
+        component:ClientAddedFilingNotDoneComponent,
+      },
+      {
+        path:'filing-sla',
+        component:FilingSlaComponent,
+      },
+      {
+        path:'prefill-uploaded-pending-summary',
+        component:PrefillUploadedSummaryNotSentComponent,
       }
     ],
 

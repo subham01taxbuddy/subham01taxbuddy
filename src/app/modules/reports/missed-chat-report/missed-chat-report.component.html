@@ -1,4 +1,3 @@
-<!-- Loading Section -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on
   and do not move away from the page...</span>
@@ -63,19 +62,27 @@
                       </div>
                     </div>
                   </div>
-                  <div class="button-container">
-                    <button class="srch-btn-1" (click)="showReports()">
-                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                    </button>
-                    <button class="dwldBtn-1" [disabled]="loading"
-                      *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
-                      (click)="downloadReport()">
-                      <i class="fa fa-download" aria-hidden="true"></i> Download File
-                    </button>
-                    <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                  <div class="row">
+                    <div class="col-sm-6 tpSpc">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="button-container">
+                        <app-custom-button class="srch-btn-1" [actions]="[showReports]">
+                          <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                        </app-custom-button>
+                        <button class="dwldBtn-1" [disabled]="loading"
+                          *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                          (click)="downloadReport()">
+                          <i class="fa fa-download" aria-hidden="true"></i> Download File
+                        </button>
+                        <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                      </div>
+                    </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 mt-3">
                       <span class="new-note1 note">
                         Note : Please select required filters Above and click on Show Reports to get information
                       </span>
@@ -98,19 +105,18 @@
 <div class="tableSpc mt-3">
   <div>
     <div class="row">
-      <div class="col-sm-9 row">
+      <div class="col-sm-8 row">
         <div class="table-info-text">
           Missed Chat Reports Details:
         </div>
       </div>
-      <!-- <div class="col-sm-3">
-        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
-      </div> -->
+      <div class="col-sm-4">
+        <div class="count1"> Total Missed Chat Count: <span class="txClr1">{{totalNoOfMissedChat || 0}}</span></div>
+      </div>
     </div>
-    <table>
-      <tr *ngFor="let item of missedChatReport | paginate:config"></tr>
-    </table>
-    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"></ag-grid-angular>
+    <div *ngFor="let item of missedChatReport | paginate:config"></div>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatReportGridOptions"
+      (rowClicked)="onSmeRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>

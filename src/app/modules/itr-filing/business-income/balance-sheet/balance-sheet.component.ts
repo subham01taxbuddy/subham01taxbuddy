@@ -31,6 +31,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   totalAppOfFunds: number = 0;
   totalDepNetBlock: any;
   isDeprecationObjInvalid: boolean;
+  totalNetBlock: number = 0;
 
   constructor(
     public matDialog: MatDialog,
@@ -60,7 +61,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.calculateTotal2();
     if (this.ITR_JSON.business?.fixedAssetsDetails) {
       this.depreciationObj = this.ITR_JSON.business.fixedAssetsDetails;
+      this.depreciationObj.forEach(element => {
+        this.totalNetBlock += Number(element.fixedAssetClosingAmount);
+      });
     }
+
     this.calculateTotalLoans();
     this.calSourcesOfFunds();
     this.calTotalLiabilitiesProvision();
@@ -163,8 +168,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
       if (this.depreciationObj.length) {
         this.totalDepNetBlock = 0;
+        this.totalNetBlock = 0;
         this.depreciationObj.forEach(element => {
           this.totalDepNetBlock += element.fixedAssetClosingAmount;
+          this.totalNetBlock += Number(element.fixedAssetClosingAmount);
         });
         this.totalApplicationOfFunds();
       }
@@ -219,6 +226,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   goBack() {
     this.saveAndNext.emit(false);
+    this.nextBreadcrumb.emit("Business/Professional Income");
   }
 
   onContinue() {
@@ -299,11 +307,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       if (!this.utilsService.isNonEmpty(this.assetLiabilitiesForm.controls['GSTRNumber'].value)) {
         this.assetLiabilitiesForm.controls['GSTRNumber'].setValue(null);
       }
-
+      this.assetLiabilitiesForm.controls['fixedAssets'].setValue(this.totalNetBlock);
       this.Copy_ITR_JSON.business.financialParticulars =
         this.assetLiabilitiesForm.value;
       this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
-
+      this.Copy_ITR_JSON.business.financialParticulars.fixedAssets = this.totalNetBlock;
       console.log(this.Copy_ITR_JSON);
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {
@@ -316,6 +324,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
           console.log('Balance Sheet=', result);
           this.utilsService.smoothScrollToTop();
           this.saveAndNext.emit(true);
+          this.nextBreadcrumb.emit("Business/Professional Income");
         },
         (error) => {
           this.loading = false;

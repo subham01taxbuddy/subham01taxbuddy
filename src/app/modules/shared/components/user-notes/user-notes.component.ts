@@ -11,7 +11,6 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-user-notes',
   templateUrl: './user-notes.component.html',
@@ -89,75 +88,96 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     this.getNotes();
   }
 
-   addNote() {
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if(res.error){
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close();
-        return
-      }else{
-        this.note()
-      }
-    },error => {
-        if (error.error && error.error.error) {
-          this.utilsService.showSnackBar( error.error.error);
-          this.dialogRef.close();
-        } else {
-          this.utilsService.showSnackBar( "An unexpected error occurred.");
-        }
-    });
-
-  }
-
-  async note(){
-    if (this.serviceType.valid && this.noteDetails.valid) {
-      const fyList = await this.utilsService.getStoredFyList();
-      const currentFyDetails = fyList.filter(
-        (item: any) => item.isFilingActive
-      );
-      if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-        this.utilsService.showSnackBar(
-          'There is no any active filing year available'
-        );
-        return;
-      }
-      const request = {
-        userId: this.data.userId,
-        notes: [
-          {
-            createdBy: this.utilsService.getLoggedInUserID(),
-            assessmentYear: currentFyDetails[0].assessmentYear,
-            note: this.noteDetails.value,
-            serviceType: this.serviceType.value,
-          },
-        ],
-      };
-      console.info('add note request:', request);
-      const param = `/note`;
-      this.itrMsService.postMethod(param, request).subscribe(
-        (result) => {
-          we_track('Notes ', {
-            'User Name': this.data?.['clientName'],
-            'User Number': this.data?.['clientMobileNumber']
-          });
-          console.log(result);
-          this.getNotes();
-          this.noteDetails.reset();
-          this.utilsService.showSnackBar('Note added successfully.');
+  addNote = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.error) {
+            this.utilsService.showSnackBar(res.error);
+            this.dialogRef.close();
+            return reject(res.error);
+          } else {
+            this.note().then(resolve).catch(reject);
+          }
         },
         (error) => {
-          console.warn(error);
-          this.utilsService.showSnackBar(
-            'Error while adding note, please try again.'
-          );
-          this.dialogRef.close();
+          if (error.error && error.error.error) {
+            this.utilsService.showSnackBar(error.error.error);
+            this.dialogRef.close();
+          } else {
+            this.utilsService.showSnackBar("An unexpected error occurred.");
+          }
+          reject(error);
         }
       );
-    } else {
-      this.serviceType.markAllAsTouched();
-    }
-  }
+    });
+  };
+
+
+  note = async (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      let fyList = [];
+      this.utilsService.getStoredFyList().then(data => {
+        fyList = data
+
+        if (this.serviceType.valid && this.noteDetails.valid) {
+          try {
+
+            const currentFyDetails = fyList.filter(
+              (item: any) => item.isFilingActive
+            );
+            if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
+              this.utilsService.showSnackBar(
+                'There is no any active filing year available'
+              );
+              return reject('No active filing year available');
+            }
+            const request = {
+              userId: this.data.userId,
+              notes: [
+                {
+                  createdBy: this.utilsService.getLoggedInUserID(),
+                  assessmentYear: currentFyDetails[0].assessmentYear,
+                  note: this.noteDetails.value,
+                  serviceType: this.serviceType.value,
+                },
+              ],
+            };
+            const param = `/note`;
+
+            this.itrMsService.postMethod(param, request).toPromise().then(
+              (result) => {
+                console.log(result);
+                this.getNotes();
+                this.noteDetails.reset();
+                this.utilsService.showSnackBar('Note added successfully.');
+                resolve(result);
+              },
+              (error) => {
+                console.warn(error);
+                this.utilsService.showSnackBar(
+                  'Error while adding note, please try again.'
+                );
+                this.dialogRef.close();
+                reject(error);
+              }
+            ).catch((error) => {
+              this.utilsService.showSnackBar('Error while adding note, please try again.');
+              reject(error);
+            });
+          } catch (error) {
+            this.utilsService.showSnackBar('An unexpected error occurred.');
+            reject(error);
+          }
+        } else {
+          this.serviceType.markAllAsTouched();
+          reject('Invalid serviceType or noteDetails');
+        }
+      });
+    });
+  };
+
 
   getNotes() {
     const param = `/note/${this.data.userId}`;

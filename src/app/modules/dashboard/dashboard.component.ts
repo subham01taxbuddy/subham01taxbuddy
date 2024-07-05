@@ -234,7 +234,7 @@ export class DashboardComponent implements OnInit {
     this.filerId = option.userId;
   }
 
-  getCallingSummary() {
+  getCallingSummary=():Promise<any> => {
     // http://localhost:9055/report/bo/dashboard/calling-summary
     // ?page=0&pageSize=20&fromDate=2023-04-01&toDate=2023-11-21&filerUserId=114823
     this.loading = true;
@@ -258,17 +258,16 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/calling-summary?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.callSummaryData = response?.data;
 
-    }, (error) => {
+    }).catch(()=>{
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
-    })
-
+    });
   }
 
-  getStatuswiseCount() {
+  getStatuswiseCount=():Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/status-wise-report?fromDate=2023-04-17&toDate=2023-11-20&filerUserId=14124'
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -298,7 +297,7 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceTypeFilter}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.statusWiseCountData = response?.data?.content[0]?.statusWiseData[0];
@@ -307,16 +306,13 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert('error', response.message);
       }
-    },
-      (error) => {
-        this.loading = false;
-        this._toastMessageService.alert('error', 'Error');
-      }
-    )
-
+    }).catch(()=>{
+      this.loading = false;
+      this._toastMessageService.alert('error', 'Error');
+    })
   }
 
-  getInvoiceReports() {
+  getInvoiceReports=():Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/invoice-report?fromDate=2023-04-01&toDate=2023-11-20&filerUserId=14121' \
 
     this.loading = true;
@@ -342,7 +338,7 @@ export class DashboardComponent implements OnInit {
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -352,13 +348,12 @@ export class DashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert("error", response.message);
         }
-      }, (error) => {
+      }).catch(()=>{
         this.loading = false;
-        this._toastMessageService.alert("error", "Error");
       })
   }
 
-  getPaymentReceivedList(configType) {
+  getPaymentReceivedList=(configType):Promise<any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/doc-uploaded-filing-not-started?fromDate=2024-04-01
     // &toDate=2024-05-01&filerUserId=14211&page=0&pageSize=5' \
     this.loading = true;
@@ -383,7 +378,7 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/doc-uploaded-filing-not-started?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       if (response.success) {
         this.paymentReceivedData = response?.data;
         this.config.paymentReceived.totalItems = response?.data?.totalElements;
@@ -392,13 +387,13 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(()=>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
-    })
+    });
   }
 
-  getSummaryConfirmationList(configType) {
+  getSummaryConfirmationList=(configType):Promise<any> =>{
     //'//uat-api.taxbuddy.com/report/bo/dashboard/waiting-for-confirmation
     //?page=0&pageSize=20&fromDate=2023-04-01&toDate=2023-11-20&filerUserId=704' \
     this.loading = true;
@@ -423,7 +418,7 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/waiting-for-confirmation?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       if (response.success) {
         this.summaryConfirmationData = response?.data;
         this.config.summaryConfirmation.totalItems = response?.data?.totalElements;
@@ -438,7 +433,7 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  getItrFilledEVerificationPendingList(configType) {
+  getItrFilledEVerificationPendingList=(configType):Promise<any> => {
     // uat-api.taxbuddy.com/report/bo/dashboard/itr-filed-everification-pending?
     //page=0&pageSize=20&fromDate=2023-04-01&toDate=2023-11-20&filerUserId=704
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -464,7 +459,7 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/itr-filed-everification-pending?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`;
 
-    this.reportService.getMethod(param).subscribe(
+    return this.reportService.getMethod(param).toPromise().then(
       (response: any) => {
         if (response.success) {
           this.eVerificationPendingData = response?.data;
@@ -473,16 +468,13 @@ export class DashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
-
+      });
   }
 
-  getITRFiledButPaymentPendingList(configType) {
+  getITRFiledButPaymentPendingList=(configType):Promise<any> => {
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam[configType]);
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -505,7 +497,7 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/itr-filed-but-payment-pending?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`;
 
-    this.reportService.getMethod(param).subscribe((response: any) => {
+    return this.reportService.getMethod(param).toPromise().then((response: any) => {
       if (response.success) {
         this.itrFiledButPaymentPendingData = response?.data;
         this.config.itrFiledButPaymentPending.totalItems = response?.data?.totalElements;
@@ -514,13 +506,13 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }, (error) => {
+    }).catch(()=>{
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     })
   }
 
-  getPartnerCommission() {
+  getPartnerCommission=():Promise<any> => {
     ///report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-30&filerUserId=61645
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
@@ -544,7 +536,7 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    this.userMsService.getMethodNew(param).subscribe(
+    return this.userMsService.getMethodNew(param).toPromise().then(
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
@@ -554,12 +546,11 @@ export class DashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      },
-      (error) => {
+      }).catch(()=>{
         this.loading = false;
         this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
-      }
-    );
+
+      })
   }
 
 

@@ -32,14 +32,14 @@ export class PayoutAdjustmentComponent implements OnInit {
 
   ngOnInit() { }
 
-  search() {
+  search = (): Promise<any> => {
     //https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/?userId=10488'
     this.loading = true;
     let userId = this.filerId || this.leaderId;
 
     if (userId) {
       let param = `?userId=${userId}`;
-      this.itrMsService.getAdjustmentDetails(param).subscribe(
+      return this.itrMsService.getAdjustmentDetails(param).toPromise().then(
         (response: any) => {
           this.showAdd = true;
           this.loading = false;
@@ -53,15 +53,13 @@ export class PayoutAdjustmentComponent implements OnInit {
             this.adjustmentDetails = null;
             this.utilsService.showSnackBar(response.message);
           }
-        },
-        (error) => {
+        }).catch(() => {
           this.loading = false;
           this.adjustmentDetails = null;
           this.utilsService.showSnackBar(
             'There is some issue while getting partner information.'
           );
-        }
-      );
+        })
     } else {
       this.loading = false;
       this.adjustmentDetails = null;
@@ -124,7 +122,7 @@ export class PayoutAdjustmentComponent implements OnInit {
     }
   }
 
-  saveAdjustment(amount, reason) {
+  saveAdjustment = (amount, reason): Promise<any> => {
     // https://2hifgwy53ui62fbhnucv77mjdq0rcslo.lambda-url.ap-south-1.on.aws/'
     console.log('values from save ', amount, reason);
     let userId = this.agentId;
@@ -136,7 +134,7 @@ export class PayoutAdjustmentComponent implements OnInit {
     };
 
     let param = '';
-    this.itrMsService.postAdjustmentDetails(param, request).subscribe(
+    return this.itrMsService.postAdjustmentDetails(param, request).toPromise().then(
       (response: any) => {
         this.loading = false;
         if (response.success) {
@@ -152,20 +150,18 @@ export class PayoutAdjustmentComponent implements OnInit {
         setTimeout(() => {
           this.dialogRef.close({ event: 'close', data: 'added' });
         }, 2000);
-      },
-      (error) => {
+      }).catch(() => {
         this.loading = false;
         this.utilsService.showSnackBar(
           'There is some issue to Add Adjustment.'
         );
-      }
-    );
+      })
   }
 
   calculateTotal(): number {
     let total = 0;
     if (this.adjustmentDetails?.adjustmentHistory) {
-      for (const item of this.adjustmentDetails?.adjustmentHistory) {
+      for (let item of this.adjustmentDetails.adjustmentHistory) {
         total += item.commisionAdjusted;
       }
       return total;
@@ -173,48 +169,57 @@ export class PayoutAdjustmentComponent implements OnInit {
   }
   calculateAdditionTotal(): number {
     let total = 0;
-    for (const item of this.adjustmentDetails?.adjustmentAdditions) {
-      total += item.adjustmentadditionAmount;
-    }
-    return total;
-  }
-
-  generateFile() {
-    //https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/'
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Generate CSV!!!!!',
-        message: 'Please Ensure you process this in razorpay after CSV is generated as system will not allow to create CSV again',
-      },
-    });
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.showMessage = 'CSV Generation Started - Please Do Not Close the Screen or Move out'
-        this.loading = true;
-        let param = ``;
-        this.itrMsService.getAdjustmentCSV(param).subscribe((response: any) => {
-          if (response.success) {
-            this.loading = false;
-            console.log('response', response['data']);
-            this.showMessage = ''
-            this.utilsService.showSnackBar(response.message);
-            this.downloadURL = response?.downloadUrl
-            window.open(this.downloadURL, '_blank');
-
-          } else {
-            this.loading = false;
-            this.showMessage = ''
-            this.utilsService.showSnackBar(response.message);
-          }
-        },
-          (error) => {
-            this.loading = false;
-            this.showMessage = ''
-            this.utilsService.showSnackBar('Error in download/generate CSV ');
-          });
+    if (this.adjustmentDetails?.adjustmentAdditions) {
+      for (const item of this.adjustmentDetails.adjustmentAdditions) {
+        total += item.adjustmentadditionAmount;
       }
+      return total;
+    }
+  }
+
+  generateFile = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Generate CSV!!!!!',
+          message: 'Please Ensure you process this in Razorpay after CSV is generated as the system will not allow creating CSV again',
+        },
+      });
+
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.showMessage = 'CSV Generation Started - Please Do Not Close the Screen or Move out';
+          this.loading = true;
+          let param = ``;
+
+          this.itrMsService.getAdjustmentCSV(param).toPromise().then((response: any) => {
+            if (response.success) {
+              this.loading = false;
+              console.log('response', response['data']);
+              this.showMessage = '';
+              this.utilsService.showSnackBar(response.message);
+              this.downloadURL = response?.downloadUrl;
+              window.open(this.downloadURL, '_blank');
+              resolve(response);
+            } else {
+              this.loading = false;
+              this.showMessage = '';
+              this.utilsService.showSnackBar(response.message);
+              reject(new Error(response.message));
+            }
+          }).catch((error) => {
+            this.loading = false;
+            this.showMessage = '';
+            this.utilsService.showSnackBar('Error in download/generate CSV');
+            reject(error);
+          });
+        } else {
+          resolve(null);
+        }
+      });
     });
   }
+
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {

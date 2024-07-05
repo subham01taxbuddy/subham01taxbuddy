@@ -1,17 +1,9 @@
-<ngx-loading
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div
-  class="spc-blw"
-  style="margin: 15px 25px; background-color: white; padding: 25px"
->
+<div class="spc-blw" style="margin: 15px 25px; background-color: white; padding: 25px">
   <div *ngIf="apiErrors">
     <div class="container">
-      <div
-        class="alert alert-danger"
-        role="alert"
-        style="display: inline-block">
+      <div class="alert alert-danger" role="alert" style="display: inline-block">
         <strong style="font-size: 18px"> Validation Errors - {{ apiErrors?.length }} found</strong>
         <ul>
           <li *ngFor="let error of apiErrors">
@@ -23,70 +15,42 @@
   </div>
   <div class="com_model perBx" *ngIf="errors">
     <div class="container">
-      <div
-        class="alert alert-danger"
-        role="alert"
-        style="display: inline-block"
-      >
+      <div class="alert alert-danger" role="alert" style="display: inline-block">
         <strong style="font-size: 18px">
-          Validation Errors - {{ errors?.length }} found</strong
-        >
+          Validation Errors - {{ errors?.length }} found</strong>
         <div>To rectify the below errors, simply click on error hyperlink.</div>
       </div>
-      <!-- <div style="font-size: 24px" class="updateManually">
-        <strong>
-          ITR Type : {{ itrType ? itrType : "ITR Type is missing" }}
-        </strong>
-        <button
-          type="button"
-          (click)="updateManually()"
-          class="btn grBut"
-          style="
-            background-color: #bfea94;
-            font-size: 15px;
-            border: 1px solid black;
-            text-transform: none;
-          "
-        >
-          <strong> Manual Update </strong>
-        </button>
-      </div> -->
       <div class="cardRect">
         <div class="table-responsive">
-        <table
-          class="table table-bordered table-hover"
-          style="margin-top: 10px"
-        >
-          <thead>
-            <tr>
-              <th>Sr. No</th>
-              <th>Error Description</th>
-              <th>Schedule</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let error of errors; let i = index">
+          <table aria-label="Error Table" class="table table-bordered table-hover" style="margin-top: 10px">
+            <thead>
               <tr>
-                <td>
-                  {{ i + 1 }}
-                </td>
-                <td>
-                    {{ error?.message }}
-                </td>
-                <td>{{ error?.relatedSchedule }}</td>
-                <td>
-                  <a
-                    href="javascript:void(0);"
-                    (click)="redirectToErrorPage(error?.relatedSchedule)">
-                  Click Here
-                </a>
-                </td>
+                <th>Sr. No</th>
+                <th>Error Description</th>
+                <th>Schedule</th>
+                <th>Action</th>
               </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let error of errors; let i = index">
+                <tr>
+                  <td>
+                    {{ i + 1 }}
+                  </td>
+                  <td>
+                    {{ getMessage(error.errorCode, ITR_JSON.employerCategory) }}
+                  </td>
+                  <td>{{ error?.relatedSchedule }}</td>
+                  <td>
+                    <a href="javascript:void(0);" (click)="redirectToErrorPage(error?.relatedSchedule)">
+                      Click Here
+                    </a>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

@@ -46,14 +46,14 @@ export class GenericCsvService {
     paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
     this.count = 0;
     await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
-    console.log('no of pages to be downloaded',this.count)
+    console.log('no of pages to be downloaded', this.count)
     page += 1;
     for (; page < this.count; page++) {
       paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
-    console.log('this.data',this.data)
-    console.log('this.data.length',this.data.length)
+    console.log('this.data', this.data)
+    console.log('this.data.length', this.data.length)
     if (this.data.length) {
       if (name === 'Filed-ITR') {
         this.mapFiledItrDetails();
@@ -61,8 +61,11 @@ export class GenericCsvService {
       if (name === 'assigned-sme-report') {
         this.mapAssignedSmeDetails(fields);
       }
-      if(name === 'calling-report-list'){
+      if (name === 'calling-report-list') {
         this.mapCallingReportDetails();
+      }
+      if (name === 'prefill-uploaded-summary-not-sent-report') {
+        this.mapChatLink();
       }
       this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
@@ -71,9 +74,22 @@ export class GenericCsvService {
     }
   }
 
-  mapCallingReportDetails(){
+  mapCallingReportDetails() {
     this.data.forEach((element) => {
       element['recordingLink'] = `=HYPERLINK("${element.recordingLink}")`;
+    });
+  }
+
+  mapChatLink() {
+    this.data.forEach((element) => {
+      if (element.conversationId) {
+        let link = `https://dashboard.kommunicate.io/conversations/${element.conversationId}`
+        element['conversationId'] = `=HYPERLINK("${link}")`;
+      }
+      if (element.whatsAppConversationId) {
+        let link = `https://dashboard.kommunicate.io/conversations/${element.whatsAppConversationId}`
+        element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
+      }
     });
   }
 
@@ -155,29 +171,37 @@ export class GenericCsvService {
             // if (result?.data?.content.length) {
             if (param.includes('status-wise-report')) {
               if (result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData && result?.data?.content[0].total) {
-                this.data = [...result?.data?.content[0].statusWiseData];
+                this.data = [...result.data.content[0].statusWiseData];
                 const columnTotal = this.calculateColumnTotal(this.data);
                 this.data.push(columnTotal);
                 resolve(result?.data.totalPages);
               } else {
                 resolve(0);
               }
-            }else if(param.includes('attendance-performance-report')){
-              if (result?.data?.content.length > 0){
-                this.data = [...result?.data?.content]
+            } else if (param.includes('attendance-performance-report')) {
+              if (result?.data?.content.length > 0) {
+                this.data = [...result.data.content]
                 resolve(0);
               }
 
             }
             else {
-              this.data = [...this.data, ...result?.data?.content];
-              let count = result.data.totalPages
-              console.log('no of pages to be downloaded',count);
-              resolve(result?.data.totalPages);
+              if (result?.data?.content) {
+                this.data = [...this.data, ...result.data.content];
+                let count = result.data.totalPages
+                console.log('no of pages to be downloaded', count);
+                resolve(result.data.totalPages);
+              }
             }
             // } else {
             //   resolve(0);
             // }
+          }
+          if(param.includes('promocodes')){
+            if (result?.content.length > 0) {
+              this.data = [...this.data, ...result.content]
+              resolve(result.totalPages);
+            }
           }
         }, error => {
           resolve(0);

@@ -34,6 +34,10 @@
         <i class="fa fa-cloud" aria-hidden="true"></i>
         Document Cloud
       </button>
+      <button class="action-buttons" title="Document-Cloud" (click)="goToProfile()">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        User Profile
+      </button>
     </div>
   </div>
   <div class="spc-blw" style="padding: 0 !important">
@@ -102,17 +106,22 @@
       </div>
       <hr />
       <!-- action-buttons  -->
-      <div class="flex justify-between p-[30px] back-foot">
-       
+      <div class="p-[30px] back-foot">
+
         <button (click)="showPrefillView()" class="lgtBtn">
           Back to Prefill Data
         </button>
 
-        <button (click)="gotoSummary()" class="darkBtn">
+        <!-- <button (click)="gotoSummary()" class="darkBtn">
           <span class="adjust">Go to Summary</span>
           <i class="material-icons icoAd">arrow_right_alt </i>
-        </button>
-        
+        </button> -->
+        <app-custom-button class="darkBtn" [disabled]="loading" [actions]="[gotoSummary]">
+          <span class="adjust">Go to Summary</span>
+          <i class="material-icons icoAd">arrow_right_alt</i>
+        </app-custom-button>
+
+
       </div>
     </div>
 

@@ -44,7 +44,6 @@ export class ForeignIncomeComponent extends WizardNavigation implements OnInit {
 
   ngOnInit(): void {
     this.showList = true;
-    ('');
   }
 
   gotoSection(topic) {

@@ -320,6 +320,7 @@ export class UtilsService {
       prefillData: itrJson ? itrJson.prefillData : null,
       prefillDataSource: itrJson ? itrJson.prefillDataSource : null,
       aisDataSource: itrJson ? itrJson.aisDataSource : null,
+      aisSource:itrJson ? itrJson.aisSource : null,
       everOptedNewRegime: {
         acknowledgementNumber: '',
         assessmentYear: '',
@@ -395,6 +396,7 @@ export class UtilsService {
       winningsUS115BB: null,
       winningsUS115BBJ: null,
       scheduleESOP: null,
+      manualUpdateReason: null
     };
 
     return ITR_JSON;
@@ -795,6 +797,18 @@ export class UtilsService {
             .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
       }
   }
+
+  saveManualUpdateReason(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+      const param =
+          '/itr/' +
+          itrObject.userId +
+          '/' +
+          itrObject.itrId +
+          '/' +
+          itrObject.assessmentYear;
+      return this.itrMsService.putMethod(param, itrObject);
+  }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {
@@ -920,7 +934,7 @@ export class UtilsService {
     if (mobile) {
       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
     } else if (email) {
-      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}&active=false`
+      param = `/bo/user-list-new?page=0&pageSize=20${userFilter}&active=false&emailId=${email}`
     }
     return this.userMsService.getMethodNew(param);
   }
@@ -1007,26 +1021,37 @@ export class UtilsService {
   }
 
   getUserRoles() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].roles)
-    ) {
-      return loggedInSmeInfo[0].roles;
+    let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    console.log('sme', sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    if(this.isNonEmpty(smeInfo)) {
+      const loggedInSmeInfo = JSON.parse(
+          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+      );
+      if (
+          this.isNonEmpty(loggedInSmeInfo) &&
+          loggedInSmeInfo[0]?.roles && loggedInSmeInfo[0].roles.length > 0
+      ) {
+        return loggedInSmeInfo[0].roles;
+      }
+    } else {
+      return [];
     }
   }
 
   getPartnerType() {
-    const loggedInSmeInfo = JSON.parse(
-      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
-    );
-    if (
-      this.isNonEmpty(loggedInSmeInfo) &&
-      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
-    ) {
-      return loggedInSmeInfo[0].partnerType;
+    let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
+    if(this.isNonEmpty(smeInfo)) {
+      const loggedInSmeInfo = JSON.parse(
+          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+      );
+      if (
+          this.isNonEmpty(loggedInSmeInfo) &&
+          this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+      ) {
+        return loggedInSmeInfo[0].partnerType;
+      }
+    } else {
+      return '';
     }
   }
 

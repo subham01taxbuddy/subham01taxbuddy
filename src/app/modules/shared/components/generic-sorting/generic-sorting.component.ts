@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-generic-sorting',
   templateUrl: './generic-sorting.component.html',
   styleUrls: ['./generic-sorting.component.scss']
 })
-export class GenericSortingComponent implements OnInit {
+export class GenericSortingComponent {
   @Output() onChange = new EventEmitter();
   sortOrder: Number;
   sortName: any;
@@ -29,21 +29,12 @@ export class GenericSortingComponent implements OnInit {
 
   }
 
-  constructor() {
-
-  }
-
-  ngOnInit(): void {
-  }
-
   changeInput(hasClear) {
     if (!this.sortOrder && hasClear) {
       this.sortOrder = 1;
     }
     var sortBy = {};
     if (this.sortName) {
-      // var key1 = 'level';
-      // sortBy[key1] = 0;
       var key2 = this.sortName.toString();
       sortBy[key2] = Number(this.sortOrder);
     }

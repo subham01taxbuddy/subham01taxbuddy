@@ -181,7 +181,7 @@
                                 <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
                                 <input matInput currencyMask type="number" [pattern]="amountRegex"
                                   formControlName="sellExpense" placeholder="Transfer Expenses" name="asset[i]"
-                                  class="input-field" maxlength="14"
+                                  class="input-field" maxlength="14" digitsOnly
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)" (focusin)="reset(asset.get('sellExpense'))" />
@@ -257,7 +257,7 @@
                           <mat-form-field class="input-field-width small-inp no-height">
                             <input matInput currencyMask type="number" [pattern]="amountRegex"
                               formControlName="costOfImprovement" name="improve[i]" class="input-field" maxlength="14"
-                              (change)="isImprovementValid(this.immovableForm, i)"
+                              (change)="isImprovementValid(this.immovableForm, i)" digitsOnly
                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                               required />
                             <mat-error *ngIf="improve.get('costOfImprovement').hasError('pattern')">
@@ -378,7 +378,7 @@
                                 <span class="span">Cost Of New Asset </span> <span class="redAst">*</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number"
+                                <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number" digitsOnly
                                   class="input-field" (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
                               </mat-form-field>
                             </div>
@@ -394,6 +394,7 @@
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" matInput class="input-field"
                                   name="deductions[i]" formControlName="investmentInCGAccount" maxlength="14" type="number"
+                                       digitsOnly
                                 />
                                 <mat-error *ngIf="deduction.get('investmentInCGAccount').hasError('pattern')">
                                   Enter valid amount.
@@ -599,7 +600,7 @@
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput class="input-field" name="buyer[i]" type="number"
-                                  formControlName="share" maxlength="3"
+                                  formControlName="share" maxlength="3" digitsOnly
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   onkeypress="event.charCode >= 48 && event.charCode <= 57" (blur)="updateSaleValue(i)"
                                   required />

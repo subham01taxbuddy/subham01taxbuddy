@@ -91,6 +91,7 @@ export interface ITR_JSON {
   prefillData: any;
   prefillDataSource: string;
   aisDataSource: string;
+  aisSource:string;
   everOptedNewRegime: OptedInNewRegime;
   everOptedOutOfNewRegime: OptedOutNewRegime;
   optionForCurrentAY: CurrentNewRegime;
@@ -147,6 +148,8 @@ export interface ITR_JSON {
   winningsUS115BB: WinningUS115BB;
   winningsUS115BBJ: WinningUS115BBJ;
   scheduleESOP: ScheduleESOP;
+
+  manualUpdateReason: string;
 
 }
 
@@ -581,6 +584,8 @@ export interface Incomes {
 export interface Tenant {
   name: string;
   panNumber: string;
+  tanNumber: string;
+  tdsClaimed: boolean;
 }
 export interface CoOwners {
   name: string;

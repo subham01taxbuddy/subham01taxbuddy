@@ -1,5 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <!-- New Open Close Filter Starts -->
+
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
+
 <div class="">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]=true>
@@ -26,20 +31,22 @@
                   This field is required</mat-error>
               </mat-form-field>
             </div>
-            <!-- <div class="row spsTp bdrTp"> -->
             <div class="col-6" *ngIf="false">
               <app-generic-sorting [sortingParameter]="sortMenus"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <!-- </div> -->
-            <div class="col-sm-4">
-              <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
-                <i class="fa fa-search" aria-hidden="true"></i> Search
-              </button>
-
-              <button class="srchSpcTp clrLnk mvRthB" [disabled]="loading" (click)="this.resetFilters()">
-                Clear
-              </button>
+            <div class="col-sm-6">
+              <div class="button-container">
+                <app-custom-button class="srch-btn-1" [actions]="[getPromoCodeList]">
+                  <i class="fa fa-search" aria-hidden="true"></i> Search
+                </app-custom-button>
+                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
+                  Clear
+                </button>
+              </div>
             </div>
 
           </div>
@@ -49,11 +56,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 <div class="clearfix">
-
-  <!-- Table Below -->
-
   <div class="tableSpc">
     <div class="row">
       <div class="col-sm-8">
@@ -65,9 +68,7 @@
         <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of PromoCodeInfo | paginate : config"></tr>
-    </table>
+    <div *ngFor="let item of PromoCodeInfo | paginate : config"></div>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="promoCodeGridOptions"
       (rowClicked)="onPromoCodeRowClicked($event)">

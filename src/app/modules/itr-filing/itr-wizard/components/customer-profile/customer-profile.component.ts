@@ -1,5 +1,4 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
-import { UpdateManualFilingComponent } from '../../../update-manual-filing/update-manual-filing.component';
 import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from '@angular/router';
 import { DatePipe, Location } from '@angular/common';
@@ -391,158 +390,265 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  saveProfile(ref) {
-    console.log('customerProfileForm: ', this.customerProfileForm);
-    this.findAssesseeType();
+  // saveProfile(ref) {
+  //   console.log('customerProfileForm: ', this.customerProfileForm);
+  //   this.findAssesseeType();
 
-    let gender = this.customerProfileForm.get('gender');
-    gender?.setValidators(Validators.required);
-    gender?.updateValueAndValidity();
+  //   let gender = this.customerProfileForm.get('gender');
+  //   gender?.setValidators(Validators.required);
+  //   gender?.updateValueAndValidity();
 
-    let aadhaarEnrolmentId =
-      this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
-    let aadhaarNumber =
-      this.customerProfileForm.controls['aadharNumber'].value;
+  //   let aadhaarEnrolmentId =
+  //     this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+  //   let aadhaarNumber =
+  //     this.customerProfileForm.controls['aadharNumber'].value;
 
-    // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
-    if (this.customerProfileForm.valid) {
+  //   // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
+  //   if (this.customerProfileForm.valid) {
 
-      if (
-        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
-          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
-        (this.utilsService.isNonEmpty(aadhaarNumber) &&
-          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
-      ) {
+  //     if (
+  //       (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+  //         !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+  //       (this.utilsService.isNonEmpty(aadhaarNumber) &&
+  //         this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+  //     ) {
+  //       this.customerProfileSaved.emit(false);
+  //       this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ invalid: true })
+  //       this.customerProfileForm.controls['aadharNumber'].setErrors({ invalid: true })
+  //       this.utilsService.showSnackBar(
+  //         'Please provide aadhar number or enrollment ID'
+  //       );
+  //       return;
+  //     }
+
+  //     this.loading = true;
+  //     const ageCalculated = this.calAge(
+  //       this.customerProfileForm.controls['dateOfBirth'].value
+  //     );
+
+  //     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+
+  //     if (this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT') {
+  //       this.ITR_JSON.jurisdictions = this.jurisdictions;
+  //       this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
+  //       this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
+  //       if(this.customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT'){
+  //         this.ITR_JSON.foreignIncome = null;
+  //         this.ITR_JSON.section89 = 0;
+  //         this.ITR_JSON.acknowledgement89 = null;
+  //         this.ITR_JSON.acknowledgementDate89 = null;
+  //         this.ITR_JSON.section90 = 0;
+  //         this.ITR_JSON.acknowledgement90 = null;
+  //         this.ITR_JSON.acknowledgementDate90 = null;
+  //         this.ITR_JSON.section91 = 0;
+  //         this.ITR_JSON.acknowledgement91 = null;
+  //         this.ITR_JSON.acknowledgementDate91 = null;
+
+  //       }
+  //     } else {
+  //       this.ITR_JSON.jurisdictions = null;
+  //       this.ITR_JSON.conditionsResStatus = null;
+  //       this.ITR_JSON.conditionsNorStatus = null;
+  //     }
+
+  //     this.ITR_JSON.family = [
+  //       {
+  //         pid: null,
+  //         fName: this.customerProfileForm.controls['firstName'].value,
+  //         mName: this.customerProfileForm.controls['middleName'].value,
+  //         lName: this.customerProfileForm.controls['lastName'].value,
+  //         fatherName: this.customerProfileForm.controls['fatherName'].value,
+  //         age: ageCalculated,
+  //         gender: this.customerProfileForm.controls['gender'].value,
+  //         relationShipCode: 'SELF',
+  //         relationType: 'SELF',
+  //         dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value,
+  //       },
+  //     ];
+  //     let param;
+  //     if (
+  //       this.ITR_JSON.filingTeamMemberId !==
+  //       Number(this.customerProfileForm.controls['filingTeamMemberId'].value)
+  //     ) {
+  //       param = '/zoho-contact';
+  //     } else {
+  //       param =
+  //         '/itr/' +
+  //         this.ITR_JSON.userId +
+  //         '/' +
+  //         this.ITR_JSON.itrId +
+  //         '/' +
+  //         this.ITR_JSON.assessmentYear;
+  //     }
+
+  //     Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+
+  //     this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+  //       (result: any) => {
+  //         this.ITR_JSON = result;
+  //         this.updateStatus(); // Update staus automatically
+  //         sessionStorage.setItem(
+  //           AppConstants.ITR_JSON,
+  //           JSON.stringify(this.ITR_JSON)
+  //         );
+  //         this.loading = false;
+  //         if (ref) {
+  //           // this.utilsService.showSnackBar(
+  //           //   'Customer profile updated successfully.'
+  //           // );
+  //           this.customerProfileSaved.emit(true);
+  //         }
+  //         // if (ref === "CONTINUE") {
+  //         // if (this.customerProfileForm.controls['itrType'].value === '1'
+  //         // || this.customerProfileForm.controls['itrType'].value === '4')
+  //         // this.router.navigate(['/itr-filing/itr']);
+  //         if (!ref) {
+  //           this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
+  //         }
+  //         // else
+  //         //   this.router.navigate(['/pages/itr-filing/direct-upload']);
+  //       },
+  //       (error) => {
+  //         this.utilsService.showSnackBar('Failed to update customer profile.');
+  //         this.loading = false;
+  //       }
+  //     );
+  //   } else {
+  //     $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+  //     this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn', this.elementRef);
+
+  //     if (gender?.status === 'INVALID') {
+  //       gender?.setValidators(Validators.required);
+  //       gender?.updateValueAndValidity();
+  //     } else {
+  //       gender?.clearValidators();
+  //       gender?.updateValueAndValidity();
+  //     }
+
+  //     // if (
+  //     //   (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+  //     //     !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+  //     //   (this.utilsService.isNonEmpty(aadhaarNumber) &&
+  //     //     this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+  //     // ) {
+  //     //   this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
+  //     //   this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
+  //     //   // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
+  //     //   // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
+  //     //   this.utilsService.showSnackBar(
+  //     //     'Please provide aadhar number or enrollment ID'
+  //     //   );
+  //     // }
+  //     this.utilsService.showSnackBar('Please fill in all mandatory fields.');
+  //     this.customerProfileSaved.emit(false);
+  //     this.openAccordion();
+  //   }
+  // }
+
+  saveProfile(ref: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+      console.log('customerProfileForm: ', this.customerProfileForm);
+      this.findAssesseeType();
+
+      let gender = this.customerProfileForm.get('gender');
+      gender?.setValidators(Validators.required);
+      gender?.updateValueAndValidity();
+
+      let aadhaarEnrolmentId = this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+      let aadhaarNumber = this.customerProfileForm.controls['aadharNumber'].value;
+
+      if (this.customerProfileForm.valid) {
+        if (
+          (!this.utilsService.isNonEmpty(aadhaarNumber) && !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+          (this.utilsService.isNonEmpty(aadhaarNumber) && this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+        ) {
+          this.customerProfileSaved.emit(false);
+          this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ invalid: true });
+          this.customerProfileForm.controls['aadharNumber'].setErrors({ invalid: true });
+          this.utilsService.showSnackBar('Please provide aadhar number or enrollment ID');
+          reject(new Error('Invalid Aadhaar details'));
+          return;
+        }
+
+        this.loading = true;
+        const ageCalculated = this.calAge(this.customerProfileForm.controls['dateOfBirth'].value);
+        this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+
+        if (this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT') {
+          this.ITR_JSON.jurisdictions = this.jurisdictions;
+          this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
+          this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
+          if (this.customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT') {
+            this.ITR_JSON.foreignIncome = null;
+            this.ITR_JSON.section89 = 0;
+            this.ITR_JSON.acknowledgement89 = null;
+            this.ITR_JSON.acknowledgementDate89 = null;
+            this.ITR_JSON.section90 = 0;
+            this.ITR_JSON.acknowledgement90 = null;
+            this.ITR_JSON.acknowledgementDate90 = null;
+            this.ITR_JSON.section91 = 0;
+            this.ITR_JSON.acknowledgement91 = null;
+            this.ITR_JSON.acknowledgementDate91 = null;
+          }
+        } else {
+          this.ITR_JSON.jurisdictions = null;
+          this.ITR_JSON.conditionsResStatus = null;
+          this.ITR_JSON.conditionsNorStatus = null;
+        }
+
+        this.ITR_JSON.family = [
+          {
+            pid: null,
+            fName: this.customerProfileForm.controls['firstName'].value,
+            mName: this.customerProfileForm.controls['middleName'].value,
+            lName: this.customerProfileForm.controls['lastName'].value,
+            fatherName: this.customerProfileForm.controls['fatherName'].value,
+            age: ageCalculated,
+            gender: this.customerProfileForm.controls['gender'].value,
+            relationShipCode: 'SELF',
+            relationType: 'SELF',
+            dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value
+          }
+        ];
+
+        let param;
+        if (this.ITR_JSON.filingTeamMemberId !== Number(this.customerProfileForm.controls['filingTeamMemberId'].value)) {
+          param = '/zoho-contact';
+        } else {
+          param = `/itr/${this.ITR_JSON.userId}/${this.ITR_JSON.itrId}/${this.ITR_JSON.assessmentYear}`;
+        }
+
+        Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+
+        this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
+          (result: any) => {
+            this.ITR_JSON = result;
+            this.updateStatus(); // Update status automatically
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            if (ref) {
+              this.customerProfileSaved.emit(true);
+            }
+            if (!ref) {
+              this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
+            }
+            resolve();
+          },
+          (error) => {
+            this.utilsService.showSnackBar('Failed to update customer profile.');
+            this.loading = false;
+            reject(error);
+          }
+        );
+      } else {
+        $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+        this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn', this.elementRef);
+        this.utilsService.showSnackBar('Please fill in all mandatory fields.');
         this.customerProfileSaved.emit(false);
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ invalid: true })
-        this.customerProfileForm.controls['aadharNumber'].setErrors({ invalid: true })
-        this.utilsService.showSnackBar(
-          'Please provide aadhar number or enrollment ID'
-        );
-        return;
+        this.openAccordion();
+        reject(new Error('Form is not valid'));
       }
-
-      this.loading = true;
-      const ageCalculated = this.calAge(
-        this.customerProfileForm.controls['dateOfBirth'].value
-      );
-
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-
-      if (this.customerProfileForm.controls['residentialStatus'].value !== 'RESIDENT') {
-        this.ITR_JSON.jurisdictions = this.jurisdictions;
-        this.ITR_JSON.conditionsResStatus = this.conditionsResStatus;
-        this.ITR_JSON.conditionsNorStatus = this.conditionsNorStatus;
-        if(this.customerProfileForm.controls['residentialStatus'].value === 'NON_RESIDENT'){
-          this.ITR_JSON.foreignIncome = null;
-          this.ITR_JSON.section89 = 0;
-          this.ITR_JSON.acknowledgement89 = null;
-          this.ITR_JSON.acknowledgementDate89 = null;
-          this.ITR_JSON.section90 = 0;
-          this.ITR_JSON.acknowledgement90 = null;
-          this.ITR_JSON.acknowledgementDate90 = null;
-          this.ITR_JSON.section91 = 0;
-          this.ITR_JSON.acknowledgement91 = null;
-          this.ITR_JSON.acknowledgementDate91 = null;
-
-        }
-      } else {
-        this.ITR_JSON.jurisdictions = null;
-        this.ITR_JSON.conditionsResStatus = null;
-        this.ITR_JSON.conditionsNorStatus = null;
-      }
-
-      this.ITR_JSON.family = [
-        {
-          pid: null,
-          fName: this.customerProfileForm.controls['firstName'].value,
-          mName: this.customerProfileForm.controls['middleName'].value,
-          lName: this.customerProfileForm.controls['lastName'].value,
-          fatherName: this.customerProfileForm.controls['fatherName'].value,
-          age: ageCalculated,
-          gender: this.customerProfileForm.controls['gender'].value,
-          relationShipCode: 'SELF',
-          relationType: 'SELF',
-          dateOfBirth: this.customerProfileForm.controls['dateOfBirth'].value,
-        },
-      ];
-      let param;
-      if (
-        this.ITR_JSON.filingTeamMemberId !==
-        Number(this.customerProfileForm.controls['filingTeamMemberId'].value)
-      ) {
-        param = '/zoho-contact';
-      } else {
-        param =
-          '/itr/' +
-          this.ITR_JSON.userId +
-          '/' +
-          this.ITR_JSON.itrId +
-          '/' +
-          this.ITR_JSON.assessmentYear;
-      }
-
-      Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-
-      this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          this.updateStatus(); // Update staus automatically
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
-          this.loading = false;
-          if (ref) {
-            // this.utilsService.showSnackBar(
-            //   'Customer profile updated successfully.'
-            // );
-            this.customerProfileSaved.emit(true);
-          }
-          // if (ref === "CONTINUE") {
-          // if (this.customerProfileForm.controls['itrType'].value === '1'
-          // || this.customerProfileForm.controls['itrType'].value === '4')
-          // this.router.navigate(['/itr-filing/itr']);
-          if (!ref) {
-            this.saveAndNext.emit({ subTab: true, tabName: 'PERSONAL' });
-          }
-          // else
-          //   this.router.navigate(['/pages/itr-filing/direct-upload']);
-        },
-        (error) => {
-          this.utilsService.showSnackBar('Failed to update customer profile.');
-          this.loading = false;
-        }
-      );
-    } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn', this.elementRef);
-
-      if (gender?.status === 'INVALID') {
-        gender?.setValidators(Validators.required);
-        gender?.updateValueAndValidity();
-      } else {
-        gender?.clearValidators();
-        gender?.updateValueAndValidity();
-      }
-
-      if (
-        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
-          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
-        (this.utilsService.isNonEmpty(aadhaarNumber) &&
-          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
-      ) {
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
-        this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
-        // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
-        // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
-        this.utilsService.showSnackBar(
-          'Please provide aadhar number or enrollment ID'
-        );
-      }
-      this.customerProfileSaved.emit(false);
-      this.openAccordion();
-    }
+    });
   }
 
   openAccordion() {
@@ -552,8 +658,8 @@ export class CustomerProfileComponent implements OnInit {
     // }
 
     const accord = document.getElementById('accordBtn');
-    if(accord){
-      if (accord.getAttribute("aria-expanded") === "false"){
+    if (accord) {
+      if (accord.getAttribute("aria-expanded") === "false") {
         accord.click();
       }
 
@@ -789,63 +895,13 @@ export class CustomerProfileComponent implements OnInit {
     this.deletedFileData = [];
   }
 
-  updateManualFiling() {
-    let manulFiling = {
-      userId: this.ITR_JSON.userId,
-      itrId: this.ITR_JSON.itrId,
-      email: this.customerProfileForm.controls['email'].value,
-      contactNumber: this.customerProfileForm.controls['contactNumber'].value,
-      panNumber: this.customerProfileForm.controls['panNumber'].value,
-      aadharNumber: this.customerProfileForm.controls['aadharNumber'].value,
-      aadhaarEnrolmentId:
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
-      assesseeType: this.customerProfileForm.controls['assesseeType'].value,
-      assessmentYear: this.ITR_JSON.assessmentYear,
-      financialYear: this.ITR_JSON.financialYear,
-      isRevised: this.customerProfileForm.controls['isRevised'].value,
-      eFillingCompleted: true,
-      eFillingDate: '',
-      ackNumber: '',
-      itrType: this.customerProfileForm.controls['itrType'].value,
-      itrTokenNumber: '',
-      filingTeamMemberId:
-        this.customerProfileForm.controls['filingTeamMemberId'].value,
-      filingSource: 'MANUALLY',
-    };
-
-    let disposable = this.matDialog.open(UpdateManualFilingComponent, {
-      width: '50%',
-      height: 'auto',
-      data: manulFiling,
-    });
-
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
-
   async getSmeList() {
     this.filingTeamMembers = await this.utilsService.getStoredSmeList();
   }
 
-  // file: File;
-  // fileName: any;
-  // showProgress: boolean;
-  // uploaded: number;
-  // showError: boolean;
-  // filesize: string;
-  // loaded: string;
-  // fileAttr = 'Choose File';
   upload() {
     document.getElementById('input-file-id').click();
   }
-
-  // onUploadFile(event) {
-  //   let fileList: FileList = event.target.files;
-  //   this.file = FileList = event.target.files;
-  //   console.log("My fileList after Select==", fileList[0].name)
-  //   this.fileName = fileList[0].name;
-  // }
 
   uploadFile(file: FileList) {
     console.log('File', file);

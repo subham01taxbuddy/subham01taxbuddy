@@ -12,7 +12,6 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UntypedFormControl } from '@angular/forms';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -26,7 +25,6 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
 import { ChatService } from 'src/app/modules/chat/chat.service';
-declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -808,10 +806,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success == true) {
-                we_track('Call', {
-                  'User Name': user.userName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -896,14 +890,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
               'Call status update successfully.'
             );
             if (statusId === 19) {
-              we_track('Call Status - Follow Up', {
-                'User Number': callInfo.userMobile,
-              });
             } else if (statusId === 18) {
               this.markAsScheduleCallDone(callInfo);
-              we_track('Call Status - Done', {
-                'User Number': callInfo.userMobile,
-              });
             }
             setTimeout(() => {
               this.search();
@@ -938,14 +926,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
       this.loading = false;
-      if (result.success) {
-        // this.utilsService.showSnackBar(result.message)
-      } else {
-        // this.utilsService.showSnackBar(result.message)
-      }
     }, err => {
       this.loading = false;
-      // this.utilsService.showSnackBar('Failed to update the details.')
     });
   }
 
@@ -966,7 +948,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.subPaidScheduleCallList.setValue(false);
@@ -987,17 +968,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
     this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
+
+    if (this.dataOnLoad) {
+      this.search();
     } else {
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
-        //clear grid for loaded data
-        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+      //clear grid for loaded data
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
     }
   }
 
@@ -1038,7 +1015,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  search(form?, isAgent?, pageChange?) {
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
     // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
     //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
     //
@@ -1107,19 +1084,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         param = param + sortByJson;
       }
     }
-    else {
-      param;
-    }
-
-    // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-
-    // param = param + `?fromDate=${fromDate}&toDate=${toDate}`
     if (this.subPaidScheduleCallList.value) {
       param = param + '&details=true'
     }
 
-    this.reportService.getMethod(param).subscribe((result: any) => {
+    return this.reportService.getMethod(param).toPromise().then((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {
@@ -1149,9 +1118,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    }, error => {
+    }).catch(() => {
       this.loading = false;
-    });
+    })
   }
 
   async downloadReport() {
@@ -1175,9 +1144,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
     if (this.searchParam.statusId) {
       param = param + 'statusId=' + this.searchParam.statusId + '&';
-    }
-    else {
-      param;
     }
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-list', '', this.sortBy);
     this.loading = false;

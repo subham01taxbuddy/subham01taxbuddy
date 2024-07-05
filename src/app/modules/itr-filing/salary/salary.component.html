@@ -84,13 +84,14 @@
                               <mat-form-field appearance="outline">
                                 <input type="text" trim matInput placeholder="Address of employer"
                                   name="AddressOfEmployer" class="form-control inpplac" formControlName="address"
-                                  maxlength="200" />
+                                  maxlength="50" />
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['address'].hasError('required')">
                                   Enter the address
                                 </mat-error>
                               </mat-form-field>
                             </div>
                           </div>
+
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
@@ -115,7 +116,7 @@
                               </div>
                               <mat-form-field appearance="outline">
                                 <input type="text" trim matInput placeholder="Town/City" name="TAN"
-                                  class="form-control inpplac" formControlName="city" maxlength="35" />
+                                  class="form-control inpplac" formControlName="city" maxlength="50" />
                                 <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
                                   Enter the town/city
                                 </mat-error>
@@ -198,7 +199,11 @@
                               <mat-select name="allowType[i]" formControlName="allowType"
                                 (selectionChange)="validateExemptIncomes($event);changeAllowancesType()">
                                 <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
-                                  [value]="exempt.value" [disabled]="exempt['disabled']">{{ exempt.label }}</mat-option>
+                                  [value]="exempt.value"
+                                  [disabled]="(exempt.value!= 'ANY_OTHER')?exempt['disabled']:false"
+                                  class="custom-dropdown-option">
+                                  {{ exempt.label }}
+                                </mat-option>
                               </mat-select>
                             </mat-form-field>
                           </div>
@@ -211,6 +216,9 @@
                                 <input type="text" trim digitsOnly matInput placeholder="" name="allowValue[i]"
                                   formControlName="allowValue" maxlength="125" (change)="validations()" />
                               </mat-form-field>
+                              <mat-hint *ngIf="income.value.allowType === 'US_10_14II'">In New tax regime Maximum
+                                eligible dedution is 34800
+                              </mat-hint>
                               <mat-error
                                 *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' ||
                               income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO')">
@@ -241,7 +249,7 @@
                                 *ngIf=" income.value.allowType === 'LEAVE_ENCASHMENT' && getAllowanceArray.controls[i].get('allowValue').hasError('max')">
                                 Leave Encashment to be claimed cannot be more than the
                                 Leave Encashment that is provided or salary entered in
-                                Salary 17(1) or 3 lakhs (for non-goverment employees),
+                                Salary 17(1) or 25 lakhs (for non-goverment employees),
                                 whichever is lower
                               </mat-error>
                               <mat-error style="width: 70%"

@@ -48,10 +48,9 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <button class="srch-btn-1" (click)="showReports()">
+                    <app-custom-button class="srch-btn-1" [actions]="[showReports]">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                    </button>
-
+                    </app-custom-button>
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
                   </div>
                   <div class="row">
@@ -82,9 +81,7 @@
         </div>
       </div>
     </div>
-    <table>
-      <tr *ngFor="let item of missedChatList | paginate:config"></tr>
-    </table>
+      <div *ngFor="let item of missedChatList | paginate:config"></div>
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatListGridOptions"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>

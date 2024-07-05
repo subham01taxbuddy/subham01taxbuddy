@@ -15,7 +15,6 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
-import { FilingStatusDialogComponent } from 'src/app/modules/itr-filing/filing-status-dialog/filing-status-dialog.component';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
@@ -29,7 +28,6 @@ import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import {DomSanitizer} from "@angular/platform-browser";
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { ChatService } from 'src/app/modules/chat/chat.service';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-filings',
@@ -85,7 +83,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   itrType = new UntypedFormControl('');
   returnType = new UntypedFormControl('');
   isEverified = new UntypedFormControl('');
-  paymentStatus = new  UntypedFormControl();
+  paymentStatus = new UntypedFormControl();
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
@@ -95,7 +93,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'true', name: 'True' },
     { value: 'false', name: 'False' },
   ];
-  paymentStatusValues=[
+  paymentStatusValues = [
     { value: 'Paid', name: 'Paid' },
     { value: 'Unpaid', name: 'Unpaid' },
   ]
@@ -283,7 +281,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchBy = object;
   }
 
-  myItrsList(pageNo, fromPageChange?) {
+  myItrsList(pageNo: number, fromPageChange?: boolean): Promise<any> {
     // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -371,49 +369,48 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
-      this.reportService.getMethod(param).subscribe(
-        (res: any) => {
-          if (res.success == false) {
-            this.toastMsgService.alert('error', res.message);
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
-            this.config.totalItems = 0;
-          }
-          console.log('filingTeamMemberId: ', res);
-          // TODO Need to update the api here to get the proper data like user management
-          if (
-            res?.data?.content instanceof Array &&
-            res?.data?.content?.length > 0
-          ) {
-            this.itrDataList = res?.data?.content;
-            this.config.totalItems = res?.data?.totalElements;
-            this.myItrsGridOptions.api?.setRowData(
-              this?.createOnSalaryRowData(this?.itrDataList)
-            );
-            this.cacheManager.initializeCache(this?.itrDataList);
+      return this.reportService.getMethod(param).toPromise().then((res: any) => {
+        if (res.success == false) {
+          this.toastMsgService.alert('error', res.message);
+          this.myItrsGridOptions.api?.setRowData(
+            this.createOnSalaryRowData([])
+          );
+          this.config.totalItems = 0;
+        }
+        console.log('filingTeamMemberId: ', res);
+        // TODO Need to update the api here to get the proper data like user management
+        if (
+          res?.data?.content instanceof Array &&
+          res?.data?.content?.length > 0
+        ) {
+          this.itrDataList = res?.data?.content;
+          this.config.totalItems = res?.data?.totalElements;
+          this.myItrsGridOptions.api?.setRowData(
+            this?.createOnSalaryRowData(this?.itrDataList)
+          );
+          this.cacheManager.initializeCache(this?.itrDataList);
 
-            const currentPageNumber = pageNo + 1;
-            this.cacheManager.cachePageContent(
-              currentPageNumber,
-              this?.itrDataList
-            );
-            this.config.currentPage = currentPageNumber;
+          const currentPageNumber = pageNo + 1;
+          this.cacheManager.cachePageContent(
+            currentPageNumber,
+            this?.itrDataList
+          );
+          this.config.currentPage = currentPageNumber;
+        } else {
+          this.itrDataList = [];
+          this.config.totalItems = 0;
+          this.myItrsGridOptions.api?.setRowData(
+            this.createOnSalaryRowData([])
+          );
+          if (res.message) {
+            this.toastMsgService.alert('error', res.message);
           } else {
-            this.itrDataList = [];
-            this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(
-              this.createOnSalaryRowData([])
-            );
-            if (res.message) {
-              this.toastMsgService.alert('error', res.message);
-            } else {
-              this.toastMsgService.alert('error', 'No Data Found');
-            }
+            this.toastMsgService.alert('error', 'No Data Found');
           }
-          this.loading = false;
-          return resolve(true);
-        },
+        }
+        this.loading = false;
+        return resolve(true);
+      },
         (error) => {
           this.myItrsGridOptions.api?.setRowData(
             this.createOnSalaryRowData([])
@@ -424,6 +421,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return resolve(false);
         }
       );
+    }).catch(() => {
+      this.myItrsGridOptions.api?.setRowData(
+        this.createOnSalaryRowData([])
+      );
+      this.config.totalItems = 0;
+      this.toastMsgService.alert('error', 'No Data Found ');
+      this.loading = false;
     });
   }
 
@@ -473,6 +477,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'filingTeamMemberId', value: 'Filer Name' },
       { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' },
+      { key: 'filingFormatedDate', value: 'Filing Formatted Date' },
+      { key: 'manualUpdateReason', value:'Reason for Manual Update' },
     ];
     await this.genericCsvService.downloadReport(
       environment.url + '/report',
@@ -536,6 +542,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         itrSummaryJson: data[i].itrSummaryJson,
         itru: data[i].itru,
         paymentStatus: data[i].paymentStatus,
+        manualUpdateReason: data[i].manualUpdateReason
       });
     }
     return newData;
@@ -626,15 +633,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          if (params.data.filingSource === 'ERI') {
-            if (!params.data.itrSummaryJson) {
-              return params.data.filingSource + ' - TB Utility';
-            } else {
-              return params.data.filingSource + '- Summary JSON ';
-            }
-          } else {
-            return params.data.filingSource;
-          }
+          return params.data.filingSource;
         },
       },
       {
@@ -768,6 +767,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params?.data?.paymentStatus) {
             return params?.data?.paymentStatus;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
+        headerName: 'Reason for Manual Update',
+        field: 'manualUpdateReason',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        width: 200,
+        valueGetter: function (params) {
+          if (params?.data?.manualUpdateReason) {
+            return params?.data?.manualUpdateReason;
           } else {
             return '-';
           }
@@ -1035,9 +1048,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               name: data?.fName + ' ' + data?.lName,
             },
           });
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
+
           // if (data.statusId !== 11) {
           //   this.router.navigate(['/eri'], {
           //     state:
@@ -1068,16 +1079,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   }
 
-  openFilingStatusDialog(data) {
-    let disposable = this.dialog.open(FilingStatusDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data,
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
+
   openReviseReturnDialog(data) {
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
       (res: any) => {
@@ -1088,9 +1090,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return;
         } else {
           console.log('Data for revise return ', data);
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
 
           if (data.isEverified) {
             let disposable = this.dialog.open(ReviseReturnDialogComponent, {
@@ -1139,9 +1138,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('Actions', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1189,9 +1185,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
@@ -1405,10 +1398,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
                 );
               }
               if (result.success) {
-                we_track('Call', {
-                  'User Name': user.fName + ' ' + user.lName,
-                  'User Phone number ': agentNumber,
-                });
                 this.toastMsgService.alert('success', result.message);
               }
             },
@@ -1549,9 +1538,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          we_track('E-verify ', {
-            'User Number': data.contactNumber,
-          });
           console.log(data);
           const param = `/eri/v1/api`;
           let headerObj = {

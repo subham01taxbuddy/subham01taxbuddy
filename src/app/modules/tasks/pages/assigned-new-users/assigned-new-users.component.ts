@@ -18,7 +18,6 @@ import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-r
 import { ServiceDropDownComponent } from '../../../shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from '../../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UntypedFormControl } from '@angular/forms';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { Subscription } from "rxjs";
 import { ReviewService } from 'src/app/modules/review/services/review.service';
@@ -33,7 +32,6 @@ import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service'
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
-declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
@@ -143,6 +141,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     } else {
@@ -150,6 +149,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
         { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'userId', name: 'User Id' },
         { value: 'panNumber', name: 'PAN' }
       ]
     }
@@ -390,9 +390,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
+        pinned: 'left',
+        lockPosition: true,
+        suppressMovable: true,
         width: 110,
         hide: !this.showReassignmentBtn.length,
-        pinned: 'left',
         checkboxSelection: (params) => {
           if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
@@ -404,8 +406,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           return {
             textAlign: 'center',
             display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
           };
         },
       },
@@ -993,10 +995,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-    we_track('Start Filing', {
-      'User Name': data?.name,
-      'User Number': data?.mobileNumber
-    });
+
   }
 
   async getUserProfile(userId) {
@@ -1136,12 +1135,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           this._toastMessageService.alert('error', "You don't have calling role.");
           return;
         }
-        if (this.coOwnerToggle.value == true) {
-          agent_number = agentNumber;
-        } else {
-          agent_number = agentNumber;
-          // agent_number = data.callerAgentNumber;
-        }
+        agent_number = agentNumber;
         const reqBody = {
           "agent_number": agent_number,
           "userId": data.userId,
@@ -1150,10 +1144,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
           if (result.success) {
-            we_track('Call', {
-              'User Name': data?.name,
-              'User Phone number ': agent_number,
-            });
             this._toastMessageService.alert("success", result.message)
           } else {
             this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -1297,7 +1287,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.getStatus();
     this.cacheManager.clearCache();
@@ -1327,8 +1316,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
 
   }
-
-  search(form?, isAgent?, pageChange?) {
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1386,39 +1374,37 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-    this.userMsService.getMethodNew(param).subscribe(
+    return this.userMsService.getMethodNew(param).toPromise().then((result: any) => {
+      if (result.success == false) {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data['content']);
 
-      (result: any) => {
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(result.data['content']);
+      }
+      this.loading = false;
 
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-
-      }, error => {
-        this.loading = false;
-        this.config.totalItems = 0;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      })
+    }).catch(() => {
+      this.loading = false;
+      this.config.totalItems = 0;
+      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+    });
   }
 
   closeChat() {

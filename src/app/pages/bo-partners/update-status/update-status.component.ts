@@ -6,7 +6,6 @@ import { GstDailyReportService } from 'src/app/services/gst-daily-report.service
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-declare function we_track(key: string, value: any);
 
 @Component({
   selector: 'app-update-status',
@@ -127,12 +126,6 @@ export class UpdateStatusComponent implements OnInit {
             'success',
             'Status update successfully.'
           );
-          we_track('Update status', {
-            'User Name': this.data?.partnerName,
-            'User Number': this.data?.mobileNumber,
-            'From status': this.data?.currentStatus,
-            'To status': this.selectedStatus,
-          });
           this.dialogRef.close({
             event: 'close',
             data: 'statusChanged',

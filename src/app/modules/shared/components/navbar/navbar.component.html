@@ -38,57 +38,64 @@
             <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
             </div>
         </div>
-        
-      
+
+
 
         <div class="col-lg-2 col-md-2 col-sm-2">
-          <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right" >
-            <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()"><i class="fa fa-copy" aria-hidden="true"></i>Copy Interview Link</button>
-          </div>
+            <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right">
+                <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()"><i class="fa fa-copy"
+                        aria-hidden="true"></i>Copy Interview Link</button>
+            </div>
         </div>
 
         <div class="col-lg-4 col-md-4 col-sm-5">
             <div *ngIf="showDropDown" class="header__breadcrumbs">
-              <div class="user" id="userDropdown" (click)="toggleDropdown()">
-                  <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i> &nbsp;
-              </div>
-              <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
-                  <a id="option1" (click)="navigateToProfile()">My Profile</a>
-                  <a id="option2" *ngIf="partnerType === 'PRINCIPAL'" (click)="navigateToAssistantManagement()">Assistant Management</a>
-              </div>
+                <div class="user" id="userDropdown" (click)="toggleDropdown()">
+                    <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i>
+                    &nbsp;
+                </div>
+                <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
+                    <a id="option1" (click)="navigateToProfile()">My Profile</a>
+                    <a id="option2" *ngIf="partnerType === 'PRINCIPAL'"
+                        (click)="navigateToAssistantManagement()">Assistant Management</a>
+                </div>
             </div>
 
-            <div *ngIf="showAffiliateBtn" class="header__breadcrumbs">
+            <div *ngIf="!showAffiliateBtn && showAffButton " class="header__breadcrumbs" style="float:left">
+                <button *ngIf="showAffButton" class="btn-copyLink-1" (click)="copyAffiliateLink()"><i class="fa fa-copy"
+                        aria-hidden="true"></i>Copy Affiliate Link</button>
+            </div>
+            <div *ngIf="showAffiliateBtn" class="header__breadcrumbs" style="float:right">
                 <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
                     <i class="fa-light fa-people-group"></i> Affiliate ID Linking</button>|
-            </div>
 
-            <div *ngIf="!showDropDown" class="header__breadcrumbs">
-              <div class="user">
-                  <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
-              </div>
-            </div>
+                <div *ngIf="!showDropDown" class="header__breadcrumbs">
+                    <div class="user">
+                        <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
+                    </div>
+                </div>
 
-            <div *ngIf="(loggedInUserInfo[0]?.serviceEligibility_GST && !roles?.includes('ROLE_FILER') || roles?.includes('ROLE_ADMIN'))" class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
-                <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp; </div>
-            </div>
+                <div *ngIf="(loggedInUserInfo[0]?.serviceEligibility_GST && !roles?.includes('ROLE_FILER') || roles?.includes('ROLE_ADMIN'))"
+                    class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
+                    <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp; </div>
+                </div>
 
 
-            <div class="header__buttons logout-btn-wrapper">
-                <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
-                                                                        aria-hidden="true"></i></button>
-            </div>
-            <div *ngIf="!showAffiliateBtn && checkEnv !=='UAT' " class="header__breadcrumbs">
+                <div class="header__buttons logout-btn-wrapper">
+                    <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
+                            aria-hidden="true"></i></button>
+                </div>
+                <!-- <div *ngIf="!showAffiliateBtn && checkEnv !=='UAT' " class="header__breadcrumbs">
               <span class="affId">
                 <i class="fa-light fa-people-group"></i> Affiliate ID - {{userAffiliateID}}
               </span>
-          </div>
+          </div> -->
+            </div>
+
+
         </div>
 
-
-    </div>
-
-    <!-- <div class="header__container">
+        <!-- <div class="header__container">
         <div class="header__buttons" *ngIf="showBtns === 'business-profile'">
             <a class="btn" (click)="saveBusinessProfile()">Save Profile</a>
         </div>
@@ -96,5 +103,5 @@
 </header>
 
 <div *ngIf="floatingWidgetShow">
- <app-floating-widget (widgetClosed)="handleWidgetClosed()" ></app-floating-widget>
+    <app-floating-widget (widgetClosed)="handleWidgetClosed()"></app-floating-widget>
 </div>
