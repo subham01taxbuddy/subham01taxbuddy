@@ -577,4 +577,18 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     this.saveMovableAssets();
     this.saveAndNext.emit(true);
   }
+  usePersonalAddress = false;
+
+  toggleAddress(formGroup) {
+    if (this.usePersonalAddress) {
+      formGroup.controls['flatNo'].setValue(this.ITR_JSON.address.flatNo);
+      formGroup.controls['premisesName'].setValue(this.ITR_JSON.address.premisesName);
+      formGroup.controls['area'].setValue(this.ITR_JSON.address.area);
+      formGroup.controls['road'].setValue(this.ITR_JSON.address.road);
+      formGroup.controls['city'].setValue(this.ITR_JSON.address.city);
+      formGroup.controls['state'].setValue(this.ITR_JSON.address.state);
+      formGroup.controls['country'].setValue(this.ITR_JSON.address.country);
+      formGroup.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
+    }
+  }
 }
