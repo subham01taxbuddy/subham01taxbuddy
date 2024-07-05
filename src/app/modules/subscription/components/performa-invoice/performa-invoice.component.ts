@@ -507,6 +507,12 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
+        if(this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1 ){
+          this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
+        }else{
+          this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink'))
+        }
+
         if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
