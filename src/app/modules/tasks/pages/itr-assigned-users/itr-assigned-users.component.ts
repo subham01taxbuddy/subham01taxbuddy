@@ -114,7 +114,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
-    debugger
     if (environment.allowReassignToPreviousLeader.includes(this.loggedInUserId)) {
       this.showReassignButton = true;
     }
