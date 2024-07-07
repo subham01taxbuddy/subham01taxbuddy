@@ -12,10 +12,11 @@ export const environment = {
 	isValidItr: false,
 	environment: 'UAT',
 	admin_id: 3000,
+	allowReassignToPreviousLeader: [3000,14140],
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "qa",
-  payOutEnv :"QA",
+	payOutEnv: "QA",
 	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",
 	idleTimeMins: 30,
@@ -59,22 +60,22 @@ export const environment = {
 		messagingSenderId: "805239680508",
 		appId: "1:805239680508:web:c5a224dafd6a97bea05679",
 		measurementId: "G-R5JYTLSE8B"
-    },
+	},
 
-    s3_cred: {
-        // user_name: "ashish@ssbainnovations.com",
-        // password: "testPwd8761$",
+	s3_cred: {
+		// user_name: "ashish@ssbainnovations.com",
+		// password: "testPwd8761$",
 		bucket: 'tb-gst-docs-uat-dev',
-        region: 'ap-south-1'
-    },
-    /* aws_cred: {
-        identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
-        region: 'ap-south-1',
-        userPoolId: 'ap-south-1_s42HgYzaY',
-        userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
-    }, */
-    AMPLIFY_CONFIG: {
-        aws_project_region: 'ap-south-1',
+		region: 'ap-south-1'
+	},
+	/* aws_cred: {
+		identityPoolId: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
+		region: 'ap-south-1',
+		userPoolId: 'ap-south-1_s42HgYzaY',
+		userPoolWebClientId: '289f0frh4oj9rp5rh6q9opo4qn',
+	}, */
+	AMPLIFY_CONFIG: {
+		aws_project_region: 'ap-south-1',
 		aws_cognito_identity_pool_id: 'ap-south-1:f7280802-a172-4b2a-a3b2-adf642b67b38',
 		aws_cognito_region: 'ap-south-1',
 		aws_user_pools_id: 'ap-south-1_7GHESh9rb',
@@ -84,6 +85,6 @@ export const environment = {
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 
-    externalScripts: {
+	externalScripts: {
 	}
 };

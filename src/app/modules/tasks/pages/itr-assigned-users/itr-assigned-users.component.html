@@ -103,6 +103,10 @@
                       <button class="bulk-buttons bulk spRt" style="float:right" [disabled]="loading"
                         (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
                           Re-Assignment to Leader</span></button>
+                      <button *ngIf="showReassignButton" class="bulk-buttons bulk spRt" style="float:right"
+                        [disabled]="loading" (click)="$event.stopPropagation(); reassign()"><span
+                          class="bulk-button-txt">
+                          Re-Assign to Previous Leader</span></button>
                     </div>
 
                   </div>
