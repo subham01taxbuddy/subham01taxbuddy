@@ -323,6 +323,11 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
   async downloadReport() {
+    if (!(this.leaderId || this.filerId)) {
+      this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
+      return
+    }
+
     this.loading = true;
     let param = ''
     let userFilter = '';
