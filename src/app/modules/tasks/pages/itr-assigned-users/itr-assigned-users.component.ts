@@ -93,7 +93,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     },
   ];
   loggedInUserId: any;
-  showReassignButton: boolean=false;
+  showReassignButton: boolean = false;
 
   constructor(
     private reviewService: ReviewService,
@@ -117,7 +117,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (environment.allowReassignToPreviousLeader.includes(this.loggedInUserId)) {
       this.showReassignButton = true;
     }
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -125,7 +125,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
       },
       onGridReady: params => {
       },
@@ -546,19 +546,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     console.log(itrStatus);
     var statusSequence = 0;
 
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
-        hide: !this.showReassignmentBtn.length,
+        hide: !(this.showReassignButton || this.showReassignmentBtn.length),
         pinned: 'left',
         lockPosition: true,
         suppressMovable: true,
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
+          return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
         },
         cellStyle: function (params: any) {
           return {
