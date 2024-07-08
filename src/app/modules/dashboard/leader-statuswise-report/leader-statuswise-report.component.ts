@@ -76,6 +76,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
   ];
   selectedService = new UntypedFormControl('');
+  leaderView = new UntypedFormControl('');
 
   constructor(
     private userMsService: UserMsService,
@@ -84,6 +85,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     private genericCsvService: GenericCsvService,
     public datePipe: DatePipe,
   ) {
+    this.leaderView.enable();
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
@@ -120,7 +122,13 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
 
   getStatusWiseReport = (): Promise<any> => {
-    if (!this.leaderId && !this.filerId) {
+    this.data = null;
+    this.grandTotal = null;
+    this.dataKeys = null;
+    this.columns = null;
+    this.grandTotalKeys = null;
+
+    if (!this.leaderId && !this.filerId && !this.leaderView.value) {
       this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
       return;
     }
@@ -145,8 +153,12 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       serviceFilter += `&serviceType=${this.selectedService.value}`
     }
 
+
     param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
+    if (this.leaderView.value) {
+      param = param + '&leaderView=true';
+    }
     return this.userMsService.getMethodNew(param).toPromise().then((response: any) => {
       if (response.success) {
         this.loading = false;
@@ -307,7 +319,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     if (event) {
       this.leaderId = event ? event.userId : null;
     }
+    if (this.leaderId || this.filerId) {
+      this.leaderView.disable();
+      this.leaderView.setValue(false);
+    } else {
+      this.leaderView.enable();
+    }
   }
+
   fromPrinciple(event) {
     if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
@@ -320,10 +339,17 @@ export class LeaderStatuswiseReportComponent implements OnInit {
         this.searchAsPrinciple = false;
       }
     }
+
+    if (this.leaderId || this.filerId) {
+      this.leaderView.disable();
+      this.leaderView.setValue(false);
+    } else {
+      this.leaderView.enable();
+    }
   }
 
   async downloadReport() {
-    if (!(this.leaderId || this.filerId)) {
+    if (!(this.leaderId || this.filerId || this.leaderView.value)) {
       this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
       return
     }
@@ -451,6 +477,9 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
+    if (this.leaderView.value) {
+      param = param + '&leaderView=true';
+    }
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'status-wise-report', fieldName, {});
     this.loading = false;
   }
@@ -461,6 +490,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.dataKeys = null;
     this.columns = null;
     this.grandTotalKeys = null;
+    this.leaderView.setValue(false);
     this.selectedService.setValue(this.serviceTypes[0].value);
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -481,4 +511,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   }
 
 
+  handleLeaderViewChange(): void {
+    this.getStatusWiseReport();
+  }
 }
