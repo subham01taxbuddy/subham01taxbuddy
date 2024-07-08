@@ -165,8 +165,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
         const columnMap: Record<string, Record<string, string>> = {
           ITR: {
-            filerName: 'filerName',
-            leaderName: 'leaderName',
+            filerName: this.leaderView.value ? 'leaderName' : 'filerName',
+            leaderName: this.leaderView.value ? 'adminName' : 'leaderName',
             servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
@@ -185,8 +185,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             backOutWithRefund: 'backOutWithRefund',
           },
           TPA: {
-            filerName: 'filerName',
-            leaderName: 'leaderName',
+            filerName: this.leaderView.value ? 'leaderName' : 'filerName',
+            leaderName: this.leaderView.value ? 'adminName' : 'leaderName',
             servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
@@ -199,8 +199,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             tpaCompleted: 'tpaCompleted'
           },
           NOTICE: {
-            filerName: 'filerName',
-            leaderName: 'leaderName',
+            filerName: this.leaderView.value ? 'leaderName' : 'filerName',
+            leaderName: this.leaderView.value ? 'adminName' : 'leaderName',
             servicetype: 'servicetype',
             open: 'open',
             notInterested: 'notInterested',
@@ -218,8 +218,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             backOut: 'backOut'
           },
           GST: {
-            filerName: 'filerName',
-            leaderName: 'leaderName',
+            filerName: this.leaderView.value ? 'leaderName' : 'filerName',
+            leaderName: this.leaderView.value ? 'adminName' : 'leaderName',
             servicetype: 'servicetype',
             open: 'open',
             interested: 'interested',
@@ -234,8 +234,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             backOut: 'backOut'
           },
           ITRU: {
-            filerName: 'filerName',
-            leaderName: 'leaderName',
+            filerName: this.leaderView.value ? 'leaderName' : 'filerName',
+            leaderName: this.leaderView.value ? 'adminName' : 'leaderName',
             servicetype: 'servicetype',
             open: 'open',
             interested: 'interested',
@@ -261,7 +261,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
         if (selectedServiceMap) {
           this.columns = Object.values(selectedServiceMap);
-          this.dataKeys = Object.values(selectedServiceMap);
+          this.dataKeys = Object.keys(selectedServiceMap);
           this.data = response?.data?.content[0];
           this.grandTotal = response?.data?.content[0].total;
           this.grandTotalKeys = Object.keys(this.grandTotal);
@@ -375,8 +375,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
     if (this.selectedService.value === 'ITR') {
       fieldName = [
-        { key: 'filerName', value: 'Filer Name' },
-        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'filerName', value: this.leaderView.value ? 'Leader Name' : 'Filer Name' },
+        { key: 'leaderName', value: this.leaderView.value ? 'Admin Name' : 'Leader Name' },
         { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
@@ -399,8 +399,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       ];
     } else if (this.selectedService.value === 'TPA') {
       fieldName = [
-        { key: 'filerName', value: 'Filer Name' },
-        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'filerName', value: this.leaderView.value ? 'Leader Name' : 'Filer Name' },
+        { key: 'leaderName', value: this.leaderView.value ? 'Admin Name' : 'Leader Name' },
         { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
@@ -414,8 +414,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       ];
     } else if (this.selectedService.value === 'NOTICE') {
       fieldName = [
-        { key: 'filerName', value: 'Filer Name' },
-        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'filerName', value: this.leaderView.value ? 'Leader Name' : 'Filer Name' },
+        { key: 'leaderName', value: this.leaderView.value ? 'Admin Name' : 'Leader Name' },
         { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'notInterested', value: 'Not Interested' },
@@ -434,8 +434,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       ];
     } else if (this.selectedService.value === 'GST') {
       fieldName = [
-        { key: 'filerName', value: 'Filer Name' },
-        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'filerName', value: this.leaderView.value ? 'Leader Name' : 'Filer Name' },
+        { key: 'leaderName', value: this.leaderView.value ? 'Admin Name' : 'Leader Name' },
         { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'interested', value: 'Interested' },
@@ -451,8 +451,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       ];
     } else if (this.selectedService.value === 'ITRU') {
       fieldName = [
-        { key: 'filerName', value: 'Filer Name' },
-        { key: 'leaderName', value: 'Leader Name' },
+        { key: 'filerName', value: this.leaderView.value ? 'Leader Name' : 'Filer Name' },
+        { key: 'leaderName', value: this.leaderView.value ? 'Admin Name' : 'Leader Name' },
         { key: 'servicetype', value: 'Service Type' },
         { key: 'open', value: 'Open' },
         { key: 'interested', value: 'Interested' },
