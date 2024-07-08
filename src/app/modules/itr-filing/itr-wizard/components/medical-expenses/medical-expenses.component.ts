@@ -440,21 +440,21 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     fieldArray.forEach(element => {
       totalParentExpenses += this.utilsService.getInt(element.value);
     });
-    if (totalParentExpenses > parentExpenseLimit) {
-      this.utilsService.showSnackBar(
-        `Medical expenses for parents cannot exceed ${parentExpenseLimit}`
-      );
-      fieldArray.forEach(element => {
-        if (element.value > 0) {
-          element.setErrors({ maxValueExceeded: true });
-        }
-      });
-      return false;
-    } else {
-      fieldArray.forEach(element => {
-        element.setErrors(null);
-      });
-    }
+    // if (totalParentExpenses > parentExpenseLimit) {
+    //   this.utilsService.showSnackBar(
+    //     `Medical expenses for parents cannot exceed ${parentExpenseLimit}`
+    //   );
+    //   fieldArray.forEach(element => {
+    //     if (element.value > 0) {
+    //       element.setErrors({ maxValueExceeded: true });
+    //     }
+    //   });
+    //   return false;
+    // } else {
+    //   fieldArray.forEach(element => {
+    //     element.setErrors(null);
+    //   });
+    // }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
     let userFieldArray = [this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
     this.investmentDeductionForm.controls['selfPremium'],
