@@ -207,7 +207,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       sortable: true,
     };
 
-  
+
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.utilService.isNonEmpty(params['userId']) || params['mobile'] !== '-' || params['invoiceNo']) {
         this.userId = params['userId'];
@@ -793,6 +793,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Razor-Pay Link',
+        field: 'paymentLink',
+        hide: hidePaymentLink ? true : false,
+        width: 250,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
         headerName: 'Services',
         field: 'serviceType',
         width: 120,
@@ -815,14 +823,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         headerName: 'Adjusted subscription amount',
         field: 'subscriptionAdjustedAmount',
         width: 200,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-      {
-        headerName: 'Razor-Pay Link',
-        field: 'paymentLink',
-        hide: hidePaymentLink ? true : false,
-        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
