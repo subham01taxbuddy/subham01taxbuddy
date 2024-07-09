@@ -1,16 +1,16 @@
-import {HostListener, Pipe, PipeTransform} from '@angular/core';
+import {Directive, HostBinding, HostListener, Inject, Pipe, PipeTransform} from '@angular/core';
+import {DOCUMENT} from "@angular/common";
 
-@Pipe({
-    name: 'wholeNumber'
+@Directive({
+    selector:'[wholeNumber]'
 })
-export class WholeNumberPipe implements PipeTransform {
-
-    transform(value: number): string {
-        if (!Number.isInteger(value)) {
-            return ''; // Return an empty string if the value is not an integer
-        }
-
-        return value.toString();
+export class WholeNumberPipe {
+    @HostBinding('autocomplete') public autocomplete
+    constructor(@Inject(DOCUMENT) private document: Document) {
+        this.autocomplete = 'off'
+    }
+    @HostListener('keypress', ['$event']) public disableKeys(e: any) {
+        return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode == 45;
     }
 
     @HostListener('paste', ['$event'])
