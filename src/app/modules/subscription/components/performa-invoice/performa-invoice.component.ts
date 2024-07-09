@@ -387,6 +387,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList))
     }
+    this.userId = null;
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
