@@ -211,50 +211,134 @@ export class GenericCsvService {
   }
 
   calculateColumnTotal(data: any[]): any {
-    const totalRow = {
-      filerName: 'Grand Total',
-      ownerName: 'Grand Total',
-      assignedUsers: 0,
-      itrFiledAsPerITRTab: 0,
-      open: 0,
-      interested: 0,
-      followup: 0,
-      autoFollowup: 0,
-      converted: 0,
-      documentsUploaded: 0,
-      preparingItr: 0,
-      waitingForConfirmation: 0,
-      itrConfirmationReceived: 0,
-      itrFiledStatusWise: 0,
-      invoiceSent: 0,
-      paymentReceived: 0,
-      notInterested: 0,
-      backout: 0
-    };
+    if (data.length === 0) {
+      return {};
+    }
+
+    let totalRow: { [key: string]: any } = {};
+
+    const serviceType = data[0].servicetype;
+
+    switch (serviceType) {
+      case 'ITR':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'chatInitiated': 0,
+          'chatResolve': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'waitingForConfirmation': 0,
+          'itrConfirmationReceived': 0,
+          'itrFiled': 0,
+          'backOutWithRefund': 0,
+          'backOut': 0,
+          'planConfirmed': 0,
+          'documentsIncomplete': 0
+        };
+        break;
+      case 'TPA':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'backOut': 0,
+          'followup': 0,
+          'tpaCompleted': 0
+        };
+        break;
+      case 'NOTICE':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'converted': 0,
+          'followUp': 0,
+          'noticeResponseFiled': 0,
+          'partResponseFiled': 0,
+          'noticeWIP': 0,
+          'noticeClosed': 0,
+          'noticeReopen': 0,
+          'backOut': 0
+        };
+        break;
+      case 'GST':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'interested': 0,
+          'notInterested': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'followUp': 0,
+          'converted': 0,
+          'activeClientReturn': 0,
+          'registrationDone': 0,
+          'gstCancelled': 0,
+          'backOut': 0
+        };
+        break;
+      case 'ITRU':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'interested': 0,
+          'notInterested': 0,
+          'chatInitiated': 0,
+          'chatResolve': 0,
+          'proformaInvoiceSent': 0,
+          'documentsIncomplete': 0,
+          'documentsUploaded': 0,
+          'itrConfirmationReceived': 0,
+          'itrFiled20_21': 0,
+          'itrFiled21_22': 0,
+          'itrFiled22_23': 0,
+          'paymentReceived': 0,
+          'planConfirmed': 0,
+          'waitingForConfirmation': 0,
+          'backOutWithRefund': 0,
+          'backedOut': 0
+        };
+        break;
+      default:
+        totalRow = {
+          'filerName': 'Grand Total',
+          'leaderName': 'Grand Total',
+        };
+        break;
+    }
 
     for (let i = 0; i < data.length; i++) {
       const rowData = data[i];
       for (const key in rowData) {
-        if (rowData.hasOwnProperty(key) && key !== 'filerName' || key !== 'ownerName') {
+        if (rowData.hasOwnProperty(key) && totalRow.hasOwnProperty(key) && typeof rowData[key] === 'number') {
           totalRow[key] += rowData[key];
         }
       }
     }
-
-    if (data.length > 0) {
-      if (data[0].filerName) {
-        delete totalRow['ownerName'];
-        totalRow.filerName = data[0].filerName ? 'Grand Total' : '';
-      }
-      else {
-        delete totalRow['filerName'];
-        totalRow.ownerName = data[0].ownerName ? 'Grand Total' : '';
-      }
-    }
-
-
-
     return totalRow;
   }
+
 }
 
