@@ -223,6 +223,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.startDate.setValue(this.minDate);
     this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
+    if(this.roles.includes('ROLE_FILER')){
+      this.agentId = this.loggedInSme[0]?.userId;
+    }
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.utilService.isNonEmpty(params['userId']) || params['mobile'] !== '-' || params['invoiceNo']) {
         this.userId = params['userId'];
@@ -242,7 +245,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     })
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = this.loggedInSme[0]?.userId;
-      this.getInvoice();
+      if(!this.userId){
+        this.getInvoice();
+      }
     } else {
       this.dataOnLoad = false;
     }
@@ -383,6 +388,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
+    this.userId = null;
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -398,6 +404,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.invoiceNo.setValue(null);
     this.gridApi?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
+    this.totalInvoice = 0
     this?.smeDropDown?.resetDropdown();
   }
 

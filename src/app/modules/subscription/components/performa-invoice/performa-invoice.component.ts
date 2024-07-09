@@ -207,6 +207,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       sortable: true,
     };
 
+    if(this.roles.includes('ROLE_FILER')){
+      this.agentId = this.loggedInSme[0]?.userId;
+    }
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (this.utilService.isNonEmpty(params['userId']) || params['mobile'] !== '-' || params['invoiceNo']) {
@@ -228,7 +231,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = this.loggedInSme[0]?.userId;
-      this.getInvoice();
+      if(!this.userId){
+        this.getInvoice();
+      }
     } else {
       this.dataOnLoad = false;
     }
@@ -398,7 +403,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.emailId = null;
     this.totalInvoice = 0
     this.deletedInvoiceList.setValue(false);
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(this.minStartDate);
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     this.mobile.setValue(null);
