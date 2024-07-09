@@ -2,7 +2,6 @@ import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -18,10 +17,10 @@ import { AllBusinessIncomeComponent } from './pages/all-business-income/all-busi
 import { UserNotesComponent } from '../../shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
 import { SummaryConversionService } from "../../../services/summary-conversion.service";
+import { ChangeStatusComponent } from '../../shared/components/change-status/change-status.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -55,7 +54,8 @@ export class ItrWizardComponent implements OnInit {
     public schedules: Schedules,
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
-    private summaryConversionService: SummaryConversionService
+    private summaryConversionService: SummaryConversionService,
+    private dialog: MatDialog,
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -607,9 +607,35 @@ export class ItrWizardComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  goToProfile(){
+  goToProfile() {
     let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
     this.router.navigate([`pages/user-management/profile/` + this.ITR_JSON.userId], { queryParams: { 'serviceType': serviceType, }, queryParamsHandling: 'merge' });
+  }
+
+  updateStatus() {
+    let userInfo = {
+      clientName: this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
+      userId: this.ITR_JSON.userId,
+      assessmentYear: this.ITR_JSON.assessmentYear,
+    }
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '60%',
+      height: 'auto',
+
+      data: {
+        userId: this.ITR_JSON.userId,
+        clientName: this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
+        serviceType: this.ITR_JSON.isITRU ? 'ITRU' : 'ITR',
+        mode: 'Update Status',
+        itrChatInitiated: true,
+        userInfo: userInfo,
+      },
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 
   ngOnDestroy() {
