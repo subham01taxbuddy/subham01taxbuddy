@@ -1,16 +1,13 @@
 <div class="fordialnotes">
   <div class="notes-header">
-    <div class="saved-notes mb-2"><b>Saved Notes for <span style="color: rgb(106, 123, 237);">{{ data.clientName }}</span></b></div>
+    <div class="saved-notes mb-2"><b>Saved Notes for <span style="color: rgb(106, 123, 237);">{{ data.clientName
+          }}</span></b></div>
     <div>
 
       <div class="card__col-lg-11" mat-dialog-title *ngIf="data.title">
         {{ data.title }}
       </div>
-      <button
-        mat-dialog-close
-        tabindex="-1"
-        class="tbd-btn-close card__col-lg-1"
-      >
+      <button mat-dialog-close tabindex="-1" class="tbd-btn-close card__col-lg-1">
         <i class="fa fa-times" aria-hidden="true"></i>
       </button>
     </div>
@@ -21,52 +18,31 @@
       <mat-label>Service Type: </mat-label>
       <mat-form-field class="service-input" appearance="outline">
         <mat-select placeholder="Service type" [formControl]="serviceType">
-          <mat-option
-            *ngFor="let serviceType of serviceTypes"
-            [value]="serviceType.value"
-          >
+          <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.value">
             {{ serviceType.label }}
           </mat-option>
         </mat-select>
-        <mat-error class="error-msg" *ngIf="serviceType.hasError('required')"
-          >Please select service type
+        <mat-error class="error-msg" *ngIf="serviceType.hasError('required')">Please select service type
         </mat-error>
       </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-6 card__col-md-6 card__col-lg-6">
       <mat-label>Notes: </mat-label>
       <mat-form-field class="notes-input" appearance="outline">
-        <textarea
-          matInput
-          [formControl]="noteDetails"
-          cdkTextareaAutosize
-          cdkAutosizeMinRows="1"
-          cdkAutosizeMaxRows="9"
-          name="noteDetails"
-          placeholder="Enter your note..."
-        ></textarea>
-        <mat-error class="error-msg" *ngIf="noteDetails.hasError('required')"
-          >Please enter note details</mat-error
-        >
+        <textarea matInput [formControl]="noteDetails" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="9"
+          name="noteDetails" placeholder="Enter your note..."></textarea>
+        <mat-error class="error-msg" *ngIf="noteDetails.hasError('required')">Please enter note details</mat-error>
       </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-3 card__col-md-3 card__col-lg-3">
-      <!-- <button type="submit" class="new-button-1" (click)="addNote()">
-        Add Notes
-      </button> -->
       <app-custom-button class="new-button-1" [actions]="[addNote]">
         Add Notes
       </app-custom-button>
     </div>
   </div>
-  <!-- <br /> -->
   &nbsp;
-  <div
-    class="mat-elevation-z8"
-    *ngIf="notes.length > 0"
-    style="margin-top: 25px"
-  >
-    <table mat-table [dataSource]="dataSource">
+  <div class="mat-elevation-z8" *ngIf="notes.length > 0" style="margin-top: 25px">
+    <table aria-label="user Notes" mat-table [dataSource]="dataSource">
       <!-- Symbol Column -->
       <ng-container matColumnDef="Date">
         <th mat-header-cell *matHeaderCellDef>Date</th>
@@ -93,25 +69,10 @@
         <td mat-cell *matCellDef="let element">{{ element.note }}</td>
       </ng-container>
 
-      <tr
-        mat-header-row
-        style="height: 20px"
-        *matHeaderRowDef="displayedColumns"
-      ></tr>
+      <tr mat-header-row style="height: 20px" *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator
-      *ngIf="notes.length > 0"
-      #paginator
-      [pageSize]="5"
-    ></mat-paginator>
+    <mat-paginator *ngIf="notes.length > 0" #paginator [pageSize]="5"></mat-paginator>
   </div>
 
-  <!-- <pagination-controls
-  (pageChange)="pageChangeData($event)"
-  #paginator
-  pageSize="5"
-></pagination-controls> -->
 </div>
-<!-- [length]="notes.length" -->
-<!-- class="marginless-paginator-range-label" -->

@@ -1071,14 +1071,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         param = param + sortByJson;
       }
     }
-    else {
-      param;
-    }
-
-    // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-
-    // param = param + `?fromDate=${fromDate}&toDate=${toDate}`
     if (this.subPaidScheduleCallList.value) {
       param = param + '&details=true'
     }
@@ -1139,9 +1131,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
     if (this.searchParam.statusId) {
       param = param + 'statusId=' + this.searchParam.statusId + '&';
-    }
-    else {
-      param;
     }
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-list', '', this.sortBy);
     this.loading = false;

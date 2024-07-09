@@ -25,7 +25,6 @@ export class LayoutComponent implements OnInit {
   showNotification: boolean = false;
   routePath: any;
   updatedChat: any;
-  urlSafe: any;
   openSidebar: boolean = true;
   subscription: Subscription
   constructor(
@@ -38,8 +37,6 @@ export class LayoutComponent implements OnInit {
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
   ) {
-    this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(environment.assistedKmScript);
-
     this.timer = interval(10000)
     this.timer.subscribe(() => {
       if (this.showNotification === false && this.userMsgInfo && this.userMsgInfo instanceof Array && this.userMsgInfo.length > 0) {

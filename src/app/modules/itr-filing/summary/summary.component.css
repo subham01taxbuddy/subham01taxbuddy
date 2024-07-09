@@ -238,7 +238,7 @@ table {
 
 .grBut {
   /* width: 85px; */
-  line-height: 24px;
+  line-height: 30px;
   border-radius: 0px;
   background: #39670b;
   color: #fff;
@@ -274,7 +274,7 @@ table {
 }
 
 .kommBut {
-  line-height: 24px;
+  line-height: 30px;
   border-radius: 0px;
   background: #5553b7;
   color: #fff;
@@ -293,7 +293,7 @@ table {
 }
 
 .whatsAppBut {
-  line-height: 24px;
+  line-height: 30px;
   border-radius: 0px;
   background: #4fce5d;
   color: #fff;

@@ -4,8 +4,6 @@ import { DatePipe, formatDate } from '@angular/common';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
@@ -130,13 +128,12 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   ogStatusList: any = [];
   partnerType: any;
   loginSmeDetails: any;
+  userId: any;
 
   constructor(
     private fb: UntypedFormBuilder,
     private datePipe: DatePipe,
     private utilService: UtilsService,
-    private userMsService: UserMsService,
-    private itrService: ItrMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string,
@@ -226,40 +223,40 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.startDate.setValue(this.minDate);
     this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
-
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (this.utilService.isNonEmpty(params['userId']) || params['mobile'] !== '-' || params['invoiceNo']) {
+        this.userId = params['userId'];
+        let mobileNo = params['mobile'];
+        let invNo = params['invoiceNo'];
+        if (this.userId) {
+          // this.invoiceFormGroup.controls['userId'].setValue(this.userId);
+        } else if (mobileNo) {
+          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        } else if (invNo) {
+          this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
+        }
+        if (this.userId || mobileNo || invNo) {
+          this.getInvoice();
+        }
+      }
+    })
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = this.loggedInSme[0]?.userId;
       this.getInvoice();
     } else {
       this.dataOnLoad = false;
     }
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo']) {
-        let name = params['name'];
-        let mobileNo = params['mobile'];
-        let invNo = params['invoiceNo'];
-        if (name) {
-          this.invoiceFormGroup.controls['name'].setValue(name);
-        } else if (mobileNo) {
-          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
-        } else if (invNo) {
-          this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
-        }
-        if (name || mobileNo || invNo) {
-          this.getInvoice();
-        }
-      }
-    })
+
 
   }
 
-  updateDates(){
-    if(this.assessmentYear.value === this.financialYear[0].financialYear){
+  updateDates() {
+    if (this.assessmentYear.value === this.financialYear[0].financialYear) {
       //current year
       this.minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
       this.startDate.setValue(this.minStartDate);
       this.endDate.setValue(moment());
-    }  else {
+    } else {
       this.minStartDate = moment('2023-04-01').toDate();
       this.startDate.setValue(this.minStartDate);
       this.minDate = moment.min(moment(), moment('2023-04-01')).toDate();
@@ -337,8 +334,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   }
   financialYear = [
-    {assessmentYear : "2025-2026",financialYear : "2024-2025", startDate: new Date('2024-04-01'), endDate: new Date('2025-03-31')},
-    {assessmentYear : "2024-2025",financialYear : "2023-2024",startDate: new Date('2023-04-01'), endDate: new Date('2024-03-31')}
+    { assessmentYear: "2025-2026", financialYear: "2024-2025", startDate: new Date('2024-04-01'), endDate: new Date('2025-03-31') },
+    { assessmentYear: "2024-2025", financialYear: "2023-2024", startDate: new Date('2023-04-01'), endDate: new Date('2024-03-31') }
   ];
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
     assessmentYear: new UntypedFormControl(this.financialYear[0].financialYear),
@@ -405,7 +402,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
 
-  getInvoice=(pageChange?):Promise<any> => {
+  getInvoice = (pageChange?): Promise<any> => {
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-25&page=0&pageSize=20&paymentStatus=Paid' \
 
     if (!pageChange) {
@@ -487,7 +484,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-
+    if (this.userId) {
+      param = param + '&userId=' + this.userId;
+    }
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -513,7 +512,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         this.gridApi?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }).catch(()=>{
+    }).catch(() => {
       this.gridApi?.setRowData(this.createRowData([]));
       this.totalInvoice = 0
       this.config.totalItems = 0;
@@ -546,8 +545,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
           paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
           leaderName: userInvoices[i].leaderName,
-          couponCodeClaimedServiceType:userInvoices[i].couponCodeClaimedServiceType,
-          markedDoneByName:userInvoices[i].markedDoneByName
+          couponCodeClaimedServiceType: userInvoices[i].couponCodeClaimedServiceType,
+          markedDoneByName: userInvoices[i].markedDoneByName
         })
       invoices.push(updateInvoice)
     }
@@ -561,10 +560,10 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  downloadInvoicesSummary=():Promise<any> =>{
+  downloadInvoicesSummary = (): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Paid&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
-      this.loading=true;
+      this.loading = true;
       let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
@@ -607,7 +606,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       }
       // location.href = environment.url + param;
       return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
-        this.loading=false;
+        this.loading = false;
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -617,8 +616,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      }).catch(()=>{
-        this.loading =false;
+      }).catch(() => {
+        this.loading = false;
       })
     }
 
@@ -874,9 +873,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         },
         valueGetter: function (params) {
           let name = params.data.markedDoneByName
-          if(name){
+          if (name) {
             return name
-          }else{
+          } else {
             return '-'
           }
         }
@@ -910,7 +909,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         </button>`;
         },
         width: 95,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: {
           textAlign: 'center',
           display: 'flex',
@@ -931,7 +930,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
            </button>`;
         },
         width: 90,
-         pinned: 'right',
+        pinned: 'right',
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -972,7 +971,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       pdf => {
         this.loading = false;
         const blob = new Blob([pdf], { type: "application/pdf" });
-        saveAs(blob,'tax_invoice');
+        saveAs(blob, 'tax_invoice');
       },
       err => {
         this.loading = false;
@@ -1004,8 +1003,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           this.getInvoice();
         });
       }
-    },(error) => {
-      this.loading=false;
+    }, (error) => {
+      this.loading = false;
       if (error.error && error.error.error) {
         this.utilsService.showSnackBar(error.error.error);
         this.getInvoice();

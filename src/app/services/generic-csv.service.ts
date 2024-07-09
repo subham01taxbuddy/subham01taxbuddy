@@ -46,14 +46,14 @@ export class GenericCsvService {
     paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
     this.count = 0;
     await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
-    console.log('no of pages to be downloaded',this.count)
+    console.log('no of pages to be downloaded', this.count)
     page += 1;
     for (; page < this.count; page++) {
       paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
-    console.log('this.data',this.data)
-    console.log('this.data.length',this.data.length)
+    console.log('this.data', this.data)
+    console.log('this.data.length', this.data.length)
     if (this.data.length) {
       if (name === 'Filed-ITR') {
         this.mapFiledItrDetails();
@@ -61,10 +61,10 @@ export class GenericCsvService {
       if (name === 'assigned-sme-report') {
         this.mapAssignedSmeDetails(fields);
       }
-      if(name === 'calling-report-list'){
+      if (name === 'calling-report-list') {
         this.mapCallingReportDetails();
       }
-      if(name ==='prefill-uploaded-summary-not-sent-report'){
+      if (name === 'prefill-uploaded-summary-not-sent-report') {
         this.mapChatLink();
       }
       this.jsonToCsvService.downloadFile(this.data, fields, name);
@@ -74,24 +74,24 @@ export class GenericCsvService {
     }
   }
 
-  mapCallingReportDetails(){
+  mapCallingReportDetails() {
     this.data.forEach((element) => {
       element['recordingLink'] = `=HYPERLINK("${element.recordingLink}")`;
     });
   }
 
-  mapChatLink(){
+  mapChatLink() {
     this.data.forEach((element) => {
-        if (element.conversationId) {
-            let link  = `https://dashboard.kommunicate.io/conversations/${element.conversationId}`
-            element['conversationId'] = `=HYPERLINK("${link}")`;
-        }
-        if (element.whatsAppConversationId) {
-            let link = `https://dashboard.kommunicate.io/conversations/${element.whatsAppConversationId}`
-            element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
-        }
+      if (element.conversationId) {
+        let link = `https://dashboard.kommunicate.io/conversations/${element.conversationId}`
+        element['conversationId'] = `=HYPERLINK("${link}")`;
+      }
+      if (element.whatsAppConversationId) {
+        let link = `https://dashboard.kommunicate.io/conversations/${element.whatsAppConversationId}`
+        element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
+      }
     });
-}
+  }
 
   mapFiledItrDetails() {
     this.allResignedActiveSmeList?.forEach((item) => {
@@ -171,29 +171,37 @@ export class GenericCsvService {
             // if (result?.data?.content.length) {
             if (param.includes('status-wise-report')) {
               if (result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData && result?.data?.content[0].total) {
-                this.data = [...result?.data?.content[0].statusWiseData];
+                this.data = [...result.data.content[0].statusWiseData];
                 const columnTotal = this.calculateColumnTotal(this.data);
                 this.data.push(columnTotal);
                 resolve(result?.data.totalPages);
               } else {
                 resolve(0);
               }
-            }else if(param.includes('attendance-performance-report')){
-              if (result?.data?.content.length > 0){
-                this.data = [...result?.data?.content]
+            } else if (param.includes('attendance-performance-report')) {
+              if (result?.data?.content.length > 0) {
+                this.data = [...result.data.content]
                 resolve(0);
               }
 
             }
             else {
-              this.data = [...this.data, ...result?.data?.content];
-              let count = result.data.totalPages
-              console.log('no of pages to be downloaded',count);
-              resolve(result?.data.totalPages);
+              if (result?.data?.content) {
+                this.data = [...this.data, ...result.data.content];
+                let count = result.data.totalPages
+                console.log('no of pages to be downloaded', count);
+                resolve(result.data.totalPages);
+              }
             }
             // } else {
             //   resolve(0);
             // }
+          }
+          if(param.includes('promocodes')){
+            if (result?.content.length > 0) {
+              this.data = [...this.data, ...result.content]
+              resolve(result.totalPages);
+            }
           }
         }, error => {
           resolve(0);
@@ -203,50 +211,134 @@ export class GenericCsvService {
   }
 
   calculateColumnTotal(data: any[]): any {
-    const totalRow = {
-      filerName: 'Grand Total',
-      ownerName: 'Grand Total',
-      assignedUsers: 0,
-      itrFiledAsPerITRTab: 0,
-      open: 0,
-      interested: 0,
-      followup: 0,
-      autoFollowup: 0,
-      converted: 0,
-      documentsUploaded: 0,
-      preparingItr: 0,
-      waitingForConfirmation: 0,
-      itrConfirmationReceived: 0,
-      itrFiledStatusWise: 0,
-      invoiceSent: 0,
-      paymentReceived: 0,
-      notInterested: 0,
-      backout: 0
-    };
+    if (data.length === 0) {
+      return {};
+    }
+
+    let totalRow: { [key: string]: any } = {};
+
+    const serviceType = data[0].servicetype;
+
+    switch (serviceType) {
+      case 'ITR':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'chatInitiated': 0,
+          'chatResolve': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'waitingForConfirmation': 0,
+          'itrConfirmationReceived': 0,
+          'itrFiled': 0,
+          'backOutWithRefund': 0,
+          'backOut': 0,
+          'planConfirmed': 0,
+          'documentsIncomplete': 0
+        };
+        break;
+      case 'TPA':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'backOut': 0,
+          'followup': 0,
+          'tpaCompleted': 0
+        };
+        break;
+      case 'NOTICE':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'notInterested': 0,
+          'interested': 0,
+          'documentsUploaded': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'converted': 0,
+          'followUp': 0,
+          'noticeResponseFiled': 0,
+          'partResponseFiled': 0,
+          'noticeWIP': 0,
+          'noticeClosed': 0,
+          'noticeReopen': 0,
+          'backOut': 0
+        };
+        break;
+      case 'GST':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'interested': 0,
+          'notInterested': 0,
+          'proformaInvoiceSent': 0,
+          'paymentReceived': 0,
+          'followUp': 0,
+          'converted': 0,
+          'activeClientReturn': 0,
+          'registrationDone': 0,
+          'gstCancelled': 0,
+          'backOut': 0
+        };
+        break;
+      case 'ITRU':
+        totalRow = {
+          'filerName': '',
+          'leaderName': '',
+          'servicetype': 'Grand Total',
+          'open': 0,
+          'interested': 0,
+          'notInterested': 0,
+          'chatInitiated': 0,
+          'chatResolve': 0,
+          'proformaInvoiceSent': 0,
+          'documentsIncomplete': 0,
+          'documentsUploaded': 0,
+          'itrConfirmationReceived': 0,
+          'itrFiled20_21': 0,
+          'itrFiled21_22': 0,
+          'itrFiled22_23': 0,
+          'paymentReceived': 0,
+          'planConfirmed': 0,
+          'waitingForConfirmation': 0,
+          'backOutWithRefund': 0,
+          'backedOut': 0
+        };
+        break;
+      default:
+        totalRow = {
+          'filerName': 'Grand Total',
+          'leaderName': 'Grand Total',
+        };
+        break;
+    }
 
     for (let i = 0; i < data.length; i++) {
       const rowData = data[i];
       for (const key in rowData) {
-        if (rowData.hasOwnProperty(key) && key !== 'filerName' || key !== 'ownerName') {
+        if (rowData.hasOwnProperty(key) && totalRow.hasOwnProperty(key) && typeof rowData[key] === 'number') {
           totalRow[key] += rowData[key];
         }
       }
     }
-
-    if (data.length > 0) {
-      if (data[0].filerName) {
-        delete totalRow['ownerName'];
-        totalRow.filerName = data[0].filerName ? 'Grand Total' : '';
-      }
-      else {
-        delete totalRow['filerName'];
-        totalRow.ownerName = data[0].ownerName ? 'Grand Total' : '';
-      }
-    }
-
-
-
     return totalRow;
   }
+
 }
 

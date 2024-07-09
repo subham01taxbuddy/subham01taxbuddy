@@ -97,10 +97,10 @@ export class ViewReviewComponent implements OnInit {
   }
 
   openKommunicateDashboard(type) {
-    if (type = 'kommunicate') {
+    if (type === 'kommunicate') {
       window.open(`https://dashboard.kommunicate.io/conversations/${this.data.leadData.groupId}`, "_blank");
     }
-    if (type = 'NotKommunicate') {
+    if (type === 'NotKommunicate') {
       console.log(this.waChatLink);
       if (this.waChatLink) {
         window.open(this.waChatLink);

@@ -17,7 +17,7 @@
     <div class="col-sm-3">
       <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForFiler()"
         [disabled]="loading">Re-Assignment</button> -->
-      <app-custom-button class="tbd-btn save-btn spsTp2"  [actions]="[reAssignmentForFiler]">
+      <app-custom-button class="tbd-btn save-btn spsTp2" [actions]="[reAssignmentForFiler]">
         Re-Assignment
       </app-custom-button>
     </div>
@@ -34,7 +34,7 @@
     <div class="row">
       <h4 matDialogTitle>Error Table:</h4>
     </div>
-    <table class="error-table">
+    <table aria-label="Error Table" class="error-table">
       <tr>
         <th>User Name</th>
         <th>Mobile No.</th>
@@ -84,10 +84,8 @@
       </div>
     </div>
     <div class="col-sm-3">
-      <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForLeader()"
-        [disabled]="loading">Re-Assignment</button> -->
-      <app-custom-button class="tbd-btn save-btn spsTp2"  [actions]="[reAssignmentForLeader]">
-          Re-Assignment
+      <app-custom-button class="tbd-btn save-btn spsTp2" [actions]="[reAssignmentForLeader]">
+        Re-Assignment
       </app-custom-button>
     </div>
   </div>

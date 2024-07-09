@@ -1,24 +1,13 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="clearfix">
   <div class="hdBack">
     <div class="ttlTx">ITR Filing Process</div>
     <div class="aligBtn">
-      <button
-        class="action-buttons1"
-        title="Users notes"
-        (click)="openNotesDialog()"
-      >
+      <button class="action-buttons1" title="Users notes" (click)="openNotesDialog()">
         <i class="fa fa-sticky-note-o fa-1x" aria-hidden="true"></i>
         Users notes
       </button>
-      <button
-        class="action-buttons"
-        title="Chat with user"
-        (click)="openChat()"
-      >
+      <button class="action-buttons" title="Chat with user" (click)="openChat()">
         <i class="fa fa-weixin fa-1x" aria-hidden="true"></i>
         Chat with user
       </button>
@@ -26,17 +15,17 @@
         <i class="fa-solid fa-phone"></i>
         Call user
       </button>
-      <button
-        class="action-buttons"
-        title="Document-Cloud"
-        (click)="goToCloud()"
-      >
+      <button class="action-buttons" title="Document-Cloud" (click)="goToCloud()">
         <i class="fa fa-cloud" aria-hidden="true"></i>
         Document Cloud
       </button>
       <button class="action-buttons" title="Document-Cloud" (click)="goToProfile()">
         <i class="fa fa-user" aria-hidden="true"></i>
         User Profile
+      </button>
+      <button class="action-buttons" title="Update-status" (click)="updateStatus()">
+        <i class="fa-sharp fa-regular fa-triangle-exclamation" aria-hidden="true"></i>
+        Update Status
       </button>
     </div>
   </div>
@@ -45,15 +34,13 @@
     <div class="row rectangleB">
       <div class="col-md-6 frameB">
         <div class="large-title">
-          <a
-                [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
-                (click)="showPrefillView()">Pre-fill Data
+          <a [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
+            (click)="showPrefillView()">Pre-fill Data
           </a>
         </div>
         <div class="text-wrapper">&gt;</div>
-        <a class="large-title"
-           (click)="gotoSources()"
-             [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
+        <a class="large-title" (click)="gotoSources()"
+          [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
           Sources of Income
         </a>
         <div class="text-wrapper" *ngIf="!showIncomeSources && !showPrefill">&gt;</div>
@@ -61,10 +48,7 @@
           {{ selectedSchedule }}
         </div>
         <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
-          <img
-                  src="../../../../assets/icon-font/icon-arrow-right.svg"
-                  alt="arrow right icon"
-          />
+          <img src="../../../../assets/icon-font/icon-arrow-right.svg" alt="arrow right icon" />
           <span class="large-title">{{ breadcrumb }}</span>
         </div>
       </div>
@@ -78,27 +62,19 @@
     <!-- breadcrumb area ends -->
 
     <div *ngIf="showPrefill">
-      <app-prefill-id
-        [data]="navigationData"
-        (skipPrefill)="skipPrefill($event)"
-        (jsonUploaded)="onUploadedJson($event)"
-      ></app-prefill-id>
+      <app-prefill-id [data]="navigationData" (skipPrefill)="skipPrefill($event)"
+        (jsonUploaded)="onUploadedJson($event)"></app-prefill-id>
     </div>
     <div *ngIf="showIncomeSources">
-      <app-source-of-incomes
-        (scheduleSelected)="updateSchedules($event)"
-      ></app-source-of-incomes>
+      <app-source-of-incomes (scheduleSelected)="updateSchedules($event)"></app-source-of-incomes>
       <!-- <div class="txHd alTxH">Enter <span color="source-color">Salary related Information below:</div> -->
       <div class="spc-blw">
         <mat-accordion class="headers-align">
-          <mat-expansion-panel
-            *ngFor="let schedule of componentsList"
-            hideToggle
-          >
+          <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>
             <mat-expansion-panel-header (click)="gotoSchedule(schedule)">
               <mat-panel-title>{{
                 schedules.getTitle(schedule)
-              }}</mat-panel-title>
+                }}</mat-panel-title>
               <mat-icon> arrow_forward_ios </mat-icon>
             </mat-expansion-panel-header>
           </mat-expansion-panel>
@@ -112,19 +88,21 @@
           Back to Prefill Data
         </button>
 
-        <button (click)="gotoSummary()" class="darkBtn">
+        <!-- <button (click)="gotoSummary()" class="darkBtn">
           <span class="adjust">Go to Summary</span>
           <i class="material-icons icoAd">arrow_right_alt </i>
-        </button>
+        </button> -->
+        <app-custom-button class="darkBtn" [disabled]="loading" [actions]="[gotoSummary]">
+          <span class="adjust">Go to Summary</span>
+          <i class="material-icons icoAd">arrow_right_alt</i>
+        </app-custom-button>
+
 
       </div>
     </div>
 
     <div *ngIf="!showIncomeSources && !showPrefill">
-      <router-outlet
-        (activate)="subscribeToEmmiter($event)"
-        (deactivate)="unsubscribe()"
-      ></router-outlet>
+      <router-outlet (activate)="subscribeToEmmiter($event)" (deactivate)="unsubscribe()"></router-outlet>
     </div>
   </div>
 </div>

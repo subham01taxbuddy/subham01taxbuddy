@@ -138,6 +138,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   ogStatusList: any = [];
   partnerType: any;
   loginSmeDetails: any;
+  userId: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -197,7 +198,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.roles.includes('ROLE_FILER') ? this.invoicesCreateColumnDef(this.allFilerList , 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList) ,
+      columnDefs: this.roles.includes('ROLE_FILER') ? this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -206,30 +207,31 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       sortable: true,
     };
 
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (this.utilService.isNonEmpty(params['userId']) || params['mobile'] !== '-' || params['invoiceNo']) {
+        this.userId = params['userId'];
+        let mobileNo = params['mobile'];
+        let invNo = params['invoiceNo'];
+        if (this.userId) {
+          // this.invoiceFormGroup.controls['userId'].setValue(this.userId);
+        } else if (mobileNo) {
+          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        } else if (invNo) {
+          this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(invNo);
+        }
+        if (this.userId || mobileNo || invNo) {
+          this.getInvoice();
+        }
+      }
+    })
+
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = this.loggedInSme[0]?.userId;
       this.getInvoice();
     } else {
       this.dataOnLoad = false;
     }
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo']) {
-        let name = params['name'];
-        let mobileNo = params['mobile'];
-        let invNo = params['invoiceNo'];
-        if (name) {
-          this.invoiceFormGroup.controls['name'].setValue(name);
-        } else if (mobileNo) {
-          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
-        }else if (invNo) {
-          this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(invNo);
-        }
-        if (name || mobileNo || invNo) {
-          this.getInvoice();
-        }
-      }
-    })
 
   }
 
@@ -331,7 +333,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.config.totalItems = 0;
-    this.config.currentPage =1;
+    this.config.currentPage = 1;
     this.totalInvoice = 0
     if (this.deletedInvoiceList.value) {
       this.gridApi?.setRowData(this.createRowData([]));
@@ -344,7 +346,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       this.roles.includes('ROLE_FILER') ?
         this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink')) :
         this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList));
-        this.gridApi?.setRowData(this.createRowData([]));
+      this.gridApi?.setRowData(this.createRowData([]));
     }
   }
 
@@ -380,9 +382,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
-    if(this.roles.includes('ROLE_FILER')){
+    if (this.roles.includes('ROLE_FILER')) {
       this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink'))
-    }else{
+    } else {
       this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList))
     }
     this.clearUserFilter = moment.now().valueOf();
@@ -408,7 +410,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     this.config.totalItems = 0;
   }
 
-  getInvoice=(isCoOwner?, agentId?, pageChange?):Promise<any> =>{
+  getInvoice = (isCoOwner?, agentId?, pageChange?): Promise<any> => {
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-24&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -484,7 +486,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
 
     let deleteFilter = '';
-    if(this.deletedInvoiceList.value){
+    if (this.deletedInvoiceList.value) {
       deleteFilter = '&deletedInvoice=' + this.deletedInvoiceList.value;
     }
 
@@ -494,6 +496,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
+    }
+    if (this.userId) {
+      param = param + '&userId=' + this.userId;
     }
 
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
@@ -512,7 +517,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
-        if(this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1 ){
+        if (this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1) {
           this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
         }
 
@@ -526,7 +531,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.gridApi?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }).catch(()=>{
+    }).catch(() => {
       this.gridApi?.setRowData(this.createRowData([]));
       this.totalInvoice = 0
       this.config.totalItems = 0;
@@ -572,7 +577,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  downloadInvoicesSummary=():Promise<any>  => {
+  downloadInvoicesSummary = (): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
       let fromDate = this.datePipe.transform(
@@ -614,7 +619,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       param = param + userFilter;
 
       let deleteFilter = '';
-      if(this.deletedInvoiceList.value){
+      if (this.deletedInvoiceList.value) {
         this.searchParam.page = 0;
         deleteFilter = '&deletedInvoice=' + this.deletedInvoiceList.value;
       }
@@ -636,8 +641,8 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-      }).catch(()=>{
-        this.loading=false;
+      }).catch(() => {
+        this.loading = false;
       })
     }
   }
@@ -788,6 +793,14 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Razor-Pay Link',
+        field: 'paymentLink',
+        hide: hidePaymentLink ? true : false,
+        width: 250,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
         headerName: 'Services',
         field: 'serviceType',
         width: 120,
@@ -810,14 +823,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         headerName: 'Adjusted subscription amount',
         field: 'subscriptionAdjustedAmount',
         width: 200,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-      {
-        headerName: 'Razor-Pay Link',
-        field: 'paymentLink',
-        hide : hidePaymentLink ? true : false,
-        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
@@ -886,7 +891,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        hide : hideCol ? true :false ,
+        hide: hideCol ? true : false,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.paymentStatus === 'Paid') {
@@ -952,7 +957,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        hide : hidePaymentLink ? true : false,
+        hide: hidePaymentLink ? true : false,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;

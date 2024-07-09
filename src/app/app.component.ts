@@ -50,6 +50,17 @@ export class AppComponent {
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
+        let softwareUpdateAvailable = localStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
+        console.log('Software update available key',softwareUpdateAvailable)
+
+        if (softwareUpdateAvailable === 'true') {
+          console.log('remove Software update available key')
+          localStorage.removeItem('SOFTWARE_UPDATE_AVAIlABLE');
+          window.location.reload();
+          navigator.serviceWorker.getRegistration('/').then(function (registration) {
+            registration.update();
+          });
+        }
         if (
           event.id === 1 &&
           event.url === event.urlAfterRedirects
@@ -68,8 +79,12 @@ export class AppComponent {
       });
 
     if (this.swUpdate.isEnabled) {
+      console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
+      // localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       this.swUpdate.available.subscribe(() => {
-        this.reloadWindow();
+        console.log('SOFTWARE_UPDATE_AVAIlABLE')
+        localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
+        // this.reloadWindow();
       })
     }
 
@@ -232,8 +247,6 @@ export class AppComponent {
           registration.update();
         });
       }
-
     });
-
   }
 }

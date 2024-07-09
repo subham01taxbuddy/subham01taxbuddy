@@ -277,7 +277,7 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="breakup-container-2">
-                  <table>
+                  <table aria-label="Price Plan Breakup">
                     <thead>
                       <tr>
                         <th class="bdrBtm1">Particulars</th>
@@ -477,7 +477,7 @@
                   </div>
 
                   <!-- start refund details -->
-                  <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
+                  <table aria-label="Refund Details" class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
                     <tbody>
                       <tr>
                         <th id="refundDetails">Refund Details</th>

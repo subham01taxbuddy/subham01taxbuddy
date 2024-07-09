@@ -555,7 +555,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   }
 
   async saveCg() {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const improvementsArray = this.assetsForm.controls[
         'improvementsArray'
       ] as UntypedFormArray;

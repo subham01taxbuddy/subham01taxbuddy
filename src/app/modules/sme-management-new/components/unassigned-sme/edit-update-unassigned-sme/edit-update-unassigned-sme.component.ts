@@ -1,15 +1,14 @@
 
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { UntypedFormBuilder } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { Router } from '@angular/router';
 import { ReportService } from 'src/app/services/report-service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -63,9 +62,9 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   itrTypeForm: UntypedFormGroup;
   itrPlanList: any;
   smeDetails: any;
-  signedInRole:any;
+  signedInRole: any;
   public panregex = AppConstants.panNumberRegex;
-  panName:any;
+  panName: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -74,7 +73,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private itrMsService: ItrMsService,
     private httpClient: HttpClient,
-    private reportService:ReportService,
+    private reportService: ReportService,
     private dialog: MatDialog,
     private location: Location,
     private router: Router,
@@ -129,13 +128,13 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   leaderId: number;
   agentId: number;
-  leaderName:any;
+  leaderName: any;
   fromSme1(event) {
     console.log('sme-drop-down', event);
     if (event) {
       this.leaderId = event ? event.userId : null;
-      this.leaderName = event ?event.name : null;
-     }
+      this.leaderName = event ? event.name : null;
+    }
     if (this.leaderId) {
       this.agentId = this.leaderId;
     } else {
@@ -148,24 +147,24 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     if (url) {
       window.open(url, '_blank');
     } else {
-      this._toastMessageService.alert('error',` URL not found`);
+      this._toastMessageService.alert('error', ` URL not found`);
     }
   }
 
-  openDocument(documentType: string ,url) {
-    if(url){
+  openDocument(documentType: string, url) {
+    if (url) {
       const parts = url.split('/');
       const lastPart = parts[parts.length - 1];
       const fileNameWithParams = lastPart.split('?')[0];
-      let newFileName= decodeURIComponent(fileNameWithParams);
-      console.log(newFileName,"New File Name");
+      let newFileName = decodeURIComponent(fileNameWithParams);
+      console.log(newFileName, "New File Name");
       this.getViewSignedUrl(fileNameWithParams)
-    }else{
-      this._toastMessageService.alert('error',`${documentType} URL not found`);
+    } else {
+      this._toastMessageService.alert('error', `${documentType} URL not found`);
     }
   }
 
-  getViewSignedUrl(name){
+  getViewSignedUrl(name) {
     let param = `/lanretni/cloud/signed-s3-url-by-type?type=partner&fileName=${name}&action=GET`;
     this.itrMsService.getMethod(param).subscribe(
       (result: any) => {
@@ -175,10 +174,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
         } else {
           this.utilsService.showSnackBar(`Something went wrong while getting URL`);
         }
-      }),
+      },
       (err: any) => {
         this.utilsService.showSnackBar('Error while getting signed URL: ' + JSON.stringify(err));
-      }
+      });
   }
 
 
@@ -205,7 +204,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   onItrTypeCheckboxChange(itrType: string) {
     if (!this.smeObj['skillSetPlanIdList']) {
-        this.smeObj['skillSetPlanIdList'] = [];
+      this.smeObj['skillSetPlanIdList'] = [];
     }
 
     const plan = this.itrPlanList.find(plan => plan.planId === itrType);
@@ -217,83 +216,83 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     const index = this.smeObj['skillSetPlanIdList'].indexOf(plan.planId);
 
     if (itrTypeControl.value && index === -1) {
-        this.smeObj['skillSetPlanIdList'].push(plan.planId);
+      this.smeObj['skillSetPlanIdList'].push(plan.planId);
     } else if (!itrTypeControl.value && index !== -1) {
-        this.smeObj['skillSetPlanIdList'].splice(index, 1);
+      this.smeObj['skillSetPlanIdList'].splice(index, 1);
     }
 
     console.log(this.smeObj['skillSetPlanIdList']);
   }
 
 
-  planIdList:any = []
+  planIdList: any = []
   getPlanDetails() {
     this.loading = true;
     let param = '/plans-master?serviceType=ITR&isActive=true';
     this.itrMsService.getMethod(param).subscribe((response: any) => {
-        this.loading = false;
-        this.itrPlanList = response;
-        if (this.itrPlanList.length) {
-            this.planIdList = this.itrPlanList.map(plan => plan.planId);
-            this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
-            if (this.smeObj?.['partnerType'] === 'CHILD') {
-                this.getPrincipalDetails(this.itrPlanList);
-            } else {
-                this.irtTypeCapability = [];
-                this.itrPlanList.forEach(element => {
-                    this.irtTypeCapability.push(element.planId);
-                    this.irtTypeCapability.forEach((itrType) => {
-                        this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
-                    })
-                });
-                this.setPlanDetails();
-            }
+      this.loading = false;
+      this.itrPlanList = response;
+      if (this.itrPlanList.length) {
+        this.planIdList = this.itrPlanList.map(plan => plan.planId);
+        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+        if (this.smeObj?.['partnerType'] === 'CHILD') {
+          this.getPrincipalDetails(this.itrPlanList);
+        } else {
+          this.irtTypeCapability = [];
+          this.itrPlanList.forEach(element => {
+            this.irtTypeCapability.push(element.planId);
+            this.irtTypeCapability.forEach((itrType) => {
+              this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
+            })
+          });
+          this.setPlanDetails();
         }
+      }
     },
-    error => {
+      error => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to get selected plan details');
-    });
+      });
   }
 
   getPrincipalDetails(itrPlanList) {
     let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
     this.reportService.getMethod(param).subscribe((response: any) => {
-        this.loading = false;
-        if (response.success) {
-            this.smeDetails = response.data[0];
-            itrPlanList.forEach(element => {
-                this.smeDetails?.skillSetPlanIdList.forEach(item => {
-                    if (element.planId === item) {
-                        this.irtTypeCapability.push(element.planId);
-                        this.irtTypeCapability.forEach((itrType) => {
-                            this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
-                        })
-                    }
-                });
-                this.setPlanDetails();
-            });
-        }
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        itrPlanList.forEach(element => {
+          this.smeDetails?.skillSetPlanIdList.forEach(item => {
+            if (element.planId === item) {
+              this.irtTypeCapability.push(element.planId);
+              this.irtTypeCapability.forEach((itrType) => {
+                this.itrTypeForm.addControl(itrType.toString(), new UntypedFormControl(false));
+              })
+            }
+          });
+          this.setPlanDetails();
+        });
+      }
     });
   }
 
   setPlanDetails() {
     if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
-        this.itrPlanList.forEach(item => {
-            this.smeObj?.['skillSetPlanIdList'].forEach(element => {
-                if(element === 138){
-                    const businessAndProfessionControl =  this.itrTypeForm.controls['138'];
-                    if (businessAndProfessionControl) {
-                        businessAndProfessionControl.setValue(true);
-                    }
-                } else {
-                    if (item.planId === element && element != 138) {
-                        const planId = item.planId.toString();
-                        this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
-                    }
-                }
-            })
+      this.itrPlanList.forEach(item => {
+        this.smeObj?.['skillSetPlanIdList'].forEach(element => {
+          if (element === 138) {
+            const businessAndProfessionControl = this.itrTypeForm.controls['138'];
+            if (businessAndProfessionControl) {
+              businessAndProfessionControl.setValue(true);
+            }
+          } else {
+            if (item.planId === element && element != 138) {
+              const planId = item.planId.toString();
+              this.itrTypeForm.setControl(planId, new UntypedFormControl(true));
+            }
+          }
         })
+      })
     }
   }
 
@@ -320,12 +319,12 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     this.mobileNumber.setValue(data.mobileNumber);
     this.pinCode.setValue(data?.partnerDetails?.pinCode);
     this.internal.setValue(data.internal)
-    if(data.internal === true || this.internal.value === true){
+    if (data.internal === true || this.internal.value === true) {
       this.external.setValue(false);
-    }else{
+    } else {
       this.external.setValue(true);
     }
-    if(data?.partnerDetails?.interviewedBy){
+    if (data?.partnerDetails?.interviewedBy) {
       let allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
       let filer = allFilerList.filter((item) => {
         return item.userId === data?.partnerDetails?.interviewedBy;
@@ -335,21 +334,21 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
       this.interviewedBy.setValue(filer[0])
 
-   }
+    }
   }
-  urls:any;
+  urls: any;
 
   setPartnerDetails(boPartnersInfo) {
     if (!boPartnersInfo) {
       return;
     }
-    if(boPartnersInfo?.partnerDetails?.partnerType === "PRINCIPAL"){
+    if (boPartnersInfo?.partnerDetails?.partnerType === "PRINCIPAL") {
       this.filerPrinciple.setValue(true);
       this.filerIndividual.setValue(false);
-    }else if(boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL"){
+    } else if (boPartnersInfo?.partnerDetails?.partnerType === "INDIVIDUAL") {
       this.filerIndividual.setValue(true);
       this.filerPrinciple.setValue(false);
-    }else{
+    } else {
       this.filerPrinciple.setValue(false);
       this.filerIndividual.setValue(false);
     }
@@ -367,7 +366,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       this.setLanguageCheckboxes(languageProficiencies);
     } else if (Array.isArray(boPartnersInfo?.partnerDetails?.languageProficiency)) {
       this.setLanguageCheckboxes(boPartnersInfo.partnerDetails?.languageProficiency);
-    }else{
+    } else {
       this.setLanguageCheckboxes(boPartnersInfo.languages);
     }
 
@@ -402,7 +401,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
       "passbookOrCancelledChequeInput": boPartnersInfo?.partnerDetails?.passbookOrCancelledChequeUrl,
       "cvInput": boPartnersInfo?.partnerDetails?.cvUrl,
       "gstinInput": boPartnersInfo?.partnerDetails?.gstUrl,
-      "zipInput" : boPartnersInfo?.partnerDetails?.zipUrl
+      "zipInput": boPartnersInfo?.partnerDetails?.zipUrl
     };
 
     this.languageForm.controls['English'].enable();
@@ -429,42 +428,42 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     controlName.setValue(controlName.value.trim());
   }
 
-  panInfo:any;
+  panInfo: any;
   getUserInfoFromPan(panNum: any) {
     // https://uat-api.taxbuddy.com//itr/api/getPanDetail?panNumber=
     if (this.pan.value && this.pan.valid) {
       const fourthLetter = panNum.substring(3, 4);
       if (fourthLetter === 'F' || fourthLetter === 'C') {
-        this.panName=this.name.value;
-          return;
+        this.panName = this.name.value;
+        return;
       }
       let param = `/api/getPanDetail?panNumber=${panNum}`;
       this.itrMsService.getMethod(param).subscribe(
         (result: any) => {
           console.log(result);
           this.panInfo = result;
-          if(result.isValid != "INVALID PAN"){
-           console.log("inside valid");
-           if(this.panInfo?.firstName && this.panInfo?.lastName){
-            if (this.panInfo.middleName && this.panInfo.middleName.trim() !== '') {
-              this.panName = this.panInfo.firstName + ' ' + this.panInfo.middleName + ' ' + this.panInfo.lastName;
-            } else {
-              this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
-            }
-            this.checkPanName();
+          if (result.isValid != "INVALID PAN") {
+            console.log("inside valid");
+            if (this.panInfo?.firstName && this.panInfo?.lastName) {
+              if (this.panInfo.middleName && this.panInfo.middleName.trim() !== '') {
+                this.panName = this.panInfo.firstName + ' ' + this.panInfo.middleName + ' ' + this.panInfo.lastName;
+              } else {
+                this.panName = this.panInfo.firstName + ' ' + this.panInfo.lastName;
+              }
+              this.checkPanName();
 
-           }else{
-            if (!this.panInfo?.firstName && this.panInfo?.lastName) {
-              this.panName = this.panInfo.lastName;
-            } else if (this.panInfo?.firstName && !this.panInfo?.lastName) {
-              this.panName = this.panInfo.firstName;
             } else {
-              this.utilsService.showSnackBar(`Not Found Name As Per PAN `);
-              return;
+              if (!this.panInfo?.firstName && this.panInfo?.lastName) {
+                this.panName = this.panInfo.lastName;
+              } else if (this.panInfo?.firstName && !this.panInfo?.lastName) {
+                this.panName = this.panInfo.firstName;
+              } else {
+                this.utilsService.showSnackBar(`Not Found Name As Per PAN `);
+                return;
+              }
+              this.checkPanName();
             }
-            this.checkPanName();
-           }
-          }else{
+          } else {
             this.utilsService.showSnackBar(`Invalid PAN Please give correct details`);
             this.pan.setErrors({ 'invalidPan': true });
           }
@@ -473,7 +472,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     }
   }
 
-  checkPanName(){
+  checkPanName() {
     if (this.panName != this.smeFormGroup.controls['name'].value) {
       const dialogRef = this.dialog.open(NameAlertComponent, {
         width: '40%',
@@ -505,11 +504,11 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     smeOriginalEmail: new UntypedFormControl(''),
     languages: new UntypedFormControl(''),
     referredBy: new UntypedFormControl(''),
-    callingNumber:new UntypedFormControl(''),
+    callingNumber: new UntypedFormControl(''),
     itrTypes: new UntypedFormControl(''),
     qualification: new UntypedFormControl(''),
-    pinCode:new UntypedFormControl(''),
-    city:new UntypedFormControl(''),
+    pinCode: new UntypedFormControl(''),
+    city: new UntypedFormControl(''),
     state: new UntypedFormControl(''),
     special: new UntypedFormControl(''),
     accountNumber: new UntypedFormControl(''),
@@ -519,7 +518,7 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     accountType: new UntypedFormControl(''),
     additionalIdsCount: new UntypedFormControl(''),
     interviewedBy: new UntypedFormControl(''),
-    additionalIdsRequired:new UntypedFormControl(''),
+    additionalIdsRequired: new UntypedFormControl(''),
   });
 
   get pan() {
@@ -583,10 +582,10 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
   get callingNumber() {
     return this.smeFormGroup.controls['callingNumber'] as UntypedFormControl;
   }
-  get pinCode(){
+  get pinCode() {
     return this.smeFormGroup.controls['pinCode'] as UntypedFormControl;
   }
-  get city(){
+  get city() {
     return this.smeFormGroup.controls['city'] as UntypedFormControl;
   }
 
@@ -627,12 +626,12 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   }
 
-  onChange(checkboxNumber: number){
+  onChange(checkboxNumber: number) {
     if (checkboxNumber === 1) {
       this.additionalIdsRequired.setValue(false);
       this.onAdditionalIdsRequiredChange();
     }
-    if(checkboxNumber === 2){
+    if (checkboxNumber === 2) {
       this.additionalIdsRequired.setValue(true);
       this.onAdditionalIdsRequiredChange();
     }
