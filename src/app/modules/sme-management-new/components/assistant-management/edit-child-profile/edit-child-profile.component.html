@@ -31,7 +31,7 @@
             <div *ngIf="!fromEdit" class=" col-sm-4  verifyBank">
               <button class="verify-button "
                     [disabled]="mobileNumber.invalid || loading || showSignUp || showOtp"
-                    (click)="amplifySignIn()">Verify Number
+                    (click)="checkActive();">Verify Number
                   </button>
             </div>
           </div>
