@@ -504,7 +504,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   checkActive(){
      if (this.mobileNumber.value && this.mobileNumber.valid) {
       this.loading = true;
-      const param = `/bo/sme/all-list?page=0&pageSize=10000`;
+      const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
       this.reportService.getMethod(param).subscribe((result: any) => {
         this.loading =false;
         if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
