@@ -391,7 +391,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
 
   closeChat(){
     this.userDetails = null;
-    this.chatManager.closeChat();
-  }
+   }
 
 }

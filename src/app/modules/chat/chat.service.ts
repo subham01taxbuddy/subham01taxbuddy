@@ -124,7 +124,7 @@ export class ChatService {
   }
   async initTokens(initializeSocket: boolean, service?: string) {
 
-    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
+    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? true : false;
     let request: any = {
       tokenRequired: tokenPresent
     };

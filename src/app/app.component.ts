@@ -1,5 +1,5 @@
 
-import { Component, HostListener, Optional } from '@angular/core';
+import { Component, HostListener, OnInit, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { MatDialog, MatDialogState } from "@angular/material/dialog";
@@ -23,7 +23,7 @@ import { ChatService } from './modules/chat/chat.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   title = 'app works!';
 
@@ -44,7 +44,7 @@ export class AppComponent {
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private chatManager: ChatManager,
-    private chatService:ChatService,
+    private chatService: ChatService,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -54,7 +54,7 @@ export class AppComponent {
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
         let softwareUpdateAvailable = localStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
-        console.log('Software update available key',softwareUpdateAvailable)
+        console.log('Software update available key', softwareUpdateAvailable)
 
         if (softwareUpdateAvailable === 'true') {
           console.log('remove Software update available key')
@@ -138,6 +138,14 @@ export class AppComponent {
     let cgPermission = sessionStorage.getItem('CG_MODULE');
     if (!cgPermission) {
       sessionStorage.setItem('CG_MODULE', 'NO');
+    }
+  }
+
+  ngOnInit(): void {
+    console.log('app comp initialize')
+    const chat21TokenAvailable = localStorage.getItem('CHAT21_TOKEN');
+    if(this.loginSmeDetails && chat21TokenAvailable){
+    this.chatManager.initChat(true);
     }
   }
 
