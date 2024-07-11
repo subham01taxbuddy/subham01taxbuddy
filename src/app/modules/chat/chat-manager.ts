@@ -90,8 +90,8 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: any, recipient: string, payload?: any) {
-    this.chatService.sendMessage(message, recipient, payload);
+  sendMessage(message: any, recipient: string, payload?: any,notification?: any,isFromPushNotification: boolean = false) {
+    this.chatService.sendMessage(message, recipient, payload, notification,isFromPushNotification);
 
   }
 

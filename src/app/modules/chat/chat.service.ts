@@ -7,6 +7,7 @@ import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
 import { webSocket } from 'rxjs/webSocket';
+import { Observable } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
@@ -54,8 +55,16 @@ export class ChatService {
   private newMessageReceived = new Subject<any>();
   newMessageReceived$ = this.newMessageReceived.asObservable();
 
-  private openChatSubject = new Subject<any>();
-  openChat$ = this.openChatSubject.asObservable();
+  private closeFloatingWidgetSubject = new Subject<void>();
+  closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
+
+
+  closeFloatingWidget() {
+    this.closeFloatingWidgetSubject.next();
+  }
+
+  
+ 
 
   lastMessageId: any;
   subject: any;
@@ -70,10 +79,8 @@ export class ChatService {
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
+   
 
-  openUserChat(user: any){
-    this.openChatSubject.next(user);
-   }
 
   registerMessageReceived(messageReceivedCallback) {
     this.onConversationUpdatedCallbacks.set(0, messageReceivedCallback);
@@ -401,7 +408,7 @@ export class ChatService {
 
     return messages;
   }
-  
+
   uuidv4() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
@@ -428,19 +435,19 @@ export class ChatService {
 
 
 
-  // startPingInterval() {
-  //   this.pingInterval = setInterval(() => {
-  //     if (this.chatClient && this.chatClient.connected) {
-  //       this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
-  //     }
-  //   }, 10000);
-  // }
+  startPingInterval() {
+    this.pingInterval = setInterval(() => {
+      if (this.chatClient && this.chatClient.connected) {
+        this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
+      }
+    }, 10000);
+  }
 
-  // stopPingInterval() {
-  //   if (this.pingInterval) {
-  //     clearInterval(this.pingInterval);
-  //   }
-  // }
+  stopPingInterval() {
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+    }
+  }
   websocketConnection(chat21Token, requestId) {
 
     this.initChatVariables(requestId);
@@ -672,7 +679,7 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        // this.startPingInterval();
+        this.startPingInterval();
 
 
       }
@@ -758,12 +765,15 @@ export class ChatService {
     return null;
   }
 
-  getMessageAttributes(payload: any) {
+  getMessageAttributes(payload: any,notification?: any,isFromPushNotification: boolean = false) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
     let user = this.localStorageService.getItem('SELECTED_CHAT', true);
+    const departmentId = isFromPushNotification ? notification?.attributes?.departmentId : user?.departmentId;
+    const departmentName = isFromPushNotification ? notification?.attributes?.departmentName : user?.departmentName;
+    const userFullName = isFromPushNotification ? notification?.attributes?.userFullname : user?.userFullName;
     return {
-      "departmentId": user?.departmentId,
-      "departmentName": user?.departmentName,
+      "departmentId": departmentId,
+      "departmentName": departmentName,
       "ipAddress": "103.97.240.182",
       "client": "",
       "sourcePage": "",
@@ -771,7 +781,7 @@ export class ChatService {
       "projectId": this.PROJECT_ID,
       "widgetVer": "v.5.0.71.3",
       "payload": [],
-      "userFullname": user?.userFullName,
+      "userFullname": userFullName,
       "requester_id": chatToken,
       "lang": "en",
       "tempUID": this.uuidv4(),
@@ -779,7 +789,7 @@ export class ChatService {
     }
   };
 
-  sendMessage(message: string, recipient: string, payloads?: any) {
+  sendMessage(message: string, recipient: string, payloads?: any, notification?: any,isFromPushNotification: boolean = false) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic;
     if (recipient) {
@@ -793,7 +803,7 @@ export class ChatService {
       type: "text",
       recipient_fullname: 'Bot',
       sender_fullname: this.userFullName,
-      attributes: this.getMessageAttributes(payloads),
+      attributes: this.getMessageAttributes(payloads,notification,isFromPushNotification),
       metadata: "",
       channel_type: "group"
     };
@@ -807,10 +817,10 @@ export class ChatService {
   }
 
   closeWebSocket() {
-    // this.stopPingInterval();
-    // if (this.connectionCheckInterval) {
-    //   clearInterval(this.connectionCheckInterval);
-    // }
+    this.stopPingInterval();
+    if (this.connectionCheckInterval) {
+      clearInterval(this.connectionCheckInterval);
+    }
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }

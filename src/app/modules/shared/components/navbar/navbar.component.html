@@ -83,3 +83,12 @@
 <div *ngIf="floatingWidgetShow">
     <app-floating-widget (widgetClosed)="handleWidgetClosed()"></app-floating-widget>
 </div>
+
+<app-user-chat *ngIf="userDetails" 
+  [username]="userDetails.userFullName" 
+  [requestId]="userDetails.request_id" 
+  [serviceType]="userDetails.departmentName"
+  [image]="userDetails.image" 
+  [showCloseIcon]="true"  
+  (closeChatClicked)="closeChat()">
+</app-user-chat>    

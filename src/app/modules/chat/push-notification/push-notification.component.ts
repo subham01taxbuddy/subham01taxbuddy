@@ -43,16 +43,19 @@ export class PushNotificationComponent {
     image: notification.attributes.userFullname[0],
     departmentName: notification.attributes.departmentName
    };
+   this.chatService.closeFloatingWidget();
 
-   this.dialogRef.close();
+
+   this.dialogRef.close(user);
 
  
-   setTimeout(() => {
-    this.chatService.openUserChat(user);
-    this.chatService.fetchMessages(user.request_id)
-    this.chatService.initRxjsWebsocket(user.request_id);
-    this.removeNotification(notification);
-  }, 0);
+  //  setTimeout(() => {
+  //   localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
+  //   this.chatService.openChatInNavbar(user);
+  //   this.chatService.fetchMessages(user.request_id)
+  //   this.chatService.initRxjsWebsocket(user.request_id);
+  //   this.removeNotification(notification);
+  // }, 0);
     
   }
 
@@ -90,7 +93,7 @@ export class PushNotificationComponent {
       
       const message = notification.messageSent.trim();
       if (message) {
-        this.chatManager.sendMessage(message, notification.recipient);
+        this.chatManager.sendMessage(message, notification.recipient,'',notification,true);
         this.removeNotification(notification);
         notification.messageSent = ''; // Clear the input field after sending
       }

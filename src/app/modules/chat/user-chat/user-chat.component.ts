@@ -278,7 +278,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         let userPresenceTopic = userOnlineOfflineData.presence;
         this.userCurrentStatus = userPresenceTopic.status;
         let lastSeenInMs = moment(userPresenceTopic.changedAt).valueOf();
-        this.userLastSeen = moment(lastSeenInMs).local().format("MM/DD/YYYY hh:mm:ss A");
+        this.userLastSeen = moment(lastSeenInMs).local().format("DD/MMM/YYYY hh:mm:ss A");
         this.cd.detectChanges();
       }
     });

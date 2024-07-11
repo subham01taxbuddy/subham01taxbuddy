@@ -17,15 +17,14 @@ interface Department {
     styleUrls: ['./floating-widget.component.scss'],
     animations: [widgetVisibility],
 })
-export class FloatingWidgetComponent implements OnInit, OnDestroy {
+export class FloatingWidgetComponent implements OnInit {
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
     centralizedChatDetails: any;
 
     @Output() widgetClosed = new EventEmitter<void>();
 
-    private subscription: Subscription;
-
+ 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService
     ) {
@@ -33,9 +32,7 @@ export class FloatingWidgetComponent implements OnInit, OnDestroy {
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
-        this.subscription = this.chatService.openChat$.subscribe(user => {
-            this.openUserChat(user);
-        });
+        
     }
 
 
@@ -62,7 +59,7 @@ export class FloatingWidgetComponent implements OnInit, OnDestroy {
     openUserChat(user: any) {
         if (this.isUserChatVisible) {
             this.chatService.unsubscribeRxjsWebsocket();
-          }
+           }
       
         this.selectedUser = user;
         this.isUserChatVisible = true;
@@ -172,11 +169,7 @@ export class FloatingWidgetComponent implements OnInit, OnDestroy {
 
     }
 
-    ngOnDestroy(): void {
-        if(this.subscription){
-            this.subscription.unsubscribe();
-        }
-    }
+   
 
     onScrollDown() {
         if (!this.fullChatScreen) {

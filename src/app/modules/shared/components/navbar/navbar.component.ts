@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, NgModule, Renderer2 } from '@angular/core';
+import { Component, DoCheck, ElementRef, HostListener, NgModule, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -29,7 +29,7 @@ export interface DialogData {
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass', './navbar.component.scss']
 })
-export class NavbarComponent implements DoCheck {
+export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
 
   sidebar_open: boolean = false;
   menu_btn_rotate: boolean = false;
@@ -56,6 +56,9 @@ export class NavbarComponent implements DoCheck {
   disposable: any;
   loggedInUserInfo: any;
   roles: any;
+  userDetails: any;
+  private chatSubscription: Subscription;
+
   private dialogRef: any = null;
 
 
@@ -108,6 +111,24 @@ export class NavbarComponent implements DoCheck {
 
   }
 
+  ngOnInit(): void {
+    // this.chatSubscription = this.chatService.messageObservable.subscribe(data => {
+    //   this.handleNewNotification(data);
+    // });
+
+     this.chatService.closeFloatingWidgetObservable.subscribe(() => {
+      this.floatingWidgetShow = false;
+    });
+   
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    } 
+  }
+
 
   handleNewNotification(data: any) {
     if (this.dialogRef) {
@@ -117,8 +138,16 @@ export class NavbarComponent implements DoCheck {
         panelClass: 'notification',
         data: data,
       });
-      this.dialogRef.afterClosed().subscribe(() => {
+      this.dialogRef.afterClosed().subscribe((result) => {
         this.dialogRef = null;
+        if(result?.request_id){
+          this.userDetails = result
+          localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.userDetails));
+          this.chatService.unsubscribeRxjsWebsocket();
+          this.chatService.fetchMessages(this.userDetails.request_id);
+          this.chatService.initRxjsWebsocket(this.userDetails.request_id);
+          this.floatingWidgetShow = false;
+        }
       });
     }
   }
@@ -358,6 +387,11 @@ export class NavbarComponent implements DoCheck {
 
   handleWidgetClosed(){
     this.floatingWidgetShow = false;
+  }
+
+  closeChat(){
+    this.userDetails = null;
+    this.chatManager.closeChat();
   }
 
 }
