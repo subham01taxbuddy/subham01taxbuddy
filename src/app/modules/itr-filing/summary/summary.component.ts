@@ -7436,9 +7436,15 @@ export class SummaryComponent implements OnInit {
                 } else {
                   let errors = '';
                   if (res.errors instanceof Array && res.errors.length > 0) {
-                    errors = res.errors.map((error) => error.code).join(', ');
-                    console.log(errors, 'errors');
-                    this.utilsService.showSnackBar(res.errors[0].desc ? res.errors[0].desc : errors);
+                    let error = res.errors[0];
+                    if(error.code === 'EF20006'){
+                      this.isValidateJson = true;
+                      resolve();
+                    } else {
+                      errors = res.errors.map((error) => error.code).join(', ');
+                      console.log(errors, 'errors');
+                      this.utilsService.showSnackBar(res.errors[0].desc ? res.errors[0].desc : errors);
+                    }
                   } else if (res.messages instanceof Array && res.messages.length > 0) {
                     errors = res.messages.map((error) => error.desc).join(', ');
                     console.log(errors, 'errors');
