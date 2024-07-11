@@ -42,3 +42,11 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 12.once analysis is completed you can check it in dashboard
 
 13.Reference links - https://www.youtube.com/watch?v=3dLVHViflys ,https://docs.sonarqube.org/latest/try-out-sonarqube/  ,
+
+14.https://www.youtube.com/watch?v=P80w8c-BFCM
+
+
+To view the report on server side we can run the below command in terminal after completing the local setup
+using the local setup path and keys in the sonar-project-properties file
+
+C:\Users\Lenovo\Downloads\sonar-scanner-cli-6.0.0.4432-windows\sonar-scanner-6.0.0.4432-windows\bin\sonar-scanner.bat -D"sonar.projectKey=Taxbuddy-Web" -D"sonar.sources=." -D"sonar.host.url=http://qc.taxbuddy.com" -D"sonar.login=admin" -D"sonar.password=gP=9Y5uU37fu"
