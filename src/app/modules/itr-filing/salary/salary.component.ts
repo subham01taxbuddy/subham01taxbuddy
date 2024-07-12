@@ -1785,7 +1785,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     for (let i = 0; i < salaryDetails.controls.length; i++) {
       let salary = salaryDetails.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)) {
-        if (salary.controls['salaryType'].value === 'SEC17_1') {
+        if (salary.controls['salaryType'].value === 'SEC17_1' || salary.controls['salaryType'].value === 'SEC17_2'
+        || salary.controls['salaryType'].value === 'SEC17_3') {
           this.grossSalary = salary.controls['salaryValue'].value;
           break;
         }
