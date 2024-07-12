@@ -930,41 +930,40 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const ltaControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'LTA';
           });
-          if(this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-              this.ITR_JSON.employerCategory !== 'GOVERNMENT'){
-            let LTAVal = formValues?.salary?.filter(item => item.salaryType === 'LTA')[0];
-            const LTA = LTAVal ? parseFloat(LTAVal?.taxableAmount) : 0;
-            this.setValidator('LTA', Validators.max(LTA));
 
-            if (ltaControl?.get('allowValue')?.errors &&
-                ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
-            } else {
-              this.removeValidator('LTA', Validators.max(LTA));
-            }
+          let LTAVal = formValues?.salary?.filter(item => item.salaryType === 'LTA')[0];
+          const LTA = LTAVal ? parseFloat(LTAVal?.taxableAmount) : 0;
+          this.setValidator('LTA', Validators.max(LTA));
+
+          if (ltaControl?.get('allowValue')?.errors &&
+              ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
+          } else {
+            this.removeValidator('LTA', Validators.max(LTA));
           }
         }
+
 
         // gratuity received
         {
           const gratuityControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'GRATUITY';
           });
-          if(this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-              this.ITR_JSON.employerCategory !== 'GOVERNMENT'){
-            let gratVal = formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0];
-            const gratuity = gratVal ? parseFloat(gratVal?.taxableAmount) : 0;
-            const fixedLimit = 2000000;
 
-            let lowerOf = Math.min(gratuity, fixedLimit);
+          let gratVal = formValues?.salary?.filter(item => item.salaryType === 'GRATUITY')[0];
+          const gratuity = gratVal ? parseFloat(gratVal?.taxableAmount) : 0;
+          const fixedLimit = 2000000;
 
-            this.setValidator('GRATUITY', Validators.max(lowerOf));
+          let lowerOf = (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+              this.ITR_JSON.employerCategory !== 'GOVERNMENT') ? gratuity : Math.min(gratuity, fixedLimit);
 
-            if (gratuityControl?.get('allowValue')?.errors &&
-                gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
-            } else {
-              this.removeValidator('GRATUITY', Validators.max(lowerOf));
-            }
+          this.setValidator('GRATUITY', Validators.max(lowerOf));
+
+          if (gratuityControl?.get('allowValue')?.errors &&
+              gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')) {
+          } else {
+            this.removeValidator('GRATUITY', Validators.max(lowerOf));
           }
+
         }
 
         // commuted pension 10(10A)
@@ -992,7 +991,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncash = leaveVal ? parseFloat(leaveVal?.taxableAmount) : 0;
           const fixedLimit = 2500000;
 
-          let lowerOf = Math.min(leaveEncash, fixedLimit);
+          let lowerOf = (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+              this.ITR_JSON.employerCategory !== 'GOVERNMENT') ? leaveEncash : Math.min(leaveEncash, fixedLimit);
 
           // lower of 25 lakhs only applicable for non government employees
           if (
