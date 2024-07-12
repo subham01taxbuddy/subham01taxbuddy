@@ -124,7 +124,7 @@ export class ChatService {
   }
   async initTokens(initializeSocket: boolean, service?: string) {
 
-    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? true : false;
+    let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
       tokenRequired: tokenPresent
     };
@@ -163,15 +163,15 @@ export class ChatService {
                 this.userId = chat21Result.data.userid;
                 this.fetchConversationList(0, chat21Result.data.userid);
                 this.getCannedMessageList();
-                if (initializeSocket) {
-                  this.websocketConnection(chat21Result.data.token, '');
-                }
               }
             });
           } else {
             let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
             this.initChatVariables(result.requestId);
             this.fetchConversationList(0, chat21Result.userid);
+            if (initializeSocket) {
+              this.websocketConnection(chat21Result.token, '');
+            }
           }
         }
       });
@@ -430,24 +430,7 @@ export class ChatService {
   callbackHandlers = new Map();
 
   chatSubscription = null;
-  pingInterval: any;
-  connectionCheckInterval: any;
 
-
-
-  startPingInterval() {
-    this.pingInterval = setInterval(() => {
-      if (this.chatClient && this.chatClient.connected) {
-        this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
-      }
-    }, 10000);
-  }
-
-  stopPingInterval() {
-    if (this.pingInterval) {
-      clearInterval(this.pingInterval);
-    }
-  }
   websocketConnection(chat21Token, requestId) {
 
     this.initChatVariables(requestId);
@@ -670,8 +653,7 @@ export class ChatService {
             });
           }
         }
-        // this.startPingInterval();
-
+ 
       }
     );
     this.chatClient.on("reconnect",
@@ -679,7 +661,7 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        this.startPingInterval();
+        // this.startPingInterval();
 
 
       }
@@ -817,10 +799,6 @@ export class ChatService {
   }
 
   closeWebSocket() {
-    this.stopPingInterval();
-    if (this.connectionCheckInterval) {
-      clearInterval(this.connectionCheckInterval);
-    }
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
