@@ -13,6 +13,7 @@ export const environment = {
 	environment: 'UAT',
 	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",
 	admin_id: 3000,
+	allowReassignToPreviousLeader: [3000,14140],
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "qa",

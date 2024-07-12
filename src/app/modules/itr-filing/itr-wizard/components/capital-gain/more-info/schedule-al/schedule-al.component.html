@@ -56,6 +56,13 @@
                         <div *ngFor="let item of immovableAssetArray.controls | slice:0:activeIndex+1;
                           let i=index" [formGroupName]="activeIndex">
                           <div *ngIf="activeIndex === i">
+                            <div class="div-6" *ngIf="activeIndex === 0">
+                              <input type="checkbox"
+                                class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                color="primary" [ngModelOptions]="{ standalone: true }"
+                                (change)="toggleAddress(immovableAssetArray.controls[activeIndex])"
+                                [(ngModel)]="usePersonalAddress" /><span class="span">Use same address as profile</span>
+                            </div>
                             <div class="asset-container">
                               <div class="div-6">
                                 <div class="form-field">

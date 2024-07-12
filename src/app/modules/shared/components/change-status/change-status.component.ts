@@ -34,7 +34,7 @@ export class ChangeStatusComponent implements OnInit {
       this.hideUndoButton = false;
     }
     this.changeStatus = this.fb.group({
-      selectStatus: [this.data.userInfo.statusId || null],
+      selectStatus: [this.data?.userInfo?.statusId || null],
       callerAgentUserId: [''],
     });
 
@@ -53,15 +53,6 @@ export class ChangeStatusComponent implements OnInit {
       ]);
       this.changeStatus.controls['selectStatus'].updateValueAndValidity();
       this.changeStatus.controls['callerAgentUserId'].updateValueAndValidity();
-
-      // console.log('this.data.userInfo statusId : ', this.data.userInfo.statusId, this.data.userInfo.statusId === "Open");
-      // if (this.data.userInfo.statusId === "Open") {
-      //   this.data.userInfo.statusId = 18;
-      // }
-      // else if (this.data.userInfo.statusId === "Interested") {
-      //   this.data.userInfo.statusId = 16;
-      // }
-
       this.getCallers();
     }
 

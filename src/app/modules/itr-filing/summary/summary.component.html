@@ -315,8 +315,9 @@
               </button>-->
 
         <app-custom-button class="btn grBut"
-        [disabled]="!(ITR_JSON.itrSummaryJson !== null || finalCalculations?.totalIncome < 20000000)" [actions]="[downloadPDF]">
-         Download PDF
+          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [actions]="[downloadPDF]">
+          Download PDF
         </app-custom-button>
 
 
@@ -324,10 +325,10 @@
         [disabled]="!(ITR_JSON.itrSummaryJson !== null || finalCalculations?.totalIncome < 20000000)">
           Send PDF to Kommunicate
         </button>-->
-
-        <app-custom-button class="btn kommBut" [disabled]="!(ITR_JSON.itrSummaryJson !== null || finalCalculations?.totalIncome < 20000000)" [actions]="[sendPdf]"
-        [actionParams]="[['both']]">
-         Send PDF to Kommunicate
+        <app-custom-button class="btn kommBut"
+          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [actions]="[sendPdf]" [actionParams]="[['both']]">
+          Send PDF to Kommunicate
         </app-custom-button>
 
         <!--<button type="button" class="btn whatsAppBut" (click)="sendPdf('whatsapp')"
@@ -335,8 +336,9 @@
           Send PDF to WhatsApp
         </button>-->
 
-        <app-custom-button class="btn whatsAppBut" [disabled]="!(ITR_JSON.itrSummaryJson !== null || finalCalculations?.totalIncome < 20000000)" [actions]="[sendPdf]"
-        [actionParams]="[['whatsapp']]">
+        <app-custom-button class="btn whatsAppBut"
+          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [actions]="[sendPdf]" [actionParams]="[['whatsapp']]">
           Send PDF to WhatsApp
         </app-custom-button>
 
@@ -351,7 +353,7 @@
         </button>-->
 
         <app-custom-button *ngIf="finalCalculations?.personalInfo?.returnType !== 'Updated Return u/s 139(8A)'"
-         class="btn grBut" style="background-color: orange" [actions]="[validateITR]">
+          class="btn grBut" style="background-color: orange" [actions]="[validateITR]">
           Validate ITR
         </app-custom-button>
 
@@ -8950,7 +8952,9 @@
               [disabled]="!isValidateJson">
               File ITR
             </button>
-            <button type="button" (click)="downloadPDF()" class="btn grBut">
+            <button type="button"
+              [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+              (click)="downloadPDF()" class="btn grBut">
               Download PDF
             </button>
           </div>

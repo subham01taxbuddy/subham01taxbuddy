@@ -54,7 +54,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    itrObjectStatus:null,
+    itrObjectStatus: null,
   };
   agentId = null;
   loggedInUserRoles: any;
@@ -83,7 +83,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'ITRU',
     },
   ]
-  fillingStatus=[
+  fillingStatus = [
     {
       label: 'Yet to Start',
       value: 'CREATE',
@@ -93,6 +93,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'PREPARING_ITR',
     },
   ];
+  loggedInUserId: any;
+  showReassignButton: boolean = false;
 
   chatBuddyDetails: any;
 
@@ -115,7 +117,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    if (environment.allowReassignToPreviousLeader.includes(this.loggedInUserId)) {
+      this.showReassignButton = true;
+    }
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -123,7 +129,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
       },
       onGridReady: params => {
       },
@@ -226,7 +232,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
+  async requestCompleted(res: any, self: ItrAssignedUsersComponent) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
@@ -544,19 +550,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     console.log(itrStatus);
     var statusSequence = 0;
 
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
-        hide: !this.showReassignmentBtn.length,
+        hide: !(this.showReassignButton || this.showReassignmentBtn.length),
         pinned: 'left',
-        lockPosition:true,
+        lockPosition: true,
         suppressMovable: true,
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
+          return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
         },
         cellStyle: function (params: any) {
           return {
@@ -1037,6 +1043,31 @@ export class ItrAssignedUsersComponent implements OnInit {
     return columnDefs;
   }
 
+  reassign() {
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
+      return;
+    }
+    if (selectedRows.length > 1) {
+      this.utilsService.showSnackBar('Please select only one entry from table to Re-Assign');
+      return;
+    }
+
+    let userId = selectedRows.map(row => row.userId);
+    const param = '/lanretni/filer-assignment/' + userId[0];
+    this.itrMsService.putMethod(param, '').subscribe((result: any) => {
+      if (result?.success) {
+        this.search();
+      } else {
+        this.utilsService.showSnackBar(result.message);
+
+      }
+    }, (error: any) => {
+      this.utilsService.showSnackBar(error.message);
+    });
+  }
+
   reassignmentForLeader() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -1329,7 +1360,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if(data.everified === false){
+        if (data.everified === false) {
           this.utilsService.showSnackBar(
             'Please complete e-verification before starting with revised return'
           );
@@ -1608,7 +1639,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-    this.searchParam.itrObjectStatus=null;
+    this.searchParam.itrObjectStatus = null;
     this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
@@ -1626,7 +1657,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  search= (form?, isAgent?, pageChange?): Promise<any> =>{
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1701,36 +1732,36 @@ export class ItrAssignedUsersComponent implements OnInit {
       param = param + '&assigned=false'
     }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+      if (result.success == false) {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data['content']);
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(result.data['content']);
+      }
+      this.loading = false;
 
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-
-      }).catch(() =>{
-        this.loading = false;
-        this.config.totalItems = 0;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      });
+    }).catch(() => {
+      this.loading = false;
+      this.config.totalItems = 0;
+      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+    });
   }
 
   closeChat() {

@@ -136,7 +136,8 @@
                   style="width: 100%; height: 93vh;"
                   ></pdf-viewer> -->
                  <ngx-extended-pdf-viewer *ngIf="docType === 'pdf'" [src]="docUrl" useBrowserLocale="false" height="85vh" [enableDragAndDrop]="false"
-                                          [showUnverifiedSignatures]="false" [showToolbar]="false"></ngx-extended-pdf-viewer>
+                                          [showUnverifiedSignatures]="false" [showToolbar]="false" [handTool]="false"
+                                          [showHandToolButton]="true"></ngx-extended-pdf-viewer>
                 </div>
 
             </div>

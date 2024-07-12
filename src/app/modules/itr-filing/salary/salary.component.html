@@ -348,11 +348,11 @@
                               </div>
                             </div>
                           </div>
-                          <div class="offset-3 col-5 mb-3" *ngIf="income.value.allowType === 'ANY_OTHER'">
+                          <div class="offset-3 col-5 mb-3" [style.display]="income.value.allowType === 'ANY_OTHER'? 'block':'none'">
                             <mat-form-field appearance="outline">
                               <input type="text" trim matInput placeholder="description" name="description[i]"
-                                formControlName="description" maxlength="200" [required]="
-                                income.value.allowType === 'ANY_OTHER' && income.value.allowValue > 0" />
+                                formControlName="description" maxlength="50"
+                                [required]="income.value.allowType === 'ANY_OTHER' && income.value.allowValue > 0" />
                             </mat-form-field>
                             <mat-error *ngIf="income['controls']['description'].hasError('required')">
                               Please enter the description

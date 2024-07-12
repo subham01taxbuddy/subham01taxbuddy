@@ -12,6 +12,7 @@ export const environment = {
 	isValidItr: true,
 	environment: 'PROD',
 	admin_id: 1067,
+	allowReassignToPreviousLeader: [1067,1040256],
 	webportal_url: 'https://itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "prod",
