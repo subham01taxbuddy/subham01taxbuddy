@@ -11,6 +11,11 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -66,6 +71,9 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private cacheManager: CacheManager,
+    private dialog: MatDialog,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -232,6 +240,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
         clientNumber: fillingData[i].clientNumber,
         invoiceStatus: fillingData[i].invoiceStatus,
         currentStatus: fillingData[i].currentStatus,
+        userId:fillingData[i].userId,
       })
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -295,21 +304,113 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'open chat ',
-        field: '',
+        headerName: 'Chat',
+        editable: false,
+        suppressMenu: true,
         sortable: true,
-        pinned:'right',
-        width: 130,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Open Chat"
+            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
+              <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
+             </button>`;
+        },
+        width: 130,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
 
     ]
+  }
+
+  onUsersRowClicked(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'open-chat': {
+          this.openChat(params.data);
+          break;
+        }
+      }
+    }
+  }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
+  openChat(client) {
+    let disposable = this.dialog.open(ChatOptionsDialogComponent, {
+      width: '40%',
+      height: 'auto',
+      data: {
+        userId: client.userId,
+        clientName: client.clientName,
+        serviceType: client.serviceType || 'ITR'
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
+    });
+
+  }
+
+  async downloadReport() {
+    this.loading = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
+
+    let param = ''
+    let userFilter = '';
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    param = `/bo/calling-report/missed-chat-list?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+
+    let fieldName = [
+      { key: 'clientName', value: 'client Name' },
+      { key: 'clientNumber', value: 'client Number' },
+      { key: 'invoiceStatus', value: 'Invoice Status' },
+      { key: 'currentStatus', value: 'Current Status' },
+      { key: 'serviceType', value: 'Service Type' },
+      { key: 'filerName', value: 'Filer Name' },
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-list', fieldName, {});
+    this.loading = false;
+    this.showCsvMessage = false;
+
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
