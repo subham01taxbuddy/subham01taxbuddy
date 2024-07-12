@@ -212,6 +212,9 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
+        if(response?.data?.content.length === 0){
+          this._toastMessageService.alert("error", 'Data Not Found');
+        }
         this.missedChatList = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.missedChatListGridOptions.api?.setRowData(this.createRowData(this.missedChatList));
@@ -248,6 +251,13 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     return fillingRepoInfoArray;
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   reportsCodeColumnDef() {
     return [
       {
@@ -275,7 +285,20 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: (params) => {
+          const mobileNumber = params.value;
+          if (mobileNumber) {
+            if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            } else {
+              return mobileNumber;
+            }
+          } else {
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Invoice Status',
