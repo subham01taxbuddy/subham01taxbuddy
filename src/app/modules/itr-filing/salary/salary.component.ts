@@ -953,8 +953,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const gratuity = gratVal ? parseFloat(gratVal?.taxableAmount) : 0;
           const fixedLimit = 2000000;
 
-          let lowerOf = (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-              this.ITR_JSON.employerCategory !== 'GOVERNMENT') ? gratuity : Math.min(gratuity, fixedLimit);
+          let lowerOf = (this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+              this.ITR_JSON.employerCategory === 'GOVERNMENT') ? gratuity : Math.min(gratuity, fixedLimit);
 
           this.setValidator('GRATUITY', Validators.max(lowerOf));
 
@@ -991,8 +991,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncash = leaveVal ? parseFloat(leaveVal?.taxableAmount) : 0;
           const fixedLimit = 2500000;
 
-          let lowerOf = (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-              this.ITR_JSON.employerCategory !== 'GOVERNMENT') ? leaveEncash : Math.min(leaveEncash, fixedLimit);
+          let lowerOf = (this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+              this.ITR_JSON.employerCategory === 'GOVERNMENT') ? leaveEncash : Math.min(leaveEncash, fixedLimit);
 
           // lower of 25 lakhs only applicable for non government employees
           if (
