@@ -991,6 +991,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           const leaveEncash = leaveVal ? parseFloat(leaveVal?.taxableAmount) : 0;
           const fixedLimit = 2500000;
 
+
           let lowerOf = (this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
               this.ITR_JSON.employerCategory === 'GOVERNMENT') ? leaveEncash : Math.min(leaveEncash, fixedLimit);
 
