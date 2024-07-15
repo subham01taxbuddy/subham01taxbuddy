@@ -1,5 +1,5 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe, formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -77,6 +77,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     private router: Router,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -228,6 +229,8 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
         serviceType :fillingData[i].serviceType,
+        delayedTime:fillingData[i].delayedTime,
+        aisProvidedDate:fillingData[i].aisProvidedDate,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -327,6 +330,36 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
+      },
+      {
+        headerName: 'Delayed Time',
+        field: 'delayedTime',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return data.value ? data.value : '-';
+        }
+      },
+      {
+        headerName: 'AIS Provided Date',
+        field: 'aisProvidedDate',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return data.value ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : '-';
+        }
       },
       {
         headerName: 'Leader Name',
@@ -476,6 +509,8 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       { key: 'customerNumber', value: 'Customer Number' },
       { key: 'panNumber', value: 'Pan Number' },
       { key: 'statusName', value: 'Status' },
+      { key: 'delayedTime', value: 'Delayed Time' },
+      { key: 'aisProvidedDate', value: 'AIS Provided Date' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'filerName', value: 'Filer Name' },
       { key: 'conversationId', value:'kommunicate chat Link'},
