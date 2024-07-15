@@ -131,10 +131,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       hasParentOverSixty: [this.Copy_ITR_JSON.systemFlags?.hasParentOverSixty],
       form10IADate: [null,],
       form10IAAcknowledgement: [null,],
-      udidNumber: [null,],
+      udidNumber: [null,Validators.pattern(AppConstants.charAndNoRegex)],
       form10IADate80dd: [null,],
       form10IAAcknowledgement80dd: [null,],
-      udidNumber80dd: [null,],
+      udidNumber80dd: [null, Validators.pattern(AppConstants.charAndNoRegex)],
       typeOfDependent: [null,],
       dependentPan: [null, [Validators.pattern(AppConstants.panNumberRegex)]],
       dependentAadhar: [null, [Validators.minLength(12), Validators.maxLength(12)]]
