@@ -319,7 +319,7 @@ export class CustomerProfileComponent implements OnInit {
       this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
       this.ITR_JSON.family instanceof Array
     ) {
-      this.ITR_JSON.family.filter((item: any) => {
+      this.ITR_JSON.family.forEach((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           this.customerProfileForm.patchValue({
             firstName: item.fName,
