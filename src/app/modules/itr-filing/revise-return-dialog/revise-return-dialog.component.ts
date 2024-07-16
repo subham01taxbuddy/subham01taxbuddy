@@ -107,7 +107,7 @@ export class ReviseReturnDialogComponent implements OnInit {
     const copy = {
       userId: this.data['userId'],
       itrId: this.data['lastFiledItrId'],
-      assessmentYear: currentFyDetails[0].assessmentYear
+      assessmentYear: this.data.assessmentYear
     };
 
     this.itrMsService.postMethod(param, copy).subscribe(
