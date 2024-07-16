@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { widgetVisibility } from './animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -24,7 +24,7 @@ export class FloatingWidgetComponent implements OnInit {
 
     @Output() widgetClosed = new EventEmitter<void>();
 
- 
+
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService
     ) {
@@ -32,7 +32,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
-        
+
     }
 
 
@@ -59,8 +59,8 @@ export class FloatingWidgetComponent implements OnInit {
     openUserChat(user: any) {
         if (this.isUserChatVisible) {
             this.chatService.unsubscribeRxjsWebsocket();
-           }
-      
+        }
+
         this.selectedUser = user;
         this.isUserChatVisible = true;
         this.showWidget = false;
@@ -169,7 +169,7 @@ export class FloatingWidgetComponent implements OnInit {
 
     }
 
-   
+
 
     onScrollDown() {
         if (!this.fullChatScreen) {

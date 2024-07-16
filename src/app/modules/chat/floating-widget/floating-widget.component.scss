@@ -34,6 +34,8 @@
 .options {
     overflow-x: auto;
     white-space: nowrap;
+    display: flex;
+    padding: 10px;
 }
 
 .options::-webkit-scrollbar {
@@ -49,12 +51,6 @@
 .glyphicon-remove {
     margin-right: 0;
     cursor: pointer;
-}
-
-.options {
-    display: flex;
-    // justify-content: space-around;
-    padding: 10px;
 }
 
 .option-box {

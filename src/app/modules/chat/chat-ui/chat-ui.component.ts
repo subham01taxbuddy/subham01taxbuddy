@@ -6,7 +6,7 @@ import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
- 
+
 interface Department {
     name: string,
     id: any
@@ -82,7 +82,6 @@ export class ChatUIComponent implements OnInit {
 
     closeUserChat() {
         this.page = 0;
-        // this.isUserChatVisible = false;
         this.showWidget = true;
     }
 
@@ -114,26 +113,24 @@ export class ChatUIComponent implements OnInit {
 
     displaySystemMessage(message: any): boolean {
         if (message?.attributes?.subtype === 'info' || message?.attributes?.subtype === 'info/support') {
-          if (!message?.attributes?.showOnUI) {
-            return false;
-          }
-          if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
-            return true;
-          }
+            if (!message?.attributes?.showOnUI) {
+                return false;
+            }
+            if (message?.attributes?.showOnUI === 'BO' || message?.attributes?.showOnUI === 'BOTH') {
+                return true;
+            }
         }
         return true;
-      }
+    }
 
     ngOnInit(): void {
-        // this.chatManager.getDepartmentList();
-        // this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
-            if(this.displaySystemMessage(newMessage)){
-            this.chatService.updateConversationList(newMessage,this.conversationList,this.selectedDepartmentId);
+            if (this.displaySystemMessage(newMessage)) {
+                this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
             }
-          });
-          const data = this.localStorage.getItem('SELECTED_CHAT',true);
-          if(data){
+        });
+        const data = this.localStorage.getItem('SELECTED_CHAT', true);
+        if (data) {
             this.openUserChat(data);
 
         }
@@ -144,10 +141,6 @@ export class ChatUIComponent implements OnInit {
     }
 
     fetchList(departmentId: any) {
-        // const selectedDepartment = this.departmentNames.find(dept => dept.id === departmentId);
-        // if(selectedDepartment){
-        //     console.log('selected dept',selectedDepartment.name, selectedDepartment.id)
-        // }
         this.selectedDepartmentId = departmentId;
         if (departmentId) {
             this.chatManager.conversationList(this.page, departmentId);
@@ -220,4 +213,4 @@ export class ChatUIComponent implements OnInit {
     }
 
 
- }
+}

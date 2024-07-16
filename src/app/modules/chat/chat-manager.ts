@@ -67,7 +67,7 @@ export class ChatManager {
   }
 
   async initChat(initializeSocket: boolean, serviceType?: string) {
-    await this.chatService.getCentralizedChatApiDetails();
+    this.chatService.getCentralizedChatApiDetails();
     await this.chatService.initTokens(initializeSocket, serviceType);
     this.registerCallbacks();
     this.chatService.initDeptDetails(serviceType);

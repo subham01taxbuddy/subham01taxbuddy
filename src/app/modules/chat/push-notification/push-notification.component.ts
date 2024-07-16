@@ -25,56 +25,41 @@ export class PushNotificationComponent {
   ) { }
 
   ngOnInit() {
-    console.log('data is ',this.data)
+    console.log('data is ', this.data)
     this.addNotification(this.data)
-    // setTimeout(() => {
-    //   this.dialogRef.close();
-    // }, 60000);
   }
 
-  openChat(notification: any, event: Event){
+  openChat(notification: any, event: Event) {
     if (event.target instanceof HTMLInputElement || event.target instanceof HTMLButtonElement) {
-      return;  
+      return;
     }
-   const user = {
-    request_id: notification.recipient,
-    departmentId: notification.attributes.departmentId,
-    userFullName: notification.attributes.userFullname,
-    image: notification.attributes.userFullname[0],
-    departmentName: notification.attributes.departmentName
-   };
-   this.chatService.closeFloatingWidget();
-
-
-   this.dialogRef.close(user);
-
- 
-  //  setTimeout(() => {
-  //   localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
-  //   this.chatService.openChatInNavbar(user);
-  //   this.chatService.fetchMessages(user.request_id)
-  //   this.chatService.initRxjsWebsocket(user.request_id);
-  //   this.removeNotification(notification);
-  // }, 0);
-    
+    const user = {
+      request_id: notification.recipient,
+      departmentId: notification.attributes.departmentId,
+      userFullName: notification.attributes.userFullname,
+      image: notification.attributes.userFullname[0],
+      departmentName: notification.attributes.departmentName
+    };
+    this.chatService.closeFloatingWidget();
+    this.dialogRef.close(user);
   }
 
 
-  addNotification(notification: any){
+  addNotification(notification: any) {
     const existingIndex = this.notifications.findIndex(n => n.sender === notification.sender);
-    if(existingIndex != -1){
-      this.notifications.splice(existingIndex,1);
+    if (existingIndex != -1) {
+      this.notifications.splice(existingIndex, 1);
     }
     this.notifications.unshift({ ...notification, messageSent: '' });
 
-    if(this.notifications.length > this.maxNotifications){
+    if (this.notifications.length > this.maxNotifications) {
       this.notifications.pop();
     }
 
     setTimeout(() => {
-     this.removeNotification(notification);
-     console.log('remove card')
-    },60000)
+      this.removeNotification(notification);
+      console.log('remove card')
+    }, 60000)
   }
 
   removeNotification(notification: any) {
@@ -87,20 +72,20 @@ export class PushNotificationComponent {
       }
     }
   }
-    sendMessage(notification: any,event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-      
-      const message = notification.messageSent.trim();
-      if (message) {
-        this.chatManager.sendMessage(message, notification.recipient,'',notification,true);
-        this.removeNotification(notification);
-        notification.messageSent = ''; // Clear the input field after sending
-      }
+  sendMessage(notification: any, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const message = notification.messageSent.trim();
+    if (message) {
+      this.chatManager.sendMessage(message, notification.recipient, '', notification, true);
+      this.removeNotification(notification);
+      notification.messageSent = ''; // Clear the input field after sending
+    }
   }
 
-  closeNotification(notification: any, event: Event){
+  closeNotification(notification: any, event: Event) {
     event.stopPropagation();
-   this.removeNotification(notification);
+    this.removeNotification(notification);
   }
 }

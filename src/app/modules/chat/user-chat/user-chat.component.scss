@@ -196,12 +196,6 @@
   margin-left: 9px;
 }
 
-.additional-details {
-  display: flex;
-  align-items: center;
-  font-size: small;
-}
-
 .experience,
 .fa-star {
   margin-left: 5px;
@@ -519,10 +513,6 @@
   flex-direction: column;
   max-height: 302px;
   overflow-y: auto;
-}
-
-.chat-messages::-webkit-scrollbar {
-  width: 0;
 }
 
 .user-info {

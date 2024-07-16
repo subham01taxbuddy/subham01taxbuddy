@@ -355,35 +355,19 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
 
   getSanitizedHtml(message) {
-    // this.renderer.setProperty(this.myDiv.nativeElement, 'innerHTML', htmlContent);
-
     return this.sanitizer.bypassSecurityTrustHtml(message);
   }
 
-  addMessageEvents(message: any) {
-    var form = this.elementRef.nativeElement.querySelector('.tiledesk-form-container form');
+  addMessageEvents() {
+    let form = this.elementRef.nativeElement.querySelector('.tiledesk-form-container form');
     if (form) {
       form.addEventListener('submit', this.handleFormSubmit);
     }
-    // var button = this.elementRef.nativeElement.querySelector('.tiledesk-btn');
-    // if(button) {
-    //   button.addEventListener('click', ()=>{
-    //     console.log('clicked here');
-    //   });
-    // }
-
     const button = this.elementRef.nativeElement.querySelector('.tiledesk-btn');
     if (button) {
       this.renderer.listen(button, 'click', () => {
-        console.log('Button clicked');
-        // Your button click handling code here
       });
-      console.log('added btn click event');
     }
-    // this.elementRef.nativeElement.querySelectorAll('a').forEach(function(a) {
-    //   a.addEventListener('click', this.handleLinkClick);
-    // });
-
   }
 
   handleBtnClick() {

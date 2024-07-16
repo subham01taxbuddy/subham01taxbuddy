@@ -1,12 +1,5 @@
 <div class="floating-widget" *ngIf="showWidget">
-
-
-    <!-- <app-user-chat *ngIf="selectedUser" [user]="selectedUser" filetype="ITR"></app-user-chat> -->
-
-
-
     <div class="header">
-        <!-- <span class="icon menu-icon">&#9776;</span> -->
         <button (click)="showFullScreen()">
             <i class="fa fa-external-link" aria-hidden="true"></i>
         </button>
@@ -21,12 +14,6 @@
             [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
             (click)="fetchList(deptName.id)">{{deptName.name }}</div>
     </div>
-
-    <!-- <div class="search-bar">
-      <span class="glyphicon glyphicon-search"></span>
-      <input type="text" placeholder="Search messages or users">
-  </div> -->
-
     <div class="user-list" *ngIf="!isUserChatVisible">
         <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="50"
             [infiniteScrollThrottle]="60" (scrolled)="onScrollDown()">
@@ -36,7 +23,6 @@
                         <div class="avatar">
                             <div class="initial">{{conversation.image ? conversation.image:''}}</div>
                         </div>
-                        <!-- <img [src]="conversation.image" alt="User Icon"> -->
                     </div>
                     <div class="col-8">
                         <div class="user-name">{{ conversation.userFullName }}</div>

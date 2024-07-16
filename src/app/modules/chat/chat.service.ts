@@ -2,12 +2,11 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LocalStorageService, SessionStorageService } from "src/app/services/storage.service";
 import { Injectable } from '@angular/core';
 import { ChatEvents } from "./chat-events";
-import { Subject } from "rxjs";
+import { Subject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
 import { webSocket } from 'rxjs/webSocket';
-import { Observable } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
@@ -63,8 +62,8 @@ export class ChatService {
     this.closeFloatingWidgetSubject.next();
   }
 
-  
- 
+
+
 
   lastMessageId: any;
   subject: any;
@@ -79,7 +78,7 @@ export class ChatService {
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
-   
+
 
 
   registerMessageReceived(messageReceivedCallback) {
@@ -414,7 +413,7 @@ export class ChatService {
 
   uuidv4() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
+      let r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
@@ -458,7 +457,7 @@ export class ChatService {
 
     this.chatClient = this.mqtt.connect(this.WEBSOCKET_URL, options);
 
-    this.chatClient.on("connect", // TODO if token is wrong it must reply with an error!
+    this.chatClient.on("connect",
       () => {
         if (this.log) {
           console.log("Chat client connected. this.connected:" + this.connected);
@@ -494,7 +493,6 @@ export class ChatService {
                 if (this.log) {
                   const messageJson = JSON.parse(message.toString())
                   console.log('message received', messageJson);
-                  let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                   this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
                   this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
@@ -579,7 +577,7 @@ export class ChatService {
                         let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                         if (messageJson.recipient === selectedUser?.request_id) {
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                            let messages = this.addMessageToDB(JSON.parse(message.toString()));
+                            this.addMessageToDB(JSON.parse(message.toString()));
                             callback(ChatEvents.MESSAGE_RECEIVED);
                           });
                         }
@@ -587,7 +585,7 @@ export class ChatService {
                     }
                     let update_conversation = true;
 
-                    if (message_json.attributes && message_json.attributes.updateconversation == false) {
+                    if (message_json.attributes && !message_json.attributes.updateconversation) {
                       update_conversation = false;
                     }
                     if (update_conversation && this.onConversationAddedCallbacks) {
@@ -656,7 +654,7 @@ export class ChatService {
             });
           }
         }
- 
+
       }
     );
     this.chatClient.on("reconnect",
@@ -664,9 +662,6 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        // this.startPingInterval();
-
-
       }
     );
     this.chatClient.on("close",
@@ -675,7 +670,6 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client close event");
         }
-        //TODO: here, all previous registered callbacks must be unregistered & cleared to avoid memory leaks
       }
     );
     this.chatClient.on("offline",
@@ -689,7 +683,6 @@ export class ChatService {
       (error) => {
         console.error("Chat client error event", error);
       }
-      //TODO: here, all previous registered callbacks must be unregistered & cleared to avoid memory leaks
     );
   }
 
@@ -719,7 +712,6 @@ export class ChatService {
             this.userOnlineOfflineEvent.next(true);
           }
         }
-        return;
       },
       error: err => console.log('rxjs error ' + err), // Called if at any point WebSocket API signals some kind of error.
       complete: () => console.log('rxjs complete') // Called when connection is closed (for whatever reason).
@@ -735,13 +727,9 @@ export class ChatService {
 
   parseTopic(topic) {
     var topic_parts = topic.split("/");
-    // /apps/tilechat/users/(ME)/messages/RECIPIENT_ID/ACTION
     if (topic_parts.length >= 7) {
-      const app_id = topic_parts[1];
-      const sender_id = topic_parts[3];
       const recipient_id = topic_parts[5];
       const convers_with = recipient_id;
-      const me = sender_id;
       const parsed = {
         "conversWith": convers_with
       }
@@ -750,7 +738,7 @@ export class ChatService {
     return null;
   }
 
-  getMessageAttributes(payload: any,notification?: any,isFromPushNotification: boolean = false) {
+  getMessageAttributes(payload: any, notification?: any, isFromPushNotification: boolean = false) {
     let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
     let user = this.localStorageService.getItem('SELECTED_CHAT', true);
     const departmentId = isFromPushNotification ? notification?.attributes?.departmentId : user?.departmentId;
@@ -774,7 +762,7 @@ export class ChatService {
     }
   };
 
-  sendMessage(message: string, recipient: string, payloads?: any, notification?: any,isFromPushNotification: boolean = false) {
+  sendMessage(message: string, recipient: string, payloads?: any, notification?: any, isFromPushNotification: boolean = false) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic;
     if (recipient) {
@@ -782,13 +770,12 @@ export class ChatService {
     } else {
       dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
     }
-    // console.log("dest_topic:", dest_topic)
     let outgoing_message = {
       text: message,
       type: "text",
       recipient_fullname: 'Bot',
       sender_fullname: this.userFullName,
-      attributes: this.getMessageAttributes(payloads,notification,isFromPushNotification),
+      attributes: this.getMessageAttributes(payloads, notification, isFromPushNotification),
       metadata: "",
       channel_type: "group"
     };
@@ -818,11 +805,7 @@ export class ChatService {
           this.onGroupUpdatedCallbacks = new Map();
           this.callbackHandlers = new Map();
           this.chatSubscription = null;
-          // this.on_message_handler = null
           this.topicInbox = null;
-          // if (callback) {
-          //   callback();
-          // }
         })
       });
     }
@@ -854,12 +837,9 @@ export class ChatService {
           this.cannedMessageList = result;
           this.localStorageService.setItem("CANNED_MESSAGE_LIST", result, true);
           this.filterCannedMessages();
-        } else {
-          // this.utilsService.showSnackBar(result.message);
         }
       },
         error => {
-          // this.utilsService.showSnackBar('Failed to get the canned message list');
         });
 
     }
