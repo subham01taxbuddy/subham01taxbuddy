@@ -106,7 +106,7 @@ export class ItrWizardComponent implements OnInit {
       this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
       this.ITR_JSON.family instanceof Array
     ) {
-      this.ITR_JSON.family.filter((item: any) => {
+      this.ITR_JSON.family.forEach((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           let fName = item.fName ? item.fName : '';
           let mName = item.mName ? item.mName : '';

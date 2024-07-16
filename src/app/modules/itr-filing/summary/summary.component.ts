@@ -7738,7 +7738,7 @@ export class SummaryComponent implements OnInit {
     let array = ['TotalCurYr', 'TotalLossSetOff', 'LossRemAftSetOff'];
     let arrayToBeReturned = [];
 
-    array.map((element) => {
+    array.forEach((element) => {
       if (element === 'TotalCurYr') {
         arrayToBeReturned.push({
           headOfIncome: element,

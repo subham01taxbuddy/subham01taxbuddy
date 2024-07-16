@@ -2592,7 +2592,7 @@ export class PersonalInformationComponent implements OnInit {
       });
       console.log('Immovable Form===', this.customerProfileForm);
     }
-    this.ITR_JSON.family.filter((item: any) => {
+    this.ITR_JSON.family.forEach((item: any) => {
       if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
         this.customerProfileForm.patchValue({
           firstName: item.fName,
