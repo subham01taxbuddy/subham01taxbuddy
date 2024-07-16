@@ -1088,6 +1088,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           console.log('Data for revise return ', data);
 
           if (data.isEverified) {
+            data.lastFiledItrId = data.itrId;
             let disposable = this.dialog.open(ReviseReturnDialogComponent, {
               width: '50%',
               height: 'auto',
