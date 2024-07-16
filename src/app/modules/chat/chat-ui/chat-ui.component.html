@@ -1,13 +1,8 @@
-<head>
-    <link rel="stylesheet" href="chat-ui.component.scss">
-</head>
-
 <div class="blank-screen" *ngIf="isBlankScreenVisible">
     <div class="floating-widget" *ngIf="showWidget">
 
 
         <div class="header">
-            <!-- <span class="icon menu-icon">&#9776;</span> -->
             <button (click)="goBack()">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
             </button>
@@ -21,14 +16,10 @@
                 deptName.name }}</div>
         </div>
 
-        <!-- <div class="search-bar">
-          <span class="glyphicon glyphicon-search"></span>
-          <input type="text" placeholder="Search messages or users">
-      </div> -->
-
         <div class="user-list main-panel-chat">
-            <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
-            [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolled)="onScrollDown()">
+            <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true"
+                [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
+                (scrolled)="onScrollDown()">
                 <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)"
                     [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
                     <div class="row">
@@ -36,7 +27,6 @@
                             <div class="avatar">
                                 <div class="initial">{{conversation.image ? conversation.image:''}}</div>
                             </div>
-                            <!-- <img [src]="conversation.image" alt="User Icon"> -->
                         </div>
                         <div class="col-8">
                             <div class="user-name">{{ conversation.userFullName }}</div>

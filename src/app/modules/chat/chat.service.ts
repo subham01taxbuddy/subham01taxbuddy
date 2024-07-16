@@ -872,7 +872,7 @@ export class ChatService {
     let messageArray = [];
     messageArray = this.cannedMessageList.map((message: any) => ({ title: message.title, titleWithSlash: '/' + message.title, text: message.text, allowDept: (message?.attributes) ? message?.attributes?.departments : [] }));
     cannedMessageArray = messageArray.filter(element => element.allowDept.length === 0);
-    messageArray.filter(element => {
+    messageArray.forEach(element => {
       if (element.allowDept.length > 0 && selectedUser && element.allowDept.includes(selectedUser.departmentId)) {
         cannedMessageArray.push(element);
       }
