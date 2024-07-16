@@ -163,6 +163,9 @@ export class ChatService {
                 this.userId = chat21Result.data.userid;
                 this.fetchConversationList(0, chat21Result.data.userid);
                 this.getCannedMessageList();
+                if (initializeSocket) {
+                  this.websocketConnection(chat21Result.data.token, '');
+                }
               }
             });
           } else {
