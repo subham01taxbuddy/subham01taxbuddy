@@ -168,13 +168,13 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       label: 'Sec 10(26AAA) - Any income as referred to in section 10(26AAA)',
       detailed: false,
     },
-    {
-      id: null,
-      seqNum: 15,
-      value: 'OPERATING_DIVIDEND',
-      label: 'Dividend Income',
-      detailed: false,
-    },
+    // {
+    //   id: null,
+    //   seqNum: 15,
+    //   value: 'OPERATING_DIVIDEND',
+    //   label: 'Dividend Income',
+    //   detailed: false,
+    // },
     {
       id: null,
       seqNum: 10,

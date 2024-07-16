@@ -51,7 +51,7 @@
                         class="fas fa-calculator"></i></button>
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
+                <div class="col-5 mt-2 input-filed" [style.display]="item.value.salaryType==='OTHER'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('salary',item, true);formValuesChanged()"
@@ -120,7 +120,8 @@
 
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'">
+                <div class="col-5 mt-2 input-filed"
+                  [style.display]="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('perquisites',item, true);formValuesChanged()"
@@ -188,7 +189,8 @@
                       Another</button>
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='ANY_OTHER'">
+                <div class="col-5 mt-2 input-filed"
+                  [style.display]="item.value.salaryType==='ANY_OTHER'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('profitsInLieu',item, true);formValuesChanged()"

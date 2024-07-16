@@ -6869,6 +6869,10 @@ export class SummaryComponent implements OnInit {
 
   sendPdf=(channel):Promise<any>  => {
     // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both
+    if(this.finalCalculations.aggregateIncome > 5000000 && this.finalCalculations.surcharge === 0 && !this.ITR_JSON.itrSummaryJson){
+      this.handleSurchargeError();
+      return null;
+    }
     this.loading = true;
     let itrId = this.ITR_JSON.itrId;
     let param = '/summary/send?itrId=' + itrId + '&channel=' + channel;
@@ -7001,12 +7005,21 @@ export class SummaryComponent implements OnInit {
   //   }
   // }
 
+  handleSurchargeError(){
+    this.utilsService.showSnackBar('Net Income exceeds 50 Lakhs, please verify the surcharge amount before proceeding.');
+  }
+
   downloadPDF = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       let detailsRequired = false;
       let finalCalculations = this.finalCalculations;
       let shortTermListedSecurityData = finalCalculations?.capitalGain?.shortTerm?.ShortTerm15Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
       let longTermListedSecurityData = finalCalculations?.capitalGain?.longTerm?.LongTerm10Per.filter(element => element.nameOfAsset === "EQUITY_SHARES_LISTED");
+
+      if(finalCalculations.aggregateIncome > 5000000 && finalCalculations.surcharge === 0 && !this.ITR_JSON.itrSummaryJson){
+        this.handleSurchargeError();
+        reject();
+      }
 
       if (shortTermListedSecurityData.length || longTermListedSecurityData.length) {
         this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -7396,6 +7409,10 @@ export class SummaryComponent implements OnInit {
   // }
 
   validateITR = (): Promise<void> => {
+    if(this.finalCalculations.aggregateIncome > 5000000 && this.finalCalculations.surcharge === 0 && !this.ITR_JSON.itrSummaryJson){
+      this.handleSurchargeError();
+      return null;
+    }
     return new Promise((resolve, reject) => {
       let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
       console.log(url);
@@ -7481,6 +7498,10 @@ export class SummaryComponent implements OnInit {
 
 
   downloadJson() {
+    if(this.finalCalculations.aggregateIncome > 5000000 && this.finalCalculations.surcharge === 0 && !this.ITR_JSON.itrSummaryJson){
+      this.handleSurchargeError();
+      return;
+    }
     let url = `${environment.url}/itr/prepare-itr-json?itrId=${this.ITR_JSON.itrId}`;
     window.open(url);
   }

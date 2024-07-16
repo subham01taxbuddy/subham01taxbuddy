@@ -18,9 +18,9 @@
               <div class="filter-box">
                 <div class="row">
                   <div class="col-sm-12 bckClr">
-                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
-                      (sendPrincipleIndividual)="fromSme($event, 2)"
-                      (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                       (sendPrincipleIndividual)="fromSme($event,false, true)"
+                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
                   </div>
                   <div class="col-sm-12">
                     <div class="row">
@@ -51,6 +51,11 @@
                     <app-custom-button class="srch-btn-1" [actions]="[showReports]">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
                     </app-custom-button>
+                    <button class="dwldBtn-1" [disabled]="loading"
+                      *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                      (click)="downloadReport()">
+                      <i class="fa fa-download" aria-hidden="true"></i> Download File
+                    </button>
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
                   </div>
                   <div class="row">
@@ -82,7 +87,8 @@
       </div>
     </div>
       <div *ngFor="let item of missedChatList | paginate:config"></div>
-    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatListGridOptions"></ag-grid-angular>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedChatListGridOptions"
+    (rowClicked)="onUsersRowClicked($event)"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 </div>
