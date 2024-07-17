@@ -93,18 +93,6 @@ export class PresumptiveIncomeComponent
         'Presumptive Income details were saved successfully'
       );
       this.saveAndNext.emit(false);
-    } else {
-      if (!this.presProfessionalSaved) {
-        // this.utilsService.showSnackBar(
-        //   'There was some error while saving professional presumptive income details, please check if all the details are correct'
-        // );
-      }
-
-      if (!this.presBusinessSaved) {
-        // this.utilsService.showSnackBar(
-        //   'There was some error while saving business presumptive income details, please check if all the details are correct'
-        // );
-      }
     }
   }
 
@@ -121,10 +109,6 @@ export class PresumptiveIncomeComponent
 
     if (this.presBusinessSaved) {
       this.save();
-    } else {
-      // this.utilsService.showSnackBar(
-      //   'There was some error while saving business presumptive income details, please check if all the details are correct'
-      // );
     }
   }
 

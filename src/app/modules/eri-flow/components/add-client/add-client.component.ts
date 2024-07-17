@@ -48,7 +48,6 @@ export class AddClientComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log(this.addClientData);
     if (this.addClientData == undefined || this.addClientData == null) {
-      // this.router.navigate(['/pages/user-management/users']);
       this.location.back();
     }
     this.addClientForm = this.fb.group({
@@ -94,9 +93,6 @@ export class AddClientComponent implements OnInit, OnDestroy {
               if (res.errors instanceof Array && res.errors.length > 0)
                 this.utilsService.showSnackBar(res.errors[0].desc);
               this.otpSend = false;
-              // if(res.errors[0].desc.includes('is already a client')){
-              //   this.otpSend = true;
-              // }
               this.addClientForm.controls['otp'].setValidators(null)
             }
           }
@@ -147,13 +143,6 @@ export class AddClientComponent implements OnInit, OnDestroy {
             }
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
-            // this.changePage();
-
-            // Show success message depends upon following paramaters
-            //             errors: []
-            // httpStatus: "ACCEPTED"
-            // messages: []
-            // successFlag: true
           }
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {

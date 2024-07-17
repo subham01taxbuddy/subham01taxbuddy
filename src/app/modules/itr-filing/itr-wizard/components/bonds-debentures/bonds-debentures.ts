@@ -72,9 +72,7 @@ export class BondsDebentures
     this.maximumDate = new Date();
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
-      this.bondType === 'bonds'
-        ? (this.title = ' Bonds & Debenture')
-        : (this.title = 'Zero Coupon Bonds');
+      this.title = this.bondType === 'bonds' ? ' Bonds & Debenture' : 'Zero Coupon Bonds';
     }
 
     this.config = {
@@ -141,9 +139,7 @@ export class BondsDebentures
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
 
             }
-            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
-              this.addMoreBondsData(element);
-            } else if (this.bondType === 'bonds' && element.whetherDebenturesAreListed) {
+            if ((this.bondType === 'zeroCouponBonds' || this.bondType === 'bonds') && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -161,9 +157,7 @@ export class BondsDebentures
               element['improvementCost'] = filterImp[0].costOfImprovement;
 
             }
-            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
-              this.addMoreBondsData(element);
-            } else if (this.bondType === 'bonds' && !element.whetherDebenturesAreListed) {
+            if ((this.bondType === 'zeroCouponBonds' || this.bondType === 'bonds') && !element.whetherDebenturesAreListed) {
               this.addMoreBondsData(element);
             }
           });
@@ -182,7 +176,6 @@ export class BondsDebentures
     }
 
     this.getImprovementYears();
-    // this.onChanges();
     this.updateDeductionUI();
   }
 
@@ -347,11 +340,9 @@ export class BondsDebentures
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
       let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
+        bonds.controls['isIndexationBenefitAvailable'].value
           ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-            ? 'ZERO_COUPON_BONDS'
-            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+          : (this.bondType === 'zeroCouponBonds' || bonds.controls['whetherDebenturesAreListed'].value) ? 'ZERO_COUPON_BONDS' : 'BONDS';
       if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
@@ -505,9 +496,6 @@ export class BondsDebentures
           !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
           && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
         ) {
-          let costOfImprovement = (element as FormGroup).controls[
-            'improvementCost'
-          ].value;
           bondImprovement.push({
             srn: (element as FormGroup).controls['srn'].value,
             dateOfImprovement: (element as FormGroup).controls[
@@ -524,9 +512,6 @@ export class BondsDebentures
         }
       });
 
-      // if (!bondsList || bondsList.length === 0) {
-      //   this.deductionForm.reset();
-      // }
       const bondData = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: this.ITR_JSON.assesseeType,
@@ -549,9 +534,7 @@ export class BondsDebentures
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
         }
       } else {
-        // if (bondData.assetDetails.length > 0) {
         this.Copy_ITR_JSON.capitalGain?.push(bondData);
-        // }
       }
 
       //here we need to check for debentures which have indexation benefits
@@ -842,7 +825,6 @@ export class BondsDebentures
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       if (res.success) {
         this.improvementYears = res.data;
-        // console.log(res);
       }
     });
   }
@@ -854,8 +836,6 @@ export class BondsDebentures
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
-    // console.log(yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)));
-    // console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
     if (purchaseMonth > 2) {
       if (yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0) {
         yearsList = yearsList.splice(
@@ -877,8 +857,6 @@ export class BondsDebentures
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
-      //this.calculateCapitalGain(formGroupName, '', index);
-      // this.calculateIndexCost(bonds);
     }
   }
   calculateIndexCost(asset, type?) {
@@ -889,8 +867,6 @@ export class BondsDebentures
       this.calculateTotalCG(asset);
       return;
     }
-    let gainType = asset.controls['gainType'].value;
-
     let selectedYear = moment(asset.controls['sellDate'].value);
     let sellFinancialYear =
       selectedYear.get('month') > 2

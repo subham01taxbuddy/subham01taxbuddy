@@ -8,7 +8,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 @Component({
   selector: 'app-add-update-trading',
   templateUrl: './add-update-trading.component.html',
-  styleUrls: ['./add-update-trading.component.scss']
 })
 export class AddUpdateTradingComponent implements OnInit {
 

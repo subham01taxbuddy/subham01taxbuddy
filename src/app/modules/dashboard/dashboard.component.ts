@@ -41,8 +41,6 @@ export class DashboardComponent implements OnInit {
   loading = false;
   loggedInSmeUserId: any;
   roles: any;
-  // maxDate = new Date(2024,2,31);
-  // minDate = new Date(2023, 3, 1);
   minStartDate: string = '2023-04-01';
   maxEndDate = moment().toDate();
   maxStartDate = moment().toDate();
@@ -116,7 +114,6 @@ export class DashboardComponent implements OnInit {
     this.getItrFilledEVerificationPendingList('eVerificationPending');
     this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
     this.getPartnerCommission();
-    // this.getItrUserOverview();
   }
 
   config = {
@@ -188,7 +185,6 @@ export class DashboardComponent implements OnInit {
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
       this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
-      // this.getItrUserOverview();
     }
 
   }

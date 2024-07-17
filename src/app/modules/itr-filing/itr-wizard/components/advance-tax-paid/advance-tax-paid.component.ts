@@ -36,7 +36,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<AdvanceTaxPaidComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -50,8 +50,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
     if (
-        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
     ) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
         this.addMoreSalary(item);
@@ -64,12 +64,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
       this.addMoreSalary();
     }
 
-    // this.salaryForm.disable();
-
-    //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
     const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
-    // const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
     const nextYearEndDate = new Date(); // Current date
 
     this.minDate = thisYearStartDate;
@@ -94,7 +90,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
           element.markAsDirty();
           element.markAllAsTouched();
           this.utilsService.showSnackBar(
-              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
           return;
         }
@@ -109,7 +105,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   createForm(item?): UntypedFormGroup {
-    if(this.data.assetIndex !== null && item){
+    if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
     return this.fb.group({
@@ -155,13 +151,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
-      let result = {
-        cgObject: this.salaryForm.value,
-        rowIndex: this.data.rowIndex,
-        type:'selfAssessment'
-      };
-      // this.dialogRef.close(result);
-      // (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
+
       this.onSave.emit({
         type: 'selfAssessment',
         saved: true
@@ -183,10 +173,10 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   addMoreSalary(item?) {
-    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
-      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+    if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
         this.utilsService.showSnackBar(
-            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
         );
         return;
       }
@@ -201,17 +191,17 @@ export class AdvanceTaxPaidComponent implements OnInit {
     salaryArray.removeAt(index);
   }
 
-  goBack(){
+  goBack() {
     this.onSave.emit({
       type: 'selfAssessment',
       saved: false
     })
   }
   activeIndex = 0;
-  markActive(index){
-    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+  markActive(index) {
+    if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
       this.utilsService.showSnackBar(
-          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
       );
       return;
     }

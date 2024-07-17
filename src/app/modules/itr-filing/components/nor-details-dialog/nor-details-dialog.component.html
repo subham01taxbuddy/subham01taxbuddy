@@ -8,9 +8,6 @@
       </div>
       <br>
       <mat-form-field class="input-field-width">
-        <!--  <input matInput class="input-field" name="jur[i]" formControlName="jurisdictionResidence"
-          pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim> -->
-
         <mat-select placeholder="" name="conditionsNorStatus" formControlName="conditionsNorStatus" required>
           <mat-option *ngFor="let condition of conditionsList" [value]="condition.key" matTooltip="{{condition.label}}">
             {{ condition.label | titlecase}}

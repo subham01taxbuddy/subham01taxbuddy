@@ -215,10 +215,6 @@ export class DeclarationComponent implements OnInit {
           JSON.stringify(this.ITR_JSON)
         );
         this.loading = false;
-        //if(this.ITR_JSON.itrType === '3') {
-        //  alert('This is ITR 3 and can not be filed from backoffice');
-        //  return;
-        //}
         this.saveAndNext.emit(true);
       },
       (error) => {
@@ -231,10 +227,6 @@ export class DeclarationComponent implements OnInit {
   }
 
   checkITRTypeChanged() {
-    // if (this.ITR_JSON.systemFlags.hasSalary && this.ITR_JSON.employers.length > 0) {
-    //   this.ITR_JSON.employerCategory = this.ITR_JSON.employers[0].employerCategory;
-    // }
-
     const param = '/tax';
     this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
       (result: any) => {

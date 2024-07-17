@@ -3,9 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ReportService } from 'src/app/services/report-service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
@@ -97,8 +95,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    // let leaderUserId = this.loggedInSmeUserId
-
     let param = ''
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
@@ -125,7 +121,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
         this.loading = false;
         this.allDetails = response.data.content;
         this.calculateCounts();
-        // this.config.docUpload.totalItems = response.data.totalElements;
         const totalNumberOfClientsAssigned = this.allDetails?.reduce((total, item) => total + item.numberOfClientsAssigned, 0);
         const totalItr1 = this.allDetails?.reduce((total, item) => total + item.itr1, 0);
         const totalItr2 = this.allDetails?.reduce((total, item) => total + item.itr2, 0);
