@@ -814,10 +814,11 @@ export class SharesAndEquityComponent
           securities.controls['fmvAsOn31Jan2018'].setValue(
             res.data.fmvAsOn31stJan2018
           );
+          this.calculateTotalCG(securities);
         }
       });
     }
-    this.calculateTotalCG(securities);
+
   }
 
   calculateDeductionGain() {
