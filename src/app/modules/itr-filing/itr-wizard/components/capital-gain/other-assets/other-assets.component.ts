@@ -51,8 +51,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       console.log(listedData);
-      // this.clearNullImprovements();
-      // this.calculateTotalCg();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -82,7 +80,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             asset.hasEdit = false;
           });
         }
-        // this.sel();
       },
       sortable: true,
       pagination: true,
@@ -259,9 +256,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (res: any) => {
         this.loading = false;
         console.log('Deduction:', res);
-        // this.goldCg.assetDetails = res.assetDetails;
-        // this.goldCg.improvement = res.improvement;
-        // this.goldCg.deduction = res.deduction;
         (this.getDeductions.controls[0] as UntypedFormGroup).controls[
           'deductionClaimed'
         ]?.setValue(res.data[0]?.deductionAmount);
@@ -283,8 +277,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     );
 
-    // this.calculateCg();
-    console.log(this.goldCg);
   }
 
   depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
@@ -325,7 +317,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (this.deductionForm.valid) {
       //re-intialise the ITR objects
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
       this.loading = true;
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
@@ -414,12 +405,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deleteDeduction(index) {
     const deleteDeduction = this.getDeductions;
     deleteDeduction.removeAt(index);
-    // Condition is added because at least one deduction needs to be shown
-    // if (deleteDeduction.length === 0) {
-    //   deleteDeduction.push(this.createDeductionForm());
-    // }
-    // this.goldCg.deduction.splice(index, 1);
-    // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
   // for pagination
@@ -661,11 +646,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
-        // cellRenderer: (params) => {
-        //   return params.data.costOfImprovement
-        //     ? params.data.costOfImprovement
-        //     : '';
-        // },
         cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           const costOfImprovement = params.data.costOfImprovement;

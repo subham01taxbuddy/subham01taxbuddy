@@ -112,7 +112,6 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   calculateNetIncome() {
     let turnover = this.selectedFormGroup.controls['turnOver'].value;
-    let netIncome = this.selectedFormGroup.controls['netIncome'].value;
     let turnoverValue = parseFloat(this.selectedFormGroup?.controls['turnOver']?.value ?
       this.selectedFormGroup?.controls['turnOver']?.value : null);
     let grossProfitValue = parseFloat(this.selectedFormGroup?.controls['grossProfit']?.value

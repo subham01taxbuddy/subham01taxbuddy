@@ -339,10 +339,13 @@ export class BondsDebentures
       let param = '/calculate/indexed-cost';
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value
-          ? 'GOLD'
-          : (this.bondType === 'zeroCouponBonds' || bonds.controls['whetherDebenturesAreListed'].value) ? 'ZERO_COUPON_BONDS' : 'BONDS';
+      let type;
+      if (bonds.controls['isIndexationBenefitAvailable'].value)
+        type = 'GOLD';
+      else if (this.bondType === 'zeroCouponBonds' || bonds.controls['whetherDebenturesAreListed'].value)
+        type = 'ZERO_COUPON_BONDS';
+      else
+        type = 'BONDS';
       if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);

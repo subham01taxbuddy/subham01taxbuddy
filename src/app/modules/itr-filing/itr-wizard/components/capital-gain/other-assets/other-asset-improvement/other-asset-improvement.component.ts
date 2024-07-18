@@ -146,7 +146,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       if (res.success) console.log('FY : ', res);
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
-      // sessionStorage.setItem('improvementYears', res.data)
       let purchaseDate = this.assetsForm.getRawValue()?.purchaseDate;
       let purchaseYear = new Date(purchaseDate).getFullYear();
       let purchaseMonth = new Date(purchaseDate).getMonth();
@@ -214,7 +213,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       this.goldCg.assetDetails.length,
       index
     );
-    // this.assetsForm.updateValueAndValidity();
   }
 
   objSrn = 0;
@@ -278,13 +276,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
           );
         }
       });
-    } else {
-      const improvementsFormGroup = this.createImprovementsArray(obj ? obj.srn : srn);
-      // (assetsForm.get('improvementsArray') as UntypedFormArray).push(
-      //   improvementsFormGroup
-      // );
     }
-
     return assetsForm;
   }
 
@@ -312,8 +304,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
     ] as UntypedFormArray;
-    let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
-    let srn = obj ? obj.srn : null;
     if (improvementsArray.valid) {
       const improvementsFormGroup = this.createImprovementsArray(this.objSrn);
       (this.assetsForm.get('improvementsArray') as UntypedFormArray).push(
@@ -549,7 +539,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
 
   saveClicked = false;
   onSaveClick(event) {
-    // event.preventDefault();
     this.saveClicked = true;
     this.calculateGainType();
   }
@@ -635,12 +624,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
           (element) => element.srn !== this.objSrn
         );
 
-        // improvementsArray?.value?.filter(
-        //   (element) => element.srn !== this.data?.assetIndex
-        // );
-
         improvementsArray?.value?.forEach((element) => {
-          // element.srn = this.data?.assetIndex;
           filteredImprovement?.push(element);
         });
 
