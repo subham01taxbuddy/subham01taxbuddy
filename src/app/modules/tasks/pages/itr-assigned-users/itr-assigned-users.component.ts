@@ -292,7 +292,13 @@ export class ItrAssignedUsersComponent implements OnInit {
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
-              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              try {
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              } catch (e) {
+                this.utilsService.showSnackBar('Please try with manual filling');
+                console.log("Local Storage is full, Please empty data");
+                return;
+              }
               this.router.navigate(['/itr-filing/itr'], {
                 state: {
                   userId: this.rowData.userId,
