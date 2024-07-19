@@ -296,6 +296,7 @@ export class ItrAssignedUsersComponent implements OnInit {
                 sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
               } catch (e) {
                 this.utilsService.showSnackBar('Please try with manual filling');
+                this.sendEmail(JSON.stringify(workingItr));
                 console.log("Local Storage is full, Please empty data");
                 return;
               }
@@ -320,6 +321,78 @@ export class ItrAssignedUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  sendEmail(ITR_JSON) {
+    this.loading = true;
+    var data = new FormData();
+    data.append('from', 'ashwini@taxbuddy.com');
+    data.append('subject', 'subject Large ITR object case');
+    data.append('body', `<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
+    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
+        <tr>
+            <td align="center">
+                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
+                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
+                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
+                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 15px 0px 15px">
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
+                                <tr>
+                                    <td style="font-size: 14px;color: #333;"> <br> <br> <span style="font-weight: bold">Dear Team,</span><br /> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please Check the below attached json that is too large </p> <br>
+
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1c3550;padding: 20px 15px;">
+                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>`);
+    data.append('isHtml', 'true');
+    data.append('to', 'divya@taxbuddy.com, pratik.bharda@taxbuddy.com, gitanjali.kakade@taxbuddy.com');
+    const dto_object = new Blob([ITR_JSON], {
+      type: 'application/json'
+    })
+
+    data.append('attachments', dto_object, "")
+    let param = '/send-mail';
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
+      console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar(error.error.text);
+    });
   }
 
   checkFilerAssignment(data: any) {
