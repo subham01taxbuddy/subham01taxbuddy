@@ -407,10 +407,7 @@ export class DonationsComponent implements OnInit {
       buyersDetails.value
     );
     let userPanExist = [];
-    // let failedCases = [];
     if (buyersDetails.value instanceof Array) {
-      // failedCases = buyersDetails.value.filter(item =>
-      //   !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
       userPanExist = buyersDetails.value.filter(
         (item) => item.pan === this.ITR_JSON.panNumber
       );

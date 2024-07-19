@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input } fro
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   ITR_JSON,
-  OnSalary,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';

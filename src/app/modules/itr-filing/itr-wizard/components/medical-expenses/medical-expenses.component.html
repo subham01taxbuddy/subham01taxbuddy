@@ -116,26 +116,6 @@
             Section 8OU - Self Disability
           </h2>
           <div class=" gray_container row">
-            <!-- <div class="col-9">
-              <div class="col-sm-6">
-                <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80u"
-                  [ngModelOptions]="{ standalone: true }" (change)="radioChange80u(true)">
-                  <mat-radio-button value="">None</mat-radio-button><br /><br />
-                  <mat-radio-button value="SELF_WITH_DISABILITY">Self with disability</mat-radio-button><br /><br />
-                  <mat-radio-button value="SELF_WITH_SEVERE_DISABILITY">Self with severe disability
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
-            <div class="col-3 m-10">
-              <mat-form-field appearance="outline">
-                <input matInput type="number" placeholder="{{ maxLimit80u }}" maxlength="8" formControlName="us80u"
-                  autocomplete="off" digitsOnly readonly />
-              </mat-form-field>
-            </div> -->
-
-            <!-- <div class="col-12"> -->
-            <!-- <div class="gray_box"> -->
             <div class="col-12 row" style="gap: 20px 75px;">
               <div class="col-3">
                 <div><span class="span">Nature of disability </span> </div>
@@ -188,37 +168,15 @@
               <div class="col-3">
                 <div><span class="span">UDID Number (If available) </span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input formControlName="udidNumber" name="udidNumber" matInput placeholder="" maxlength="18"/>
+                  <input formControlName="udidNumber" name="udidNumber" matInput placeholder="" maxlength="18" />
                 </mat-form-field>
               </div>
             </div>
-            <!-- </div> -->
-            <!-- </div> -->
           </div>
           <h2 class="inner_accordion-title heading">
             Section 8ODD - Disabled dependent deduction
           </h2>
           <div class=" gray_container row">
-            <!-- <div class="col-9">
-              <div class="col-sm-6">
-                <mat-radio-group aria-label="Select an option" [(ngModel)]="selected80dd"
-                  [ngModelOptions]="{ standalone: true }" (change)="radioChange80dd(true)">
-                  <mat-radio-button value="">None</mat-radio-button><br /><br />
-                  <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY">Dependent person with disability
-                  </mat-radio-button><br /><br />
-                  <mat-radio-button value="DEPENDENT_PERSON_WITH_SEVERE_DISABILITY">Dependent person with severe
-                    disability
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
-            <div class="col-3 m-10">
-              <mat-form-field appearance="outline">
-                <input matInput type="number" placeholder="{{ maxLimit80dd }}" maxlength="8" formControlName="us80dd"
-                  autocomplete="off" digitsOnly readonly />
-
-              </mat-form-field>
-            </div> -->
             <div class="col-12 row" style="gap: 20px 75px;">
               <div class="col-3">
                 <div><span class="span">Nature of disability </span> </div>
@@ -312,7 +270,8 @@
               <div class="col-3">
                 <div><span class="span">UDID Number (If available) </span> </div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input formControlName="udidNumber80dd" name="udidNumber80dd" matInput placeholder="" maxlength="18"/>
+                  <input formControlName="udidNumber80dd" name="udidNumber80dd" matInput placeholder=""
+                    maxlength="18" />
                 </mat-form-field>
               </div>
             </div>

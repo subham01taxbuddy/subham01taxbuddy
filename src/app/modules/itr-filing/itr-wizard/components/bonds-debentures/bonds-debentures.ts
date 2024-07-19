@@ -346,7 +346,7 @@ export class BondsDebentures
         type = 'ZERO_COUPON_BONDS';
       else
         type = 'BONDS';
-      if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
+      if (!bonds.controls['isIndexationBenefitAvailable'].value) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
       }
@@ -385,12 +385,14 @@ export class BondsDebentures
 
   calculateTotalCG(bonds) {
     if (bonds.valid) {
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
-          ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-            ? 'ZERO_COUPON_BONDS'
-            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+      let type;
+      if (bonds.controls['isIndexationBenefitAvailable'].value)
+        type = 'GOLD';
+      else if (this.bondType === 'zeroCouponBonds' || bonds.controls['whetherDebenturesAreListed'].value)
+        type = 'ZERO_COUPON_BONDS';
+      else
+        type = 'BONDS';
+
       let request = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',

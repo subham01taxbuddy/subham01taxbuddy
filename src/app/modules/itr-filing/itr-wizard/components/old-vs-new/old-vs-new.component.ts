@@ -559,12 +559,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Continue to opt';
       this.oldRegimeLabel = 'Opt Out';
       currAssmntYr.enable();
-
-      //check whether user had opted for new regime in last year
-      let newRegimeAy =
-        this.regimeSelectionForm.controls['everOptedNewRegime'].get(
-          'assessmentYear'
-        ).value;
       this.dueDateOver = false;
     }
 
@@ -573,22 +567,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Opting in Now';
       currAssmntYr.enable();
     }
-
-    // if (!optIn) {
-    //   this.oldRegimeLabel = 'Opting in Now';
-    //   this.newRegimeLabel = 'Not Opting';
-    //   (
-    //     this.regimeSelectionForm.controls[
-    //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
-    //   ).controls['everOptedOutOfNewRegime'].setValue(false);
-
-    //   (
-    //     this.regimeSelectionForm.controls[
-    //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
-    //   ).controls['everOptedOutOfNewRegime'].disable();
-    // }
   }
 
   resultOld: any;
@@ -670,17 +648,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
         itrType = Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0];
         if (this.ITR_JSON.itrType === '1') {
-          // itrType = 'ITR1';
           ITR14IncomeDeductions = 'ITR1_IncomeDeductions';
           taxComputation = 'ITR1_TaxComputation';
         } else if (this.ITR_JSON.itrType === '4') {
-          // itrType = 'ITR4';
           ITR14IncomeDeductions = 'IncomeDeductions';
           taxComputation = 'TaxComputation';
-        } else if (this.ITR_JSON.itrType === '2') {
-          // itrType = 'ITR2';
-        } else if (this.ITR_JSON.itrType === '3') {
-          // itrType = 'ITR3';
         }
 
         this.isITRU = this.ITR_JSON.itrSummaryJson['ITR'][itrType]
@@ -694,12 +666,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               label: 'Income from Salary',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
-                    ITR14IncomeDeductions
-                  ]?.IncomeFromSal
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][
-                      ITR14IncomeDeductions
-                    ]?.IncomeFromSal
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][ITR14IncomeDeductions]?.IncomeFromSal
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][itrType][ITR14IncomeDeductions]?.IncomeFromSal
                     : 0
                   : 0,
               new:
@@ -1936,9 +1904,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     );
   }
 
-  isIncomeMoreThan2Cr(){
+  isIncomeMoreThan2Cr() {
     return this.oldSummaryIncome?.taxSummary.grossTotalIncome > 20000000 ||
-        this.newSummaryIncome?.taxSummary.grossTotalIncome > 20000000;
+      this.newSummaryIncome?.taxSummary.grossTotalIncome > 20000000;
   }
 
   getITRType() {
@@ -1959,11 +1927,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             this.itrType = ITR_RESULT.itrType;
             this.loading = false;
             console.log('this.itrType', this.itrType);
-            //if(this.ITR_JSON.itrType === '3') {
-            //  alert('This is ITR 3 and can not be filed from backoffice');
-            //  return;
-            //}
-            // this.saveAndNext.emit(true);
           },
           (error) => {
             this.loading = false;
@@ -1983,11 +1946,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           this.itrType = ITR_RESULT.itrType;
           this.loading = false;
           console.log('this.itrType', this.itrType);
-          //if(this.ITR_JSON.itrType === '3') {
-          //  alert('This is ITR 3 and can not be filed from backoffice');
-          //  return;
-          //}
-          // this.saveAndNext.emit(true);
         },
         (error) => {
           this.loading = false;
@@ -2111,12 +2069,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         this.summaryToolReliefsForm.controls['acknowledgementDate89']?.setValue(
           this.ITR_JSON.acknowledgementDate89
         );
-      } else {
       }
-
-      // this.summaryToolReliefsForm.controls['section90']?.setValue(
-      //   this.ITR_JSON.section90
-      // );
       if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
         this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
           this.ITR_JSON.acknowledgement90
@@ -2126,9 +2079,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         );
       }
 
-      // this.summaryToolReliefsForm.controls['section91']?.setValue(
-      //   this.ITR_JSON.section91
-      // );
       if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
         this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
           this.ITR_JSON.acknowledgement91
@@ -2148,18 +2098,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     const july = 6;
     const july31 = 31;
 
-    if (
-      currentMonth > july ||
-      (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
-    ) {
-      this.dueDateOver = true;
-      this.allowNewRegime =
-        environment.environment === 'UAT' ? true : !this.dueDateOver;
-      return;
-    } else if (
-      (currentMonth === july && currentDay > july31) ||
-      (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
-    ) {
+    if ((currentMonth > july ||
+      (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')) || ((currentMonth === july && currentDay > july31) ||
+        (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD'))) {
       this.dueDateOver = true;
       this.allowNewRegime =
         environment.environment === 'UAT' ? true : !this.dueDateOver;
@@ -2209,161 +2150,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.ITR_JSON[sectionDate] = null;
     }
   }
-
-  // gotoSummary() {
-  //   this.loading = true;
-
-  //   //section89
-  //   this.updatingReliefSections(
-  //     'section89',
-  //     'acknowledgement89',
-  //     'acknowledgementDate89'
-  //   );
-
-  //   // section90
-  //   this.updatingReliefSections(
-  //     'section90',
-  //     'acknowledgement90',
-  //     'acknowledgementDate90'
-  //   );
-
-  //   // section91
-  //   this.updatingReliefSections(
-  //     'section91',
-  //     'acknowledgement91',
-  //     'acknowledgementDate91'
-  //   );
-
-  //   // setting other
-  //   this.ITR_JSON.optionForCurrentAY =
-  //     this.regimeSelectionForm.getRawValue().optionForCurrentAY;
-
-  //   if (this.itrType === '3' || this.itrType === '4') {
-  //     this.ITR_JSON.everOptedOutOfNewRegime =
-  //       this.regimeSelectionForm.value.everOptedOutOfNewRegime;
-
-  //     this.ITR_JSON.everOptedNewRegime =
-  //       this.regimeSelectionForm.value.everOptedNewRegime;
-  //   }
-
-  //   this.ITR_JSON.regime =
-  //     this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
-
-  //   // saving - calling the save api
-  //   if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
-  //     this.submitted = false;
-
-  //     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
-  //       this.ITR_JSON = JSON.parse(
-  //         sessionStorage.getItem(AppConstants.ITR_JSON)
-  //       );
-  //       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
-  //         sessionStorage.setItem(
-  //           AppConstants.ITR_JSON,
-  //           JSON.stringify(this.ITR_JSON)
-  //         );
-  //         this.loading = false;
-  //         this.nextBreadcrumb.emit('Summary');
-  //         this.router.navigate(['/itr-filing/itr/summary']);
-  //         console.log(this.itrType, 'ITR Type as per JSON');
-  //       } else {
-  //         //save ITR object
-  //         this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-  //           (result) => {
-  //             sessionStorage.setItem(
-  //               AppConstants.ITR_JSON,
-  //               JSON.stringify(this.ITR_JSON)
-  //             );
-  //             this.loading = false;
-  //             this.utilsService.showSnackBar(
-  //               'Regime selection updated successfully.'
-  //             );
-  //             this.nextBreadcrumb.emit('Summary');
-  //             this.router.navigate(['/itr-filing/itr/summary']);
-  //           },
-  //           (error) => {
-  //             this.utilsService.showSnackBar(
-  //               'Failed to update regime selection.'
-  //             );
-  //             this.loading = false;
-  //           }
-  //         );
-  //       }
-  //     } else {
-  //       //save ITR object
-  //       this.utilsService.saveFinalItrObject(this.ITR_JSON).subscribe(
-  //         (result) => {
-  //           sessionStorage.setItem(
-  //             AppConstants.ITR_JSON,
-  //             JSON.stringify(this.ITR_JSON)
-  //           );
-  //           this.loading = false;
-  //           this.utilsService.showSnackBar(
-  //             'Regime selection updated successfully.'
-  //           );
-  //           this.nextBreadcrumb.emit('Summary');
-  //           this.router.navigate(['/itr-filing/itr/summary']);
-  //         },
-  //         (error) => {
-  //           this.utilsService.showSnackBar(
-  //             'Failed to update regime selection.'
-  //           );
-  //           this.loading = false;
-  //         }
-  //       );
-  //     }
-  //   } else {
-  //     this.submitted = true;
-  //     this.utilsService.showSnackBar(
-  //       'Please fill all required details to continue'
-  //     );
-  //     Object.keys(this.regimeSelectionForm.controls).forEach((key) => {
-  //       const control = this.regimeSelectionForm.get(key);
-
-  //       if (control instanceof UntypedFormGroup) {
-  //         Object.keys(control.controls).forEach((nestedKey) => {
-  //           const nestedControl = control.get(nestedKey);
-  //           const controlErrors: ValidationErrors = nestedControl.errors;
-
-  //           if (controlErrors != null) {
-  //             console.log('Key control: ' + key + '.' + nestedKey);
-
-  //             Object.keys(controlErrors).forEach((keyError) => {
-  //               console.log(
-  //                 'Key control: ' +
-  //                 key +
-  //                 '.' +
-  //                 nestedKey +
-  //                 ', keyError: ' +
-  //                 keyError +
-  //                 ', err value: ',
-  //                 controlErrors[keyError]
-  //               );
-  //             });
-  //           }
-  //         });
-  //       }
-
-  //       // const controlErrors: ValidationErrors = this.regimeSelectionForm.get([
-  //       //   key,
-  //       // ]).errors;
-  //       // if (controlErrors != null) {
-  //       //   console.log(this.regimeSelectionForm);
-  //       //   Object.keys(controlErrors).forEach((keyError) => {
-  //       //     console.log(
-  //       //       'Key control: ' +
-  //       //         key +
-  //       //         ', keyError: ' +
-  //       //         keyError +
-  //       //         ', err value: ',
-  //       //       controlErrors[keyError]
-  //       //     );
-  //       //   });
-  //       // }
-  //     });
-  //     this.loading = false;
-  //   }
-  // }
 
   gotoSummary = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -2512,23 +2298,29 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   }
 
   setFilingDate(formGroup: any, ackNum?, ackDate?) {
+    let id;
+    let lastSix;
+    let day;
+    let month;
+    let year;
+    let dateString;
     if (ackNum && ackDate) {
-      var id = (formGroup as UntypedFormGroup).controls[ackNum].value;
-      var lastSix = id.toString().substr(id.length - 6);
-      var day = lastSix.slice(0, 2);
-      var month = lastSix.slice(2, 4);
-      var year = lastSix.slice(4, 6);
-      let dateString = `20${year}-${month}-${day}`;
+      id = (formGroup as UntypedFormGroup).controls[ackNum].value;
+      lastSix = id.toString().substr(id.length - 6);
+      day = lastSix.slice(0, 2);
+      month = lastSix.slice(2, 4);
+      year = lastSix.slice(4, 6);
+      dateString = `20${year}-${month}-${day}`;
       console.log(dateString, year, month, day);
 
       (formGroup as UntypedFormGroup).controls[ackDate].setValue(moment(dateString).toDate());
     } else {
-      var id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
-      var lastSix = id.toString().substr(id.length - 6);
-      var day = lastSix.slice(0, 2);
-      var month = lastSix.slice(2, 4);
-      var year = lastSix.slice(4, 6);
-      let dateString = `20${year}-${month}-${day}`;
+      id = (formGroup as UntypedFormGroup).controls['acknowledgementNumber'].value;
+      lastSix = id.toString().substr(id.length - 6);
+      day = lastSix.slice(0, 2);
+      month = lastSix.slice(2, 4);
+      year = lastSix.slice(4, 6);
+      dateString = `20${year}-${month}-${day}`;
       console.log(dateString, year, month, day);
 
       (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
@@ -2623,7 +2415,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (result) => {
         console.log('pdf Result', result);
         var FileSaver = require('file-saver');
-        //const fileURL = URL.createObjectURL(result);
         const fileURL = webkitURL.createObjectURL(result);
         window.open(fileURL);
         let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';

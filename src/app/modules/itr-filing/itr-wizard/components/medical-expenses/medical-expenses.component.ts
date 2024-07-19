@@ -91,8 +91,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     this.Copy_ITR_JSON = this.ITR_JSON;
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
     const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
-    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
-
     this.minDate = thisYearStartDate;
     this.maxDate = new Date();
   }
@@ -103,7 +101,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   initForm() {
-    // let maxPremium = this.userAge >= 60 ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
       selfPremium: [null, [Validators.pattern(AppConstants.numericRegex)]],
       selfPreventiveCheckUp: [
@@ -131,7 +128,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       hasParentOverSixty: [this.Copy_ITR_JSON.systemFlags?.hasParentOverSixty],
       form10IADate: [null,],
       form10IAAcknowledgement: [null,],
-      udidNumber: [null,Validators.pattern(AppConstants.charAndNoRegex)],
+      udidNumber: [null, Validators.pattern(AppConstants.charAndNoRegex)],
       form10IADate80dd: [null,],
       form10IAAcknowledgement80dd: [null,],
       udidNumber80dd: [null, Validators.pattern(AppConstants.charAndNoRegex)],
@@ -194,10 +191,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           'selfMedicalExpenditure'
         ].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
-        // this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
-        // this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(
-        //   true
-        // );
         this.investmentDeductionForm.controls['hasParentOverSixty'].markAsTouched();
         this.investmentDeductionForm.controls['hasParentOverSixty'].updateValueAndValidity();
         this.investmentDeductionForm.controls['premium'].setValue(
@@ -431,8 +424,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
 
   saveInvestmentDeductions() {
     let isParentOverSixty = this.investmentDeductionForm.controls['hasParentOverSixty'].value;
-    let parentExpenseLimit = isParentOverSixty ? 50000 : 25000;
-
     let fieldArray = [this.investmentDeductionForm.controls['premium'],
     this.investmentDeductionForm.controls['preventiveCheckUp'],
     this.investmentDeductionForm.controls['medicalExpenditure']];
@@ -440,21 +431,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     fieldArray.forEach(element => {
       totalParentExpenses += this.utilsService.getInt(element.value);
     });
-    // if (totalParentExpenses > parentExpenseLimit) {
-    //   this.utilsService.showSnackBar(
-    //     `Medical expenses for parents cannot exceed ${parentExpenseLimit}`
-    //   );
-    //   fieldArray.forEach(element => {
-    //     if (element.value > 0) {
-    //       element.setErrors({ maxValueExceeded: true });
-    //     }
-    //   });
-    //   return false;
-    // } else {
-    //   fieldArray.forEach(element => {
-    //     element.setErrors(null);
-    //   });
-    // }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
     let userFieldArray = [this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
     this.investmentDeductionForm.controls['selfPremium'],
