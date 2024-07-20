@@ -16,6 +16,7 @@ import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service'
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 import {Subscription} from "rxjs";
+
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }

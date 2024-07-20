@@ -231,6 +231,17 @@ export class SidebarComponent {
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
+    
+    {
+      name:'Recovery-Data',
+      icon:'recovery.png',
+      active:false,
+      url:null,
+      roles:[],
+      submenu:[
+        {name: 'Itr-Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN', 'ROLE_LEADER']}
+      ]
+  },
     {
       name: 'PAN Exception',
       icon: 'invoice.png',

@@ -36,6 +36,7 @@ export class NeedHelpComponent implements OnInit {
       filename: new UntypedFormControl(''),
       mobileNo: new UntypedFormControl(this.userData.email, Validators.required)
     });
+    
   }
   getURL() {
     return window.location.href;

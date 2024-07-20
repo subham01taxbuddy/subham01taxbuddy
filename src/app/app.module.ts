@@ -32,12 +32,15 @@ import { SpeedTestModule } from 'ng-speed-test';
 import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import {SummaryConversionService} from "./services/summary-conversion.service";
+import { RecoveryModule } from './modules/recovery/recovery.module';
+import { MatButtonModule } from '@angular/material/button';
 
+ 
 @NgModule({
   declarations: [
     AppComponent,
     ToastMessageComponent,
-  ],
+   ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig,
@@ -49,13 +52,15 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
     PagesModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatButtonModule,
     AngularFireModule,
     AngularFireMessagingModule,
     SubscriptionModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
-    SpeedTestModule,
+    SpeedTestModule
+    
   ],
   providers: [
     NavbarService,

@@ -1,0 +1,28 @@
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  pre {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    font-size: 14px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  mat-dialog-content {
+    max-height: 80vh;
+  }

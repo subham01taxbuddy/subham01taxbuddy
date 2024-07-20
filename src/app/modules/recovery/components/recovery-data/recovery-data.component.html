@@ -1,0 +1,48 @@
+
+<div class="container">
+    <div class="search-box">
+      <div class="input-group">
+        <label for="mobileNumber">Mobile No:</label>
+        <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
+      </div>
+      <button class="btn" (click)="search()">Search</button>
+      
+    </div>
+  </div>
+
+  <div class="expand">
+<table *ngIf="groupedSnapshots.length" class="snapshots-table">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Commit Date</th>
+        <th>Version</th>
+        <th>Fragment</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of groupedSnapshots">
+        <ng-container *ngFor="let fragment of item.fragments; let first = first">
+          <tr>
+            <td *ngIf="first" [attr.rowspan]="item.fragments.length">
+              <mat-checkbox [(ngModel)]="item.selected" (change)="onSelectionChange(item)"></mat-checkbox>
+            </td>
+            <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.commitDate }}</td>
+            <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.version }}</td>
+            <td>{{ fragment.fragmentName }}</td>
+            <td>
+              <table class="state-table">
+                <tr *ngFor="let entry of getStateEntries(fragment.state)">
+                  <td>{{ entry.key }}:</td>
+                  <td>{{ entry.value }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+  </div>
+  <button class="btn-apply"  (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>

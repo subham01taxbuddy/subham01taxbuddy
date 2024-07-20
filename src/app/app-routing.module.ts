@@ -44,6 +44,9 @@ export const appRoutes: Routes = [
   {
     path: 'reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)
   },
+  {
+    path: 'recovery', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/recovery/recovery.module').then(m => m.RecoveryModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

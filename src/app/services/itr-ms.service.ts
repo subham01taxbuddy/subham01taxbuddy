@@ -276,4 +276,23 @@ export class ItrMsService {
       responseType: 'blob',
     });
   }
+
+  getJvSnapshots<T>(openItrId): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.get<T>(
+      `http://localhost:9050/itr/list-itr/${openItrId}`,
+    { headers: this.headers }
+    );
+  }
+
+  putJvSnapshots<T>(ids: string[]): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    const body = { ids: ids };
+    return this.httpClient.put<T>(
+      `http://localhost:9050/itr/update-snapshot`, body ,
+      { headers: this.headers }
+    );
+  }
 }

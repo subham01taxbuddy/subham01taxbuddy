@@ -61,6 +61,7 @@ import { CalculatorModalComponent } from './components/calculator-modal/calculat
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
 import {ZipcodeDirective} from "./directives/zipcode.directive";
+
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -105,6 +106,7 @@ import {ZipcodeDirective} from "./directives/zipcode.directive";
         CalculatorModalComponent,
         CustomButtonComponent,
         IncomeSourceDialogComponent
+        
     ],
     imports: [
         CommonModule,
