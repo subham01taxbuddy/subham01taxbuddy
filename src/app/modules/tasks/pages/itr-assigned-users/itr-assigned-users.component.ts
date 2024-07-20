@@ -297,6 +297,10 @@ export class ItrAssignedUsersComponent implements OnInit {
               } catch (e) {
                 this.utilsService.showSnackBar('Please try with manual filling');
                 this.sendEmail(JSON.stringify(workingItr));
+                workingItr.capitalGain = null;
+                this.utilsService.saveItrObject(workingItr).subscribe((result:any)=>{
+                  console.log('itr cg cleared');
+                });
                 console.log("Local Storage is full, Please empty data");
                 return;
               }
@@ -327,7 +331,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.loading = true;
     var data = new FormData();
     data.append('from', 'ashwini@taxbuddy.com');
-    data.append('subject', 'subject Large ITR object case');
+    data.append('subject', 'Large ITR object case');
     data.append('body', `<!DOCTYPE html>
 <html>
 
@@ -379,12 +383,13 @@ export class ItrAssignedUsersComponent implements OnInit {
 
 </html>`);
     data.append('isHtml', 'true');
-    data.append('to', 'divya@taxbuddy.com, pratik.bharda@taxbuddy.com, gitanjali.kakade@taxbuddy.com');
+    // data.append('to', 'divya@taxbuddy.com, pratik.bharda@taxbuddy.com, gitanjali.kakade@taxbuddy.com');
+    data.append('to', 'ashwini@taxbuddy.com');
     const dto_object = new Blob([ITR_JSON], {
       type: 'application/json'
     })
 
-    data.append('attachments', dto_object, "")
+    data.append('file', dto_object, "itr.json");
     let param = '/send-mail';
     this.userMsService.postMethod(param, data).subscribe((res: any) => {
       console.log(res);
