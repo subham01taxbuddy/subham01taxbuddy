@@ -1,7 +1,6 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
-import { Location } from '@angular/common';
 import {
   Component, ElementRef,
   EventEmitter,
@@ -156,7 +155,6 @@ export class CustomerProfileComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     private matDialog: MatDialog,
-    public location: Location,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private requestManager: RequestManager, private elementRef: ElementRef
   ) {
