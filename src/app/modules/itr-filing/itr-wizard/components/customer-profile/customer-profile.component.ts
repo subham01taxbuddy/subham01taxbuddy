@@ -1,17 +1,17 @@
 import { NriDetailsDialogComponent } from '../../../components/nri-details-dialog/nri-details-dialog.component';
 import { ITR_JSON, Jurisdictions } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
+import { Location } from '@angular/common';
 import {
   Component, ElementRef,
   EventEmitter,
   Input,
   OnInit,
-  Output,
-  SimpleChanges,
+  Output
 } from '@angular/core';
 import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
