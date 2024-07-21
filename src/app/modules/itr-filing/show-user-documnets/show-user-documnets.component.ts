@@ -68,10 +68,18 @@ export class ShowUserDocumnetsComponent implements OnInit {
         }
       });
     });
+  }
 
+  isDownloadAccess() {
     let roles = this.utilsService.getUserRoles();
     let filtered = roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     this.isDownloadAllowed = filtered && filtered.length > 0 ? true : false;
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.isDownloadAccess();
+    }, 2000);
   }
 
   isAisDocument(document) {
