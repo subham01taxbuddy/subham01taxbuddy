@@ -6867,7 +6867,7 @@ export class SummaryComponent implements OnInit {
     //}
   }
 
-  sendPdf=(channel):Promise<any>  => {
+  sendPdf = (channel): Promise<any> => {
     // https://uat-api.taxbuddy.com/itr/summary/send?itrId=28568&channel=both
     if(this.finalCalculations.aggregateIncome > 5000000 && this.finalCalculations.surcharge === 0 && !this.ITR_JSON.itrSummaryJson){
       this.handleSurchargeError();
@@ -6881,7 +6881,7 @@ export class SummaryComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar(res.message);
         this.utilsService.showSnackBar(res.message);
-      }).catch((error)=>{
+      }).catch((error) => {
         this.loading = false;
         this.utilsService.showSnackBar(error);
       })
@@ -7069,9 +7069,9 @@ export class SummaryComponent implements OnInit {
           );
         } else {
           const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
-                        '&itrId=' + this.ITR_JSON.itrId +
-                        '&assessmentYear=' + this.ITR_JSON.assessmentYear +
-                        '&detailsRequired=' + detailsRequired;
+            '&itrId=' + this.ITR_JSON.itrId +
+            '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+            '&detailsRequired=' + detailsRequired;
           this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
             (result) => {
               console.log('PDF Result', result);
@@ -7093,9 +7093,9 @@ export class SummaryComponent implements OnInit {
         }
       } else {
         const param = '/api/txbdyReport?userId=' + this.ITR_JSON.userId +
-                      '&itrId=' + this.ITR_JSON.itrId +
-                      '&assessmentYear=' + this.ITR_JSON.assessmentYear +
-                      '&detailsRequired=' + detailsRequired;
+          '&itrId=' + this.ITR_JSON.itrId +
+          '&assessmentYear=' + this.ITR_JSON.assessmentYear +
+          '&detailsRequired=' + detailsRequired;
         this.itrMsService.downloadFile(param, 'application/pdf').subscribe(
           (result) => {
             console.log('PDF Result', result);
@@ -7120,6 +7120,9 @@ export class SummaryComponent implements OnInit {
 
 
   confirmSubmitITR() {
+    if (this.finalCalculations?.amountPayable > 0) {
+      this.utilsService.showSnackBar('ITR filing with Tax Payable');
+    }
     if (this.ITR_JSON?.itrSummaryJson) {
       const dialogRef = this.dialog.open(AddManualUpdateReasonComponent, {
         width: '60vw',
@@ -7454,7 +7457,7 @@ export class SummaryComponent implements OnInit {
                   let errors = '';
                   if (res.errors instanceof Array && res.errors.length > 0) {
                     let error = res.errors[0];
-                    if(error.code === 'EF20006'){
+                    if (error.code === 'EF20006') {
                       this.isValidateJson = true;
                       resolve();
                     } else {

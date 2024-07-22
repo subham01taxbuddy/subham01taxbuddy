@@ -6,12 +6,11 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output,
-  SimpleChanges,
+  Output
 } from '@angular/core';
 import { UntypedFormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -156,7 +155,6 @@ export class CustomerProfileComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     private matDialog: MatDialog,
-    public location: Location,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private requestManager: RequestManager, private elementRef: ElementRef
   ) {
