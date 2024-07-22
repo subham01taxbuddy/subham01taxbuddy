@@ -286,12 +286,12 @@ export class ItrMsService {
     );
   }
 
-  putJvSnapshots<T>(ids: string[]): Observable<T> {
+  putJvSnapshots<T>(ids: string[],openItrId:number): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     const body = { ids: ids };
     return this.httpClient.put<T>(
-      `http://localhost:9050/itr/update-snapshot`, body ,
+      `http://localhost:9050/itr/update-snapshot/${openItrId}`, body ,
       { headers: this.headers }
     );
   }

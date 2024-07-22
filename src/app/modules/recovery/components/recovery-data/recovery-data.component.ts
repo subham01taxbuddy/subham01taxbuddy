@@ -121,11 +121,16 @@ export class RecoveryDataComponent implements OnInit {
       }
 
      callPutApi(){
-     
+      this.utilService.getFilerIdByMobile(this.mobileNumber).subscribe(
+        (response: any) => {
+          console.log('api response', response);
+          
+          if (response && response.data && response.data.content && response.data.content.length > 0) {
+            const openItrId = response.data.content[0].openItrId;
     
-      console.log('Sending IDs:', this.selectedItems);
-
-      this.itrMs.putJvSnapshots(this.selectedItems).subscribe(
+      //console.log('Sending IDs:', this.selectedItems);
+      if(openItrId){
+      this.itrMs.putJvSnapshots(this.selectedItems,openItrId).subscribe(
         (response) => {
           console.log('Put API response:', response);
           this.openResponsePopup(response);
@@ -135,9 +140,13 @@ export class RecoveryDataComponent implements OnInit {
           this.openResponsePopup(error);
         }
       );
-        
-     
+    }
   }
+}
+    );
+    } 
+    
+  
 
 getStateEntries(state: any): {key: string, value: any}[] {
   if (!state || typeof state !== 'object') {
