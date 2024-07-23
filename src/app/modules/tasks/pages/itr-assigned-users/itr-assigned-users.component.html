@@ -55,7 +55,17 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-2 spsTp">
+                        <div *ngIf="searchParam.statusId === 8" class="col-sm-3 spsTp">
+                          <label class="input__label" for="attr">Tax Payable</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                            <mat-select placeholder=""  [(ngModel)]="taxPayable">
+                              <mat-option *ngFor="let tax of taxDropdown" [value]="tax.value">
+                                {{ tax.label }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="spsTp" [ngClass]="{'col-sm-2': searchParam.statusId !== 8, 'col-sm-3': searchParam.statusId === 8}">
                           <label class="input__label" for="attr">Filing Status </label>
                           <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [(ngModel)]="searchParam.itrObjectStatus">
@@ -66,7 +76,7 @@
                           </mat-form-field>
                         </div>
 
-                        <div class="col-sm-5 spsTp">
+                        <div class="spsTp" [ngClass]="{'col-sm-5': searchParam.statusId !== 8, 'col-sm-8': searchParam.statusId === 8}">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
