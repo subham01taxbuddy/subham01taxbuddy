@@ -7,9 +7,6 @@ import { ToastMessage } from '../classes/toast';
 export class ToastMessageService {
     private subject = new Subject<ToastMessage>();
 
-    constructor() {
-    }
-
     getAlert(): Observable<ToastMessage> {
         return this.subject.asObservable();
     }

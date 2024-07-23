@@ -1,7 +1,7 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ApiEndpoints } from 'src/app/modules/shared/api-endpoint';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AfterContentChecked, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -42,7 +42,6 @@ export class DelayComponent implements AfterContentChecked {
     this.cdRef.detectChanges();
   }
 
-  // TODO
   getDelayedItrData(fy:any) {
     const loggedInUserId = this.utilsService.getLoggedInUserID();
     let reqBody = {
