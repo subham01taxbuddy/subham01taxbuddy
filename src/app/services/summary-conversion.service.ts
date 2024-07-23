@@ -295,12 +295,8 @@ export class SummaryConversionService {
                         ITR_Obj.aadharNumber =
                             ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-                        (ITR_Obj.aadhaarEnrolmentId =
-                            ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId),
-                            // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
-                            this.parseAndFormatDate(
-                                ItrJSON[this.ITR_Type].PersonalInfo?.DOB
-                            );
+                        ITR_Obj.aadhaarEnrolmentId = ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId;
+                        // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
                         ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
                     }
 

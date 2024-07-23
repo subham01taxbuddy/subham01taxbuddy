@@ -60,3 +60,25 @@ background-color:#f8f8fc;
     position: relative;
     padding: 10px 0px 0px 15px!important;
 }
+
+.darkBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10%;
+  background-color: #1b67ba;
+  border-color: #1b67ba;
+  color: #ffffff;
+  border-radius: 6px;
+  height: 50px;
+  width: 230px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 500 !important;
+}
+
+.darkBtn:hover {
+  background-color: #ffffff;
+  color: #1b67ba;
+  border: 1px solid #1b67ba;
+}

@@ -60,6 +60,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   maxNumber: number;
   disableButton: Boolean = false;
   emailAccepted = '';
+  allFilerList:any;
 
   constructor(
     private fb: FormBuilder,
@@ -497,6 +498,39 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     }
     if (checkboxNumber === 4) {
       this.internal.setValue(false);
+    }
+  }
+
+  checkActive(){
+     if (this.mobileNumber.value && this.mobileNumber.valid) {
+      this.loading = true;
+      const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
+      this.reportService.getMethod(param).subscribe((result: any) => {
+        this.loading =false;
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
+          this.allFilerList = result?.data?.content;
+          const isNumberPresent = this.allFilerList.some(
+            (item: any) => item.mobileNumber === this.mobileNumber.value || item.callingNumber === this.mobileNumber.value
+          );
+          if(isNumberPresent){
+            return this._toastMessageService.alert('error', 'This Number is already Present As SME ');
+          }else{
+            this.amplifySignIn();
+          }
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert('error', 'No Data Found in Get All Filer List API');
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error in API of Get All Filer List');
+      });
+
+     }else {
+      this._toastMessageService.alert('error',
+        'please enter mobile Number.'
+      );
     }
   }
 

@@ -10,7 +10,6 @@ export class DigitsOnlyDirective {
         this.autocomplete = 'off'
     }
     @HostListener('keypress', ['$event']) public disableKeys(e: any) {
-        this.document.all ? e.keyCode : e.keyCode
         return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57)
     }
 
@@ -26,6 +25,10 @@ export class DigitsOnlyDirective {
         if (cleanedValue !== inputValue) {
             inputValue = cleanedValue;
             document.execCommand('insertText', false, inputValue);
+        } else {
+            if(inputValue.match(/^[0-9.]+$/)){
+                document.execCommand('insertText', false, inputValue);
+            }
         }
     }
 }

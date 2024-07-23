@@ -7,7 +7,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-business-income',
   templateUrl: './business-income.component.html',
-  styleUrls: ['./business-income.component.scss']
 })
 export class BusinessIncomeComponent implements OnInit {
   loading = false;

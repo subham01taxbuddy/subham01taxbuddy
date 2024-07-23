@@ -5,13 +5,15 @@
     <div class="container card">
       <div style="padding: 10px; font-size: 20px">
         <span class="card__title">Comparison of New v/s Old Regime</span>
-        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="downloadComparison()" class="comp-title">
+        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="downloadComparison()" class="comp-title"
+          [disabled]="isIncomeMoreThan2Cr()">
           <i class="fas fa-download"></i></button>
-        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="shareComparison()" class="comp-title">
+        <button *ngIf="!ITR_JSON.itrSummaryJson" type="button" (click)="shareComparison()" class="comp-title"
+          [disabled]="isIncomeMoreThan2Cr()">
           <i class="fa fa-paper-plane"></i></button>
       </div>
       <div class="cardRect">
-        <table class="table table-bordered">
+        <table aria-label="comparison" class="table table-bordered">
           <thead style="background: #eaeaea">
             <tr class="table-head">
               <th class="text-center particular-label">Particulars</th>
@@ -41,7 +43,7 @@
 
         <hr />
 
-        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()" >
+        <form [formGroup]="regimeSelectionForm" (ngSubmit)="gotoSummary()">
           <div class="card__row flex flex-col" *ngIf="!this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)">
             <div class="card__col-xs-12 question-label" style="margin-bottom: 10px; background: #eaeaea">
               <strong> Tax Regime Selection </strong>
@@ -57,8 +59,9 @@
                 </div>
                 <div class="card__col-lg-2 card__col-md-2 card__col-sm-2 card__col-xm-2 text-right">
                   <mat-radio-group name="currentYearRegime" formControlName="currentYearRegime"
-                                   (change)="updateCurrentAYOptions()">
-                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px" labelPosition="before">
+                    (change)="updateCurrentAYOptions()">
+                    <mat-radio-button [value]="'NEW'" style="margin-left: 0px; margin-right: 2px"
+                      labelPosition="before">
                       No
                     </mat-radio-button>
                     <mat-radio-button [value]="'OLD'" labelPosition="before">
@@ -75,7 +78,6 @@
                   </mat-error>
                 </div>
               </div>
-<!--              <hr />-->
             </div>
 
             <div formGroupName="everOptedNewRegime" *ngIf="false">
@@ -124,7 +126,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
@@ -143,11 +144,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
-                    <!--                    Enter-->
-                    <!--                    acknowledgement number</mat-error>-->
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
-                    <!--                    Acknowledgement number should be 15 digit</mat-error>-->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
@@ -164,10 +160,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
-                    <!--                    Select-->
-                    <!--                    Date of-->
-                    <!--                    filling</mat-error>-->
                   </mat-form-field>
                 </div>
               </div>
@@ -221,7 +213,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
@@ -241,11 +232,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
-                    <!--                    Enter-->
-                    <!--                    acknowledgement number</mat-error>-->
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
-                    <!--                    Acknowledgement number should be 15 digit</mat-error>-->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
@@ -263,10 +249,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
-                    <!--                    Select-->
-                    <!--                    Date of-->
-                    <!--                    filling</mat-error>-->
                   </mat-form-field>
                 </div>
               </div>
@@ -274,7 +256,8 @@
             </div>
 
             <div formGroupName="optionForCurrentAY">
-              <div class="card__row" *ngIf="(this.ITR_JSON.itrType === '4' || this.ITR_JSON.itrType === '3') && showCurrentAYOptions">
+              <div class="card__row"
+                *ngIf="(this.ITR_JSON.itrType === '4' || this.ITR_JSON.itrType === '3') && showCurrentAYOptions">
                 <div class="card__col-xs-4">
                   <mat-label class="option-label">Acknowledgement Number</mat-label>
                   <mat-form-field appearance="outline">
@@ -289,11 +272,6 @@
                         showCurrentAYOptions">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('required')">-->
-                    <!--                    Enter-->
-                    <!--                    acknowledgement number</mat-error>-->
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEAckNo'].hasError('minlength')">-->
-                    <!--                    Acknowledgement number should be 15 digit</mat-error>-->
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-4">
@@ -310,10 +288,6 @@
                       ">
                       This field is required
                     </mat-error>
-                    <!--                <mat-error *ngIf="customerProfileForm.controls['form10IEDate'].hasError('required')">-->
-                    <!--                    Select-->
-                    <!--                    Date of-->
-                    <!--                    filling</mat-error>-->
                   </mat-form-field>
                 </div>
               </div>
@@ -344,10 +318,12 @@
                 summaryToolReliefsForm.get('section89').value !== '0'
               " class="flex" style="margin-left: auto">
               <div class="card__col-xs-6">
-                <mat-label>Acknowledgement Number</mat-label>
+                <mat-label>Acknowledgement Number1</mat-label>
                 <mat-form-field appearance="outline">
-                  <input matInput name="acknowledgement" formControlName="acknowledgement89"
-                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
+                  <input class="input-field" matInput name="acknowledgement" formControlName="acknowledgement89"
+                    placeholder="Acknowledgement"
+                    (blur)="setFilingDate(summaryToolReliefsForm,'acknowledgement89','acknowledgementDate89')"
+                    maxlength="15" minlength="15" required />
                 </mat-form-field>
                 <mat-error *ngIf="
                     summaryToolReliefsForm
@@ -355,6 +331,13 @@
                       .hasError('required')
                   ">
                   In order to claim relief, please enter the required fields
+                </mat-error>
+                <mat-error *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement89')
+                      .hasError('pattern')
+                  ">
+                  Please enter only numbers
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
@@ -395,8 +378,10 @@
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Number</mat-label>
                 <mat-form-field appearance="outline">
-                  <input matInput name="acknowledgement" formControlName="acknowledgement90"
-                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
+                  <input matInput class="input-field" name="acknowledgement" formControlName="acknowledgement90"
+                    placeholder="Acknowledgement"
+                    (blur)="setFilingDate(summaryToolReliefsForm,'acknowledgement90','acknowledgementDate90')"
+                    maxlength="15" minlength="15" required />
                 </mat-form-field>
                 <mat-error *ngIf="
                     summaryToolReliefsForm
@@ -404,6 +389,13 @@
                       .hasError('required')
                   ">
                   In order to claim relief, please enter the required fields
+                </mat-error>
+                <mat-error *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement90')
+                      .hasError('pattern')
+                  ">
+                  Please enter only numbers
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
@@ -442,8 +434,10 @@
               <div class="card__col-xs-6">
                 <mat-label>Acknowledgement Number</mat-label>
                 <mat-form-field appearance="outline">
-                  <input matInput name="acknowledgement" formControlName="acknowledgement91"
-                    placeholder="Acknowledgement" maxlength="15" minlength="15" digitsOnly required />
+                  <input class="input-field" matInput name="acknowledgement" formControlName="acknowledgement91"
+                    placeholder="Acknowledgement"
+                    (blur)="setFilingDate(summaryToolReliefsForm,'acknowledgement91','acknowledgementDate91')"
+                    maxlength="15" minlength="15" required />
                 </mat-form-field>
                 <mat-error *ngIf="
                     summaryToolReliefsForm
@@ -451,6 +445,13 @@
                       .hasError('required')
                   ">
                   In order to claim relief, please enter the required fields
+                </mat-error>
+                <mat-error *ngIf="
+                    summaryToolReliefsForm
+                      .get('acknowledgement91')
+                      .hasError('pattern')
+                  ">
+                  Please enter only numbers
                 </mat-error>
               </div>
               <div class="card__col-xs-6">
@@ -485,12 +486,12 @@
             <thead style="text-align: center;">
               <tr class="table-head">
                 <th id="head-of-income" rowspan="2" colspan="2" class="th-positon-relative">Head of income</th>
-                <th id="income-current"  rowspan="2">Income of<br> current year<br> (1)</th>
+                <th id="income-current" rowspan="2">Income of<br> current year<br> (1)</th>
                 <th id="long-term-loss" colspan="2">Long term loss of
                   the <br>current year set off</th>
                 <th id="short-term-loss" colspan="2">Short Term loss of
                   the <br>current year set off</th>
-                <th id="set-off"  rowspan="2">Current year’s <br>Income remaining <br>after set off<br>
+                <th id="set-off" rowspan="2">Current year’s <br>Income remaining <br>after set off<br>
                   (6)= 1-2-3-4-5</th>
                 <th id="head-of-set" colspan="2">Current Year's <br>Inter Head Set off<br>
                   (7)</th>
@@ -501,34 +502,34 @@
                 </th>
               </tr>
               <tr class="table-head">
-                <th  id="ten-percentage">
+                <th id="ten-percentage">
                   10%<br>
                   (2)
                 </th>
-                <th  id="twenty-percentage">
+                <th id="twenty-percentage">
                   20%<br>
                   (3)
                 </th>
-                <th  id="fifteen-percentage">
+                <th id="fifteen-percentage">
                   15%<br>
                   (4)
                 </th>
-                <th  id="rate">
+                <th id="rate">
                   Applicable rate<br>
                   (5)
                 </th>
-                <th  id="house-property">
+                <th id="house-property">
                   House proprty<br>
                   (i)
                 </th>
-                <th  id="business">
+                <th id="business">
                   Busines and<br> profession
                   (ii)
                 </th>
-                <th  id="long-term">
+                <th id="long-term">
                   Long Term<br>(i)
                 </th>
-                <th  id="short-te">
+                <th id="short-te">
                   Short Term<br>(ii)
                 </th>
               </tr>
@@ -718,7 +719,7 @@
         <div class="question-label" style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
           <strong> Quarterwise breakup of column (9) </strong>
         </div>
-        <table class="table table-bordered">
+        <table aria-label="quarterwise breakup" class="table table-bordered">
           <thead>
             <tr class="table-head">
               <th>Sr. No</th>
@@ -846,9 +847,9 @@
 
 <div class="flex justify-between p-[30px] back-foot">
   <button (click)="goBack()" class="lgtBtn">Back to Sources</button>
-
-  <button (click)="gotoSummary()" class="darkBtn">
+  <app-custom-button class="darkBtn" [disabled]="loading" [actions]="[gotoSummary]">
     <span class="adjust">Save & Next</span>
-    <i class="material-icons icoAd">arrow_right_alt </i>
-  </button>
+    <i class="material-icons icoAd">arrow_right_alt</i>
+  </app-custom-button>
+
 </div>

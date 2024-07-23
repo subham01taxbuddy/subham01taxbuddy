@@ -2,7 +2,6 @@ import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -18,10 +17,10 @@ import { AllBusinessIncomeComponent } from './pages/all-business-income/all-busi
 import { UserNotesComponent } from '../../shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
 import { SummaryConversionService } from "../../../services/summary-conversion.service";
+import { ChangeStatusComponent } from '../../shared/components/change-status/change-status.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -55,7 +54,8 @@ export class ItrWizardComponent implements OnInit {
     public schedules: Schedules,
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
-    private summaryConversionService: SummaryConversionService
+    private summaryConversionService: SummaryConversionService,
+    private dialog: MatDialog,
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -106,7 +106,7 @@ export class ItrWizardComponent implements OnInit {
       this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
       this.ITR_JSON.family instanceof Array
     ) {
-      this.ITR_JSON.family.filter((item: any) => {
+      this.ITR_JSON.family.forEach((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           let fName = item.fName ? item.fName : '';
           let mName = item.mName ? item.mName : '';
@@ -177,61 +177,129 @@ export class ItrWizardComponent implements OnInit {
     }, 2000);
   }
 
-  gotoSummary() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    if (this.ITR_JSON.itrSummaryJson) {
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Comparison of New v/s Old Regime';
-      this.router.navigate(['/itr-filing/itr/old-vs-new']);
-      return;
-    }
-    this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result: any) => {
-      console.log(result);
-      // if(result.success){
+  // gotoSummary() {
+  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  //   if (this.ITR_JSON.itrSummaryJson) {
+  //     this.breadcrumb = null;
+  //     this.showIncomeSources = false;
+  //     this.selectedSchedule = 'Comparison of New v/s Old Regime';
+  //     this.router.navigate(['/itr-filing/itr/old-vs-new']);
+  //     return;
+  //   }
+  //   this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result: any) => {
+  //     console.log(result);
+  //     // if(result.success){
 
-      if (result.data.errors.length > 0) {
-        let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
-        this.breadcrumb = null;
-        this.showIncomeSources = false;
-        this.selectedSchedule = 'Validation Errors';
-        this.router.navigate(['/itr-filing/itr/validation-errors'], {
-          state: { validationErrors: errorMapping },
-        });
-      } else {
-        if (!this.ITR_JSON.systemFlags.hasAgricultureIncome) {
-          this.ITR_JSON.agriculturalDetails = null;
-          this.ITR_JSON.agriculturalLandDetails = null;
-          this.ITR_JSON.agriculturalIncome = null;
-        }
-        if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
-          this.ITR_JSON.schedule5a = null;
-        }
-        if (this.ITR_JSON.partnerInFirmFlag === 'N') {
-          this.ITR_JSON.partnerFirms = [];
-        }
-        this.ITR_JSON = this.itrValidationService.removeNullProperties(
-          this.ITR_JSON
-        );
-        this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
-          this.ITR_JSON
-        );
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
+  //     if (result.data.errors.length > 0) {
+  //       let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
+  //       this.breadcrumb = null;
+  //       this.showIncomeSources = false;
+  //       this.selectedSchedule = 'Validation Errors';
+  //       this.router.navigate(['/itr-filing/itr/validation-errors'], {
+  //         state: { validationErrors: errorMapping },
+  //       });
+  //     } else {
+  //       if (!this.ITR_JSON.systemFlags.hasAgricultureIncome) {
+  //         this.ITR_JSON.agriculturalDetails = null;
+  //         this.ITR_JSON.agriculturalLandDetails = null;
+  //         this.ITR_JSON.agriculturalIncome = null;
+  //       }
+  //       if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
+  //         this.ITR_JSON.schedule5a = null;
+  //       }
+  //       if (this.ITR_JSON.partnerInFirmFlag === 'N') {
+  //         this.ITR_JSON.partnerFirms = [];
+  //       }
+  //       this.ITR_JSON = this.itrValidationService.removeNullProperties(
+  //         this.ITR_JSON
+  //       );
+  //       this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
+  //         this.ITR_JSON
+  //       );
+  //       sessionStorage.setItem(
+  //         AppConstants.ITR_JSON,
+  //         JSON.stringify(this.ITR_JSON)
+  //       );
 
-        this.breadcrumb = null;
-        this.showIncomeSources = false;
-        this.selectedSchedule = 'Comparison of New v/s Old Regime';
-        this.router.navigate(['/itr-filing/itr/old-vs-new']);
+  //       this.breadcrumb = null;
+  //       this.showIncomeSources = false;
+  //       this.selectedSchedule = 'Comparison of New v/s Old Regime';
+  //       this.router.navigate(['/itr-filing/itr/old-vs-new']);
+  //     }
+
+
+  //     // }
+  //   });
+
+  // }
+
+  gotoSummary = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      this.loading = true;
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+      if (this.ITR_JSON.itrSummaryJson) {
+        this.navigateToOldVsNew();
+        this.loading = false;
+        resolve();
+        return;
       }
 
-
-      // }
+      this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe(
+        (result: any) => {
+          this.loading = false;
+          if (result.data.errors.length > 0) {
+            let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
+            this.navigateToValidationErrors(errorMapping);
+          } else {
+            this.cleanUpITRJSON();
+            sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+            this.navigateToOldVsNew();
+          }
+          this.loading = false;
+          resolve();
+        },
+        (error) => {
+          this.loading = false;
+          console.error('Validation error:', error);
+          reject(error);
+        }
+      );
     });
-
   }
+
+  private navigateToOldVsNew() {
+    this.breadcrumb = null;
+    this.showIncomeSources = false;
+    this.selectedSchedule = 'Comparison of New v/s Old Regime';
+    this.router.navigate(['/itr-filing/itr/old-vs-new']);
+  }
+
+  private navigateToValidationErrors(errorMapping: any) {
+    this.breadcrumb = null;
+    this.showIncomeSources = false;
+    this.selectedSchedule = 'Validation Errors';
+    this.router.navigate(['/itr-filing/itr/validation-errors'], {
+      state: { validationErrors: errorMapping },
+    });
+  }
+
+  private cleanUpITRJSON() {
+    if (!this.ITR_JSON.systemFlags.hasAgricultureIncome) {
+      this.ITR_JSON.agriculturalDetails = null;
+      this.ITR_JSON.agriculturalLandDetails = null;
+      this.ITR_JSON.agriculturalIncome = null;
+    }
+    if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
+      this.ITR_JSON.schedule5a = null;
+    }
+    if (this.ITR_JSON.partnerInFirmFlag === 'N') {
+      this.ITR_JSON.partnerFirms = [];
+    }
+    this.ITR_JSON = this.itrValidationService.removeNullProperties(this.ITR_JSON);
+    this.ITR_JSON = this.itrValidationService.removeDuplicateCg(this.ITR_JSON);
+  }
+
 
   validateItrObj() {
     let userItrObj = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -539,9 +607,35 @@ export class ItrWizardComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  goToProfile(){
+  goToProfile() {
     let serviceType = this.ITR_JSON.isITRU ? 'ITRU' : 'ITR';
     this.router.navigate([`pages/user-management/profile/` + this.ITR_JSON.userId], { queryParams: { 'serviceType': serviceType, }, queryParamsHandling: 'merge' });
+  }
+
+  updateStatus() {
+    let userInfo = {
+      clientName: this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
+      userId: this.ITR_JSON.userId,
+      assessmentYear: this.ITR_JSON.assessmentYear,
+    }
+    let disposable = this.dialog.open(ChangeStatusComponent, {
+      width: '60%',
+      height: 'auto',
+
+      data: {
+        userId: this.ITR_JSON.userId,
+        clientName: this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
+        serviceType: this.ITR_JSON.isITRU ? 'ITRU' : 'ITR',
+        mode: 'Update Status',
+        itrChatInitiated: true,
+        userInfo: userInfo,
+      },
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 
   ngOnDestroy() {

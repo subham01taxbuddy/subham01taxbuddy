@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnInit,
   OnChanges,
   SimpleChanges,
@@ -27,8 +26,7 @@ import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 })
 export class LandAndBuildingComponent
   extends WizardNavigation
-  implements OnInit, OnChanges
-{
+  implements OnInit, OnChanges {
   @ViewChild(LabFormComponent) labFormComponent;
 
   loading = false;
@@ -81,7 +79,6 @@ export class LandAndBuildingComponent
       assestDetails: [],
       ITR_JSON: this.ITR_JSON,
       mode: 'ADD',
-      // assetSelected: assetSelected,
     };
   }
 
@@ -95,12 +92,6 @@ export class LandAndBuildingComponent
 
   get getPropertiesArrayForForm() {
     return <UntypedFormArray>this.propertiesForm.get('propertiesArray');
-  }
-  updatePropertySelection(event, id) {
-    let array = this.propertiesForm.controls['propertiesArray'] as UntypedFormArray;
-    let selected = array.controls.filter(
-      (control: UntypedFormGroup) => control.controls['index'].value === id - 1
-    )[0];
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -118,13 +109,9 @@ export class LandAndBuildingComponent
   }
 
   addCapitalGain(mode, assetSelected) {
-    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     console.log('Edit CG:', assetSelected);
     let assetDetails = null;
     if (mode === 'EDIT') {
-      let filtered = this.Copy_ITR_JSON.capitalGain.filter(
-        (item) => item.assetType !== assetSelected.assetType
-      );
       let selectedTypeList = this.Copy_ITR_JSON.capitalGain.filter(
         (item) => item.assetType === assetSelected.assetType
       )[0];
@@ -144,10 +131,8 @@ export class LandAndBuildingComponent
   }
 
   cgCreateRowData() {
-    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.isExmptAvail = false;
     this.properties = [];
-    const dataToReturn = [];
     let labData = this.ITR_JSON.capitalGain?.filter(
       (item) => item.assetType === 'PLOT_OF_LAND'
     );
@@ -156,10 +141,6 @@ export class LandAndBuildingComponent
       let buyerDetails = labData[0].buyersDetails?.filter(
         (buyer) => buyer.srn === assetDetails.srn
       )[0];
-      // if (this.utilsService.isNonEmpty(this.ITR_JSON.capitalGain[i].cgOutput)) {
-      //   cgIncome = this.ITR_JSON.capitalGain[i].cgOutput.filter(item => item.assetType === this.ITR_JSON.capitalGain[i].assetType);
-      // }
-
       let costOfImprovement = 0;
       let improvements = labData[0].improvement?.filter(
         (imp) => imp.srn == assetDetails.srn
@@ -318,7 +299,7 @@ export class LandAndBuildingComponent
     this.saveAndNext.emit(false);
   }
 
-  saveFormData(){
+  saveFormData() {
     this.loading = true;
     this.labFormComponent.saveImmovableCG(this.labFormComponent.immovableForm, 0, true);
     this.loading = false;

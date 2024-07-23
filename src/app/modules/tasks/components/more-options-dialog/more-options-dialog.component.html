@@ -70,7 +70,8 @@
       (click)="deleteUser()">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
     </button> -->
-    <app-custom-button  *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button" [actions]="[deleteUser]">
+    <app-custom-button *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button"
+      [actions]="[deleteUser]">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
     </app-custom-button>
   </span>
@@ -96,7 +97,8 @@
   &nbsp;&nbsp;
 
   <div class="card__row" *ngIf="showDetails === 'OPT_SERVICE'">
-    <table style=" width: 100%;" *ngIf="optedServicesData && optedServicesData.length > 0">
+    <table aria-label="Other Details Service" style=" width: 100%;"
+      *ngIf="optedServicesData && optedServicesData.length > 0">
       <tr>
         <!-- <th>No</th> -->
         <th>Service Type</th>
@@ -130,11 +132,8 @@
     </div>
   </div>
   <div class="card__row" *ngIf="showDetails === 'JOURNEY'">
-    <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="myItrsGridOptions">
-  </ag-grid-angular> -->
-    <table style=" width: 100%;">
+    <table aria-label="Journey Details" style=" width: 100%;">
       <tr>
-        <!-- <th>No</th> -->
         <th>Service Type</th>
         <th>Status Name</th>
         <th>Assessment Year</th>

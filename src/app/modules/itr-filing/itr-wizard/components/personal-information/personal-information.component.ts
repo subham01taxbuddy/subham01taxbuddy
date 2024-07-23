@@ -3,7 +3,6 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  OnChanges,
   Input,
   SimpleChanges, ElementRef,
 } from '@angular/core';
@@ -13,7 +12,6 @@ import {
   UntypedFormBuilder,
   UntypedFormArray,
   ValidationErrors,
-  FormControl,
   ValidatorFn,
   AbstractControl,
 } from '@angular/forms';
@@ -24,7 +22,6 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import {
   DateAdapter,
   MAT_DATE_LOCALE,
@@ -2392,7 +2389,6 @@ export class PersonalInformationComponent implements OnInit {
     this.userMsService.getMethod(param).subscribe(
       (result) => {
         this.bankList = result;
-        // this.encrDecrService.set(AppConstants.BANK_DATA, JSON.stringify(this.bankList));
       },
       (error) => { }
     );
@@ -2423,48 +2419,9 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // findAssesseeType() {
-  //   this.customerProfileForm.controls['panNumber'].setValue(
-  //     this.utilsService.isNonEmpty(
-  //       this.customerProfileForm.controls['panNumber'].value
-  //     )
-  //       ? this.customerProfileForm.controls['panNumber'].value.toUpperCase()
-  //       : this.customerProfileForm.controls['panNumber'].value
-  //   );
-
-  //   if (
-  //     this.utilsService.isNonEmpty(
-  //       this.customerProfileForm.controls['panNumber'].value
-  //     )
-  //   ) {
-  //     const pan = this.customerProfileForm.controls['panNumber'].value;
-  //     if (pan.substring(4, 3) === 'P') {
-  //       this.customerProfileForm.controls['assesseeType'].setValue(
-  //         'INDIVIDUAL'
-  //       );
-  //     } else if (pan.substring(4, 3) === 'H') {
-  //       this.customerProfileForm.controls['assesseeType'].setValue('HUF');
-  //     } else {
-  //       this.customerProfileForm.controls['assesseeType'].setValue(
-  //         'INDIVIDUAL'
-  //       );
-  //     }
-  //   }
-  // }
-
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
       const token = sessionStorage.getItem(AppConstants.TOKEN);
-      let httpOptions: any;
-      httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-        }),
-        responseType: 'json',
-      };
-
       if (
         this.utilsService.isNonEmpty(
           this.customerProfileForm.controls['panNumber']
@@ -2540,11 +2497,6 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
   changeCountry(country) {
-    // const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
-    // this.itrMsService.getMethod(param).subscribe((result: any) => {
-    //   // this.stateDropdown = result;
-    // }, error => {
-    // });
     if (country !== '91') {
       this.stateDropdown = [
         {
@@ -2595,7 +2547,7 @@ export class PersonalInformationComponent implements OnInit {
       });
       console.log('Immovable Form===', this.customerProfileForm);
     }
-    this.ITR_JSON.family.filter((item: any) => {
+    this.ITR_JSON.family.forEach((item: any) => {
       if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
         this.customerProfileForm.patchValue({
           firstName: item.fName,
@@ -2682,11 +2634,7 @@ export class PersonalInformationComponent implements OnInit {
 
   async saveProfile(ref) {
     console.log(this.customerProfileForm, 'customerProfile');
-    // this.findAssesseeType();
-    //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
     this.customerProfileForm.controls['panNumber'].setValue(
@@ -2698,7 +2646,6 @@ export class PersonalInformationComponent implements OnInit {
     }
     this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
 
-    // if (!this.isFormValid()) {
     if (this.customerProfileForm.invalid) {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
@@ -2710,7 +2657,6 @@ export class PersonalInformationComponent implements OnInit {
       this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       return;
     }
-    // }
 
     const formArrayValid = this.getBankDetailsArray.controls.every(control => control.valid);
     const formArrayHasValues = this.getBankDetailsArray.controls.length > 0;
@@ -2760,9 +2706,6 @@ export class PersonalInformationComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          // this.utilsService.showSnackBar(
-          //   'Customer profile updated successfully.'
-          // );
           this.personalInfoSaved.emit(true);
 
           if (!ref) {
@@ -2786,17 +2729,11 @@ export class PersonalInformationComponent implements OnInit {
   openAcc() {
     const accordionButton = document.getElementById('bankButtonId');
     if (accordionButton) {
-      if (accordionButton.getAttribute("aria-expanded") === "false"){
+      if (accordionButton.getAttribute("aria-expanded") === "false") {
         accordionButton.click();
       }
 
     }
-    // const accordion = document.getElementById('perDetailsId');
-    // if(accordion){
-    //   if(accordion.getAttribute("aria-expanded") === "false"){
-    //     accordion.click();
-    //   }
-    // }
   }
 
   async verifyAllBanks() {
@@ -2823,14 +2760,6 @@ export class PersonalInformationComponent implements OnInit {
     }
     return true;
   }
-
-  // calAge(dob) {
-  //   const birthday: any = new Date(dob);
-  //   const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
-  //   const today: any = new Date(currentYear, 2, 31);
-  //   const timeDiff: any = ((today - birthday) / (31557600000));
-  //   return Math.floor(timeDiff);
-  // }
 
   documents = [];
   getDocuments() {
@@ -2917,10 +2846,6 @@ export class PersonalInformationComponent implements OnInit {
       }
     );
   }
-
-  // previousRoute() {
-  //   this.router.navigate(['/pages/itr-filing/customer-profile']);
-  // }
 
   afterUploadDocs(fileUpload) {
     if (fileUpload === 'File uploaded successfully') {

@@ -15,6 +15,8 @@ import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -76,6 +78,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     private router: Router,
     private cacheManager: CacheManager,
     private reportService: ReportService,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.promoCodeGridOptions = <GridOptions>{
@@ -436,6 +439,50 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
       this.searchParam.page = event - 1;
       this.getPromoCodeList(event);
     }
+  }
+
+  showCsvMessage: boolean;
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+    let param = '';
+    let searchFilter = '';
+
+
+    if (this.searchValue.value) {
+      // param = '&code=' + this.searchValue.value;
+      const encodedSearchValue = encodeURIComponent(this.searchValue.value);
+      searchFilter += `&code=${encodedSearchValue}`;
+    }
+    let serviceFilter = '';
+    if (this.serviceType.value) {
+      serviceFilter += `&serviceType=${this.serviceType.value}`;
+    }
+
+    param = `/promocodes${searchFilter}${serviceFilter}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    let fieldName = [
+      { key: 'code', value: 'Code' },
+      { key: 'title', value: 'Title' },
+      { key: 'description', value: 'Description' },
+      { key: 'startDate', value: 'Start Date' },
+      { key: 'endDate', value: 'End Date' },
+      { key: 'discountType', value: 'Discount Type' },
+      { key: 'discountAmount', value: 'Discount Amount' },
+      { key: 'discountPercent', value: 'Discount Percent' },
+      { key: 'minOrderAmount', value: 'Minimum Order Amount' },
+      { key: 'maxDiscountAmount', value: 'Max Discount Amount' },
+      { key: 'usedCount', value:'User Count'},
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'promo-code-csv', fieldName, {});
+    this.loading = false;
+    this.showCsvMessage = false;
+
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;

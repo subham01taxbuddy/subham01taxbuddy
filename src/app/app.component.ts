@@ -19,7 +19,6 @@ import { KommunicateSsoService } from './services/kommunicate-sso.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
 
@@ -50,6 +49,17 @@ export class AppComponent {
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
+        let softwareUpdateAvailable = localStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
+        console.log('Software update available key', softwareUpdateAvailable)
+
+        if (softwareUpdateAvailable === 'true') {
+          console.log('remove Software update available key')
+          localStorage.removeItem('SOFTWARE_UPDATE_AVAIlABLE');
+          window.location.reload();
+          navigator.serviceWorker.getRegistration('/').then(function (registration) {
+            registration.update();
+          });
+        }
         if (
           event.id === 1 &&
           event.url === event.urlAfterRedirects
@@ -68,8 +78,10 @@ export class AppComponent {
       });
 
     if (this.swUpdate.isEnabled) {
+      console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
       this.swUpdate.available.subscribe(() => {
-        this.reloadWindow();
+        console.log('SOFTWARE_UPDATE_AVAIlABLE')
+        localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       })
     }
 
@@ -87,8 +99,6 @@ export class AppComponent {
                   sessionStorage.setItem('webToken', value);
                 }).catch(error => {
                   console.log("error", error.code);
-                  if (error.code === 'messaging/permission-blocked') {
-                  }
                 })
               } else {
                 alert("Click the icon to the left of address bar and enable notifications.")
@@ -103,7 +113,6 @@ export class AppComponent {
       this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
         tap(it => console.log('FCM', it)),
       );
-    } else {
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
@@ -232,8 +241,6 @@ export class AppComponent {
           registration.update();
         });
       }
-
     });
-
   }
 }

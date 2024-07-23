@@ -797,6 +797,18 @@ export class UtilsService {
             .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
       }
   }
+
+  saveManualUpdateReason(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+      const param =
+          '/itr/' +
+          itrObject.userId +
+          '/' +
+          itrObject.itrId +
+          '/' +
+          itrObject.assessmentYear;
+      return this.itrMsService.putMethod(param, itrObject);
+  }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {

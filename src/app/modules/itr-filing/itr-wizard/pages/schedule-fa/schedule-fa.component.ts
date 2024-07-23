@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Form, Validators} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Form, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -101,6 +101,7 @@ export class ScheduleFaComponent implements OnInit {
   maxPurchaseDate: any;
   selectedIndexes: number[] = [];
   selectedAccountIndexes: number[] = [];
+  countryNameCodeList: any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -1370,5 +1371,24 @@ export class ScheduleFaComponent implements OnInit {
     }
     this.scheduleFa.updateValueAndValidity();
     console.log(this.scheduleFa);
+  }
+
+  filter(event): void {
+    if (event.target.value) {
+      const filterValue = event.target.value.toLowerCase();
+      this.countryNameCodeList = this.countryCodeList.filter(
+        item => item.name.toLowerCase().includes(filterValue) || item.code.toString().includes(filterValue));
+    } else {
+      this.countryNameCodeList = this.countryCodeList;
+    }
+  }
+
+  displayFn = (country: any): string => {
+    if (country) {
+      let b = this.countryCodeList?.filter(o => o.code.toString() === country.toString())[0];
+      return b ? `${b?.code}:${b?.name}` : '';
+    } else {
+      return '';
+    }
   }
 }

@@ -423,8 +423,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
-    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid && (agriIncome && agriIncome?.value > 500000 ?
-      this.agriIncFormGroup.valid : true)) {
+    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
     } else {

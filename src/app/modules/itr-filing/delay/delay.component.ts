@@ -9,7 +9,6 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 @Component({
   selector: 'app-delay',
   templateUrl: './delay.component.html',
-  styleUrls: ['./delay.component.css']
 })
 export class DelayComponent implements AfterContentChecked {
 
@@ -46,12 +45,10 @@ export class DelayComponent implements AfterContentChecked {
   // TODO
   getDelayedItrData(fy:any) {
     const loggedInUserId = this.utilsService.getLoggedInUserID();
-    // let param = `${ApiEndpoints.itrMs.itrByAckStatus}`;
     let reqBody = {
       'financialYear': fy,
       'filingTeamMemberId': loggedInUserId
     }
-    // this.itrMsService.getMethod(param).subscribe((res: any) => {
     let param = '/itr-search?page=0&size=20';
     let param2 = reqBody;
     this.itrMsService.postMethod(param, param2).subscribe((res: any) => {

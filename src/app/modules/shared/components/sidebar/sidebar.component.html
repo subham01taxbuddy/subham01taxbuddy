@@ -3,15 +3,14 @@
     <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
       <div class="menu sidebar__item menu-name" (click)="$event.stopPropagation();toggle(i)"
         *ngIf="!menu.url && isApplicable(menu.roles)">
-        <img src="assets/img/menu/{{menu.icon}}" (click)="openOtherMenu()" class="imgAli" [title]="menu.name" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
+        <img src="assets/img/menu/{{menu.icon}}" alt="menu" (click)="openOtherMenu()" class="imgAli" [title]="menu.name" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
         <i *ngIf="!menu.active && openSidebar" class="fa fa-chevron-right menu-icon"></i>
         <i *ngIf="menu.active && openSidebar" class="fa fa-chevron-up menu-icon"></i>
       </div>
       <div *ngIf="menu.url && isApplicable(menu.roles)">
         <a routerLink="{{menu.url}}" routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
           class="sidebar__item" href="javascript:void(0)">
-          <!-- <span class="spacTp">{{ menu.name }}</span> -->
-          <img src="assets/img/menu/{{menu.icon}}" [title]="menu.name" class="imgAli" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
+          <img src="assets/img/menu/{{menu.icon}}" alt="menu-icon" [title]="menu.name" class="imgAli" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
         </a>
       </div>
       <div *ngIf="menu.active && openSidebar">

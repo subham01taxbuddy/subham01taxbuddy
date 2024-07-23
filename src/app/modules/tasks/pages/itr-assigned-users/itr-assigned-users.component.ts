@@ -53,7 +53,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    itrObjectStatus:null,
+    itrObjectStatus: null,
   };
   agentId = null;
   loggedInUserRoles: any;
@@ -82,7 +82,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'ITRU',
     },
   ]
-  fillingStatus=[
+  fillingStatus = [
     {
       label: 'Yet to Start',
       value: 'CREATE',
@@ -92,6 +92,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'PREPARING_ITR',
     },
   ];
+  loggedInUserId: any;
+  showReassignButton: boolean = false;
 
   constructor(
     private reviewService: ReviewService,
@@ -111,7 +113,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    if (environment.allowReassignToPreviousLeader.includes(this.loggedInUserId)) {
+      this.showReassignButton = true;
+    }
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -119,7 +125,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
       },
       onGridReady: params => {
       },
@@ -222,7 +228,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
+  async requestCompleted(res: any, self: ItrAssignedUsersComponent) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
@@ -286,7 +292,18 @@ export class ItrAssignedUsersComponent implements OnInit {
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
-              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              try {
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              } catch (e) {
+                this.utilsService.showSnackBar('Please try with manual filling');
+                this.sendEmail(JSON.stringify(workingItr));
+                workingItr.capitalGain = null;
+                this.utilsService.saveItrObject(workingItr).subscribe((result:any)=>{
+                  console.log('itr cg cleared');
+                });
+                console.log("Local Storage is full, Please empty data");
+                return;
+              }
               this.router.navigate(['/itr-filing/itr'], {
                 state: {
                   userId: this.rowData.userId,
@@ -308,6 +325,79 @@ export class ItrAssignedUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  sendEmail(ITR_JSON) {
+    this.loading = true;
+    var data = new FormData();
+    data.append('from', 'ashwini@taxbuddy.com');
+    data.append('subject', 'Large ITR object case');
+    data.append('body', `<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
+    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
+        <tr>
+            <td align="center">
+                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
+                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
+                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
+                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 15px 0px 15px">
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
+                                <tr>
+                                    <td style="font-size: 14px;color: #333;"> <br> <br> <span style="font-weight: bold">Dear Team,</span><br /> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please Check the below attached json that is too large </p> <br>
+
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1c3550;padding: 20px 15px;">
+                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>`);
+    data.append('isHtml', 'true');
+    // data.append('to', 'divya@taxbuddy.com, pratik.bharda@taxbuddy.com, gitanjali.kakade@taxbuddy.com');
+    data.append('to', 'ashwini@taxbuddy.com');
+    const dto_object = new Blob([ITR_JSON], {
+      type: 'application/json'
+    })
+
+    data.append('file', dto_object, "itr.json");
+    let param = '/send-mail';
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
+      console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar(error.error.text);
+    });
   }
 
   checkFilerAssignment(data: any) {
@@ -540,19 +630,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     console.log(itrStatus);
     var statusSequence = 0;
 
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
+    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
-        hide: !this.showReassignmentBtn.length,
+        hide: !(this.showReassignButton || this.showReassignmentBtn.length),
         pinned: 'left',
-        lockPosition:true,
+        lockPosition: true,
         suppressMovable: true,
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
+          return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
         },
         cellStyle: function (params: any) {
           return {
@@ -1033,6 +1123,31 @@ export class ItrAssignedUsersComponent implements OnInit {
     return columnDefs;
   }
 
+  reassign() {
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
+      return;
+    }
+    if (selectedRows.length > 1) {
+      this.utilsService.showSnackBar('Please select only one entry from table to Re-Assign');
+      return;
+    }
+
+    let userId = selectedRows.map(row => row.userId);
+    const param = '/lanretni/filer-assignment/' + userId[0];
+    this.itrMsService.putMethod(param, '').subscribe((result: any) => {
+      if (result?.success) {
+        this.search();
+      } else {
+        this.utilsService.showSnackBar(result.message);
+
+      }
+    }, (error: any) => {
+      this.utilsService.showSnackBar(error.message);
+    });
+  }
+
   reassignmentForLeader() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -1324,7 +1439,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if(data.everified === false){
+        if (data.everified === false) {
           this.utilsService.showSnackBar(
             'Please complete e-verification before starting with revised return'
           );
@@ -1595,7 +1710,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-    this.searchParam.itrObjectStatus=null;
+    this.searchParam.itrObjectStatus = null;
     this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
@@ -1613,7 +1728,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  search= (form?, isAgent?, pageChange?): Promise<any> =>{
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1688,36 +1803,36 @@ export class ItrAssignedUsersComponent implements OnInit {
       param = param + '&assigned=false'
     }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+      if (result.success == false) {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+      }
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data['content']);
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(result.data['content']);
+      }
+      this.loading = false;
 
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-
-      }).catch(() =>{
-        this.loading = false;
-        this.config.totalItems = 0;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      });
+    }).catch(() => {
+      this.loading = false;
+      this.config.totalItems = 0;
+      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+    });
   }
 
 

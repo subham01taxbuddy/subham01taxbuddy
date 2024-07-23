@@ -174,11 +174,11 @@ export class MoreOptionsDialogComponent implements OnInit {
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       if (this.navigateToInvoice) {
         this.router.navigate(['/subscription/tax-invoice'], {
-          queryParams: { name: this.data.name },
+          queryParams: { userId: this.data.userId },
         });
       } else {
         this.router.navigate(['/subscription/proforma-invoice'], {
-          queryParams: { name: this.data.name },
+          queryParams: { userId: this.data.userId },
         });
       }
     } else {
@@ -700,6 +700,9 @@ export class MoreOptionsDialogComponent implements OnInit {
             });
 
             disposable.afterClosed().subscribe((result) => {
+              if (result) {
+                this.dialog.closeAll();
+              }
             });
           } else {
             this.utilsService.showSnackBar(
