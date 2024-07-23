@@ -232,13 +232,13 @@ export class SidebarComponent {
     },
     
     {
-      name:'Recovery-Data',
+      name:'Data Recovery',
       icon:'recovery.png',
       active:false,
       url:null,
-      roles:[],
+      roles:['ROLE_ADMIN'],
       submenu:[
-        {name: 'Itr-Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN', 'ROLE_LEADER']}
+        {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
       ]
   },
     {
