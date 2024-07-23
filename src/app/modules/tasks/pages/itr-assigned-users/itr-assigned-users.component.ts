@@ -92,6 +92,12 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'PREPARING_ITR',
     },
   ];
+  taxDropdown=[
+    {label: 'Both', value: ''},
+    {label: 'Yes', value: true },
+    {label: 'No', value: false }
+  ];
+  taxPayable:any;
   loggedInUserId: any;
   showReassignButton: boolean = false;
 
@@ -545,7 +551,12 @@ export class ItrAssignedUsersComponent implements OnInit {
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     var statusSequence = 0;
-
+    let hideTaxPayble
+    if(this.utilsService.isNonEmpty(this.taxPayable)){
+      hideTaxPayble =true;
+    }else{
+      hideTaxPayble =false;
+    }
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
@@ -646,6 +657,28 @@ export class ItrAssignedUsersComponent implements OnInit {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Tax Payable',
+        field: 'taxPayable',
+        width: 150,
+        suppressMovable: true,
+        hide: !hideTaxPayble,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellRenderer: (params) => {
+          const value = params.value;
+          if (value === null || value === undefined || value === '') {
+            return '-';
+          } else if (value < 0) {
+            return `(${Math.abs(value)})`;
+          }
+          return value;
         },
       },
       {
@@ -1039,6 +1072,16 @@ export class ItrAssignedUsersComponent implements OnInit {
     return columnDefs;
   }
 
+  taxPayableRenderer(params: any) {
+    const value = params.value;
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    } else if (value < 0) {
+      return `(${Math.abs(value)})`;
+    }
+    return value;
+  }
+
   reassign() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -1195,7 +1238,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         leaderUserId: userData[i].leaderUserId,
         paymentStatus: userData[i].paymentStatus,
         aisProvided: userData[i].aisProvided,
-        everified: userData[i].everified
+        everified: userData[i].everified,
+        taxPayable:userData[i].taxPayable,
       })
       userArray.push(userInfo);
     }
@@ -1624,6 +1668,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
+    this.taxPayable = null;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.itrObjectStatus = null;
@@ -1714,6 +1759,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
+
+    if(this.utilsService.isNonEmpty(this.taxPayable)){
+      param = param + `&taxPayable=${this.taxPayable}`;
+    }
+
     if (this.unAssignedUsersView.value) {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
