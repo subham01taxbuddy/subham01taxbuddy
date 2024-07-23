@@ -12,12 +12,10 @@ export class AuthGuard  {
     }
 
     canActivate(route) {
-
-        let queryParamas = route.queryParams || {};
-        var x_aut_token = this.utilsService.getIdToken();
+        let x_aut_token = this.utilsService.getIdToken();
 
         let startWithUrlFound = 0;
-        for (var i = 0, stwLen = this.startWithUrl.length; i < stwLen; i++) {
+        for (let i = 0, stwLen = this.startWithUrl.length; i < stwLen; i++) {
             if (route['_routerState'].url.startsWith(this.startWithUrl[i])) {
                 startWithUrlFound = 1;
                 break;

@@ -1002,7 +1002,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.search();
           return;
         } else {
-          var workingItr = this.itrDataList.filter(
+          let workingItr = this.itrDataList.filter(
             (item: any) => item.itrId === data.itrId
           )[0];
           Object.entries(workingItr).forEach((key, value) => {
@@ -1044,22 +1044,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
               name: data?.fName + ' ' + data?.lName,
             },
           });
-
-          // if (data.statusId !== 11) {
-          //   this.router.navigate(['/eri'], {
-          //     state:
-          //     {
-          //       userId: data.userId,
-          //       panNumber: data.panNumber,
-          //       eriClientValidUpto: data?.eriClientValidUpto,
-          //       callerAgentUserId: this.selectedFilingTeamMemberId,
-          //       assessmentYear: data?.assessmentYear,
-          //       name: data?.fName + ' ' + data?.lName
-          //     }
-          //   });
-          // } else {
-          //   // this._toastMessageService.alert("success", 'This user ITR is filed');
-          // }
         }
       },
       (error) => {
@@ -1247,7 +1231,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
   markAsEverified(data) {
     this.loading = true;
-    var workingItr = this.itrDataList.filter(
+    let workingItr = this.itrDataList.filter(
       (item: any) => item.itrId === data.itrId
     )[0];
     workingItr['everifiedStatus'] = 'Successfully e-Verified';
@@ -1280,7 +1264,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   markAsProcessed(data) {
     // 'https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status'
     this.loading = true;
-    var workingItr = this.itrDataList.filter(
+    let workingItr = this.itrDataList.filter(
       (item: any) => item.itrId === data.itrId
     )[0];
     let reqData = {
@@ -1326,7 +1310,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   interestedForNextYearTpa(data) {
     this.loading = true;
-    var workingItr = this.itrDataList.filter(
+    let workingItr = this.itrDataList.filter(
       (item: any) => item.itrId === data.itrId
     )[0];
     workingItr['nextYearTpa'] = 'INTERESTED';
@@ -1371,8 +1355,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
           }
           console.log('user: ', user);
           this.loading = true;
-          let customerNumber = user.contactNumber;
-          // const param = `/prod/call-support/call`;
           const param = `tts/outbound-call`;
           const reqBody = {
             agent_number: agentNumber,

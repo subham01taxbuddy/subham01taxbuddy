@@ -352,7 +352,7 @@ export class UserListComponent {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,

@@ -324,6 +324,7 @@ export class ProfileDialogComponent implements OnInit {
         this.addressForm.controls['state'].setValue(result.stateCode);  //stateCode
       }, error => {
         if (error.status === 404) {
+          this._toastMessageService.alert('error','City not found')
         }
       });
     }
