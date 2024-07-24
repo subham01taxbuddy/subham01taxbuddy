@@ -79,7 +79,7 @@ export class EriExceptionsComponent implements OnInit {
 
   createRowData(eriExceptionList) {
     console.log('scheduleCalls -> ', eriExceptionList);
-    var eriExceptionListArray = [];
+    let eriExceptionListArray = [];
     for (let i = 0; i < eriExceptionList.length; i++) {
       let scheduleCallsInfo = Object.assign({}, eriExceptionListArray[i], {
         userId: eriExceptionList[i]['userId'],
@@ -421,7 +421,6 @@ export class EriExceptionsComponent implements OnInit {
         this.toastMsgService.alert("success", result.success.message)
       }
     }, error => {
-      // this.utilsService.showSnackBar('Error while making call, Please try again.');
       this.toastMsgService.alert("error", 'Error while making call, Please try again')
       this.loading = false;
     })
@@ -506,7 +505,6 @@ export class EriExceptionsComponent implements OnInit {
   pageChanged(event) {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
-    // this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
     this.getEriExceptionList(this.selectedAgentUserId, this.selectedPageNo);
   }
 

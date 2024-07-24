@@ -1,6 +1,6 @@
 import { ItrLifecycleDialogComponent } from './../../components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ChangeDetectorRef, Component, OnInit, ViewChild, OnDestroy, } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, } from '@angular/core';
 import { ColDef, GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -11,9 +11,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { environment } from 'src/environments/environment';
 import { ChangeStatusComponent } from 'src/app/modules/shared/components/change-status/change-status.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { EVerificationDialogComponent } from 'src/app/modules/tasks/components/e-verification-dialog/e-verification-dialog.component';
 import { ReviseReturnDialogComponent } from 'src/app/modules/itr-filing/revise-return-dialog/revise-return-dialog.component';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
@@ -93,7 +91,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   paymentStatusValues = [
     { value: 'Paid', name: 'Paid' },
     { value: 'Unpaid', name: 'Unpaid' },
-  ]
+  ];
 
   constructor(
     private reviewService: ReviewService,
@@ -117,7 +115,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
-        // params.api.sizeColumnsToFit();
       },
       sortable: true,
       filter: true,
@@ -187,30 +184,29 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.reportService.getMethod(param).subscribe(
       (res: any) => {
         this.loading = false;
-        if (res.success == false) {
-          this.allFilerList = [];
-          this.toastMsgService.alert('error', res.message);
-        }
-        console.log('filingTeamMemberId: ', res);
-        if (
-          res?.data?.content instanceof Array &&
-          res?.data?.content?.length > 0
-        ) {
-          this.allFilerList = res?.data?.content;
-          sessionStorage.setItem(
-            AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
-            JSON.stringify(this.allFilerList)
-          );
-          this.myItrsGridOptions.api?.setColumnDefs(
-            this.columnDef()
-          );
+        if (res.success) {
+          console.log('filingTeamMemberId: ', res);
+          if (
+            res?.data?.content instanceof Array &&
+            res?.data?.content?.length > 0
+          ) {
+            this.allFilerList = res?.data?.content;
+            sessionStorage.setItem(
+              AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
+              JSON.stringify(this.allFilerList)
+            );
+            this.myItrsGridOptions.api?.setColumnDefs(this.columnDef());
+          } else {
+            this.allFilerList = [];
+            if (res.message) {
+              this.toastMsgService.alert('error', res.message);
+            } else {
+              this.toastMsgService.alert('error', 'No Data Found');
+            }
+          }
         } else {
           this.allFilerList = [];
-          if (res.message) {
-            this.toastMsgService.alert('error', res.message);
-          } else {
-            this.toastMsgService.alert('error', 'No Data Found');
-          }
+          this.toastMsgService.alert('error', res.message);
         }
       },
       (error) => {
@@ -365,62 +361,64 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       console.log('My Params:', param);
       param = param + `${userFilter}`;
-      return this.reportService.getMethod(param).toPromise().then((res: any) => {
-        if (res.success == false) {
-          this.toastMsgService.alert('error', res.message);
-          this.myItrsGridOptions.api?.setRowData(
-            this.createOnSalaryRowData([])
-          );
-          this.config.totalItems = 0;
-        }
-        console.log('filingTeamMemberId: ', res);
-        // TODO Need to update the api here to get the proper data like user management
-        if (
-          res?.data?.content instanceof Array &&
-          res?.data?.content?.length > 0
-        ) {
-          this.itrDataList = res?.data?.content;
-          this.config.totalItems = res?.data?.totalElements;
-          this.myItrsGridOptions.api?.setRowData(
-            this?.createOnSalaryRowData(this?.itrDataList)
-          );
-          this.cacheManager.initializeCache(this?.itrDataList);
+      return this.reportService
+        .getMethod(param)
+        .toPromise()
+        .then(
+          (res: any) => {
+            if (res.success == false) {
+              this.toastMsgService.alert('error', res.message);
+              this.myItrsGridOptions.api?.setRowData(
+                this.createOnSalaryRowData([])
+              );
+              this.config.totalItems = 0;
+            }
+            console.log('filingTeamMemberId: ', res);
+            // TODO Need to update the api here to get the proper data like user management
+            if (
+              res?.data?.content instanceof Array &&
+              res?.data?.content?.length > 0
+            ) {
+              this.itrDataList = res?.data?.content;
+              this.config.totalItems = res?.data?.totalElements;
+              this.myItrsGridOptions.api?.setRowData(
+                this?.createOnSalaryRowData(this?.itrDataList)
+              );
+              this.cacheManager.initializeCache(this?.itrDataList);
 
-          const currentPageNumber = pageNo + 1;
-          this.cacheManager.cachePageContent(
-            currentPageNumber,
-            this?.itrDataList
-          );
-          this.config.currentPage = currentPageNumber;
-        } else {
-          this.itrDataList = [];
-          this.config.totalItems = 0;
-          this.myItrsGridOptions.api?.setRowData(
-            this.createOnSalaryRowData([])
-          );
-          if (res.message) {
-            this.toastMsgService.alert('error', res.message);
-          } else {
-            this.toastMsgService.alert('error', 'No Data Found');
+              const currentPageNumber = pageNo + 1;
+              this.cacheManager.cachePageContent(
+                currentPageNumber,
+                this?.itrDataList
+              );
+              this.config.currentPage = currentPageNumber;
+            } else {
+              this.itrDataList = [];
+              this.config.totalItems = 0;
+              this.myItrsGridOptions.api?.setRowData(
+                this.createOnSalaryRowData([])
+              );
+              if (res.message) {
+                this.toastMsgService.alert('error', res.message);
+              } else {
+                this.toastMsgService.alert('error', 'No Data Found');
+              }
+            }
+            this.loading = false;
+            return resolve(true);
+          },
+          (error) => {
+            this.myItrsGridOptions.api?.setRowData(
+              this.createOnSalaryRowData([])
+            );
+            this.config.totalItems = 0;
+            this.toastMsgService.alert('error', 'No Data Found ');
+            this.loading = false;
+            return resolve(false);
           }
-        }
-        this.loading = false;
-        return resolve(true);
-      },
-        (error) => {
-          this.myItrsGridOptions.api?.setRowData(
-            this.createOnSalaryRowData([])
-          );
-          this.config.totalItems = 0;
-          this.toastMsgService.alert('error', 'No Data Found ');
-          this.loading = false;
-          return resolve(false);
-        }
-      );
+        );
     }).catch(() => {
-      this.myItrsGridOptions.api?.setRowData(
-        this.createOnSalaryRowData([])
-      );
+      this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
       this.config.totalItems = 0;
       this.toastMsgService.alert('error', 'No Data Found ');
       this.loading = false;
@@ -474,7 +472,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' },
       { key: 'filingFormatedDate', value: 'Filing Formatted Date' },
-      { key: 'manualUpdateReason', value:'Reason for Manual Update' },
+      { key: 'manualUpdateReason', value: 'Reason for Manual Update' },
     ];
     await this.genericCsvService.downloadReport(
       environment.url + '/report',
@@ -504,14 +502,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
         userId: data[i].userId,
         fName:
           this.utilsService.isNonEmpty(data[i].family) &&
-            data[i].family instanceof Array &&
-            data[i].family.length > 0
+          data[i].family instanceof Array &&
+          data[i].family.length > 0
             ? data[i].family[0].fName
             : '',
         lName:
           this.utilsService.isNonEmpty(data[i].family) &&
-            data[i].family instanceof Array &&
-            data[i].family.length > 0
+          data[i].family instanceof Array &&
+          data[i].family.length > 0
             ? data[i].family[0].lName
             : '',
         panNumber: data[i].panNumber,
@@ -538,7 +536,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         itrSummaryJson: data[i].itrSummaryJson,
         itru: data[i].itru,
         paymentStatus: data[i].paymentStatus,
-        manualUpdateReason: data[i].manualUpdateReason
+        manualUpdateReason: data[i].manualUpdateReason,
       });
     }
     return newData;
@@ -645,8 +643,11 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params.data.isRevised === 'Y') {
             return 'Revised';
-          } else if (params.data.isRevised === 'N' && params.data.itru === true) {
-            return 'Updated'
+          } else if (
+            params.data.isRevised === 'N' &&
+            params.data.itru === true
+          ) {
+            return 'Updated';
           }
           return 'Original';
         },
@@ -766,7 +767,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           } else {
             return '-';
           }
-        }
+        },
       },
       {
         headerName: 'Reason for Manual Update',
@@ -780,7 +781,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           } else {
             return '-';
           }
-        }
+        },
       },
       {
         headerName: 'Actions',
@@ -1052,13 +1053,11 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
-
   }
-
 
   openReviseReturnDialog(data) {
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
@@ -1104,7 +1103,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
@@ -1150,11 +1149,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
-
   }
 
   getEriAcknowledgeDetail(data) {
@@ -1199,11 +1197,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
-
   }
 
   isChatOpen = false;
@@ -1221,11 +1218,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe(result => {
+    disposable.afterClosed().subscribe((result) => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
-        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+        this.kommunicateSsoService.openConversation(result.id);
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(
+          result.kommChatLink
+        );
       }
     });
   }
@@ -1273,7 +1272,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       uiAction: 'NotRequired',
       taskStatus: 'Completed',
       assessmentYear: workingItr.assessmentYear,
-      serviceType: workingItr.itru ? 'ITRU' : 'ITR'
+      serviceType: workingItr.itru ? 'ITRU' : 'ITR',
     };
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
@@ -1389,7 +1388,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
@@ -1411,8 +1410,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
     disposable.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
-      console.log('result: ', result);
       if (result) {
+        console.log('result: ', result);
       }
     });
   }
@@ -1446,7 +1445,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
@@ -1518,35 +1517,43 @@ export class FilingsComponent implements OnInit, OnDestroy {
             assessmentYear: data.assessmentYear,
             userId: data.userId.toString(),
           };
-          sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+          sessionStorage.setItem(
+            'ERI-Request-Header',
+            JSON.stringify(headerObj)
+          );
           let req = {
             serviceName: 'EriITRLifeCycleStatus',
             pan: data.panNumber,
             ay: data.assessmentYear.substring(0, 4),
           };
 
-          this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
-            console.log(res);
-            if ((res && res.successFlag) || res.httpStatus != 'REJECTED') {
-              if (res.hasOwnProperty('itrsFiled') && res.itrsFiled instanceof Array) {
-                let input = {
-                  name: data.fName + ' ' + data.lName,
-                  pan: data.panNumber,
-                  itrsFiled: res.itrsFiled[0],
-                };
-                this.openLifeCycleDialog(input);
-              } else if (res.hasOwnProperty('messages')) {
-                if (res.messages instanceof Array && res.messages.length > 0)
-                  this.utilsService.showSnackBar(res.messages[0].desc);
+          this.itrMsService
+            .postMethodForEri(param, req)
+            .subscribe((res: any) => {
+              console.log(res);
+              if ((res && res.successFlag) || res.httpStatus != 'REJECTED') {
+                if (
+                  res.hasOwnProperty('itrsFiled') &&
+                  res.itrsFiled instanceof Array
+                ) {
+                  let input = {
+                    name: data.fName + ' ' + data.lName,
+                    pan: data.panNumber,
+                    itrsFiled: res.itrsFiled[0],
+                  };
+                  this.openLifeCycleDialog(input);
+                } else if (res.hasOwnProperty('messages')) {
+                  if (res.messages instanceof Array && res.messages.length > 0)
+                    this.utilsService.showSnackBar(res.messages[0].desc);
+                }
+              } else {
+                if (res.hasOwnProperty('errors')) {
+                  if (res.errors instanceof Array && res.errors.length > 0)
+                    this.utilsService.showSnackBar(res.errors[0].desc);
+                  this.getItrLifeCycleStatus(data);
+                }
               }
-            } else {
-              if (res.hasOwnProperty('errors')) {
-                if (res.errors instanceof Array && res.errors.length > 0)
-                  this.utilsService.showSnackBar(res.errors[0].desc);
-                this.getItrLifeCycleStatus(data);
-              }
-            }
-          });
+            });
         }
       },
       (error) => {
@@ -1555,11 +1562,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.utilsService.showSnackBar(error.error.error);
           this.search();
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
     );
-
   }
 
   getItrLifeCycleStatus(data) {
