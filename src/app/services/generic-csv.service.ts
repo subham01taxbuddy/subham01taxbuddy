@@ -168,7 +168,6 @@ export class GenericCsvService {
       this.httpClient.get(baseUrl + param, { headers: this.headers }).toPromise()
         .then((result: any) => {
           if (result.success) {
-            // if (result?.data?.content.length) {
             if (param.includes('status-wise-report')) {
               if (result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData && result?.data?.content[0].total) {
                 this.data = [...result.data.content[0].statusWiseData];
@@ -193,9 +192,6 @@ export class GenericCsvService {
                 resolve(result.data.totalPages);
               }
             }
-            // } else {
-            //   resolve(0);
-            // }
           }
           if(param.includes('promocodes')){
             if (result?.content.length > 0) {

@@ -1,8 +1,8 @@
 import { environment } from 'src/environments/environment';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
-declare var google: any;
-declare var gapi: any;
+declare let google: any;
+declare let gapi: any;
 
 const driveClientId = environment.gdrive.GOOGLE_DRIVE_CLIENT_ID;
 const driveApiKey = environment.gdrive.GOOGLE_DRIVE_API_KEY;
@@ -59,7 +59,7 @@ export class GoogleDriveService{
   }
 
   searchFolder(){
-    var folderName = 'Parser'
+    let folderName = 'Parser'
     gapi.client.request({
       method:'GET',
       path: `https://www.googleapis.com/drive/v3/files?q=mimeType='application/vnd.google-apps.folder' and name='${folderName}'&supportsAllDrives=true&includeItemsFromAllDrives=true`,
@@ -90,7 +90,7 @@ export class GoogleDriveService{
         parents: folderId ? [folderId] : [],
       };
 
-      var file = new Blob(fileData, {type: dataType});
+      let file = new Blob(fileData, {type: dataType});
 
       //this is gapi client way.. excel is created with data
       gapi.client.request({
@@ -112,7 +112,7 @@ export class GoogleDriveService{
         let fileId = response.id;
         let uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?supportsAllDrives=true`;
 
-        var metadataOptions = new HttpHeaders();
+        let metadataOptions = new HttpHeaders();
         metadataOptions = metadataOptions.append('Authorization', 'Bearer ' + gapi.client.getToken());
         metadataOptions = metadataOptions.append('Content-Type', contentType);
         metadataOptions = metadataOptions.append('X-Upload-Content-Length', file.size.toString());

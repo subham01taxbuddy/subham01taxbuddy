@@ -85,7 +85,6 @@ export class BulkStatusUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-    const userId = this.utilsService.getLoggedInUserID();
     this.getMasterStatusList();
   }
 
@@ -98,8 +97,6 @@ export class BulkStatusUpdateComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));

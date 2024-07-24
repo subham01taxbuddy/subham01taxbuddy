@@ -607,9 +607,6 @@
 .input__radio-control {
   float: none;
   display: inline-block;
-}
-
-.input__radio-control {
   border-radius: 50%;
 }
 
@@ -798,7 +795,7 @@
 .select__box:after {
   content: "";
   display: block;
-  
+
   width: 21px;
   height: 100%;
 
@@ -1648,8 +1645,6 @@ body.modal-body .content {
   transform: rotate(-45deg);
 }
 
-.modal-content {}
-
 .modal-footer .btn {
   margin-right: 0;
   border: none;
@@ -1775,8 +1770,6 @@ body.modal-body .content {
 .modal-fullscreen__control-item_fit {
   background-position: -20px 0;
 }
-
-.modal-fullscreen__control-item_minus {}
 
 /* LINK ICO */
 
@@ -2328,9 +2321,6 @@ body.modal-body .content {
   background-size: 11px auto;
   background-position: calc(100% - 3px) center;
   cursor: pointer;
-}
-
-.calendar__hour-select {
   display: inline-block;
   padding: 3px 14px 3px 3px;
   background-color: transparent;

@@ -327,10 +327,10 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         },
         valueGetter: (params) => {
           console.log(params.data);
-          var q1 = params.data.areaOfExpertise?.incomeTaxBasic;
-          var q2 = params.data.areaOfExpertise?.incomeTaxSpecial;
-          var q3 = params.data.areaOfExpertise?.tdsFiling;
-          var q4 = params.data.areaOfExpertise?.additional;
+          let q1 = params.data.areaOfExpertise?.incomeTaxBasic;
+          let q2 = params.data.areaOfExpertise?.incomeTaxSpecial;
+          let q3 = params.data.areaOfExpertise?.tdsFiling;
+          let q4 = params.data.areaOfExpertise?.additional;
           return q1 + ',' + q2 + ',' + q3 + ',' + q4;
         },
       },
@@ -412,7 +412,6 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
         width: 100,
          pinned: 'right',
         cellRenderer: function (params: any) {
-          //console.log(params);
           if (params.data.currentstatus == 'APPROVE' || params.data.currentstatus == 'PAID') {
             return `<button type="button" class="action_icon add_button" title="Send Email"
         style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
@@ -529,7 +528,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
     }
   }
   createRowData(data: any) {
-    var partnersArray = [];
+    let partnersArray = [];
     for (let i = 0; i < data.length; i++) {
       let boPartnersInfo: any = Object.assign({}, partnersArray[i], {
         partnerType: data[i].partnerType,
@@ -591,7 +590,7 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
       this.loading = true;
       let partnerName = partnerData.name;
       let mobile = partnerData.mobileNumber;
-      var data = new FormData();
+      let data = new FormData();
       data.append('from', 'support@taxbuddy.com');
       data.append('subject', 'Partner Onboarding in Taxbuddy BO');
       data.append('body', `<!DOCTYPE html>
@@ -706,7 +705,6 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
       console.log('statusData:', result);
       if (result) {
         if (result.data === 'statusChanged') {
-          // this.getBoPartners();
           this.getBoPartners();
         }
       }
@@ -727,12 +725,6 @@ export class BoPartnersComponent implements OnInit, OnDestroy {
     });
     disposable.afterClosed().subscribe((result) => {
       console.log('updateInfo data:', result);
-      // if (result) {
-      //   if (result.data === 'statusChanged') {
-      //     // this.getBoPartners();
-      //     this.getBoPartners();
-      //   }
-      // }
     });
   }
 

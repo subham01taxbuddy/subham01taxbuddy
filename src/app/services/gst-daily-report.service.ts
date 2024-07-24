@@ -15,12 +15,10 @@ export class GstDailyReportService {
   putMethod<T>(...param): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.put<T>(
       environment.url + this.microService + param[0],
       param[1],
       { headers: this.headers }
     );
-    // .map(response => response.json())
   }
 }

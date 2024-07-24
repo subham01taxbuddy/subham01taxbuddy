@@ -46,8 +46,6 @@
                 <br>
                 <div class="row">
                     <div class="col-md-12 col-xs-12 btn-wrapper">
-                        <!-- <button type="submit" [disabled]="loading || scheduleForm.invalid || !date || !time"
-                            class="btn btnSave" (click)="scheduleCall()">Save</button> -->
                         <app-custom-button [disabled]="loading || scheduleForm.invalid || !date || !time" class="btn btnSave" [actions]="[scheduleCall]">
                           Save
                         </app-custom-button>

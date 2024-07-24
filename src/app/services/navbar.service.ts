@@ -291,7 +291,6 @@ export class NavbarService {
 	}
 
 	getGST3BComputationByPost(params: any) {
-		// return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/gst-computations', 'method': 'POST' }, params);
 		return NavbarService.getInstance(this.http).apiCall({ 'url': `/gst/api/gst-computations?businessId=${params.businessId}&gstReturnCalendarId=${params.gstReturnCalendarId}`, 'method': 'POST' }, {});
 	}
 
@@ -355,10 +354,6 @@ export class NavbarService {
 
 	apiCall(apiKey: any, params: any,): Observable<any> {
 		let options: any = { headers: this.getHeaders() }
-		// if (['gst_gov_url', 'ifsc_url'].indexOf(apiKey["url_key"]) != -1) {
-		// 	options = { headers: new HttpHeaders({}) };
-		// }
-
 		let pUrl = environment[(apiKey["url_key"] ? apiKey["url_key"] : "url")];
 		if (apiKey['method'] === 'POST') {
 			return this.http.post(pUrl + apiKey['url'], JSON.stringify(params), options)
@@ -376,9 +371,9 @@ export class NavbarService {
 
 	// check session validity based on time(in minutes)
 	isSessionValid(validityMinutes: number = 1440): boolean {
-		var sessionDate = new Date(localStorage.getItem('session_time') ?? 0).getTime();
-		var now = (new Date()).getTime();
-		var timeDiff = Math.abs(sessionDate - now);
+		let sessionDate = new Date(localStorage.getItem('session_time') ?? 0).getTime();
+		let now = (new Date()).getTime();
+		let timeDiff = Math.abs(sessionDate - now);
 		timeDiff = Math.ceil(timeDiff / (1000 * 60));
 
 		if (timeDiff > validityMinutes) {

@@ -57,7 +57,7 @@ export class SignUpExceptionsComponent implements OnInit {
 
   getSignUpExceptionList(agentUserId, pageNo) {
     this.loading = true;
-    var param = `/sign-up-exceptions/${agentUserId}?page=${pageNo}&size=20`;
+    let param = `/sign-up-exceptions/${agentUserId}?page=${pageNo}&size=20`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       if (result && result.content instanceof Array && result.content.length > 0) {
@@ -80,7 +80,7 @@ export class SignUpExceptionsComponent implements OnInit {
 
   createRowData(signUpExceptionList) {
     console.log('scheduleCalls -> ', signUpExceptionList);
-    var signUpExceptionListArray = [];
+    let signUpExceptionListArray = [];
     for (let i = 0; i < signUpExceptionList.length; i++) {
       let scheduleCallsInfo = Object.assign({}, signUpExceptionListArray[i], {
         userId: signUpExceptionList[i]['userId'],
@@ -438,7 +438,6 @@ export class SignUpExceptionsComponent implements OnInit {
         this.toastMsgService.alert("success", result.success.message)
       }
     }, error => {
-      // this.utilsService.showSnackBar('Error while making call, Please try again.');
       this.toastMsgService.alert("error", 'Error while making call, Please try again')
       this.loading = false;
     })
@@ -527,7 +526,6 @@ export class SignUpExceptionsComponent implements OnInit {
   pageChanged(event) {
     this.config.currentPage = event;
     this.selectedPageNo = event - 1;
-    // this.myItrsList(this.selectedFyYear, this.selectedPageNo, this.selectedFilingTeamMemberId);
     this.getSignUpExceptionList(this.selectedAgentUserId, this.selectedPageNo);
   }
 }

@@ -316,7 +316,7 @@ export class CreateNewUserComponent implements OnInit {
       }
     }
     this.userService.getMethod(param).subscribe((res: any) => {
-      if (res.success == true) {
+      if (res.success) {
         this.loading = false;
         this.utilsService.showSnackBar("User created succesfully.");
       } else {

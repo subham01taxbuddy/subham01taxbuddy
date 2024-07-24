@@ -239,7 +239,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.loading = false;
     switch (res.api) {
       case this.LIFECYCLE: {
-        const loggedInId = this.utilsService.getLoggedInUserID();
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -335,7 +334,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   sendEmail(ITR_JSON) {
     this.loading = true;
-    var data = new FormData();
+    let data = new FormData();
     data.append('from', 'ashwini@taxbuddy.com');
     data.append('subject', 'Large ITR object case');
     data.append('body', `<!DOCTYPE html>
@@ -495,10 +494,6 @@ export class ItrAssignedUsersComponent implements OnInit {
               itrSubscriptionFound = true;
               return;
             }
-            // if (item1.service === 'ITRU' && (item1.financialYear === "2022-2023" || item1.financialYear === "2022-23") ) {
-            //   itrSubscriptionFound = true;
-            //   return;
-            // }
           }
 
 
@@ -621,7 +616,6 @@ export class ItrAssignedUsersComponent implements OnInit {
       this?.serviceDropDown?.resetService();
       this.usersGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
-      // this.search();
     }
   }
 
@@ -634,7 +628,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    var statusSequence = 0;
+    let statusSequence = 0;
     let hideTaxPayble
     if(this.utilsService.isNonEmpty(this.taxPayable)){
       hideTaxPayble =true;
@@ -1290,7 +1284,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         id: userData[i].id,
@@ -1427,7 +1421,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.search();
         return;
       } else {
-        // this.start(data);
         console.log(data);
 
         if (data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)) {
@@ -1641,7 +1634,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         disposable.afterClosed().subscribe(result => {
           if (result) {
             if (result.data === "statusChanged") {
-              // this.searchParam.page = 0;
               this.search();
             }
           }
@@ -1853,11 +1845,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       param = param + '&assigned=false'
     }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-      if (result.success == false) {
-        this._toastMessageService.alert("error", result.message);
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+      this.loading = false;
       if (result.success) {
         if (result.data && result.data['content'] instanceof Array) {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -1875,15 +1863,16 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.config.totalItems = 0;
           this._toastMessageService.alert('error', result.message)
         }
+      }else{
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
       }
-      this.loading = false;
-
     }).catch(() => {
       this.loading = false;
       this.config.totalItems = 0;
       this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
     });
   }
-
 
 }

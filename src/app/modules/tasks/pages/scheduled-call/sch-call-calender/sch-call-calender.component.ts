@@ -162,7 +162,6 @@ export class SchCallCalenderComponent implements OnInit {
   getSmeBookedSlot() {
     if (this.data.allData.leaderUserId) {
       let param = '/sme-booked-slots?smeUserId=' + this.data.allData.leaderUserId;
-      // let param = environment.baseUrl + '/report/sme-booked-slots?smeUserId=' + '7002';
       this.reportService.getMethod(param).subscribe((response: any) => {
         if (response.success) {
           this.smeBookedSlots = response.data.bookedSlots;

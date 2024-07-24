@@ -112,11 +112,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     param = `/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
-      if (response.success == false) {
-        this.allDetails = null;
-        this.calculateCounts();
-        this._toastMessageService.alert("error", response.message);
-      }
       if (response.success) {
         this.loading = false;
         this.allDetails = response.data.content;

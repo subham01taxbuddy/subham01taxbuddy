@@ -123,7 +123,6 @@ export class ItrMsService {
 
   singelCgCalculate<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
-    // this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.append(InterceptorSkipHeader, '');
     return this.httpClient.post<T>(
       this.SINGLE_CG_URL,
