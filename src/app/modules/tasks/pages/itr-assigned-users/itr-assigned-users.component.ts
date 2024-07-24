@@ -97,7 +97,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     {label: 'Yes', value: true },
     {label: 'No', value: false }
   ];
-  taxPayable:any;
+  taxPayable: any = '';
   loggedInUserId: any;
   showReassignButton: boolean = false;
 
