@@ -759,7 +759,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           const value = params.value;
           if (value === null || value === undefined || value === '') {
             return '-';
-          } else if (value < 0) {
+          } else if (value < 0 || !this.taxPayable  ) {
             return `(${Math.abs(value)})`;
           }
           return value;
