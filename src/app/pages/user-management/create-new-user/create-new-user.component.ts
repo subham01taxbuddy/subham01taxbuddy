@@ -145,8 +145,9 @@ export class CreateNewUserComponent implements OnInit {
   leaderId: number;
   filerId: number;
   agentId: number;
+  filerSelected:boolean =false;
 
-  fromSme(event, item) {
+  fromSme(event, item,fromFiler?) {
     if (item === 1) {
       if (event && Object.keys(event).length > 0) {
         this.leaderName = event ? event.name : null;
@@ -164,6 +165,11 @@ export class CreateNewUserComponent implements OnInit {
         if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
           this.getSmeInfoDetails(this.filerId);
         }
+        if(this.partnerType ==="PRINCIPAL"){
+          this.filerSelected = false;
+        }else{
+          this.filerSelected = true;
+        }
       }
     } else if (item === 3) {
       if (event && Object.keys(event).length > 0) {
@@ -172,6 +178,11 @@ export class CreateNewUserComponent implements OnInit {
         this.filerName = event ? event.name : null;
         if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
           this.getSmeInfoDetails(this.filerId);
+        }
+        if(fromFiler){
+          this.filerSelected = true;
+        }else{
+          this.filerSelected = false;
         }
       }
     }
@@ -252,22 +263,26 @@ export class CreateNewUserComponent implements OnInit {
 
   createUserInCognito() {
     if (this.signUpForm.valid) {
-      const signUp = this.createSignUpObj();
-      console.log('SignUp Object:', signUp);
-      Auth.signUp(signUp).then(res => {
+      if(this.filerId && this.filerSelected){
+        const signUp = this.createSignUpObj();
+        console.log('SignUp Object:', signUp);
+        Auth.signUp(signUp).then(res => {
         console.log('SignUp Result:', res);
-        // Auth.signIn(res.user.getUsername()).then(signInRes => {
-        //   console.log('Sign In Result After Sign Up:', signInRes);
+          // Auth.signIn(res.user.getUsername()).then(signInRes => {
+          //   console.log('Sign In Result After Sign Up:', signInRes);
 
-        // }).catch(signInErr => {
-        //   console.log('Sign In err After Sign Up:', signInErr);
-        // });
-        this.userSignUp(res);
-      }).catch(err => {
-        console.log('Sign Up err:', err);
-        console.log('sign up error', err.message)
-        this.utilsService.showSnackBar(err.message);
-      });
+          // }).catch(signInErr => {
+          //   console.log('Sign In err After Sign Up:', signInErr);
+          // });
+          this.userSignUp(res);
+        }).catch(err => {
+          console.log('Sign Up err:', err);
+          console.log('sign up error', err.message)
+          this.utilsService.showSnackBar(err.message);
+        });
+      }else{
+        this.utilsService.showSnackBar("Please Select Filer.");
+      }
     } else {
       $('input.ng-invalid').first().focus();
     }
