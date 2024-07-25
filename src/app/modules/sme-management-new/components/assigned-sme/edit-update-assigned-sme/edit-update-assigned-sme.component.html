@@ -196,10 +196,6 @@
                   </mat-form-field>
                 </div>
                 <div class="row mt-3 verifyBank">
-                  <!-- <button class="col-2 verify-button "
-                    [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
-                    (click)="verifyBankDetails()">verify
-                  </button> -->
                   <app-custom-button class="col-2 verify-button" [disabled]="bankDetailsFormGroup.invalid ||!isBankDetailsFormChange|| loading"
                     [actions]="[verifyBankDetails]">
                     verify
@@ -743,7 +739,6 @@
           <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
         </div>
         <div style=" flex: 1 0 0; text-align: right;">
-          <!-- <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button> -->
           <app-custom-button class="save-all"  [actions]="[updateSmeDetails]">
             Save & Go Back to Table
           </app-custom-button>

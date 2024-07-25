@@ -162,7 +162,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.resetFilters();
   }
 
   searchByObject(object) {

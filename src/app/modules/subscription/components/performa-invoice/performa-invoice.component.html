@@ -95,11 +95,6 @@
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
                       Clear form
                     </button>
-
-                    <!-- <button *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') " class="dwldBtn-1"
-                      [disabled]="loading" (click)="downloadInvoicesSummary()">
-                      <i class="fa fa-download" aria-hidden="true"></i> Download File
-                    </button> -->
                     <app-custom-button *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') " class="dwldBtn-1"
                     [disabled]="loading" [actions]="[downloadInvoicesSummary]">
                     <i class="fa fa-download" aria-hidden="true"></i> Download File

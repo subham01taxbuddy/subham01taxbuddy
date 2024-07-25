@@ -318,15 +318,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.itrToggle.setValue((this.smeObj?.['assignmentOffByLeader']) ? false : true);
     this.gst.setValue((this.smeObj?.['serviceEligibility_GST']) ? true : false);
     if (this.smeObj?.['serviceEligibility_GST']) {
-      // this.gstToggle.setValue((this.smeObj?.['serviceEligibility_GST'].assignmentStart) ? true : false);
     }
     this.tpa.setValue((this.smeObj?.['serviceEligibility_TPA']) ? true : false);
     if (this.smeObj?.['serviceEligibility_TPA']) {
-      // this.tpaToggle.setValue((this.smeObj?.['serviceEligibility_TPA'].assignmentStart) ? true : false);
     }
     this.notice.setValue((this.smeObj?.['serviceEligibility_NOTICE']) ? true : false);
     if (this.smeObj?.['serviceEligibility_NOTICE']) {
-      // this.noticeToggle.setValue((this.smeObj?.['serviceEligibility_NOTICE'].assignmentStart) ? true : false);
     }
 
     this.disableItrService = (this.itr.value && this.hideAssignmentOnOff) ? true : false;
@@ -842,15 +839,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
     this.userMsService.postMethod(param, request).subscribe((result: any) => {
       if (result.success) {
-        // this.loading = false;
         this.utilsService.showSnackBar(result.data.message);
-        // this.location.back();
       } else {
-        // this.loading = false;
         this.utilsService.showSnackBar(result.message);
       }
     }, (error) => {
-      // this.loading = false;
       this.utilsService.showSnackBar(error.error.message);
     });
   }
@@ -1046,7 +1039,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       let res: any
       res = await this.userMsService.putMethod(param, requestData).toPromise();
       console.log('SME assignment updated', res);
-      // this.loading = false;
       this.initialCall = true;
 
       if (res.success === false) {
@@ -1057,10 +1049,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.loading = false;
         this.updateSuccessful = false;
       } else {
-        // this._toastMessageService.alert(
-        //   'success',
-        //   'sme details updated successfully'
-        // );
         this.loading = false;
         this.updateSuccessful = true;
       }
