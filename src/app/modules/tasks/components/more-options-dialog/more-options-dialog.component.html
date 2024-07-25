@@ -61,15 +61,6 @@
     </button>
   </span>
   <span>
-    <!-- <button type="button" title="Delete User" [disabled]="isDisable"
-   class="delete-user tbd-btn-small" [style.cursor]="isDisable ? 'no-drop': 'pointer'"
-      (click)="deleteUser()">
-      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-    </button> -->
-    <!-- <button type="button" title="Delete User" class="delete-user more-new-button" *ngIf="isApplicable(['ROLE_ADMIN'])"
-      (click)="deleteUser()">
-      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
-    </button> -->
     <app-custom-button *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button"
       [actions]="[deleteUser]">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
@@ -100,7 +91,6 @@
     <table aria-label="Other Details Service" style=" width: 100%;"
       *ngIf="optedServicesData && optedServicesData.length > 0">
       <tr>
-        <!-- <th>No</th> -->
         <th>Service Type</th>
         <th>Agent Name</th>
         <th>Agent Mobile</th>

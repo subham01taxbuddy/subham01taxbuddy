@@ -34,7 +34,6 @@ export class MoreOptionsDialogComponent implements OnInit {
   myItrsGridOptions: GridOptions;
   initialData = {};
   statusList = [];
-  // isDisable = true;
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
   navigateToInvoice: boolean
@@ -69,7 +68,6 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.getStatus();
     this.partnerType = this.utilsService.getPartnerType();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('data from assigned users', this.data);

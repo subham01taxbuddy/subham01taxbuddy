@@ -54,9 +54,6 @@
   display: flex !important;
 }
 
-// .txt-right {
-//     text-align: center;
-// }
 .lftTx {
   padding: 10px 0px 10px 20px;
   font-size: 15px;
@@ -81,12 +78,10 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  // margin-right: 5px;
 }
 
 .itr-progress {
   background-color: #D4F3F8;
-  // height: auto;
   margin-top: 8px;
   align-items: center;
 }
@@ -110,7 +105,6 @@
 
 .boxImg1 {
   width: 102px;
-  // margin-top: -20px;
 }
 
 .formBase-height {
@@ -132,12 +126,6 @@
       height: 60vh !important;
   }
 }
-
-// @media only screen and (max-width: 1023px) and (min-width: 0px) {
-//     .itr-progress {
-//         height: auto;
-//     }
-// }
 
 .errorMessage {
   color: red;
@@ -216,7 +204,6 @@ hr {
 }
 
 ::ng-deep .mat-step:last-child .mat-vertical-content-container {
-  // border-left: 1px dashed lightgray !important;
   padding-bottom: 24px;
 }
 
