@@ -12,7 +12,7 @@
         <div class="row">
           <div class="col-sm-12 bckClr" *ngIf="isApplicable(['ROLE_ADMIN'])">
             <app-sme-list-drop-down (sendLeader)="fromSme($event, 1)" (sendPrincipleIndividual)="fromSme($event, 2)"
-              (sendFiler)="fromSme($event,3)" [disabled]="assignedToMe">
+              (sendFiler)="fromSme($event,3,'fromFiler')" [disabled]="assignedToMe">
             </app-sme-list-drop-down>
             <div class="smallNot">
               Note : Service type will be enable after selecting Leader
