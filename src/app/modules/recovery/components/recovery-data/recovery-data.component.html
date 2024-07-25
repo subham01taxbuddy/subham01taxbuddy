@@ -1,17 +1,16 @@
-
 <div class="container">
-    <div class="search-box">
-      <div class="input-group">
-        <label for="mobileNumber">Mobile No:</label>
-        <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
-      </div>
-      <button class="btn" (click)="search()">Search</button>
-      
+  <div class="search-box">
+    <div class="input-group">
+      <label for="mobileNumber">Mobile No:</label>
+      <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
     </div>
-  </div>
+    <button class="btn" (click)="search()">Search</button>
 
-  <div class="expand">
-<table *ngIf="groupedSnapshots.length" class="snapshots-table">
+  </div>
+</div>
+
+<div class="expand">
+  <table *ngIf="groupedSnapshots.length" class="snapshots-table">
     <thead>
       <tr>
         <th>Select</th>
@@ -44,5 +43,5 @@
       </ng-container>
     </tbody>
   </table>
-  </div>
-  <button class="btn-apply"  (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>
+</div>
+<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>
