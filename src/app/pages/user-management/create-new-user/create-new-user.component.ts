@@ -263,7 +263,7 @@ export class CreateNewUserComponent implements OnInit {
 
   createUserInCognito() {
     if (this.signUpForm.valid) {
-      if (this.roles.includes('ROLE_ADMIN') && (!this.filerId || !this.filerSelected)) {
+      if ((!this.filerId || !this.filerSelected)) {
         this.utilsService.showSnackBar("Please Select Filer.");
         return;
       }
