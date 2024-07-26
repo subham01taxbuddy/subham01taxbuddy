@@ -940,30 +940,24 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
             if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU'))) {
               this.allPlans.forEach((item: any) => {
-                item.disable = true;
-                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                  item.disable = false;
-              })
+                item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+              });
             }
           }
           else {
             this.allPlans = activePlans;
             if (this.roles.includes('ROLE_FILER')) {
               this.allPlans.forEach((item: any) => {
-                item.disable = true;
-                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                  item.disable = false;
-              })
+                item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+              });
             }
           }
         } else {
           this.allPlans = [plans];
           if (this.roles.includes('ROLE_FILER')) {
             this.allPlans.forEach((item: any) => {
-              item.disable = true;
-              if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                item.disable = false;
-            })
+              item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+            });
           }
         }
         this.setServiceDetails();
