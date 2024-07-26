@@ -5,11 +5,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -149,9 +146,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.filerId = null;
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
-  }
-  getRoleValue(role) {
-
   }
 
   filerId: number;
@@ -368,7 +362,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
         const currentPageNumber = pageChange || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
         this.config.currentPage = currentPageNumber;
-     
+
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
@@ -383,7 +377,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         filerName: fillingData[i].filerName,
@@ -833,9 +827,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
       this.config.totalItems = 0;
     }
-
-    // this.showReports();
-
   }
 
   // pageChanged(event) {
@@ -876,7 +867,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.getFilingCount();
       this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();

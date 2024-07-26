@@ -310,7 +310,7 @@ export class FilingSlaComponent implements OnInit {
 
   createRowData(missedChatData) {
     console.log('missedRepoInfo -> ', missedChatData);
-    var missedChatRepoInfoArray = [];
+    let missedChatRepoInfoArray = [];
     for (let i = 0; i < missedChatData?.length; i++) {
       let agentReportInfo = Object.assign({}, missedChatRepoInfoArray[i], {
         noOfMissedChat: missedChatData[i].noOfMissedChat,

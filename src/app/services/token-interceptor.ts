@@ -130,7 +130,6 @@ export class TokenInterceptor implements HttpInterceptor {
         },
       });
     }
-    // console.log('Im in intercept====', request);
     return next.handle(request).pipe(
         catchError((error, caught) => {
           // intercept the respons error and displace it to the console
@@ -151,8 +150,6 @@ export class TokenInterceptor implements HttpInterceptor {
             return of(err.message);
           })
           .catch((error) => console.log('sign out err:', error));
-      } else {
-        // return of(err.message);
       }
     }
     throw err;

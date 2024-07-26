@@ -2,24 +2,15 @@
 
 <header class="header clearfix fixed">
 
-    <!-- <mat-slide-toggle >Slide me!</mat-slide-toggle>&nbsp; -->
-
     <div class="row">
         <div class="col-lg-1 col-md-1 col-sm-1">
-            <!-- <a class="header__logo" (click)="sideBar()"> -->
-            <!-- <span class="header__logo-button" [class.header__logo-button-open]="sidebar_open"
-                    [class.header__logo-button-rotate]="menu_btn_rotate">
-                    <span></span>
-                    <span [class.header__logo-button-hide]="menu_hide_component"></span>
-                    <span></span>
-                </span> -->
+
             <mat-icon class="cursor-pointer hamburger" *ngIf="nav" (click)="open()">
                 menu
             </mat-icon>
             <mat-icon class="cursor-pointer hamburger" *ngIf="!nav" (click)="close()">
                 menu_close
             </mat-icon>
-            <!-- </a> -->
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4">
             <a class="header__logo" (click)="navigateToHome()">
@@ -29,11 +20,6 @@
                 <i class="fa-regular fa-phone-arrow-right"></i>&nbsp;&nbsp;Dial Any Number
             </button>
         </div>
-          
-        <!-- <div class="col-lg-2 col-md-2 col-sm-6">
-
-
-        </div> -->
 
         <div class="col-lg-2 col-md-2 col-sm-1">
             <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
@@ -72,19 +58,10 @@
                 <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
                     <i class="fa-light fa-people-group"></i> Affiliate ID Linking</button>|
             </div>
-            <!-- <div *ngIf="!showAffiliateBtn && checkEnv !=='UAT' " class="header__breadcrumbs">
-              <span class="affId">
-                <i class="fa-light fa-people-group"></i> Affiliate ID - {{userAffiliateID}}
-              </span>
-          </div> -->
+
         </div>
 
 
     </div>
 
-    <!-- <div class="header__container">
-        <div class="header__buttons" *ngIf="showBtns === 'business-profile'">
-            <a class="btn" (click)="saveBusinessProfile()">Save Profile</a>
-        </div>
-    </div> -->
 </header>

@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {UntypedFormControl, Validators} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {UtilsService} from "../../../../services/utils.service";
-import {ItrMsService} from "../../../../services/itr-ms.service";
-import {AppConstants} from "../../constants";
 
 @Component({
   selector: 'app-service-drop-down',
@@ -16,8 +14,7 @@ export class ServiceDropDownComponent implements OnInit {
   serviceTypes = [];
   selectedService = new UntypedFormControl('', []);
   @Input() fromInvoices : boolean =false;
-  constructor(public utilsService: UtilsService,
-              private itrMsService: ItrMsService) { }
+  constructor(public utilsService: UtilsService) { }
 
   ngOnInit() {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -87,18 +84,13 @@ export class ServiceDropDownComponent implements OnInit {
         },
       ]
     }
-    this.setDropDown();
-  }
-
-  setDropDown() {
-
   }
 
   resetService(){
     this.selectedService.setValue(null);
   }
 
-  changeService(fy: String) {
+  changeService(fy: string) {
     this.sendService.emit(this.selectedService.value);
   }
 

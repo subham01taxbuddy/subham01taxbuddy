@@ -5273,7 +5273,6 @@ export class SummaryConversionService {
                 }
             } catch (error) {
                 console.log(`Error occurred for type ${type}: `, error);
-                // this.utilsService.showSnackBar(`Error occurred for type ${type}`);
             }
         }
 

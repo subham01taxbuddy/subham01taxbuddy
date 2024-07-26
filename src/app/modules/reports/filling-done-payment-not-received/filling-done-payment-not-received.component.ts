@@ -127,9 +127,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     if (event) {
       this.filerId = event ? event.userId : null;
       this.agentId = this.filerId;
-      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
 
@@ -206,7 +203,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
   createRowData(fillingData) {
     console.log('payoutRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
         name: fillingData[i].name,
@@ -337,7 +334,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = ''
@@ -381,7 +377,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     this.config.totalPartnersPaid = 0;
     this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
-    // this.showReports();
   }
 
   pageChanged(event) {

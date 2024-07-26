@@ -9,13 +9,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-.search-box {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
 .input-group {
   flex-grow: 1;
   display: flex;
@@ -61,12 +54,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-mat-checkbox {
+.mat-checkbox {
   margin-right: 10px;
 }
-
-
-
 
 .container {
   margin-bottom: 20px;
@@ -113,7 +103,7 @@ mat-checkbox {
   width: 40%;
 }
 
-mat-checkbox {
+.mat-checkbox {
   display: block;
   margin: 0 auto;
 }

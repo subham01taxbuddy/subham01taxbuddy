@@ -26,7 +26,7 @@ export const MY_FORMATS = {
 };
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
@@ -140,9 +140,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
-    this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : this.hideAssignmentOnOff = false;
-    this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : this.hideSectionForAdmin = false;
-    this.loggedInSmeRoles.includes('ROLE_ADMIN') ? this.isDisabled = true : this.isDisabled = false;
+    this.hideAssignmentOnOff = this.smeObj?.roles.includes('ROLE_LEADER');
+    this.hideSectionForAdmin = this.smeObj?.roles.includes('ROLE_ADMIN');
+    this.isDisabled = this.loggedInSmeRoles.includes('ROLE_ADMIN');
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
@@ -317,14 +317,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.itr.setValue((this.smeObj?.['serviceEligibility_ITR']) ? true : false);
     this.itrToggle.setValue((this.smeObj?.['assignmentOffByLeader']) ? false : true);
     this.gst.setValue((this.smeObj?.['serviceEligibility_GST']) ? true : false);
-    if (this.smeObj?.['serviceEligibility_GST']) {
-    }
     this.tpa.setValue((this.smeObj?.['serviceEligibility_TPA']) ? true : false);
-    if (this.smeObj?.['serviceEligibility_TPA']) {
-    }
     this.notice.setValue((this.smeObj?.['serviceEligibility_NOTICE']) ? true : false);
-    if (this.smeObj?.['serviceEligibility_NOTICE']) {
-    }
 
     this.disableItrService = (this.itr.value && this.hideAssignmentOnOff) ? true : false;
     this.disableTpaService = (this.tpa.value && this.hideAssignmentOnOff) ? true : false;

@@ -29,7 +29,6 @@ export interface User {
   styleUrls: ['./assigned-subscription.component.scss'],
 })
 export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
-  // @Input() queryParam: any;
   @Input() from: any;
   @Input() tabName: any;
   @Output() sendTotalCount = new EventEmitter<any>();
@@ -58,23 +57,18 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   allFilerList: any;
   roles: any;
-  coOwnerToggle = new UntypedFormControl('');
-  coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
     page: 0,
     pageSize: 20,
     serviceType: null,
     assessmentYear: null
-    // mobileNumber: null,
-    // emailId: null,
   };
   dataOnLoad = true;
   sortBy: any = {};
   sortMenus = [
     { value: 'userName', name: 'Name' },
     { value: 'userSelectedPlan.name', name: 'User Selected Plan' },
-    // { value: '', name: 'Subscription Amount' },
     { value: 'invoiceDetail.invoiceNo', name: 'Invoice Number' },
     { value: 'promoCode', name: 'Promo code' },
     { value: 'createdDate', name: 'Created Date' },
@@ -197,7 +191,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
 
-    // this.getFilerList();
   }
 
   splitQueryParameters(apiUrl: string): string {
@@ -1491,16 +1484,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.loading=false;
       this.utilsService.showSnackBar('Error in Delete Bulk Subscription API')
     })
-  }
-
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value);
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    } else {
-      this.coOwnerCheck = false;
-    }
-    this.getAssignedSubscription(0, true);
   }
 
   ngOnDestroy() {

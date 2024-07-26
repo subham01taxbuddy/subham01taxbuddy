@@ -63,7 +63,6 @@ export class ItrFiledUsersComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     let param = `/bo/itr-filed-users-details-report?fromDate=${fromDate}&toDate=${toDate}`;
-    // location.href = environment.url + param;
     this.reportService.invoiceDownload(param).subscribe((response:any) => {
       const blob = new Blob([response], { type: 'application/octet-stream' });
       const url = window.URL.createObjectURL(blob);

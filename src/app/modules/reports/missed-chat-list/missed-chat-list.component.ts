@@ -236,7 +236,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         clientName: fillingData[i].clientName,
@@ -457,7 +457,6 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
       this.missedChatListGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showReports();
   }
 
   pageChanged(event) {

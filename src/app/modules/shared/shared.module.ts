@@ -1,8 +1,4 @@
-import {
-  MatDialog,
-  MatDialogContent,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
 import { KommunicateDialogComponent } from '../itr-filing/kommunicate-dialog/kommunicate-dialog.component';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

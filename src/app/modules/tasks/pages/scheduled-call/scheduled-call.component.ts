@@ -1089,7 +1089,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let param = `/dashboard/schedule-call-details/${this.agentId}?`;
 
     if (this.searchParam.email) {

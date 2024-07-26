@@ -232,7 +232,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
 
   createRowData(fillingData) {
     console.log('payoutRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
         name: fillingData[i].name,

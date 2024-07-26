@@ -1031,11 +1031,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     console.log("param2: ", param2);
     this.userMsService.postMethod(param, param2).subscribe(res => {
       console.log("Status update response: ", res)
-      // this.loading = false;
-      //this._toastMessageService.alert("success", "Status update successfully.");
     }, error => {
-      // this.loading = false;
-      //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+      console.log('error',error)
     });
   }
 

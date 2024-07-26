@@ -39,7 +39,7 @@ export const MY_FORMATS = {
 
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({

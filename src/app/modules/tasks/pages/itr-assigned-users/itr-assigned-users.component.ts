@@ -388,7 +388,6 @@ export class ItrAssignedUsersComponent implements OnInit {
 
 </html>`);
     data.append('isHtml', 'true');
-    // data.append('to', 'divya@taxbuddy.com, pratik.bharda@taxbuddy.com, gitanjali.kakade@taxbuddy.com');
     data.append('to', 'ashwini@taxbuddy.com');
     const dto_object = new Blob([ITR_JSON], {
       type: 'application/json'
@@ -635,8 +634,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     }else{
       hideTaxPayble =false;
     }
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
-    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
@@ -1080,11 +1077,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
             <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
             </button>`;
-
-            // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-            // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-            //  </button>`;
           },
 
           width: 180,

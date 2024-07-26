@@ -1,13 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { param } from 'jquery';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { PopUpComponent } from '../pop-up/pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 interface FragmentData {
   fragmentName: string;
@@ -28,7 +26,7 @@ interface GroupedSnapshot {
   templateUrl: './recovery-data.component.html',
   styleUrls: ['./recovery-data.component.scss'],
 })
-export class RecoveryDataComponent implements OnInit {
+export class RecoveryDataComponent {
 
   mobileNumber: string = '';
   isLoading: boolean = false;
@@ -45,9 +43,6 @@ export class RecoveryDataComponent implements OnInit {
 
   constructor(private http: HttpClient, private itrMs: ItrMsService, private userMsService: UserMsService,
     private utilService: UtilsService, private dialog: MatDialog) { }
-
-  ngOnInit(): void {
-  }
 
   search() {
     this.utilService.getFilerIdByMobile(this.mobileNumber).subscribe(

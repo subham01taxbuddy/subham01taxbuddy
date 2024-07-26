@@ -58,7 +58,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   isReadOnly: boolean = false;
   loggedInSmeInfo: any;
   maxNumber: number;
-  disableButton: Boolean = false;
+  disableButton: boolean = false;
   emailAccepted = '';
   allFilerList:any;
 

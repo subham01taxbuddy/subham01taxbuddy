@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class GenericSortingComponent {
   @Output() onChange = new EventEmitter();
-  sortOrder: Number;
+  sortOrder: number;
   sortName: any;
   @Input() sortingParameter: any[] = [];
 
@@ -33,9 +33,9 @@ export class GenericSortingComponent {
     if (!this.sortOrder && hasClear) {
       this.sortOrder = 1;
     }
-    var sortBy = {};
+    let sortBy = {};
     if (this.sortName) {
-      var key2 = this.sortName.toString();
+      let key2 = this.sortName.toString();
       sortBy[key2] = Number(this.sortOrder);
     }
     this.onChange.emit(sortBy);

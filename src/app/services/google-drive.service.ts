@@ -151,7 +151,6 @@ export class GoogleDriveService{
 
   async saveExcel(fileName: string, fileUrl: string, fileMimeType: string, folderId?: string) {
 
-    // const got = await import('got');
     const headers = new HttpHeaders();
     this.http.get(fileUrl,{headers, responseType: 'blob' as 'json'}).subscribe(
       (response: any) =>{
@@ -160,8 +159,6 @@ export class GoogleDriveService{
         binaryData.push(response);
         let downloadLink = document.createElement('a');
         downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, {type: dataType}));
-        // if (filename)
-        //   downloadLink.setAttribute('download', filename);
         document.body.appendChild(downloadLink);
         downloadLink.click();
       }

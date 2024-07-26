@@ -1,6 +1,6 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, DoCheck, ElementRef, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
 import { MatDialog } from '@angular/material/dialog';
@@ -93,10 +93,7 @@ export class NavbarComponent implements DoCheck {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
-    // if (NavbarService.getInstance().closeSideBar) {
-    //   this.sideBar();
-    //   NavbarService.getInstance().closeSideBar = false;
-    // }
+
   }
 
   sideBar() {
@@ -280,7 +277,6 @@ export class NavbarComponent implements DoCheck {
 
   copyLink() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    const smeEmailId = loggedInSmeInfo[0].email;
     const leaderId = loggedInSmeInfo[0].userId;
     const leaderName = loggedInSmeInfo[0].name;
     const link = `${environment.webportal_url}/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;

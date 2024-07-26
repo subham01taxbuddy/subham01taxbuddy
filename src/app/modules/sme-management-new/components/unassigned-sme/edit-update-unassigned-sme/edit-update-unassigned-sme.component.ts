@@ -16,7 +16,7 @@ import { Location } from "@angular/common";
 
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
