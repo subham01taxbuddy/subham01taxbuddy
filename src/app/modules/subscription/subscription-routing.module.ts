@@ -5,15 +5,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { SubscriptionComponent } from './subscription.component';
 import { CreateUpdateSubscriptionComponent } from './components/assigned-subscription/create-update-subscription/create-update-subscription.component';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
-import { AddSubscriptionComponent } from './components/assigned-subscription/add-subscription/add-subscription.component';
 import { OldInvoicesComponent } from './components/old-invoices/old-invoices.component';
 import { PauseInvoiceReminderComponent } from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
 import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
 import { RefundRequestComponent } from './components/refund-request/refund-request.component';
 import { CreditNoteComponent } from './components/credit-note/credit-note.component';
 import { SubscriptionAdjustmentComponent } from './components/subscription-adjustment/subscription-adjustment.component';
-
-// const routes: Routes = [{ path: '', component: SubscriptionComponent }];
 
 const routes: Routes = [
   {

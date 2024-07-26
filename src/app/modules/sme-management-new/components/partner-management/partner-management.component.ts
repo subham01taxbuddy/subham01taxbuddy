@@ -427,8 +427,6 @@ export class PartnerManagementComponent implements OnInit {
   updateSmeDetails=():Promise<any> =>{
     //'https://uat-api.taxbuddy.com/user/v2/partner-details' \
     if(this.partnerForm.valid && this.bankDetailsFormGroup.valid){
-
-      // let reqBody = this.partnerInfo;
       const param = `/v2/partner-details`;
 
       const requestBody = {

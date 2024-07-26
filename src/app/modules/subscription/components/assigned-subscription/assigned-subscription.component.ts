@@ -1,5 +1,5 @@
 import { data } from 'jquery';
-import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -207,8 +207,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter((item) =>
@@ -219,7 +217,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
@@ -332,7 +329,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    var param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}${userIdFilter}`;
+    let param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}${userIdFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -349,74 +346,75 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       console.log('SUBSCRIPTION RESPONSE:', response);
       this.allSubscriptions = response;
       this.loading = false;
-      if (response.success == false) {
+      if (response.success) {
+        if (
+          response?.data?.content instanceof Array &&
+          response?.data?.content?.length > 0
+        ) {
+          this.subscriptionListGridOptions.api?.setRowData(
+            this.createRowData(response.data.content)
+          );
+          this.config.totalItems = response.data.totalElements;
+          this.cacheManager.initializeCache(response.data.content);
+
+          const currentPageNumber = response?.data?.number + 1;
+          this.cacheManager.cachePageContent(
+            currentPageNumber,
+            response.data.content
+          );
+          this.config.currentPage = currentPageNumber;
+          this.userId = response.data.content[0].userId;
+        } else {
+          if (response?.data?.content?.length === 0) {
+            this._toastMessageService.alert('error', 'Subscription not found');
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          }
+          if (response?.data?.error === 'User not found') {
+            this._toastMessageService.alert(
+              'error',
+              'No user with this Mobile Number/Email found. ' +
+                'Please create user before creating subscription.'
+            );
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else if (response?.data?.error === 'Subscription not found') {
+            this._toastMessageService.alert('error', response?.data?.error);
+            let filtered = this.roles.filter(
+              (item) =>
+                item === 'ROLE_ADMIN' ||
+                item === 'ROLE_LEADER' ||
+                item === 'ROLE_FILER'
+            );
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else {
+            this._toastMessageService.alert('error', response?.data?.error);
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          }
+        }
+      } else {
         this._toastMessageService.alert('error', response.message);
         this.subscriptionListGridOptions.api?.setRowData(
           this.createRowData([])
         );
         this.config.totalItems = 0;
-      }
-      if (
-        response?.data?.content instanceof Array &&
-        response?.data?.content?.length > 0
-      ) {
-        this.subscriptionListGridOptions.api?.setRowData(
-          this.createRowData(response.data.content)
-        );
-        this.config.totalItems = response.data.totalElements;
-        this.cacheManager.initializeCache(response.data.content);
-
-        const currentPageNumber = response?.data?.number + 1;
-        this.cacheManager.cachePageContent(
-          currentPageNumber,
-          response.data.content
-        );
-        this.config.currentPage = currentPageNumber;
-        this.userId = response.data.content[0].userId;
-      } else {
-        if (response?.data?.content?.length === 0) {
-          this._toastMessageService.alert('error', 'Subscription not found');
-          this.config.totalItems = 0;
-          this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-          return;
-        }
-        if (response?.data?.error === 'User not found') {
-          this._toastMessageService.alert(
-            'error',
-            'No user with this Mobile Number/Email found. ' +
-            'Please create user before creating subscription.'
-          );
-          this.isAllowed = false;
-          this.config.totalItems = 0;
-          this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-          return;
-        } else if (response?.data?.error === 'Subscription not found') {
-          this._toastMessageService.alert('error', response?.data?.error);
-          let filtered = this.roles.filter(
-            (item) =>
-              item === 'ROLE_ADMIN' ||
-              item === 'ROLE_LEADER' ||
-              item === 'ROLE_FILER'
-          );
-          this.isAllowed = filtered && filtered.length > 0 ? true : false;
-          this.config.totalItems = 0;
-          this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-          return;
-        } else {
-          this._toastMessageService.alert('error', response?.data?.error);
-          this.isAllowed = false;
-          this.config.totalItems = 0;
-          this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-          return;
-        }
       }
       this.sendTotalCount.emit(this.config.totalItems);
     }).catch((error) => {
@@ -432,7 +430,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
-    var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
+    let param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -613,17 +611,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   subscriptionCreateColumnDef(List, view) {
     return [
-      // {
-      //   field: 'selection',
-      //   headerName: '',
-      //   // headerCheckboxSelection: true,
-      //   checkboxSelection: true,
-      //   width: 50,
-
-      //   lockPosition: true,
-      //   suppressMovable: false,
-      //   cellRenderer: (params) => { },
-      // },
       {
         headerName: 'User Id',
         field: 'userId',
@@ -646,7 +633,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        // hide: from === 'MY_SUB' ? false : true
       },
       {
         headerName: 'User Selected',
@@ -771,34 +757,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
-      // {
-      //   headerName: 'Subscription Prepared',
-      //   field: 'subscriptionCreatedBy',
-      //   width: 150,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function (params) {
-      //     let createdUserId = params.data.subscriptionCreatedBy
-      //     let filer1 = List;
-      //     // console.log('filer1',filer1)
-      //     //  let filer= filer1.filter(item=> item.userId {
-      //     //   if(item.userId==createdUserId){
-      //     //     return item.name;
-      //     //    }else 'NA'
-      //     //  })
-      //     let filer = filer1?.filter((item) => {
-      //       return item.userId === createdUserId;
-      //     }).map((item) => {
-      //       return item.name;
-      //     });
-      //     return filer;
-      //   }
-      // },
       {
         headerName: 'Delete Subscription',
         field: '',
@@ -807,7 +765,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to delete/cancel Subscription" data-action-type="remove"
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:red; ">
@@ -823,7 +780,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         lockPosition: true,
         suppressMovable: false,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
           if (params.data.cancellationStatus === 'PENDING') {
             return `<button type="button" disabled class="action_icon add_button"
@@ -847,19 +803,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         suppressMovable: false,
         hide: view === 'admin' ? false : true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
-          // if (params.data.cancellationStatus === 'PENDING' || params.data?.invoiceDetail?.paymentStatus ==='Paid') {
-          //   return `<button type="button" disabled class="action_icon add_button"
-          // style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
-          // <i class="fa-sharp fa-solid fa-ticket fa-xs"> Coupon</i>
-          //  </button>`;
-          // } else {
-          //   return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
-          //   style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-          //   <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
-          //   </button>`;
-          // }
           if (params.data?.invoiceDetail?.some(invoice => invoice?.paymentStatus === 'Paid') && !params.data?.invoiceDetail?.some(invoice => invoice?.invoiceRefundDetails?.some(refund => refund?.refundStatus === 'IN_PROGRESS'))) {
             return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
               style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
@@ -877,13 +821,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   createRowData(subscriptionData) {
     console.log('SUBSCRIPTIONDATA:', subscriptionData);
-    // var invoiceDetail = [];
-    // invoiceDetail.push('invoiceNo');
-    // console.log('invoiceNoFormArray:', invoiceDetail);
-
     const newData = [];
     for (let i = 0; i < subscriptionData.length; i++) {
-      // var invoiceNumber = '';
       const invoiceNumber = [];
       const paymentStatuses = [];
       for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
@@ -891,7 +830,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         paymentStatuses.push(
           subscriptionData[i].invoiceDetail[x].paymentStatus
         );
-        // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
       }
       newData.push({
         subscriptionId: subscriptionData[i].subscriptionId,
@@ -1327,12 +1265,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
                 'createSubscriptionObject',
                 JSON.stringify(subData)
               );
-              // let subID=result.data['subscriptionId'];
               console.log('Afetr dialog close -> ', subData);
               this.router.navigate(['/subscription/create-subscription'], {
                 queryParams: { assignedFilerId: this.assignedFilerId },
               });
-              // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
             } else {
               this.getAssignedSubscription(this.config.currentPage);
             }
@@ -1374,15 +1310,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     console.log(option);
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.getAssignedSubscription(event - 1, true);
-  //   } else {
-  //     this.getAssignedSubscription(event - 1);
-  //   }
-
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -1394,8 +1321,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.searchParam.page = event - 1;
       this.config.currentPage = event;
-      // this.searchParam.page = event - 1
-      // this.selectedPageNo = event - 1;
       this.getAssignedSubscription(event, '', '', 'fromPageChange');
     }
   }
@@ -1475,7 +1400,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       service += `&serviceType=${this.searchParam.serviceType}`;
     }
 
-    var param = `/bo/subscription-dashboard-new?${userFilter}${service}`;
+    let param = `/bo/subscription-dashboard-new?${userFilter}${service}`;
 
     if (Object.keys(this.sortBy).length) {
       let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));

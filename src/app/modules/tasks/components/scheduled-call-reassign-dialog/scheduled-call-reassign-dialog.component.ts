@@ -90,7 +90,6 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
     console.log("in check leader selected leader id ", leaderId);
     if(leaderId === this.data.allData.leaderUserId){
       this.utilsService.showSnackBar('Scheduled call already assigned this leader ,please select different leader')
-      // alert("You can't assign to yourself");
     }else{
       this.getSmeBookedSlot(leaderId)
     }
@@ -109,7 +108,6 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
         this.smeBookedSlots = response.data.bookedSlots;
         if (this.smeBookedSlots?.length) {
           const timeSlotToCheck = new Date(this.data.allData.scheduleCallTime).toISOString();
-          // const timeSlotExists = this.checkIfTimeSlotExists(timeSlotToCheck);
           const timeSlotIsBooked = this.smeBookedSlots.some(slot => {
             const startTime = new Date(slot.scheduleCallTimeStart).toISOString();
             const endTime = new Date(slot.scheduleCallTimeEnd).toISOString();

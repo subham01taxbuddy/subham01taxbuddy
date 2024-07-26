@@ -1161,7 +1161,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.selectRole.setValue(null);
     this.selectedLangControl.setValue(null);
     this.selectedITRCapabilityControl.setValue(null);
-    const loggedInSmeUserId = this.loggedInSme[0].userId
     this.searchParam.page = 0;
     this.searchParam.pageSize = 15;
     this.key = null;

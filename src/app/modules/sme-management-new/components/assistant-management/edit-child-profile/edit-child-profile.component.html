@@ -113,12 +113,7 @@
                   Mobile number is required and must be valid.</mat-error>
             </mat-form-field>
           </div>
-          <!-- <div class="col-sm-4">
-            <mat-label>Assistant Name(First,Middle & Last Name)*</mat-label>
-            <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="First,Middle & Last Name" [formControl]="name" class="input-field"  required />
-            </mat-form-field>
-          </div> -->
+
           <div class="col-sm-4">
             <mat-label> Email ID * </mat-label>
             <mat-form-field appearance="outline">
@@ -385,7 +380,6 @@
             <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
           </div>
           <div style=" flex: 1 0 0; text-align: right;">
-            <!-- <button class="save-all" (click)="updateSmeDetails()">Save & Go Back to Table </button> -->
             <app-custom-button class="save-all"  [actions]="[updateSmeDetails]">
               Save & Go Back to Table
             </app-custom-button>
