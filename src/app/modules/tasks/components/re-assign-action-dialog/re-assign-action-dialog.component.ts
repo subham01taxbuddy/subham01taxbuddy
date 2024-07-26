@@ -275,6 +275,12 @@ export class ReAssignActionDialogComponent implements OnInit {
     });
   };
 
+  getReason(item){
+    if(item.reason.startsWith("User can not be reassigned before default time")){
+      return "User can not be reassigned before default time of the last updated status that is 5 Mins";
+    }
+    return item.reason;
+  }
 
   closeErrorTable() {
     this.dialogRef.close({ event: 'close', data: 'success' });
