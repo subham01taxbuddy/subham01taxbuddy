@@ -320,10 +320,12 @@ export class CreateNewUserComponent implements OnInit {
   assignUser(userId, serviceType) {
     //'https://dev-api.taxbuddy.com/user/v2/manual-assignment?userId=8729&serviceType=ITR&leaderUserId=8149&filerUserId=8149&statusId=16'
     let param = `/v2/manual-assignment?userId=${userId}&serviceType=${serviceType}&statusId=16`
-    if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+    if (this.loggedInUserRoles.includes('ROLE_LEADER') && this.filerId) {
+      param = param + `&leaderUserId=${this.loggedInId}&filerUserId=${this.filerId}`;
+    }else if(this.loggedInUserRoles.includes('ROLE_LEADER') && !this.filerId){
       param = param + `&leaderUserId=${this.loggedInId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
-      param = param + `&filerUserId=${this.loggedInId}`;
+      param = param + `&filerUserId=${this.filerId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
       if (this.leaderId && !this.filerId) {
         param = param + `&leaderUserId=${this.leaderId}`;
