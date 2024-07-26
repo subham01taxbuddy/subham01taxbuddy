@@ -16,6 +16,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 
 @Component({
   selector: 'app-potential-user',
@@ -65,6 +67,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     { value: 'Registered', name: 'Registered' },
     { value: 'ITR Filed', name: 'ITR Filed' }
   ]
+  dialogRef: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -730,7 +733,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           break;
         }
         case 'active': {
-          this.active(params.data)
+          this.assignFilerBeforeActivate(params.data)
           break;
         }
       }
@@ -831,16 +834,60 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   }
 
+  assignFilerBeforeActivate(data) {
+    let smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    smeList.forEach((item) => {
+      if (item.name === data.leaderName)
+        data['leaderUserId'] = item.userId;
+      if (item.name === data.filerName)
+        data['filerUserId'] = item.userId;
+    });
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.roles.includes('ROLE_LEADER') && data.leaderUserId != loggedInId) {
+      debugger
+      this.active(data);
+    } else {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Assign Filer Confirmation',
+          message: 'Do you want to assign filer?',
+        },
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          let selectedUser: any = [];
+          selectedUser[0] = (data);
+          let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+            width: '65%',
+            height: 'auto',
+            data: {
+              data: selectedUser,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              debugger
+              this.active(data);
+            }
+          });
+        } else {
+          debugger
+          this.active(data);
+        }
+      })
+    }
+  }
+
+
   active(data) {
     //'https://dev-api.taxbuddy.com/user/leader-assignment?userId=8729&serviceType=ITR&statusId=16' \
-
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
       (res: any) => {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
           this.search();
-          return;
         } else {
           console.log('data to active user', data);
           let loggedInId = this.utilsService.getLoggedInUserID();
