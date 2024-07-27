@@ -628,12 +628,12 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
   }
 
-  isSelectionAllowed(data){
+  isSelectionAllowed(data) {
     console.log(data);
-    console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
+    console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now())) / 1000 / 60);
     let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
-    return  !(!data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
-        && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
+    return !(!data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+      && Math.abs(moment(data.statusUpdatedDate).diff(moment.now())) / 1000 / 60 <= AppConstants.DISABLITY_TIME_MINS);
   }
 
   usersCreateColumnDef(itrStatus) {
@@ -1844,7 +1844,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.taxPayable)) {
       param = param + `&taxPayable=${this.taxPayable}`;
     }
-
     if (this.unAssignedUsersView.value) {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
@@ -1940,8 +1939,13 @@ export class ItrAssignedUsersComponent implements OnInit {
       param = param + '&assigned=false'
     }
 
-
     let fieldName = [];
+    let taxPayableArray = [];
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      taxPayableArray = [
+        { key: 'taxPayable', value: 'Tax Payable' }
+      ]
+    }
     if (this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')) {
       fieldName = [
         { key: 'name', value: 'Client Name' },
@@ -1949,7 +1953,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         { key: 'customerNumber', value: 'Mobile No' },
         { key: 'leaderName', value: 'leader Name' },
         { key: 'filerName', value: 'Filer Name' },
-        { key: 'taxPayable', value: 'Tax Payable' },
         { key: 'serviceType', value: 'Service Type' },
         { key: 'language', value: 'Language' },
         { key: 'subscriptionPlan', value: 'Subscription Plan' },
@@ -1967,7 +1970,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         { key: 'email', value: 'Email Address' },
         { key: 'leaderName', value: 'leader Name' },
         { key: 'filerName', value: 'Filer Name' },
-        { key: 'taxPayable', value: 'Tax Payable' },
         { key: 'serviceType', value: 'Service Type' },
         { key: 'language', value: 'Language' },
         { key: 'subscriptionPlan', value: 'Subscription Plan' },
@@ -1980,8 +1982,11 @@ export class ItrAssignedUsersComponent implements OnInit {
         { key: 'userId', value: 'User Id' },
       ];
     }
+    if (taxPayableArray.length) {
+      fieldName = fieldName.concat(taxPayableArray);
+    }
     await this.genericCsvService.downloadReport(
-      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {});
+      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {},this.taxPayable);
     this.loading = false;
     this.showCsvMessage = false;
   }
