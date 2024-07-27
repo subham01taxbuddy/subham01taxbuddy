@@ -628,6 +628,14 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
   }
 
+  isSelectionAllowed(data){
+    console.log(data);
+    console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
+    let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
+    return  !(!data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+        && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
+  }
+
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     let statusSequence = 0;
@@ -647,7 +655,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         lockPosition: true,
         suppressMovable: true,
         checkboxSelection: (params) => {
-          return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
+          return this.isSelectionAllowed(params.data);
+          // return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
         },
         cellStyle: function (params: any) {
           return {
@@ -1708,6 +1717,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   moreOptions(client) {
     console.log('client', client)
+    client.hideReassign = !this.isSelectionAllowed(client);
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',

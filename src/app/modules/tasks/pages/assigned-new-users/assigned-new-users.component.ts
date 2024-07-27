@@ -374,6 +374,14 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  isSelectionAllowed(data){
+    console.log(data);
+    console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
+    let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
+    return  !(!data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+        && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
+  }
+
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
     let columnDefs: ColDef[] = [
@@ -388,11 +396,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         width: 110,
         hide: !this.showReassignmentBtn.length,
         checkboxSelection: (params) => {
-          if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-          } else {
-            return this.showReassignmentBtn.length
-          }
+          // if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+          //   return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
+          // } else {
+          //   return this.showReassignmentBtn.length
+          // }
+          return this.isSelectionAllowed(params.data);
         },
         cellStyle: function (params: any) {
           return {
@@ -1251,7 +1260,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   moreOptions(client) {
-    console.log('client', client)
+    console.log('client', client);
+    client.hideReassign = !this.isSelectionAllowed(client);
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
