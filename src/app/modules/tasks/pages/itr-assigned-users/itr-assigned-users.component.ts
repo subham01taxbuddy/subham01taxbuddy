@@ -30,6 +30,7 @@ import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
 import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 @Component({
   selector: 'app-itr-assigned-users',
@@ -92,14 +93,15 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'PREPARING_ITR',
     },
   ];
-  taxDropdown=[
-    {label: 'Both', value: ''},
-    {label: 'Yes', value: true },
-    {label: 'No', value: false }
+  taxDropdown = [
+    { label: 'Both', value: '' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false }
   ];
   taxPayable: any = '';
   loggedInUserId: any;
   showReassignButton: boolean = false;
+  showCsvMessage: boolean;
 
   constructor(
     private reviewService: ReviewService,
@@ -117,6 +119,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     private userService: UserMsService,
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -552,10 +555,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     console.log(itrStatus);
     var statusSequence = 0;
     let hideTaxPayble
-    if(this.utilsService.isNonEmpty(this.taxPayable)){
-      hideTaxPayble =true;
-    }else{
-      hideTaxPayble =false;
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      hideTaxPayble = true;
+    } else {
+      hideTaxPayble = false;
     }
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
@@ -675,7 +678,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           const value = params.value;
           if (value === null || value === undefined || value === '') {
             return '-';
-          } else if (value < 0 || !this.taxPayable  ) {
+          } else if (value < 0 || !this.taxPayable) {
             return `(${Math.abs(value)})`;
           }
           return value;
@@ -1239,7 +1242,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         paymentStatus: userData[i].paymentStatus,
         aisProvided: userData[i].aisProvided,
         everified: userData[i].everified,
-        taxPayable:userData[i].taxPayable,
+        taxPayable: userData[i].taxPayable,
       })
       userArray.push(userInfo);
     }
@@ -1760,7 +1763,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       param = param + `&leaderUserId=${this.agentId}`;
     }
 
-    if(this.utilsService.isNonEmpty(this.taxPayable)){
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
       param = param + `&taxPayable=${this.taxPayable}`;
     }
 
@@ -1801,5 +1804,110 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
+
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.utilsService.isNonEmpty(this.searchParam.emailId)) {
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    let serviceType = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.serviceType)) {
+      serviceType += `&serviceType=${this.searchParam.serviceType}`;
+    }
+
+    let status = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.statusId)) {
+      status += `&statusId=${this.searchParam.statusId}`;
+    }
+
+    let itrObjectStatus = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.itrObjectStatus)) {
+      itrObjectStatus += `&itrObjectStatus=${this.searchParam.itrObjectStatus}`;
+    }
+    let param = `/bo/user-list-new?itrChatInitiated=true${status}${serviceType}${itrObjectStatus}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    if (Object.keys(this.searchBy).length) {
+      Object.keys(this.searchBy).forEach(key => {
+        param = param + '&' + key + '=' + this.searchBy[key];
+      });
+    }
+
+
+    if (this.filerId === this.agentId) {
+      param = param + `&filerUserId=${this.filerId}`;
+    }
+
+    if (this.partnerType === 'PRINCIPAL') {
+      param = param + '&searchAsPrincipal=true';
+    };
+    if (this.leaderId === this.agentId) {
+      param = param + `&leaderUserId=${this.leaderId}`;
+    }
+
+    if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = param + `&leaderUserId=${this.agentId}`;
+    }
+
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      param = param + `&taxPayable=${this.taxPayable}`;
+    }
+
+    if (this.unAssignedUsersView.value) {
+      // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
+      param = param + '&assigned=false'
+    }
+
+
+    let fieldName = [];
+    if (this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      fieldName = [
+        { key: 'name', value: 'Client Name' },
+        { key: 'email', value: 'Email Address' },
+        { key: 'mobileNumber', value: 'Mobile No' },
+        { key: 'leaderName', value: 'leader Name' },
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'taxPayable', value: 'Tax Payable' },
+        { key: 'serviceType', value: 'Service Type' },
+        { key: 'language', value: 'Language' },
+        { key: 'subscriptionPlan', value: 'Subscription Plan' },
+        { key: 'panNumber', value: 'PAN Number' },
+        { key: 'paymentStatus', value: 'Payment Status' },
+        { key: 'aisProvided', value: 'AIS Password Status' },
+        { key: 'eriClientValidUpto', value: 'ERI Client' },
+        { key: 'createdDate', value: 'Created Date' },
+        { key: 'statusUpdatedDate', value: 'Status Updated' },
+        { key: 'userId', value: 'User Id' },
+      ];
+    } else {
+      fieldName = [
+        { key: 'name', value: 'Client Name' },
+        { key: 'email', value: 'Email Address' },
+        { key: 'leaderName', value: 'leader Name' },
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'taxPayable', value: 'Tax Payable' },
+        { key: 'serviceType', value: 'Service Type' },
+        { key: 'language', value: 'Language' },
+        { key: 'subscriptionPlan', value: 'Subscription Plan' },
+        { key: 'panNumber', value: 'PAN Number' },
+        { key: 'paymentStatus', value: 'Payment Status' },
+        { key: 'aisProvided', value: 'AIS Password Status' },
+        { key: 'eriClientValidUpto', value: 'ERI Client' },
+        { key: 'createdDate', value: 'Created Date' },
+        { key: 'statusUpdatedDate', value: 'Status Updated' },
+        { key: 'userId', value: 'User Id' },
+      ];
+    }
+    await this.genericCsvService.downloadReport(
+      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {});
+    this.loading = false;
+    this.showCsvMessage = false;
+  }
 
 }
