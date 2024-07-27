@@ -629,6 +629,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
   }
 
+
   isSelectionAllowed(data){
     // console.log(data);
     // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
