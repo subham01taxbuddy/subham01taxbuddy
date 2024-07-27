@@ -377,10 +377,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   isSelectionAllowed(data){
-    console.log(data);
-    console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
+    // console.log(data);
+    // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
     let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
-    return  !(!data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+    return  !(data.serviceType === 'ITR' && !data.filerId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
         && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
   }
 
