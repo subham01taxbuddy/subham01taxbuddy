@@ -94,7 +94,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? this.showReassignmentBtn.length : false;
+        return this.isSelectionAllowed(rowNode.data);
+        // return rowNode.data ? this.showReassignmentBtn.length : false;
       },
       onGridReady: params => {
       },
