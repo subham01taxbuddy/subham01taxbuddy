@@ -452,6 +452,7 @@ export class UserListComponent {
   }
 
   moreOptions(client) {
+    client.hideReassign = true;
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',

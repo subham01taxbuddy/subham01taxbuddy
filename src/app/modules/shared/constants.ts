@@ -92,6 +92,8 @@ export class AppConstants {
     public static statusList: any = [{ label: 'All', value: 'All' }, { label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
     public static platformList: any = [{ label: 'All', value: 'All' }, { label: 'Play Store', value: 'Play Store' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, { label: 'Apple Store', value: 'Apple Store' }];
     public static defaultCountry = '91';
+
+    public static DISABLITY_TIME_MINS = 10;
     public static stateDropdown: any = [{
         "id": "5b4599c9c15a76370a3424c2",
         "stateId": "1",

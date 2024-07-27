@@ -13,7 +13,7 @@
 
 
   <span *ngIf="((data.serviceType === 'ITR')
-              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' ">
+              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' && data.hideReassign != true">
     <button type="button" class="more-new-button" title="Re Assignment" (click)="reAssignUser()">
       <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>&nbsp;&nbsp;Re Assign
     </button>
