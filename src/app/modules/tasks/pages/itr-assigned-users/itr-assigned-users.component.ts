@@ -134,7 +134,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
+        return this.isSelectionAllowed(rowNode.data);
+        // return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
       },
       onGridReady: params => {
       },
