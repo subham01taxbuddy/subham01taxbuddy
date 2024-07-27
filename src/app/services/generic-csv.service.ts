@@ -191,9 +191,12 @@ export class GenericCsvService {
                 console.log('no of pages to be downloaded', count);
                 resolve(result.data.totalPages);
               }
+              if (!result?.data) {
+                resolve(0);
+              }
             }
           }
-          if(param.includes('promocodes')){
+          if (param.includes('promocodes')) {
             if (result?.content.length > 0) {
               this.data = [...this.data, ...result.content]
               resolve(result.totalPages);
