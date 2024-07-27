@@ -29,7 +29,7 @@ export class GenericCsvService {
     this.allPlanDetails = JSON.parse(sessionStorage.getItem('ALL_PLAN_LIST'));
   }
 
-  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
+  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any, taxpayable?) {
     let sortJson = encodeURI(JSON.stringify(sortBy));
     let paramUrl = param;
     if (page == 0) {
@@ -55,6 +55,9 @@ export class GenericCsvService {
     console.log('this.data', this.data)
     console.log('this.data.length', this.data.length)
     if (this.data.length) {
+      if (name === 'ITR-Assigned Users') {
+        this.mapItrAssignedDetails(taxpayable);
+      }
       if (name === 'Filed-ITR') {
         this.mapFiledItrDetails();
       }
@@ -91,6 +94,14 @@ export class GenericCsvService {
         element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
       }
     });
+  }
+
+  mapItrAssignedDetails(taxPayable) {
+    if (!taxPayable) {
+      this.data.forEach((element) => {
+        element['taxPayable'] = '(' + element['taxPayable'] + ')';
+      })
+    }
   }
 
   mapFiledItrDetails() {
