@@ -894,7 +894,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
           if (data !== null)
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+            return formatDate(data.value, 'dd/MM/yyyy HH:mm', this.locale);
           else
             return '-';
         },
