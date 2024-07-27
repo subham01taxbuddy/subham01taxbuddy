@@ -1870,7 +1870,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       fieldName = [
         { key: 'name', value: 'Client Name' },
         { key: 'email', value: 'Email Address' },
-        { key: 'mobileNumber', value: 'Mobile No' },
+        { key: 'customerNumber', value: 'Mobile No' },
         { key: 'leaderName', value: 'leader Name' },
         { key: 'filerName', value: 'Filer Name' },
         { key: 'taxPayable', value: 'Tax Payable' },
