@@ -72,6 +72,7 @@ export class GenericCsvService {
       this._toastMessageService.alert('error', "There is no records found");
       return
     }
+    
   }
 
   mapCallingReportDetails() {
