@@ -1,5 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
@@ -94,6 +96,9 @@
                       <app-custom-button class="srch-btn-1" [actions]="[search]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
+                      <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download File
+                      </button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
                       </button>
