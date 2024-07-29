@@ -62,7 +62,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
   partnerType: any;
   constructor(
     public datePipe: DatePipe,
-    private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -108,7 +107,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.showReports()
+
   }
 
   filerId: number;
@@ -206,6 +205,9 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
+        if(response?.data?.content.length === 0){
+          this._toastMessageService.alert("error", 'Data Not Found');
+        }
         this.missedInboundCallList = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.missedInboundCallListGridOptions.api?.setRowData(this.createRowData(this.missedInboundCallList));
@@ -227,7 +229,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         clientName: fillingData[i].clientName,
@@ -240,6 +242,13 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     }
     console.log('fillingRepoInfoArray-> ', fillingRepoInfoArray)
     return fillingRepoInfoArray;
+  }
+
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length || 10);
+    }
+    return '-';
   }
 
   reportsCodeColumnDef() {
@@ -269,7 +278,20 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+        cellRenderer: (params) => {
+          const mobileNumber = params.value;
+          if (mobileNumber) {
+            if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            } else {
+              return mobileNumber;
+            }
+          } else {
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Call Date & Time',
@@ -338,7 +360,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       return;
     }
     this.loading = true;
-    let customerNumber = params.clientNumber;
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
@@ -348,12 +369,11 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
       if (result.success) {
         this._toastMessageService.alert("success", result.message)
+      }else{
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -382,7 +402,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       this.missedInboundCallListGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showReports();
   }
 
   pageChanged(event) {

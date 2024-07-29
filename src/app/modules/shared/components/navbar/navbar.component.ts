@@ -1,6 +1,6 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, DoCheck, ElementRef, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +19,15 @@ import {Subscription} from "rxjs";
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
+}
+
+interface Alert {
+  type: string;
+  message: string;
+  title: string;
+  applicableFrom: Date;
+  applicableTo: Date;
+  seen : boolean;
 }
 
 @Component({
@@ -49,6 +58,10 @@ export class NavbarComponent implements DoCheck {
   partnerType :any;
   userAffiliateID:any;
   checkEnv= environment.environment;
+
+  alerts: Alert[] = [];
+  showNotifications = false;
+
 
   constructor(
     private router: Router,
@@ -93,10 +106,7 @@ export class NavbarComponent implements DoCheck {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
-    // if (NavbarService.getInstance().closeSideBar) {
-    //   this.sideBar();
-    //   NavbarService.getInstance().closeSideBar = false;
-    // }
+
   }
 
   sideBar() {
@@ -280,7 +290,6 @@ export class NavbarComponent implements DoCheck {
 
   copyLink() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    const smeEmailId = loggedInSmeInfo[0].email;
     const leaderId = loggedInSmeInfo[0].userId;
     const leaderName = loggedInSmeInfo[0].name;
     const link = `${environment.webportal_url}/log/userlogin?interviewedBy=${leaderId}&name=${leaderName}`;
@@ -325,4 +334,38 @@ export class NavbarComponent implements DoCheck {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-}
+  getAlerts() {
+      this.userMsService.getAllAlert().subscribe(
+        (response: Alert[]) => {
+          this.alerts = response.map(alert => ({
+            ...alert,
+            applicableFrom: new Date(alert.applicableFrom),
+            applicableTo: new Date(alert.applicableTo)
+          }));
+         
+          this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+          console.log('All Alert list get:', this.alerts);
+        },
+        error => {
+          console.error('Error fetching alerts:', error);
+        }
+      );
+    }
+  
+    toggleNotifications() {
+      this.showNotifications = !this.showNotifications;
+      if (this.showNotifications) {
+        if (this.alerts.length === 0) {
+          this.getAlerts();
+        } else {
+          
+          this.alerts.forEach(alert => alert.seen = true);
+        }
+      }
+    }
+    markAsSeen(alert: Alert) {
+      alert.seen = true;
+    }
+    }
+  
+

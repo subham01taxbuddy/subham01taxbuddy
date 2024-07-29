@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { DatePipe, formatDate } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
@@ -64,6 +64,9 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  isSummarySent=new UntypedFormControl(false);
+  isAisProvided=new UntypedFormControl();
+  delayedTimeInMinutes=new UntypedFormControl(30, [Validators.min(0)]);
 
   constructor(
     public datePipe: DatePipe,
@@ -77,6 +80,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     private router: Router,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -180,9 +184,21 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    let summaryFilter ='';
+    if((this.utilsService.isNonEmpty(this.isSummarySent.value) && this.isSummarySent.valid)){
+      summaryFilter += `&isSummarySent=${this.isSummarySent.value}`;
+    }
+    let aisFilter ='';
+    if((this.utilsService.isNonEmpty(this.isAisProvided.value) && this.isAisProvided.valid)){
+      aisFilter += `&isAisProvided=${this.isAisProvided.value}`;
+    }
+    let timeFilter ='';
+    if((this.utilsService.isNonEmpty(this.delayedTimeInMinutes.value) && this.delayedTimeInMinutes.valid)){
+      timeFilter += `&delayedTimeInMinutes=${this.delayedTimeInMinutes.value}`;
+    }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/bo/report-prefill-uploaded-summary-not-sent?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/report-prefill-uploaded-summary-not-sent?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${summaryFilter}${aisFilter}${timeFilter}`;
 
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
@@ -216,7 +232,7 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
 
   createRowData(fillingData) {
     console.log('payoutRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
         name: fillingData[i].name,
@@ -228,6 +244,8 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
         serviceType :fillingData[i].serviceType,
+        delayedTime:fillingData[i].delayedTime,
+        aisProvidedDate:fillingData[i].aisProvidedDate,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -319,6 +337,18 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       {
         headerName: 'Status',
         field: 'statusName',
+        width: 190,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Delayed Time (hh:mm)',
+        field: 'delayedTime',
         width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -327,6 +357,24 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
+        cellRenderer: (data: any) => {
+          return data.value ? data.value : '-';
+        }
+      },
+      {
+        headerName: 'AIS Provided Date',
+        field: 'aisProvidedDate',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        cellRenderer: (data: any) => {
+          return data.value ? formatDate(data.value, 'dd/MM/yyyy', this.locale) : '-';
+        }
       },
       {
         headerName: 'Leader Name',
@@ -468,7 +516,20 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    param = `/bo/report-prefill-uploaded-summary-not-sent?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    let summaryFilter ='';
+    if((this.utilsService.isNonEmpty(this.isSummarySent.value) && this.isSummarySent.valid)){
+      summaryFilter += `&isSummarySent=${this.isSummarySent.value}`;
+    }
+    let aisFilter ='';
+    if((this.utilsService.isNonEmpty(this.isAisProvided.value) && this.isAisProvided.valid)){
+      aisFilter += `&isAisProvided=${this.isAisProvided.value}`;
+    }
+    let timeFilter ='';
+    if((this.utilsService.isNonEmpty(this.delayedTimeInMinutes.value) && this.delayedTimeInMinutes.valid)){
+      timeFilter += `&delayedTimeInMinutes=${this.delayedTimeInMinutes.value}`;
+    }
+
+    param = `/bo/report-prefill-uploaded-summary-not-sent?fromDate=${fromDate}&toDate=${toDate}${userFilter}${summaryFilter}${aisFilter}${timeFilter}`;
 
     let fieldName = [
       { key: 'name', value: 'Name' },
@@ -476,6 +537,8 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
       { key: 'customerNumber', value: 'Customer Number' },
       { key: 'panNumber', value: 'Pan Number' },
       { key: 'statusName', value: 'Status' },
+      { key: 'delayedTime', value: 'Delayed Time' },
+      { key: 'aisProvidedDate', value: 'AIS Provided Date' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'filerName', value: 'Filer Name' },
       { key: 'conversationId', value:'kommunicate chat Link'},
@@ -627,6 +690,9 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
+    this.isAisProvided.setValue(null);
+    this.isSummarySent.setValue(false);
+    this.delayedTimeInMinutes.setValue(30);
     this?.smeDropDown?.resetDropdown();
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());

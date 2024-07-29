@@ -1,6 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { DatePipe } from '@angular/common';
+import { DatePipe,formatDate } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -10,11 +10,12 @@ import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/materia
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
-import { formatDate } from '@angular/common';
 import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -76,6 +77,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     private router: Router,
     private cacheManager: CacheManager,
     private reportService: ReportService,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.promoCodeGridOptions = <GridOptions>{
@@ -116,7 +118,6 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     let param = '';
     let searchFilter = '';
     if (this.searchValue.value) {
-      // param = '&code=' + this.searchValue.value;
       this.searchParam.page = 0
       data = this.utileService.createUrlParams(this.searchParam);
       const encodedSearchValue = encodeURIComponent(this.searchValue.value);
@@ -162,7 +163,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
 
   createRowData(promoCodeData) {
     console.log('promoCodeData -> ', promoCodeData);
-    var promoCodeArray = [];
+    let promoCodeArray = [];
     for (let i = 0; i < promoCodeData.length; i++) {
       let promoCodeInfo = Object.assign({}, promoCodeArray[i], {
         code: promoCodeData[i].code,
@@ -438,15 +439,56 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     }
   }
 
+  showCsvMessage: boolean;
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+    let param = '';
+    let searchFilter = '';
+
+
+    if (this.searchValue.value) {
+      const encodedSearchValue = encodeURIComponent(this.searchValue.value);
+      searchFilter += `&code=${encodedSearchValue}`;
+    }
+    let serviceFilter = '';
+    if (this.serviceType.value) {
+      serviceFilter += `&serviceType=${this.serviceType.value}`;
+    }
+
+    param = `/promocodes${searchFilter}${serviceFilter}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    let fieldName = [
+      { key: 'code', value: 'Code' },
+      { key: 'title', value: 'Title' },
+      { key: 'description', value: 'Description' },
+      { key: 'startDate', value: 'Start Date' },
+      { key: 'endDate', value: 'End Date' },
+      { key: 'discountType', value: 'Discount Type' },
+      { key: 'discountAmount', value: 'Discount Amount' },
+      { key: 'discountPercent', value: 'Discount Percent' },
+      { key: 'minOrderAmount', value: 'Minimum Order Amount' },
+      { key: 'maxDiscountAmount', value: 'Max Discount Amount' },
+      { key: 'usedCount', value:'User Count'},
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'promo-code-csv', fieldName, {});
+    this.loading = false;
+    this.showCsvMessage = false;
+
+  }
+
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
-    // this.searchParam.page = 0;
     this?.serviceDropDown?.resetService();
     this?.serviceType?.setValue(null);
     this?.searchValue.setValue(null);
     this.pageChanged(1);
-    // this.getPromoCodeList();
   }
   ngOnDestroy() {
     this.cacheManager.clearCache();

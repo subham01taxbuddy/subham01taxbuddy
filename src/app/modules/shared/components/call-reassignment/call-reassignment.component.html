@@ -23,7 +23,6 @@
             {{agent.name}} <span style="font-weight: bold;">{{agent.serviceType}}</span>
           </mat-option>
         </mat-select>
-        <!-- <mat-error *ngIf="changeStatus.controls['selectStatus.hasError('required')">Select status.</mat-error> -->
       </mat-form-field>
     </div>
 
@@ -41,7 +40,6 @@
       <mat-form-field appearance="fill">
         <mat-label>Caller Agents</mat-label>
         <mat-select formControlName="callerAgentUserIds" multiple required>
-          <!--(selectionChange)="addValidationOnBtn()"-->
           <mat-select-trigger>
             {{callReassignForm.controls['callerAgentUserIds'].value ?
             callReassignForm.controls['callerAgentUserIds'].value[0] : ''}}

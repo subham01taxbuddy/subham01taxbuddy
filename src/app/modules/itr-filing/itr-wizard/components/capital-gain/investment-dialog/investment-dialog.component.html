@@ -10,15 +10,6 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <!-- <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <mat-select placeholder="Type Of Asset" name="assetType" [(ngModel)]="assetType" [ngModelOptions]=" 
-             {standalone: true}">
-            <mat-option value="EQUITY_SHARES_LISTED"> Listed (LTCG) </mat-option>
-            <mat-option value="EQUITY_SHARES_UNLISTED"> Unlisted (LTCG) </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div> -->
     </div>
 
     <div class="card__row">
@@ -48,15 +39,6 @@
             valid amount.</mat-error>
         </mat-form-field>
       </div>
-      <!-- <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field class="input-field-width">
-          <input matInput currencyMask digitsOnly formControlName="totalDeductionClaimed" [hidden]="true"
-            placeholder="Deduction Claimed" name="totalDeductionClaimed" class="input-field" maxlength="14" [disabled]="true"
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
-          <mat-error *ngIf="investmentForm.controls['totalDeductionClaimed'].hasError('pattern')">Enter
-            valid amount.</mat-error>
-        </mat-form-field>
-      </div> -->
     </div>
     <div class="row dialog-button">
       <div class="sub_btn top-space">

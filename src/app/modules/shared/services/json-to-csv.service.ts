@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { json2csv } from 'json-2-csv';
-declare var window
+declare let window
 @Injectable({
   providedIn: 'root'
 })
@@ -61,7 +60,6 @@ export class JsonToCsvService {
             } else {
               line += ', ';
             }
-            // line += ',' + array[i][data[0]][data[1]];
           }
         } else {
           if ((array[i][head]) instanceof Array) {

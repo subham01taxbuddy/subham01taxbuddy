@@ -128,9 +128,6 @@ export class ClientAddedFilingNotDoneComponent implements OnInit {
     if (event) {
       this.filerId = event ? event.userId : null;
       this.agentId = this.filerId;
-      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
 
@@ -399,7 +396,6 @@ export class ClientAddedFilingNotDoneComponent implements OnInit {
     this.config.totalPartnersPaid = 0;
     this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
-    // this.showReports();
   }
 
   pageChanged(event) {

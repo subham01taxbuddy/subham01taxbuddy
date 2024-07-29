@@ -63,7 +63,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
-  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   roles: any;
   loggedUserId: any;
@@ -225,7 +224,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   createRowData(scheduleCalls) {
     console.log('scheduleCalls -> ', scheduleCalls);
-    var scheduleCallsArray = [];
+    let scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
       let scheduleCallsInfo = Object.assign({}, scheduleCalls[i], {
         userId: scheduleCalls[i]['userId'],
@@ -263,7 +262,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   createColumnDef(view, subPaidScheduleCallList?): ColDef[] {
-    const that = this;
     return [
       {
         headerName: 'User Id',
@@ -789,19 +787,17 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
             userId: user.userId,
           };
 
-          // const param = `/prod/call-support/call`;
           const param = `tts/outbound-call`;
           this.reviewService.postMethod(param, reqBody).subscribe(
             (result: any) => {
               this.loading = false;
-              if (result.success == false) {
+              if (result.success) {
+                this.toastMsgService.alert('success', result.message);
+              }else{
                 this.loading = false;
                 this.utilsService.showSnackBar(
                   'Error while making call, Please try again.'
                 );
-              }
-              if (result.success == true) {
-                this.toastMsgService.alert('success', result.message);
               }
             },
             (error) => {
@@ -926,11 +922,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      this.search('', '', event);
     }
   }
 
@@ -984,7 +976,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
         this.agentId = this.utilsService.getLoggedInUserID();
       }
-      // this?.serviceDropDown?.resetService();
       this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     } else {
@@ -1057,28 +1048,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       leaderFilter = `&leaderUserId=${this.leaderId}`
     }
 
-    var param = `/bo/schedule-call-details?${data}${leaderFilter}`;
+    let param = `/bo/schedule-call-details?${data}${leaderFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value == true && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
-    }
-    else {
-      param;
-    }
-
-    // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-
-    // param = param + `?fromDate=${fromDate}&toDate=${toDate}`
     if (this.subPaidScheduleCallList.value) {
       param = param + '&details=true'
     }
@@ -1086,14 +1060,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
-      if (result.success == false) {
-        this.toastMsgService.alert(
-          'error', result.message)
-        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
-
-      if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
+      if (result.success && result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
         this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
           this.createRowData(result.data.content));
@@ -1122,15 +1089,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let param = `/dashboard/schedule-call-details/${this.agentId}?`;
 
-    if (this.coOwnerToggle.value) {
-      param = param + 'searchAsCoOwner=true&';
-    }
-    if (this.coOwnerToggle.value && loggedInId !== this.agentId) {
-      param = `/dashboard/schedule-call-details/${this.agentId}?`;
-    }
     if (this.searchParam.email) {
       param = param + 'email=' + this.searchParam.email.toLocaleLowerCase() + '&';
     }
@@ -1139,9 +1099,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
     if (this.searchParam.statusId) {
       param = param + 'statusId=' + this.searchParam.statusId + '&';
-    }
-    else {
-      param;
     }
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-list', '', this.sortBy);
     this.loading = false;

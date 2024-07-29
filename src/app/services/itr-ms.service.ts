@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { InterceptorSkipHeader } from "./token-interceptor";
 @Injectable({
@@ -122,7 +122,6 @@ export class ItrMsService {
 
   singelCgCalculate<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
-    // this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.append(InterceptorSkipHeader, '');
     return this.httpClient.post<T>(
       this.SINGLE_CG_URL,
@@ -280,7 +279,7 @@ export class ItrMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get<T>(
-      environment.url + this.microService + `/list-itr/${openItrId}`,
+      `http://localhost:9050/itr/list-itr/${openItrId}`,
       { headers: this.headers }
     );
   }
@@ -290,9 +289,13 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
     const body = { ids: ids };
     return this.httpClient.put<T>(
-      `http://localhost:9050/itr/update-snapshot/${openItrId}`, body,
+     `http://localhost:9050/itr/update-snapshot/${openItrId}`, body,
       { headers: this.headers }
     );
   }
+
+  
+
 }
-//environment.url + this.microService
+//environment.url + this.microService + `/list-itr/${openItrId}`
+// environment.url + this.microService +`/update-snapshot/${openItrId}`,body

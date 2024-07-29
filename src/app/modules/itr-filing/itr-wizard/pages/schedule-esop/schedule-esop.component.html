@@ -309,7 +309,7 @@
                         <button type="button" class="addAno pb-3" [hidden]="hideAddScheduleButton"
                             (click)="addScheduleEsop()"> {{addButtonName}}
                         </button>
-                        <table *ngIf="scheduleESOPDetailsFormArray?.length > 0" class="table table-bordered">
+                        <table  aria-label="Schedule ESOP Details" *ngIf="scheduleESOPDetailsFormArray?.length > 0" class="table table-bordered">
                             <thead>
                                 <th>Sr. No.</th>
                                 <th>Assessment Year</th>

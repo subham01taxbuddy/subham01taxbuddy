@@ -12,13 +12,13 @@ import { AppConstants } from "../../modules/shared/constants";
 })
 export class NeedHelpComponent implements OnInit {
   helpForm!: UntypedFormGroup;
-  isError: Boolean = false;
-  apiSuccess: Boolean = false;
-  btnDisabled: Boolean = false;
+  isError: boolean = false;
+  apiSuccess: boolean = false;
+  btnDisabled: boolean = false;
   hasSubmit = true;
   errorMessage = '';
   fileName = '';
-  loading: Boolean = false;
+  loading: boolean = false;
   ticket_number = '';
   userData: any;
   selectedFileName: string;
@@ -36,7 +36,7 @@ export class NeedHelpComponent implements OnInit {
       filename: new UntypedFormControl(''),
       mobileNo: new UntypedFormControl(this.userData.email, Validators.required)
     });
-    
+
   }
   getURL() {
     return window.location.href;

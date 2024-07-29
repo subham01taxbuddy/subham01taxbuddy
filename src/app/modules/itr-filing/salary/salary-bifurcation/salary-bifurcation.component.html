@@ -26,7 +26,7 @@
                     <mat-select name="salaryType[i]" formControlName="salaryType"
                       (selectionChange)="changeSectionOne('salary');setDescriptionValidation('salary',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of salaryNames; let k = index" [value]="name.key"
-                        [disabled]="name['disabled']">{{ name.value
+                        [disabled]="(name.key != 'OTHER') ?name['disabled'] :false">{{ name.value
                         }}</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -47,10 +47,11 @@
                       Another</button>
                   </div>
                   <div class="deleteBtn" *ngIf="shouldShowCalculator(item.value.salaryType)">
-                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i class="fas fa-calculator"></i></button>
+                    <button type="button" (click)="calculate(salary['controls'][i].value.salaryType)"> <i
+                        class="fas fa-calculator"></i></button>
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='OTHER'">
+                <div class="col-5 mt-2 input-filed" [style.display]="item.value.salaryType==='OTHER'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('salary',item, true);formValuesChanged()"
@@ -95,7 +96,7 @@
                     <mat-select name="perquisiteType[i]" formControlName="perquisiteType"
                       (selectionChange)="changeSectionOne('perquisites');setDescriptionValidation('perquisites',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of perquisiteNames; let k = index" [value]="name.key"
-                        [disabled]="name['disabled']">{{ name.value
+                        [disabled]="(name.key != 'OTH_BENEFITS_AMENITIES') ?name['disabled'] :false">{{ name.value
                         }}</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -119,7 +120,8 @@
 
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'">
+                <div class="col-5 mt-2 input-filed"
+                  [style.display]="item.value.perquisiteType==='OTH_BENEFITS_AMENITIES'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('perquisites',item, true);formValuesChanged()"
@@ -163,7 +165,7 @@
                     <mat-select name="salaryType[i]" formControlName="salaryType"
                       (selectionChange)="changeSectionOne('profitsInLieu');setDescriptionValidation('profitsInLieu',item, false);formValuesChanged()">
                       <mat-option *ngFor="let name of profitInLieuNames; let k = index" [value]="name.key"
-                        [disabled]="name['disabled']">{{
+                        [disabled]="(name.key != 'ANY_OTHER') ?name['disabled'] :false">{{
                         name.value
                         }}</mat-option>
                     </mat-select>
@@ -187,7 +189,8 @@
                       Another</button>
                   </div>
                 </div>
-                <div class="col-5 mt-2 input-filed" *ngIf="item.value.salaryType==='ANY_OTHER'">
+                <div class="col-5 mt-2 input-filed"
+                  [style.display]="item.value.salaryType==='ANY_OTHER'? 'block':'none'">
                   <mat-form-field appearance="outline" class="small-inp no-height">
                     <input matInput name="description[i]" formControlName="description"
                       (change)="setDescriptionValidation('profitsInLieu',item, true);formValuesChanged()"

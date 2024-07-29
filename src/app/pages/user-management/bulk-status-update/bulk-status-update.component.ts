@@ -85,7 +85,6 @@ export class BulkStatusUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-    const userId = this.utilsService.getLoggedInUserID();
     this.getMasterStatusList();
   }
 
@@ -98,8 +97,6 @@ export class BulkStatusUpdateComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -123,7 +120,7 @@ export class BulkStatusUpdateComponent implements OnInit {
   }
 
 
-  update() {
+  update=():Promise<any> => {
     //https://uat-api.taxbuddy.com/gateway/itr-status-bulk-request
     if (this.fromStatusValue.value && this.searchParam.serviceType && this.toStatusValue.value) {
       this.loading = true;
@@ -140,23 +137,25 @@ export class BulkStatusUpdateComponent implements OnInit {
         newStatusName: this.newStatusName
       }
 
-      this.userMsService.postMethodInfo(param, data).subscribe((res: any) => {
+      return this.userMsService.postMethodInfo(param, data).toPromise().then((res: any) => {
         this.loading = false;
         if (res) {
           this.utilsService.showSnackBar(res.response);
-
+          this.searchParam.serviceType = null;
+          this.searchParam.statusId = null;
+          this.fromStatusValue.setValue(null);
+          this.startDate.setValue(this.minStartDate);
+          this.endDate.setValue(new Date());
+          this.toStatusValue.setValue(null);
         } else {
           this.utilsService.showSnackBar('there is problem while updating the status');
         }
-      },
-
-        error => {
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'error in the api of bulk status update'
-          );
-        })
-
+      }).catch(()=>{
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'error in the api of bulk status update'
+        );
+      })
     } this.utilsService.showSnackBar(
       'Please select the service and current status of users & to status which need to update   '
     );

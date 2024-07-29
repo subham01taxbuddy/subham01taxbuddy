@@ -12,7 +12,6 @@ import { ListedUnlistedDialogComponent } from './listed-unlisted-dialog/listed-u
 @Component({
   selector: 'app-equity-mf',
   templateUrl: './equity-mf.component.html',
-  styleUrls: ['./equity-mf.component.scss']
 })
 export class EquityMfComponent implements OnInit {
   ITR_JSON: ITR_JSON;
@@ -103,7 +102,7 @@ export class EquityMfComponent implements OnInit {
     };
   }
 
-  calculatedTotalListedCg(){
+  calculatedTotalListedCg() {
     this.totalListedCg = 0;
     let longTermGain = false;
     this.listedCg.assetDetails.forEach(item => {
@@ -223,7 +222,7 @@ export class EquityMfComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -255,7 +254,7 @@ export class EquityMfComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
@@ -286,7 +285,7 @@ export class EquityMfComponent implements OnInit {
 
   addEquityAndMf(mode, type, rowIndex?, assetDetails?) {
     const dialogRef = this.matDialog.open(ListedUnlistedDialogComponent, {
-      data: { mode: mode, assetType: type, rowIndex:rowIndex, assetDetails: assetDetails },
+      data: { mode: mode, assetType: type, rowIndex: rowIndex, assetDetails: assetDetails },
       closeOnNavigation: true,
       disableClose: false,
       width: '700px'
@@ -297,45 +296,19 @@ export class EquityMfComponent implements OnInit {
       if (result !== undefined) {
         if (mode === 'ADD') {
           if (type === 'EQUITY_SHARES_LISTED') {
-            if(!this.listedCg.assetDetails) {
+            if (!this.listedCg.assetDetails) {
               this.listedCg.assetDetails = [];
             }
             this.listedCg.assetDetails.push(result.cgObject);
             this.listedGridOptions.api?.setRowData(this.listedCg.assetDetails);
 
           } else if (type === 'EQUITY_SHARES_UNLISTED') {
-            if(!this.unlistedCg.assetDetails) {
+            if (!this.unlistedCg.assetDetails) {
               this.unlistedCg.assetDetails = [];
             }
             this.unlistedCg.assetDetails.push(result.cgObject);
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
           }
-          // let currObj = this.cgArray.filter(item => item.assetType === type);
-          // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
-          //   currObj[0].assetDetails.push(result);
-          //   this.cgArray = this.cgArray.filter(item => item.assetType !== type);
-          //   this.cgArray.push(currObj[0]);
-          // } else {
-          //   let capitalGain = {
-          //     "assetType": type,
-          //     "deduction": [],
-          //     "improvement": [],
-          //     "buyersDetails": [],
-          //     "assetDetails": [result]
-          //   }
-          //   this.cgArray.push(capitalGain);
-          // }
-          // // TODO Add api calls here after adding
-          // console.log('CG Array:', this.cgArray);
-          // if (type === 'EQUITY_SHARES_UNLISTED') {
-          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-          //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
-          // } else if (type === 'EQUITY_SHARES_LISTED') {
-          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
-          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-          //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
-          // }
         } else {
 
           if (type === 'EQUITY_SHARES_LISTED') {
@@ -346,20 +319,6 @@ export class EquityMfComponent implements OnInit {
             this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails);
           }
 
-          // let currObj = this.cgArray.filter(item => item.assetType === type);
-          // if (currObj.length > 0 && currObj[0].assetDetails instanceof Array) {
-          //   currObj[0].assetDetails.splice((assetDetails.id - 1), 1, result);
-          // }
-          // // TODO Add api calls here after update
-          // if (type === 'EQUITY_SHARES_LISTED') {
-          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_LISTED');
-          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-          //     this.listedGridOptions.api?.setRowData(assets[0].assetDetails)
-          // } else if (type === 'EQUITY_SHARES_UNLISTED') {
-          //   let assets = this.cgArray.filter(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-          //   if (assets.length > 0 && assets[0].assetDetails instanceof Array)
-          //     this.unListedGridOptions.api?.setRowData(assets[0].assetDetails)
-          // }
         }
         this.calculateCg(type);
       }
@@ -557,7 +516,7 @@ export class EquityMfComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -589,7 +548,7 @@ export class EquityMfComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
@@ -636,29 +595,6 @@ export class EquityMfComponent implements OnInit {
 
   listedDeductionCreateRowData() {
     return this.listedCg.deduction;
-    // let dataToReturn = [];
-    // let unlisted = [];
-    // let listed = [];
-    // if (this.cgArray.length > 0) {
-    //   let index = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-    //   if (index !== -1 && this.cgArray[index].deduction instanceof Array) {
-    //     for (let i = 0; i < this.cgArray[index].deduction.length; i++) {
-    //       let data = { assetType: 'EQUITY_SHARES_UNLISTED' }
-    //       Object.assign(data, this.cgArray[index].deduction[i])
-    //       unlisted.push(data);
-    //     }
-    //   }
-
-    //   let ind = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_LISTED');
-    //   if (ind !== -1 && this.cgArray[ind].deduction instanceof Array) {
-    //     for (let i = 0; i < this.cgArray[ind].deduction.length; i++) {
-    //       let data = { assetType: 'EQUITY_SHARES_LISTED' }
-    //       Object.assign(data, this.cgArray[ind].deduction[i])
-    //       listed.push(data);
-    //     }
-    //   }
-    // }
-    // return dataToReturn.concat(listed, unlisted);
   }
 
   listedDeductionCreateColumnDef() {
@@ -668,15 +604,6 @@ export class EquityMfComponent implements OnInit {
         field: 'underSection',
         suppressMovable: true,
       },
-      // {
-      //   headerName: 'Type of Asset',
-      //   field: 'assetType',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   cellRenderer: (params) => {
-      //     return params.data.assetType === 'EQUITY_SHARES_LISTED' ? 'Listed' : 'Un Listed';
-      //   }
-      // },
       {
         headerName: 'Purchase Date of New asset',
         field: 'purchaseDate',
@@ -712,7 +639,7 @@ export class EquityMfComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -732,7 +659,7 @@ export class EquityMfComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
@@ -767,29 +694,6 @@ export class EquityMfComponent implements OnInit {
 
   unlistedDeductionCreateRowData() {
     return this.unlistedCg.deduction;
-    // let dataToReturn = [];
-    // let unlisted = [];
-    // let listed = [];
-    // if (this.cgArray.length > 0) {
-    //   let index = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_UNLISTED');
-    //   if (index !== -1 && this.cgArray[index].deduction instanceof Array) {
-    //     for (let i = 0; i < this.cgArray[index].deduction.length; i++) {
-    //       let data = { assetType: 'EQUITY_SHARES_UNLISTED' }
-    //       Object.assign(data, this.cgArray[index].deduction[i])
-    //       unlisted.push(data);
-    //     }
-    //   }
-
-    //   let ind = this.cgArray.findIndex(item => item.assetType === 'EQUITY_SHARES_LISTED');
-    //   if (ind !== -1 && this.cgArray[ind].deduction instanceof Array) {
-    //     for (let i = 0; i < this.cgArray[ind].deduction.length; i++) {
-    //       let data = { assetType: 'EQUITY_SHARES_LISTED' }
-    //       Object.assign(data, this.cgArray[ind].deduction[i])
-    //       listed.push(data);
-    //     }
-    //   }
-    // }
-    // return dataToReturn.concat(listed, unlisted);
   }
 
   unlistedDeductionCreateColumnDef() {
@@ -799,15 +703,6 @@ export class EquityMfComponent implements OnInit {
         field: 'underSection',
         suppressMovable: true,
       },
-      // {
-      //   headerName: 'Type of Asset',
-      //   field: 'assetType',
-      //   editable: false,
-      //   suppressMovable: true,
-      //   cellRenderer: (params) => {
-      //     return params.data.assetType === 'EQUITY_SHARES_LISTED' ? 'Listed' : 'Un Listed';
-      //   }
-      // },
       {
         headerName: 'Purchase Date of New asset',
         field: 'purchaseDate',
@@ -843,7 +738,7 @@ export class EquityMfComponent implements OnInit {
         suppressMenu: true,
         sortable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Edit">
           <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
@@ -863,7 +758,7 @@ export class EquityMfComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         width: 70,
-         pinned: 'right',
+        pinned: 'right',
         cellRenderer: function (params) {
           return `<button type="button" class="action_icon add_button" title="Delete">
           <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
@@ -910,7 +805,6 @@ export class EquityMfComponent implements OnInit {
             this.listedCg.deduction.splice(result.rowIndex, 1, result.deduction);
             this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction)
           }
-          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
           this.calculatedTotalListedCg();
         }
       });
@@ -948,7 +842,6 @@ export class EquityMfComponent implements OnInit {
             this.unlistedCg.deduction.splice(result.rowIndex, 1, result.deduction);
             this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction)
           }
-          // this.investmentGridOptions.api.setRowData(this.investmentsCreateRowData());
           this.calculateTotalUnlistedCg();
         }
       });
@@ -967,11 +860,11 @@ export class EquityMfComponent implements OnInit {
       this.unListedGridOptions.api?.setRowData(this.unlistedCg.assetDetails)
       this.calculateTotalUnlistedCg();
     }
-    if(this.listedCg.assetDetails.length === 0) {
+    if (this.listedCg.assetDetails.length === 0) {
       //remove deductions
       this.listedCg.deduction = [];
       this.listedDeductionGridOptions.api?.setRowData(this.listedCg.deduction);
-    } else if(this.unlistedCg.assetDetails.length === 0) {
+    } else if (this.unlistedCg.assetDetails.length === 0) {
       //remove deductions
       this.unlistedCg.deduction = [];
       this.unlistedDeductionGridOptions.api?.setRowData(this.unlistedCg.deduction);
@@ -989,83 +882,18 @@ export class EquityMfComponent implements OnInit {
       this.calculateTotalUnlistedCg();
     }
   }
-  calculateSingleCg(request) {
-    request = {
-      "assessmentYear": this.ITR_JSON.assessmentYear,
-      "assesseeType": "INDIVIDUAL",
-      "residentialStatus": "RESIDENT",
-      "assetType": "EQUITY_SHARES_LISTED",
-      "deduction": [{
-        "underSection": "",
-        "orgAssestTransferDate": "",
-        "purchaseDate": "",
-        "panOfEligibleCompany": "",
-        "purchaseDatePlantMachine": "",
-        "costOfNewAssets": 0,
-        "investmentInCGAccount": 0,
-        "totalDeductionClaimed": 0,
-        "costOfPlantMachinary": 0
-      }
-      ],
-      "improvement": [
-        {
-          "srn": 0,
-          "dateOfImprovement": " ",
-          "costOfImprovement": 0
-        }
-      ],
-      "buyersDetails": [{
-        "name": "Ashish",
-        "pan": "AKRPH1618L",
-        "share": 100,
-        "amount": 1000,
-        "address": "majale",
-        "pin": "416109"
-      }],
-      "assetDetails": [{
-        "srn": 0,
-        "id": null,
-        "description": "",
-        "gainType": "LONG",
-        "sellDate": "2021-12-31T18:30:00.000Z",
-        "sellValue": 200000,
-        "stampDutyValue": 0,
-        "valueInConsideration": 0,
-        "sellExpense": 0,
-        "purchaseDate": "2021-07-04T18:30:00.000Z",
-        "purchaseCost": 122222,
-        "isinCode": "",
-        "nameOfTheUnits": "",
-        "sellOrBuyQuantity": 0,
-        "sellValuePerUnit": 0,
-        "purchaseValuePerUnit": 0,
-        "isUploaded": false,
-        "hasIndexation": false,
-        "algorithm": "cgProperty",
-        "fmvAsOn31Jan2018": null,
-        "indexCostOfAcquisition": 0
-      }
-      ]
-    }
-    this.itrMsService.singelCgCalculate(request).subscribe((result: any) => {
-      console.log('Single CG Result:', result)
-
-    }, error => {
-      this.utilsService.showSnackBar('Calculate gain failed please try again.');
-    });
-  }
 
   saveCg() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_LISTED')
-    if(this.listedCg.assetDetails.length > 0) {
+    if (this.listedCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain.push(this.listedCg);
     }
 
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item => item.assetType !== 'EQUITY_SHARES_UNLISTED')
-    if(this.unlistedCg.assetDetails.length > 0) {
+    if (this.unlistedCg.assetDetails.length > 0) {
       this.ITR_JSON.capitalGain.push(this.unlistedCg);
     }
 

@@ -145,7 +145,6 @@
                             <div class="lndBldg-L">Cost of Acquisition <span class="redAst">*</span></div>
                             <div class="lndBldg-R">
                               <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
                                 <input matInput currencyMask digitsOnly [pattern]="amountRegex"
                                   formControlName="purchaseCost" placeholder="Cost of Acquisition" name="asset[i]"
                                   class="input-field" maxlength="14" (blur)="calculateIndexCost(i);
@@ -177,8 +176,6 @@
                             <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
                             <div class="lndBldg-R">
                               <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
-                                <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
                                 <input matInput currencyMask type="number" [pattern]="amountRegex"
                                   formControlName="sellExpense" placeholder="Transfer Expenses" name="asset[i]"
                                   class="input-field" maxlength="14" digitsOnly

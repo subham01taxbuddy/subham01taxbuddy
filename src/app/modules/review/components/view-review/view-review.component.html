@@ -70,25 +70,6 @@
     </div>
   </div>
   <br />
-  
-  <!-- <div
-  class="card__row"
-  style="margin-top: 10px"
-  *ngIf="userDetails?.sourcePlatform === 'Kommunicate'"
->
-  <button
-    mat-raised-button
-    class="btn-help"
-    (click)="openKommunicateDashboard('kommunicate')"
-  >
-    Open With Kommunicate &nbsp;&nbsp;<i
-      class="fa fa-comments-o"
-      aria-hidden="true"
-    ></i>
-  </button>
-</div>
-<br> -->
-
 
   <div class="card__row">
     <div class="card__col-xs-6 card__col-sm-12">
@@ -120,7 +101,7 @@
 <div
   class="card__row"
   style="margin-top: 10px"
-  *ngIf="userDetails && userDetails?.sourcePlatform != 'Kommunicate'"
+  *ngIf="userDetails && userDetails?.sourcePlatform !== 'Kommunicate'"
 >
   <ag-grid-angular
     class="ag-theme-balham"

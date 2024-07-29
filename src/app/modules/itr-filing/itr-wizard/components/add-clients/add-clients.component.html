@@ -1,10 +1,5 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-<main
-  class="overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]"
->
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<main class="overflow-x-scroll scrollbar-hide flex flex-col justify-between p-[25px]">
   <!-- add-client-header  -->
   <div class="flex justify-between items-center">
     <div class="headline texAlSp">Steps to Add Client:</div>
@@ -22,149 +17,88 @@
   <form [formGroup]="addClientForm">
     <mat-stepper #stepper labelPosition="bottom">
       <mat-step [stepControl]="firstFormGroup">
-<!--        <form [formGroup]="firstFormGroup">-->
-          <ng-template matStepLabel>Verify PAN</ng-template>
-          <div class="card flex RequestOtp">
-            <div
-              class="flex flex-col gap-[25px] pr-[25px] pl-[25px] pb-[0] pt-[25px]"
-            >
-              <!-- aadhar-email options -->
-              <mat-radio-group
-                aria-label="Select an option"
-                [(ngModel)]="selectedOtpOption"
-                [ngModelOptions]="{ standalone: true }"
-              >
-                <mat-radio-button checked value="A"
-                  >Aadhaar OTP</mat-radio-button
-                >&nbsp;&nbsp;&nbsp;
-                <mat-radio-button value="E">E portal OTP</mat-radio-button>
-              </mat-radio-group>
-              <!-- pan-dob input  -->
-              <div class="card__row mb-3">
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <mat-label>PAN Number</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      [style.cursor]="
+        <ng-template matStepLabel>Verify PAN</ng-template>
+        <div class="card flex RequestOtp">
+          <div class="flex flex-col gap-[25px] pr-[25px] pl-[25px] pb-[0] pt-[25px]">
+            <!-- aadhar-email options -->
+            <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOtpOption"
+              [ngModelOptions]="{ standalone: true }">
+              <mat-radio-button checked value="A">Aadhaar OTP</mat-radio-button>&nbsp;&nbsp;&nbsp;
+              <mat-radio-button value="E">E portal OTP</mat-radio-button>
+            </mat-radio-group>
+            <!-- pan-dob input  -->
+            <div class="card__row mb-3">
+              <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label>PAN Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input [style.cursor]="
                         ITR_JSON.eFillingCompleted === true ? 'not-allowed' : ''
-                      "
-                      [disabled]="ITR_JSON.eFillingCompleted === true"
-                      matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                      matTooltipClass="tab-tooltip"
-                      matTooltipPosition="above"
-                      matInput
-                      placeholder="PAN"
-                      name="panNumber"
-                      formControlName="panNumber"
-                      class="input-field"
-                      maxlength="10"
-                      minlength="10"
-                      (blur)="setOtpValidation()"
-                      (keyup)="setUpperCase()"
-                      required
-                    />
-                    <mat-error
-                      *ngIf="
+                      " [disabled]="ITR_JSON.eFillingCompleted === true"
+                    matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                    matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput placeholder="PAN" name="panNumber"
+                    formControlName="panNumber" class="input-field" maxlength="10" minlength="10"
+                    (blur)="setOtpValidation()" (keyup)="setUpperCase()" required />
+                  <mat-error *ngIf="
                         addClientForm.controls['panNumber'].hasError('pattern')
-                      "
-                    >
-                      Enter valid PAN (e.g XXXXX1234X)</mat-error
-                    >
-                  </mat-form-field>
-                </div>
-                <div class="card__col-xs-12 card__col-sm-4">
-                  <mat-label>Date Of Birth</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matTooltip="Date of birth as per PAN"
-                      matTooltipClass="tab-tooltip"
-                      matTooltipPosition="above"
-                      matInput
-                      [min]="minDate"
-                      [max]="maxDate"
-                      [matDatepicker]="picker"
-                      class="input-field"
-                      placeholder="Date of birth"
-                      name="dateOfBirth"
-                      [formControl]="addClientForm.controls['dateOfBirth'] | formControlType"
-                    />
-                    <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="picker"
-                    ></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
+                      ">
+                    Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="card__col-xs-12 card__col-sm-4">
+                <mat-label>Date Of Birth</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                    matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" class="input-field"
+                    placeholder="Date of birth" name="dateOfBirth"
+                    [formControl]="addClientForm.controls['dateOfBirth'] | formControlType" />
+                  <mat-hint>Format: DD/MM/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
               </div>
             </div>
-
-            <!-- verifyPan button  -->
-            <div style="padding: 0 0 25px 25px">
-              <button
-                matStepperNext
-                class="lgtBtn"
-                style="margin: 0px"
-                *ngIf="addClientForm.controls['panNumber'].valid"
-                (click)="verifyPan()"
-              >
-                <span class="font-semibold">Verify PAN </span>
-              </button>
-            </div>
           </div>
-<!--        </form>-->
+
+          <!-- verifyPan button  -->
+          <div style="padding: 0 0 25px 25px">
+            <button matStepperNext class="lgtBtn" style="margin: 0px" *ngIf="addClientForm.controls['panNumber'].valid"
+              (click)="verifyPan()">
+              <span class="font-semibold">Verify PAN </span>
+            </button>
+          </div>
+        </div>
       </mat-step>
       <mat-step [stepControl]="secondFormGroup">
-<!--        <form [formGroup]="secondFormGroup">-->
-          <ng-template matStepLabel>Enter OTP</ng-template>
+        <ng-template matStepLabel>Enter OTP</ng-template>
 
-          <div class="card flex">
-            <div class="flex flex-col gap-[25px] pr-[25px] pl-[25px] pb-[0] pt-[25px]">
+        <div class="card flex">
+          <div class="flex flex-col gap-[25px] pr-[25px] pl-[25px] pb-[0] pt-[25px]">
 
 
             <div class="card__col-xs-12 card__col-sm-4 ">
               <!--  -->
               <mat-label>Verify OTP</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  matTooltip="Verify OTP"
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  matInput
-                  currencyMask
-                  placeholder="Verify OTP"
-                  name="otp"
-                  formControlName="otp"
-                  class="input-field"
-                  maxlength="75"
-                />
-                <mat-error
-                  *ngIf="addClientForm.controls['otp'].hasError('required')"
-                >
-                  Enter OTP</mat-error
-                >
+                <input matTooltip="Verify OTP" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+                  currencyMask placeholder="Verify OTP" name="otp" formControlName="otp" class="input-field"
+                  maxlength="75" />
+                <mat-error *ngIf="addClientForm.controls['otp'].hasError('required')">
+                  Enter OTP</mat-error>
               </mat-form-field>
             </div>
             <!-- Validate OTP  -->
             <div style="padding: 0 0 25px 10px">
-              <button
-                matStepperNext
-                (click)="verifyOtp()"
-                class="lgtBtn"
-                style="margin: 0px"
-              >
+              <button matStepperNext (click)="verifyOtp()" class="lgtBtn" style="margin: 0px">
                 <span class="font-semibold">Validate OTP</span>
               </button>
             </div>
           </div>
-          </div>
-<!--        </form>-->
+        </div>
       </mat-step>
       <mat-step>
         <ng-template matStepLabel>Success</ng-template>
         <div class="flex card success justify-between items-center">
           <div class="p-[50px]">
-            <!-- *ngIf="addedClient" -->
             <i class="bi bi-check-circle-fill"></i>
             <p>Client added successfully</p>
           </div>
@@ -172,139 +106,6 @@
       </mat-step>
     </mat-stepper>
   </form>
-
-  <!-- add-client-card  -->
-  <!-- <div class="p-[25px]">
-    <div class="card">
-      <form [formGroup]="addClientForm">
-        <div class="flex flex-col gap-[12px]">
-          <div class="card__row p-[25px]">
-            <div>
-              <mat-radio-group
-                aria-label="Select an option"
-                [(ngModel)]="selectedOtpOption"
-                [ngModelOptions]="{ standalone: true }"
-              >
-                <mat-radio-button value="A">Aadhaar OTP</mat-radio-button
-                >&nbsp;&nbsp;&nbsp;
-                <mat-radio-button value="E">E portal OTP</mat-radio-button>
-              </mat-radio-group>
-            </div>
-          </div>
-
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field appearance="outline">
-                <mat-label>PAN Number</mat-label>
-                <input
-                  [style.cursor]="
-                    ITR_JSON.eFillingCompleted === true ? 'not-allowed' : ''
-                  "
-                  [disabled]="ITR_JSON.eFillingCompleted === true"
-                  matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  matInput
-                  placeholder="PAN"
-                  name="panNumber"
-                  formControlName="panNumber"
-                  class="input-field"
-                  maxlength="10"
-                  minlength="10"
-                  (blur)="setOtpValidation()"
-                  (keyup)="setUpperCase()"
-                  required
-                />
-                <mat-error
-                  *ngIf="
-                    addClientForm.controls['panNumber'].hasError('pattern')
-                  "
-                >
-                  Enter valid PAN (e.g XXXXX1234X)</mat-error
-                >
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4">
-              <mat-form-field appearance="outline">
-                <mat-label>Date Of Birth</mat-label>
-                <input
-                  matTooltip="Date of birth as per PAN"
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  matInput
-                  [min]="minDate"
-                  [max]="maxDate"
-                  [matDatepicker]="picker"
-                  class="input-field"
-                  placeholder="Date of birth"
-                  name="dateOfBirth"
-                  [formControl]="addClientForm.controls['dateOfBirth']"
-                />
-                <mat-hint>Format: DD/MM/YYYY</mat-hint>
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div>
-          </div>
-
-          <div class="card__row">
-            <button
-              *ngIf="addClientForm.controls.panNumber.valid"
-              class="btn long-btn"
-              style="border: none"
-              (click)="verifyPan()"
-            >
-              Verify PAN
-            </button>
-          </div>
-
-          <div class="card__row">
-            <div
-              class="card__col-xs-12 card__col-sm-4"
-              *ngIf="addClientForm.controls.panNumber.valid && otpSend"
-            >
-              <mat-form-field appearance="outline">
-                <mat-label>Verify OTP</mat-label>
-                <input
-                  matTooltip="Verify OTP"
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  matInput
-                  currencyMask
-                  placeholder="Verify OTP"
-                  name="otp"
-                  formControlName="otp"
-                  class="input-field"
-                  maxlength="75"
-                />
-                <mat-error
-                  *ngIf="addClientForm.controls['otp'].hasError('required')"
-                >
-                  Enter OTP</mat-error
-                >
-              </mat-form-field>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4" *ngIf="otpSend">
-              <button
-                class="btn long-btn"
-                style="border: none"
-                (click)="verifyOtp()"
-              >
-                Verify OTP
-              </button>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-4" *ngIf="addedClient">
-              <p>Client added successfully</p>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div> -->
-
   <hr />
   <!-- action-buttons  -->
   <div class="flex justify-between p-[30px] back-foot">

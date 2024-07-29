@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -33,7 +33,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ViewChatLinksComponent implements OnInit {
+export class ViewChatLinksComponent {
   loading!: boolean;
   searchParam: any = {
     page: 0,
@@ -61,10 +61,6 @@ export class ViewChatLinksComponent implements OnInit {
       totalItems: 0,
     };
     this.getChatLinks()
-  }
-
-  ngOnInit() {
-
   }
 
   getChatLinks(){

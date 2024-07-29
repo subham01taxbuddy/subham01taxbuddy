@@ -1,6 +1,4 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { RecoveryRoutingModule } from './recovery-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading';
@@ -18,7 +16,7 @@ import { PopUpComponent } from './components/pop-up/pop-up.component';
   schemas: [NO_ERRORS_SCHEMA],
   declarations: [ RecoveryDataComponent, PopUpComponent],
   imports: [
-    
+
     RecoveryRoutingModule,
     FormsModule,
     ReactiveFormsModule,

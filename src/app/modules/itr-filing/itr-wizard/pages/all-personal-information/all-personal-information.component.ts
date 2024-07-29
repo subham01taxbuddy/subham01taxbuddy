@@ -126,10 +126,21 @@ export class AllPersonalInformationComponent implements OnInit {
     }
   }
 
-  saveAll() {
-    this.saveCount = 0;
-    this.customerProfileComponent.saveProfile('CONTINUE');
-    // this.saveAllInfo();
+  // saveAll() {
+  //   this.saveCount = 0;
+  //   this.customerProfileComponent.saveProfile('CONTINUE');
+  //   // this.saveAllInfo();
+  // }
+
+  saveAll = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      this.saveCount = 0;
+      this.customerProfileComponent.saveProfile('CONTINUE').then(() => {
+        resolve();
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
 
   onCustomerProfileSaved(event) {

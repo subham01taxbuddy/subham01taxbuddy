@@ -9,13 +9,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-.search-box {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
 .input-group {
   flex-grow: 1;
   display: flex;
@@ -61,12 +54,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-mat-checkbox {
+.mat-checkbox {
   margin-right: 10px;
 }
-
-
-
 
 .container {
   margin-bottom: 20px;
@@ -113,7 +103,7 @@ mat-checkbox {
   width: 40%;
 }
 
-mat-checkbox {
+.mat-checkbox {
   display: block;
   margin: 0 auto;
 }
@@ -130,4 +120,81 @@ mat-checkbox {
   transition: background-color 0.3s;
   margin-top: 30px;
   margin-bottom: 25px;
+}
+
+
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loader p {
+  margin-top: 10px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #666;
+}
+
+
+.loader, .loader-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  height: 200px;
+}
+
+.loader p, .loader-overlay p {
+  margin-top: 10px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #666;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
 }

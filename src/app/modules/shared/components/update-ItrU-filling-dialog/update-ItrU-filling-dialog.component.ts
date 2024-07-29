@@ -110,10 +110,6 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       })
   }
 
-  filterFilingYears(filingNotDoneYears: string[]) {
-
-  }
-
   checkSubscriptionForSelectedFinancialYear(financialYear:string) {
     this.loading = true;
     const query = {
@@ -164,7 +160,6 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
           this.loading = false;
           this.hideYears = false;
           this.showDetails = true;
-          // this.updateItrUDetails();
         } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
           this.loading = false;
           this.hideYears = true;
@@ -200,7 +195,6 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
             this.dialogRef.close(true);
             reject(res.error);
           } else {
-            const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2); //2023-2024 //23
             const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2); //23 or 24
             if (ackNumberLastTwoDigits !== '24' && ackNumberLastTwoDigits !== '23') {
               this.utilsService.showSnackBar(
@@ -279,11 +273,11 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
 
   setFilingDate() {
     let today = moment().startOf('day').valueOf();
-    var id = this.ackNumber.value;
-    var lastSix = id.substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
+    let id = this.ackNumber.value;
+    let lastSix = id.substr(id.length - 6);
+    let day = lastSix.slice(0, 2);
+    let month = lastSix.slice(2, 4);
+    let year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day)
     let efillingDateTime = moment(dateString, "YYYY-MM-DD").startOf('day').valueOf();

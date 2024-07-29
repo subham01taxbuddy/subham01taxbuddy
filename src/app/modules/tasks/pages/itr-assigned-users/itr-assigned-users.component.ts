@@ -30,6 +30,7 @@ import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
 import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 @Component({
   selector: 'app-itr-assigned-users',
@@ -53,7 +54,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    itrObjectStatus:null,
+    itrObjectStatus: null,
   };
   agentId = null;
   loggedInUserRoles: any;
@@ -82,7 +83,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'ITRU',
     },
   ]
-  fillingStatus=[
+  fillingStatus = [
     {
       label: 'Yet to Start',
       value: 'CREATE',
@@ -92,6 +93,15 @@ export class ItrAssignedUsersComponent implements OnInit {
       value: 'PREPARING_ITR',
     },
   ];
+  taxDropdown = [
+    { label: 'Both', value: '' },
+    { label: 'Yes', value: true },
+    { label: 'No', value: false }
+  ];
+  taxPayable: any = '';
+  loggedInUserId: any;
+  showReassignButton: boolean = false;
+  showCsvMessage: boolean;
 
   constructor(
     private reviewService: ReviewService,
@@ -109,9 +119,14 @@ export class ItrAssignedUsersComponent implements OnInit {
     private userService: UserMsService,
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
+    this.loggedInUserId = this.utilsService.getLoggedInUserID();
+    if (environment.allowReassignToPreviousLeader.includes(this.loggedInUserId)) {
+      this.showReassignButton = true;
+    }
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -119,7 +134,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return this.isSelectionAllowed(rowNode.data);
+        // return rowNode.data ? (this.showReassignButton || (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35)) : false;
       },
       onGridReady: params => {
       },
@@ -222,12 +238,11 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   LIFECYCLE = 'LIFECYCLE';
-  async requestCompleted(res: any, self:ItrAssignedUsersComponent) {
+  async requestCompleted(res: any, self: ItrAssignedUsersComponent) {
     console.log(res);
     this.loading = false;
     switch (res.api) {
       case this.LIFECYCLE: {
-        const loggedInId = this.utilsService.getLoggedInUserID();
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -286,7 +301,18 @@ export class ItrAssignedUsersComponent implements OnInit {
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
-              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              try {
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              } catch (e) {
+                this.utilsService.showSnackBar('Please try with manual filling');
+                this.sendEmail(JSON.stringify(workingItr));
+                workingItr.capitalGain = null;
+                this.utilsService.saveItrObject(workingItr).subscribe((result: any) => {
+                  console.log('itr cg cleared');
+                });
+                console.log("Local Storage is full, Please empty data");
+                return;
+              }
               this.router.navigate(['/itr-filing/itr'], {
                 state: {
                   userId: this.rowData.userId,
@@ -308,6 +334,78 @@ export class ItrAssignedUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  sendEmail(ITR_JSON) {
+    this.loading = true;
+    let data = new FormData();
+    data.append('from', 'ashwini@taxbuddy.com');
+    data.append('subject', 'Large ITR object case');
+    data.append('body', `<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
+    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
+        <tr>
+            <td align="center">
+                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
+                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
+                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
+                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 15px 0px 15px">
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
+                                <tr>
+                                    <td style="font-size: 14px;color: #333;"> <br> <br> <span style="font-weight: bold">Dear Team,</span><br /> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please Check the below attached json that is too large </p> <br>
+
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1c3550;padding: 20px 15px;">
+                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>`);
+    data.append('isHtml', 'true');
+    data.append('to', 'ashwini@taxbuddy.com');
+    const dto_object = new Blob([ITR_JSON], {
+      type: 'application/json'
+    })
+
+    data.append('file', dto_object, "itr.json");
+    let param = '/send-mail';
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
+      console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar(error.error.text);
+    });
   }
 
   checkFilerAssignment(data: any) {
@@ -399,10 +497,6 @@ export class ItrAssignedUsersComponent implements OnInit {
               itrSubscriptionFound = true;
               return;
             }
-            // if (item1.service === 'ITRU' && (item1.financialYear === "2022-2023" || item1.financialYear === "2022-23") ) {
-            //   itrSubscriptionFound = true;
-            //   return;
-            // }
           }
 
 
@@ -525,7 +619,6 @@ export class ItrAssignedUsersComponent implements OnInit {
       this?.serviceDropDown?.resetService();
       this.usersGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
-      // this.search();
     }
   }
 
@@ -536,23 +629,36 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
   }
 
+
+  isSelectionAllowed(data){
+    // console.log(data);
+    // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
+    let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
+    return  !(data.serviceType === 'ITR' && !data.filerUserId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+        && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
+  }
+
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    var statusSequence = 0;
-
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
-    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
+    let statusSequence = 0;
+    let hideTaxPayble
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      hideTaxPayble = true;
+    } else {
+      hideTaxPayble = false;
+    }
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
         headerCheckboxSelection: true,
         width: 110,
-        hide: !this.showReassignmentBtn.length,
+        hide: !(this.showReassignButton || this.showReassignmentBtn.length),
         pinned: 'left',
-        lockPosition:true,
+        lockPosition: true,
         suppressMovable: true,
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
+          return this.isSelectionAllowed(params.data);
+          // return this.showReassignButton || (this.showReassignmentBtn.length && params.data.statusId != 11);
         },
         cellStyle: function (params: any) {
           return {
@@ -640,6 +746,28 @@ export class ItrAssignedUsersComponent implements OnInit {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Tax Payable',
+        field: 'taxPayable',
+        width: 150,
+        suppressMovable: true,
+        hide: !hideTaxPayble,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellRenderer: (params) => {
+          const value = params.value;
+          if (value === null || value === undefined || value === '') {
+            return '-';
+          } else if (value < 0 || !this.taxPayable) {
+            return `(${Math.abs(value)})`;
+          }
+          return value;
         },
       },
       {
@@ -767,7 +895,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
           if (data !== null)
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+            return formatDate(data.value, 'dd/MM/yyyy HH:mm', this.locale);
           else
             return '-';
         },
@@ -963,11 +1091,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
             <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
             </button>`;
-
-            // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-            // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-            //  </button>`;
           },
 
           width: 180,
@@ -1031,6 +1154,41 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     columnDefs.splice(columnDefs.length - 2, 0, ...additionalColumns);
     return columnDefs;
+  }
+
+  taxPayableRenderer(params: any) {
+    const value = params.value;
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    } else if (value < 0) {
+      return `(${Math.abs(value)})`;
+    }
+    return value;
+  }
+
+  reassign() {
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
+      return;
+    }
+    if (selectedRows.length > 1) {
+      this.utilsService.showSnackBar('Please select only one entry from table to Re-Assign');
+      return;
+    }
+
+    let userId = selectedRows.map(row => row.userId);
+    const param = '/lanretni/filer-assignment/' + userId[0];
+    this.itrMsService.putMethod(param, '').subscribe((result: any) => {
+      if (result?.success) {
+        this.search();
+      } else {
+        this.utilsService.showSnackBar(result.message);
+
+      }
+    }, (error: any) => {
+      this.utilsService.showSnackBar(error.message);
+    });
   }
 
   reassignmentForLeader() {
@@ -1132,7 +1290,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         id: userData[i].id,
@@ -1164,7 +1322,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         leaderUserId: userData[i].leaderUserId,
         paymentStatus: userData[i].paymentStatus,
         aisProvided: userData[i].aisProvided,
-        everified: userData[i].everified
+        everified: userData[i].everified,
+        taxPayable: userData[i].taxPayable,
       })
       userArray.push(userInfo);
     }
@@ -1268,7 +1427,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.search();
         return;
       } else {
-        // this.start(data);
         console.log(data);
 
         if (data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)) {
@@ -1324,7 +1482,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         return;
       } else {
         console.log('Data for revise return ', data);
-        if(data.everified === false){
+        if (data.everified === false) {
           this.utilsService.showSnackBar(
             'Please complete e-verification before starting with revised return'
           );
@@ -1482,7 +1640,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         disposable.afterClosed().subscribe(result => {
           if (result) {
             if (result.data === "statusChanged") {
-              // this.searchParam.page = 0;
               this.search();
             }
           }
@@ -1562,6 +1719,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   moreOptions(client) {
     console.log('client', client)
+    client.hideReassign = !this.isSelectionAllowed(client);
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -1593,9 +1751,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
+    this.taxPayable = null;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-    this.searchParam.itrObjectStatus=null;
+    this.searchParam.itrObjectStatus = null;
     this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
@@ -1613,7 +1772,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  search= (form?, isAgent?, pageChange?): Promise<any> =>{
+  search = (form?, isAgent?, pageChange?): Promise<any> => {
 
     if (!pageChange) {
       this.cacheManager.clearCache();
@@ -1683,42 +1842,156 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
+
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      param = param + `&taxPayable=${this.taxPayable}`;
+    }
+
     if (this.unAssignedUsersView.value) {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
     }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-        if (result.success == false) {
-          this._toastMessageService.alert("error", result.message);
+      this.loading = false;
+      if (result.success) {
+        if (result.data && result.data['content'] instanceof Array) {
+          this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
+          this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
+          this.userInfo = result.data['content'];
+          this.config.totalItems = result.data.totalElements;
+          this.cacheManager.initializeCache(result.data['content']);
+
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
+          this.config.currentPage = currentPageNumber;
+
+        } else {
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
+          this._toastMessageService.alert('error', result.message)
         }
-        if (result.success) {
-          if (result.data && result.data['content'] instanceof Array) {
-            this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
-            this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
-            this.userInfo = result.data['content'];
-            this.config.totalItems = result.data.totalElements;
-            this.cacheManager.initializeCache(result.data['content']);
-
-            const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
-            this.config.currentPage = currentPageNumber;
-
-          } else {
-            this.usersGridOptions.api?.setRowData(this.createRowData([]));
-            this.config.totalItems = 0;
-            this._toastMessageService.alert('error', result.message)
-          }
-        }
-        this.loading = false;
-
-      }).catch(() =>{
-        this.loading = false;
+      } else {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-      });
+      }
+    }).catch(() => {
+      this.loading = false;
+      this.config.totalItems = 0;
+      this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
+    });
   }
 
+
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.utilsService.isNonEmpty(this.searchParam.emailId)) {
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
+    }
+    let serviceType = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.serviceType)) {
+      serviceType += `&serviceType=${this.searchParam.serviceType}`;
+    }
+
+    let status = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.statusId)) {
+      status += `&statusId=${this.searchParam.statusId}`;
+    }
+
+    let itrObjectStatus = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.itrObjectStatus)) {
+      itrObjectStatus += `&itrObjectStatus=${this.searchParam.itrObjectStatus}`;
+    }
+    let param = `/bo/user-list-new?itrChatInitiated=true${status}${serviceType}${itrObjectStatus}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    if (Object.keys(this.searchBy).length) {
+      Object.keys(this.searchBy).forEach(key => {
+        param = param + '&' + key + '=' + this.searchBy[key];
+      });
+    }
+
+
+    if (this.filerId === this.agentId) {
+      param = param + `&filerUserId=${this.filerId}`;
+    }
+
+    if (this.partnerType === 'PRINCIPAL') {
+      param = param + '&searchAsPrincipal=true';
+    };
+    if (this.leaderId === this.agentId) {
+      param = param + `&leaderUserId=${this.leaderId}`;
+    }
+
+    if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = param + `&leaderUserId=${this.agentId}`;
+    }
+
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      param = param + `&taxPayable=${this.taxPayable}`;
+    }
+
+    if (this.unAssignedUsersView.value) {
+      // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
+      param = param + '&assigned=false'
+    }
+
+    let fieldName = [];
+    let taxPayableArray = [];
+    if (this.utilsService.isNonEmpty(this.taxPayable)) {
+      taxPayableArray = [
+        { key: 'taxPayable', value: 'Tax Payable' }
+      ]
+    }
+    if (this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      fieldName = [
+        { key: 'name', value: 'Client Name' },
+        { key: 'email', value: 'Email Address' },
+        { key: 'customerNumber', value: 'Mobile No' },
+        { key: 'leaderName', value: 'leader Name' },
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'serviceType', value: 'Service Type' },
+        { key: 'language', value: 'Language' },
+        { key: 'subscriptionPlan', value: 'Subscription Plan' },
+        { key: 'panNumber', value: 'PAN Number' },
+        { key: 'paymentStatus', value: 'Payment Status' },
+        { key: 'aisProvided', value: 'AIS Password Status' },
+        { key: 'eriClientValidUpto', value: 'ERI Client' },
+        { key: 'createdDate', value: 'Created Date' },
+        { key: 'statusUpdatedDate', value: 'Status Updated' },
+        { key: 'userId', value: 'User Id' },
+      ];
+    } else {
+      fieldName = [
+        { key: 'name', value: 'Client Name' },
+        { key: 'email', value: 'Email Address' },
+        { key: 'leaderName', value: 'leader Name' },
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'serviceType', value: 'Service Type' },
+        { key: 'language', value: 'Language' },
+        { key: 'subscriptionPlan', value: 'Subscription Plan' },
+        { key: 'panNumber', value: 'PAN Number' },
+        { key: 'paymentStatus', value: 'Payment Status' },
+        { key: 'aisProvided', value: 'AIS Password Status' },
+        { key: 'eriClientValidUpto', value: 'ERI Client' },
+        { key: 'createdDate', value: 'Created Date' },
+        { key: 'statusUpdatedDate', value: 'Status Updated' },
+        { key: 'userId', value: 'User Id' },
+      ];
+    }
+    if (taxPayableArray.length) {
+      fieldName = fieldName.concat(taxPayableArray);
+    }
+    await this.genericCsvService.downloadReport(
+      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {},this.taxPayable);
+    this.loading = false;
+    this.showCsvMessage = false;
+  }
 
 }

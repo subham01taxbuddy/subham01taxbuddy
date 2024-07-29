@@ -279,6 +279,7 @@ export class ReAssignActionDialogComponent implements OnInit {
   closeErrorTable() {
     this.dialogRef.close({ event: 'close', data: 'success' });
     this.dialogRef1.close();
+    this.dialog.closeAll();
   }
 
   progressMessage: string = '';
@@ -299,7 +300,6 @@ export class ReAssignActionDialogComponent implements OnInit {
           completedUsers++;
           this.updateProgress(completedUsers, totalUsers);
           this.loading = false;
-          // this.utilsService.showSnackBar(result.message);
         } catch (error) {
           this.loading = false;
           this.utilsService.showSnackBar(error.error.error);
@@ -335,7 +335,6 @@ export class ReAssignActionDialogComponent implements OnInit {
           completedUsers++;
           this.updateProgress(completedUsers, totalUsers);
           this.loading = false;
-          // this.utilsService.showSnackBar('User re-assigned successfully.');
         } catch (error) {
           this.loading = false;
           this.utilsService.showSnackBar(error.error.error);

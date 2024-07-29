@@ -67,9 +67,9 @@ export class GenericUserFilterComponent {
 
 
     }
-    var searchBy = {};
+    let searchBy = {};
     if (this.searchKey) {
-      var key2 = this.searchKey.toString();
+      let key2 = this.searchKey.toString();
       searchBy[key2] = this.searchValue.value;
     }
     this.onChange.emit(searchBy);

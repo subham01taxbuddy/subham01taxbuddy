@@ -15,7 +15,7 @@ export class ChangeStatusComponent implements OnInit {
   itrStatus: any = [];
   callers: any = [];
   changeStatus!: UntypedFormGroup;
-  hideUndoButton :boolean =false;
+  hideUndoButton: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<ChangeStatusComponent>,
@@ -28,13 +28,13 @@ export class ChangeStatusComponent implements OnInit {
 
   ngOnInit() {
 
-    if((this.data.serviceType === 'ITRU' || this.data.serviceType === 'ITR') && this.data.userInfo?.statusId === 14 ){
-      this.hideUndoButton =true;
-    }else{
-      this.hideUndoButton =false;
+    if ((this.data.serviceType === 'ITRU' || this.data.serviceType === 'ITR') && this.data.userInfo?.statusId === 14) {
+      this.hideUndoButton = true;
+    } else {
+      this.hideUndoButton = false;
     }
     this.changeStatus = this.fb.group({
-      selectStatus: [this.data.userInfo.statusId || null],
+      selectStatus: [this.data?.userInfo?.statusId || null],
       callerAgentUserId: [''],
     });
 
@@ -53,15 +53,6 @@ export class ChangeStatusComponent implements OnInit {
       ]);
       this.changeStatus.controls['selectStatus'].updateValueAndValidity();
       this.changeStatus.controls['callerAgentUserId'].updateValueAndValidity();
-
-      // console.log('this.data.userInfo statusId : ', this.data.userInfo.statusId, this.data.userInfo.statusId === "Open");
-      // if (this.data.userInfo.statusId === "Open") {
-      //   this.data.userInfo.statusId = 18;
-      // }
-      // else if (this.data.userInfo.statusId === "Interested") {
-      //   this.data.userInfo.statusId = 16;
-      // }
-
       this.getCallers();
     }
 
@@ -89,12 +80,7 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          // let loggedInRole = this.utilsService.getUserRoles();
-          // if(loggedInRole.includes('ROLE_FILER')){
-          //   this.itrStatus = response.filter((item: any) => item.statusId !== 8);
-          // }else{
-            this.itrStatus = response;
-          // }
+          this.itrStatus = response;
         } else {
           this.itrStatus = [];
         }
@@ -142,9 +128,6 @@ export class ChangeStatusComponent implements OnInit {
   }
 
   addStatus = (): Promise<any> => {
-    // const fyList = this.utilsService.getStoredFyList();
-    // console.log('fyList:', fyList);
-    // const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     return new Promise((resolve, reject) => {
       this.utilsService.getUserCurrentStatus(this.data.userInfo.userId).subscribe(
         (res: any) => {
@@ -341,10 +324,10 @@ export class ChangeStatusComponent implements OnInit {
 export interface ConfirmModel {
   userId: any;
   userName: string;
-  clientName:string;
+  clientName: string;
   serviceType: any;
   mode: any;
   userInfo: any;
   itrChatInitiated?: boolean;
-  selectedStatus:any;
+  selectedStatus: any;
 }

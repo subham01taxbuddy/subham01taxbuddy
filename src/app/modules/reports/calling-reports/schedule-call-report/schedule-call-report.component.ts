@@ -4,14 +4,10 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
-import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 
@@ -89,7 +85,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
       this.leaderId = this.loggedInSme[0].userId;
     }
     this.dataOnLoad = false;
-    // this.showReports();
   }
 
   leaderId: number;
@@ -159,7 +154,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
 
   createRowData(callingData) {
     console.log('callingRepoInfo -> ', callingData);
-    var callingRepoInfoArray = [];
+    let callingRepoInfoArray = [];
     for (let i = 0; i < callingData.length; i++) {
       let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
         filerName: callingData[i].filerName,
@@ -243,21 +238,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Parent Name',
-      //   field: 'parentName',
-      //   sortable: true,
-      //   pinned: 'right',
-      //   width: 200,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-
 
     ]
   }
@@ -315,7 +295,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
       this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showReports();
   }
 
   // pageChanged(event) {

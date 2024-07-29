@@ -3,7 +3,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -161,7 +160,6 @@ export class TeamReportDashboardComponent implements OnInit {
   search() {
     this.getInvoiceReports();
     this.getOperationTeamDetails();
-    // this.getPartnersAssignmentDetails();
     this.getTotalCommission();
     this.getScheduledCallDetails();
     this.getSubPaidScheduleCallCount();
@@ -184,7 +182,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
   }
 
-  getInvoiceReports=():Promise<any> => {
+  getInvoiceReports = (): Promise<any> => {
     // API to get invoice report for dashboard of leader
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/invoice-report?fromDate=2023-09-01&toDate=2023-11-08&serviceType=ITR'
     this.loading = true;
@@ -208,13 +206,13 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       })
   }
 
-  getOperationTeamDetails=():Promise<any> => {
+  getOperationTeamDetails = (): Promise<any> => {
     // API to get operation team
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/sme-report'
     this.loading = true;
@@ -234,7 +232,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       });
@@ -273,7 +271,7 @@ export class TeamReportDashboardComponent implements OnInit {
     );
   }
 
-  getTotalCommission=():Promise<any> => {
+  getTotalCommission = (): Promise<any> => {
     // API to get totalcommission
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
@@ -313,7 +311,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert(
           'error',
@@ -321,7 +319,7 @@ export class TeamReportDashboardComponent implements OnInit {
       });
   }
 
-  getSubPaidScheduleCallCount=():Promise<any> =>{
+  getSubPaidScheduleCallCount = (): Promise<any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?toDate=2024-02-09&count=true&fromDate=2024-02-01
     // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01'
     this.loading = true;
@@ -339,22 +337,17 @@ export class TeamReportDashboardComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.subPaidScheduleCallDetails = response.data;
-          // this.totalScheduledCall =
-          //   response.data.callsAssigned_Open +
-          //   response.data.done +
-          //   response.data.followUp;
-
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       })
   }
 
-  getScheduledCallDetails=():Promise<any> =>{
+  getScheduledCallDetails = (): Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -380,7 +373,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       });

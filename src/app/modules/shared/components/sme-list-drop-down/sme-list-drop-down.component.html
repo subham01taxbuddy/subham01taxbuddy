@@ -4,7 +4,7 @@
     <div class="col-sm-4" *ngIf="!disableLeader">
       <mat-label> Search By Leader </mat-label>
       <mat-form-field appearance="outline" class="small-inp no-height">
-        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"  (blur)="setList()" />
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"/>
         <mat-autocomplete #auto>
           <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
             (click)="getLeaderNameId(option);">
@@ -17,8 +17,7 @@
     <div class="col-sm-4">
       <mat-label> Search By Principal/Individual </mat-label>
       <mat-form-field appearance="outline" class="small-inp no-height">
-        <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"
-          (blur)="setList2()" />
+        <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"/>
         <mat-autocomplete  #auto1="matAutocomplete">
           <mat-option *ngFor="let option1 of filteredPrincipleIndividuals | async" [value]="option1.name"
             (click)="getPrincipleNameId(option1);">
@@ -47,7 +46,7 @@
     <div class="col-sm-4" *ngIf="showAllToLeader">
       <mat-label> Search By Leader </mat-label>
       <mat-form-field appearance="outline" class="small-inp no-height">
-        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"  (blur)="setList()" />
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"/>
         <mat-autocomplete #auto>
           <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
             (click)="getLeaderNameId(option);">
@@ -60,8 +59,7 @@
     <div class="col-sm-4">
       <mat-label> Search By Principal/Individual </mat-label>
       <mat-form-field appearance="outline" class="small-inp no-height">
-        <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"
-          (blur)="setList2()" />
+        <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"/>
         <mat-autocomplete #auto1>
           <mat-option *ngFor="let option1 of filteredPrincipleIndividuals | async" [value]="option1.name"
             (click)="getPrincipleNameId(option1);">
@@ -106,8 +104,7 @@
       <div class="col-sm-4">
         <mat-label> Search By Principal/Individual </mat-label>
         <mat-form-field appearance="outline" class="small-inp no-height">
-          <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"
-            (blur)="setList2()" />
+          <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1" />
           <mat-autocomplete #auto1>
             <mat-option *ngFor="let option1 of filteredPrincipleIndividuals | async" [value]="option1.name"
               (click)="getPrincipleNameId(option1);">

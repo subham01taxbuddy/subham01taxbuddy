@@ -58,8 +58,9 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   isReadOnly: boolean = false;
   loggedInSmeInfo: any;
   maxNumber: number;
-  disableButton: Boolean = false;
+  disableButton: boolean = false;
   emailAccepted = '';
+  allFilerList:any;
 
   constructor(
     private fb: FormBuilder,
@@ -500,6 +501,39 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkActive(){
+     if (this.mobileNumber.value && this.mobileNumber.valid) {
+      this.loading = true;
+      const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
+      this.reportService.getMethod(param).subscribe((result: any) => {
+        this.loading =false;
+        if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
+          this.allFilerList = result?.data?.content;
+          const isNumberPresent = this.allFilerList.some(
+            (item: any) => item.mobileNumber === this.mobileNumber.value || item.callingNumber === this.mobileNumber.value
+          );
+          if(isNumberPresent){
+            return this._toastMessageService.alert('error', 'This Number is already Present As SME ');
+          }else{
+            this.amplifySignIn();
+          }
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert('error', 'No Data Found in Get All Filer List API');
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error in API of Get All Filer List');
+      });
+
+     }else {
+      this._toastMessageService.alert('error',
+        'please enter mobile Number.'
+      );
+    }
+  }
+
   async amplifySignIn() {
     if (this.mobileNumber.value && this.mobileNumber.valid) {
       this.loading = true;
@@ -666,7 +700,6 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
         this.otpVerificationDone = true;
         this.fromEdit = true;
         this.smeOriginalEmail.setValue(this.emailAddress.value || response.email);
-        // this.name.setValue(response.firstName + " " + response.lastName);
         this.firstName.setValue(response.firstName);
         this.lastName.setValue(response.lastName);
         this.callingNumber.setValue(this.mobileNumber.value)
@@ -790,6 +823,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
     this.http.get(url, { headers }).subscribe(
       (response: any) => {
+        console.log(response);
       })
 
   }
@@ -802,8 +836,6 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     //'https://uat-api.taxbuddy.com/user/v2/assistant-details' \
     this.markFormGroupTouched(this.smeFormGroup);
     if (this.smeFormGroup.valid) {
-
-      // let reqBody = this.partnerInfo;
       let userId = this.childObj ? this.childObj.data.userId : this.childUserId
       let parentId = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentId;
       let parentName = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentName;
@@ -820,7 +852,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       const today = new Date();
       const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
       let name = this.name.setValue(`${this.firstName.value} ${this.middleName.value} ${this.lastName.value}`);
-
+      console.log(name);
       const param = `/v2/assistant-details`;
 
       const requestBody = {

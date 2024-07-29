@@ -51,8 +51,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       console.log(listedData);
-      // this.clearNullImprovements();
-      // this.calculateTotalCg();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -82,7 +80,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             asset.hasEdit = false;
           });
         }
-        // this.sel();
       },
       sortable: true,
       pagination: true,
@@ -259,9 +256,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (res: any) => {
         this.loading = false;
         console.log('Deduction:', res);
-        // this.goldCg.assetDetails = res.assetDetails;
-        // this.goldCg.improvement = res.improvement;
-        // this.goldCg.deduction = res.deduction;
         (this.getDeductions.controls[0] as UntypedFormGroup).controls[
           'deductionClaimed'
         ]?.setValue(res.data[0]?.deductionAmount);
@@ -283,8 +277,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     );
 
-    // this.calculateCg();
-    console.log(this.goldCg);
   }
 
   depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
@@ -325,7 +317,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (this.deductionForm.valid) {
       //re-intialise the ITR objects
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
       this.loading = true;
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
@@ -414,12 +405,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deleteDeduction(index) {
     const deleteDeduction = this.getDeductions;
     deleteDeduction.removeAt(index);
-    // Condition is added because at least one deduction needs to be shown
-    // if (deleteDeduction.length === 0) {
-    //   deleteDeduction.push(this.createDeductionForm());
-    // }
-    // this.goldCg.deduction.splice(index, 1);
-    // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
   // for pagination
@@ -517,9 +502,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         checkboxSelection: (params) => {
           return true;
         },
-        // valueGetter: function nameFromCode(params) {
-        //   return params.data.hasEdit;
-        // },
         cellStyle: function (params: any) {
           return {
             textAlign: 'center',
@@ -529,13 +511,19 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           };
         },
       },
-      // {
-      //   headerName: 'Sr. No.',
-      //   field: 'srn',
-      //   width: 80,
-      //   editable: false,
-      //   suppressMovable: true,
-      // },
+      {
+        headerName: 'Sale Date / Date of Transfer',
+        field: 'sellDate',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (params) => {
+          return params.data.sellDate
+            ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
+            : '';
+        },
+      },
       {
         headerName: 'Sale Value',
         field: 'sellValue',
@@ -558,34 +546,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Indexed cost of acquisition',
-        field: 'indexCostOfAcquisition',
-        width: 150,
-        editable: false,
-        suppressMovable: true,
-        cellStyle: {
-          textAlign: 'center',
-        },
-        cellRenderer: function (params) {
-          const saleValue = params.value;
-          const formattedValue = `₹${saleValue}`;
-          return formattedValue;
-        },
-      },
-      {
-        headerName: 'Buy Date / Date of Acquisition',
-        field: 'purchaseDate',
-        width: 150,
-        editable: false,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (params) => {
-          return params.data.purchaseDate
-            ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
-            : '';
-        },
-      },
-      {
         headerName: 'Source',
         field: 'brokerName',
         width: 150,
@@ -599,39 +559,21 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           fontWeight: 500,
           lineHeight: 'normal'
         },
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           return params.data.brokerName === 'AIS' ? `<span style="color: #007bff;">${params.data.brokerName}</span>`
-              : `<span style="color: #91C561;">${params.data.brokerName}</span>`
+            : `<span style="color: #91C561;">${params.data.brokerName}</span>`
         }
       },
       {
-        headerName: 'Indexed cost of Improvement',
-        field: 'indexCostOfImprovement',
-        width: 150,
-        editable: false,
-        suppressMovable: true,
-        // cellRenderer: (params) => {
-        //   return params.data.costOfImprovement
-        //     ? params.data.costOfImprovement
-        //     : '';
-        // },
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (params) => {
-          const costOfImprovement = params.data.costOfImprovement;
-          const formattedValue = costOfImprovement ? `₹${costOfImprovement}` : '';
-          return formattedValue;
-        },
-      },
-      {
-        headerName: 'Sale Date / Date of Transfer',
-        field: 'sellDate',
+        headerName: 'Buy Date / Date of Acquisition',
+        field: 'purchaseDate',
         width: 150,
         editable: false,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
-          return params.data.sellDate
-            ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
+          return params.data.purchaseDate
+            ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
             : '';
         },
       },
@@ -657,23 +599,17 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Expenses',
-        field: 'sellExpense',
-        width: 100,
+        headerName: 'Indexed cost of acquisition',
+        field: 'indexCostOfAcquisition',
+        width: 150,
         editable: false,
         suppressMovable: true,
         cellStyle: {
           textAlign: 'center',
-          color: '#33353F',
-          fontFamily: 'DM Sans',
-          fontSize: '14px',
-          fontStyle: 'normal',
-          fontWeight: 500,
-          lineHeight: 'normal'
         },
         cellRenderer: function (params) {
-          const sellExpense = params.value;
-          const formattedValue = sellExpense ? `₹${sellExpense}` : '';
+          const saleValue = params.value;
+          const formattedValue = `₹${saleValue}`;
           return formattedValue;
         },
       },
@@ -703,6 +639,40 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
            </button>`;
           }
         }
+      },
+      {
+        headerName: 'Indexed cost of Improvement',
+        field: 'indexCostOfImprovement',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (params) => {
+          const costOfImprovement = params.data.costOfImprovement;
+          const formattedValue = costOfImprovement ? `₹${costOfImprovement}` : '';
+          return formattedValue;
+        },
+      },
+      {
+        headerName: 'Expenses',
+        field: 'sellExpense',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
+        cellRenderer: function (params) {
+          const sellExpense = params.value;
+          const formattedValue = sellExpense ? `₹${sellExpense}` : '';
+          return formattedValue;
+        },
       },
       {
         headerName: 'Gain Amount',

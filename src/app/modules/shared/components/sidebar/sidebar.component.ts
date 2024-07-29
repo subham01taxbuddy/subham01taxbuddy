@@ -1,9 +1,7 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
 import { Router } from '@angular/router';
-import { NavbarService } from "../../../../services/navbar.service";
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Subscription } from 'rxjs';
@@ -199,7 +197,6 @@ export class SidebarComponent {
       roles: [],
       submenu: [
         { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        { name: 'Filing SLA', url: '/reports/filing-sla', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
@@ -231,24 +228,15 @@ export class SidebarComponent {
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
+
     {
-      name:'Alert',
-      icon:'alert.png',
-      active:false,
-      url:null,
-      roles:[],
-      submenu:[
-        {name: 'Alert', url: '/alert/create', roles: ['ROLE_ADMIN', 'ROLE_LEADER']}
-      ]
-  },
-    {
-      name:'Recovery-Data',
+      name:'Data Recovery',
       icon:'recovery.png',
       active:false,
       url:null,
-      roles:[],
+      roles:['ROLE_ADMIN'],
       submenu:[
-        {name: 'Itr-Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN', 'ROLE_LEADER']}
+        {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
       ]
   },
     {

@@ -1,6 +1,6 @@
 import {ElementRef, Injectable} from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import {catchError, concatMap, Observable, Subject} from 'rxjs';
+import { concatMap, Observable, Subject} from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Employer, ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
-import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
@@ -428,7 +427,7 @@ export class UtilsService {
   }
 
   showErrorMsg(errorCode) {
-    var errorMessage = '';
+    let errorMessage = '';
     if (errorCode === 400) {
       errorMessage = 'Bad request, invalid input request.';
     } else if (errorCode === 401) {
@@ -449,7 +448,6 @@ export class UtilsService {
     let startFy = financialYear.slice(0, 5);
     let endFy = financialYear.slice(7, 9);
     return startFy + endFy;
-    // return '2020-21';
   }
 
   async getStoredFyList() {
@@ -484,7 +482,6 @@ export class UtilsService {
     const smeList = JSON.parse(
       sessionStorage.getItem(AppConstants.SME_LIST) || null
     );
-    // console.log('fyList', fyList);
     if (
       this.isNonEmpty(smeList) &&
       smeList instanceof Array &&
@@ -749,7 +746,6 @@ export class UtilsService {
       let data = null;
       if (pinCode.valid) {
         const param = '/pincode/' + pinCode.value;
-        // return await this.userMsService.getMethod(param).toPromise();
         this.userMsService.getMethod(param).subscribe(
           (result: any) => {
             data = {
@@ -797,6 +793,18 @@ export class UtilsService {
             .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
       }
   }
+
+  saveManualUpdateReason(itrObject: ITR_JSON): Observable<any> {
+    //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
+      const param =
+          '/itr/' +
+          itrObject.userId +
+          '/' +
+          itrObject.itrId +
+          '/' +
+          itrObject.assessmentYear;
+      return this.itrMsService.putMethod(param, itrObject);
+  }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
     if (itrObject.itrSummaryJson) {
@@ -810,8 +818,6 @@ export class UtilsService {
         itrObject.assessmentYear;
       return this.itrMsService.putMethod(param, itrObject);
     } else {
-      // return this.getUserCurrentStatus([itrObject.userId])
-      //     .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
       itrObject.isItrSummaryJsonEdited = false;
       const param = `/itr/itr-type`;
       return this.itrMsService
@@ -987,7 +993,6 @@ export class UtilsService {
 
   fetchSmeInfo(userId) {
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
-    // this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
     this.userMsService.getMethodNew(param).subscribe(
       (res: any) => {
         if (res.success) {
@@ -1048,7 +1053,6 @@ export class UtilsService {
     let loggedInUserId = environment.admin_id;
     console.log('logged in sme id ', loggedInUserId);
     const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-    // return await this.userMsService.getMethod(param).toPromise();
     this.reportService.getMethod(param).subscribe((res: any) => {
       console.log('filer List Result', res);
       if (res.success && res.data instanceof Array) {
@@ -1059,11 +1063,7 @@ export class UtilsService {
         );
         return filerList;
       }
-      // if (res.success) {
-      //   sessionStorage.setItem(AppConstants.ALL_FILERS_LIST, JSON.stringify(res.data))
-      // }
     });
-    // sessionStorage.setItem("autosave", field.value);
   }
 
   setAddClientJsonData(data: any) {
@@ -1458,13 +1458,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.salary?.push({
             salaryType: key,
             taxableAmount: element,
             exemptAmount: 0,
           });
-          // }
         }
       }
     }
@@ -1477,13 +1475,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.perquisites?.push({
             perquisiteType: key,
             taxableAmount: element,
             exemptAmount: 0
           });
-          // }
         }
       }
     }
@@ -1496,13 +1492,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.profitsInLieuOfSalaryType?.push({
             salaryType: key,
             taxableAmount: element,
             exemptAmount: 0,
           });
-          // }
         }
       }
     }

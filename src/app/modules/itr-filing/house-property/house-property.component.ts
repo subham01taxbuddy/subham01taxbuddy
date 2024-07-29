@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit,Output, EventEmitter } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
-  UntypedFormArray,
+  UntypedFormArray, AbstractControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,7 +15,6 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DeleteConfirmationDialogComponent } from '../components/delete-confirmation-dialog/delete-confirmation-dialog.component';
-import { Output, EventEmitter } from '@angular/core';
 import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
@@ -87,14 +86,6 @@ export class HousePropertyComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
-    // if (
-    //   this.utilsService.isNonEmpty(this.ITR_JSON) &&
-    //   this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-    //   this.ITR_JSON.houseProperties instanceof Array &&
-    //   this.ITR_JSON.houseProperties.length > 0
-    // ) {
-    //   this.hpView = 'TABLE';
-    // }
 
     if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
@@ -163,13 +154,6 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['state'].setValue(this.ITR_JSON.address.state);
       this.housePropertyForm.controls['country'].setValue(this.ITR_JSON.address.country);
       this.housePropertyForm.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
-    } else {
-      // this.housePropertyForm.controls['address'].setValue(null);
-      // this.housePropertyForm.controls['city'].setValue(null);
-      //
-      // this.housePropertyForm.controls['state'].setValue(null);
-      // this.housePropertyForm.controls['country'].setValue(null);
-      // this.housePropertyForm.controls['pinCode'].setValue(null);
     }
   }
 
@@ -195,7 +179,6 @@ export class HousePropertyComponent implements OnInit {
   deleteHousingIncome(index) {
     if (index >= 0 && index < this.Copy_ITR_JSON.houseProperties.length) {
       this.hpView = 'FORM';
-      // this.housingView = 'FORM';
       this.mode = 'ADD';
       this.housePropertyForm = this.createHousePropertyForm();
       this.housePropertyForm.controls['country'].setValue('91');
@@ -271,11 +254,6 @@ export class HousePropertyComponent implements OnInit {
   }
 
   changeCountry(country) {
-    // const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
-    // this.itrMsService.getMethod(param).subscribe((result: any) => {
-    //   // this.stateDropdown = result;
-    // }, error => {
-    // });
     if (country !== '91') {
       this.stateDropdown = [
         {
@@ -459,6 +437,16 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  patternValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const pattern1 = AppConstants.panNumberRegex;
+    const pattern2 = AppConstants.tanNumberRegex;
+
+    if ((control.value && (pattern1.test(control.value) || pattern2.test(control.value))) || !control.value) {
+      return null;
+    }
+    return { patternInvalid: true };
+  }
+
   createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?: boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
@@ -471,7 +459,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator]
       });
     } else {
       return this.fb.group({
@@ -481,7 +469,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [obj.tanNumber, Validators.compose([Validators.pattern(AppConstants.tanNumberRegex)]),]
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator,]
       });
     }
   }
@@ -777,14 +765,8 @@ export class HousePropertyComponent implements OnInit {
       coOwner.push(this.createCoOwnerForm());
     } else {
       console.log('coOwner==', coOwner);
-      // TODO
-      // if (coOwner.length > 0 && (this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].name.value) || this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].panNumber.value) ||
-      // this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].percentage.value))) {
-      // this.confirmationDialog('CONFIRM_COOWNER_DELETE');
-      // } else {
       this.housePropertyForm.controls['isCoOwners'].setValue(false);
       this.housePropertyForm.controls['coOwners'] = this.fb.array([]);
-      // }
     }
     this.calAnnualValue();
   }
@@ -907,7 +889,6 @@ export class HousePropertyComponent implements OnInit {
         );
 
         this.isDisable = true;
-        // this.housePropertyForm.controls['loans'].disable();
         this.housePropertyForm.controls['address'].reset();
         this.housePropertyForm.controls['city'].reset();
         this.housePropertyForm.controls['state'].reset();
@@ -976,8 +957,6 @@ export class HousePropertyComponent implements OnInit {
       ].updateValueAndValidity();
     } else if (type === 'DLOP') {
       this.housePropertyForm.controls['tenant'] = this.fb.array([]);
-      // this.housePropertyForm.controls['isEligibleFor80EE'].setValue(false);
-
       this.housePropertyForm.controls['annualRentReceived'].setValidators([
         Validators.pattern(AppConstants.numericRegex),
         Validators.min(1),
@@ -1312,10 +1291,6 @@ export class HousePropertyComponent implements OnInit {
       this.storedValue === 'onInit' ||
       this.storedValue === 'edit'
     ) {
-      // interest form control
-      const interestAmountControl =
-        this.housePropertyForm.controls['interestAmount'];
-
       // current value of interest amount
       const currentInterestValue = Number(
         this.housePropertyForm.controls['interestAmount']?.value
@@ -1476,7 +1451,6 @@ export class HousePropertyComponent implements OnInit {
         Number(this.housePropertyForm.controls['annualRentReceived'].value) *
         ownerPercentage *
         0.01;
-      //this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(rentPercent);
       this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
         this.housePropertyForm.controls['annualRentReceived'].value
       );
@@ -1484,14 +1458,12 @@ export class HousePropertyComponent implements OnInit {
         rentPercent
       );
       this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
-      // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
       this.annualValue =
         ((this.housePropertyForm.controls['annualRentReceived'].value -
           Number(this.housePropertyForm.controls['propertyTax'].value)) *
           ownerPercentage) /
         100;
       this.thirtyPctOfAnnualValue = Math.round(this.annualValue * 0.3);
-      // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
     }
     this.calculateInterestOrDeduction();
   }

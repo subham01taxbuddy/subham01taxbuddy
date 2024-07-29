@@ -16,6 +16,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 
 @Component({
   selector: 'app-potential-user',
@@ -30,8 +32,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ogStatusList: any = [];
   usersGridOptions: GridOptions;
   config: any;
-  coOwnerToggle = new UntypedFormControl('');
-  coOwnerCheck = false;
   roles: any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
@@ -65,6 +65,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     { value: 'Registered', name: 'Registered' },
     { value: 'ITR Filed', name: 'ITR Filed' }
   ]
+  dialogRef: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -259,22 +260,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?${data}&active=false`;
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
-    }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this._toastMessageService.alert("error", result.message);
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
       if (result.success) {
         if (result.data && result.data['content'] instanceof Array) {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -293,8 +280,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           this.config.totalItems = 0;
           this._toastMessageService.alert('error', result.message)
         }
+      } else {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
       }
-      this.loading = false;
     }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'error')
@@ -366,7 +356,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
@@ -730,7 +720,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           break;
         }
         case 'active': {
-          this.active(params.data)
+          this.assignFilerBeforeActivate(params.data)
           break;
         }
       }
@@ -755,12 +745,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
-          if (result.success == false) {
-            this.loading = false;
-            this.utilsService.showSnackBar('Error while making call, Please try again.');
-          }
           if (result.success) {
             this._toastMessageService.alert("success", result.message)
+          } else {
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
           }
         }, error => {
           this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -831,16 +819,60 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   }
 
+  assignFilerBeforeActivate(data) {
+    let smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    smeList.forEach((item) => {
+      if (item.name === data.leaderName)
+        data['leaderUserId'] = item.userId;
+      if (item.name === data.filerName)
+        data['filerUserId'] = item.userId;
+    });
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.roles.includes('ROLE_LEADER') && data.leaderUserId != loggedInId) {
+      debugger
+      this.active(data);
+    } else {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Assign Filer Confirmation',
+          message: 'Do you want to assign filer?',
+        },
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          let selectedUser: any = [];
+          selectedUser[0] = (data);
+          let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+            width: '65%',
+            height: 'auto',
+            data: {
+              data: selectedUser,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              debugger
+              this.active(data);
+            }
+          });
+        } else {
+          debugger
+          this.active(data);
+        }
+      })
+    }
+  }
+
+
   active(data) {
     //'https://dev-api.taxbuddy.com/user/leader-assignment?userId=8729&serviceType=ITR&statusId=16' \
-
     this.utilsService.getUserCurrentStatus(data.userId).subscribe(
       (res: any) => {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
           this.search();
-          return;
         } else {
           console.log('data to active user', data);
           let loggedInId = this.utilsService.getLoggedInUserID();
@@ -850,7 +882,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
             (result: any) => {
               console.log('res after active ', result);
               this.loading = false;
-              if (result.success == true) {
+              if (result.success) {
                 if (this.roles.includes('ROLE_LEADER') && result.data.leaderUserId != loggedInId) {
                   this.reAssign(data, loggedInId);
                 } else {
@@ -905,10 +937,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         this.userMsService.getMethod(param).subscribe((res: any) => {
           this.loading = false;
           console.log(res);
-          this.utilsService.showSnackBar('user activated &  re assigned successfully.');
-          this.resetFilters();
-          this.loading = false;
-          if (res.success == false) {
+          if (res.success) {
+            this.utilsService.showSnackBar('user activated &  re assigned successfully.');
+            this.resetFilters();
+          } else {
             this.utilsService.showSnackBar(res.error)
             console.log(res.message)
           }
@@ -937,11 +969,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      this.search('', '', event);
     }
   }
 

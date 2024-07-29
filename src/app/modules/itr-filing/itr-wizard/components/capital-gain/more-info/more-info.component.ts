@@ -316,8 +316,7 @@ export class MoreInfoComponent implements OnInit {
         width: 70,
         pinned: 'right',
         cellRenderer: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-          } else {
+          if (params.node.rowIndex != '8' || params.node.rowIndex != '9' || params.node.rowIndex != '10' || params.node.rowIndex != '11') {
             return `<button type="button" class="action_icon add_button" title="Delete">
             <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
           </button>`;

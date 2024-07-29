@@ -1,15 +1,13 @@
 import { NewPresumptiveIncomes } from './../../../../../../modules/shared/interfaces/itr-input.interface';
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators ,AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-business-dialog',
   templateUrl: './business-dialog.component.html',
-  styleUrls: ['./business-dialog.component.scss'],
 })
 export class BusinessDialogComponent implements OnInit {
   natureOfBusinessDropdownAll: any;
@@ -169,7 +167,6 @@ export class BusinessDialogComponent implements OnInit {
   MAX_RECEIPT_LIMIT = 20000000;
 
   saveBusinessDetails() {
-    //this.businessForm.controls['presumptiveIncome'].setValue(this.businessForm.controls['preIncome'].value + this.businessForm.controls['minimumPresumptiveIncome'].value);
     console.log('this.natureOfBusinessForm === ', this.businessForm.value);
     if (this.businessForm.valid) {
       //check the income validation for u/s 44D

@@ -14,6 +14,15 @@
               </mat-expansion-panel-header>
               <div class="filter-box">
                 <div class="row">
+                  <div class="col-sm-12">
+                    <section class="example-section checkbox-right">
+                      <div class="checkbox-group ">
+                        <mat-checkbox [formControl]="leaderView"
+                          *ngIf="roles.includes('ROLE_ADMIN')" (change)="handleLeaderViewChange()">Leader
+                          View</mat-checkbox>
+                      </div>
+                    </section>
+                  </div>
                   <div class="col-sm-12 bckClr">
                     <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
                       (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
@@ -54,15 +63,13 @@
                     </div>
                   </div>
                   <div class="button-container">
-                    <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                    </button> -->
                     <app-custom-button class="srch-btn-1" [actions]="[getStatusWiseReport]">
                       <i class="fa fa-search" aria-hidden="true"></i> Search
                     </app-custom-button>
                     <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
                       <i class="fa fa-download" aria-hidden="true"></i> Download File
                     </button>
-                    <button class="clrLnk-1" (click)="this.resetFilters()">
+                    <button class="clrLnk-1" (click)="resetFilters()">
                       Clear form
                     </button>
                   </div>
@@ -79,7 +86,7 @@
       <div class="col-sm-12">
         <div class="table-radiusTab-1">
           <div class="table-container">
-            <table class="table">
+            <table aria-label="table" class="table">
               <thead>
                 <tr *ngIf="columns">
                   <th scope="col" class="sticky-column">Sr.No</th>

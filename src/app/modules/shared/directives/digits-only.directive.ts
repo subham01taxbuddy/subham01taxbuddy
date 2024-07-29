@@ -10,22 +10,21 @@ export class DigitsOnlyDirective {
         this.autocomplete = 'off'
     }
     @HostListener('keypress', ['$event']) public disableKeys(e: any) {
-        this.document.all ? e.keyCode : e.keyCode
         return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57)
     }
 
     @HostListener('paste', ['$event'])
     onPaste(event: ClipboardEvent) {
         event.preventDefault();
-        // const pastedInput: string = event.clipboardData
-        //     .getData('text/plain')
-        //     .replace(/\D|(\.\d+)/g, ''); // get a digit-only string
-        // document.execCommand('insertText', false, pastedInput);
         let inputValue = event.clipboardData.getData('text/plain');
         const cleanedValue = inputValue.split('.')[0];
         if (cleanedValue !== inputValue) {
             inputValue = cleanedValue;
             document.execCommand('insertText', false, inputValue);
+        } else {
+            if(inputValue.match(/^[0-9.]+$/)){
+                document.execCommand('insertText', false, inputValue);
+            }
         }
     }
 }

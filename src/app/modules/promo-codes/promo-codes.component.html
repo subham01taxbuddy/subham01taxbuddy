@@ -1,5 +1,10 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <!-- New Open Close Filter Starts -->
+
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
+
 <div class="">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]=true>
@@ -30,13 +35,18 @@
               <app-generic-sorting [sortingParameter]="sortMenus"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <div class="col-sm-4">
-              <app-custom-button class="srch-btn" [actions]="[getPromoCodeList]">
-                <i class="fa fa-search" aria-hidden="true"></i> Search
-              </app-custom-button>
-              <button class="srchSpcTp clrLnk mvRthB" [disabled]="loading" (click)="this.resetFilters()">
-                Clear
-              </button>
+            <div class="col-sm-6">
+              <div class="button-container">
+                <app-custom-button class="srch-btn-1" [actions]="[getPromoCodeList]">
+                  <i class="fa fa-search" aria-hidden="true"></i> Search
+                </app-custom-button>
+                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
+                  Clear
+                </button>
+              </div>
             </div>
 
           </div>

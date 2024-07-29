@@ -197,15 +197,12 @@ export class CreditNoteComponent implements OnInit {
     if (this.filerId) {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
-      // this.filerUserId = this.filerId;
     } else if (this.leaderId) {
       this.agentId = this.leaderId;
-      // this.getInvoice();
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.getInvoice();
   }
 
   getCreditNote=(pageChange?):Promise<any> => {
@@ -283,7 +280,7 @@ export class CreditNoteComponent implements OnInit {
 
   createRowData(creditData) {
     console.log('creditData -> ', creditData);
-    var creditInfoArray = [];
+    let  creditInfoArray = [];
     for (let i = 0; i < creditData.length; i++) {
       let creditReportInfo = Object.assign({}, creditInfoArray[i], {
         creditNoteNo: creditData[i].creditNoteNo,

@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { environment } from 'src/environments/environment';
 import { AddUpdateReviewComponent } from '../../components/add-update-review/add-update-review.component';
 import { UpdateSmeNotesComponent } from '../../components/update-sme-notes/update-sme-notes.component';
 import { ViewReviewComponent } from '../../components/view-review/view-review.component';
@@ -379,10 +378,6 @@ export class ReviewListComponent implements OnInit,OnDestroy {
     });
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.getReview(event - 1);
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -390,7 +385,6 @@ export class ReviewListComponent implements OnInit,OnDestroy {
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;
-      // this.selectedPageNo = event - 1;
       this.getReview(event - 1,event);
     }
   }
@@ -411,14 +405,14 @@ export class ReviewListComponent implements OnInit,OnDestroy {
       this.selectStatus && this.selectStatus != 'All'
         ? `&status=${this.selectStatus}`
         : '';
-
+    let param='';
     if (this.selectStatus || this.selectPlatform) {
-      var param =
+       param =
         `review?${pagination}` +
         status +
         platform;
     } else {
-      var param = `review?${pagination}`;
+       param = `review?${pagination}`;
     }
     this.reviewService.getMethod(param).subscribe(
       (response: any) => {
@@ -455,7 +449,7 @@ export class ReviewListComponent implements OnInit,OnDestroy {
   }
 
   createRowData(data: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < data.length; i++) {
       let platform = '-';
       if (data[i].sourcePlatform) {

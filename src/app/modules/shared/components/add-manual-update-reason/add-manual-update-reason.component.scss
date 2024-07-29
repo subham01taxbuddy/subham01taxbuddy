@@ -1,0 +1,57 @@
+.flex-70 {
+    flex-basis: 70% !important;
+}
+
+.flex-15 {
+    flex-basis: 15% !important;
+}
+
+.text {
+    text-align: center;
+    font-size: 16px;
+    padding: 2px 2px;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.service-input {
+    width: 100%;
+}
+
+.notes-input {
+    width: 100%;
+}
+
+.add-notes {
+    width: 98%;
+    height: 50%;
+}
+
+.fordialnotes {
+    overflow: hidden;
+    padding: 13px;
+    height: 400px;
+    width: 100%;
+}
+
+.new-button-1 {
+    margin-top: 17px;
+    display: flex;
+    height: 48px;
+    padding: 8px 30px;
+    align-items: center;
+    gap: 9px;
+    color: #FFF;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.28px;
+    border-radius: 4px;
+    background: #2D8EF9;
+}

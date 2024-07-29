@@ -116,61 +116,65 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
 
 
   note = async (): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      if (this.serviceType.valid && this.noteDetails.valid) {
-        try {
-          const fyList = await this.utilsService.getStoredFyList();
-          const currentFyDetails = fyList.filter(
-            (item: any) => item.isFilingActive
-          );
-          if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-            this.utilsService.showSnackBar(
-              'There is no any active filing year available'
-            );
-            return reject('No active filing year available');
-          }
-          const request = {
-            userId: this.data.userId,
-            notes: [
-              {
-                createdBy: this.utilsService.getLoggedInUserID(),
-                assessmentYear: currentFyDetails[0].assessmentYear,
-                note: this.noteDetails.value,
-                serviceType: this.serviceType.value,
-              },
-            ],
-          };
-          console.info('add note request:', request);
-          const param = `/note`;
+    return new Promise((resolve, reject) => {
+      let fyList = [];
+      this.utilsService.getStoredFyList().then(data => {
+        fyList = data
 
-          this.itrMsService.postMethod(param, request).toPromise().then(
-            (result) => {
-              console.log(result);
-              this.getNotes();
-              this.noteDetails.reset();
-              this.utilsService.showSnackBar('Note added successfully.');
-              resolve(result);
-            },
-            (error) => {
-              console.warn(error);
+        if (this.serviceType.valid && this.noteDetails.valid) {
+          try {
+
+            const currentFyDetails = fyList.filter(
+              (item: any) => item.isFilingActive
+            );
+            if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
               this.utilsService.showSnackBar(
-                'Error while adding note, please try again.'
+                'There is no any active filing year available'
               );
-              this.dialogRef.close();
-              reject(error);
+              return reject('No active filing year available');
             }
-          ).catch((error) => {
-            this.utilsService.showSnackBar('Error while adding note, please try again.');
+            const request = {
+              userId: this.data.userId,
+              notes: [
+                {
+                  createdBy: this.utilsService.getLoggedInUserID(),
+                  assessmentYear: currentFyDetails[0].assessmentYear,
+                  note: this.noteDetails.value,
+                  serviceType: this.serviceType.value,
+                },
+              ],
+            };
+            const param = `/note`;
+
+            this.itrMsService.postMethod(param, request).toPromise().then(
+              (result) => {
+                console.log(result);
+                this.getNotes();
+                this.noteDetails.reset();
+                this.utilsService.showSnackBar('Note added successfully.');
+                resolve(result);
+              },
+              (error) => {
+                console.warn(error);
+                this.utilsService.showSnackBar(
+                  'Error while adding note, please try again.'
+                );
+                this.dialogRef.close();
+                reject(error);
+              }
+            ).catch((error) => {
+              this.utilsService.showSnackBar('Error while adding note, please try again.');
+              reject(error);
+            });
+          } catch (error) {
+            this.utilsService.showSnackBar('An unexpected error occurred.');
             reject(error);
-          });
-        } catch (error) {
-          this.utilsService.showSnackBar('An unexpected error occurred.');
-          reject(error);
+          }
+        } else {
+          this.serviceType.markAllAsTouched();
+          reject('Invalid serviceType or noteDetails');
         }
-      } else {
-        this.serviceType.markAllAsTouched();
-        reject('Invalid serviceType or noteDetails');
-      }
+      });
     });
   };
 
@@ -188,8 +192,6 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
           let data = result.notes.sort((a, b) =>
             a.dateAndTime < b.dateAndTime ? 1 : -1
           );
-          // this.dataSource = new MatTableDataSource<any>(this.notes);
-          // this.dataSource.data = data;
           this.dataSource.data = data;
         }
       },

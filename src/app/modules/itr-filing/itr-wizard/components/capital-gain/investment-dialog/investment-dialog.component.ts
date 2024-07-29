@@ -28,7 +28,6 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-investment-dialog',
   templateUrl: './investment-dialog.component.html',
-  styleUrls: ['./investment-dialog.component.scss'],
   providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
@@ -39,7 +38,6 @@ export class InvestmentDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
   investmentForm: UntypedFormGroup;
-  // assetType = '';
   ITR_JSON: ITR_JSON;
   loading = false;
 
@@ -50,7 +48,6 @@ export class InvestmentDialogComponent implements OnInit {
     this.investmentForm.controls['orgAssestTransferDate'].disable();
     this.investmentForm = this.createInvestmentForm();
     if (this.data.mode === 'EDIT') {
-      // this.assetType = this.data.assetType;
       this.investmentForm.patchValue(this.data.investment);
     }
   }

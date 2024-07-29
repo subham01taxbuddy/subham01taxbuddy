@@ -158,16 +158,6 @@ export class LoginComponent implements OnInit {
       if (this.utilsService.isNonEmpty(userData)) {
 
         this.getSmeInfoDetails(userData.userId);
-        // if (userData.USER_ROLE.indexOf("ROLE_ADMIN") !== -1) {
-        //   this.router.navigate(['/tasks/assigned-users']);
-        // } else if (['ROLE_GST_AGENT', 'ROLE_NOTICE_AGENT', 'ROLE_ITR_AGENT', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL', 'ROLE_GST_CALLER', 'ROLE_NOTICE_CALLER'].some(item => userData.USER_ROLE.includes(item))) {
-        //   this.router.navigate(['/tasks/assigned-users']);
-        // } else if (userData.USER_ROLE.indexOf("ROLE_TPA_SME") !== -1) {
-        //   this.router.navigate(['pages/tpa-interested']);
-        // } else {
-        //   if (userData.USER_ROLE.length > 0)
-        //     this._toastMessageService.alert("error", "Access Denied.");
-        // }
       }
       if (userData) {
         this.gotoCloud(userData);
@@ -382,7 +372,6 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.loading = true;
-    // const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     const param = `/bo/sme-details-new/${userId}`;
     this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
     this.requestManager.requestCompleted.subscribe((event) => {
@@ -390,11 +379,6 @@ export class LoginComponent implements OnInit {
         if (event.error) {
           console.log('Error:', event.error);
           this._toastMessageService.alert("error", event.error.error.error);
-        } else {
-          // if (event?.result?.data[0].roles.includes('ROLE_FILER')) {
-          //   this.assignUnassignedUsersToFiler(event.result.data[0]);
-          // }
-          console.log('Success:', event.result);
         }
       }
     })
@@ -415,7 +399,6 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         this.loading = false;
         if (response.success) {
-          // this.utilsService.showSnackBar(response.message);
           sessionStorage.setItem('kmAuthToken', response?.data?.token);
           if (response?.data?.token) {
             this.kommunicateSsoService.loginKommunicateSdk(response?.data?.token);

@@ -32,8 +32,7 @@
                         <mat-label>Select Status</mat-label>
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
-                            <mat-option *ngFor="let drop of statusList" [value]="drop.value"
-                              (click)="getStatusValue(drop)">
+                            <mat-option *ngFor="let drop of statusList" [value]="drop.value">
                               {{ drop.name }}
                             </mat-option>
                           </mat-select>

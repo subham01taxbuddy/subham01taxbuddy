@@ -50,6 +50,7 @@ export const appRoutes: Routes = [
   {
     path: 'alert', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/alert/alert.module').then(m => m.AlertModule)
   },
+  
   { path: '**', redirectTo: 'login' },
 ];
 

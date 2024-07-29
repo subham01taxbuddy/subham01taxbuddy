@@ -17,8 +17,6 @@ font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</div
     </mat-form-field>
   </div>
   <div class="col-sm-3">
-    <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading || disableReAssign">Re-Assign
-      Call</button> -->
     <app-custom-button class="tbd-btn save-btn spsTp2" [disabled]="loading || disableReAssign"  [actions]="[reAssign]">
       Re-Assign Call
     </app-custom-button>

@@ -110,7 +110,7 @@ export class PrefillIdComponent implements OnInit {
       this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
       this.ITR_JSON.family instanceof Array
     ) {
-      this.ITR_JSON.family.filter((item: any) => {
+      this.ITR_JSON.family.forEach((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           let mName = item.mName ? item.mName : '';
           return item.fName + ' ' + mName + ' ' + item.lName;
@@ -5454,7 +5454,7 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Type
               ]?.ScheduleFA?.DtlsForeignCustodialAcc?.map((element) => ({
                 accountNumber: element?.AccountNumber,
-                accountOpeningDate: element?.AccOpenDate,
+                accountOpeningDate: moment(element?.AccOpenDate).toISOString(),
                 addressOfInstitution: element?.FinancialInstAddress,
                 cashValue: null,
                 closingBalance: element?.ClosingBalance,
@@ -5498,7 +5498,7 @@ export class PrefillIdComponent implements OnInit {
                 addressOfEntity: element?.AddressOfEntity,
                 zipCode: element?.ZipCode,
                 natureOfEntity: element?.NatureOfEntity,
-                dateOfInterest: element?.InterestAcquiringDate,
+                dateOfInterest: moment(element?.InterestAcquiringDate).toISOString(),
                 initialValue: element?.InitialValOfInvstmnt,
                 peakValue: element?.PeakBalanceDuringPeriod,
                 closingValue: element?.ClosingBalance,
@@ -5519,7 +5519,7 @@ export class PrefillIdComponent implements OnInit {
                 nameOfInstitution: element?.FinancialInstName,
                 addressOfInstitution: element?.FinancialInstAddress,
                 zipCode: element?.ZipCode,
-                dateOfContract: element?.ContractDate,
+                dateOfContract: moment(element?.ContractDate).toISOString(),
                 cashValue: element?.CashValOrSurrenderVal,
                 totalGrossAmountPaid: element?.TotGrossAmtPaidCredited,
                 accountNumber: null,
@@ -5550,7 +5550,7 @@ export class PrefillIdComponent implements OnInit {
                 nameOfEntity: element?.NameOfEntity,
                 address: element?.AddressOfEntity,
                 natureOfInterest: element?.NatureOfInt,
-                date: element?.DateHeld,
+                date: moment(element?.DateHeld).toISOString(),
                 totalInvestments: element?.TotalInvestment,
                 accruedIncome: element?.IncFromInt,
                 amount: element?.IncTaxAmt,
@@ -5592,7 +5592,7 @@ export class PrefillIdComponent implements OnInit {
                 zipCode: element?.ZipCode,
                 address: element?.AddressOfProperty,
                 ownerShip: element?.Ownership,
-                date: element?.DateOfAcq,
+                date: moment(element?.DateOfAcq).toISOString(),
                 totalInvestments: element?.TotalInvestment,
                 derivedIncome: element?.IncDrvProperty,
                 natureOfIncome: element?.NatureOfInc,
@@ -5633,7 +5633,7 @@ export class PrefillIdComponent implements OnInit {
                 zipCode: element?.ZipCode,
                 natureOfAsstes: element?.NatureOfAsset,
                 ownerShip: element?.Ownership,
-                date: element?.DateOfAcq,
+                date: moment(element?.DateOfAcq).toISOString(),
                 totalInvestments: element?.TotalInvestment,
                 derivedIncome: element?.IncDrvAsset,
                 natureOfIncome: element?.NatureOfInc,
@@ -5719,7 +5719,7 @@ export class PrefillIdComponent implements OnInit {
                 settlorAddress: element?.AddressOfSettlor,
                 beneficiariesName: element?.NameOfBeneficiaries,
                 beneficiariesAddress: element?.AddressOfBeneficiaries,
-                date: element?.DateHeld,
+                date: moment(element?.DateHeld).toISOString(),
                 isTaxableinYourHand: element?.IncDrvTaxFlag,
                 derivedIncome: element?.IncDrvFromTrust,
                 amount: element?.IncOfferedAmt,
