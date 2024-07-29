@@ -39,7 +39,9 @@ export class CustomerSignUpComponent implements OnInit {
   minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
-  minEndDate = new Date().toISOString().slice(0, 10);  loading: boolean;
+  minEndDate = new Date().toISOString().slice(0, 10);
+  loading: boolean;
+  showCsvMessage: boolean;
 
   constructor(
     public datePipe: DatePipe,
@@ -61,21 +63,31 @@ export class CustomerSignUpComponent implements OnInit {
 
   downloadReport() {
     // https://uat-api.taxbuddy.com/report/bo/customer-signup-report?fromDate=2023-12-29&toDate=2023-12-29&page=1&pageSize=20
+    this.loading=true;
+    this.showCsvMessage=true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     let param = `/bo/customer-signup-report?fromDate=${fromDate}&toDate=${toDate}`;
     // location.href = environment.url + param;
     this.reportService.invoiceDownload(param).subscribe((response:any) => {
-      const blob = new Blob([response], { type: 'application/octet-stream' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Customer-SignUp-Report.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      if(response){
+        this.loading=false;
+        const blob = new Blob([response], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Customer-SignUp-Report.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.showCsvMessage=false;
+      }else{
+        this.loading=false;
+        this.showCsvMessage=false;
+      }
+
     });
   }
 }

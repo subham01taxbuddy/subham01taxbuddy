@@ -150,6 +150,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
   }
+
   getRoleValue(role) {
 
   }
@@ -251,8 +252,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -263,19 +264,18 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
-       this.countData = response?.data;
+        this.countData = response?.data;
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }).catch(() =>{
+    }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     })
   }
 
   showReports = (pageChange?): Promise<any> => {
-    //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -342,8 +342,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -359,31 +359,37 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.itrFillingReport = response?.data?.content;
-        this.totalItrFiledCount=response?.data?.content[0].totalItrFiledCount;
-        this.config.totalItems = response?.data?.totalElements;
-        this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-        this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
-
-        const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
-        this.config.currentPage = currentPageNumber;
-
+        if (Array.isArray(response?.data?.content) && response?.data?.content?.length > 0){
+          this.itrFillingReport = response?.data?.content;
+        if (response?.data?.content.length > 0) {
+          this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
+        }
+          this.config.totalItems = response?.data?.totalElements;
+          this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+          this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
+          this.config.currentPage = currentPageNumber;
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert("error", "Data Not Found");
+          this.totalItrFiledCount = 0;
+        }
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
         this.totalItrFiledCount = 0;
       }
-    }).catch(() =>{
+    }).catch(() => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Error");
+      this._toastMessageService.alert("error", "Data Not Found");
       this.totalItrFiledCount = 0;
     })
   }
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         filerName: fillingData[i].filerName,
@@ -754,8 +760,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -833,9 +839,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
       this.config.totalItems = 0;
     }
-
-    // this.showReports();
-
   }
 
   // pageChanged(event) {
@@ -876,7 +879,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.getFilingCount();
       this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();
