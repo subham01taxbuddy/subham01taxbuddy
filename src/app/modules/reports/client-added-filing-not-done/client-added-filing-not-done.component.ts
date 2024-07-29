@@ -205,7 +205,7 @@ export class ClientAddedFilingNotDoneComponent implements OnInit {
 
   createRowData(fillingData) {
     console.log('payoutRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
         name: fillingData[i].name,
@@ -349,7 +349,6 @@ export class ClientAddedFilingNotDoneComponent implements OnInit {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = ''

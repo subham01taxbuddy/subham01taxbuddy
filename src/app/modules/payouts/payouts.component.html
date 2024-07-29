@@ -102,9 +102,6 @@
                       </div>
                     </div>
                     <div class="button-container">
-                      <!-- <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search"
-                          aria-hidden="true"></i> Search
-                      </button> -->
                       <app-custom-button class="srch-btn-1" [disabled]="loading" [actions]="[advanceSearch]" [actionParams]="[[advanceSearchKey.value]]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
@@ -138,7 +135,6 @@
             <span class="table-info-text">Payout Details based on search:</span>
           </div>
           <div class="col-sm-3" *ngIf="isEditAllowed">
-            <!-- <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>-->
             <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[approveSelected]">
               Approve
             </app-custom-button>

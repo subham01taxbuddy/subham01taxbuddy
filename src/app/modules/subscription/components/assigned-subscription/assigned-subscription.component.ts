@@ -21,7 +21,7 @@ import { Location, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 @Component({
   selector: 'app-assigned-subscription',

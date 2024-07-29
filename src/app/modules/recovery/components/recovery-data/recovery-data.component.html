@@ -10,7 +10,7 @@
 </div>
 
 <div class="expand">
-  <table *ngIf="groupedSnapshots.length" class="snapshots-table">
+  <table aria-label="snapshots-table" *ngIf="groupedSnapshots.length" class="snapshots-table">
     <thead>
       <tr>
         <th>Select</th>
@@ -31,11 +31,19 @@
             <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.version }}</td>
             <td>{{ fragment.fragmentName }}</td>
             <td>
-              <table class="state-table">
-                <tr *ngFor="let entry of getStateEntries(fragment.state)">
-                  <td>{{ entry.key }}:</td>
-                  <td>{{ entry.value }}</td>
-                </tr>
+              <table aria-label="state-table" class="state-table">
+                <thead style="display: none;">
+                  <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let entry of getStateEntries(fragment.state)">
+                    <td>{{ entry.key }}:</td>
+                    <td>{{ entry.value }}</td>
+                  </tr>
+                </tbody>
               </table>
             </td>
           </tr>

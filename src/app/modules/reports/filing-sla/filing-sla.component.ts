@@ -354,8 +354,6 @@ export class FilingSlaComponent implements OnInit {
       this.filingSlaReportGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-
-    // this.showReports();
   }
 
 
