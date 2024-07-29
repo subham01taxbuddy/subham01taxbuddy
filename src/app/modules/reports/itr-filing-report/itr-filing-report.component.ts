@@ -352,17 +352,22 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.itrFillingReport = response?.data?.content;
-        if (response?.data?.content.length > 0) {
-          this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
+        if (Array.isArray(response?.data?.content) && response?.data?.content?.length > 0){
+          this.itrFillingReport = response?.data?.content;
+          if (response?.data?.content.length > 0) {
+            this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
+          }
+          this.config.totalItems = response?.data?.totalElements;
+          this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+          this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
+          this.config.currentPage = currentPageNumber;
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert("error", "Data Not Found");
+          this.totalItrFiledCount = 0;
         }
-        this.config.totalItems = response?.data?.totalElements;
-        this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-        this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
-        const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
-        this.config.currentPage = currentPageNumber;
-
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
@@ -370,7 +375,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       }
     }).catch(() => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Error");
+      this._toastMessageService.alert("error", "Data Not Found");
       this.totalItrFiledCount = 0;
     })
   }
