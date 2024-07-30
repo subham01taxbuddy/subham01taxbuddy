@@ -230,6 +230,17 @@ export class SidebarComponent {
     },
 
     {
+      name:'Alert',
+      icon:'alert.png',
+      active:false,
+      url:null,
+      roles:['ROLE_ADMIN'],
+      submenu:[
+        {name: 'alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
+      ]
+  },
+
+    {
       name:'Data Recovery',
       icon:'recovery.png',
       active:false,

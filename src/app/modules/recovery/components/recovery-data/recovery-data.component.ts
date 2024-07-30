@@ -177,7 +177,7 @@ export class RecoveryDataComponent {
                     console.log('Response saved to DB');
 
                   } else {
-                    console.log('User chose not to save or an error occurred');
+                    console.log('User choose not to save or an error occurred');
 
                   }
                 });
