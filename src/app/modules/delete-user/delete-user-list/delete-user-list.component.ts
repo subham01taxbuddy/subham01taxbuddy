@@ -92,6 +92,7 @@ export class DeleteUserListComponent {
     this.mobileNumber.setValue('');
     this.fromDate.setValue('');
     this.toDate.setValue('');
+    this.config.totalItems= 0;
     this.usersGridOptions.api?.setRowData(this.createRowData([]));
     this.config.currentPage = 1;
   }
@@ -140,16 +141,21 @@ export class DeleteUserListComponent {
 
       console.log('url', dynamicUrl)
 
-      return NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).toPromise().then(res => {
+      NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
+        this.loading = false;
         if (Array.isArray(res.content)) {
-          this.deleteUserData = res.content;
-          console.log('list of delete req', this.deleteUserData)
-          this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
-          this.config.totalItems = res.totalElements;
+          if(res?.content?.length > 0){
+            this.deleteUserData = res.content;
+            console.log('list of delete req', this.deleteUserData)
+            this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
+            this.config.totalItems = res.totalElements;
+          }else{
+            this._toastMessageService.alert("error", 'No Data Found ');
+          }
         }
         this.loading = false;
         return resolve(true)
-      }).catch((err) => {
+      }, err => {
         this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
         this.loading = false;
         return resolve(false)
@@ -255,17 +261,24 @@ export class DeleteUserListComponent {
   }
 
   createRowData(userData: any) {
+    if (!userData || !Array.isArray(userData)) {
+      console.error('Invalid userData:', userData);
+      return [];
+    }
+
     let userArray = [];
+
     for (let i = 0; i < userData.length; i++) {
-      let deleteUserInfo: any = Object.assign({}, ...userArray[i], {
+      let deleteUserInfo = {
         userId: userData[i].userId,
         createdDate: this.utilsService.isNonEmpty(userData[i].createdDate) ? userData[i].createdDate : '-',
         name: userData[i].userName,
         mobileNumber: this.utilsService.isNonEmpty(userData[i].mobileNumber) ? userData[i].mobileNumber : '-',
-        emailAddress: this.utilsService.isNonEmpty(userData[i].email_address) ? userData[i].email_address : '-',
-      })
+        emailAddress: this.utilsService.isNonEmpty(userData[i].email_address) ? userData[i].email_address : '-'
+      };
       userArray.push(deleteUserInfo);
     }
+
     return userArray;
   }
 
