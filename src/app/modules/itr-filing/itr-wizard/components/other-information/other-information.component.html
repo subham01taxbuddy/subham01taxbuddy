@@ -627,7 +627,7 @@
                   <div><span class="span">Receipts received under the head : </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head"
+                    <input wholeNumber trim class="input-field" matInput placeholder="Receipts received under the head"
                       name="incomeReceived" formControlName="incomeReceived" maxlength="10"
                       (input)="validationBusiness()" required />
                     <mat-error *ngIf="
@@ -641,7 +641,7 @@
                   <div><span class="span">Amount apportioned in the hands of Spouse: </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput
+                    <input (input)="validationBusiness()" wholeNumber trim class="input-field" matInput
                       placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse"
                       formControlName="apportionedAmountOfSpouse" maxlength="10" required />
                     <mat-error *ngIf="
@@ -701,7 +701,7 @@
                   <div><span class="span">Receipts received under the head : </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head"
+                    <input wholeNumber trim class="input-field" matInput placeholder="Receipts received under the head"
                       name="incomeReceived" formControlName="incomeReceived" maxlength="10" (input)="validationCg()"
                       required />
                     <mat-error *ngIf="
@@ -715,7 +715,7 @@
                   <div><span class="span">Amount apportioned in the hands of Spouse : </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input (input)="validationCg()" digitsOnly trim class="input-field" matInput
+                    <input (input)="validationCg()" wholeNumber trim class="input-field" matInput
                       placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse"
                       formControlName="apportionedAmountOfSpouse" maxlength="10" required />
                     <mat-error *ngIf="
