@@ -21,6 +21,15 @@ export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
 
+interface Alert {
+  type: string;
+  message: string;
+  title: string;
+  applicableFrom: Date;
+  applicableTo: Date;
+  seen : boolean;
+}
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -49,6 +58,10 @@ export class NavbarComponent implements DoCheck {
   partnerType :any;
   userAffiliateID:any;
   checkEnv= environment.environment;
+
+  alerts: Alert[] = [];
+  showNotifications = false;
+
 
   constructor(
     private router: Router,
@@ -321,4 +334,38 @@ export class NavbarComponent implements DoCheck {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-}
+  getAlerts() {
+      this.userMsService.getAllAlert().subscribe(
+        (response: Alert[]) => {
+          this.alerts = response.map(alert => ({
+            ...alert,
+            applicableFrom: new Date(alert.applicableFrom),
+            applicableTo: new Date(alert.applicableTo)
+          }));
+         
+          this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+          console.log('All Alert list get:', this.alerts);
+        },
+        error => {
+          console.error('Error fetching alerts:', error);
+        }
+      );
+    }
+  
+    toggleNotifications() {
+      this.showNotifications = !this.showNotifications;
+      if (this.showNotifications) {
+        if (this.alerts.length === 0) {
+          this.getAlerts();
+        } else {
+          
+          this.alerts.forEach(alert => alert.seen = true);
+        }
+      }
+    }
+    markAsSeen(alert: Alert) {
+      alert.seen = true;
+    }
+    }
+  
+

@@ -126,7 +126,22 @@ export class UserMsService {
    return this.httpClient.post<T>(
       `http://localhost:8050/user/api-alert/create`,alertData,  { headers: this.headers });
   }
+  
+  getAllAlert<T>(): Observable<T>
+  {
+    this.headers= new HttpHeaders();
+    this.headers.append('Content-Type','application/json');
+   return this.httpClient.get<T>(
+      `http://localhost:8050/user/api-alert/All`,  { headers: this.headers });
+  }
 
+sendAlert<T>(alert : any): Observable<T>
+  {
+    this.headers= new HttpHeaders();
+    this.headers.append('Content-Type','application/json');
+   return this.httpClient.post<T>(
+      `http://localhost:8050/user/api-alert/send`,alert,  { headers: this.headers });
+  }
 
   postMethodAWSURL<T>(...param: any): Observable<any> {
     this.headers = new HttpHeaders();

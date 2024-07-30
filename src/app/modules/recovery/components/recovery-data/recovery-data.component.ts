@@ -6,6 +6,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { PopUpComponent } from '../pop-up/pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject, finalize, Observable } from 'rxjs';
 
 interface FragmentData {
   fragmentName: string;
@@ -31,10 +32,13 @@ export class RecoveryDataComponent {
   mobileNumber: string = '';
   isLoading: boolean = false;
   error: string | null = null;
+  private _isLoading = new BehaviorSubject<boolean>(false);
+  isLoading$: Observable<boolean> = this._isLoading.asObservable();
 
   jvSnapshots: any = [];
   selectedItems: string[] = [];
   groupedSnapshots: GroupedSnapshot[] = [];
+  isProcessingSnapshots: boolean = false;
 
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = ['version', 'fragment', 'state', 'commitDate'];
@@ -45,7 +49,10 @@ export class RecoveryDataComponent {
     private utilService: UtilsService, private dialog: MatDialog) { }
 
   search() {
-    this.utilService.getFilerIdByMobile(this.mobileNumber).subscribe(
+    this.isLoading = true;
+    this.utilService.getFilerIdByMobile(this.mobileNumber).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe(
       (response: any) => {
         console.log('api response', response);
 
@@ -53,15 +60,7 @@ export class RecoveryDataComponent {
           const openItrId = response.data.content[0].openItrId;
 
           if (openItrId) {
-            this.itrMs.getJvSnapshots(openItrId).subscribe(
-              (snapshotResponse: any) => {
-                this.processSnapshots(snapshotResponse['data']);
-
-              },
-              (snapshotError) => {
-                console.error('Error fetching JV Snapshots', snapshotError);
-              }
-            );
+            this.fetchJvSnapshots(openItrId);
           } else {
             console.error('No itrId found in the response');
           }
@@ -74,6 +73,23 @@ export class RecoveryDataComponent {
       }
     );
   }
+
+  fetchJvSnapshots(openItrId: string) {
+   
+    this._isLoading.next(true);
+    this.itrMs.getJvSnapshots(openItrId).pipe(
+      finalize(() => this._isLoading.next(false))
+    ).subscribe(
+      (snapshotResponse: any) => {
+        this.processSnapshots(snapshotResponse['data']);
+      },
+      (snapshotError) => {
+        console.error('Error fetching JV Snapshots', snapshotError);
+        this.error = 'Error fetching JV Snapshots';
+      }
+    );
+  }
+
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -86,30 +102,35 @@ export class RecoveryDataComponent {
   }
 
   processSnapshots(snapshots: any[]) {
-    const groupedMap = new Map<string, GroupedSnapshot>();
+    this.isProcessingSnapshots = true;
+    setTimeout(() => {
+      const groupedMap = new Map<string, GroupedSnapshot>();
 
-    snapshots.forEach(snapshot => {
-      const version = snapshot.version;
-      if (!groupedMap.has(version)) {
-        groupedMap.set(version, {
-          version,
-          commitDate: this.formatDate(snapshot.commitMetadata.commitDate),
-          fragments: [],
-          selected: false,
+      snapshots.forEach(snapshot => {
+        const version = snapshot.version;
+        if (!groupedMap.has(version)) {
+          groupedMap.set(version, {
+            version,
+            commitDate: this.formatDate(snapshot.commitMetadata.commitDate),
+            fragments: [],
+            selected: false,
+          });
+        }
 
+        const group = groupedMap.get(version)!;
+        group.fragments.push({
+          fragmentName: snapshot.globalId.fragment,
+          state: snapshot.state,
+          id: snapshot.id
         });
-      }
-
-      const group = groupedMap.get(version)!;
-      group.fragments.push({
-        fragmentName: snapshot.globalId.fragment,
-        state: snapshot.state,
-        id: snapshot.id
       });
-    });
-    this.groupedSnapshots = Array.from(groupedMap.values());
-    console.log('Grouped Snapshots:', this.groupedSnapshots);
+      this.groupedSnapshots = Array.from(groupedMap.values());
+      console.log('Grouped Snapshots:', this.groupedSnapshots);
+
+      this.isProcessingSnapshots = false;
+    }, 0);
   }
+
 
   toggleSelection(snapshot: GroupedSnapshot) {
     snapshot.selected = !snapshot.selected;
@@ -126,7 +147,10 @@ export class RecoveryDataComponent {
   }
 
   callPutApi() {
-    this.utilService.getFilerIdByMobile(this.mobileNumber).subscribe(
+    this._isLoading.next(true);
+    this.utilService.getFilerIdByMobile(this.mobileNumber).pipe(
+      finalize(() => this._isLoading.next(false))
+    ).subscribe(
       (response: any) => {
         console.log('api response', response);
 
@@ -135,7 +159,10 @@ export class RecoveryDataComponent {
 
 
           if (openItrId) {
-            this.itrMs.putJvSnapshots(this.selectedItems, openItrId).subscribe(
+            this._isLoading.next(true);
+            this.itrMs.putJvSnapshots(this.selectedItems, openItrId).pipe(
+              finalize(() => this._isLoading.next(false))
+            ).subscribe(
               (response) => {
                 console.log('Put API response:', response);
 

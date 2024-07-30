@@ -37,6 +37,36 @@
                 <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
                         aria-hidden="true"></i></button>
             </div>
+
+            <div class="page-container">
+                <div class="notification-container">
+                    <button class="notification-icon" (click)="toggleNotifications()">
+                        <i class="fa-solid fa-bell"></i>
+                      <span class="notification-badge" *ngIf="alerts.length > 0">{{ alerts.length }}</span>
+                    </button>
+                    <div class="notification-dropdown" *ngIf="showNotifications">
+                      <div class="notification-header">
+                        <h3>Notifications</h3>
+                      </div>
+                      <div class="notification-list">
+                        <div class="notification-item" *ngFor="let alert of alerts">
+                          <h4>{{ alert.title }}</h4>
+                          <p>{{ alert.message }}</p>
+                          <!-- <span class="notification-date">
+                            {{ alert.applicableFrom | date }} - {{ alert.applicableTo | date }}
+                          </span> -->
+                          <span class="notification-date">
+                            {{ alert.applicableFrom | date:'short' }} - {{ alert.applicableTo | date:'short' }}
+                          </span>
+                        </div>
+                        <div class="no-notifications" *ngIf="alerts.length === 0">
+                          No notifications
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
             <div *ngIf="showDropDown" class="header__breadcrumbs" style="float:right;cursor: pointer;">
               <div class="user" id="userDropdown" (click)="toggleDropdown()">
                   <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i> &nbsp;

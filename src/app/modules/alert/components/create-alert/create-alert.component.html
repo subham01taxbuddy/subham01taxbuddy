@@ -1,0 +1,55 @@
+<div class="clearfix">
+    <div class="align-items-center row">
+      <div class="col-sm-4">
+        <div class="hdTx">Create New Alert:</div>
+      </div>
+    </div>
+    <div class="rowClr">
+      <div class="surround">
+        <form [formGroup]="alertForm" (ngSubmit)="createAlert()">
+          <div class="row">
+            <div class="col-sm-3 spsTp">
+              <mat-label>Type:</mat-label>
+              <mat-form-field appearance="outline" class="class1">
+                <mat-select formControlName="type" required>
+                  <mat-option value="INFORMATION">Information</mat-option>
+                  <mat-option value="UPDATES">Updates</mat-option>
+                  <mat-option value="CRITICAL">Critical</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3 spsTp">
+              <mat-label>Title:</mat-label>
+              <mat-form-field appearance="outline" class="class1">
+                <input matInput placeholder="Title" formControlName="title" autocomplete="off" type="text">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3 spsTp">
+              <mat-label>Message:</mat-label>
+              <mat-form-field appearance="outline" class="class1">
+                <input matInput placeholder="Message" formControlName="message" required type="text">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3 spsTp">
+              <mat-label>Applicable From:</mat-label>
+              <mat-form-field appearance="outline" class="class1">
+                <input matInput placeholder="Applicable From" formControlName="applicableFrom" required type="datetime-local">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3 spsTp">
+              <mat-label>Applicable To:</mat-label>
+              <mat-form-field appearance="outline" class="class1">
+                <input matInput placeholder="Applicable To" formControlName="applicableTo" required type="datetime-local">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12 spsTp bdrTp">
+              <button type="submit" class="rt-btn">Create Alert</button>
+              
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
