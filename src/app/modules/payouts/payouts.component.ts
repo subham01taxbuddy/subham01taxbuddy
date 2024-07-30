@@ -292,7 +292,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   payOutStatusChanged() {
-    // this.selectedStatus=''
     this.config.currentPage = 1;
     let queryString = '';
     if (this.utilsService.isNonEmpty(this.searchVal)) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -58,7 +58,7 @@ export class BreakUpComponent implements OnInit {
       this.inputValues[i] = valueToSet;
     }
 
-    // setting total 
+    // setting total
     this.total = this.getTotal;
     const presentInputs = this.inputValues.filter((value) => value > 0).length;
 
