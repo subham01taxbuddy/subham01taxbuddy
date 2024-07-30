@@ -38,7 +38,7 @@ export class PopUpComponent {
     this.utilService.saveItrObject(itrObject).subscribe(
       (result) => {
         console.log('Response saved to DB:', result);
-        console.log('Updates Applied and Data Recoverd Successfully')
+        console.log('Updates Applied and Data Recoverd Successfully');
         this.dialogRef.close(true);
       },
       (error) => {
