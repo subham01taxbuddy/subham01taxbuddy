@@ -93,7 +93,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
         return this.isSelectionAllowed(rowNode.data);
-        // return rowNode.data ? this.showReassignmentBtn.length : false;
       },
       onGridReady: params => {
       },
