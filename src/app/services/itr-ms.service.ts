@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {InterceptorSkipHeader} from "./token-interceptor";
+import { InterceptorSkipHeader } from "./token-interceptor";
 @Injectable({
   providedIn: 'root',
 })
@@ -113,7 +113,6 @@ export class ItrMsService {
   postMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-
     return this.httpClient.post<T>(
       environment.url + this.microService + param[0],
       param[1],
@@ -228,7 +227,7 @@ export class ItrMsService {
         })
       );
   }
-  downloadFileAsPost(param: any, fileType: any, request:any) {
+  downloadFileAsPost(param: any, fileType: any, request: any) {
     console.log('get Param', param);
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
@@ -280,18 +279,23 @@ export class ItrMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get<T>(
-      environment.url+this.microService +`/list-itr/${openItrId}`,
-    { headers: this.headers }
+      `http://localhost:9050/itr/list-itr/${openItrId}`,
+      { headers: this.headers }
     );
   }
 
-  putJvSnapshots<T>(ids: string[],openItrId:number): Observable<T> {
+  putJvSnapshots<T>(ids: string[], openItrId: number): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     const body = { ids: ids };
     return this.httpClient.put<T>(
-       environment.url+this.microService +`/update-snapshot/${openItrId}`, body ,
+     `http://localhost:9050/itr/update-snapshot/${openItrId}`, body,
       { headers: this.headers }
     );
   }
+
+  
+
 }
+//environment.url + this.microService + `/list-itr/${openItrId}`
+// environment.url + this.microService +`/update-snapshot/${openItrId}`,body

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -7,25 +8,11 @@ import { UtilsService } from 'src/app/services/utils.service';
   selector: 'app-pop-up',
   templateUrl: './pop-up.component.html',
   styleUrls: ['./pop-up.component.scss'],
-  styles: [`
-    .mat-dialog-actions {
-      padding: 16px 24px;
-    }
-    .action-button {
-      min-width: 80px;
-      margin-left: 8px;
-    }
-    .mat-raised-button.mat-primary {
-      background-color: #1976d2 !important;
-    }
-    .mat-raised-button:not(.mat-primary) {
-      background-color: #f5f5f5 !important;
-      color: rgba(0, 0, 0, 0.87) !important;
-    }
-  `]
+ 
 })
 export class PopUpComponent {
   formattedData: string;
+  isLoading = new BehaviorSubject<boolean>(false);
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<PopUpComponent>,
     private utilService: UtilsService) {
@@ -45,6 +32,7 @@ export class PopUpComponent {
   }
 
   onYesClick(): void {
+    this.isLoading.next(true);
     const itrObject = this.data.response.data as ITR_JSON;
 
     this.utilService.saveItrObject(itrObject).subscribe(

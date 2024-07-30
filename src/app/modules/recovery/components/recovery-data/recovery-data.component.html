@@ -4,13 +4,29 @@
       <label for="mobileNumber">Mobile No:</label>
       <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
     </div>
-    <button class="btn" (click)="search()">Search</button>
-
+    <button class="btn" (click)="search()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Search</span>
+      <span *ngIf="isLoading">Searching...</span>
+    </button>
   </div>
+
+  <div *ngIf="isLoading" class="loader">
+    <mat-spinner diameter="80"></mat-spinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+
 </div>
 
 <div class="expand">
-  <table aria-label="snapshots-table" *ngIf="groupedSnapshots.length" class="snapshots-table">
+  <div *ngIf="isProcessingSnapshots" class="loader">
+    <mat-spinner diameter="80"></mat-spinner>
+    <p>Processing snapshots...</p>
+  </div>
+  <table *ngIf="!isProcessingSnapshots && groupedSnapshots.length" class="snapshots-table">
     <thead>
       <tr>
         <th>Select</th>
@@ -31,19 +47,11 @@
             <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.version }}</td>
             <td>{{ fragment.fragmentName }}</td>
             <td>
-              <table aria-label="state-table" class="state-table">
-                <thead style="display: none;">
-                  <tr>
-                    <th>Key</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let entry of getStateEntries(fragment.state)">
-                    <td>{{ entry.key }}:</td>
-                    <td>{{ entry.value }}</td>
-                  </tr>
-                </tbody>
+              <table class="state-table">
+                <tr *ngFor="let entry of getStateEntries(fragment.state)">
+                  <td>{{ entry.key }}:</td>
+                  <td>{{ entry.value }}</td>
+                </tr>
               </table>
             </td>
           </tr>
@@ -52,4 +60,10 @@
     </tbody>
   </table>
 </div>
-<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>
+<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0 || (isLoading$ | async)">
+  <span *ngIf="!(isLoading$ | async)">Apply</span>
+  <span *ngIf="isLoading$ | async">Applying...</span>
+</button>
+<div *ngIf="isLoading$ | async" class="loader-overlay">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
