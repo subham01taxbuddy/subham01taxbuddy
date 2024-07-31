@@ -230,13 +230,13 @@ export class SidebarComponent {
     },
 
     {
-      name:'Alert',
+      name:'Alerts',
       icon:'alert.png',
       active:false,
       url:null,
       roles:['ROLE_ADMIN'],
       submenu:[
-        {name: 'alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
+        {name: 'Create Alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
       ]
   },
 
