@@ -32,10 +32,21 @@ import { SpeedTestModule } from 'ng-speed-test';
 import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import {SummaryConversionService} from "./services/summary-conversion.service";
-import { RecoveryModule } from './modules/recovery/recovery.module';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
+import { AppConstants } from './modules/shared/constants';
 
- 
+const dbConfig: DBConfig  = {
+  name: 'taxbuddyIndexedDb',
+  version: 1,
+  objectStoresMeta: [{
+    store: 'taxbuddy',
+    storeConfig: { keyPath: 'id', autoIncrement: true },
+    storeSchema: [
+      { name: AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, keypath: AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, options: { unique: false } },
+    ]
+  }]
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,8 +70,8 @@ import { MatButtonModule } from '@angular/material/button';
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
-    SpeedTestModule
-    
+    SpeedTestModule,
+    NgxIndexedDBModule.forRoot(dbConfig)
   ],
   providers: [
     NavbarService,

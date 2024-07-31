@@ -16,6 +16,8 @@ import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
 import { KommunicateSsoService } from './services/kommunicate-sso.service';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -41,6 +43,7 @@ export class AppComponent {
     private http: HttpClient,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
+    private dbService: NgxIndexedDBService,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -196,6 +199,9 @@ export class AppComponent {
       .then(data => {
         this.kommunicateSsoService.logoutKommunicateChat();
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 

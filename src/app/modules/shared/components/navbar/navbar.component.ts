@@ -16,6 +16,7 @@ import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service'
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 import { Subscription } from "rxjs";
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -76,7 +77,8 @@ export class NavbarComponent implements DoCheck {
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
     private renderer: Renderer2,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dbService: NgxIndexedDBService
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -246,6 +248,9 @@ export class NavbarComponent implements DoCheck {
         this.smeLogout();
         this.loading = false;
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
       })
@@ -346,42 +351,27 @@ export class NavbarComponent implements DoCheck {
         }));
 
         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-        console.log('All Active Alert list get:', this.alerts);
-        this.removeExpiredAlerts();
+        console.log('All Alert list get:', this.alerts);
       },
       error => {
         console.error('Error fetching alerts:', error);
       }
     );
   }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     if (this.showNotifications) {
       if (this.alerts.length === 0) {
         this.getAlerts();
-        this.startExpirationCheck();
       } else {
-        this.stopExpirationCheck();
+
+        this.alerts.forEach(alert => alert.seen = true);
       }
     }
   }
-  private startExpirationCheck() {
-    if (!this.intervalId) {
-      this.intervalId = setInterval(() => this.removeExpiredAlerts(), 60000);
-    }
-  }
-  private stopExpirationCheck() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-      this.intervalId = null;
-    }
-  }
-  removeExpiredAlerts() {
-    const now = new Date();
-    this.alerts = this.alerts.filter(alert => alert.applicableTo > now);
-  }
-  ngOnDestroy() {
-    this.stopExpirationCheck();
+  markAsSeen(alert: Alert) {
+    alert.seen = true;
   }
 }
 
