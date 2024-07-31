@@ -354,7 +354,6 @@ export class NavbarComponent implements DoCheck {
       }
     );
   }
-
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     if (this.showNotifications) {

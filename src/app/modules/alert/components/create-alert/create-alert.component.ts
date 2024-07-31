@@ -63,8 +63,6 @@ export class CreateAlertComponent {
       applicableTo: new Date().toISOString()
     });
   }
-
-
   getAlert()
   {
     this.userMsService.getAllAlert().subscribe(
@@ -74,5 +72,7 @@ export class CreateAlertComponent {
 
     )
   }
+
+  
 }
 
