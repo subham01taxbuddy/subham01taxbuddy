@@ -414,7 +414,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.loading = false;
               return resolve(true);
 
-            }else{
+            } else {
               this.toastMsgService.alert('error', res.message);
               this.myItrsGridOptions.api?.setRowData(
                 this.createOnSalaryRowData([])
@@ -442,6 +442,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   async downloadReport() {
+    if (!this.leaderUserId) {
+      this.utilsService.showSnackBar('Please select leader Name to download csv');
+      return;
+    }
     this.loading = true;
     this.showCsvMessage = true;
     let userFilter = '';
@@ -1382,7 +1386,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
               this.loading = false;
               if (result.success) {
                 this.toastMsgService.alert('success', result.message);
-              }else{
+              } else {
                 this.utilsService.showSnackBar(
                   'Error while making call, Please try again.'
                 );
