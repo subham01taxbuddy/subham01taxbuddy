@@ -464,6 +464,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   async downloadReport() {
+    if (!this.leaderUserId) {
+      this.utilsService.showSnackBar('Please select leader Name to download csv');
+      return;
+    }
     this.loading = true;
     this.showCsvMessage = true;
     let userFilter = '';
