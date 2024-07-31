@@ -380,46 +380,48 @@ export class FilingsComponent implements OnInit, OnDestroy {
         .toPromise()
         .then(
           (res: any) => {
-            if (res.success == false) {
+            console.log('filingTeamMemberId: ', res);
+            if (res.success) {
+              if (
+                res?.data?.content instanceof Array &&
+                res?.data?.content?.length > 0
+              ) {
+                this.itrDataList = res?.data?.content;
+                this.config.totalItems = res?.data?.totalElements;
+                this.myItrsGridOptions.api?.setRowData(
+                  this?.createOnSalaryRowData(this?.itrDataList)
+                );
+                this.cacheManager.initializeCache(this?.itrDataList);
+
+                const currentPageNumber = pageNo + 1;
+                this.cacheManager.cachePageContent(
+                  currentPageNumber,
+                  this?.itrDataList
+                );
+                this.config.currentPage = currentPageNumber;
+              } else {
+                this.itrDataList = [];
+                this.config.totalItems = 0;
+                this.myItrsGridOptions.api?.setRowData(
+                  this.createOnSalaryRowData([])
+                );
+                if (res.message) {
+                  this.toastMsgService.alert('error', res.message);
+                } else {
+                  this.toastMsgService.alert('error', 'No Data Found');
+                }
+              }
+              this.loading = false;
+              return resolve(true);
+
+            }else{
               this.toastMsgService.alert('error', res.message);
               this.myItrsGridOptions.api?.setRowData(
                 this.createOnSalaryRowData([])
               );
               this.config.totalItems = 0;
+              return resolve(false);
             }
-            console.log('filingTeamMemberId: ', res);
-            // TODO Need to update the api here to get the proper data like user management
-            if (
-              res?.data?.content instanceof Array &&
-              res?.data?.content?.length > 0
-            ) {
-              this.itrDataList = res?.data?.content;
-              this.config.totalItems = res?.data?.totalElements;
-              this.myItrsGridOptions.api?.setRowData(
-                this?.createOnSalaryRowData(this?.itrDataList)
-              );
-              this.cacheManager.initializeCache(this?.itrDataList);
-
-              const currentPageNumber = pageNo + 1;
-              this.cacheManager.cachePageContent(
-                currentPageNumber,
-                this?.itrDataList
-              );
-              this.config.currentPage = currentPageNumber;
-            } else {
-              this.itrDataList = [];
-              this.config.totalItems = 0;
-              this.myItrsGridOptions.api?.setRowData(
-                this.createOnSalaryRowData([])
-              );
-              if (res.message) {
-                this.toastMsgService.alert('error', res.message);
-              } else {
-                this.toastMsgService.alert('error', 'No Data Found');
-              }
-            }
-            this.loading = false;
-            return resolve(true);
           },
           (error) => {
             this.myItrsGridOptions.api?.setRowData(
@@ -1378,13 +1380,12 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.reviewService.postMethod(param, reqBody).subscribe(
             (result: any) => {
               this.loading = false;
-              if (result.success == false) {
+              if (result.success) {
+                this.toastMsgService.alert('success', result.message);
+              }else{
                 this.utilsService.showSnackBar(
                   'Error while making call, Please try again.'
                 );
-              }
-              if (result.success) {
-                this.toastMsgService.alert('success', result.message);
               }
             },
             (error) => {
