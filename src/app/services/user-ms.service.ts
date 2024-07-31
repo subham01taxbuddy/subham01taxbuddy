@@ -116,31 +116,35 @@ export class UserMsService {
     return this.httpClient.delete(environment.url + param[0], this.headers);
     //  .map(response => response.json());
 
-   
+
   }
 
-  postMethodAlert<T>(alertData : any): Observable<T>
-  {
-    this.headers= new HttpHeaders();
-    this.headers.append('Content-Type','application/json');
-   return this.httpClient.post<T>(
-      `http://localhost:8050/user/api-alert/create`,alertData,  { headers: this.headers });
-  }
-  
-  getAllAlert<T>(): Observable<T>
-  {
-    this.headers= new HttpHeaders();
-    this.headers.append('Content-Type','application/json');
-   return this.httpClient.get<T>(
-      `http://localhost:8050/user/api-alert/All`,  { headers: this.headers });
+  postMethodAlert<T>(alertData: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.post<T>(
+      `http://localhost:8050/user/api-alert/create`, alertData, { headers: this.headers });
   }
 
-sendAlert<T>(alert : any): Observable<T>
-  {
-    this.headers= new HttpHeaders();
-    this.headers.append('Content-Type','application/json');
-   return this.httpClient.post<T>(
-      `http://localhost:8050/user/api-alert/send`,alert,  { headers: this.headers });
+  getAllAlert<T>(): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.get<T>(
+      `http://localhost:8050/user/api-alert/All-active`, { headers: this.headers });
+  }
+
+  removeExpiredAlerts<T>(): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.delete<T>(
+      `http://localhost:8050/user/api-alert/All-active`, { headers: this.headers });
+  }
+
+  sendAlert<T>(alert: any): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.post<T>(
+      `http://localhost:8050/user/api-alert/send`, alert, { headers: this.headers });
   }
 
   postMethodAWSURL<T>(...param: any): Observable<any> {

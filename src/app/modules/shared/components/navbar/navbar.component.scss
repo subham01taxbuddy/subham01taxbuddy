@@ -161,10 +161,10 @@
 
 .notification-container {
   position: fixed;
-top: 20px;
-left: 50%;
-transform: translateX(-50%);
-z-index: 1000;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 }
 
 .notification-icon {
@@ -172,8 +172,8 @@ z-index: 1000;
   border: none;
   cursor: pointer;
   padding: 10px;
-  left:75px;
-  
+  left: 75px;
+
 }
 
 .notification-badge {
@@ -242,18 +242,20 @@ z-index: 1000;
   text-align: center;
   color: #777;
 }
+
 .notification-icon {
   position: relative;
   background: none;
   border: none;
   cursor: pointer;
   padding: 10px;
-  margin-left: auto; 
+  margin-left: auto;
 
 }
+
 .navbar-container {
   display: flex;
-  justify-content: flex-end; 
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
 }

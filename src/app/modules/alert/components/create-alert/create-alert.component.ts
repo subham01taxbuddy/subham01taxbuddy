@@ -64,6 +64,7 @@ export class CreateAlertComponent {
     });
   }
 
+
   getAlert()
   {
     this.userMsService.getAllAlert().subscribe(

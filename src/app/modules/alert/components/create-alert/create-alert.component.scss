@@ -86,14 +86,12 @@
     background-color: #6c757d;
     cursor: not-allowed;
   }
-  
   mat-label {
     font-weight: 500;
     margin-bottom: 5px;
     display: block;
   }
   
-  /* Responsive adjustments */
   @media (max-width: 576px) {
     .col-sm-3, .col-sm-4 {
       flex: 0 0 100%;

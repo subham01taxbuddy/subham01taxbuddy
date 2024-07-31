@@ -15,7 +15,7 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
 
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
@@ -27,7 +27,7 @@ interface Alert {
   title: string;
   applicableFrom: Date;
   applicableTo: Date;
-  seen : boolean;
+  seen: boolean;
 }
 
 @Component({
@@ -47,20 +47,22 @@ export class NavbarComponent implements DoCheck {
 
   loggedInUserId: number;
   showAffiliateBtn = false;
-  showCopyLinkButton =false;
-  affLink:any;
+  showCopyLinkButton = false;
+  affLink: any;
   showAffButton = false;
 
   loading: boolean = false;
   nav: boolean;
   isDropdownOpen = false;
-  showDropDown:boolean =false;
-  partnerType :any;
-  userAffiliateID:any;
-  checkEnv= environment.environment;
+  showDropDown: boolean = false;
+  partnerType: any;
+  userAffiliateID: any;
+  checkEnv = environment.environment;
 
   alerts: Alert[] = [];
   showNotifications = false;
+  private intervalId: any;
+
 
 
   constructor(
@@ -80,17 +82,17 @@ export class NavbarComponent implements DoCheck {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
     this.partnerType = this.utilsService.getPartnerType();
-    if(role.includes('ROLE_LEADER')){
-      this.showCopyLinkButton =true;
-    }else{
+    if (role.includes('ROLE_LEADER')) {
+      this.showCopyLinkButton = true;
+    } else {
       this.showCopyLinkButton = false;
     }
     this.fetchAffiliateId();
 
-    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
-      this.showDropDown =true;
-    }else{
-      this.showDropDown=false;
+    if (role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType === 'INDIVIDUAL')) {
+      this.showDropDown = true;
+    } else {
+      this.showDropDown = false;
     }
 
     this.renderer.listen('window', 'click', (event: Event) => {
@@ -136,13 +138,13 @@ export class NavbarComponent implements DoCheck {
       this.close();
     }
     this.subscription = this.sidebarService.isLoading
-        .subscribe((state) => {
-          if (!state) {
-            this.nav = true;
-          } else {
-            this.nav =  false;
-          }
-        });
+      .subscribe((state) => {
+        if (!state) {
+          this.nav = true;
+        } else {
+          this.nav = false;
+        }
+      });
   }
 
   open() {
@@ -169,10 +171,10 @@ export class NavbarComponent implements DoCheck {
         } else {
           this.showAffiliateBtn = true;
         }
-        if(response.data.referralLink){
+        if (response.data.referralLink) {
           this.affLink = response.data.referralLink;
           this.showAffButton = true;
-        }else{
+        } else {
           this.showAffButton = false;
         }
       } else {
@@ -320,14 +322,14 @@ export class NavbarComponent implements DoCheck {
   }
 
 
-  navigateToProfile(){
+  navigateToProfile() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/partner-profile'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/partner-profile'], { queryParams: { userId: userId } },)
   }
 
-  navigateToAssistantManagement(){
+  navigateToAssistantManagement() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/assistant-management'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/assistant-management'], { queryParams: { userId: userId } },)
   }
 
   toggleDropdown() {
@@ -335,37 +337,53 @@ export class NavbarComponent implements DoCheck {
   }
 
   getAlerts() {
-      this.userMsService.getAllAlert().subscribe(
-        (response: Alert[]) => {
-          this.alerts = response.map(alert => ({
-            ...alert,
-            applicableFrom: new Date(alert.applicableFrom),
-            applicableTo: new Date(alert.applicableTo)
-          }));
-         
-          this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-          console.log('All Alert list get:', this.alerts);
-        },
-        error => {
-          console.error('Error fetching alerts:', error);
-        }
-      );
-    }
-  
-    toggleNotifications() {
-      this.showNotifications = !this.showNotifications;
-      if (this.showNotifications) {
-        if (this.alerts.length === 0) {
-          this.getAlerts();
-        } else {
-          
-          this.alerts.forEach(alert => alert.seen = true);
-        }
+    this.userMsService.getAllAlert().subscribe(
+      (response: Alert[]) => {
+        this.alerts = response.map(alert => ({
+          ...alert,
+          applicableFrom: new Date(alert.applicableFrom),
+          applicableTo: new Date(alert.applicableTo)
+        }));
+
+        this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+        console.log('All Active Alert list get:', this.alerts);
+        this.removeExpiredAlerts();
+      },
+      error => {
+        console.error('Error fetching alerts:', error);
+      }
+    );
+  }
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      if (this.alerts.length === 0) {
+        this.getAlerts();
+        this.startExpirationCheck();
+      } else {
+        this.stopExpirationCheck();
       }
     }
-    markAsSeen(alert: Alert) {
-      alert.seen = true;
+  }
+  private startExpirationCheck() {
+    if (!this.intervalId) {
+      this.intervalId = setInterval(() => this.removeExpiredAlerts(), 60000);
     }
+  }
+  private stopExpirationCheck() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
-  
+  }
+  removeExpiredAlerts() {
+    const now = new Date();
+    this.alerts = this.alerts.filter(alert => alert.applicableTo > now);
+  }
+  ngOnDestroy() {
+    this.stopExpirationCheck();
+  }
+}
+
 
