@@ -9,6 +9,7 @@ import { NavbarService } from "./navbar.service";
 import { UserMsService } from "./user-ms.service";
 import { VendorService } from './vendor.service';
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -18,6 +19,7 @@ export class TokenInterceptor implements HttpInterceptor {
     public utilsService: UtilsService,
     private userMsService: UserMsService,
     private vendorService : VendorService,
+    private dbService: NgxIndexedDBService
   ) { }
 
   private tokenExpired(token: string) {
@@ -162,6 +164,9 @@ export class TokenInterceptor implements HttpInterceptor {
     Auth.signOut()
       .then(data => {
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 

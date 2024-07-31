@@ -27,7 +27,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
-
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 @Component({
   selector: 'app-filings',
   templateUrl: './filings.component.html',
@@ -108,8 +108,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private kommunicateSsoService: KommunicateSsoService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private dbService: NgxIndexedDBService
   ) {
+    dbService['currentStore'] = "taxbuddy";
     this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
@@ -182,12 +184,44 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   getAllFilerList() {
+    this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+      console.log('success? ', successDeleted);
+    });
     this.loading = true;
     const param = `/bo/sme/all-list?page=0&pageSize=10000`;
     this.reportService.getMethod(param).subscribe(
       (res: any) => {
         this.loading = false;
-        if (res.success == false) {
+        if (res.success) {
+          console.log('filingTeamMemberId: ', res);
+          if (
+            res?.data?.content instanceof Array &&
+            res?.data?.content?.length > 0
+          ) {
+            this.allFilerList = res?.data?.content;
+            // sessionStorage.setItem(
+            //   AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
+            //   JSON.stringify(this.allFilerList)
+            // );
+            this.dbService
+              .bulkAdd('taxbuddy', [
+                {
+                  ALL_RESIGNED_ACTIVE_SME_LIST: JSON.stringify(this.allFilerList),
+                },
+              ]).subscribe((result) => {
+                console.log('indexDB set data result: ', result);
+              });
+
+            this.myItrsGridOptions.api?.setColumnDefs(this.columnDef());
+          } else {
+            this.allFilerList = [];
+            if (res.message) {
+              this.toastMsgService.alert('error', res.message);
+            } else {
+              this.toastMsgService.alert('error', 'No Data Found');
+            }
+          }
+        } else {
           this.allFilerList = [];
           this.toastMsgService.alert('error', res.message);
         }

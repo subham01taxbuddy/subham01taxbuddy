@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { JsonToCsvService } from '../modules/shared/services/json-to-csv.service';
 import { ToastMessageService } from './toast-message.service';
 import { UtilsService } from './utils.service';
+import { AppConstants } from '../modules/shared/constants';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +24,21 @@ export class GenericCsvService {
     private jsonToCsvService: JsonToCsvService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
+    private dbService: NgxIndexedDBService
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-    this.allResignedActiveSmeList = JSON.parse(sessionStorage.getItem('ALL_RESIGNED_ACTIVE_SME_LIST'));
+    // this.allResignedActiveSmeList = JSON.parse(sessionStorage.getItem('ALL_RESIGNED_ACTIVE_SME_LIST'));
     this.allPlanDetails = JSON.parse(sessionStorage.getItem('ALL_PLAN_LIST'));
   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any, taxpayable?) {
+    if (name === 'Filed-ITR') {
+      this.dbService.getAll('taxbuddy').subscribe((result: any) => {
+        console.log('indexDB get data results: ', result);
+        this.allResignedActiveSmeList = JSON.parse(result[0][AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST]);
+      });
+    }
     let sortJson = encodeURI(JSON.stringify(sortBy));
     let paramUrl = param;
     if (page == 0) {

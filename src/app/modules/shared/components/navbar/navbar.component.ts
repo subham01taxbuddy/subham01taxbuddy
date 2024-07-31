@@ -15,7 +15,9 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -37,17 +39,17 @@ export class NavbarComponent implements DoCheck {
 
   loggedInUserId: number;
   showAffiliateBtn = false;
-  showCopyLinkButton =false;
-  affLink:any;
+  showCopyLinkButton = false;
+  affLink: any;
   showAffButton = false;
 
   loading: boolean = false;
   nav: boolean;
   isDropdownOpen = false;
-  showDropDown:boolean =false;
-  partnerType :any;
-  userAffiliateID:any;
-  checkEnv= environment.environment;
+  showDropDown: boolean = false;
+  partnerType: any;
+  userAffiliateID: any;
+  checkEnv = environment.environment;
 
   constructor(
     private router: Router,
@@ -60,23 +62,24 @@ export class NavbarComponent implements DoCheck {
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
     private renderer: Renderer2,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dbService: NgxIndexedDBService
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
     this.partnerType = this.utilsService.getPartnerType();
-    if(role.includes('ROLE_LEADER')){
-      this.showCopyLinkButton =true;
-    }else{
+    if (role.includes('ROLE_LEADER')) {
+      this.showCopyLinkButton = true;
+    } else {
       this.showCopyLinkButton = false;
     }
     this.fetchAffiliateId();
 
-    if(role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType ==='INDIVIDUAL')){
-      this.showDropDown =true;
-    }else{
-      this.showDropDown=false;
+    if (role.includes('ROLE_FILER') && (this.partnerType === 'PRINCIPAL' || this.partnerType === 'INDIVIDUAL')) {
+      this.showDropDown = true;
+    } else {
+      this.showDropDown = false;
     }
 
     this.renderer.listen('window', 'click', (event: Event) => {
@@ -125,13 +128,13 @@ export class NavbarComponent implements DoCheck {
       this.close();
     }
     this.subscription = this.sidebarService.isLoading
-        .subscribe((state) => {
-          if (!state) {
-            this.nav = true;
-          } else {
-            this.nav =  false;
-          }
-        });
+      .subscribe((state) => {
+        if (!state) {
+          this.nav = true;
+        } else {
+          this.nav = false;
+        }
+      });
   }
 
   open() {
@@ -158,10 +161,10 @@ export class NavbarComponent implements DoCheck {
         } else {
           this.showAffiliateBtn = true;
         }
-        if(response.data.referralLink){
+        if (response.data.referralLink) {
           this.affLink = response.data.referralLink;
           this.showAffButton = true;
-        }else{
+        } else {
           this.showAffButton = false;
         }
       } else {
@@ -233,6 +236,9 @@ export class NavbarComponent implements DoCheck {
         this.smeLogout();
         this.loading = false;
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
       })
@@ -310,14 +316,14 @@ export class NavbarComponent implements DoCheck {
   }
 
 
-  navigateToProfile(){
+  navigateToProfile() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/partner-profile'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/partner-profile'], { queryParams: { userId: userId } },)
   }
 
-  navigateToAssistantManagement(){
+  navigateToAssistantManagement() {
     let userId = this.utilsService.getLoggedInUserID();
-    this.router.navigate(['/sme-management-new/assistant-management'],{queryParams: { userId: userId }},)
+    this.router.navigate(['/sme-management-new/assistant-management'], { queryParams: { userId: userId } },)
   }
 
   toggleDropdown() {
