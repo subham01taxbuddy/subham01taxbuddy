@@ -258,7 +258,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
           let objITR
           if (this.rowData.serviceType === 'ITRU') {
-            objITR = this.utilsService.createEmptyJson(profile, 'ITRU', currentFyDetails[0].assessmentYear, "2022-2023");
+            objITR = this.utilsService.createEmptyJson(profile, 'ITRU', "2023-2024", "2022-2023");
             objITR.isITRU = true;
           } else {
             objITR = this.utilsService.createEmptyJson(profile, 'ITR', currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
