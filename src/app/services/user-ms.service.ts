@@ -123,9 +123,9 @@ export class UserMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.post<T>(
-      `http://localhost:8050/user/api-alert/create`, alertData, { headers: this.headers });
+      `https://uat-api.taxbuddy.com/user/api-alert/create`, alertData, { headers: this.headers });
   }
-
+//`http://localhost:8050/user/api-alert/create`, alertData, { headers: this.headers });
   getAllAlert<T>(): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
