@@ -1888,16 +1888,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       let allowanceArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
       allowanceArray.controls = [];
       this.addByDefaultAllowances(allowance);
-      // for (let i = 0; i < allowance.length; i++) {
-      //   this.addExemptIncome(allowance[i]);
-      // }
     }
     if (this.localEmployer.allowance.length == 0) {
       let allowanceArray = this.allowanceFormGroup.controls['allowances'] as UntypedFormArray;
       allowanceArray.controls = [];
       this.addByDefaultAllowances();
-
-      // this.addExemptIncome();
     }
 
     /* Deductions Set Values */
@@ -1961,15 +1956,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         'entertainmentAllow'
       ].updateValueAndValidity();
     }
-    // this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
-    // this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
-
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
   }
 
   addByDefaultAllowances(allowance?) {
     if (allowance) {
-      var newArr = allowance.map((x) => x.allowanceType)
+      let newArr = allowance.map((x) => x.allowanceType)
       let data;
       if (!newArr.includes('HOUSE_RENT')) {
         data = {
@@ -2434,7 +2425,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.localEmployer = this.utilsService.updateEmployerBifurcation(this.localEmployer, 'SEC17_1', this.bifurcationResult);
     }
     if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('BASIC_SALARY')) {
-      // this.bifurcationResult.SEC17_1.value.BASIC_SALARY = 0;
       let data = {
         'id': null,
         'description': null,
@@ -2445,7 +2435,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.localEmployer.salary.push(data);
     }
     if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('HOUSE_RENT')) {
-      // this.bifurcationResult.SEC17_1.value.HOUSE_RENT = 0;
       let data = {
         'id': null,
         'description': null,
@@ -2456,7 +2445,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.localEmployer.salary.push(data);
     }
     if (!Object.keys(this.bifurcationResult.SEC17_1.value).includes('LTA')) {
-      // this.bifurcationResult.SEC17_1.value.LTA = 0;
       let data = {
         'id': null,
         'description': null,

@@ -279,7 +279,7 @@ export class ItrMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get<T>(
-      `http://localhost:9050/itr/list-itr/${openItrId}`,
+        environment.url + this.microService + `/list-itr/${openItrId}`,
       { headers: this.headers }
     );
   }
@@ -289,7 +289,7 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
     const body = { ids: ids };
     return this.httpClient.put<T>(
-     `http://localhost:9050/itr/update-snapshot/${openItrId}`, body,
+        environment.url + this.microService +`/update-snapshot/${openItrId}`,body,
       { headers: this.headers }
     );
   }
@@ -297,5 +297,3 @@ export class ItrMsService {
   
 
 }
-//environment.url + this.microService + `/list-itr/${openItrId}`
-// environment.url + this.microService +`/update-snapshot/${openItrId}`,body
