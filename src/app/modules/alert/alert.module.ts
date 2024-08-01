@@ -12,6 +12,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SmeManagementNewRoutingModule } from '../sme-management-new/sme-management-new.routing';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -29,7 +34,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MaterialModule,
     NgxPaginationModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgxMaterialTimepickerModule
   ]
 })
 export class AlertModule { }

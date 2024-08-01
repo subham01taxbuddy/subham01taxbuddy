@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @Component({
   selector: 'app-create-alert',
@@ -14,7 +19,7 @@ export class CreateAlertComponent {
   channels = ['EMAIL', 'PUSHMESSAGE'];
   errorMessage: string | null = null;
 
-  constructor(private userMsService: UserMsService, private fb: FormBuilder) {}
+  constructor(private userMsService: UserMsService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.initForm();
@@ -25,19 +30,28 @@ export class CreateAlertComponent {
       type: ['', Validators.required],
       title: ['', Validators.required],
       message: ['', Validators.required],
-      applicableFrom: [new Date().toISOString(), Validators.required],
-      applicableTo: [new Date().toISOString(), Validators.required]
+      applicableFromDate: [new Date(), Validators.required],
+      applicableFromTime: ['00:00', Validators.required],
+      applicableToDate: [new Date(), Validators.required],
+      applicableToTime: ['23:59', Validators.required]
     });
   }
 
   createAlert() {
+
     if (this.alertForm.valid) {
+      const formValue = this.alertForm.value;
+      const fromDateTime = this.combineDateTime(formValue.applicableFromDate, formValue.applicableFromTime);
+      const toDateTime = this.combineDateTime(formValue.applicableToDate, formValue.applicableToTime);
+
       const formattedData = {
-        ...this.alertForm.value,
-        applicableFrom: new Date(this.alertForm.value.applicableFrom).toISOString(),
-        applicableTo: new Date(this.alertForm.value.applicableTo).toISOString()
+        type: formValue.type,
+        title: formValue.title,
+        message: formValue.message,
+        applicableFrom: fromDateTime.toISOString(),
+        applicableTo: toDateTime.toISOString()
       };
-      
+
       this.userMsService.postMethodAlert(formattedData).subscribe(
         response => {
           console.log('Alert created successfully:', response);
@@ -59,20 +73,27 @@ export class CreateAlertComponent {
       type: '',
       title: '',
       message: '',
-      applicableFrom: new Date().toISOString(),
-      applicableTo: new Date().toISOString()
+      applicableFromDate: new Date(),
+      applicableFromTime: '00:00',
+      applicableToDate: new Date(),
+      applicableToTime: '23:59'
     });
   }
-  getAlert()
-  {
-    this.userMsService.getAllAlert().subscribe(
-      response =>{
-        console.log('All Alert list get:'+ response);
-      }
-
-    )
+  combineDateTime(date: Date, time: string): Date {
+    const [timeStr, period] = time.split(' ');
+    let [hours, minutes] = timeStr.split(':').map(Number);
+    
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+    
+    const combinedDate = new Date(date);
+    combinedDate.setHours(hours, minutes);
+    return combinedDate;
   }
-
-  
 }
+
+
 
