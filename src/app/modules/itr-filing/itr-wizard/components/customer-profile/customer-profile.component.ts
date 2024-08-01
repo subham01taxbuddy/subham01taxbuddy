@@ -603,8 +603,8 @@ export class CustomerProfileComponent implements OnInit {
 
   deleteFile(filePath) {
     let adminId = this.utilsService.getLoggedInUserID();
-    var path = '/itr/cloud/files?actionBy=' + adminId;
-    var reqBody = [filePath];
+    let path = '/itr/cloud/files?actionBy=' + adminId;
+    let reqBody = [filePath];
     console.log(
       'URL path: ',
       path,
@@ -713,7 +713,7 @@ export class CustomerProfileComponent implements OnInit {
   //This method call not in used
   uploadDocument(document) {
     this.loading = true;
-    var s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${document.name
+    let s3ObjectUrl = `${this.ITR_JSON.userId}/${this.getFilePath()}/${document.name
       }`;
     let cloudFileMetaData =
       '{"fileName":"' +
@@ -890,11 +890,11 @@ export class CustomerProfileComponent implements OnInit {
   }
 
   setFilingDate() {
-    var id = this.customerProfileForm.controls['orgITRAckNum'].value;
-    var lastSix = id.substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
+    let id = this.customerProfileForm.controls['orgITRAckNum'].value;
+    let lastSix = id.substr(id.length - 6);
+    let day = lastSix.slice(0, 2);
+    let month = lastSix.slice(2, 4);
+    let year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day);
 

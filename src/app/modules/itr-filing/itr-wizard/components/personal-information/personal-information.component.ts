@@ -18,7 +18,7 @@ import {
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
@@ -2333,7 +2333,7 @@ export class PersonalInformationComponent implements OnInit {
   createBankDetailsForm(
     obj: {
       ifsCode?: string;
-      name?: String;
+      name?: string;
       accountNumber?: string;
       hasRefund?: boolean;
       hasEdit?: boolean;
@@ -2421,7 +2421,6 @@ export class PersonalInformationComponent implements OnInit {
 
   getUserDataByPan(pan) {
     if (this.customerProfileForm.controls['panNumber'].valid) {
-      const token = sessionStorage.getItem(AppConstants.TOKEN);
       if (
         this.utilsService.isNonEmpty(
           this.customerProfileForm.controls['panNumber']
@@ -2541,7 +2540,7 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.bankDetails.length > 0
     ) {
       this.customerProfileForm.controls['bankDetails'] = this.fb.array([]);
-      var bank = <UntypedFormArray>this.customerProfileForm.get('bankDetails');
+      let bank = <UntypedFormArray>this.customerProfileForm.get('bankDetails');
       this.ITR_JSON.bankDetails.forEach((obj) => {
         bank.push(this.createBankDetailsForm(obj));
       });
@@ -2614,7 +2613,7 @@ export class PersonalInformationComponent implements OnInit {
 
   isFormValid() {
     //check if at least one account is selected for refund
-    var isBankSelected = false;
+    let isBankSelected = false;
     this.customerProfileForm.controls['bankDetails'].value.forEach((bank) => {
       if (bank['hasRefund']) {
         isBankSelected = true;
@@ -2771,8 +2770,8 @@ export class PersonalInformationComponent implements OnInit {
 
   deleteFile(filePath) {
     let adminId = this.utilsService.getLoggedInUserID();
-    var path = '/itr/cloud/files?actionBy=' + adminId;
-    var reqBody = [filePath];
+    let path = '/itr/cloud/files?actionBy=' + adminId;
+    let reqBody = [filePath];
     console.log(
       'URL path: ',
       path,
@@ -2854,11 +2853,11 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   setFilingDate() {
-    var id = this.customerProfileForm.controls['form10IEAckNo'].value;
-    var lastSix = id.substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
+    let id = this.customerProfileForm.controls['form10IEAckNo'].value;
+    let lastSix = id.substr(id.length - 6);
+    let day = lastSix.slice(0, 2);
+    let month = lastSix.slice(2, 4);
+    let year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day);
 

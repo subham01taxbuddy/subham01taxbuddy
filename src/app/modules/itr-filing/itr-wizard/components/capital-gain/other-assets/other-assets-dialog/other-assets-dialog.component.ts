@@ -21,7 +21,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
   templateUrl: './other-assets-dialog.component.html',
 })
 export class OtherAssetsDialogComponent implements OnInit {
-  @Input() isAddOtherAssets: Number;
+  @Input() isAddOtherAssets: number;
   assetDetailsForm!: UntypedFormGroup;
   assetType = 'GOLD';
   config: any;

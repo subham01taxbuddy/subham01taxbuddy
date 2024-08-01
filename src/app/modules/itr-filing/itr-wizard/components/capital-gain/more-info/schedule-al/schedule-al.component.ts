@@ -249,7 +249,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           this.utilsService.showSnackBar(
             'To Switch/Add New Asset Please fill in all the mandatory fields in the current Asset'
           );
-          return;
         }
       });
     }

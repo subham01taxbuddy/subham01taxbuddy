@@ -153,10 +153,6 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(true);
   }
 
-  saveAll() {
-
-  }
-
   subscription: Subscription
 
   subscribeToEmitter(componentRef) {

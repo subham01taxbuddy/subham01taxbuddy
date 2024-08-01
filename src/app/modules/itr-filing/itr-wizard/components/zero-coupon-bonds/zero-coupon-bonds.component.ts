@@ -1,10 +1,9 @@
 import {
   Component, ElementRef,
   EventEmitter,
-  Input,
   OnInit,
   Output,
-  SimpleChanges, ViewChild,
+  ViewChild,
 } from '@angular/core';
 import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -104,9 +103,7 @@ export class ZeroCouponBondsComponent
     this.maximumDate = new Date();
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
-      this.bondType === 'bonds'
-        ? (this.title = ' Bonds & Debenture')
-        : (this.title = 'Zero Coupon Bonds');
+      this.title = this.bondType === 'bonds' ? 'Bonds & Debenture' : 'Zero Coupon Bonds'
     }
 
     this.config = {
@@ -173,9 +170,7 @@ export class ZeroCouponBondsComponent
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
 
             }
-            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
-              this.addMoreBondsData(element);
-            } else if (this.bondType === 'bonds' && element.whetherDebenturesAreListed) {
+            if ((this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) || (this.bondType === 'bonds' && element.whetherDebenturesAreListed)) {
               this.addMoreBondsData(element);
             }
           });
@@ -193,9 +188,7 @@ export class ZeroCouponBondsComponent
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
 
             }
-            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
-              this.addMoreBondsData(element);
-            } else if (this.bondType === 'bonds' && !element.whetherDebenturesAreListed) {
+            if ((this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) || (this.bondType === 'bonds' && !element.whetherDebenturesAreListed)) {
               this.addMoreBondsData(element);
             }
           });
@@ -220,7 +213,6 @@ export class ZeroCouponBondsComponent
     this.activeIndex = -1;
 
     this.getImprovementYears();
-    // this.onChanges();
     this.updateDeductionUI();
   }
 
@@ -331,7 +323,6 @@ export class ZeroCouponBondsComponent
   }
 
   onSaveClick() {
-    // event.preventDefault();
     setTimeout(() => {
       if (this.selectedFormGroup.pending) {
         // Wait for all async validators to complete
@@ -652,6 +643,22 @@ export class ZeroCouponBondsComponent
     ];
   }
 
+  getType(bonds) {
+    if (bonds.controls['isIndexationBenefitAvailable'].value) {
+      return 'GOLD';
+    } else {
+      if (this.bondType === 'zeroCouponBonds') {
+        return 'ZERO_COUPON_BONDS';
+      } else {
+        if (bonds.controls['whetherDebenturesAreListed'].value) {
+          return 'ZERO_COUPON_BONDS';
+        } else {
+          return 'BONDS';
+        }
+      }
+    }
+  }
+
   getGainType(bonds) {
     if (
       bonds.controls['purchaseDate'].value &&
@@ -660,13 +667,8 @@ export class ZeroCouponBondsComponent
       let param = '/calculate/indexed-cost';
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
-          ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-            ? 'ZERO_COUPON_BONDS'
-            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
-      if (bonds.controls['isIndexationBenefitAvailable'].value === false) {
+      let type = this.getType(bonds);
+      if (!bonds.controls['isIndexationBenefitAvailable'].value) {
         bonds.controls['indexCostOfAcquisition'].setValue(0);
         bonds.controls['indexCostOfImprovement'].setValue(0);
       }
@@ -707,12 +709,7 @@ export class ZeroCouponBondsComponent
     if (bonds.valid) {
       this.selectedFormGroup.markAsPending();
       this.loading = true;
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
-          ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-            ? 'ZERO_COUPON_BONDS'
-            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+      let type = this.getType(bonds);
       let request = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',
@@ -815,9 +812,6 @@ export class ZeroCouponBondsComponent
           !(element as UntypedFormGroup).controls['isIndexationBenefitAvailable'].value
           && !(element as UntypedFormGroup).controls['whetherDebenturesAreListed'].value
         ) {
-          let costOfImprovement = (element as UntypedFormGroup).controls[
-            'costOfImprovement'
-          ].value;
           bondImprovement.push({
             srn: (element as UntypedFormGroup).controls['srn'].value,
             dateOfImprovement: (element as UntypedFormGroup).controls[
@@ -834,9 +828,6 @@ export class ZeroCouponBondsComponent
         }
       });
 
-      // if (!bondsList || bondsList.length === 0) {
-      //   this.deductionForm.reset();
-      // }
       const bondData = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: this.ITR_JSON.assesseeType,
@@ -859,9 +850,7 @@ export class ZeroCouponBondsComponent
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
         }
       } else {
-        // if (bondData.assetDetails.length > 0) {
         this.Copy_ITR_JSON.capitalGain?.push(bondData);
-        // }
       }
 
       //here we need to check for debentures which have indexation benefits
@@ -1160,7 +1149,6 @@ export class ZeroCouponBondsComponent
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       if (res.success) {
         this.improvementYears = res.data;
-        // console.log(res);
       }
     });
   }
@@ -1172,8 +1160,6 @@ export class ZeroCouponBondsComponent
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
-    // console.log(yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)));
-    // console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
     if (purchaseMonth > 2) {
       if (yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0) {
         yearsList = yearsList.splice(
@@ -1195,8 +1181,6 @@ export class ZeroCouponBondsComponent
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
-      //this.calculateCapitalGain(formGroupName, '', index);
-      // this.calculateIndexCost(bonds);
     }
   }
   calculateIndexCost(asset, type?) {
@@ -1207,7 +1191,6 @@ export class ZeroCouponBondsComponent
       this.calculateTotalCG(asset);
       return;
     }
-    let gainType = asset.controls['gainType'].value;
 
     let selectedYear = moment(asset.controls['sellDate'].value);
     let sellFinancialYear =

@@ -17,8 +17,8 @@ export class ForgotPasswordComponent implements OnInit {
   @Output() sendValue = new EventEmitter<any>();
 
   forgotPasswordForm!: UntypedFormGroup;
-  isError: Boolean = false;
-  busy: Boolean = false;
+  isError: boolean = false;
+  busy: boolean = false;
   errorMessage = '';
 
   mode = 'MOBILE';

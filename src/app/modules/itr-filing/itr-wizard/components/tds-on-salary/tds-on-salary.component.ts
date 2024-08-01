@@ -137,13 +137,6 @@ export class TdsOnSalaryComponent implements OnInit {
         JSON.stringify(this.Copy_ITR_JSON)
       );
 
-      let result = {
-        type: 'tdsOnSalary',
-        cgObject: this.salaryForm.value,
-        rowIndex: this.data.rowIndex,
-      };
-      // this.dialogRef.close(result);
-
       this.formDataSubmitted.emit(this.Copy_ITR_JSON.taxPaid['onSalary']);
       this.onSave.emit({
         type: 'tdsOnSalary',
@@ -191,7 +184,6 @@ export class TdsOnSalaryComponent implements OnInit {
   }
 
   addMore(item?) {
-    const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
 
     if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
@@ -202,9 +194,7 @@ export class TdsOnSalaryComponent implements OnInit {
         return;
       }
     }
-    // if (salaryJsonArray?.length > 0) {
     salaryArray.push(this.createForm(item));
-    // }
     if (!item) {
       this.activeIndex = salaryArray.length - 1;
       this.paginator.pageIndex = this.activeIndex;

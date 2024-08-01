@@ -69,7 +69,7 @@ export class HousePropertyComponent implements OnInit {
   EEStatus: boolean;
   EAStatus: boolean;
   storedIndex: any;
-  storedValue: String;
+  storedValue: string;
   selectedIndexes: number[] = [];
   PREV_ITR_JSON: any;
 

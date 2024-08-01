@@ -8,7 +8,6 @@ import {
 import { CustomerProfileComponent } from '../../components/customer-profile/customer-profile.component';
 import { PersonalInformationComponent } from '../../components/personal-information/personal-information.component';
 import { OtherInformationComponent } from '../../components/other-information/other-information.component';
-import { waitUntil } from 'ag-grid-community/dist/lib/utils/function';
 import { UtilsService } from '../../../../../services/utils.service';
 
 @Component({
@@ -43,7 +42,7 @@ export class AllPersonalInformationComponent implements OnInit {
     this.isEditOther = true;
   }
   setStep(index: number) {
-    if(this.step != index) {
+    if (this.step != index) {
       this.step = index;
     }
   }

@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -8,7 +8,6 @@ import {
   NewCapitalGain,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
@@ -24,7 +23,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   step = 0;
-  isAddOtherAssetsImprovement: Number;
+  isAddOtherAssetsImprovement: number;
   deductionForm!: UntypedFormGroup;
   config: any;
   index: number;
@@ -455,10 +454,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  editForm() { }
-
-  closed() { }
-
   isAssetSelected() {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
@@ -482,7 +477,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (asset) =>
         !selected.includes(asset?.srn)
     );
-    this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
+    this.assetList = this.assetList.filter((asset) => !asset?.hasEdit);
 
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions

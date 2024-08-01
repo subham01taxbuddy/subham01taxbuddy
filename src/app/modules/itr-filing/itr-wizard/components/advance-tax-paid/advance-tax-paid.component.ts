@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./advance-tax-paid.component.scss'],
 })
 export class AdvanceTaxPaidComponent implements OnInit {
-  @Input() isAddAdvance: Number;
+  @Input() isAddAdvance: number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
   salaryForm: UntypedFormGroup;
@@ -92,7 +92,6 @@ export class AdvanceTaxPaidComponent implements OnInit {
           this.utilsService.showSnackBar(
             'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
-          return;
         }
       });
     }

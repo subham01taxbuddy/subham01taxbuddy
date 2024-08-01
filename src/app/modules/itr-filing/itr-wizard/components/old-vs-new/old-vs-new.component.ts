@@ -1362,8 +1362,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         );
       }
     } else {
-      const param = '/tax/old-vs-new';
-
       forkJoin([
         this.itrMsService.postMethod('/tax/old-regime', this.ITR_JSON),
         this.itrMsService.postMethod('/tax/new-regime', this.ITR_JSON)
@@ -1371,12 +1369,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         next: ([data1, data2]) => {
           this.resultOld = data1;
           this.resultNew = data2;
-          // console.log('result is=====', data1, data2);
-          // Process the results
           this.displayComparison();
         },
         error: (error) => {
-          // this.error = error;
           console.error('Error fetching data:', error);
           this.loading = false;
           this.errorMessage =
@@ -1743,12 +1738,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.dueDateOver = true;
       this.allowNewRegime =
         environment.environment === 'UAT' ? true : !this.dueDateOver;
-      return;
     } else {
       this.dueDateOver = false;
       this.allowNewRegime =
         environment.environment === 'UAT' ? true : !this.dueDateOver;
-      return;
     }
   }
 
@@ -2053,7 +2046,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.itrMsService.downloadFileAsPost(param, 'application/pdf', request).subscribe(
       (result) => {
         console.log('pdf Result', result);
-        var FileSaver = require('file-saver');
+        let FileSaver = require('file-saver');
         const fileURL = webkitURL.createObjectURL(result);
         window.open(fileURL);
         let fileName = this.ITR_JSON.panNumber + ' ' + 'old-vs-new' + '.pdf';

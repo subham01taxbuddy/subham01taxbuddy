@@ -2,7 +2,7 @@ import {
   Component, ElementRef, EventEmitter,
   OnChanges,
   OnInit,
-  Output,
+  Output, Input,
   SimpleChanges, ViewChild,
 } from '@angular/core';
 import {
@@ -12,11 +12,9 @@ import {
   UntypedFormBuilder,
   Validators, NgForm,
 } from '@angular/forms';
-import { Input } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON, NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment/moment';
 import { RequestManager } from "../../../../../../shared/services/request-manager";
@@ -40,7 +38,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   loading: boolean = false;
   index: number;
   @Input() goldCg: NewCapitalGain;
-  @Input() isAddOtherAssetsImprovement: Number;
+  @Input() isAddOtherAssetsImprovement: number;
   @Input() data: any;
   @Output() onSave = new EventEmitter();
   selectedIndexes: number[] = [];

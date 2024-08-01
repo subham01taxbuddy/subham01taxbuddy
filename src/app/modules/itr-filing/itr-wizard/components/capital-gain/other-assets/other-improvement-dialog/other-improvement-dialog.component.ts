@@ -3,12 +3,10 @@ import {
   Component,
   Inject,
   OnInit,
-  SimpleChanges,
+  SimpleChanges, Input
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormControl, UntypedFormArray } from '@angular/forms';
-import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-other-improvement-dialog',
@@ -21,7 +19,7 @@ export class OtherImprovementDialogComponent implements OnInit {
   improvements: UntypedFormArray;
   isImprovement = new UntypedFormControl();
 
-  @Input() isAddOtherAssetsImprovement: Number;
+  @Input() isAddOtherAssetsImprovement: number;
   config: any;
 
   constructor(

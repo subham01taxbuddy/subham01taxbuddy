@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./tcs.component.scss'],
 })
 export class TcsComponent implements OnInit {
-  @Input() isAddTcs: Number;
+  @Input() isAddTcs: number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
   salaryForm: UntypedFormGroup;
@@ -85,7 +85,6 @@ export class TcsComponent implements OnInit {
           this.utilsService.showSnackBar(
             'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
-          return;
         }
       });
     }
