@@ -1,3 +1,4 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="clearfix">
   <div class="align-items-center row">
     <div class="col-sm-4">
@@ -58,7 +59,7 @@
             </mat-form-field>
           </div>
           <div class="col-sm-12 spsTp bdrTp">
-            <button type="submit" class="rt-btn">Create Alert</button>
+            <button type="submit" class="rt-btn" [disabled]="loading">Create Alert</button>
           </div>
         </div>
       </form>

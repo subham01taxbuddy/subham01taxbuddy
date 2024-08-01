@@ -343,6 +343,7 @@ export class NavbarComponent implements DoCheck {
   }
 
   getAlerts() {
+    this.loading = true;
     this.userMsService.getAllAlert().subscribe(
       (response: Alert[]) => {
         this.alerts = response.map(alert => ({
@@ -350,11 +351,13 @@ export class NavbarComponent implements DoCheck {
           applicableFrom: new Date(alert.applicableFrom),
           applicableTo: new Date(alert.applicableTo)
         }));
-
+        this.loading = false;
         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
         console.log('All Alert list get:', this.alerts);
+        
       },
       error => {
+        this.loading = false;
         console.error('Error fetching alerts:', error);
       }
     );
