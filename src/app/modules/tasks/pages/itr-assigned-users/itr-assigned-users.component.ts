@@ -556,8 +556,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     // console.log(data);
     // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
     let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
-    return  !(data.serviceType === 'ITR' && !data.filerUserId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
-        && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
+    return !(data.serviceType === 'ITR' && !data.filerUserId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
+      && Math.abs(moment(data.statusUpdatedDate).diff(moment.now())) / 1000 / 60 <= AppConstants.DISABLITY_TIME_MINS);
   }
 
   usersCreateColumnDef(itrStatus) {
@@ -1816,8 +1816,6 @@ export class ItrAssignedUsersComponent implements OnInit {
 
 
   async downloadReport() {
-    this.loading = true;
-    this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     if (this.utilsService.isNonEmpty(this.searchParam.emailId)) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
@@ -1849,21 +1847,33 @@ export class ItrAssignedUsersComponent implements OnInit {
       });
     }
 
-
+    let filerId;
     if (this.filerId === this.agentId) {
+      filerId = this.filerId;
       param = param + `&filerUserId=${this.filerId}`;
     }
 
     if (this.partnerType === 'PRINCIPAL') {
       param = param + '&searchAsPrincipal=true';
     };
+    let leaderId;
     if (this.leaderId === this.agentId) {
+      leaderId = this.leaderId;
       param = param + `&leaderUserId=${this.leaderId}`;
     }
 
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      leaderId = this.agentId;
       param = param + `&leaderUserId=${this.agentId}`;
     }
+    if (!leaderId && !filerId) {
+      this.utilsService.showSnackBar('Please select leader Name to download csv');
+      return;
+    }
+
+    this.loading = true;
+    this.showCsvMessage = true;
+
 
     if (this.utilsService.isNonEmpty(this.taxPayable)) {
       param = param + `&taxPayable=${this.taxPayable}`;
@@ -1921,7 +1931,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       fieldName = fieldName.concat(taxPayableArray);
     }
     await this.genericCsvService.downloadReport(
-      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {},this.taxPayable);
+      environment.url + '/report', param, 0, 'ITR-Assigned Users', fieldName, {}, this.taxPayable);
     this.loading = false;
     this.showCsvMessage = false;
   }
