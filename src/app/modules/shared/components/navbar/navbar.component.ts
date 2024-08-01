@@ -18,6 +18,7 @@ import { SidebarService } from 'src/app/services/sidebar.service';
 import { Subscription } from "rxjs";
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
+
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
