@@ -13,7 +13,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
   styleUrls: ['./create-alert.component.scss']
 })
 export class CreateAlertComponent {
-
+  loading : boolean = false;
   alertForm: FormGroup;
   alertTypes = ['INFORMATION', 'UPDATES', 'CRITICAL'];
   channels = ['EMAIL', 'PUSHMESSAGE'];
@@ -38,6 +38,7 @@ export class CreateAlertComponent {
   }
 
   createAlert() {
+    this.loading = true;
 
     if (this.alertForm.valid) {
       const formValue = this.alertForm.value;
@@ -55,15 +56,18 @@ export class CreateAlertComponent {
       this.userMsService.postMethodAlert(formattedData).subscribe(
         response => {
           console.log('Alert created successfully:', response);
+          this.loading = false;
           this.errorMessage = null;
           this.resetForm();
         },
         error => {
+          this.loading = false;
           console.error('Error creating alert:', error);
           this.errorMessage = 'Failed to create alert. Please try again later.';
         }
       );
     } else {
+      this.loading = false;
       this.errorMessage = 'Please fill in all required fields.';
     }
   }
