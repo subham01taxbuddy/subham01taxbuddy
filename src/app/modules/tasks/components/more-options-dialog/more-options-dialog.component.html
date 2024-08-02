@@ -51,7 +51,7 @@
     </button>
   </span>
   <span *ngIf="this.data.serviceType === 'ITR' && this.data.itrObjectStatus === 'ITR_FILED' ">
-    <button type="button" class="more-new-button" title="Insurance" (click)="giveInsurance()">
+    <button *ngIf="false" type="button" class="more-new-button" title="Insurance" (click)="giveInsurance()">
       <i class="fa fa-ambulance" aria-hidden="true"></i>&nbsp;&nbsp;Insurance
     </button>
   </span>
