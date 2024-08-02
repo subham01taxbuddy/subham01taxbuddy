@@ -47,26 +47,6 @@ export class AllPersonalInformationComponent implements OnInit {
     }
   }
 
-  closed(type) {
-    if (type === 'customer') {
-      this.isEditCustomer = true;
-    } else if (type === 'personal') {
-      this.isEditPersonal = true;
-    } else if (type === 'other') {
-      this.isEditOther = true;
-    }
-  }
-
-  editForm(type) {
-    if (type === 'customer') {
-      this.isEditCustomer = true;
-    } else if (type === 'personal') {
-      this.isEditPersonal = true;
-    } else if (type === 'other') {
-      this.isEditOther = true;
-    }
-  }
-
   goBack() {
     this.saveAndNext.emit(true);
   }
