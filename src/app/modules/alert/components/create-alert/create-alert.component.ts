@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-
 @Component({
   selector: 'app-create-alert',
   templateUrl: './create-alert.component.html',
@@ -86,13 +80,13 @@ export class CreateAlertComponent {
   combineDateTime(date: Date, time: string): Date {
     const [timeStr, period] = time.split(' ');
     let [hours, minutes] = timeStr.split(':').map(Number);
-    
+
     if (period === 'PM' && hours !== 12) {
       hours += 12;
     } else if (period === 'AM' && hours === 12) {
       hours = 0;
     }
-    
+
     const combinedDate = new Date(date);
     combinedDate.setHours(hours, minutes);
     return combinedDate;

@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, firstValueFrom, map, startWith } from 'rxjs';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -254,10 +254,10 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/calling-summary?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
+    return firstValueFrom(this.reportService.getMethod(param)).then((response: any) => {
       this.callSummaryData = response?.data;
-
-    }).catch(()=>{
+      this.loading = false;
+    }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
     });
@@ -293,19 +293,20 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceTypeFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
+    return firstValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.statusWiseCountData = response?.data?.content[0]?.statusWiseData[0];
-        console.log('data from filer dash statuswiae', this.statusWiseCountData)
+        console.log('data from filer dash statuswise', this.statusWiseCountData);
       } else {
-        this.loading = false;
         this._toastMessageService.alert('error', response.message);
       }
-    }).catch(()=>{
+    })
+    .catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
-    })
+    });
   }
 
   getInvoiceReports=():Promise<any> => {
@@ -333,20 +334,19 @@ export class DashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.invoiceData = response.data[0];
-
-        } else {
-          this.loading = false;
-          this._toastMessageService.alert("error", response.message);
-        }
-      }).catch(()=>{
-        this.loading = false;
-      })
+    return firstValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.invoiceData = response.data[0];
+      } else {
+        this._toastMessageService.alert('error', response.message);
+      }
+    })
+    .catch(() => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'Error retrieving invoice data');
+    });
   }
 
   getPaymentReceivedList=(configType):Promise<any> => {

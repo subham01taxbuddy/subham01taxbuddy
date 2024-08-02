@@ -9,7 +9,6 @@ import { SharedModule } from '../shared/shared.module';
 import { AgGridModule } from 'ag-grid-angular';
 import { MaterialModule } from '../shared/material.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SmeManagementNewRoutingModule } from '../sme-management-new/sme-management-new.routing';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';

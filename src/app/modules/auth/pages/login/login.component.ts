@@ -271,50 +271,72 @@ export class LoginComponent implements OnInit {
   apiCallCounter = 0;
   updateCognitoId(data: any) {
     const param = `/user_account/${data.attributes['phone_number'].substring(3, 13)}/${data.attributes.sub}`;
-    this.userMsService.userPutMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      console.log('Cognito Id updated result:', res);
-      data.deleteAttributes(['custom:user_type'], (err: any, result: any) => {
-        if (err) {
-          console.log('error while deleting after migration:', err); return;
-        }
-        console.log('User migrated successfully and key deleted:', result);
-      });
-
-      this.setUserDataInsession(data, res);
-    }, error => {
-      this.apiCallCounter = this.apiCallCounter + 1;
-      if (this.apiCallCounter < 3) {
-        this.updateCognitoId(data);
-      } else {
+    this.userMsService.userPutMethod(param).subscribe({
+      next: (res: any) => {
         this.loading = false;
-        this._toastMessageService.alert("error", 'Please contact our adminstrator, (** we need to tackale this point)');
-      }
-      console.log('Cognito Id failed result:', error);
+        console.log('Cognito Id updated result:', res);
+        data.deleteAttributes(['custom:user_type'], (err: any, result: any) => {
+          if (err) {
+            console.log('Error while deleting after migration:', err);
+            return;
+          }
+          console.log('User migrated successfully and key deleted:', result);
+        });
+
+        this.setUserDataInsession(data, res);
+      },
+      error: (error: any) => {
+        this.apiCallCounter += 1;
+        if (this.apiCallCounter < 3) {
+          this.updateCognitoId(data);
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert(
+            'error',
+            'Please contact our administrator, (** we need to tackle this point)'
+          );
+        }
+        console.log('Cognito Id failed result:', error);
+      },
     });
   }
 
   getUserByCognitoId(data: any) {
     let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
       'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
-    NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe(res => {
-      console.log('By CognitoId data:', res)
-      console.log("Is admin template allowed", this.roleBaseAuthGaurdService.checkHasPermission(res.role, ["ROLE_ADMIN", /* "ROLE_IFA", */ 'ROLE_FILING_TEAM', 'ROLE_TPA_SME']))
-      if (res && data.signInUserSession.accessToken.jwtToken) {
-        this.setUserDataInsession(data, res);
-      } else if (res && !(this.roleBaseAuthGaurdService.checkHasPermission(res.role, allowedRoles))) {
-        this._toastMessageService.alert("error", "Access Denied.");
-      } else {
-        this._toastMessageService.alert("error", "The Mobile/Email address or Password entered, is not correct. Please check and try again");
-      }
-      this.loading = false;
-    }, err => {
-      let errorMessage = "Internal server error."
-      if ([400, 401].indexOf(err.status) != -1) {
-        errorMessage = "User name or Password is wrong."
-      }
-      this._toastMessageService.alert("error", errorMessage);
-      this.loading = false;
+    NavbarService.getInstance(this.http).getUserByCognitoId(`${data.attributes.sub}`).subscribe({
+      next: (res: any) => {
+        console.log('By CognitoId data:', res);
+        console.log(
+          'Is admin template allowed',
+          this.roleBaseAuthGaurdService.checkHasPermission(res.role, [
+            'ROLE_ADMIN',
+            /* "ROLE_IFA", */
+            'ROLE_FILING_TEAM',
+            'ROLE_TPA_SME',
+          ])
+        );
+
+        if (res && data.signInUserSession.accessToken.jwtToken) {
+          this.setUserDataInsession(data, res);
+        } else if (res && !this.roleBaseAuthGaurdService.checkHasPermission(res.role, allowedRoles)) {
+          this._toastMessageService.alert('error', 'Access Denied.');
+        } else {
+          this._toastMessageService.alert(
+            'error',
+            'The Mobile/Email address or Password entered is not correct. Please check and try again'
+          );
+        }
+        this.loading = false;
+      },
+      error: (err: any) => {
+        let errorMessage = 'Internal server error.';
+        if ([400, 401].includes(err.status)) {
+          errorMessage = 'Username or Password is wrong.';
+        }
+        this._toastMessageService.alert('error', errorMessage);
+        this.loading = false;
+      },
     });
   }
 
@@ -395,8 +417,8 @@ export class LoginComponent implements OnInit {
     //'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/sme-authtoken'
     this.loading = true;
     let param = `kommunicate/sme-authtoken`;
-    this.reviewService.postMethod(param, '').subscribe(
-      (response: any) => {
+    this.reviewService.postMethod(param, '').subscribe({
+      next: (response: any) => {
         this.loading = false;
         if (response.success) {
           sessionStorage.setItem('kmAuthToken', response?.data?.token);
@@ -407,10 +429,11 @@ export class LoginComponent implements OnInit {
           this.utilsService.showSnackBar(response.message);
         }
       },
-      (error) => {
+      error: (error) => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to generate the kommunicate auth token');
-      });
+      },
+    });
   }
 
   mode: string = 'SIGN_IN';
@@ -432,13 +455,16 @@ export class LoginComponent implements OnInit {
   getPlanDetails() {
     this.loading = true;
     let param = '/plans-master';
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      sessionStorage.setItem('ALL_PLAN_LIST', JSON.stringify(response));
-    },
-      error => {
+    this.itrMsService.getMethod(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
-      });
+        sessionStorage.setItem('ALL_PLAN_LIST', JSON.stringify(response));
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error('Error fetching plan details:', error);
+      },
+    });
 
   }
 }
