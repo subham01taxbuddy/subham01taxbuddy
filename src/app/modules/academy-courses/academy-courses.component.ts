@@ -95,31 +95,31 @@ export class AcademyCoursesComponent implements OnInit {
     this.loading =true ;
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `course-data?${data}`;
-    this.reviewService.getMethod(param).subscribe((response: any) => {
-      if (response.success) {
+    this.reviewService.getMethod(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
-        console.log('response', response);
-        this.courseInfo = response.body.content
-        this.totalCount = response.body.totalElements;
-        this.config.totalItems = response.body.totalElements;
-        this.academyCoursesGridOptions.api?.setRowData(this.createRowData(response.body.content));
-        this.cacheManager.initializeCache(response.body.content);
+        if (response.success) {
+          console.log('response', response);
+          this.courseInfo = response.body.content;
+          this.totalCount = response.body.totalElements;
+          this.config.totalItems = response.body.totalElements;
+          this.academyCoursesGridOptions.api?.setRowData(this.createRowData(response.body.content));
+          this.cacheManager.initializeCache(response.body.content);
 
-
-        const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,response.body.content);
-      this.config.currentPage = currentPageNumber;
-      }else{
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, response.body.content);
+          this.config.currentPage = currentPageNumber;
+        } else {
+          this.utilsService.showSnackBar(response.message);
+          this.academyCoursesGridOptions.api?.setRowData(this.createRowData([]));
+        }
+      },
+      error: (error: any) => {
         this.loading = false;
-        this.utilsService.showSnackBar(response.message);
-        this.academyCoursesGridOptions.api?.setRowData(this.createRowData([]));
-      }
-    },
-    (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Error in API of get course list');
+        console.error('Error in API of get course list', error);
+        this.utilsService.showSnackBar('Error in API of get course list');
+      },
     });
-
   }
 
   addCourse(){
