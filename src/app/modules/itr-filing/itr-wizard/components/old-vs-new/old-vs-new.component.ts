@@ -164,6 +164,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   initForm() {
     let regimeRequired = !this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson);
+    let regime = this.ITR_JSON.isLate === 'Y' ? 'NEW' : '';
     this.regimeSelectionForm = this.fb.group({
       everOptedNewRegime: this.fb.group({
         everOptedNewRegime: [''],
@@ -178,11 +179,19 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         acknowledgementNumber: [],
       }),
       optionForCurrentAY: this.fb.group({
-        currentYearRegime: ['', regimeRequired ? Validators.required : []],
+        currentYearRegime: [regime, regimeRequired ? Validators.required : []],
         date: [],
         acknowledgementNumber: [],
       }),
     });
+
+    if(this.ITR_JSON.isLate === 'Y'){
+      let currAssmntYr = (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+      ).controls['currentYearRegime'];
+      currAssmntYr.disable();
+      currAssmntYr.updateValueAndValidity();
+    }
 
     this.summaryToolReliefsForm = this.fb.group({
       section89: [],
@@ -566,6 +575,15 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.oldRegimeLabel = 'Not Opting';
       this.newRegimeLabel = 'Opting in Now';
       currAssmntYr.enable();
+    }
+
+    if(this.ITR_JSON.isLate === 'Y'){
+      let currAssmntYr = (
+          this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+      ).controls['currentYearRegime'];
+      currAssmntYr.setValue('NEW');
+      currAssmntYr.disable();
+      currAssmntYr.updateValueAndValidity();
     }
   }
 
