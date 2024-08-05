@@ -36,6 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
 import { AppConstants } from './modules/shared/constants';
 
+
 const dbConfig: DBConfig  = {
   name: 'taxbuddyIndexedDb',
   version: 1,

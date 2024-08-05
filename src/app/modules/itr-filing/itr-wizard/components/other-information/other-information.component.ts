@@ -1,3 +1,4 @@
+import { headOfIncome } from './../../../../shared/interfaces/itr-input.interface';
 import {
   Component, ElementRef,
   EventEmitter,

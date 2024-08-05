@@ -2,14 +2,14 @@
 <div class="clearfix">
   <div class="align-items-center row">
     <div class="col-sm-4">
-      <div class="hdTx">Create New Alert:</div>
+      <div class="hdTx">Create New Alert</div>
     </div>
   </div>
   <div class="rowClr">
     <div class="surround">
       <form [formGroup]="alertForm" (ngSubmit)="createAlert()">
-        <div class="row">
-          <div class="col-sm-3 spsTp">
+        <div class="row mb-4">
+          <div class="col-sm-4 spsTp">
             <mat-label>Type:</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <mat-select formControlName="type" required>
@@ -19,45 +19,61 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="col-sm-3 spsTp">
+          <div class="col-sm-4 spsTp">
             <mat-label>Title:</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <input matInput placeholder="Title" formControlName="title" autocomplete="off" type="text">
             </mat-form-field>
           </div>
-          <div class="col-sm-3 spsTp">
+          <div class="col-sm-4 spsTp">
             <mat-label>Message:</mat-label>
             <mat-form-field appearance="outline" class="class1">
               <input matInput placeholder="Message" formControlName="message" required type="text">
             </mat-form-field>
-          </div><br><br>
-          <div class="col-sm-3 spsTp">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 spsTp">
             <mat-label>Applicable From:</mat-label>
-            <mat-form-field appearance="outline" class="class1">
-              <input matInput [matDatepicker]="pickerFrom" placeholder="Choose a date"
-                formControlName="applicableFromDate">
-              <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-              <mat-datepicker #pickerFrom></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="class1">
-              <input matInput [ngxTimepicker]="pickerFromTime" [format]="12" placeholder="Choose a time"
-                formControlName="applicableFromTime" readonly>
-              <ngx-material-timepicker #pickerFromTime></ngx-material-timepicker>
-            </mat-form-field>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [matDatepicker]="pickerFrom" placeholder="Choose a date"
+                    formControlName="applicableFromDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [ngxTimepicker]="pickerFromTime" [format]="12" placeholder="Choose a time"
+                    formControlName="applicableFromTime" readonly>
+                  <ngx-material-timepicker #pickerFromTime></ngx-material-timepicker>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
-          <div class="col-sm-3 spsTp">
+          <div class="col-sm-6 spsTp">
             <mat-label>Applicable To:</mat-label>
-            <mat-form-field appearance="outline" class="class1">
-              <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date" formControlName="applicableToDate">
-              <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-              <mat-datepicker #pickerTo></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="class1">
-              <input matInput [ngxTimepicker]="pickerToTime" [format]="12" placeholder="Choose a time"
-                formControlName="applicableToTime" readonly>
-              <ngx-material-timepicker #pickerToTime></ngx-material-timepicker>
-            </mat-form-field>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date" formControlName="applicableToDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTo></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [ngxTimepicker]="pickerToTime" [format]="12" placeholder="Choose a time"
+                    formControlName="applicableToTime" readonly>
+                  <ngx-material-timepicker #pickerToTime></ngx-material-timepicker>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="row mt-5">
           <div class="col-sm-12 spsTp bdrTp">
             <button type="submit" class="rt-btn" [disabled]="loading">Create Alert</button>
           </div>

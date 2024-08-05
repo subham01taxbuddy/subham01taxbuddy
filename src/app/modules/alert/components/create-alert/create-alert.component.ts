@@ -53,6 +53,7 @@ export class CreateAlertComponent {
           this.loading = false;
           this.errorMessage = null;
           this.resetForm();
+          
         },
         error => {
           this.loading = false;
