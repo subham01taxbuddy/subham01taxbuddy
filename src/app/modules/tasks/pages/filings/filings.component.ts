@@ -83,6 +83,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
     { value: 'Updated', name: 'Updated' },
+    { value: 'Belated', name: 'Belated' },
   ];
   isVerified = [
     { value: 'true', name: 'True' },

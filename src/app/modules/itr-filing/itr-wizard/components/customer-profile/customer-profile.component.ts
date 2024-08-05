@@ -161,6 +161,19 @@ export class CustomerProfileComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('subscribing');
+
+    if(this.ITR_JSON.isLate === 'Y'){
+      this.returnTypes = [
+        { value: 'N', label: 'Belated return u/s 139(4)' },
+        { value: 'Y', label: 'Revised' },
+      ]
+    } else {
+      this.returnTypes = [
+        { value: 'N', label: 'Original' },
+        { value: 'Y', label: 'Revised' },
+      ]
+    }
+
     this.requestManagerSubscription =
       this.requestManager.requestCompleted.subscribe((value: any) => {
         this.requestManager.init();
