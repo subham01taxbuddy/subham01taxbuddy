@@ -21,6 +21,14 @@ interface GroupedSnapshot {
   fragments: FragmentData[];
   selected?: boolean;
 }
+interface SnapshotItem {
+  version: string;
+  commitDate: string;
+  fragmentName: string;
+  state: any;
+  id: string;
+  selected: boolean;
+}
 
 @Component({
   selector: 'app-recovery-data',
@@ -30,7 +38,7 @@ interface GroupedSnapshot {
 export class RecoveryDataComponent {
 
   mobileNumber: string = '';
-  isLoading: boolean = false;
+  loading : boolean = false;
   error: string | null = null;
   private _isLoading = new BehaviorSubject<boolean>(false);
   isLoading$: Observable<boolean> = this._isLoading.asObservable();
@@ -44,16 +52,18 @@ export class RecoveryDataComponent {
   displayedColumns: string[] = ['version', 'fragment', 'state', 'commitDate'];
 
   sendIds: any = [];
+  snapshots: SnapshotItem[] = [];
 
   constructor(private http: HttpClient, private itrMs: ItrMsService, private userMsService: UserMsService,
     private utilService: UtilsService, private dialog: MatDialog) { }
 
   search() {
-    this.isLoading = true;
+    this.loading = true;
     this.utilService.getFilerIdByMobile(this.mobileNumber).pipe(
-      finalize(() => this.isLoading = false)
+      finalize(() => console.log('got Data'))
     ).subscribe(
       (response: any) => {
+        this.loading = false;
         console.log('api response', response);
 
         if (response && response.data && response.data.content && response.data.content.length > 0) {
@@ -75,10 +85,9 @@ export class RecoveryDataComponent {
   }
 
   fetchJvSnapshots(openItrId: string) {
-   
-    this._isLoading.next(true);
+    this.loading = true;
     this.itrMs.getJvSnapshots(openItrId).pipe(
-      finalize(() => this._isLoading.next(false))
+      finalize(() => this.loading =false)
     ).subscribe(
       (snapshotResponse: any) => {
         this.processSnapshots(snapshotResponse['data']);
@@ -102,56 +111,39 @@ export class RecoveryDataComponent {
   }
 
   processSnapshots(snapshots: any[]) {
-    this.isProcessingSnapshots = true;
+    this.loading = true;
     setTimeout(() => {
-      const groupedMap = new Map<string, GroupedSnapshot>();
-
-      snapshots.forEach(snapshot => {
-        const version = snapshot.version;
-        if (!groupedMap.has(version)) {
-          groupedMap.set(version, {
-            version,
-            commitDate: this.formatDate(snapshot.commitMetadata.commitDate),
-            fragments: [],
-            selected: false,
-          });
-        }
-
-        const group = groupedMap.get(version)!;
-        group.fragments.push({
-          fragmentName: snapshot.globalId.fragment,
-          state: snapshot.state,
-          id: snapshot.id
-        });
-      });
-      this.groupedSnapshots = Array.from(groupedMap.values());
-      console.log('Grouped Snapshots:', this.groupedSnapshots);
-
-      this.isProcessingSnapshots = false;
+      this.snapshots = snapshots.map(snapshot => ({
+        version: snapshot.version,
+        commitDate: this.formatDate(snapshot.commitMetadata.commitDate),
+        fragmentName: snapshot.globalId.fragment,
+        state: snapshot.state,
+        id: snapshot.id,
+        selected: false
+      }));
+      console.log('Processed Snapshots:', this.snapshots);
+      this.loading = false;
     }, 0);
   }
 
-
-  toggleSelection(snapshot: GroupedSnapshot) {
+   toggleSelection(snapshot: SnapshotItem) {
     snapshot.selected = !snapshot.selected;
-    this.onSelectionChange(snapshot);
+    this.onSelectionChange();
   }
 
-  onSelectionChange(item: GroupedSnapshot) {
-    if (item.selected) {
-      this.selectedItems = [...this.selectedItems, ...item.fragments.map(f => f.id)];
-    } else {
-      this.selectedItems = this.selectedItems.filter(id => !item.fragments.some(f => f.id === id));
-    }
-    console.log('Selected items:', this.selectedItems);
+  onSelectionChange() {
+    this.selectedItems = this.snapshots
+      .filter(item => item.selected)
+      .map(item => item.id);
   }
 
   callPutApi() {
-    this._isLoading.next(true);
+    this.loading = true;
     this.utilService.getFilerIdByMobile(this.mobileNumber).pipe(
-      finalize(() => this._isLoading.next(false))
+      finalize(() => console.log())
     ).subscribe(
       (response: any) => {
+        this.loading = false;
         console.log('api response', response);
 
         if (response && response.data && response.data.content && response.data.content.length > 0) {
@@ -159,9 +151,9 @@ export class RecoveryDataComponent {
 
 
           if (openItrId) {
-            this._isLoading.next(true);
+            this.loading = true;
             this.itrMs.putJvSnapshots(this.selectedItems, openItrId).pipe(
-              finalize(() => this._isLoading.next(false))
+              finalize(() => this.loading = false)
             ).subscribe(
               (response) => {
                 console.log('Put API response:', response);
@@ -194,6 +186,7 @@ export class RecoveryDataComponent {
       }
     );
   }
+  
   getStateEntries(state: any): { key: string, value: any }[] {
     if (!state || typeof state !== 'object') {
       return [];

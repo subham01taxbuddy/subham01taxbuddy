@@ -1,23 +1,14 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="container">
   <div class="search-box">
     <div class="input-group">
       <label for="mobileNumber">Mobile No:</label>
       <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
     </div>
-    <button class="btn" (click)="search()" [disabled]="isLoading">
-      <span *ngIf="!isLoading">Search</span>
-      <span *ngIf="isLoading">Searching...</span>
+    <button class="btn" (click)="search()" [disabled]="loading">
+      <span>Search</span>
     </button>
   </div>
-
-  <div *ngIf="isLoading" class="loader">
-    <mat-spinner diameter="80"></mat-spinner>
-  </div>
-
-  <div *ngIf="error" class="error-message">
-    {{ error }}
-  </div>
-
 
 </div>
 
@@ -26,7 +17,7 @@
     <mat-spinner diameter="80"></mat-spinner>
     <p>Processing snapshots...</p>
   </div>
-  <table *ngIf="!isProcessingSnapshots && groupedSnapshots.length" class="snapshots-table">
+  <table *ngIf="!isProcessingSnapshots && snapshots.length" class="snapshots-table">
     <thead>
       <tr>
         <th>Select</th>
@@ -37,33 +28,28 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let item of groupedSnapshots">
-        <ng-container *ngFor="let fragment of item.fragments; let first = first">
-          <tr>
-            <td *ngIf="first" [attr.rowspan]="item.fragments.length">
-              <mat-checkbox [(ngModel)]="item.selected" (change)="onSelectionChange(item)"></mat-checkbox>
-            </td>
-            <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.commitDate }}</td>
-            <td *ngIf="first" [attr.rowspan]="item.fragments.length">{{ item.version }}</td>
-            <td>{{ fragment.fragmentName }}</td>
-            <td>
-              <table class="state-table">
-                <tr *ngFor="let entry of getStateEntries(fragment.state)">
-                  <td>{{ entry.key }}:</td>
-                  <td>{{ entry.value }}</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </ng-container>
-      </ng-container>
+      <tr *ngFor="let item of snapshots">
+        <td>
+          <mat-checkbox [(ngModel)]="item.selected" (change)="onSelectionChange()"></mat-checkbox>
+        </td>
+        <td>{{ item.commitDate }}</td>
+        <td>{{ item.version }}</td>
+        <td>{{ item.fragmentName }}</td>
+        <td>
+          <table class="state-table">
+            <tr *ngFor="let entry of getStateEntries(item.state)">
+              <td>{{ entry.key }}:</td>
+              <td>{{ entry.value }}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
 <button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0 || (isLoading$ | async)">
-  <span *ngIf="!(isLoading$ | async)">Apply</span>
-  <span *ngIf="isLoading$ | async">Applying...</span>
+  <span>Apply</span>
 </button>
-<div *ngIf="isLoading$ | async" class="loader-overlay">
-  <mat-spinner diameter="40"></mat-spinner>
-</div>
+
+
+
