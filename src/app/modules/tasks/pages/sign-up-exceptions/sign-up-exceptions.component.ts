@@ -58,23 +58,23 @@ export class SignUpExceptionsComponent implements OnInit {
   getSignUpExceptionList(agentUserId, pageNo) {
     this.loading = true;
     let param = `/sign-up-exceptions/${agentUserId}?page=${pageNo}&size=20`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      this.loading = false;
-      if (result && result.content instanceof Array && result.content.length > 0) {
-        this.signUpExceptionList = result.content;
-        this.config.totalItems = result.totalElements;
-        this.signupExceptionGridOptions.api?.setRowData(this.createRowData(result.content))
-      }
-      else {
-        this.signupExceptionGridOptions.api?.setRowData(this.createRowData([]))
-      }
-
-    },
-      error => {
-        console.log('Error during getting sign-up-exceptions: ', error);
-        this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status))
+    this.userMsService.getMethod(param).subscribe({
+      next: (result: any) => {
         this.loading = false;
-      })
+        if (result && result.content instanceof Array && result.content.length > 0) {
+          this.signUpExceptionList = result.content;
+          this.config.totalItems = result.totalElements;
+          this.signupExceptionGridOptions.api?.setRowData(this.createRowData(result.content));
+        } else {
+          this.signupExceptionGridOptions.api?.setRowData(this.createRowData([]));
+        }
+      },
+      error: (error: any) => {
+        console.error('Error during getting sign-up-exceptions: ', error);
+        this.toastMsgService.alert('error', this.utilsService.showErrorMsg(error.error.status));
+        this.loading = false;
+      }
+    });
   }
 
 
@@ -407,20 +407,22 @@ export class SignUpExceptionsComponent implements OnInit {
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      console.log('open chat link res: ', response);
-      this.loading = false;
-      if (response.success) {
-        window.open(response.data.whatsAppChatLink)
-      }
-      else {
-        this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate')
-      }
-    },
-      error => {
-        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.')
+    this.userMsService.getMethod(param).subscribe({
+      next: (response: any) => {
+        console.log('open chat link res: ', response);
         this.loading = false;
-      })
+        if (response.success) {
+          window.open(response.data.whatsAppChatLink);
+        } else {
+          this.toastMsgService.alert('error', 'User has not initiated chat on kommunicate');
+        }
+      },
+      error: (error: any) => {
+        console.error('Error during fetching chat:', error);
+        this.toastMsgService.alert('error', 'Error during fetching chat, try after some time.');
+        this.loading = false;
+      }
+    });
   }
 
   startCalling(user) {
@@ -431,16 +433,19 @@ export class SignUpExceptionsComponent implements OnInit {
       "agent_number": user.callerAgentNumber,
       "customer_number": user.mobile
     }
-    this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-      console.log('Call Result: ', result);
-      this.loading = false;
-      if (result.success.status) {
-        this.toastMsgService.alert("success", result.success.message)
+    this.userMsService.postMethodAWSURL(param, reqBody).subscribe({
+      next: (result: any) => {
+        console.log('Call Result: ', result);
+        this.loading = false;
+        if (result.success.status) {
+          this.toastMsgService.alert("success", result.success.message);
+        }
+      },
+      error: (error: any) => {
+        this.toastMsgService.alert("error", 'Error while making call, Please try again');
+        this.loading = false;
       }
-    }, error => {
-      this.toastMsgService.alert("error", 'Error while making call, Please try again')
-      this.loading = false;
-    })
+    });
   }
 
   showUserInformation(user) {
@@ -456,19 +461,21 @@ export class SignUpExceptionsComponent implements OnInit {
     this.loading = true;
     //https://uat-api.taxbuddy.com/user/sign-up-exceptions/{customerNumber}
     let param = `/sign-up-exceptions/${callInfo.mobile}`;
-    this.userMsService.putMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      this.toastMsgService.alert('success', 'Call status update successfully.');
-      setTimeout(() => {
-        this.config.currentPage = this.selectedPageNo + 1
-        this.getSignUpExceptionList(this.selectedAgentUserId, this.selectedPageNo);
-      }, 3000)
-    },
-      error => {
-        console.log('Error during schedule-call status change: ', error);
-        this.toastMsgService.alert('error', 'Error during schedule-call status change.')
+    this.userMsService.putMethod(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
-      })
+        this.toastMsgService.alert('success', 'Call status update successfully.');
+        setTimeout(() => {
+          this.config.currentPage = this.selectedPageNo + 1;
+          this.getSignUpExceptionList(this.selectedAgentUserId, this.selectedPageNo);
+        }, 3000);
+      },
+      error: (error: any) => {
+        console.log('Error during schedule-call status change: ', error);
+        this.toastMsgService.alert('error', 'Error during schedule-call status change.');
+        this.loading = false;
+      }
+    });
 
   }
 

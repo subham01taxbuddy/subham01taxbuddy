@@ -141,24 +141,26 @@ export class DeleteUserListComponent {
 
       console.log('url', dynamicUrl)
 
-      NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
-        this.loading = false;
-        if (Array.isArray(res.content)) {
-          if(res?.content?.length > 0){
-            this.deleteUserData = res.content;
-            console.log('list of delete req', this.deleteUserData)
-            this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
-            this.config.totalItems = res.totalElements;
-          }else{
-            this._toastMessageService.alert("error", 'No Data Found ');
+      NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe({
+        next: (res: any) => {
+          this.loading = false;
+          if (Array.isArray(res.content)) {
+            if (res?.content?.length > 0) {
+              this.deleteUserData = res.content;
+              console.log('list of delete req', this.deleteUserData);
+              this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
+              this.config.totalItems = res.totalElements;
+            } else {
+              this._toastMessageService.alert("error", 'No Data Found ');
+            }
           }
+          resolve(true);
+        },
+        error: (err) => {
+          this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
+          this.loading = false;
+          resolve(false);
         }
-        this.loading = false;
-        return resolve(true)
-      }, err => {
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
-        this.loading = false;
-        return resolve(false)
       });
     });
   }
@@ -285,11 +287,8 @@ export class DeleteUserListComponent {
   onUsersRowClicked(params: any) {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'delete': {
-          this.deleteUser(params.data)
-          break;
-        }
+      if (actionType === 'delete') {
+        this.deleteUser(params.data);
       }
     }
   }
@@ -305,16 +304,19 @@ export class DeleteUserListComponent {
     this.dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
         const param = `/user/account/delete/` + data.mobileNumber + `?reason=Test`;
-        this.userService.deleteMethod(param).subscribe((res: any) => {
-          if (res.success) {
-            this.utilsService.showSnackBar(`User deleted successfully!`);
-            this.getUserSearchList(0);
-          } else {
-            this.utilsService.showSnackBar(res.message);
+        this.userService.deleteMethod(param).subscribe({
+          next: (res: any) => {
+            if (res.success) {
+              this.utilsService.showSnackBar(`User deleted successfully!`);
+              this.getUserSearchList(0);
+            } else {
+              this.utilsService.showSnackBar(res.message);
+            }
+          },
+          error: (error) => {
+            this.utilsService.showSnackBar(error.message);
           }
-        }, error => {
-          this.utilsService.showSnackBar(error.message);
-        })
+        });
       }
     })
   }

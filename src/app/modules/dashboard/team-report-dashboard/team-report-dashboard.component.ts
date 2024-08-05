@@ -9,6 +9,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
+import { lastValueFrom } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -197,19 +198,19 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.invoiceData = response.data;
-        } else {
-          this.loading = false;
-          this._toastMessageService.alert('error', response.message);
-        }
-      }).catch(() => {
-        this.loading = false;
-        this._toastMessageService.alert('error', 'Error');
-      })
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.invoiceData = response.data;
+      } else {
+        this._toastMessageService.alert('error', response.message);
+      }
+    })
+    .catch(() => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'Error');
+    });
   }
 
   getOperationTeamDetails = (): Promise<any> => {
@@ -223,8 +224,8 @@ export class TeamReportDashboardComponent implements OnInit {
     }
     param = `/bo/dashboard/sme-report${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.operationTeamData = response.data;
@@ -254,21 +255,20 @@ export class TeamReportDashboardComponent implements OnInit {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
     param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`;
-    this.userMsService.getMethodNew(param).subscribe(
-      (response: any) => {
+    this.userMsService.getMethodNew(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
         if (response.success) {
           this.partnersAssignmentData = response.data;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
       },
-      (error) => {
+      error: (error) => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      },
+    });
   }
 
   getTotalCommission = (): Promise<any> => {
@@ -285,8 +285,8 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
           this.totalOriginal =
@@ -332,8 +332,8 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}&count=true`;
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.subPaidScheduleCallDetails = response.data;
@@ -359,8 +359,8 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.scheduledCallData = response.data;

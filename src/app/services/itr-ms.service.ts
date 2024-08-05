@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { InterceptorSkipHeader } from "./token-interceptor";
 @Injectable({
@@ -294,6 +294,6 @@ export class ItrMsService {
     );
   }
 
-  
+
 
 }

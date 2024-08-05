@@ -25,7 +25,6 @@ export class UserMsService {
   getMethodNew<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(environment.url + this.newMicroService + param[0], { headers: this.headers });
     // .map(response => response.json())
   }

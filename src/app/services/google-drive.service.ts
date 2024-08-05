@@ -179,8 +179,6 @@ export class GoogleDriveService{
       },
       media: {
         mimeType: fileMimeType,
-        //TODO: add correct stream data
-        // body:got.default.stream(fileUrl),
       },
       supportsAllDrives: true,
       driveId: driveId,

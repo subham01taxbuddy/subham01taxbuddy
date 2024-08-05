@@ -1,6 +1,6 @@
 import {ElementRef, Injectable} from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import { concatMap, Observable, Subject} from 'rxjs';
+import { concatMap, lastValueFrom, Observable, Subject} from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -475,7 +475,7 @@ export class UtilsService {
 
   async getFyList() {
     const param = `${ApiEndpoints.itrMs.filingDates}`;
-    return await this.itrMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.itrMsService.getMethod(param));
   }
 
   async getStoredSmeList() {
@@ -514,7 +514,7 @@ export class UtilsService {
   async getSmeList() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme/all-list?active=true&page=0&pageSize=10' \
     const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getStoredAgentList(action?: any) {
@@ -556,7 +556,7 @@ export class UtilsService {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
     const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getStoredMasterStatusList() {
@@ -585,7 +585,7 @@ export class UtilsService {
   }
   async getMasterStatusList() {
     const param = `/${ApiEndpoints.userMs.itrStatusMasterBo}`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
 
   createUrlParams(queryParams: any) {
@@ -666,21 +666,21 @@ export class UtilsService {
     const loggedInUserId = this.getLoggedInUserID();
     //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
     const param = `/bo/sme-details-new/${loggedInUserId}?leader=true`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getUserProfile(userId) {
     const param = `/profile/${userId}`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
   async getItr(userId: any, ay: string) {
     const param = `/itr?userId=${userId}&assessmentYear=${ay}`;
-    return await this.itrMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.itrMsService.getMethod(param));
   }
 
   async getAllBankByIfsc() {
     const param = '/bankCodeDetails';
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
 
   async getBankByIfsc(ifscCode) {
@@ -746,8 +746,8 @@ export class UtilsService {
       let data = null;
       if (pinCode.valid) {
         const param = '/pincode/' + pinCode.value;
-        this.userMsService.getMethod(param).subscribe(
-          (result: any) => {
+        this.userMsService.getMethod(param).subscribe({
+          next: (result: any) => {
             data = {
               country: 'INDIA',
               countryCode: '91',
@@ -756,12 +756,12 @@ export class UtilsService {
             };
             resolve(data);
           },
-          (error) => {
+          error: (error) => {
             if (error.status === 404) {
               reject(error);
             }
           }
-        );
+        });
       } else {
         console.log('pinCode invalid', pinCode);
       }
@@ -993,8 +993,8 @@ export class UtilsService {
 
   fetchSmeInfo(userId) {
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
-    this.userMsService.getMethodNew(param).subscribe(
-      (res: any) => {
+    this.userMsService.getMethodNew(param).subscribe({
+      next: (res: any) => {
         if (res.success) {
           sessionStorage.setItem(
             AppConstants.LOGGED_IN_SME_INFO,
@@ -1002,10 +1002,10 @@ export class UtilsService {
           );
         }
       },
-      (error) => {
+      error: (error) => {
         console.log('error in fetching sme info', error);
       }
-    );
+    });
   }
 
   getIdToken() {

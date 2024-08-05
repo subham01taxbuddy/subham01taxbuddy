@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import * as moment from 'moment';
+import { lastValueFrom } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -159,10 +160,9 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     if (this.leaderView.value) {
       param = param + '&leaderView=true';
     }
-    return this.userMsService.getMethodNew(param).toPromise().then((response: any) => {
+    return lastValueFrom(this.userMsService.getMethodNew(param)).then((response: any) => {
+      this.loading = false;
       if (response.success) {
-        this.loading = false;
-
         const columnMap: Record<string, Record<string, string>> = {
           ITR: {
             filerName: this.leaderView.value ? 'leaderName' : 'filerName',

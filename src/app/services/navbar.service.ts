@@ -104,7 +104,6 @@ export class NavbarService {
 	}
 
 	getInvoiceSummary(businessId: any, params: any) {
-		// TODO: [IP-9] Here Financial year is hardcoded currently we dont have mastr for FY.
 		return NavbarService.getInstance(this.http).apiCall({ 'url': '/gst/api/invoice-summary/' + businessId + '?year=2019-2020', 'method': 'GET' }, params);
 	}
 

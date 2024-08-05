@@ -45,7 +45,7 @@ export class SummaryConversionService {
 
         // Setting the assessmentYear
         {
-            var assessmentYear;
+            let assessmentYear;
             if (ItrJSON[this.ITR_Type].hasOwnProperty('Form_ITR1')) {
                 assessmentYear = ItrJSON[this.ITR_Type].Form_ITR1?.AssessmentYear;
             } else if (ItrJSON[this.ITR_Type].hasOwnProperty('Form_ITR4')) {

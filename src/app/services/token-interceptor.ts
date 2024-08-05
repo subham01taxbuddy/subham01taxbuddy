@@ -180,10 +180,13 @@ export class TokenInterceptor implements HttpInterceptor {
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
-
-    this.userMsService.postMethod(param, '').subscribe((response: any) => {
-    }, (error) => {
-      console.log('error in sme Logout API', error)
-    })
+    this.userMsService.postMethod(param, '').subscribe({
+      next: (response: any) => {
+        console.log('SME Logout successful:', response);
+      },
+      error: (error) => {
+        console.error('Error in SME Logout API:', error);
+      }
+    });
   }
 }
