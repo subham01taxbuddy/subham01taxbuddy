@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, Renderer2 } from '@angular/core';
+import { Component, DoCheck, ElementRef, Renderer2,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -37,7 +37,7 @@ interface Alert {
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass', './navbar.component.scss']
 })
-export class NavbarComponent implements DoCheck {
+export class NavbarComponent implements DoCheck,OnInit {
 
   sidebar_open: boolean = false;
   menu_btn_rotate: boolean = false;
@@ -64,9 +64,8 @@ export class NavbarComponent implements DoCheck {
   alerts: Alert[] = [];
   showNotifications = false;
   private intervalId: any;
-
-
-
+  unreadAlertCount: number = 0;
+ 
   constructor(
     private router: Router,
     public dialog: MatDialog,
@@ -105,13 +104,15 @@ export class NavbarComponent implements DoCheck {
     });
   }
 
-
-
   ngDoCheck() {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
+   
+  }
 
+  ngOnInit(): void {
+    this.getAlerts();
   }
 
   sideBar() {
@@ -349,12 +350,12 @@ export class NavbarComponent implements DoCheck {
         this.alerts = response.map(alert => ({
           ...alert,
           applicableFrom: new Date(alert.applicableFrom),
-          applicableTo: new Date(alert.applicableTo)
+          applicableTo: new Date(alert.applicableTo),
         }));
         this.loading = false;
         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+      
         console.log('All Alert list get:', this.alerts);
-        
       },
       error => {
         this.loading = false;
@@ -369,14 +370,11 @@ export class NavbarComponent implements DoCheck {
       if (this.alerts.length === 0) {
         this.getAlerts();
       } else {
-
         this.alerts.forEach(alert => alert.seen = true);
       }
     }
   }
-  markAsSeen(alert: Alert) {
-    alert.seen = true;
-  }
+ 
 }
 
 
