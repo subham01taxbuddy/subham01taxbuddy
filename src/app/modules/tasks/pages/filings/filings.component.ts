@@ -555,7 +555,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         leaderUserId: data[i].leaderUserId,
         filingSource: data[i].filingSource,
         itrSummaryJson: data[i].itrSummaryJson,
-        itru: data[i].itru,
+        itru: data[i].isITRU,
+        isLate: data[i].isLate,
         paymentStatus: data[i].paymentStatus,
         manualUpdateReason: data[i].manualUpdateReason,
       });
@@ -669,6 +670,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
             params.data.itru === true
           ) {
             return 'Updated';
+          } else if(params.data.isRevised === 'N' &&
+              params.data.itru === false && params.data.isLate === 'Y'){
+            return 'Belated';
           }
           return 'Original';
         },
