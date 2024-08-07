@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { AlertRoutingModule } from './alert-routing.module';
 import { CreateAlertComponent } from './components/create-alert/create-alert.component';
@@ -17,6 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -39,7 +41,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
-    NgxMaterialTimepickerModule
-  ]
+    NgxMaterialTimepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule
+  ],
+  providers: [DatePipe]
 })
 export class AlertModule { }

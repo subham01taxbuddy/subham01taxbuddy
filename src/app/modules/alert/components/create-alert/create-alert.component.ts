@@ -1,16 +1,35 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, UntypedFormControl, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-create-alert',
   templateUrl: './create-alert.component.html',
-  styleUrls: ['./create-alert.component.scss']
+  styleUrls: ['./create-alert.component.scss'],
+  providers: [
+    DatePipe,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 export class CreateAlertComponent {
   loading : boolean = false;
@@ -19,9 +38,17 @@ export class CreateAlertComponent {
   channels = ['EMAIL', 'PUSHMESSAGE'];
   errorMessage: string | null = null;
 
-  constructor(private userMsService: UserMsService, private fb: FormBuilder) { }
+  @ViewChild('pickerFrom') pickerFrom: MatDatepicker<Date>;
+  @ViewChild('pickerTo') pickerTo: MatDatepicker<Date>;
+  minDate: Date = new Date(); 
+ 
+  constructor(private userMsService: UserMsService,
+              private fb: FormBuilder, 
+              private snackbar : MatSnackBar,
+              private changeDetectorRef: ChangeDetectorRef) {} 
 
   ngOnInit() {
+    
     this.initForm();
   }
 
@@ -57,7 +84,9 @@ export class CreateAlertComponent {
         response => {
           console.log('Alert created successfully:', response);
           this.loading = false;
-          this.errorMessage = null;
+         this.snackbar.open('Alert created successfully', 'Close', {
+          duration: 3000,
+        });
           this.resetForm();
           
         },
@@ -65,12 +94,17 @@ export class CreateAlertComponent {
           this.loading = false;
           console.error('Error creating alert:', error);
           this.errorMessage = 'Failed to create alert. Please try again later.';
+          this.snackbar.open('Failed to create alert. Please try again later.', 'Close', {
+            duration: 3000,
+          });
         }
       );
     } else {
       this.loading = false;
       this.errorMessage = 'Please fill in all required fields.';
+     
     }
+    
   }
 
   resetForm() {
@@ -83,7 +117,21 @@ export class CreateAlertComponent {
       applicableToDate: new Date(),
       applicableToTime: '23:59'
     });
-  }
+  
+  Object.keys(this.alertForm.controls).forEach(key => {
+    const control = this.alertForm.get(key);
+    control.setErrors(null);
+    control.markAsPristine();
+    control.markAsUntouched();
+  });
+
+  this.alertForm.setErrors(null);
+  this.alertForm.markAsPristine();
+  this.alertForm.markAsUntouched();
+  
+  this.changeDetectorRef.detectChanges();
+}
+  
   combineDateTime(date: Date, time: string): Date {
     const [timeStr, period] = time.split(' ');
     let [hours, minutes] = timeStr.split(':').map(Number);
@@ -97,6 +145,19 @@ export class CreateAlertComponent {
     const combinedDate = new Date(date);
     combinedDate.setHours(hours, minutes);
     return combinedDate;
+  }
+
+
+  dateFilter = (d: Date | null): boolean => {
+    const day = (d || new Date()).getDay();
+    return d >= this.minDate;
+  }
+  openDatePicker(picker: 'from' | 'to') {
+    if (picker === 'from') {
+      this.pickerFrom.open();
+    } else {
+      this.pickerTo.open();
+    }
   }
 }
 
