@@ -99,3 +99,8 @@
       max-width: 100%;
     }
   }
+  mat-form-field.is-invalid {
+    .mat-form-field-outline {
+      color: red !important;
+    }
+  }

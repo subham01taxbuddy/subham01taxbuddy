@@ -279,11 +279,11 @@ export class ItrMsService {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get<T>(
-        environment.url + this.microService + `/list-itr/${openItrId}`,
+      environment.url + this.microService + `/list-itr/${openItrId}`,
       { headers: this.headers }
     );
   }
-
+ 
   putJvSnapshots<T>(ids: string[], openItrId: number): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
