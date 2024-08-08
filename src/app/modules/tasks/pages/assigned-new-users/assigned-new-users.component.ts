@@ -338,7 +338,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.search('', '', event);
     }
   }
-    }
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
