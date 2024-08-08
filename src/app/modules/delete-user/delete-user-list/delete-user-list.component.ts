@@ -146,18 +146,19 @@ export class DeleteUserListComponent {
           this.loading = false;
           if (Array.isArray(res.content)) {
             if (res?.content?.length > 0) {
+              this.loading = false;
               this.deleteUserData = res.content;
               console.log('list of delete req', this.deleteUserData);
               this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
               this.config.totalItems = res.totalElements;
             } else {
-              this._toastMessageService.alert("error", 'No Data Found ');
+              this._toastMessageService.alert("error",'No Data Found ');
             }
           }
           resolve(true);
         },
         error: (err) => {
-          this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
+          this._toastMessageService.alert("error",this.utilsService.showErrorMsg(err.error.status));
           this.loading = false;
           resolve(false);
         }
