@@ -2,15 +2,12 @@ import {
   Component,
   Inject,
   Input,
-  OnChanges,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { inject } from '@angular/core/testing';
 import {
   UntypedFormArray,
   UntypedFormBuilder,
-  FormControl,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
@@ -18,15 +15,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-other-assets-dialog',
   templateUrl: './other-assets-dialog.component.html',
-  styleUrls: ['./other-assets-dialog.component.scss'],
 })
 export class OtherAssetsDialogComponent implements OnInit {
-  @Input() isAddOtherAssets: Number;
+  @Input() isAddOtherAssets: number;
   assetDetailsForm!: UntypedFormGroup;
   assetType = 'GOLD';
   config: any;
@@ -38,13 +33,10 @@ export class OtherAssetsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
     private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // let num: any = Math.random().toFixed(2);
-    // let digit = num * 100
     this.assetDetailsForm = this.fb.group({
-      // srn: [this.data.rowIndex],
       otherAssetsArrays: this.fb.array([]),
     });
 

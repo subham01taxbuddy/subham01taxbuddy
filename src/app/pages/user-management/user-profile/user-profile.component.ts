@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileDialogComponent } from '../profile-dialog/profile-dialog.component';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe ,Location} from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -12,9 +12,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';
-import { Location } from "@angular/common";
 
 import * as $ from 'jquery';
+import { lastValueFrom } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -395,18 +395,21 @@ export class UserProfileComponent implements OnInit {
 
   getUserInfoByPan(pan: any) {
     if (pan.valid) {
-      this.utilsService.getPanDetails(pan.value, this.userId).subscribe((result: any) => {
-        console.log('userData from PAN: ', result)
-        this.userProfileForm.controls['fName'].setValue(result.firstName ? result.firstName : '');
-        this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
-        this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
-        this.userProfileForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
-        let dob = new Date(result?.dateOfBirth ? result?.dateOfBirth : '').toISOString();
-        this.userProfileForm.controls['dateOfBirth'].setValue(dob)
-      },
-        error => {
-          console.log('Error during fetching data using PAN number: ', error)
-        })
+      this.utilsService.getPanDetails(pan.value, this.userId).subscribe({
+        next: (result: any) => {
+          console.log('userData from PAN: ', result);
+          const formControls = this.userProfileForm.controls;
+          const { firstName, middleName, lastName, dateOfBirth } = result;
+          formControls['fName'].setValue(firstName || '');
+          formControls['mName'].setValue(middleName || '');
+          formControls['lName'].setValue(lastName || '');
+          formControls['fatherName'].setValue(middleName || '');
+          formControls['dateOfBirth'].setValue(new Date(dateOfBirth || '').toISOString());
+        },
+        error: (error) => {
+          console.log('Error during fetching data using PAN number: ', error);
+        }
+      });
     }
   }
 
@@ -427,47 +430,46 @@ export class UserProfileComponent implements OnInit {
   getUserInfo(userId: any) {
     this.loading = true;
     let param = '/profile/' + userId;
-    this.userService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      console.log('user data -> ', res);
-      this.userInfo = res;
-      if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
-        this.userProfileForm.patchValue(this.userInfo);
-      }
-      else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
-        this.userInfo.bankDetails = [];
-        this.userProfileForm.patchValue(this.userInfo);
-      }
-      else if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
-        this.userInfo.address = [];
-        this.userProfileForm.patchValue(this.userInfo);
-      }
-      else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
-        this.userInfo.bankDetails = [];
-        this.userInfo.address = [];
-        this.userProfileForm.patchValue(this.userInfo);
-      }
-
-      if (this.utilsService.isNonEmpty(this.userInfo.gstDetails)) {
-        this.gstForm.patchValue(this.userInfo.gstDetails)
-      }
-
-      console.log('this.userProfileForm -> ', this.userProfileForm.value)
-      if (this.userProfileForm.value.address.length !== 0) {
-        this.addressData = this.userProfileForm.value?.address;
-      }
-      else {
-        this.addressData = [];
-      }
-      this.bankData = this.userProfileForm.controls['bankDetails'].value;
-      this.unMaskedMobileNo = this.userInfo.mobileNumber;
-      this.updateUserRole(this.unMaskedMobileNo);
-      this.maskMobileNumber(this.userInfo.mobileNumber);
-    },
-      error => {
+    this.userService.getMethod(param).subscribe({
+      next: (res: any) => {
         this.loading = false;
-        console.log('Error -> ', error)
-      })
+        console.log('user data -> ', res);
+        this.userInfo = res;
+
+        if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
+          this.userProfileForm.patchValue(this.userInfo);
+        } else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
+          this.userInfo.bankDetails = [];
+          this.userProfileForm.patchValue(this.userInfo);
+        } else if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
+          this.userInfo.address = [];
+          this.userProfileForm.patchValue(this.userInfo);
+        } else if (!this.utilsService.isNonEmpty(this.userInfo.bankDetails) && !this.utilsService.isNonEmpty(this.userInfo.address)) {
+          this.userInfo.bankDetails = [];
+          this.userInfo.address = [];
+          this.userProfileForm.patchValue(this.userInfo);
+        }
+
+        if (this.utilsService.isNonEmpty(this.userInfo.gstDetails)) {
+          this.gstForm.patchValue(this.userInfo.gstDetails);
+        }
+
+        console.log('this.userProfileForm -> ', this.userProfileForm.value);
+        if (this.userProfileForm.value.address.length !== 0) {
+          this.addressData = this.userProfileForm.value?.address;
+        } else {
+          this.addressData = [];
+        }
+        this.bankData = this.userProfileForm.controls['bankDetails'].value;
+        this.unMaskedMobileNo = this.userInfo.mobileNumber;
+        this.updateUserRole(this.unMaskedMobileNo);
+        this.maskMobileNumber(this.userInfo.mobileNumber);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.log('Error -> ', error);
+      }
+    });
   }
 
   openDialog(windowTitle: string, windowBtn: string, index: any, myUser: any, mode: string) {
@@ -538,15 +540,17 @@ export class UserProfileComponent implements OnInit {
   getPartyInfoByGSTIN(event: any) {
     let gstinNo = event.target.value;
     let param = '/partiesByGstin?gstin=' + gstinNo;
-    this.gstService.getMethod(param).subscribe((res: any) => {
-      if (res) {
-        this.gstForm.patchValue(res);
-        this.gstForm.controls['gstType'].setValue(this.getGstType(res['gstnType']));
-      }
-    },
-      error => {
+    this.gstService.getMethod(param).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.gstForm.patchValue(res);
+          this.gstForm.controls['gstType'].setValue(this.getGstType(res['gstnType']));
+        }
+      },
+      error: (error) => {
         console.log('Error during getting Party Info by GSTIN -> ', error);
-      })
+      }
+    });
   }
 
   getGstType(gstCode: any) {
@@ -649,8 +653,8 @@ export class UserProfileComponent implements OnInit {
 
   updateUserProfile = (): Promise<any> => {
     return new Promise((resolve, reject) => {
-      this.utilsService.getUserCurrentStatus(this.userInfo.userId).subscribe(
-        (res: any) => {
+      this.utilsService.getUserCurrentStatus(this.userInfo.userId).subscribe({
+        next: (res: any) => {
           console.log(res);
           if (res.error) {
             this.utilsService.showSnackBar(res.error);
@@ -684,36 +688,29 @@ export class UserProfileComponent implements OnInit {
                 this.userInfo.userId +
                 '?serviceType=' +
                 this.serviceType;
-              this.userService
-                .putMethod(param, this.userInfo)
-                .toPromise()
-                .then(
-                  (res) => {
-                    this.maskMobileNumber(this.unMaskedMobileNo);
-                    this._toastMessageService.alert(
-                      'success',
-                      this.userInfo.fName + "'s profile updated successfully."
-                    );
-                    this.loading = false;
-                    this.location.back();
-                    resolve(res);
-                  },
-                  (error) => {
-                    let errorMessage =
-                      error.error && error.error.message
-                        ? error.error.message
-                        : 'Internal server error.';
-                    this._toastMessageService.alert(
-                      'error',
-                      'merchant detail - ' + errorMessage
-                    );
-                    this.loading = false;
-                    this.getUserInfo(this.userId);
-                    reject(error);
-                  }
-                )
-                .catch((error) => {
+
+              lastValueFrom(this.userService.putMethod(param, this.userInfo))
+                .then((res) => {
+                  this.maskMobileNumber(this.unMaskedMobileNo);
+                  this._toastMessageService.alert(
+                    'success',
+                    this.userInfo.fName + "'s profile updated successfully."
+                  );
                   this.loading = false;
+                  this.location.back();
+                  resolve(res);
+                })
+                .catch((error) => {
+                  let errorMessage =
+                    error.error && error.error.message
+                      ? error.error.message
+                      : 'Internal server error.';
+                  this._toastMessageService.alert(
+                    'error',
+                    'merchant detail - ' + errorMessage
+                  );
+                  this.loading = false;
+                  this.getUserInfo(this.userId);
                   reject(error);
                 });
             } else {
@@ -722,7 +719,7 @@ export class UserProfileComponent implements OnInit {
             }
           }
         },
-        (error) => {
+        error: (error) => {
           this.loading = false;
           if (error.error && error.error.error) {
             this._toastMessageService.alert('error', error.error.error);
@@ -735,7 +732,7 @@ export class UserProfileComponent implements OnInit {
           }
           reject(error);
         }
-      );
+      });
     });
   };
 
@@ -759,15 +756,17 @@ export class UserProfileComponent implements OnInit {
   updateUserRole(userMobNo: any) {
     console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
     let param = '/users?mobileNumber=' + userMobNo;
-    this.userService.getMethod(param).subscribe((userRole: any) => {
-      console.log('User rolses: ', userRole);
-      if (Array.isArray(userRole.role) && userRole.role.length > 0) {
-        this.userRole.setValue(userRole.role)
-      }
-    },
-      error => {
+    this.userService.getMethod(param).subscribe({
+      next: (userRole: any) => {
+        console.log('User roles: ', userRole);
+        if (Array.isArray(userRole.role) && userRole.role.length > 0) {
+          this.userRole.setValue(userRole.role);
+        }
+      },
+      error: (error) => {
         console.log('Error during update user role: ', error);
-      })
+      }
+    });
   }
 
   onCancelClick() {

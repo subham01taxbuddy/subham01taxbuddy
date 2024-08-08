@@ -28,7 +28,7 @@ export class FileParserComponent implements OnInit {
     private utilService: UtilsService,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -46,7 +46,6 @@ export class FileParserComponent implements OnInit {
         steps: './assets/files/Steps to download 5 Paisa.pdf',
         note: 'Equity/Intraday/F&O'
       },
-        //not supported
       // {
       //   name: 'IIFL',
       //   label: 'IIFL',
@@ -54,62 +53,62 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      // {
-      //   name: 'Angel',
-      //   label: 'Angel One',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download Angel One.pdf',
-      //   note:''
-      // },
-      // {
-      //   name: 'Paytm',
-      //   label: 'PayTm',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download PayTM.pdf',
-      //   note:'Equity/F&O'
-      // },
-      // {
-      //   name: 'Axis',
-      //   label: 'Axis Broker',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: '',
-      //   note:''
-      // },
-      // {
-      //   name: 'Upstox',
-      //   label: 'Upstox',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download upstox statement.pdf',
-      //   note:''
-      // },
-      // {
-      //   name: 'Groww',
-      //   label: 'Groww',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download Groww statement.pdf',
-      //   note:'Equity/Intraday/MF'
-      // },
+      {
+        name: 'Angel',
+        label: 'Angel One',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download Angel One.pdf',
+        note:''
+      },
+      {
+        name: 'Paytm',
+        label: 'PayTm',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download PayTM.pdf',
+        note:'Equity/F&O'
+      },
+      {
+        name: 'Axis',
+        label: 'Axis Broker',
+        loading: false,
+        filesUploaded: [],
+        steps: '',
+        note:''
+      },
+      {
+        name: 'Upstox',
+        label: 'Upstox',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download upstox statement.pdf',
+        note:''
+      },
+      {
+        name: 'Groww',
+        label: 'Groww',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download Groww statement.pdf',
+        note:'Equity/Intraday/MF'
+      },
       {
         name: 'Zerodha',
         label: 'Zerodha',
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Zerodha statement.pdf',
-        note:'MF/Equity/Intraday/F&O'
+        note: 'MF/Equity/Intraday/F&O'
       },
-      // {
-      //   name: 'ICICI',
-      //   label: 'ICICI Bank',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download ICICI Statement.pdf',
-      //   note:''
-      // },
+      {
+        name: 'ICICI',
+        label: 'ICICI Bank',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download ICICI Statement.pdf',
+        note:''
+      },
       // {
       //   name: 'Jainam',
       //   label: 'Jainam',
@@ -123,7 +122,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: '',
-        note:'Equity (intraday)/MF/F&O'
+        note: 'Equity (intraday)/MF/F&O'
       },
     ];
   }
@@ -140,17 +139,15 @@ export class FileParserComponent implements OnInit {
     let file = (event.target as HTMLInputElement).files;
     console.log('File', file);
     if (file.length > 0) {
-      // this.uploadDoc = file.item(0);
       let allowedFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
       let selectedFormat = file.item(0)?.type;
-      console.log('file extension after selectedFormat',selectedFormat)
+      console.log('file extension after selectedFormat', selectedFormat)
       if (allowedFormats.includes(selectedFormat)) {
         this.uploadDoc = file.item(0);
         this.uploadDocument(this.uploadDoc);
-      }else{
+      } else {
         this.utilService.showSnackBar('Invalid file format. Only XLS and XLSX files are allowed.');
       }
-      // this.uploadDocument(this.uploadDoc);
     }
   }
 
@@ -183,9 +180,9 @@ export class FileParserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((selectedFileId: any) => {
       if (selectedFileId) {
-        console.log('File Id for upload',selectedFileId);
+        console.log('File Id for upload', selectedFileId);
         this.uploadDocument('', selectedFileId);
-      }else{
+      } else {
         this.utilService.showSnackBar('Invalid file, No File Id found');
       }
     });
@@ -194,10 +191,6 @@ export class FileParserComponent implements OnInit {
   uploadDocument(document, id?) {
     // 'https://uat-api.taxbuddy.com/itr/upload-excel'
     this.loading = true;
-    let brokerIndex = (this.brokerData as []).findIndex(
-      (item: any) => item.name === this.brokerName
-    );
-
     const formData = new FormData();
     if (document) {
       formData.append('file', document);
@@ -206,25 +199,12 @@ export class FileParserComponent implements OnInit {
     }
 
     let annualYear = this.ITR_JSON.assessmentYear;
-    // console.log('annualYear: ', annualYear);
-    // //let cloudFileMetaData = '{"formCode":"' + this.ITR_JSON.itrType + ',"ay":' + this.ITR_JSON.assessmentYear + ',"filingTypeCd":"O","userId ":' + this.ITR_JSON.userId + ',"filingTeamMemberId":' + this.ITR_JSON.filingTeamMemberId + '"}';
-    // formData.append("formCode", this.ITR_JSON.itrType);
-    // formData.append("ay", annualYear);
-    // formData.append("filingTypeCd", this.ITR_JSON.isRevised === "N" ? "O" : "R");
-    // formData.append('brokerName', this.brokerName);
     formData.append('userId', this.ITR_JSON.userId.toString());
     let param = '/upload-excel';
     this.itrService.postMethod(param, formData).subscribe(
       (res: any) => {
-        // this.loading = false;
-        //   this.isValidateJson = true;
-        console.log('uploadDocument response =>', res);
         if (this.utilService.isNonEmpty(res)) {
           if (res.success) {
-            //update UI for uploaded file name
-            let selectedBroker = this.brokerData.filter(
-              (broker) => broker.name === this.brokerName
-            )[0];
             if (this.uploadDoc) {
               this.filesUploaded.push(this.uploadDoc.name);
             } else {
@@ -278,7 +258,6 @@ export class FileParserComponent implements OnInit {
                     this.newDataAvailable.emit(true);
                   } else {
                     this.loading = false;
-                    //   this.isValidateJson = false;
                     this.utilService.showSnackBar(
                       'Something went wrong, try after some time.'
                     );
@@ -286,7 +265,6 @@ export class FileParserComponent implements OnInit {
                 },
                 (error) => {
                   this.loading = false;
-                  //   this.isValidateJson = false;
                   this.utilService.showSnackBar(
                     'Something went wrong, try after some time.'
                   );
@@ -302,7 +280,6 @@ export class FileParserComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        //   this.isValidateJson = false;
         this.utilService.showSnackBar(
           'Something went wrong, try after some time.'
         );

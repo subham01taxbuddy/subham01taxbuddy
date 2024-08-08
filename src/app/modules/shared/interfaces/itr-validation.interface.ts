@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 export interface ItrValidationObject {
-  errorCode: String;
-  message?: String;
+  errorCode: string;
+  message?: string;
   relatedSchedule: keyof Schedules;
 }
 
@@ -750,18 +750,18 @@ export const ErrorMsgsSchedule = {
   }
 };
 export interface Schedules {
-  personalInfo: String;
-  otherSources: String;
-  investmentsDeductions: String;
-  taxesPaid: String;
-  declaration: String;
-  salary: String;
-  houseProperty: String;
-  businessIncome: String;
-  capitalGain: String;
-  speculativeIncome: String;
-  foreignIncome: String;
-  moreInformation: String;
+  personalInfo: string;
+  otherSources: string;
+  investmentsDeductions: string;
+  taxesPaid: string;
+  declaration: string;
+  salary: string;
+  houseProperty: string;
+  businessIncome: string;
+  capitalGain: string;
+  speculativeIncome: string;
+  foreignIncome: string;
+  moreInformation: string;
 
   // customerProfile: any;
   // personalInformation: any;
@@ -800,7 +800,6 @@ export interface Schedules {
   providedIn: 'root',
 })
 export class ItrValidations {
-  constructor() { }
 
   getErrorSchedule(errorCode: string) {
     return ErrorMsgsSchedule[errorCode];

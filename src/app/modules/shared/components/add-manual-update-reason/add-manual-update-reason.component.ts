@@ -1,7 +1,6 @@
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-add-manual-update-reason',
   templateUrl: './add-manual-update-reason.component.html',
@@ -14,9 +13,6 @@ export class AddManualUpdateReasonComponent {
     public dialogRef: MatDialogRef<AddManualUpdateReasonComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
   ) {
-  }
-
-  ngOnInit() {
   }
 
   updateReason(status) {

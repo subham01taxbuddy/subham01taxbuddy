@@ -235,7 +235,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     if (this.assetLiabilitiesForm.valid) {
       valid = true;
     } else {
-      valid = false;
       this.utilsService.showSnackBar(
         'Please make sure all the details of balance sheet are entered correctly'
       );
@@ -244,25 +243,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       this.utilsService.showSnackBar('Please enter the all fixed asset details');
       return;
     }
-
-    // if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
-    //   if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
-    //     valid = true;
-    //   } else {
-    //     valid = false;
-    //   }
-    // } else {
-    //   if (
-    //     this.assetLiabilitiesForm.controls['cashInHand'].valid &&
-    //     this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
-    //     this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
-    //     this.assetLiabilitiesForm.controls['inventories'].valid
-    //   ) {
-    //     valid = true;
-    //   } else {
-    //     valid = false;
-    //   }
-    // }
 
     if (valid) {
       this.loading = true;

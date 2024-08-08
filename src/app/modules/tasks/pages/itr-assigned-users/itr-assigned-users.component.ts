@@ -243,7 +243,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.loading = false;
     switch (res.api) {
       case this.LIFECYCLE: {
-        const loggedInId = this.utilsService.getLoggedInUserID();
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -302,7 +301,18 @@ export class ItrAssignedUsersComponent implements OnInit {
               Object.assign(obj, workingItr);
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
-              sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              try {
+                sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
+              } catch (e) {
+                this.utilsService.showSnackBar('Please try with manual filling');
+                this.sendEmail(JSON.stringify(workingItr));
+                workingItr.capitalGain = null;
+                this.utilsService.saveItrObject(workingItr).subscribe((result: any) => {
+                  console.log('itr cg cleared');
+                });
+                console.log("Local Storage is full, Please empty data");
+                return;
+              }
               this.router.navigate(['/itr-filing/itr'], {
                 state: {
                   userId: this.rowData.userId,
@@ -324,6 +334,78 @@ export class ItrAssignedUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  sendEmail(ITR_JSON) {
+    this.loading = true;
+    let data = new FormData();
+    data.append('from', 'ashwini@taxbuddy.com');
+    data.append('subject', 'Large ITR object case');
+    data.append('body', `<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+
+<body style="margin: 0 !important; padding: 0 !important; background: #ededed;">
+    <table width="100%" cellpadding="0" style="margin-top: 40px" cellspacing="0" border="0">
+        <tr>
+            <td align="center">
+                <table width="600" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;border: 1px solid #e0e0e0;background-color: #fff;">
+                    <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                        <td>
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;border-bottom: 1px solid #e0e0e0;padding: 10px 0 10px 0;">
+                                <tr style="background: #fff;border-bottom: 1px solid #e0e0e0;">
+                                    <td style="background: #fff;padding-left: 15px;"> <a href="https://www.taxbuddy.com/" target="_blank" style="display: inline-block;"> <img alt="Logo" src="https://s3.ap-south-1.amazonaws.com/assets.taxbuddy.com/taxbuddy.png" width="150px" border="0"> </a> </td>
+                                    <td align="right" valign="top" style="padding: 15px 15px 15px 0;" class="logo" width="70%"> </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0px 15px 0px 15px">
+                            <table cellpadding="0" cellspacing="0" style="width: 100%;font-family:Arial, sans-serif;">
+                                <tr>
+                                    <td style="font-size: 14px;color: #333;"> <br> <br> <span style="font-weight: bold">Dear Team,</span><br /> <br>
+                                        <p style="margin: 0;line-height: 24px;font-size: 14px;"> Please Check the below attached json that is too large </p> <br>
+
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #1c3550;padding: 20px 15px;">
+                            <table cellpadding="0" cellspacing="0" style="font-size: 13px;color: #657985;font-family:Arial, sans-serif;width: 100%;"> </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>`);
+    data.append('isHtml', 'true');
+    data.append('to', 'ashwini@taxbuddy.com');
+    const dto_object = new Blob([ITR_JSON], {
+      type: 'application/json'
+    })
+
+    data.append('file', dto_object, "itr.json");
+    let param = '/send-mail';
+    this.userMsService.postMethod(param, data).subscribe((res: any) => {
+      console.log(res);
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar(error.error.text);
+    });
   }
 
   checkFilerAssignment(data: any) {
@@ -415,10 +497,6 @@ export class ItrAssignedUsersComponent implements OnInit {
               itrSubscriptionFound = true;
               return;
             }
-            // if (item1.service === 'ITRU' && (item1.financialYear === "2022-2023" || item1.financialYear === "2022-23") ) {
-            //   itrSubscriptionFound = true;
-            //   return;
-            // }
           }
 
 
@@ -541,7 +619,6 @@ export class ItrAssignedUsersComponent implements OnInit {
       this?.serviceDropDown?.resetService();
       this.usersGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
-      // this.search();
     }
   }
 
@@ -552,7 +629,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
   }
 
-  isSelectionAllowed(data){
+
+  isSelectionAllowed(data) {
     // console.log(data);
     // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
     let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
@@ -562,15 +640,13 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
-    var statusSequence = 0;
+    let statusSequence = 0;
     let hideTaxPayble
     if (this.utilsService.isNonEmpty(this.taxPayable)) {
       hideTaxPayble = true;
     } else {
       hideTaxPayble = false;
     }
-    let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER');
-    let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     let columnDefs: ColDef[] = [
       {
         field: 'Re Assign',
@@ -1015,11 +1091,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
             <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
             </button>`;
-
-            // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-            // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-            // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-            //  </button>`;
           },
 
           width: 180,
@@ -1219,7 +1290,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         id: userData[i].id,
@@ -1356,7 +1427,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.search();
         return;
       } else {
-        // this.start(data);
         console.log(data);
 
         if (data.id && data.id !== null && (!data.itrObjectStatus || data.itrObjectStatus === null)) {
@@ -1570,7 +1640,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         disposable.afterClosed().subscribe(result => {
           if (result) {
             if (result.data === "statusChanged") {
-              // this.searchParam.page = 0;
               this.search();
             }
           }
@@ -1777,16 +1846,13 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.utilsService.isNonEmpty(this.taxPayable)) {
       param = param + `&taxPayable=${this.taxPayable}`;
     }
+
     if (this.unAssignedUsersView.value) {
       // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
       param = param + '&assigned=false'
     }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
-      if (result.success == false) {
-        this._toastMessageService.alert("error", result.message);
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+      this.loading = false;
       if (result.success) {
         if (result.data && result.data['content'] instanceof Array) {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -1804,9 +1870,11 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.config.totalItems = 0;
           this._toastMessageService.alert('error', result.message)
         }
+      } else {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
       }
-      this.loading = false;
-
     }).catch(() => {
       this.loading = false;
       this.config.totalItems = 0;

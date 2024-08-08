@@ -180,7 +180,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.serviceCall('');
   }
 
   getLeaders() {
@@ -290,11 +289,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
     this.searchVal = '';
     this.key = ''
-    // this.serviceCall(queryString);
   }
 
   payOutStatusChanged() {
-    // this.selectedStatus=''
     this.config.currentPage = 1;
     let queryString = '';
     if (this.utilsService.isNonEmpty(this.searchVal)) {
@@ -302,7 +299,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
     this.searchVal = '';
     this.key = ''
-    // this.serviceCall(queryString);
   }
 
   reasonChanged(){
@@ -392,7 +388,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;
-      // this.searchParam.page = event - 1;
       this.serviceCall('', event);
     }
   }
@@ -548,12 +543,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         valueGetter: function (params: any) {
-          var id = params.data.ackNumber;
+          let id = params.data.ackNumber;
           if (id) {
-            var lastSix = id.substr(id.length - 6);
-            var day = lastSix.slice(0, 2);
-            var month = lastSix.slice(2, 4);
-            var year = lastSix.slice(4, 6);
+            let lastSix = id.substr(id.length - 6);
+            let day = lastSix.slice(0, 2);
+            let month = lastSix.slice(2, 4);
+            let year = lastSix.slice(4, 6);
             let dateString = `20${year}-${month}-${day}`;
             console.log(dateString, year, month, day)
             return dateString;
@@ -1159,12 +1154,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     } else {
       //clear grid for loaded data
       this.usersGridOptions.api?.setRowData([]);
-      // this.subscriptionListGridOptions.api?.setRowData(
-      //   this.createRowData([]) );
       this.config.totalItems = 0;
-      // this.config.currentPage =1;
     }
-    // this.serviceCall('');
   }
   ngOnDestroy() {
     this.cacheManager.clearCache();

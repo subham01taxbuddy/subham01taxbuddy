@@ -58,7 +58,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
   isReadOnly: boolean = false;
   loggedInSmeInfo: any;
   maxNumber: number;
-  disableButton: Boolean = false;
+  disableButton: boolean = false;
   emailAccepted = '';
   allFilerList:any;
 
@@ -700,7 +700,6 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
         this.otpVerificationDone = true;
         this.fromEdit = true;
         this.smeOriginalEmail.setValue(this.emailAddress.value || response.email);
-        // this.name.setValue(response.firstName + " " + response.lastName);
         this.firstName.setValue(response.firstName);
         this.lastName.setValue(response.lastName);
         this.callingNumber.setValue(this.mobileNumber.value)
@@ -824,6 +823,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
 
     this.http.get(url, { headers }).subscribe(
       (response: any) => {
+        console.log(response);
       })
 
   }
@@ -836,8 +836,6 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
     //'https://uat-api.taxbuddy.com/user/v2/assistant-details' \
     this.markFormGroupTouched(this.smeFormGroup);
     if (this.smeFormGroup.valid) {
-
-      // let reqBody = this.partnerInfo;
       let userId = this.childObj ? this.childObj.data.userId : this.childUserId
       let parentId = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentId;
       let parentName = this.childObj ? this.childObj.data.parentId : this.loggedInSmeInfo[0].parentName;
@@ -854,7 +852,7 @@ export class EditChildProfileComponent implements OnInit, OnDestroy {
       const today = new Date();
       const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
       let name = this.name.setValue(`${this.firstName.value} ${this.middleName.value} ${this.lastName.value}`);
-
+      console.log(name);
       const param = `/v2/assistant-details`;
 
       const requestBody = {

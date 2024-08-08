@@ -1,18 +1,7 @@
 <h1 mat-dialog-title> Investment details for "{{this.data.assetClassName}}"</h1>
 
 <mat-dialog-content>
-  <!-- <div class="btn-primary"> -->
-  <!-- <button type="button" (click)="addInvestment('ADD','')" class='tbd-btn-small'>Add <i class="fa fa-plus"></i></button> -->
-  <!-- </div> -->
-  <!--  <div class="card__row">
-    <div style="height: 100%; padding-top: 15px; box-sizing: border-box;padding-bottom: 30px;">
-      <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
-        [gridOptions]="investmentOfAssetGridOptions" (rowClicked)="onInvestmentsRowClicked($event)">
-      </ag-grid-angular>
-    </div>
-  </div> -->
   <form [formGroup]="investmentForm">
-    <!-- *ngIf="investMode === 'ADD' || investMode === 'EDIT'" -->
     <div class="card__row">
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
@@ -28,30 +17,18 @@
     </div>
 
     <div class="card__row" *ngIf="investmentForm.controls['underSection'].valid">
-      <!--  <div class="card__col-xs-12 card__col-sm-6">
-        <mat-form-field>
-          <input matInput formControlName="orgAssestTransferDate" name="orgAssestTransferDate"
-            [matDatepicker]="transferDate" placeholder="Date of Transfer">
-          <mat-datepicker-toggle matSuffix [for]="transferDate"></mat-datepicker-toggle>
-          <mat-datepicker #transferDate></mat-datepicker>
-        </mat-form-field>
-      </div> -->
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field>
-          <input matInput readonly formControlName="purchaseDate" readonly name="purchaseDate" [matDatepicker]="purchaseDate"
-            placeholder="Date of Purchase">
+          <input matInput readonly formControlName="purchaseDate" readonly name="purchaseDate"
+            [matDatepicker]="purchaseDate" placeholder="Date of Purchase">
           <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
           <mat-datepicker #purchaseDate></mat-datepicker>
-          <!--  <mat-error
-            *ngIf="investmentForm.controls['purchaseDate'].hasError('matDatepickerMax') || investmentForm.controls['purchaseDate'].hasError('matDatepickerMin')">
-            Invalid Date of Purchase</mat-error> -->
         </mat-form-field>
       </div>
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
-          <input matInput currencyMask type="number" formControlName="costOfNewAssets"
-            placeholder="Cost of New Asset" name="costOfNewAssets" class="input-field" maxlength="14"
-            (blur)="blurCostOfNewAssets()"
+          <input matInput currencyMask type="number" formControlName="costOfNewAssets" placeholder="Cost of New Asset"
+            name="costOfNewAssets" class="input-field" maxlength="14" (blur)="blurCostOfNewAssets()"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="investmentForm.controls['costOfNewAssets'].hasError('pattern')">Enter
             valid amount.</mat-error>
@@ -71,7 +48,8 @@
       <div class="card__col-xs-12 card__col-sm-6">
         <mat-form-field class="input-field-width">
           <input matInput currencyMask type="number" formControlName="totalDeductionClaimed"
-            placeholder="Deduction Claimed" name="totalDeductionClaimed" class="input-field" maxlength="14" [disabled]="true"
+            placeholder="Deduction Claimed" name="totalDeductionClaimed" class="input-field" maxlength="14"
+            [disabled]="true"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <mat-error *ngIf="investmentForm.controls['totalDeductionClaimed'].hasError('pattern')">Enter
             valid amount.</mat-error>
@@ -80,12 +58,6 @@
         </mat-form-field>
       </div>
     </div>
-
-    <!--  <mat-dialog-actions align="center"  *ngIf="investmentForm.controls['underSection'].valid">
-      <button class="tbd-btn" (click)="saveInvestments()" [disabled]="saveBusy">{{{investMode === 'EDIT' ? 'Update' :
-        'Save'}}</button>
-      <button type="submit" class="tbd-btn-secondary" mat-dialog-close (click)="cancelInvestments()">Cancel</button>
-  </mat-dialog-actions> -->
 
     <div class="row dialog-button" *ngIf="investmentForm.controls['underSection'].valid">
       <div class="sub_btn top-space">

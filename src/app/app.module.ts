@@ -36,6 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
 import { AppConstants } from './modules/shared/constants';
 
+
 const dbConfig: DBConfig  = {
   name: 'taxbuddyIndexedDb',
   version: 1,
@@ -51,7 +52,7 @@ const dbConfig: DBConfig  = {
   declarations: [
     AppComponent,
     ToastMessageComponent,
-  ],
+   ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig,
@@ -63,6 +64,7 @@ const dbConfig: DBConfig  = {
     PagesModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatButtonModule,
     AngularFireModule,
     AngularFireMessagingModule,
     SubscriptionModule,

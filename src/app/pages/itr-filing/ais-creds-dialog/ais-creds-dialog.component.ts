@@ -129,7 +129,6 @@ export class AisCredsDialogComponent implements OnInit {
         this.timeLeft--;
       } else {
         this.getUserCreds(true);
-        // this.retryCount++;
         this.updateClicked = false;
         this.showProgress = false;
         this.pauseTimer();

@@ -301,19 +301,21 @@ export class CreateNewUserComponent implements OnInit {
       finalReq.cognitoId = cognitoData['userSub'];
       this.loading = true;
       let param = "/user_account";
-      this.userService.postMethod(param, finalReq).subscribe((res: any) => {
-        if (res.status === 406) {
+      this.userService.postMethod(param, finalReq).subscribe({
+        next: (res: any) => {
           this.loading = false;
-          this.utilsService.showSnackBar(res.message);
-          return;
+          if (res.status === 406) {
+            this.utilsService.showSnackBar(res.message);
+            return;
+          }
+          this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log("Error when creating user: ", error);
+          this.utilsService.showSnackBar("Some issue to create user.");
         }
-        this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
-      }, (error) => {
-        this.loading = false;
-        console.log("Error when creating user: ", error);
-        this.utilsService.showSnackBar("Some issue to create user.");
-      }
-      );
+      });
     }
   }
 
@@ -335,43 +337,50 @@ export class CreateNewUserComponent implements OnInit {
         param = param + `&filerUserId=${this.filerId}`
       }
     }
-    this.userService.getMethod(param).subscribe((res: any) => {
-      if (res.success == true) {
+    this.userService.getMethod(param).subscribe({
+      next: (res: any) => {
         this.loading = false;
-        this.utilsService.showSnackBar("User created succesfully.");
-      } else {
+        if (res.success) {
+          this.utilsService.showSnackBar("User created successfully.");
+        } else {
+          this.utilsService.showSnackBar("Error while assigning user! Please select leader or Filer Name.");
+        }
+      },
+      error: (error) => {
         this.loading = false;
-        this.utilsService.showSnackBar("Error while assigning user!!! Please select leader or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!");
       }
-
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar("Error while assigning user!!!");
-    })
+    });
   }
 
   getUserInfoByPan() {
-    let pan = this.signUpForm.controls['panNumber'];
+    const pan = this.signUpForm.controls['panNumber'];
+
     if (this.utilsService.isNonEmpty(pan.value) && pan.valid) {
-      this.utilsService.getPanDetails(pan.value).subscribe((result: any) => {
-        console.log('userData from PAN: ', result);
-        if (result.isValid && result.isValid === 'INVALID PAN') {
-          this.utilsService.showSnackBar('The PAN number is invalid');
-          this.signUpForm.patchValue({
-            firstName: '',
-            lastName: '',
-            middleName: ''
-          });
-        } else if (result.isValid && result.isValid === 'EXISTING AND VALID') {
-          this.signUpForm.patchValue(result);
-        } else {
-          this.utilsService.showSnackBar(result.isValid);
+      this.utilsService.getPanDetails(pan.value).subscribe({
+        next: (result: any) => {
+          console.log('userData from PAN: ', result);
+          if (result.isValid === 'INVALID PAN') {
+            this.utilsService.showSnackBar('The PAN number is invalid');
+            this.signUpForm.patchValue({
+              firstName: '',
+              lastName: '',
+              middleName: ''
+            });
+          } else if (result.isValid === 'EXISTING AND VALID') {
+            this.signUpForm.patchValue(result);
+          } else {
+            this.utilsService.showSnackBar(result.isValid);
+          }
+        },
+        error: (error) => {
+          console.log('Error during fetching data using PAN number: ', error);
+          this.utilsService.showSnackBar('Error fetching data. Please try again.');
         }
-      }, error => {
-        console.log('Error during fetching data using PAN number: ', error)
-      })
+      });
     }
   }
+
 
   changeServiceType() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));

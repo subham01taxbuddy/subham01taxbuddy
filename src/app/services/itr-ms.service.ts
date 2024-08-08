@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {InterceptorSkipHeader} from "./token-interceptor";
+import { InterceptorSkipHeader } from "./token-interceptor";
 @Injectable({
   providedIn: 'root',
 })
@@ -113,7 +113,6 @@ export class ItrMsService {
   postMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-
     return this.httpClient.post<T>(
       environment.url + this.microService + param[0],
       param[1],
@@ -123,7 +122,6 @@ export class ItrMsService {
 
   singelCgCalculate<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
-    // this.headers.append('Content-Type', 'application/json');
     this.headers = this.headers.append(InterceptorSkipHeader, '');
     return this.httpClient.post<T>(
       this.SINGLE_CG_URL,
@@ -229,7 +227,7 @@ export class ItrMsService {
         })
       );
   }
-  downloadFileAsPost(param: any, fileType: any, request:any) {
+  downloadFileAsPost(param: any, fileType: any, request: any) {
     console.log('get Param', param);
     const userData = JSON.parse(localStorage.getItem('UMD') || '');
     const TOKEN = userData ? userData.id_token : null;
@@ -276,4 +274,26 @@ export class ItrMsService {
       responseType: 'blob',
     });
   }
+
+  getJvSnapshots<T>(openItrId): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.get<T>(
+      environment.url + this.microService + `/list-itr/${openItrId}`,
+      { headers: this.headers }
+    );
+  }
+ 
+  putJvSnapshots<T>(ids: string[], openItrId: number): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    const body = { ids: ids };
+    return this.httpClient.put<T>(
+        environment.url + this.microService +`/update-snapshot/${openItrId}`,body,
+      { headers: this.headers }
+    );
+  }
+
+
+
 }

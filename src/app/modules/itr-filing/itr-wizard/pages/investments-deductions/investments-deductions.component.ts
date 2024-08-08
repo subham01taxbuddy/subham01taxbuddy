@@ -35,7 +35,7 @@ export class InvestmentsDeductionsComponent
   otherDeductionComponent!: OtherDeductionsComponent;
 
   step = 0;
-  isAddDonation: Number;
+  isAddDonation: number;
   loading: boolean = false;
   investmentDeductionForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;

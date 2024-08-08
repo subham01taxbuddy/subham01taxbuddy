@@ -1,9 +1,7 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
 import { Router } from '@angular/router';
-import { NavbarService } from "../../../../services/navbar.service";
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Subscription } from 'rxjs';
@@ -230,6 +228,28 @@ export class SidebarComponent {
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
+
+    {
+      name:'Alerts',
+      icon:'alert.png',
+      active:false,
+      url:null,
+      roles:['ROLE_ADMIN'],
+      submenu:[
+        {name: 'Create Alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
+      ]
+  },
+
+    {
+      name:'Data Recovery',
+      icon:'recovery.png',
+      active:false,
+      url:null,
+      roles:['ROLE_ADMIN'],
+      submenu:[
+        {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
+      ]
+  },
     {
       name: 'PAN Exception',
       icon: 'invoice.png',

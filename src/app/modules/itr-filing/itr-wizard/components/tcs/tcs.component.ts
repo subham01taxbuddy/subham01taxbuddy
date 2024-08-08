@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./tcs.component.scss'],
 })
 export class TcsComponent implements OnInit {
-  @Input() isAddTcs: Number;
+  @Input() isAddTcs: number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
   salaryForm: UntypedFormGroup;
@@ -34,7 +34,7 @@ export class TcsComponent implements OnInit {
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<TcsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -50,8 +50,8 @@ export class TcsComponent implements OnInit {
     this.salaryForm = this.inItForm();
 
     if (
-        this.Copy_ITR_JSON.taxPaid?.tcs &&
-        this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
+      this.Copy_ITR_JSON.taxPaid?.tcs &&
+      this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
     ) {
       this.Copy_ITR_JSON.taxPaid.tcs.forEach((item) => {
         this.addMoreSalary(item);
@@ -83,9 +83,8 @@ export class TcsComponent implements OnInit {
           element.markAsDirty();
           element.markAllAsTouched();
           this.utilsService.showSnackBar(
-              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
-          return;
         }
       });
     }
@@ -98,7 +97,7 @@ export class TcsComponent implements OnInit {
   }
 
   createForm(item?): UntypedFormGroup {
-    if(this.data.assetIndex !== null && item){
+    if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
     return this.fb.group({
@@ -124,10 +123,10 @@ export class TcsComponent implements OnInit {
   }
 
   activeIndex = 0;
-  markActive(index){
-    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+  markActive(index) {
+    if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
       this.utilsService.showSnackBar(
-          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
       );
       return;
     }
@@ -137,7 +136,7 @@ export class TcsComponent implements OnInit {
     this.config.currentPage = this.activeIndex;
   }
 
-  goBack(){
+  goBack() {
     this.onSave.emit({
       type: 'tcs',
       saved: false
@@ -155,7 +154,7 @@ export class TcsComponent implements OnInit {
     );
     this.loading = true;
     if (this.salaryForm.valid) {
-      if(!this.Copy_ITR_JSON.taxPaid){
+      if (!this.Copy_ITR_JSON.taxPaid) {
         this.Copy_ITR_JSON.taxPaid = {
           onSalary: [], otherThanSalary16A: [], otherThanSalary26QB: [], otherThanTDSTCS: [], paidRefund: [], tcs: []
         }
@@ -165,14 +164,6 @@ export class TcsComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
-
-      let result = {
-        cgObject: this.salaryForm.value,
-        rowIndex: this.data.rowIndex,
-        type:'tcs'
-      };
-      // this.dialogRef.close(result);
-
       this.onSave.emit({
         type: 'tcs',
         saved: true
@@ -190,10 +181,10 @@ export class TcsComponent implements OnInit {
   }
 
   addMoreSalary(item?) {
-    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
-      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+    if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
         this.utilsService.showSnackBar(
-            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
         );
         return;
       }

@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 import { GoogleDriveService } from "../../../services/google-drive.service";
 import * as FileSaver from 'file-saver';
 import * as JSZip from "jszip";
-import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { saveAs } from "file-saver/dist/FileSaver";
 
 @Component({
@@ -39,7 +39,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("params from more  :", params)
-      // this.getCommonDocuments(params['userId']);
       this.userId = params['userId'];
       this.serviceType = params['serviceType']
       // this.mobileNumber = params['mobileNumber'];
@@ -97,7 +96,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
       //open file in gdrive
       this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
-      // this.gdriveService.getUserConsent();
     }, error => {
       this.loading = false;
     });
@@ -114,7 +112,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
       //open file in gdrive
       this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
-      // this.gdriveService.getUserConsent();
     }, error => {
       this.loading = false;
     })
@@ -199,15 +196,13 @@ export class ShowUserDocumnetsComponent implements OnInit {
         if (error.status === 401) {
           this.toastMessageService.alert('error', error.error.detail)
         }
-        // this.utilsService.disposable.unsubscribe();
-        // this.errorHandler(error);
       }
     );
   }
 
   getCurrentPath(path, from?) {
     if (from === 'fromBreadcrum') {
-      var indexOfClickPath = this.breadcrumbsPart.indexOf(path);
+      let indexOfClickPath = this.breadcrumbsPart.indexOf(path);
       this.breadcrumbsPart.splice((indexOfClickPath + 1), this.breadcrumbsPart.length)
     }
     console.log("this.breadcrumbsPart : ", this.breadcrumbsPart);
@@ -343,9 +338,6 @@ export class ShowUserDocumnetsComponent implements OnInit {
       } else {
         this.utilsService.showSnackBar(res.response);
       }
-
-      // window.open(this.docUrl);
-      // this.utilsService.showSnackBar(res.response);
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar(error);
@@ -379,14 +371,12 @@ export class ShowUserDocumnetsComponent implements OnInit {
     console.log('body: ', body);
     this.itrMsService.deleteMethodWithRequest(path, body).subscribe((res: any) => {
       console.log('Responce after delete file: ', res);
-      // this.utilsService.disposable.unsubscribe();
       this.utilsService.showSnackBar(res.response);
       const lastBreadcrumb = this.breadcrumbsPart[this.breadcrumbsPart.length - 1];
       this.getCloudFilePath(lastBreadcrumb);
     },
       error => {
         console.log('There is some erro for deleting file: ', error);
-        // this.utilsService.disposable.unsubscribe();
         this.utilsService.showSnackBar(error.response);
       });
 

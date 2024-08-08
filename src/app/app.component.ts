@@ -21,7 +21,6 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
 
@@ -54,7 +53,7 @@ export class AppComponent {
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
         let softwareUpdateAvailable = localStorage.getItem('SOFTWARE_UPDATE_AVAIlABLE');
-        console.log('Software update available key',softwareUpdateAvailable)
+        console.log('Software update available key', softwareUpdateAvailable)
 
         if (softwareUpdateAvailable === 'true') {
           console.log('remove Software update available key')
@@ -83,11 +82,9 @@ export class AppComponent {
 
     if (this.swUpdate.isEnabled) {
       console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
-      // localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       this.swUpdate.available.subscribe(() => {
         console.log('SOFTWARE_UPDATE_AVAIlABLE')
         localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
-        // this.reloadWindow();
       })
     }
 
@@ -105,8 +102,6 @@ export class AppComponent {
                   sessionStorage.setItem('webToken', value);
                 }).catch(error => {
                   console.log("error", error.code);
-                  if (error.code === 'messaging/permission-blocked') {
-                  }
                 })
               } else {
                 alert("Click the icon to the left of address bar and enable notifications.")
@@ -121,7 +116,6 @@ export class AppComponent {
       this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
         tap(it => console.log('FCM', it)),
       );
-    } else {
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
@@ -226,14 +220,15 @@ export class AppComponent {
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
-
-    this.userMsService.postMethod(param, '').subscribe((response: any) => {
-      this.loading = false;
-
-    }, (error) => {
-      this.loading = false;
-      console.log('error in sme Logout API', error)
-    })
+    this.userMsService.postMethod(param, '').subscribe({
+      next: (response: any) => {
+        this.loading = false;
+      },
+      error: (error: any) => {
+        this.loading = false;
+        console.log('Error in SME Logout API', error);
+      }
+    });
   }
 
   reloadWindow() {

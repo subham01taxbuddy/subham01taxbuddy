@@ -7,7 +7,6 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ChatOptionsDialogComponent } from '../../components/chat-options/chat-options-dialog.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { UntypedFormControl } from '@angular/forms';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
@@ -32,8 +31,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ogStatusList: any = [];
   usersGridOptions: GridOptions;
   config: any;
-  coOwnerToggle = new UntypedFormControl('');
-  coOwnerCheck = false;
   roles: any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
@@ -262,22 +259,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?${data}&active=false`;
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
-    }
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this._toastMessageService.alert("error", result.message);
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
       if (result.success) {
         if (result.data && result.data['content'] instanceof Array) {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -296,8 +279,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
           this.config.totalItems = 0;
           this._toastMessageService.alert('error', result.message)
         }
+      } else {
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
       }
-      this.loading = false;
     }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'error')
@@ -369,7 +355,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
@@ -758,12 +744,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
         this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
           this.loading = false;
-          if (result.success == false) {
-            this.loading = false;
-            this.utilsService.showSnackBar('Error while making call, Please try again.');
-          }
           if (result.success) {
             this._toastMessageService.alert("success", result.message)
+          } else {
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
           }
         }, error => {
           this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -897,7 +881,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
             (result: any) => {
               console.log('res after active ', result);
               this.loading = false;
-              if (result.success == true) {
+              if (result.success) {
                 if (this.roles.includes('ROLE_LEADER') && result.data.leaderUserId != loggedInId) {
                   this.reAssign(data, loggedInId);
                 } else {
@@ -952,10 +936,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         this.userMsService.getMethod(param).subscribe((res: any) => {
           this.loading = false;
           console.log(res);
-          this.utilsService.showSnackBar('user activated &  re assigned successfully.');
-          this.resetFilters();
-          this.loading = false;
-          if (res.success == false) {
+          if (res.success) {
+            this.utilsService.showSnackBar('user activated &  re assigned successfully.');
+            this.resetFilters();
+          } else {
             this.utilsService.showSnackBar(res.error)
             console.log(res.message)
           }
@@ -984,11 +968,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      this.search('', '', event);
     }
   }
 

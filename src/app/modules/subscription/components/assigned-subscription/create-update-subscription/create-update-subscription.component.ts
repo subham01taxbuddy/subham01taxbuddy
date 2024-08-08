@@ -153,12 +153,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       sessionStorage.getItem('subscriptionObject')
     )?.type);
 
-    // if (this.subType !== 'edit') {
-    //   this.isButtonDisable = false;
-    // } else {
-    //   this.isButtonDisable = true;
-    // }
-
     if (this.roles?.includes('ROLE_FILER') || this.assignedFilerId) {
       this.getSmeDetail();
     }
@@ -1087,7 +1081,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      // this.selectedITRUFy = response?.data?.content.map(sub => sub?.item?.financialYear);
       this.selectedITRUFy = response?.data?.content.filter(sub => sub?.item?.service === 'ITRU').map(sub => sub?.item?.financialYear);
     })
   }
@@ -1161,9 +1154,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
-      // if (this.subType === 'edit' && this.service !== 'ITR') {
-      //   this.isButtonDisable = false;
-      // }
       this.serviceDetails = this.allPlans.map((item) => {
         return { service: this.service, details: item.name };
       });

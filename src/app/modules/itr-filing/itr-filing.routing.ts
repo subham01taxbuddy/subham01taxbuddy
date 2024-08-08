@@ -15,9 +15,7 @@ import { HousePropertyComponent } from './house-property/house-property.componen
 import { ForeignIncomeComponent } from './itr-wizard/pages/foreign-income/foreign-income.component';
 import { AllBusinessIncomeComponent } from './itr-wizard/pages/all-business-income/all-business-income.component';
 import { SummaryComponent } from './summary/summary.component';
-import { AllSalaryIncomeComponent } from './itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { CapitalGainComponent } from './itr-wizard/components/capital-gain/capital-gain.component';
-import { LandAndBuildingComponent } from './itr-wizard/components/capital-gain/land-and-building/land-and-building.component';
 import { OtherAssetsComponent } from './itr-wizard/components/capital-gain/other-assets/other-assets.component';
 import { ZeroCouponBondsComponent } from './itr-wizard/components/zero-coupon-bonds/zero-coupon-bonds.component';
 import { SharesAndEquityComponent } from './itr-wizard/pages/shares-and-equity/shares-and-equity.component';

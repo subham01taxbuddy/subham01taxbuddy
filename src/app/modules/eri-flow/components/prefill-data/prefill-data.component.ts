@@ -1,15 +1,12 @@
 import { environment } from 'src/environments/environment';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, Validators,UntypedFormGroup } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-prefill-data',
   templateUrl: './prefill-data.component.html',
-  styleUrls: ['./prefill-data.component.scss']
 })
 export class PrefillDataComponent implements OnInit, OnDestroy {
   @Input() userDetails: any;
@@ -18,7 +15,6 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   validateOtpForm: UntypedFormGroup;
   constructor(private itrMsService: ItrMsService,
     private utilsService: UtilsService,
-    private router: Router,
     private fb: UntypedFormBuilder) { }
 
 
@@ -89,7 +85,6 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
           if (res.hasOwnProperty('messages')) {
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar("Prefill JSON validated successfully");
-            // this.changePage();
           }
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
@@ -109,7 +104,6 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   downloadPrefillJson() {
     const fileURL = `${environment.url}/itr/eri/download-prefill-json-file?userId=${this.userDetails.userId.toString()}&assessmentYear=2022-2023`;
     window.open(fileURL);
-    return;
   }
 
 

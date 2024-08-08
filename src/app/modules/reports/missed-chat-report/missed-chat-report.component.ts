@@ -4,12 +4,9 @@ import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -145,9 +142,6 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     this.filerId = null;
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
-  }
-  getRoleValue(role) {
-
   }
 
   leaderId: number;
@@ -348,7 +342,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
 
   createRowData(missedChatData) {
     console.log('missedRepoInfo -> ', missedChatData);
-    var missedChatRepoInfoArray = [];
+    let missedChatRepoInfoArray = [];
     for (let i = 0; i < missedChatData?.length; i++) {
       let agentReportInfo = Object.assign({}, missedChatRepoInfoArray[i], {
         noOfMissedChat: missedChatData[i].noOfMissedChat,
@@ -454,7 +448,7 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      // this.advanceSearch();
+      console.log(result);
     });
   }
 
@@ -484,7 +478,6 @@ export class MissedChatReportComponent implements OnInit, OnDestroy {
       this.config.totalItems = 0;
     }
 
-    // this.showReports();
   }
 
   // pageChanged(event) {

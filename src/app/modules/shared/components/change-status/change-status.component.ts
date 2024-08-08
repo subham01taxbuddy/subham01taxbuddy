@@ -80,12 +80,7 @@ export class ChangeStatusComponent implements OnInit {
               item.applicableServices.includes(this.data.serviceType)
             )
           );
-          // let loggedInRole = this.utilsService.getUserRoles();
-          // if(loggedInRole.includes('ROLE_FILER')){
-          //   this.itrStatus = response.filter((item: any) => item.statusId !== 8);
-          // }else{
           this.itrStatus = response;
-          // }
         } else {
           this.itrStatus = [];
         }
@@ -133,9 +128,6 @@ export class ChangeStatusComponent implements OnInit {
   }
 
   addStatus = (): Promise<any> => {
-    // const fyList = this.utilsService.getStoredFyList();
-    // console.log('fyList:', fyList);
-    // const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     return new Promise((resolve, reject) => {
       this.utilsService.getUserCurrentStatus(this.data.userInfo.userId).subscribe(
         (res: any) => {

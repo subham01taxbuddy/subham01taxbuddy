@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
+import { lastValueFrom } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -161,7 +161,6 @@ export class TeamReportDashboardComponent implements OnInit {
   search() {
     this.getInvoiceReports();
     this.getOperationTeamDetails();
-    // this.getPartnersAssignmentDetails();
     this.getTotalCommission();
     this.getScheduledCallDetails();
     this.getSubPaidScheduleCallCount();
@@ -184,7 +183,7 @@ export class TeamReportDashboardComponent implements OnInit {
     }
   }
 
-  getInvoiceReports=():Promise<any> => {
+  getInvoiceReports = (): Promise<any> => {
     // API to get invoice report for dashboard of leader
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/invoice-report?fromDate=2023-09-01&toDate=2023-11-08&serviceType=ITR'
     this.loading = true;
@@ -199,22 +198,22 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.invoiceData = response.data;
-        } else {
-          this.loading = false;
-          this._toastMessageService.alert('error', response.message);
-        }
-      }).catch(()=>{
-        this.loading = false;
-        this._toastMessageService.alert('error', 'Error');
-      })
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.invoiceData = response.data;
+      } else {
+        this._toastMessageService.alert('error', response.message);
+      }
+    })
+    .catch(() => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'Error');
+    });
   }
 
-  getOperationTeamDetails=():Promise<any> => {
+  getOperationTeamDetails = (): Promise<any> => {
     // API to get operation team
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/sme-report'
     this.loading = true;
@@ -225,8 +224,8 @@ export class TeamReportDashboardComponent implements OnInit {
     }
     param = `/bo/dashboard/sme-report${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.operationTeamData = response.data;
@@ -234,7 +233,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       });
@@ -256,24 +255,23 @@ export class TeamReportDashboardComponent implements OnInit {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
     param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`;
-    this.userMsService.getMethodNew(param).subscribe(
-      (response: any) => {
+    this.userMsService.getMethodNew(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
         if (response.success) {
           this.partnersAssignmentData = response.data;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
       },
-      (error) => {
+      error: (error) => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
-      }
-    );
+      },
+    });
   }
 
-  getTotalCommission=():Promise<any> => {
+  getTotalCommission = (): Promise<any> => {
     // API to get totalcommission
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
@@ -287,8 +285,8 @@ export class TeamReportDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
           this.totalOriginal =
@@ -313,7 +311,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert(
           'error',
@@ -321,7 +319,7 @@ export class TeamReportDashboardComponent implements OnInit {
       });
   }
 
-  getSubPaidScheduleCallCount=():Promise<any> =>{
+  getSubPaidScheduleCallCount = (): Promise<any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?toDate=2024-02-09&count=true&fromDate=2024-02-01
     // https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?leaderUserId=14166&toDate=2024-02-09&count=true&fromDate=2024-02-01'
     this.loading = true;
@@ -334,27 +332,22 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}&count=true`;
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.subPaidScheduleCallDetails = response.data;
-          // this.totalScheduledCall =
-          //   response.data.callsAssigned_Open +
-          //   response.data.done +
-          //   response.data.followUp;
-
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       })
   }
 
-  getScheduledCallDetails=():Promise<any> =>{
+  getScheduledCallDetails = (): Promise<any> => {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -366,8 +359,8 @@ export class TeamReportDashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
         this.loading = false;
         if (response.success) {
           this.scheduledCallData = response.data;
@@ -380,7 +373,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       });

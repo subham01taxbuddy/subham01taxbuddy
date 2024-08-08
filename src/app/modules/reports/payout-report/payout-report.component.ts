@@ -49,8 +49,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     pageSize: 20,
   };
   payoutReportGridOptions: GridOptions;
-  // totalCommissionEarned =0;
-  // totalPartnersPaid=0;
   dataOnLoad = true;
   roles: any;
   loggedInSme: any;
@@ -107,10 +105,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  getStatusValue(item) {
-
-  }
-
   setToDateValidation() {
     this.minEndDate = this.startDate.value;
     this.maxStartDate = this.endDate.value;
@@ -143,9 +137,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     if (event) {
       this.filerId = event ? event.userId : null;
       this.agentId = this.filerId;
-      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
 
@@ -231,7 +222,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
 
   createRowData(payoutData) {
     console.log('payoutRepoInfo -> ', payoutData);
-    var payoutRepoInfoArray = [];
+    let payoutRepoInfoArray = [];
     for (let i = 0; i < payoutData.length; i++) {
       let agentReportInfo = {
         filerName: payoutData[i].filerName,
@@ -404,7 +395,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = ''
@@ -451,7 +441,6 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     this.config.totalPartnersPaid = 0;
     this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
-    // this.showReports();
   }
 
   pageChanged(event) {

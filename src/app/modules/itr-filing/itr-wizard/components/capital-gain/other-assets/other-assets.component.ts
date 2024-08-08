@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -8,7 +8,6 @@ import {
   NewCapitalGain,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
@@ -24,7 +23,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   step = 0;
-  isAddOtherAssetsImprovement: Number;
+  isAddOtherAssetsImprovement: number;
   deductionForm!: UntypedFormGroup;
   config: any;
   index: number;
@@ -51,8 +50,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       console.log(listedData);
-      // this.clearNullImprovements();
-      // this.calculateTotalCg();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -82,7 +79,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             asset.hasEdit = false;
           });
         }
-        // this.sel();
       },
       sortable: true,
       pagination: true,
@@ -259,9 +255,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (res: any) => {
         this.loading = false;
         console.log('Deduction:', res);
-        // this.goldCg.assetDetails = res.assetDetails;
-        // this.goldCg.improvement = res.improvement;
-        // this.goldCg.deduction = res.deduction;
         (this.getDeductions.controls[0] as UntypedFormGroup).controls[
           'deductionClaimed'
         ]?.setValue(res.data[0]?.deductionAmount);
@@ -283,8 +276,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     );
 
-    // this.calculateCg();
-    console.log(this.goldCg);
   }
 
   depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
@@ -325,7 +316,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (this.deductionForm.valid) {
       //re-intialise the ITR objects
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
       this.loading = true;
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
@@ -414,12 +404,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deleteDeduction(index) {
     const deleteDeduction = this.getDeductions;
     deleteDeduction.removeAt(index);
-    // Condition is added because at least one deduction needs to be shown
-    // if (deleteDeduction.length === 0) {
-    //   deleteDeduction.push(this.createDeductionForm());
-    // }
-    // this.goldCg.deduction.splice(index, 1);
-    // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
   // for pagination
@@ -470,10 +454,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  editForm() { }
-
-  closed() { }
-
   isAssetSelected() {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
@@ -497,7 +477,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (asset) =>
         !selected.includes(asset?.srn)
     );
-    this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
+    this.assetList = this.assetList.filter((asset) => !asset?.hasEdit);
 
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions
@@ -661,11 +641,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
-        // cellRenderer: (params) => {
-        //   return params.data.costOfImprovement
-        //     ? params.data.costOfImprovement
-        //     : '';
-        // },
         cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           const costOfImprovement = params.data.costOfImprovement;

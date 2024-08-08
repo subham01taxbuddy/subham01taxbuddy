@@ -18,7 +18,6 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-other-information',
@@ -409,7 +408,6 @@ export class OtherInformationComponent implements OnInit {
   }
 
   checkPAN(index?) {
-    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
     const panOfSpouseValue = this.schedule5AForm
       ?.get('panOfSpouse')
       ?.value?.toUpperCase();
@@ -503,7 +501,6 @@ export class OtherInformationComponent implements OnInit {
     } else {
       if (this.Copy_ITR_JSON?.directorInCompany.length > 0) {
         this.Copy_ITR_JSON.directorInCompany = [];
-        // this.directorForm.reset();
         (this.directorForm.controls['directorsArray'] as UntypedFormArray).clear();
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
       }
@@ -525,7 +522,6 @@ export class OtherInformationComponent implements OnInit {
       if (this.Copy_ITR_JSON?.partnerInFirms.length > 0) {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
         this.Copy_ITR_JSON.partnerInFirms = [];
-        // this.directorForm.reset();
         this.firmForm.reset();
         this.formAdded = false;
         (this.firmForm.controls['firmsArray'] as UntypedFormArray).clear();

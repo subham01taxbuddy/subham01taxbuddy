@@ -5,7 +5,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
-import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
   parse: {
@@ -69,7 +68,6 @@ export class CustomerSignUpComponent implements OnInit {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     let param = `/bo/customer-signup-report?fromDate=${fromDate}&toDate=${toDate}`;
-    // location.href = environment.url + param;
     this.reportService.invoiceDownload(param).subscribe((response:any) => {
       if(response){
         this.loading=false;

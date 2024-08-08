@@ -6,6 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import {  MatDialogRef } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
+import { lastValueFrom } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -85,7 +86,6 @@ export class BulkStatusUpdateComponent implements OnInit {
   }
 
   ngOnInit() {
-    const userId = this.utilsService.getLoggedInUserID();
     this.getMasterStatusList();
   }
 
@@ -98,8 +98,6 @@ export class BulkStatusUpdateComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -123,14 +121,14 @@ export class BulkStatusUpdateComponent implements OnInit {
   }
 
 
-  update=():Promise<any> => {
+  update=async ():Promise<any> => {
     //https://uat-api.taxbuddy.com/gateway/itr-status-bulk-request
     if (this.fromStatusValue.value && this.searchParam.serviceType && this.toStatusValue.value) {
       this.loading = true;
       let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
       let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let selectedStatus = this.fromStatusValue.value;
-      let param = '/gateway/itr-status-bulk-request'
+      let param = '/gateway/itr-status-bulk-request';
       let data = {
         statusIdList: selectedStatus,
         newStatusId: this.toStatusValue.value,
@@ -138,9 +136,10 @@ export class BulkStatusUpdateComponent implements OnInit {
         toDate: toDate,
         serviceType: this.searchParam.serviceType,
         newStatusName: this.newStatusName
-      }
+      };
 
-      return this.userMsService.postMethodInfo(param, data).toPromise().then((res: any) => {
+      try {
+        const res: any = await lastValueFrom(this.userMsService.postMethodInfo(param, data));
         this.loading = false;
         if (res) {
           this.utilsService.showSnackBar(res.response);
@@ -151,17 +150,15 @@ export class BulkStatusUpdateComponent implements OnInit {
           this.endDate.setValue(new Date());
           this.toStatusValue.setValue(null);
         } else {
-          this.utilsService.showSnackBar('there is problem while updating the status');
+          this.utilsService.showSnackBar('There is a problem while updating the status');
         }
-      }).catch(()=>{
+      } catch (error) {
         this.loading = false;
-        this.utilsService.showSnackBar(
-          'error in the api of bulk status update'
-        );
-      })
-    } this.utilsService.showSnackBar(
-      'Please select the service and current status of users & to status which need to update   '
-    );
+        this.utilsService.showSnackBar('Error in the API of bulk status update');
+      }
+    } else {
+      this.utilsService.showSnackBar('Please select the service and current status of users & to status which need to update');
+    }
 
   }
 }

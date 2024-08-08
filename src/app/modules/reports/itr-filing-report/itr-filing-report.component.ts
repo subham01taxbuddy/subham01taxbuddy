@@ -5,11 +5,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -78,7 +75,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
   partnerType: any;
-  totalItrFiledCount:any;
+  totalItrFiledCount: any;
   selectedStatus = new UntypedFormControl();
   statusList = [
     { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
@@ -92,7 +89,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     { value: 'totalPayment', name: 'Payment Earned (Total)' }
   ];
   clearUserFilter: number;
-  countData:any;
+  countData: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -208,7 +205,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  getFilingCount= (): Promise<any> =>{
+  getFilingCount = (): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?page=0&pageSize=20&fromDate=2024-06-05&toDate=2024-06-05&count=true
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
@@ -361,9 +358,9 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       if (response.success) {
         if (Array.isArray(response?.data?.content) && response?.data?.content?.length > 0){
           this.itrFillingReport = response?.data?.content;
-        if (response?.data?.content.length > 0) {
-          this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
-        }
+          if (response?.data?.content.length > 0) {
+            this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
+          }
           this.config.totalItems = response?.data?.totalElements;
           this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
           this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));

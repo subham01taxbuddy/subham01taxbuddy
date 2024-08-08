@@ -4,7 +4,6 @@ import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
-import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -62,7 +61,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
   partnerType: any;
   constructor(
     public datePipe: DatePipe,
-    private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -108,7 +106,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.showReports()
+
   }
 
   filerId: number;
@@ -230,7 +228,7 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         clientName: fillingData[i].clientName,
@@ -361,7 +359,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       return;
     }
     this.loading = true;
-    let customerNumber = params.clientNumber;
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
@@ -371,12 +368,11 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
       if (result.success) {
         this._toastMessageService.alert("success", result.message)
+      }else{
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -405,7 +401,6 @@ export class MissedInboundCallListComponent implements OnInit, OnDestroy {
       this.missedInboundCallListGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showReports();
   }
 
   pageChanged(event) {

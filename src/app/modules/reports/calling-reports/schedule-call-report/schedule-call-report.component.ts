@@ -85,7 +85,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
       this.leaderId = this.loggedInSme[0].userId;
     }
     this.dataOnLoad = false;
-    // this.showReports();
   }
 
   leaderId: number;
@@ -155,7 +154,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
 
   createRowData(callingData) {
     console.log('callingRepoInfo -> ', callingData);
-    var callingRepoInfoArray = [];
+    let callingRepoInfoArray = [];
     for (let i = 0; i < callingData.length; i++) {
       let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
         filerName: callingData[i].filerName,
@@ -239,21 +238,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
           debounceMs: 0
         }
       },
-      // {
-      //   headerName: 'Parent Name',
-      //   field: 'parentName',
-      //   sortable: true,
-      //   pinned: 'right',
-      //   width: 200,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-
 
     ]
   }
@@ -311,7 +295,6 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
       this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showReports();
   }
 
   // pageChanged(event) {

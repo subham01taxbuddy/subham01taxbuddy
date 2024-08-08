@@ -42,8 +42,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   itrStatus: any = [];
   filerUserId: any;
   ogStatusList: any = [];
-  coOwnerToggle = new UntypedFormControl('');
-  coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;
   searchParam: any = {
@@ -95,7 +93,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
         return this.isSelectionAllowed(rowNode.data);
-        // return rowNode.data ? this.showReassignmentBtn.length : false;
       },
       onGridReady: params => {
       },
@@ -198,7 +195,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.loading = false;
     switch (res.api) {
       case this.LIFECYCLE: {
-        const loggedInId = this.utilsService.getLoggedInUserID();
         const fyList = await this.utilsService.getStoredFyList();
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
@@ -339,13 +335,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      this.search('', '', event);
     }
   }
+    }
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
@@ -377,8 +370,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   isSelectionAllowed(data){
-    // console.log(data);
-    // console.log(Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60);
     let filteredPlans = ["Salary & House Property Plan", "Capital Gain Plan"]
     return  !(data.serviceType === 'ITR' && !data.filerUserId && (!data.subscriptionPlan || filteredPlans.includes(data.subscriptionPlan))
         && Math.abs(moment(data.statusUpdatedDate).diff(moment.now()))/1000/60 <= AppConstants.DISABLITY_TIME_MINS);
@@ -398,11 +389,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         width: 110,
         hide: !this.showReassignmentBtn.length,
         checkboxSelection: (params) => {
-          // if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          //   return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-          // } else {
-          //   return this.showReassignmentBtn.length
-          // }
           return this.isSelectionAllowed(params.data);
         },
         cellStyle: function (params: any) {
@@ -859,7 +845,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
@@ -1042,11 +1028,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     console.log("param2: ", param2);
     this.userMsService.postMethod(param, param2).subscribe(res => {
       console.log("Status update response: ", res)
-      // this.loading = false;
-      //this._toastMessageService.alert("success", "Status update successfully.");
     }, error => {
-      // this.loading = false;
-      //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
+      console.log('error',error)
     });
   }
 
@@ -1190,7 +1173,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         disposable.afterClosed().subscribe((result) => {
           if (result) {
             if (result.data === 'statusChanged') {
-              // this.searchParam.page = 0;
               this.search();
             }
           }
@@ -1291,9 +1273,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
-    // this.searchParam.mobileNumber = null;
-    // this.searchParam.emailId = null;
-
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
     this.getStatus();
@@ -1322,7 +1301,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'status') {
       this.searchParam.page = 0;
-      // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
 
@@ -1371,11 +1349,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       param = param + `&leaderUserId=${this.agentId}`;
     }
     return this.userMsService.getMethodNew(param).toPromise().then((result: any) => {
-      if (result.success == false) {
-        this._toastMessageService.alert("error", result.message);
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+      this.loading = false;
       if (result.success) {
         if (result.data && result.data['content'] instanceof Array) {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data['content']));
@@ -1393,9 +1367,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           this.config.totalItems = 0;
           this._toastMessageService.alert('error', result.message)
         }
+      }else{
+        this._toastMessageService.alert("error", result.message);
+        this.usersGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
       }
       this.loading = false;
-
     }).catch(() => {
       this.loading = false;
       this.config.totalItems = 0;

@@ -45,11 +45,8 @@
     </div>
   </div>
   <div class="col-sm-4">
-  <!-- <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>  -->
   </div>
   </div>
-  <!-- <ag-grid-angular class="ag-theme-balham" [gridOptions]="invoiceGridOptions" (rowClicked)="onInvoiceRowClicked($event)" paginationPageSize=15 pagination=true>
-  </ag-grid-angular> -->
   <div *ngIf="invoiceNo">
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceGridOptions" (rowClicked)="onExistingInvoiceRowClicked($event)" [paginationPageSiz]e=20 [pagination]=true>
     </ag-grid-angular>

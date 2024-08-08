@@ -1,8 +1,6 @@
 
-import { map, Observable } from 'rxjs';
-
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { UntypedFormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { UntypedFormGroup, UntypedFormControl, Validators,UntypedFormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -18,7 +16,7 @@ import { Location } from "@angular/common";
 
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
@@ -95,9 +93,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     this.setFormValues(this.smeObj);
     this.setPartnerDetails(this.smeObj);
     console.log('sme obj', this.smeObj);
-    const userId = this.smeObj.userId;
-    // this.getPartnerDetails();
-
   }
 
   getPartnerDetails() {
@@ -690,8 +685,6 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   uploadFileS3(uploadDoc, signedUrl) {
     let headers = new HttpHeaders();
-    // headers = headers.append('Content-Type', 'application/json');
-    // headers = headers.append('Accept', 'application/json');
     headers = headers.append(
       'X-Upload-Content-Length',
       uploadDoc.size.toString()

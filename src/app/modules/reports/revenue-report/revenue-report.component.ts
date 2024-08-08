@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
 import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
@@ -115,7 +113,6 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     this.loading = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
 
     let param = '';
     let userFilter = '';
@@ -201,7 +198,7 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
 
   createRowData(revenueData) {
     console.log('revenueRepoInfo -> ', revenueData);
-    var revenueRepoInfoArray = [];
+    let revenueRepoInfoArray = [];
     for (let i = 0; i < revenueData.length; i++) {
       let agentReportInfo = Object.assign({}, revenueRepoInfoArray[i], {
         filerName: revenueData[i].filerName,
@@ -494,7 +491,6 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId && !this.filerId) {
@@ -550,7 +546,6 @@ export class RevenueReportComponent implements OnInit, OnDestroy {
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
       this.config.totalItems = 0;
     }
-    // this.showReports();
 
   }
 

@@ -1,6 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
-import { DatePipe } from '@angular/common';
+import { DatePipe,formatDate } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -10,7 +10,6 @@ import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/materia
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
-import { formatDate } from '@angular/common';
 import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
@@ -119,7 +118,6 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     let param = '';
     let searchFilter = '';
     if (this.searchValue.value) {
-      // param = '&code=' + this.searchValue.value;
       this.searchParam.page = 0
       data = this.utileService.createUrlParams(this.searchParam);
       const encodedSearchValue = encodeURIComponent(this.searchValue.value);
@@ -165,7 +163,7 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
 
   createRowData(promoCodeData) {
     console.log('promoCodeData -> ', promoCodeData);
-    var promoCodeArray = [];
+    let promoCodeArray = [];
     for (let i = 0; i < promoCodeData.length; i++) {
       let promoCodeInfo = Object.assign({}, promoCodeArray[i], {
         code: promoCodeData[i].code,
@@ -450,7 +448,6 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
 
 
     if (this.searchValue.value) {
-      // param = '&code=' + this.searchValue.value;
       const encodedSearchValue = encodeURIComponent(this.searchValue.value);
       searchFilter += `&code=${encodedSearchValue}`;
     }
@@ -488,12 +485,10 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
-    // this.searchParam.page = 0;
     this?.serviceDropDown?.resetService();
     this?.serviceType?.setValue(null);
     this?.searchValue.setValue(null);
     this.pageChanged(1);
-    // this.getPromoCodeList();
   }
   ngOnDestroy() {
     this.cacheManager.clearCache();

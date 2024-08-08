@@ -81,7 +81,6 @@ export class ItrWizardComponent implements OnInit {
     }
 
     this.subscription = fromEvent(window, 'popstate').subscribe((_) => {
-      //history.pushState(null, null, location.href);
       if (this.router.url.startsWith('/itr-filing/itr/eri')) {
         this.skipPrefill(_);
         this.utilsService.showSnackBar(
@@ -96,7 +95,6 @@ export class ItrWizardComponent implements OnInit {
       this.showIncomeSources = true;
     }
     this.getCustomerName();
-    // this.sidebarService.hide();
 
     this.summaryConversionService.getPreviousItrs(this.ITR_JSON.userId, '2023-24', '2022-23');
   }
@@ -106,7 +104,7 @@ export class ItrWizardComponent implements OnInit {
       this.utilsService.isNonEmpty(this.ITR_JSON.family) &&
       this.ITR_JSON.family instanceof Array
     ) {
-      this.ITR_JSON.family.filter((item: any) => {
+      this.ITR_JSON.family.forEach((item: any) => {
         if (item.relationShipCode === 'SELF' || item.relationType === 'SELF') {
           let fName = item.fName ? item.fName : '';
           let mName = item.mName ? item.mName : '';
@@ -117,20 +115,11 @@ export class ItrWizardComponent implements OnInit {
     }
   }
 
-  // ngAfterContentChecked() {
-  //   this.cdRef.detectChanges();
-  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-  // }
-
   subscription: Subscription;
-  breadcrumb: String;
+  breadcrumb: any;
   breadcrumbComponent: WizardNavigation;
 
   subscribeToEmmiter(componentRef) {
-    //this may not be needed for us
-    // if (!(componentRef instanceof ExemptIncomeComponent)){
-    //   return;
-    // }
     const child: WizardNavigation = componentRef;
     child?.saveAndNext.subscribe(() => {
       this.gotoSources();
@@ -157,16 +146,13 @@ export class ItrWizardComponent implements OnInit {
     this.subscription.unsubscribe();
     this.breadcrumb = null;
     if (this.router.url !== '/itr-filing/itr') {
-      // while(this.router.url !== '/itr-filing/itr') {
       this.location.back();
-      // }
     }
     this.showPrefill = true;
     this.showIncomeSources = false;
 
     setTimeout(function () {
       this.subscription = fromEvent(window, 'popstate').subscribe((_) => {
-        //history.pushState(null, null, location.href);
         if (this.router.url.startsWith('/itr-filing/itr/eri')) {
           this.skipPrefill(_);
           this.utilsService.showSnackBar(
@@ -176,62 +162,6 @@ export class ItrWizardComponent implements OnInit {
       });
     }, 2000);
   }
-
-  // gotoSummary() {
-  //   this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-  //   if (this.ITR_JSON.itrSummaryJson) {
-  //     this.breadcrumb = null;
-  //     this.showIncomeSources = false;
-  //     this.selectedSchedule = 'Comparison of New v/s Old Regime';
-  //     this.router.navigate(['/itr-filing/itr/old-vs-new']);
-  //     return;
-  //   }
-  //   this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result: any) => {
-  //     console.log(result);
-  //     // if(result.success){
-
-  //     if (result.data.errors.length > 0) {
-  //       let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
-  //       this.breadcrumb = null;
-  //       this.showIncomeSources = false;
-  //       this.selectedSchedule = 'Validation Errors';
-  //       this.router.navigate(['/itr-filing/itr/validation-errors'], {
-  //         state: { validationErrors: errorMapping },
-  //       });
-  //     } else {
-  //       if (!this.ITR_JSON.systemFlags.hasAgricultureIncome) {
-  //         this.ITR_JSON.agriculturalDetails = null;
-  //         this.ITR_JSON.agriculturalLandDetails = null;
-  //         this.ITR_JSON.agriculturalIncome = null;
-  //       }
-  //       if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
-  //         this.ITR_JSON.schedule5a = null;
-  //       }
-  //       if (this.ITR_JSON.partnerInFirmFlag === 'N') {
-  //         this.ITR_JSON.partnerFirms = [];
-  //       }
-  //       this.ITR_JSON = this.itrValidationService.removeNullProperties(
-  //         this.ITR_JSON
-  //       );
-  //       this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
-  //         this.ITR_JSON
-  //       );
-  //       sessionStorage.setItem(
-  //         AppConstants.ITR_JSON,
-  //         JSON.stringify(this.ITR_JSON)
-  //       );
-
-  //       this.breadcrumb = null;
-  //       this.showIncomeSources = false;
-  //       this.selectedSchedule = 'Comparison of New v/s Old Regime';
-  //       this.router.navigate(['/itr-filing/itr/old-vs-new']);
-  //     }
-
-
-  //     // }
-  //   });
-
-  // }
 
   gotoSummary = (): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -388,26 +318,24 @@ export class ItrWizardComponent implements OnInit {
       this.router.navigate(['/itr-filing/' + navigationPath], {
         state: this.navigationData,
       });
-      return;
     }
   }
 
   gotoCgSchedule() {
     if (this.breadcrumb) {
       this.location.back();
-      let lastBreadcrumb = this.breadcrumb;
       this.breadcrumb = null;
       if (this.breadcrumbComponent instanceof CapitalGainComponent) {
         this.gotoSchedule(this.schedules.CAPITAL_GAIN);
-        (this.breadcrumbComponent as CapitalGainComponent).initList();
+        this.breadcrumbComponent.initList();
       } else if (
         this.breadcrumbComponent instanceof AllBusinessIncomeComponent
       ) {
         this.gotoSchedule(this.schedules.BUSINESS_INCOME);
-        (this.breadcrumbComponent as AllBusinessIncomeComponent).initList();
+        this.breadcrumbComponent.initList();
       } else if (this.breadcrumbComponent instanceof MoreInformationComponent) {
         this.gotoSchedule(this.schedules.MORE_INFORMATION);
-        (this.breadcrumbComponent as MoreInformationComponent).initList();
+        this.breadcrumbComponent.initList();
       }
     }
   }
@@ -418,7 +346,6 @@ export class ItrWizardComponent implements OnInit {
       this.location.back();
       this.showIncomeSources = true;
       this.showPrefill = false;
-      // this.ngAfterContentChecked();
     }
   }
 
@@ -462,12 +389,9 @@ export class ItrWizardComponent implements OnInit {
       } else if (
         scheduleInfoEvent.schedule.schedule === this.schedules.CAPITAL_GAIN
       ) {
-        // let spSource = scheduleInfoEvent.sources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
-        // if (!spSource.selected) {
         this.componentsList = this.componentsList.filter(
           (item) => item !== this.schedules.CAPITAL_GAIN
         );
-        // }
       } else {
         this.componentsList = this.componentsList.filter(
           (item) => item !== scheduleInfoEvent.schedule.schedule
@@ -489,7 +413,6 @@ export class ItrWizardComponent implements OnInit {
         this.incomeSubTab = 5;
       }
     } else {
-      // this.stepper.next();
     }
   }
 
@@ -517,7 +440,6 @@ export class ItrWizardComponent implements OnInit {
       return;
     }
     this.loading = true;
-    let customerNumber = this.ITR_JSON.contactNumber;
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
@@ -618,7 +540,7 @@ export class ItrWizardComponent implements OnInit {
       userId: this.ITR_JSON.userId,
       assessmentYear: this.ITR_JSON.assessmentYear,
     }
-    let disposable = this.dialog.open(ChangeStatusComponent, {
+    this.dialog.open(ChangeStatusComponent, {
       width: '60%',
       height: 'auto',
 
@@ -632,10 +554,6 @@ export class ItrWizardComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => {
-      if (result) {
-      }
-    });
   }
 
   ngOnDestroy() {

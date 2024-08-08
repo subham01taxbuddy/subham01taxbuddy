@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>API Response</h2>
+<mat-dialog-content>
+  <pre>{{ formattedData }}</pre>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onYesClick()" color="primary" [disabled]="isLoading | async">
+    <mat-spinner *ngIf="isLoading | async" diameter="20" style="display: inline-block; margin-right: 5px;"></mat-spinner>
+    Yes
+  </button>
+  <button mat-button (click)="onNoClick()" [disabled]="isLoading | async">No</button>
+</mat-dialog-actions>
+
+<div *ngIf="isLoading | async" class="loader-overlay">
+  <mat-spinner></mat-spinner>
+</div>

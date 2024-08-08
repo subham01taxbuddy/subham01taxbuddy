@@ -67,7 +67,6 @@
     </div>
     <div *ngIf="showIncomeSources">
       <app-source-of-incomes (scheduleSelected)="updateSchedules($event)"></app-source-of-incomes>
-      <!-- <div class="txHd alTxH">Enter <span color="source-color">Salary related Information below:</div> -->
       <div class="spc-blw">
         <mat-accordion class="headers-align">
           <mat-expansion-panel *ngFor="let schedule of componentsList" hideToggle>
@@ -88,10 +87,6 @@
           Back to Prefill Data
         </button>
 
-        <!-- <button (click)="gotoSummary()" class="darkBtn">
-          <span class="adjust">Go to Summary</span>
-          <i class="material-icons icoAd">arrow_right_alt </i>
-        </button> -->
         <app-custom-button class="darkBtn" [disabled]="loading" [actions]="[gotoSummary]">
           <span class="adjust">Go to Summary</span>
           <i class="material-icons icoAd">arrow_right_alt</i>

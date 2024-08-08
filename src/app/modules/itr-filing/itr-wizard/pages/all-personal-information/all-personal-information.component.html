@@ -6,49 +6,41 @@
       <h1 class="heading__title"> Personal Information</h1>
       <div class="space">
 
-          <div class="div-4">
-            <div class="frame-wrapper-2A">
-              <div class="accordion new-bg-1" id="myAccordion">
+        <div class="div-4">
+          <div class="frame-wrapper-2A">
+            <div class="accordion new-bg-1" id="myAccordion">
 
-                <app-customer-profile
-                        (saveAndNext)="checkSuccess(0)"
-                        [navigationData]="navigationData"
-                        [isEditCustomer]="isEditCustomer"
-                        (customerProfileSaved)="onCustomerProfileSaved($event)">
-                </app-customer-profile>
+              <app-customer-profile (saveAndNext)="checkSuccess(0)" [navigationData]="navigationData"
+                [isEditCustomer]="isEditCustomer" (customerProfileSaved)="onCustomerProfileSaved($event)">
+              </app-customer-profile>
 
-                <app-personal-information
-                        (saveAndNext)="checkSuccess(1)"
-                        [isEditPersonal]="isEditPersonal"
-                        (personalInfoSaved)="onPersonalInfoSaved($event)">
-                </app-personal-information>
+              <app-personal-information (saveAndNext)="checkSuccess(1)" [isEditPersonal]="isEditPersonal"
+                (personalInfoSaved)="onPersonalInfoSaved($event)">
+              </app-personal-information>
 
-                <app-other-information
-                        (saveAndNext)="checkSuccess(2)"
-                        [isEditOther]="isEditOther"
-                        (otherInfoSaved)="onotherInfoSaved($event)">
-                </app-other-information>
+              <app-other-information (saveAndNext)="checkSuccess(2)" [isEditOther]="isEditOther"
+                (otherInfoSaved)="onotherInfoSaved($event)">
+              </app-other-information>
 
 
-              </div>
             </div>
           </div>
+        </div>
 
 
 
 
 
-          <div class="out-box">
-            <div class="box-left">
-              <button class="btn btn__white" (click)="goBack()">Back</button>
-            </div>
-            <div class="box-right">
-              <!-- <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button> -->
-              <app-custom-button class="btn btn__primary" [disabled]="loading" [actions]="[saveAll]">
-                Save & View Summary
-              </app-custom-button>
-            </div>
+        <div class="out-box">
+          <div class="box-left">
+            <button class="btn btn__white" (click)="goBack()">Back</button>
           </div>
+          <div class="box-right">
+            <app-custom-button class="btn btn__primary" [disabled]="loading" [actions]="[saveAll]">
+              Save & View Summary
+            </app-custom-button>
+          </div>
+        </div>
 
       </div>
     </div>

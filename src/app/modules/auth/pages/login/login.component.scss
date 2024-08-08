@@ -16,19 +16,15 @@
 }
 
 .mat-mdc-form-field {
-  display: inline!important;
+  display: inline !important;
   position: relative;
   text-align: left;
 }
 
 
 
-.spTp{
-  margin-top:20px;
-}
-
-.btn {
-  margin:20px 0px 0px 0px!important;
+.spTp {
+  margin-top: 20px;
 }
 
 .link-style {
@@ -36,9 +32,6 @@
   display: block;
 }
 
-// .login_content_container {
-//   margin: 0 10px;
-// }
 
 .login_content_container {
   box-sizing: border-box;
@@ -53,7 +46,7 @@
 
   position: absolute;
   width: 480px;
-  height:auto;
+  height: auto;
   // left: 516px;
   top: 140px;
 
@@ -66,10 +59,10 @@
   border-radius: 16px;
 }
 
-.txRes{
-  font-size:14px;
+.txRes {
+  font-size: 14px;
   color: #000;
-  font-weight:600;
+  font-weight: 600;
   font-style: italic;
 }
 
@@ -140,6 +133,7 @@ p {
   z-index: 2;
   color: #00aeca;
 }
+
 .btn {
   display: flex;
   flex-direction: row;
@@ -147,12 +141,13 @@ p {
   align-items: center;
   padding: 14px 49px;
   gap: 10px;
-  width:100%;
+  width: 100%;
   height: 52px;
   background: #00aeca;
   border-radius: 8px;
-  color: #ffffff!important;
-  font-weight: bold!important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+  margin: 20px 0px 0px 0px !important;
 }
 
 /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
@@ -164,6 +159,6 @@ p {
 }
 
 .btn-disabled {
-    pointer-events: none;
-    opacity: .5;
+  pointer-events: none;
+  opacity: .5;
 }

@@ -7,6 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment-timezone';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReportService } from 'src/app/services/report-service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sch-call-calender',
@@ -141,41 +142,44 @@ export class SchCallCalenderComponent implements OnInit {
     this.loading = true;
     // https://uat-api.taxbuddy.com/user/schedule-call-details/3000?page=0&size=30&mobileNumber=4564313878&statusId=17
     let param = '/schedule-call-details/' + this.data?.allData.userId + '?page=0&size=30&mobileNumber=' + this.data?.allData.userMobile;
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success && response?.data?.content?.length > 0) {
-        this.scheduleCallDetails = response?.data?.content[0];
-        this.alreadyScheduleCallDetails = response?.data?.content
-      } else {
-        this.scheduleCallDetails = null;
-        this.alreadyScheduleCallDetails = [];
-      }
-    },
-      error => {
+    this.userMsService.getMethod(param).subscribe({
+      next: (response: any) => {
         this.loading = false;
-        console.log('error ==> ', error)
+        if (response.success && response?.data?.content?.length > 0) {
+          this.scheduleCallDetails = response?.data?.content[0];
+          this.alreadyScheduleCallDetails = response?.data?.content;
+        } else {
+          this.scheduleCallDetails = null;
+          this.alreadyScheduleCallDetails = [];
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.log('error ==> ', err);
         this.utilsService.showSnackBar('Failed to get Schedule call details');
-      });
+      }
+    });
   }
 
 
   getSmeBookedSlot() {
     if (this.data.allData.leaderUserId) {
       let param = '/sme-booked-slots?smeUserId=' + this.data.allData.leaderUserId;
-      // let param = environment.baseUrl + '/report/sme-booked-slots?smeUserId=' + '7002';
-      this.reportService.getMethod(param).subscribe((response: any) => {
-        if (response.success) {
-          this.smeBookedSlots = response.data.bookedSlots;
-          if (this.smeBookedSlots?.length) {
-            this.markBookedSlotBusy();
+      this.reportService.getMethod(param).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            this.smeBookedSlots = response.data.bookedSlots;
+            if (this.smeBookedSlots?.length) {
+              this.markBookedSlotBusy();
+            }
+          } else {
+            this.utilsService.showSnackBar(response.message);
           }
-        } else {
-          this.utilsService.showSnackBar(response.message);
-        }
-      },
-        error => {
+        },
+        error: (error: any) => {
           this.utilsService.showSnackBar('Failed to get sme booked slots');
-        });
+        }
+      });
     }
   }
 
@@ -238,59 +242,55 @@ export class SchCallCalenderComponent implements OnInit {
   }
 
   scheduleCall = (): Promise<any> => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (this.date && this.time && this.scheduleForm.valid) {
         const mainScheduleData = moment(this.time).tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss.SSS') + "Z";
         this.loading = true;
-        let param = '/gateway/setup-meeting?title=' + this.scheduleForm['controls']['title'].value +
-                    '&description=' + this.scheduleForm['controls']['description'].value +
-                    '&scheduleDate=' + mainScheduleData +
-                    '&userId=' + this.data.allData.userId +
-                    '&serviceType=' + this.data.allData.serviceType +
-                    '&smeUserId=' + this.data.allData.leaderUserId;
+        let param = '/gateway/setup-meeting?title=' + encodeURIComponent(this.scheduleForm['controls']['title'].value) +
+                    '&description=' + encodeURIComponent(this.scheduleForm['controls']['description'].value) +
+                    '&scheduleDate=' + encodeURIComponent(mainScheduleData) +
+                    '&userId=' + encodeURIComponent(this.data.allData.userId) +
+                    '&serviceType=' + encodeURIComponent(this.data.allData.serviceType) +
+                    '&smeUserId=' + encodeURIComponent(this.data.allData.leaderUserId);
 
         const showScheduleTime = moment(mainScheduleData).utc().format('hh:mm:ss a');
         console.log('showScheduleTime', showScheduleTime);
 
         if (this.data.allData.scheduleCallType) {
-          param = param + '&scheduleCallType=' + this.data.allData.scheduleCallType;
+          param = param + '&scheduleCallType=' + encodeURIComponent(this.data.allData.scheduleCallType);
         }
 
-        this.userMsService.getMethodInfo(param).toPromise().then(
-          (response: any) => {
-            if (response['data']) {
-              if (response['data']['response'] && response['success']) {
-                if (response['data']['response'].toLocaleLowerCase() === 'sent') {
-                  this.utilService.showSnackBar('Your appointment with tax expert has been scheduled for ' +
-                    (new Date(mainScheduleData)).toLocaleDateString() + ' date and ' + showScheduleTime + ' time');
+        try {
+          const response: any = await lastValueFrom(this.userMsService.getMethodInfo(param));
 
-                  setTimeout(() => {
-                    this.dialogRef.close(true);
-                    this.loading = false;
-                  }, 4000);
+          if (response['data']) {
+            if (response['data']['response'] && response['success']) {
+              if (response['data']['response'].toLocaleLowerCase() === 'sent') {
+                this.utilService.showSnackBar('Your appointment with tax expert has been scheduled for ' +
+                  (new Date(mainScheduleData)).toLocaleDateString() + ' date and ' + showScheduleTime + ' time');
 
-                  resolve(response);
-                } else {
-                  this.utilService.showSnackBar(response['data']['response'].toString());
+                setTimeout(() => {
+                  this.dialogRef.close(true);
                   this.loading = false;
-                  reject(response['data']['response'].toString());
-                }
+                }, 4000);
+
+                resolve(response);
               } else {
-                this.utilService.showSnackBar(response['error']);
+                this.utilService.showSnackBar(response['data']['response'].toString());
                 this.loading = false;
-                reject(response['error']);
+                reject(response['data']['response'].toString());
               }
+            } else {
+              this.utilService.showSnackBar(response['error']);
+              this.loading = false;
+              reject(response['error']);
             }
-          },
-          (error) => {
-            this.utilService.showSnackBar('Failed to set up meeting with tax expert');
-            this.loading = false;
-            reject(error);
           }
-        ).catch((error) => {
+        } catch (error) {
+          this.utilService.showSnackBar('Failed to set up meeting with tax expert');
           this.loading = false;
           reject(error);
-        });
+        }
       } else {
         reject('Invalid form data');
       }

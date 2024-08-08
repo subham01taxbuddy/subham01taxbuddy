@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
-import { GridOptions, IsColumnFuncParams, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
+import { ColumnFunctionCallbackParams, GridOptions, ValueGetterParams, ValueSetterParams } from 'ag-grid-community';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON, PastYearLosses } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -99,7 +99,7 @@ export class MoreInfoComponent implements OnInit {
       {
         headerName: 'Date of Filing',
         field: 'dateofFilling',
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+        editable: (params: ColumnFunctionCallbackParams) => { return this.canLastCellBeEdited(params) },
         suppressMovable: true,
         cellEditor: 'agDateInput',
         valueFormatter: (data) => data.value ? moment(data.value).format('DD/MM/YYYY') : null,
@@ -120,7 +120,7 @@ export class MoreInfoComponent implements OnInit {
         headerName: 'House property Loss',
         field: 'housePropertyLoss',
         suppressMovable: true,
-        editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+        editable: (params: ColumnFunctionCallbackParams) => { return this.canLastCellBeEdited(params) },
         cellStyle: function (params) {
           if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
             return { backgroundColor: '#cecec8bd' };
@@ -164,7 +164,7 @@ export class MoreInfoComponent implements OnInit {
           {
             headerName: 'Brought Forward Business Loss',
             field: 'broughtForwordBusinessLoss',
-            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+            editable: (params: ColumnFunctionCallbackParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
             cellStyle: function (params) {
               if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
@@ -196,7 +196,7 @@ export class MoreInfoComponent implements OnInit {
           {
             headerName: 'Loss from Speculative Business',
             field: 'speculativeBusinessLoss',
-            editable: (params: IsColumnFuncParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
+            editable: (params: ColumnFunctionCallbackParams) => { return (this.canCellBeEdited(params) && this.canLastCellBeEdited(params)) },
             suppressMovable: true,
             cellStyle: function (params) {
               if ((params.node.rowIndex == '0' || params.node.rowIndex == '1' || params.node.rowIndex == '2' || params.node.rowIndex == '3') || (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11')) {
@@ -241,7 +241,7 @@ export class MoreInfoComponent implements OnInit {
             headerName: 'Short Term Capital Loss',
             field: 'STCGLoss',
             width: 180,
-            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+            editable: (params: ColumnFunctionCallbackParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
             cellStyle: function (params) {
               if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
@@ -275,7 +275,7 @@ export class MoreInfoComponent implements OnInit {
             headerName: 'Long Term Capital Loss',
             field: 'LTCGLoss',
             width: 180,
-            editable: (params: IsColumnFuncParams) => { return this.canLastCellBeEdited(params) },
+            editable: (params: ColumnFunctionCallbackParams) => { return this.canLastCellBeEdited(params) },
             suppressMovable: true,
             cellStyle: function (params) {
               if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
@@ -316,8 +316,7 @@ export class MoreInfoComponent implements OnInit {
         width: 70,
         pinned: 'right',
         cellRenderer: function (params) {
-          if (params.node.rowIndex == '8' || params.node.rowIndex == '9' || params.node.rowIndex == '10' || params.node.rowIndex == '11') {
-          } else {
+          if (params.node.rowIndex != '8' || params.node.rowIndex != '9' || params.node.rowIndex != '10' || params.node.rowIndex != '11') {
             return `<button type="button" class="action_icon add_button" title="Delete">
             <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
           </button>`;
