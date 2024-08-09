@@ -62,9 +62,7 @@ export class CreateAlertComponent {
       title: ['', Validators.required],
       message: ['', Validators.required],
       applicableFromDate: [new Date(), Validators.required],
-     // applicableFromDate: [new Date(), [Validators.required, this.dateFromValidator.bind(this)]],
       applicableFromTime: ['00:00', Validators.required],
-      //applicableToDate: [new Date(), [Validators.required, this.dateToValidator.bind(this)]],
       applicableToDate: [new Date(), Validators.required],
       applicableToTime: ['23:59', Validators.required]
     });
@@ -163,7 +161,7 @@ dateToValidator(control: AbstractControl): ValidationErrors | null {
   const toDate = new Date(control.value);
   const fromDateControl = this.alertForm.get('applicableFromDate');
   if (!fromDateControl) {
-    return null; // Return null if the fromDate control doesn't exist
+    return null; 
   }
   const fromDate = fromDateControl.value;
   if (fromDate && toDate < fromDate) {
@@ -186,7 +184,6 @@ combineDateTime(date: Date, time: string): Date {
     combinedDate.setHours(hours, minutes);
     return combinedDate;
   }
-
 
   dateFilter = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
