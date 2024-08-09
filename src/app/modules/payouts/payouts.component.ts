@@ -105,6 +105,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   serviceType = new UntypedFormControl('');
+  isCreateAllowed :boolean = false;
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -172,6 +173,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'mobileNumber', name: 'Mobile Number' },
         { value: 'invoiceNo', name: 'Invoice No' },
+        {value: 'txbdyInvoiceId', name: 'Invoice ID'},
       ]
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
@@ -362,6 +364,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           const currentPageNumber = pageChange || this.config.currentPage;
           this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
           this.config.currentPage = currentPageNumber;
+          if((this.key === 'txbdyInvoiceId') && (this.searchVal !== "") ){
+            if(result.data.content.length === 0){
+              this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.isCreateAllowed = true;
+            }else{
+              this.isCreateAllowed = false;
+            }
+          }else{
+            this.isCreateAllowed = false;
+          }
           resolve();
         } else {
           this.usersGridOptions.api?.setRowData([]);
@@ -562,6 +574,18 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Invoice ID',
+        field: 'txbdyInvoiceId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center'},
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -936,6 +960,42 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  createPayouts = (): Promise<any> => {
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Payout!',
+        message: 'Are you sure you want to create a payout for this invoice?',
+      },
+    });
+
+    return this.dialogRef.afterClosed().toPromise().then(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let queryString = '';
+        if (this.utilsService.isNonEmpty(this.searchVal)) {
+          queryString = `${this.key}=${this.searchVal}`;
+        }
+
+        let param = `/v2/bo/partnerCommission?${queryString}`;
+
+        return this.itrMsService.postMethod(param, {}).toPromise().then((result: any) => {
+          this.loading = false;
+          if (result.success) {
+            this.utilsService.showSnackBar('Payouts created successfully');
+            this.serviceCall('');
+          } else {
+            this.utilsService.showSnackBar('Failed to create payouts');
+          }
+        }).catch((error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar('Error in creating payouts. Please try again later.');
+        });
+      } else {
+        return Promise.resolve();
+      }
+    });
   }
 
   approveSelected=():Promise<any> =>{

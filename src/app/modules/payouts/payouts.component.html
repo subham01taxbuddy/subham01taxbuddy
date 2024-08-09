@@ -131,10 +131,16 @@
     <div class="tableSpc mt-3">
       <div>
         <div class="align-items-center row">
-          <div class="col-sm-9 ">
+          <div [ngClass]="{'col-sm-7': isCreateAllowed, 'col-sm-9': !isCreateAllowed}">
             <span class="table-info-text">Payout Details based on search:</span>
           </div>
-          <div class="col-sm-3" *ngIf="isEditAllowed">
+          <div class="col-sm-2" *ngIf="isCreateAllowed && this.roles.includes('ROLE_ADMIN') ">
+            <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[createPayouts]">
+              Create Payouts
+            </app-custom-button>
+            <span class="txblw">Click to create payout again searched invoice</span>
+          </div>
+          <div class="col-sm-3 mvright" *ngIf="isEditAllowed">
             <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[approveSelected]">
               Approve
             </app-custom-button>
