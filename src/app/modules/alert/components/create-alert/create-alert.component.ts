@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, UntypedFormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, NgForm, UntypedFormControl, ValidationErrors, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -40,16 +40,20 @@ export class CreateAlertComponent {
 
   @ViewChild('pickerFrom') pickerFrom: MatDatepicker<Date>;
   @ViewChild('pickerTo') pickerTo: MatDatepicker<Date>;
+  
   minDate: Date = new Date(); 
+  minDateTo: Date;
  
   constructor(private userMsService: UserMsService,
               private fb: FormBuilder, 
               private snackbar : MatSnackBar,
               private changeDetectorRef: ChangeDetectorRef) {} 
+               
+              
 
   ngOnInit() {
-    
     this.initForm();
+   this.setMinDateTo();
   }
 
   initForm() {
@@ -58,12 +62,26 @@ export class CreateAlertComponent {
       title: ['', Validators.required],
       message: ['', Validators.required],
       applicableFromDate: [new Date(), Validators.required],
+     // applicableFromDate: [new Date(), [Validators.required, this.dateFromValidator.bind(this)]],
       applicableFromTime: ['00:00', Validators.required],
+      //applicableToDate: [new Date(), [Validators.required, this.dateToValidator.bind(this)]],
       applicableToDate: [new Date(), Validators.required],
       applicableToTime: ['23:59', Validators.required]
     });
+
+    this.alertForm.get('applicableFromDate').setValidators([Validators.required, this.dateFromValidator.bind(this)]);
+    this.alertForm.get('applicableToDate').setValidators([Validators.required, this.dateToValidator.bind(this)]);
+
+    this.alertForm.get('applicableFromDate').valueChanges.subscribe(value => {
+    this.setMinDateTo();
+    this.alertForm.get('applicableToDate').updateValueAndValidity();
+    });
   }
 
+  setMinDateTo() {
+    const fromDate = this.alertForm.get('applicableFromDate').value;
+    this.minDateTo = fromDate ? new Date(fromDate) : new Date();
+  }
   createAlert() {
     this.loading = true;
 
@@ -102,9 +120,7 @@ export class CreateAlertComponent {
     } else {
       this.loading = false;
       this.errorMessage = 'Please fill in all required fields.';
-     
-    }
-    
+     }
   }
 
   resetForm() {
@@ -131,8 +147,32 @@ export class CreateAlertComponent {
   
   this.changeDetectorRef.detectChanges();
 }
-  
-  combineDateTime(date: Date, time: string): Date {
+
+ dateFromValidator(control: AbstractControl): ValidationErrors | null {
+  const selectedDate = new Date(control.value);
+  if (selectedDate < this.minDate) {
+    return { 'dateFromInvalid': true };
+  }
+  return null;
+}
+
+dateToValidator(control: AbstractControl): ValidationErrors | null {
+  if (!this.alertForm) {
+    return null; 
+  }
+  const toDate = new Date(control.value);
+  const fromDateControl = this.alertForm.get('applicableFromDate');
+  if (!fromDateControl) {
+    return null; // Return null if the fromDate control doesn't exist
+  }
+  const fromDate = fromDateControl.value;
+  if (fromDate && toDate < fromDate) {
+    return { 'dateToInvalid': true };
+  }
+  return null;
+}
+
+combineDateTime(date: Date, time: string): Date {
     const [timeStr, period] = time.split(' ');
     let [hours, minutes] = timeStr.split(':').map(Number);
 
