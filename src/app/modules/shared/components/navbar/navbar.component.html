@@ -50,7 +50,7 @@
             <div class="notification-list">
               <div class="notification-item" *ngFor="let alert of alerts">
                 <h4>{{ alert.title }}</h4>
-                <p>{{ alert.message }}</p>
+                <p class="notification-message">{{ alert.message }}</p>
                 <span class="notification-date">
                   {{ alert.applicableFrom | date:'short' }} - {{ alert.applicableTo | date:'short' }}
                 </span>
