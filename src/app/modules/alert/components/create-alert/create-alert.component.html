@@ -43,7 +43,7 @@
                 <mat-form-field appearance="outline" class="class1">
                   <input matInput [matDatepicker]="pickerFrom" 
                     placeholder="Choose a date"
-                    [min]="minDate"
+                    [min]="minDateTo"
                     formControlName="applicableFromDate">
                   <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
                   <mat-datepicker #pickerFrom></mat-datepicker>
@@ -63,8 +63,14 @@
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="class1">
-                  <input matInput [matDatepicker]="pickerTo" placeholder="DD/MM/YYYY"
-                    formControlName="applicableToDate">
+                  <input matInput [matDatepicker]="pickerTo" 
+                   placeholder="DD/MM/YYYY"
+<<<<<<< HEAD
+                   [min]="minDate"
+=======
+                   [min]="minDateTo"
+>>>>>>> origin/jayesh-recoveryData
+                  formControlName="applicableToDate">
                   <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTo></mat-datepicker>
                 </mat-form-field>
