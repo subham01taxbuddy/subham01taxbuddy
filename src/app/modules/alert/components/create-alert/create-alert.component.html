@@ -63,8 +63,10 @@
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="class1">
-                  <input matInput [matDatepicker]="pickerTo" placeholder="DD/MM/YYYY"
-                    formControlName="applicableToDate">
+                  <input matInput [matDatepicker]="pickerTo" 
+                   placeholder="DD/MM/YYYY"
+                   [min]="minDate"
+                  formControlName="applicableToDate">
                   <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTo></mat-datepicker>
                 </mat-form-field>
