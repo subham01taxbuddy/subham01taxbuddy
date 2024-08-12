@@ -1175,8 +1175,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
 
     let fieldName = [
-      { key: 'filerUserId', value: 'Filer Name' },
-      { key: 'leaderUserId', value: 'Leader Name' },
+      { key: 'filerName', value: 'Filer Name' },
+      { key: 'leaderName', value: 'Leader Name' },
       { key: 'userName', value: 'User Name' },
       { key: 'userMobileNumber', value: 'User Phone Number' },
       { key: 'serviceType', value: 'Service Type' },
