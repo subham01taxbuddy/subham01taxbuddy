@@ -10,8 +10,10 @@
     <div>
       <span class="file-type-option">{{ serviceType }}</span>
     </div>
+  
   </div>
 
+  <div>
   <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
     <div class="avatar">
       <div class="initial">{{image ? image:''}}</div>
@@ -25,6 +27,13 @@
         <span *ngIf="userCurrentStatus==='offline'" class="experience ml-2">Last seen at <b>{{userLastSeen}}</b></span>
       </div>
     </div>
+    <button *ngIf="isAssignedToBotVisible && showBotIcon" class="botstyle" [ngClass]="{'active': wideBot}" (click)="sendBotMessage()">
+      <img src="assets/images2/bot_icon.png" alt="bot" title="Assign To Bot">
+     </button>
+    <!-- <button *ngIf="isAssignedToBotVisible" class="botstyle">
+      <span class="btn bot">Assign To Bot</span>
+    </button> -->
+  </div>
   </div>
 
   <div class="message-input-container">
@@ -50,8 +59,8 @@
               <div class="message-and-timestamp">
                 <span
                   *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId && displaySystemMessage(message)"
-                  [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId}"
-                  class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)">{{message.content}}</span>
+                  [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId,'centered-message': message.sender === 'system'}"
+                  class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)" style="white-space: pre-wrap;">{{message.content}}</span>
 
                 <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
                   class="message text-type-user-messages"> {{
@@ -101,6 +110,23 @@
                         </button>
                       </div>
                     </ng-container>
+
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '9'">
+                      <div class="container">
+                          <div class="row">
+                              <div class="card h-100"
+                                  *ngFor="let element of parsedContent(message.content).metadata.payload">
+                                  <a [href]="element.url" target="_blank">
+                                      <img class="card-img-top mt-2" [src]="element.url"
+                                          alt="card-image">                                     
+                                  </a>
+                                  <div class="card-body">
+                                    <p class="card-text doc-title">{{ element.caption }}</p>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                  </ng-container>
 
 
                     <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '10'">

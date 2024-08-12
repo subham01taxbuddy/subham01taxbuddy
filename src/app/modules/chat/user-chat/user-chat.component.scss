@@ -634,6 +634,13 @@
   margin-bottom: 4px;
   border-radius: 1px;
   background-color: #f2f2f2;
+  //overflow-wrap: anywhere;
+
+}
+
+.centered-message {
+  display: block;
+  text-align: center;
 }
 
 .messaged {
@@ -876,3 +883,14 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.bot{
+  border: 0.5px solid black;
+  padding: 2px;
+  font-size: 13px;
+ }
+
+ .user-info img{
+  margin-right: 43px;
+  margin-left: 74px;
+ }

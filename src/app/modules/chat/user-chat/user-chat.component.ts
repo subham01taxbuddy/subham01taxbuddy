@@ -7,6 +7,7 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 import { memoize } from 'lodash';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
+import { faAssistiveListeningSystems } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-user-chat',
@@ -31,6 +32,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   @Input() username: string;
   @Input() requestId: string;
   @Input() showChevronIcon: boolean = false;
+  @Input() isAssignedToBotVisible: boolean = false;
+
 
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
 
@@ -43,6 +46,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   chatMessages: boolean = true;
   userInfo: boolean = true;
   userInputField: boolean = true;
+  wideBot: boolean = true;
 
   agentStatus: string = 'Last seen at dd-mmm-yy hh:mm:ss';
 
@@ -74,6 +78,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   invalid = false;
   showArrow: boolean = true;
+  showBotIcon: boolean = true;
 
 
   selectedRadio: { [name: string]: string } = {};
@@ -281,6 +286,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         this.cd.detectChanges();
       }
     });
+    this.updateBotIconVisibility();
   }
 
   ngAfterViewInit(): void {
@@ -314,9 +320,34 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     }
     this.isAtBottom = isAtBottom;
     this.messageCountTo0();
+    this.updateBotIconVisibility();
     this.cd.detectChanges();
 
   };
+
+  updateBotIconVisibility(): void {
+    const messagesString = sessionStorage.getItem('fetchedMessages');
+    if (messagesString) {
+      const messages = JSON.parse(messagesString);
+      if (messages.length > 0) {
+        const sortedMessages = messages.sort((a, b) => a.timestamp - b.timestamp);
+        const lastMessage = sortedMessages[sortedMessages.length - 1];
+        this.showBotIcon = !(this.isBotSender(lastMessage.sender) || lastMessage.sender === 'system');
+      } else {
+         this.showBotIcon = true;
+      }
+    } else {
+       this.showBotIcon = true;
+    }
+  }
+
+  sendBotMessage(){
+    this.chatService.botMessage(this.requestId).subscribe((response) => {
+      console.log('response',response)
+    })
+  }
+
+ 
 
   parsedContent = memoize((content) => {
     let parsedContent;

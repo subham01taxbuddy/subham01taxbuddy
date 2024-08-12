@@ -49,6 +49,6 @@
 </div>
 <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
     [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id"
-    [serviceType]="selectedUser.departmentName" [showChevronIcon]="true"></app-user-chat>
+    [serviceType]="selectedUser.departmentName" [showChevronIcon]="true" [isAssignedToBotVisible]="true"></app-user-chat>
 
 <app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>

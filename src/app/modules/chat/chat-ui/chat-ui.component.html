@@ -50,7 +50,7 @@
 
     </div>
     <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
-        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id"
+        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id" [isAssignedToBotVisible]="true"
         class="floating expanded"></app-user-chat>
 
 </div>

@@ -182,7 +182,6 @@ export class ChatService {
 
   setHeaders(type: any = "auth") {
     let httpOptions: any = {};
-
     if (type == "auth") {
       const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
       let TOKEN = UMDtoken.id_token
@@ -221,9 +220,9 @@ export class ChatService {
   }
 
   fetchConversationList(page, userId: any, departmentId?: any, removeCallback?) {
-    if (!departmentId) {
-      departmentId = "65e56e777c8dbc0013851f4d";
-    }
+    // if (!departmentId) {
+    //   departmentId = "65e56e777c8dbc0013851f4d";
+    // }
     let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations?page=' + page + '&pageSize=20'
     if (departmentId) {
       CONVERSATION_URL += `&departmentId=${departmentId}`
@@ -354,7 +353,7 @@ export class ChatService {
   updateMessagesDB(messages: any, timeStamp?: any) {
     let transformedMessages = messages.map(message => ({
       content: message.text,
-      sender: message.sender,
+      sender: message.attributes?.action?.feedback ? "system" : message.sender,
       timestamp: message.timestamp,
       type: message.type,
       senderFullName: (message.sender).startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
@@ -380,7 +379,7 @@ export class ChatService {
 
     let m = {
       content: message.text,
-      sender: message.sender,
+      sender: message.attributes?.action?.feedback ? "system" : message.sender,
       timestamp: message.timestamp,
       type: message.type,
       senderFullName: message.sender.startsWith('bot_') ? 'Tax Expert' : message.sender_fullname,
@@ -739,7 +738,7 @@ export class ChatService {
   }
 
   getMessageAttributes(payload: any, notification?: any, isFromPushNotification: boolean = false) {
-    let chatToken = this.sessionStorageService.getItem("CHAT21_TOKEN");
+    let chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
     let user = this.localStorageService.getItem('SELECTED_CHAT', true);
     const departmentId = isFromPushNotification ? notification?.attributes?.departmentId : user?.departmentId;
     const departmentName = isFromPushNotification ? notification?.attributes?.departmentName : user?.departmentName;
@@ -786,6 +785,42 @@ export class ChatService {
       // callback(err, outgoing_message)
       console.log(err);
     });
+  }
+
+  botMessage(requestId) {
+    const chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
+    let user = this.localStorageService.getItem('SELECTED_CHAT', true);
+    const departmentId = user?.departmentId;
+    const departmentName = user?.departmentName;
+    const userFullName = user?.userFullName;
+    const url = `${environment.TILEDESK_URL}/api/65e56b0b7c8dbc0013851dcb/requests/${requestId}/messages/`
+    let requestBody = {
+      "type": "text",
+      "text": "CONTINUE_BOT",
+      "sender": "system",
+      "recipient_fullname": 'Bot',
+      "sender_fullname": this.userFullName,
+      "metadata": "",
+      "channel_type": "group",
+      "attributes": {
+        "subtype": "info",
+        "showOnUI": "BO",
+        "departmentId": departmentId,
+        "departmentName": departmentName,
+        "ipAddress": "103.97.240.182",
+        "client": "",
+        "sourcePage": "",
+        "sourceTitle": "Angular web app",
+        "projectId": this.PROJECT_ID,
+        "widgetVer": "v.5.0.71.3",
+        "payload": [],
+        "userFullname": userFullName,
+        "requester_id": chatToken,
+        "lang": "en",
+        "tempUID": this.uuidv4()
+      },
+    }
+    return this.httpClient.post(url, requestBody, this.setHeaders("tileDesk"));
   }
 
   closeWebSocket() {
