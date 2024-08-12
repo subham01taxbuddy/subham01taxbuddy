@@ -18,7 +18,7 @@ import { ChatManager } from "../../../chat/chat-manager";
 import { PushNotificationComponent } from 'src/app/modules/chat/push-notification/push-notification.component';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -29,7 +29,7 @@ export interface DialogData {
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass', './navbar.component.scss']
 })
-export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
+export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
 
   sidebar_open: boolean = false;
   menu_btn_rotate: boolean = false;
@@ -42,7 +42,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
   loggedInUserId: number;
   showAffiliateBtn = false;
   showCopyLinkButton = false;
-  affLink:any;
+  affLink: any;
   showAffButton = false;
 
   loading: boolean = false;
@@ -82,6 +82,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
 
   ) {
     this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+    if (!this.loggedInUserInfo) {
+      this.loggedInUserInfo = JSON.parse(localStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    }
     this.roles = this.loggedInUserInfo[0]?.roles;
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
@@ -116,17 +119,17 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
     //   this.handleNewNotification(data);
     // });
 
-     this.chatService.closeFloatingWidgetObservable.subscribe(() => {
+    this.chatService.closeFloatingWidgetObservable.subscribe(() => {
       this.floatingWidgetShow = false;
     });
-   
+
   }
 
 
   ngOnDestroy(): void {
     if (this.chatSubscription) {
       this.chatSubscription.unsubscribe();
-    } 
+    }
   }
 
 
@@ -140,7 +143,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
       });
       this.dialogRef.afterClosed().subscribe((result) => {
         this.dialogRef = null;
-        if(result?.request_id){
+        if (result?.request_id) {
           this.userDetails = result
           localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.userDetails));
           this.chatService.unsubscribeRxjsWebsocket();
@@ -185,13 +188,13 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
       this.close();
     }
     this.subscription = this.sidebarService.isLoading
-        .subscribe((state) => {
-          if (!state) {
-            this.nav = true;
-          } else {
-            this.nav =  false;
-          }
-        });
+      .subscribe((state) => {
+        if (!state) {
+          this.nav = true;
+        } else {
+          this.nav = false;
+        }
+      });
   }
 
   open() {
@@ -218,10 +221,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
         } else {
           this.showAffiliateBtn = true;
         }
-        if(response.data.referralLink){
+        if (response.data.referralLink) {
           this.affLink = response.data.referralLink;
           this.showAffButton = true;
-        }else{
+        } else {
           this.showAffButton = false;
         }
       } else {
@@ -339,7 +342,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
   }
 
   copyLink() {
-    let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    let loggedInSmeInfo;
+    loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    if (!loggedInSmeInfo) {
+      loggedInSmeInfo = JSON.parse(localStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
+    }
     const smeEmailId = loggedInSmeInfo[0].email;
     const leaderId = loggedInSmeInfo[0].userId;
     const leaderName = loggedInSmeInfo[0].name;
@@ -385,12 +392,12 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  handleWidgetClosed(){
+  handleWidgetClosed() {
     this.floatingWidgetShow = false;
   }
 
-  closeChat(){
+  closeChat() {
     this.userDetails = null;
-   }
+  }
 
 }
