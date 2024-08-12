@@ -364,6 +364,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           const currentPageNumber = pageChange || this.config.currentPage;
           this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
           this.config.currentPage = currentPageNumber;
+          resolve();
+        } else {
+          this.usersGridOptions.api?.setRowData([]);
+          this.userInfo = [];
+          this.config.totalItems = 0;
+          this.utilsService.showSnackBar(result.message);
           if((this.key === 'txbdyInvoiceId') && (this.searchVal !== "") ){
             if(result.data.content.length === 0){
               this.utilsService.showSnackBar("No payouts found against this invoice");
@@ -374,17 +380,21 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           }else{
             this.isCreateAllowed = false;
           }
-          resolve();
-        } else {
-          this.usersGridOptions.api?.setRowData([]);
-          this.userInfo = [];
-          this.config.totalItems = 0;
-          this.utilsService.showSnackBar(result.message);
           reject(result.message);
         }
       }, error => {
         this.loading = false;
-        this.utilsService.showSnackBar('Data not found');
+        if((this.key === 'txbdyInvoiceId') && (this.searchVal !== "") ){
+          if(error.error.httpErrorCode === 404){
+            this.utilsService.showSnackBar("No payouts found against this invoice");
+            this.isCreateAllowed = true;
+          }else{
+            this.isCreateAllowed = false;
+          }
+        }else{
+          this.isCreateAllowed = false;
+          this.utilsService.showSnackBar('Data not found');
+        }
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
         this.config.totalItems = 0;
