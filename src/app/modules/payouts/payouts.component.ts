@@ -106,6 +106,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   minEndDate = new Date().toISOString().slice(0, 10);
   serviceType = new UntypedFormControl('');
   isCreateAllowed :boolean = false;
+  txbdyInvoiceId:any;
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -359,23 +360,34 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
           this.userInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
+          this.txbdyInvoiceId = result.data.content.length > 0 ? result?.data?.content[0]?.txbdyInvoiceId : '';
           this.cacheManager.initializeCache(result.data.content);
 
           const currentPageNumber = pageChange || this.config.currentPage;
           this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
           this.config.currentPage = currentPageNumber;
+          if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
+            if(result.data.content.length === 0){
+              this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.isCreateAllowed = true;
+            }else{
+              this.isCreateAllowed = true;
+            }
+          }else{
+            this.isCreateAllowed = false;
+          }
           resolve();
         } else {
           this.usersGridOptions.api?.setRowData([]);
           this.userInfo = [];
           this.config.totalItems = 0;
           this.utilsService.showSnackBar(result.message);
-          if((this.key === 'txbdyInvoiceId') && (this.searchVal !== "") ){
+          if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
             if(result.data.content.length === 0){
               this.utilsService.showSnackBar("No payouts found against this invoice");
               this.isCreateAllowed = true;
             }else{
-              this.isCreateAllowed = false;
+              this.isCreateAllowed = true;
             }
           }else{
             this.isCreateAllowed = false;
@@ -384,12 +396,12 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         }
       }, error => {
         this.loading = false;
-        if((this.key === 'txbdyInvoiceId') && (this.searchVal !== "") ){
+        if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
           if(error.error.httpErrorCode === 404){
             this.utilsService.showSnackBar("No payouts found against this invoice");
             this.isCreateAllowed = true;
           }else{
-            this.isCreateAllowed = false;
+            this.isCreateAllowed = true;
           }
         }else{
           this.isCreateAllowed = false;
@@ -984,8 +996,16 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       if (result === 'YES') {
         this.loading = true;
         let queryString = '';
-        if (this.utilsService.isNonEmpty(this.searchVal)) {
-          queryString = `${this.key}=${this.searchVal}`;
+
+        if(this.utilsService.isNonEmpty(this.txbdyInvoiceId)){
+          queryString += `txbdyInvoiceId=${this.txbdyInvoiceId}`
+        }else if (this.utilsService.isNonEmpty(this.searchVal)) {
+          const isNumeric = /^\d+$/.test(this.searchVal);
+          if (isNumeric) {
+            queryString = `txbdyInvoiceId=${this.searchVal}`;
+          } else {
+            queryString = `invoiceNo=${this.searchVal}`;
+          }
         }
 
         let param = `/v2/bo/partnerCommission?${queryString}`;
@@ -1000,7 +1020,11 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           }
         }).catch((error) => {
           this.loading = false;
-          this.utilsService.showSnackBar('Error in creating payouts. Please try again later.');
+          if(error.error.message){
+            this.utilsService.showSnackBar(error.error.message);
+          }else{
+            this.utilsService.showSnackBar('Error in creating payouts. Please try again later.');
+          }
         });
       } else {
         return Promise.resolve();
