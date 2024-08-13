@@ -253,9 +253,15 @@ export class ChatService {
     return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } })
   }
 
-  fetchMessages(requestId, timeStamp?) {
+  fetchMessages(requestId, timeStamp?, pageSize?) {
     let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
-    let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=40`;
+    let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?`;
+
+    if (pageSize) {
+      url = url + 'pageSize=' + pageSize;
+    } else {
+      url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=40`;
+    }
     if (timeStamp) {
       url = url + '&timeStamp=' + timeStamp;
     }

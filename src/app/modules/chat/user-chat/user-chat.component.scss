@@ -30,7 +30,7 @@
   position: fixed;
   right: 20px;
   width: 350px;
-  height: 472px;
+  height: 490px;
   top: 110px;
   bottom: 20px;
   background-color: #fff;
@@ -103,6 +103,37 @@
   font-size: 20px;
   color: #3498db;
   margin-left: 10px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  padding: 5px 0px;
+  background-color: #f2f2f2;
+  margin: 10px;
+  border: 1px #f2f2f2;
+
+  input {
+    flex-grow: 1;
+    padding: 8px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    margin-left: 5px;
+    width: 261px;
+    height: 37px;
+    resize: none;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #3498db;
+    margin-left: 10px;
+  }
 }
 
 .fa {
@@ -884,13 +915,13 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.bot{
+.bot {
   border: 0.5px solid black;
   padding: 2px;
   font-size: 13px;
- }
+}
 
- .user-info img{
+.user-info img {
   margin-right: 43px;
   margin-left: 74px;
- }
+}
