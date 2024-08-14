@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, Pipe, PipeTransform, Renderer2, ViewChild } from '@angular/core';
 import { ChatService } from '../chat.service';
 import { ChatEvents } from "../chat-events";
 import { ChatManager } from "../chat-manager";
@@ -7,7 +7,30 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 import { memoize } from 'lodash';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
-import { faAssistiveListeningSystems } from '@fortawesome/free-solid-svg-icons';
+
+@Pipe({
+  name: 'highlight'
+})
+export class HighlightSearch implements PipeTransform {
+constructor(private sanitizer: DomSanitizer){}
+
+transform(value: any, args: any): any {
+  if (!args) {
+    return value;
+  }
+  // Match in a case insensitive maneer
+  const re = new RegExp(args, 'gi');
+  const match = value.match(re);
+
+  // If there's no match, just return the original value.
+  if (!match) {
+    return value;
+  }
+
+  const replacedValue = value.replace(re, "<mark>" + match[0] + "</mark>")
+  return this.sanitizer.bypassSecurityTrustHtml(replacedValue)
+}
+}
 
 @Component({
   selector: 'app-user-chat',
@@ -54,7 +77,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   userInput: string = '';
   messageSent: string = '';
-
+  searchInput: string = '';
   isTyping: boolean = false;
   newMessageReceived: boolean = false;
   chat21UserId: string;
@@ -300,15 +323,12 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   };
 
   handleReceivedMessages = (data?: any) => {
-    console.log('received message', data);
-
     const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
     const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
 
     const messagesString = sessionStorage.getItem('fetchedMessages');
     if (messagesString) {
       this.fetchedMessages = JSON.parse(messagesString);
-      console.log('fetch messages', this.fetchedMessages);
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
       const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId)
       if (filteredMessage.length > 0) {
@@ -334,20 +354,20 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         const lastMessage = sortedMessages[sortedMessages.length - 1];
         this.showBotIcon = !(this.isBotSender(lastMessage.sender) || lastMessage.sender === 'system');
       } else {
-         this.showBotIcon = true;
+        this.showBotIcon = true;
       }
     } else {
-       this.showBotIcon = true;
+      this.showBotIcon = true;
     }
   }
 
-  sendBotMessage(){
+  sendBotMessage() {
     this.chatService.botMessage(this.requestId).subscribe((response) => {
-      console.log('response',response)
+      console.log('response', response)
     })
   }
 
- 
+
 
   parsedContent = memoize((content) => {
     let parsedContent;
@@ -386,7 +406,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
 
   getSanitizedHtml(message) {
-    return this.sanitizer.bypassSecurityTrustHtml(message);
+    return message;
   }
 
   addMessageEvents() {
@@ -472,5 +492,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  search() {
+    this.chatService.fetchMessages(this.requestId, '', 100000);
   }
 }

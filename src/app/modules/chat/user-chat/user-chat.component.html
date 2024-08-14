@@ -10,30 +10,40 @@
     <div>
       <span class="file-type-option">{{ serviceType }}</span>
     </div>
-  
+
   </div>
 
   <div>
-  <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
-    <div class="avatar">
-      <div class="initial">{{image ? image:''}}</div>
-    </div>
-    <div class="agent-details">
-      <span class="username">{{ username }}</span>
-      <span class="status-dot"></span>
-      <div class="additional-details">
-        <span [ngClass]="(userCurrentStatus==='online')? 'user-status online' : 'user-status offline'"></span>
-        <span *ngIf="userCurrentStatus==='online'" class="experience ml-2">{{userCurrentStatus | titlecase}}</span>
-        <span *ngIf="userCurrentStatus==='offline'" class="experience ml-2">Last seen at <b>{{userLastSeen}}</b></span>
+    <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
+      <div class="avatar">
+        <div class="initial">{{image ? image:''}}</div>
       </div>
-    </div>
-    <button *ngIf="isAssignedToBotVisible && showBotIcon" class="botstyle" [ngClass]="{'active': wideBot}" (click)="sendBotMessage()">
-      <img src="assets/images2/bot_icon.png" alt="bot" title="Assign To Bot">
-     </button>
-    <!-- <button *ngIf="isAssignedToBotVisible" class="botstyle">
+      <div class="agent-details">
+        <span class="username">{{ username }}</span>
+        <span class="status-dot"></span>
+        <div class="additional-details">
+          <span [ngClass]="(userCurrentStatus==='online')? 'user-status online' : 'user-status offline'"></span>
+          <span *ngIf="userCurrentStatus==='online'" class="experience ml-2">{{userCurrentStatus | titlecase}}</span>
+          <span *ngIf="userCurrentStatus==='offline'" class="experience ml-2">Last seen at
+            <b>{{userLastSeen}}</b></span>
+        </div>
+      </div>
+      <button *ngIf="isAssignedToBotVisible && showBotIcon" class="botstyle" [ngClass]="{'active': wideBot}"
+        (click)="sendBotMessage()">
+        <img src="assets/images2/bot_icon.png" alt="bot" title="Assign To Bot">
+      </button>
+      <!-- <button *ngIf="isAssignedToBotVisible" class="botstyle">
       <span class="btn bot">Assign To Bot</span>
     </button> -->
-  </div>
+    </div>
+    <div class="search" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
+      <input type="text" placeholder="Type here to search message" class="message-input" (keyup.enter)="search()"
+        [(ngModel)]="searchInput" autoResize>
+
+      <button type="button" (click)="search()" [disabled]="!searchInput.trim()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
 
   <div class="message-input-container">
@@ -60,17 +70,17 @@
                 <span
                   *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId && displaySystemMessage(message)"
                   [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId,'centered-message': message.sender === 'system'}"
-                  class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content)" style="white-space: pre-wrap;">{{message.content}}</span>
+                  class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content) | highlight: searchInput"
+                  style="white-space: pre-wrap;"></span>
 
                 <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
-                  class="message text-type-user-messages"> {{
-                  message.content
-                  }}</span>
+                  class="message text-type-user-messages" [innerHtml]="message.content | highlight: searchInput">
+                </span>
 
                 <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
                   (loadeddata)="addMessageEvents()">
                   <div *ngIf="parsedContent(message.content).metadata.templateId !='7'"
-                    [innerHTML]="getSanitizedHtml(parsedContent(message.content).message)" class="html-type"></div>
+                    [innerHTML]="getSanitizedHtml(parsedContent(message.content).message) | highlight: searchInput" class="html-type"></div>
 
 
                   <ng-container *ngIf="parsedContent(message.content).metadata">
@@ -113,20 +123,19 @@
 
                     <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '9'">
                       <div class="container">
-                          <div class="row">
-                              <div class="card h-100"
-                                  *ngFor="let element of parsedContent(message.content).metadata.payload">
-                                  <a [href]="element.url" target="_blank">
-                                      <img class="card-img-top mt-2" [src]="element.url"
-                                          alt="card-image">                                     
-                                  </a>
-                                  <div class="card-body">
-                                    <p class="card-text doc-title">{{ element.caption }}</p>
-                                </div>
-                              </div>
+                        <div class="row">
+                          <div class="card h-100"
+                            *ngFor="let element of parsedContent(message.content).metadata.payload">
+                            <a [href]="element.url" target="_blank">
+                              <img class="card-img-top mt-2" [src]="element.url" alt="card-image">
+                            </a>
+                            <div class="card-body">
+                              <p class="card-text doc-title">{{ element.caption }}</p>
+                            </div>
                           </div>
+                        </div>
                       </div>
-                  </ng-container>
+                    </ng-container>
 
 
                     <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '10'">
