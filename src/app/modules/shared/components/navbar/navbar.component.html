@@ -55,6 +55,8 @@
                 <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
                     <i class="fa-light fa-people-group"></i> Affiliate ID Linking</button>|
 
+            </div>
+            <div class="header__breadcrumbs" style="float:right">
                 <div *ngIf="!showDropDown" class="header__breadcrumbs">
                     <div class="user">
                         <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
@@ -91,4 +93,4 @@
   [image]="userDetails.image" 
   [showCloseIcon]="true"  
   (closeChatClicked)="closeChat()">
-</app-user-chat>    
+</app-user-chat>
