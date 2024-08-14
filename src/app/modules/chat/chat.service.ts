@@ -344,6 +344,7 @@ export class ChatService {
         conversationLists.unshift(newConversation);
       }
     }
+    console.log('conversation list updated....');
   }
 
   clearMessagesDB() {
