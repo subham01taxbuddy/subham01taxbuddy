@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit {
       this.registerLogin(userId);
       this.utilsService.getStoredSmeList();
       this.getAgentList();
-      this.generateKmAuthToken();
+      // this.generateKmAuthToken();
       let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
