@@ -399,6 +399,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
           if(error.error.httpErrorCode === 404){
             this.utilsService.showSnackBar("No payouts found against this invoice");
+            this.txbdyInvoiceId = null;
             this.isCreateAllowed = true;
           }else{
             this.isCreateAllowed = true;
