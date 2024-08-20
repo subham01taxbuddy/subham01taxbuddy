@@ -47,7 +47,7 @@ export class FloatingWidgetComponent implements OnInit {
 
     newMessageSubscription: Subscription;
     showFullScreen() {
-        this.fullChatScreen = !this.fullChatScreen;
+        this.fullChatScreen = true;
         this.page = 0;
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
@@ -94,6 +94,10 @@ export class FloatingWidgetComponent implements OnInit {
 
         this.isUserChatVisible = false;
         this.showWidget = true;
+    }
+
+    closeFullScreen(){
+        this.fullChatScreen = false;
     }
 
 

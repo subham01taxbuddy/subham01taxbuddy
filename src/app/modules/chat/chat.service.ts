@@ -750,7 +750,8 @@ export class ChatService {
     const departmentId = isFromPushNotification ? notification?.attributes?.departmentId : user?.departmentId;
     const departmentName = isFromPushNotification ? notification?.attributes?.departmentName : user?.departmentName;
     const userFullName = isFromPushNotification ? notification?.attributes?.userFullname : user?.userFullName;
-    return {
+
+    let attributes = {
       "departmentId": departmentId,
       "departmentName": departmentName,
       "ipAddress": "103.97.240.182",
@@ -763,9 +764,13 @@ export class ChatService {
       "userFullname": userFullName,
       "requester_id": chatToken,
       "lang": "en",
-      "tempUID": this.uuidv4(),
-      "action": payload
+      "tempUID": this.uuidv4()
     }
+    
+    if (!isFromPushNotification) {
+      attributes["action"] = payload;
+  }
+    return attributes;
   };
 
   sendMessage(message: string, recipient: string, payloads?: any, notification?: any, isFromPushNotification: boolean = false) {

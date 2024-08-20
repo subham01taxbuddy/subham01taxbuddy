@@ -51,4 +51,4 @@
     [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id"
     [serviceType]="selectedUser.departmentName" [showChevronIcon]="true" [isAssignedToBotVisible]="true"></app-user-chat>
 
-<app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>
+<app-chat-ui *ngIf="fullChatScreen" (back)="closeFullScreen()"></app-chat-ui>
