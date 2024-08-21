@@ -313,45 +313,39 @@ export class ChatService {
 
 
   updateConversationList(newMessage: any, conversationLists: any, selectedDepartmentId: any) {
-    const existingConversationIndex = conversationLists.findIndex(
-      (conversation) => conversation.request_id === newMessage.recipient
-    );
+     const shouldUpdate =
+        newMessage.attributes.departmentId === selectedDepartmentId;
 
-    if (newMessage.attributes.departmentId === selectedDepartmentId) {
+    if (shouldUpdate) {
+         const existingConversationIndex = conversationLists.findIndex(
+            (conversation) => conversation.request_id === newMessage.recipient
+        );
 
-      if (existingConversationIndex !== -1) {
-
-        const updatedConversation = {
-          image: newMessage.attributes.userFullname[0],
-          userFullName: newMessage.attributes.userFullname,
-          text: newMessage.text,
-          timestamp: newMessage.timestamp,
-          request_id: newMessage.recipient,
-          type: newMessage.type,
-          departmentId: newMessage.attributes.departmentId,
-          sender: newMessage.sender,
-          recipientFullName: newMessage.recipient_fullname,
+         const newConversation = {
+            image: newMessage.attributes.userFullname[0],
+            userFullName: newMessage.attributes.userFullname,
+            text: newMessage.text,
+            timestamp: newMessage.timestamp,
+            request_id: newMessage.recipient,
+            type: newMessage.type,
+            departmentId: newMessage.attributes.departmentId,
+            sender: newMessage.sender,
+            recipientFullName: newMessage.recipient_fullname,
         };
 
-        conversationLists[existingConversationIndex] = updatedConversation;
-        conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]); // Move the updated conversation to the top
-      } else {
-        const newConversation = {
-          image: newMessage.attributes.userFullname[0],
-          userFullName: newMessage.attributes.userFullname,
-          text: newMessage.text,
-          timestamp: newMessage.timestamp,
-          request_id: newMessage.recipient,
-          type: newMessage.type,
-          departmentId: newMessage.attributes.departmentId,
-          sender: newMessage.sender,
-          recipientFullName: newMessage.recipient_fullname,
-        };
-        conversationLists.unshift(newConversation);
-      }
+        if (existingConversationIndex !== -1) {
+             conversationLists[existingConversationIndex] = newConversation;
+            conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]);
+        } else {
+            conversationLists.unshift(newConversation);
+        }
+
+        console.log('conversation list updated....');
+    } else {
+        console.log('Message from non-selected department, no update performed.');
     }
-    console.log('conversation list updated....');
-  }
+}
+
 
   clearMessagesDB() {
     this.sessionStorageService.removeItem('fetchedMessages');

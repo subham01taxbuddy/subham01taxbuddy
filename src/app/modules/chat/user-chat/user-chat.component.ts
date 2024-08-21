@@ -172,9 +172,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     console.log(`selected value: ${name} : ${value}`)
   }
 
-  isSelected(name: string, value: string): boolean {
-    return this.selectedOptions[name] === value;
+  isSelected(name: string, value: string, message: any): boolean {
+    return this.selectedCheckBoxes[name]?.includes(value) || (message?.action && message?.action[name]?.includes(value));
   }
+
 
   handleButtonEvent(message: string) {
     this.messageSent = message;
@@ -187,6 +188,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     }
     const pattern = new RegExp(regex);
     return pattern.test(value);
+  }
+
+  isCheckBoxSelected(name: string, value: string, message: any): boolean {
+    return this.selectedCheckBoxes[name]?.includes(value) || (message?.action && message?.action[name]?.includes(value));
   }
 
   onSubmit(message: string) {
