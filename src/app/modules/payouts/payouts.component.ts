@@ -447,7 +447,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Filer Name',
-        field: 'filerUserId',
+        field: 'filerName',
         width: 150,
         pinned: 'left',
         suppressMovable: true,
@@ -458,20 +458,24 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.filerUserId)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+          if(params?.data?.filerName){
+            return params.data.filerName;
+          }else{
+            let createdUserId = parseInt(params?.data?.filerUserId)
+            let filer1 = list;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer
+          }
         }
       },
       {
         headerName: 'Leader Name',
-        field: 'leaderUserId',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -481,15 +485,19 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.leaderUserId)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+          if(params?.data?.leaderName){
+            return params.data.leaderName;
+          }else{
+            let createdUserId = parseInt(params?.data?.leaderUserId)
+            let filer1 = list;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer
+          }
         }
       },
       {
