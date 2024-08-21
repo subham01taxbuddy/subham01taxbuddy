@@ -19,10 +19,23 @@
               <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="row">
-                    <div class="col-sm-12 bckClr">
+                    <div class="col-sm-12 bckClr" *ngIf="false">
                       <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
                         (sendPrincipleIndividual)="fromPrinciple($event)"
                         (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+                    </div>
+                    <div class="col-sm-5 bckClr">
+                      <mat-label> Search By Filer Name(All Filer List) </mat-label>
+                      <mat-form-field appearance="outline" class="small-inp no-height">
+                        <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto1"/>
+                        <mat-autocomplete  #auto1="matAutocomplete">
+                          <mat-option *ngFor="let option1 of filteredFiler | async" [value]="option1.name"
+                            (click)="getFilerNameId(option1);">
+                            {{ option1.name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <mat-icon class="search-icon" matSuffix>search</mat-icon>
+                      </mat-form-field>
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
