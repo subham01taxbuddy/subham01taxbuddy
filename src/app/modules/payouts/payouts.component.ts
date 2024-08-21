@@ -174,7 +174,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.searchMenus = [
         { value: 'mobileNumber', name: 'Mobile Number' },
         { value: 'invoiceNo', name: 'Invoice No' },
-        {value: 'txbdyInvoiceId', name: 'Invoice ID'},
       ]
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
@@ -360,7 +359,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
           this.userInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
-          this.txbdyInvoiceId = result.data.content.length > 0 ? result?.data?.content[0]?.txbdyInvoiceId : '';
+          // this.txbdyInvoiceId = result.data.content.length > 0 ? result?.data?.content[0]?.txbdyInvoiceId : '';
           this.cacheManager.initializeCache(result.data.content);
 
           const currentPageNumber = pageChange || this.config.currentPage;
@@ -369,6 +368,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
             if(result.data.content.length === 0){
               this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.txbdyInvoiceId = null;
               this.isCreateAllowed = true;
             }else{
               this.isCreateAllowed = true;
@@ -385,6 +385,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
             if(result.data.content.length === 0){
               this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.txbdyInvoiceId = null;
               this.isCreateAllowed = true;
             }else{
               this.isCreateAllowed = true;
