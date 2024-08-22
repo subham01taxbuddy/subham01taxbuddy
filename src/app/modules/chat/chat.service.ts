@@ -313,15 +313,16 @@ export class ChatService {
 
 
   updateConversationList(newMessage: any, conversationLists: any, selectedDepartmentId: any) {
-     const shouldUpdate =
+    const shouldUpdate = 
+        !selectedDepartmentId || 
         newMessage.attributes.departmentId === selectedDepartmentId;
 
     if (shouldUpdate) {
-         const existingConversationIndex = conversationLists.findIndex(
+        const existingConversationIndex = conversationLists.findIndex(
             (conversation) => conversation.request_id === newMessage.recipient
         );
 
-         const newConversation = {
+        const newConversation = {
             image: newMessage.attributes.userFullname[0],
             userFullName: newMessage.attributes.userFullname,
             text: newMessage.text,
@@ -334,13 +335,13 @@ export class ChatService {
         };
 
         if (existingConversationIndex !== -1) {
-             conversationLists[existingConversationIndex] = newConversation;
+            conversationLists[existingConversationIndex] = newConversation;
             conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]);
         } else {
             conversationLists.unshift(newConversation);
         }
 
-        console.log('conversation list updated....');
+        console.log('Conversation list updated.');
     } else {
         console.log('Message from non-selected department, no update performed.');
     }
