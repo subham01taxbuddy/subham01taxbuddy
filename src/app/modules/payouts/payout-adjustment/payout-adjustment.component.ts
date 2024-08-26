@@ -128,7 +128,7 @@ export class PayoutAdjustmentComponent {
     const request = {
       userId: userId,
       amtPending: amount,
-      reason: reason,
+      reason: reason || this.reason.value,
     };
 
     let param = '';
