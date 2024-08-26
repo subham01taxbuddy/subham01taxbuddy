@@ -19,12 +19,12 @@
               <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="row">
-                    <div class="col-sm-12 bckClr" *ngIf="false">
+                    <div class="col-sm-12 bckClr" *ngIf="!this.roles.includes('ROLE_ADMIN')">
                       <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
                         (sendPrincipleIndividual)="fromPrinciple($event)"
                         (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
                     </div>
-                    <div class="col-sm-5 bckClr">
+                    <div class="col-sm-5 bckClr" *ngIf="this.roles.includes('ROLE_ADMIN')">
                       <mat-label> Search By Filer Name(All Filer List) </mat-label>
                       <mat-form-field appearance="outline" class="small-inp no-height">
                         <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto1"/>
