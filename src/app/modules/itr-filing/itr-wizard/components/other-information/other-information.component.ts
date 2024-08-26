@@ -19,6 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 
+
 @Component({
   selector: 'app-other-information',
   templateUrl: './other-information.component.html',
