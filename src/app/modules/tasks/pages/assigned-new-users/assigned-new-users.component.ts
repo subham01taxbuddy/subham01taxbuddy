@@ -28,7 +28,6 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ChatManager } from 'src/app/modules/chat/chat-manager';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
@@ -89,7 +88,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private chatManager: ChatManager,
     private localStorageService: LocalStorageService,
-    private kommunicateSsoService: KommunicateSsoService,
     private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -1257,7 +1255,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result?.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
       else if(result?.request_id){

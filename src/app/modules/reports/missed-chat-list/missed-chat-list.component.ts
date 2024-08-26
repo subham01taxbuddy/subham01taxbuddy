@@ -13,7 +13,6 @@ import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 
@@ -72,7 +71,6 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private cacheManager: CacheManager,
     private dialog: MatDialog,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
   ) {
     this.startDate.setValue(new Date());
@@ -382,7 +380,6 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
     });
