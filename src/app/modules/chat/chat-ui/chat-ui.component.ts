@@ -91,6 +91,7 @@ export class ChatUIComponent implements OnInit {
         this.page = 0;
         this.isBlankScreenVisible = false;
         document.body.classList.remove('no-scroll');
+        this.back.emit();
     }
 
     users = [];

@@ -173,9 +173,9 @@
                                 <input type="text" class="form-control"
                                   [attr.disabled]="isBotSender(message.sender) ? true : null"
                                   name="{{ item.data.label }}"
-                                  [placeholder]="(message?.action != null ) ? (message?.action[item.data.label]) : item.data.placeholder"
+                                  [placeholder]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : item.data.placeholder"
                                   [pattern]="item.data?.validation?.regex"
-                                  [value]="formData3[item.data.label] ? formData3[item.data.label]:''" [ngClass]="{
+                                  [value]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : (formData3[item.data.label] ?? '')" [ngClass]="{
                                 'is-invalid':
                                   formData3[item.data.label] &&
                                   !isInputValid(formData3[item.data.label], item?.data?.validation?.regex)
@@ -205,6 +205,7 @@
                                   (input)="onInputChange($event, item.data.label,message.message_id)" required>
                               </div>
                             </ng-container>
+
                             <ng-container *ngIf="item.type === 'hidden'">
                               <input type="hidden" [attr.disabled]="isBotSender(message.sender)" [name]="item.data.name"
                                 [value]="item.data.value">
@@ -233,8 +234,9 @@
                               <div>{{ item.data.title }}</div>
                               <div *ngFor="let option of item.data.options">
                                 <button mat-raised-button [disabled]="isBotSender(message.sender)" class="lgtBtn"
-                                  (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"><mat-icon
-                                    *ngIf="this.selectedCheckBoxes[item.data.name]?.includes(option.value)">check_circle</mat-icon>
+                                  (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"> <mat-icon *ngIf="isCheckBoxSelected(item.data.name, option.value, message)">
+                                    check_circle
+                                  </mat-icon>
                                   {{ option.label }}</button>
                               </div>
                             </ng-container>
@@ -246,7 +248,7 @@
                                   [value]="(message?.action) ? message?.action[item.data.name]:''"
                                   (change)="onDropdownChange(item.data.name, $event,message.message_id)">
                                   <option *ngFor="let option of item.data.options" [value]="option.value"
-                                    [selected]="isSelected(item.data.name, option.value)">
+                                    [selected]="isSelected(item.data.name, option.value,message)">
                                     {{ option.label }}
                                   </option>
                                 </select>
@@ -255,6 +257,7 @@
                                   {{ item.data.validation.errorText }}
                                 </div>
                               </div>
+                              
                             </ng-container>
 
 
