@@ -260,13 +260,14 @@ export class ChatService {
     if (pageSize) {
       url = url + 'pageSize=' + pageSize;
     } else {
-      url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=40`;
+      url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=20`;
     }
     if (timeStamp) {
       url = url + '&timeStamp=' + timeStamp;
     }
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
+      console.log('fetch messages',chat21Result);
       if (chat21Result.success) {
         if (!timeStamp) {
           this.clearMessagesDB();

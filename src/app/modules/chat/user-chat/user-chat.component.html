@@ -326,4 +326,4 @@
     </button>
   </div>
 </div>
-<app-chat-ui *ngIf="fullChatScreen"></app-chat-ui>
+<app-chat-ui *ngIf="fullChatScreen" (back)="closeFullScreen()"></app-chat-ui>

@@ -7,6 +7,8 @@ import { LocalStorageService } from 'src/app/services/storage.service';
 import { memoize } from 'lodash';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Pipe({
   name: 'highlight'
@@ -213,7 +215,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    this.fullChatScreen = !this.fullChatScreen;
+    this.fullChatScreen = true;
     this.chatManager.getDepartmentList();
     document.body.classList.add('no-scroll');
 
@@ -318,6 +320,13 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    fromEvent(this.chatWindowContainer.nativeElement, 'scroll')
+    .pipe(debounceTime(50))
+    .subscribe(() => {
+      if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
+        this.onScrollUp();
+      }
+    });    
     this.scrollToBottom();
     this.toggleArrowVisibility();
   }
@@ -460,6 +469,19 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   onScrollUp() {
     this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp);
+    console.log('triggered scrollup')
+  }
+
+  initializeScroll() {
+    if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
+      this.chatWindowContainer.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+    }
+  }
+
+  onScroll() {
+    if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
+      this.onScrollUp();
+    }
   }
 
   displaySystemMessage(message: any): boolean {
@@ -501,5 +523,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   search() {
     this.chatService.fetchMessages(this.requestId, '', 100000);
+  }
+
+  closeFullScreen(){
+    this.fullChatScreen = false;
   }
 }

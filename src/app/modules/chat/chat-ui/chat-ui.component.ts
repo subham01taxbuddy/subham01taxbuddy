@@ -69,6 +69,7 @@ export class ChatUIComponent implements OnInit {
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
             if (this.userChatComp) {
+                this.userChatComp.initializeScroll();
                 this.userChatComp.scrollToBottom();
             }
         }, 1000);
