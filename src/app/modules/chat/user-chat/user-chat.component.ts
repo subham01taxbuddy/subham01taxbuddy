@@ -343,6 +343,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     const messagesString = sessionStorage.getItem('fetchedMessages');
     if (messagesString) {
       this.fetchedMessages = JSON.parse(messagesString);
+      console.log('fetchMessages',this.fetchedMessages);
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
       const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId)
       if (filteredMessage.length > 0) {

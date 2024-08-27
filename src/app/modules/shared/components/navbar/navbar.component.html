@@ -63,8 +63,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="(loggedInUserInfo[0]?.serviceEligibility_GST && !roles?.includes('ROLE_FILER') || roles?.includes('ROLE_ADMIN'))"
-                    class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
+                <div class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
                     <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp; </div>
                 </div>
 
@@ -86,11 +85,7 @@
     <app-floating-widget (widgetClosed)="handleWidgetClosed()"></app-floating-widget>
 </div>
 
-<app-user-chat *ngIf="userDetails" 
-  [username]="userDetails.userFullName" 
-  [requestId]="userDetails.request_id" 
-  [serviceType]="userDetails.departmentName"
-  [image]="userDetails.image" 
-  [showCloseIcon]="true"  
-  (closeChatClicked)="closeChat()">
+<app-user-chat *ngIf="userDetails" [username]="userDetails.userFullName" [requestId]="userDetails.request_id"
+    [serviceType]="userDetails.departmentName" [image]="userDetails.image" [showCloseIcon]="true"
+    (closeChatClicked)="closeChat()">
 </app-user-chat>
