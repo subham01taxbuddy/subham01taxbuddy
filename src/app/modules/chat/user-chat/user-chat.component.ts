@@ -470,19 +470,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   onScrollUp() {
     this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp);
-    console.log('triggered scrollup')
-  }
-
-  initializeScroll() {
-    if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
-      this.chatWindowContainer.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
-    }
-  }
-
-  onScroll() {
-    if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
-      this.onScrollUp();
-    }
+    console.log('triggered scrollup');
   }
 
   displaySystemMessage(message: any): boolean {
