@@ -23,7 +23,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { ChatService } from '../chat/chat.service';
 
 export const MY_FORMATS = {
@@ -121,7 +120,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public datePipe: DatePipe,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     private chatService:ChatService,
     @Inject(LOCALE_ID) private locale: string) {
@@ -1006,7 +1004,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
       else if(result?.request_id){

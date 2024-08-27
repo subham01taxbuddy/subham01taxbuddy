@@ -209,7 +209,7 @@ export class FloatingWidgetComponent implements OnInit {
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
-                            image: user ? user.image : conversation.userFullName[0],
+                            image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
                             text: conversation.text,
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
@@ -228,7 +228,7 @@ export class FloatingWidgetComponent implements OnInit {
                 this.conversationList = convdata.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: user ? user.image : conversation.userFullName[0],
+                        image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
                         name: conversation.recipientFullName,
                         text: conversation.text,
                         timestamp: conversation.timestamp,
@@ -245,6 +245,7 @@ export class FloatingWidgetComponent implements OnInit {
             }
         }
     }
+
 
     handleDeptList = (data: any) => {
         // this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))

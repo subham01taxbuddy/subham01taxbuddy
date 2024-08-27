@@ -26,7 +26,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import {DomSanitizer} from "@angular/platform-browser";
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
 @Component({
@@ -110,7 +109,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     private chatService: ChatService,
   ) {
@@ -1244,7 +1242,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
       else if(result?.requestId){

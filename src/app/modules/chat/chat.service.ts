@@ -27,7 +27,7 @@ export class ChatService {
   private CHAT_API_URL = environment.CHAT_API_URL;
   private WEBSOCKET_URL = environment.WEBSOCKET_URL;
   private USER_STATUS_WEBSOCKET_URL = environment.USER_STATUS_WEBSOCKET_URL;
-  private PROJECT_ID = "65e56b0b7c8dbc0013851dcb";
+  private PROJECT_ID = environment.TILEDESK_PROJECT_ID;
   private CENTRALIZED_CHAT_DETAILS = "https://zbuz4brujg5rfks47lct546o5u0aduge.lambda-url.ap-south-1.on.aws/chat-system-config";
   private CANNED_MESSAGE_LIST = environment.TILEDESK_URL + '/api/' + this.PROJECT_ID + '/canned';
   presenceTopic;

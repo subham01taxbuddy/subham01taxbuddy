@@ -36,7 +36,7 @@ export class ChatUIComponent implements OnInit {
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
-        this.handleConversationList();
+        // this.handleConversationList();
     }
 
 
@@ -165,7 +165,7 @@ export class ChatUIComponent implements OnInit {
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
-                            image: user ? user.image : conversation.userFullName[0],
+                            image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
                             name: conversation.name,
                             text: conversation.text,
                             timestamp: conversation.timestamp,
@@ -183,7 +183,7 @@ export class ChatUIComponent implements OnInit {
                 this.conversationList = conversations.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
-                        image: user ? user.image : conversation.userFullName[0],
+                        image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
                         name: conversation.recipientFullName,
                         text: conversation.text,
                         timestamp: conversation.timestamp,

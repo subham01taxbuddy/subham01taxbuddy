@@ -9,16 +9,16 @@ export const environment = {
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
 	addClientThroughEportal: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/efiling/add-eri",
 	isValidItr: false,
-	environment: 'UAT',
+	environment: 'DEV',
 	admin_id: 3000,
 	allowReassignToPreviousLeader: [3000, 14140],
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "dev",
+	payOutEnv: "DEV",
+	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	kmAppId: "5d1fff0257a39f9bb9699a129da55963",
 	// kmAppId: "3c45762181ce71ac72f5e8ffd90da16a8",
-	payOutEnv: "QA",
-	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
@@ -79,5 +79,6 @@ export const environment = {
 	CHAT_API_URL: 'https://dev-tiledesk.taxbuddy.com/chatapi/api/tilechat',
 	TILEDESK_URL: 'https://dev-tiledesk.taxbuddy.com',
 	USER_STATUS_WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/ws',
-	PROJECT_NAME: 'Taxbuddy Dev'
+	PROJECT_NAME: 'Taxbuddy Dev',
+	TILEDESK_PROJECT_ID: "65e56b0b7c8dbc0013851dcb"
 };
