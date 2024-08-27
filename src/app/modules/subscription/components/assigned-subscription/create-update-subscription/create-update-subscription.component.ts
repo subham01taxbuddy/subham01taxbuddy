@@ -560,7 +560,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   get isOtherServiceType(): boolean {
-    return this.serviceType === 'OTHER';
+    return this.serviceType === 'OTHER' && this.subType === 'edit'
   }
 
   otherInfoForm: UntypedFormGroup = this.fb.group({
@@ -1240,9 +1240,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = `/bo/sme-details-new/${this.subscriptionObj?.subscriptionAssigneeId}`;
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      this.filerName.setValue(result.data[0]?.name);
-      this.leaderName.setValue(result.data[0]?.parentName);
-      this.leaderUserId = result.data[0]?.parentId;
+      if(this.leaderName.value === '' || this.leaderName.value === null ){
+        this.filerName.setValue(result.data[0]?.name);
+        this.leaderName.setValue(result.data[0]?.parentName);
+        this.leaderUserId = result.data[0]?.parentId;
+      }
       if(this.serviceType === 'OTHER'){
         this.getFilerList();
       }
