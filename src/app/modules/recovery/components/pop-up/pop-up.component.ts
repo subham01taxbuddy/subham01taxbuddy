@@ -12,7 +12,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class PopUpComponent {
   formattedData: string;
-  isLoading = new BehaviorSubject<boolean>(false);
+  loading : boolean = false;
+  
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<PopUpComponent>,
     private utilService: UtilsService) {
@@ -32,11 +33,12 @@ export class PopUpComponent {
   }
 
   onYesClick(): void {
-    this.isLoading.next(true);
+    this.loading =true;
     const itrObject = this.data.response.data as ITR_JSON;
 
     this.utilService.saveItrObject(itrObject).subscribe(
       (result) => {
+        this.loading = false;
         console.log('Response saved to DB:', result);
         console.log('Updates Applied and Data Recoverd Successfully');
         this.dialogRef.close(true);

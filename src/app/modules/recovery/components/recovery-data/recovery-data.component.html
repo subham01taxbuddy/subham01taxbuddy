@@ -13,8 +13,7 @@
 </div>
 
 <div class="expand">
-  <div *ngIf="isProcessingSnapshots" class="loader">
-    <mat-spinner diameter="80"></mat-spinner>
+  <div *ngIf="isProcessingSnapshots">
     <p>Processing snapshots...</p>
   </div>
   <table *ngIf="!isProcessingSnapshots && snapshots.length" class="snapshots-table">
@@ -47,9 +46,8 @@
     </tbody>
   </table>
 </div>
-<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0 || (isLoading$ | async)">
-  <span>Apply</span>
-</button>
+<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>
+
 
 
 
