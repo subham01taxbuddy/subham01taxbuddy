@@ -560,7 +560,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   get isOtherServiceType(): boolean {
-    return this.serviceType === 'OTHER' && this.subType === 'edit'
+    return this.serviceType === 'OTHER' && this.subType === 'edit' && this.roles.includes('ROLE_ADMIN')
   }
 
   otherInfoForm: UntypedFormGroup = this.fb.group({
