@@ -164,8 +164,7 @@ export class UserMsService {
   uploadReport(file: File): Observable<Blob> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post('http://localhost:9050/itr/script-add-invoiceNo-in-csv', formData, {
-    //return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData,{
+    return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData,{
     responseType: 'blob',
     headers: new HttpHeaders().append('Accept', 'text/csv')
     });
