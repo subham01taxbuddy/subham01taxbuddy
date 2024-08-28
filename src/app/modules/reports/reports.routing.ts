@@ -23,6 +23,7 @@ import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-don
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
 import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.component';
+import { TransactionComponent } from './transaction/transaction.component';
 
 
 const routes: Routes = [
@@ -129,6 +130,10 @@ const routes: Routes = [
       {
         path:'prefill-uploaded-pending-summary',
         component:PrefillUploadedSummaryNotSentComponent,
+      },
+      {
+        path:'transaction-report',
+        component:TransactionComponent,
       }
     ],
 

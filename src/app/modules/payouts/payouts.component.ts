@@ -24,6 +24,8 @@ import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { map, Observable, startWith } from 'rxjs';
+import { User } from '../subscription/components/performa-invoice/performa-invoice.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -107,6 +109,11 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   serviceType = new UntypedFormControl('');
   isCreateAllowed :boolean = false;
   txbdyInvoiceId:any;
+  searchFiler = new UntypedFormControl('');
+  filteredFiler : Observable<any[]>;
+  filerNames: User[]
+  filerOptions: User[] = [];
+  allOldNewFilerList: any;
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -123,6 +130,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
+    this.getAllFilerList();
     this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
@@ -182,6 +190,67 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
+    this.setFilteredFiler()
+  }
+
+  setFilteredFiler(){
+    this.filteredFiler = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        console.log('change', value);
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.filerOptions)
+          : this.filerOptions.slice();
+      })
+    );
+  }
+
+  private _filter(name: string, options): User[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getFilerNameId(option){
+    console.log(option);
+    if(option.leader){
+      this.leaderId = option.userId;
+      this.agentId = this.leaderId;
+    }else{
+      this.filerId = option.userId;
+      this.agentId = this.filerId;
+    }
+    if (option?.partnerType === 'PRINCIPAL') {
+      this.searchAsPrinciple = true;
+    } else {
+      this.searchAsPrinciple = false;
+    }
+  }
+
+  getAllFilerList(){
+    this.loading = true;
+    const param = `/bo/sme/all-list?page=0&pageSize=10000`;
+    this.reportService.getMethod(param).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res.success) {
+          console.log('filingTeamMemberId: ', res);
+          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
+            this.allOldNewFilerList = res?.data?.content;
+            this.filerNames = this.allOldNewFilerList.map((item) => {
+              return { name: item.name, userId: item.userId, partnerType: item.partnerType, leader: item.leader };
+            });
+            this.filerOptions = this.filerNames
+            this.setFilteredFiler();
+          }
+        }else{
+          console.log('error', res);
+          this.utilsService.showSnackBar('Error While Getting All Filer List')
+        }
+      });
   }
 
   getLeaders() {
@@ -1241,6 +1310,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
 
   resetFilters() {
+    this.searchFiler.setValue(null);
     this.cacheManager.clearCache();
     this?.serviceDropDown?.resetService();
     this.serviceType.setValue(null);

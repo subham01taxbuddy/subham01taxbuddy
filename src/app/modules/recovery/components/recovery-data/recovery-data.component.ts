@@ -8,19 +8,19 @@ import { PopUpComponent } from '../pop-up/pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, finalize, Observable } from 'rxjs';
 
-interface FragmentData {
-  fragmentName: string;
-  state: any;
-  id: string;
-}
+// interface FragmentData {
+//   fragmentName: string;
+//   state: any;
+//   id: string;
+// }
 
-interface GroupedSnapshot {
+// interface GroupedSnapshot {
 
-  version: string;
-  commitDate: string;
-  fragments: FragmentData[];
-  selected?: boolean;
-}
+//   version: string;
+//   commitDate: string;
+//   fragments: FragmentData[];
+//   selected?: boolean;
+// }
 interface SnapshotItem {
   version: string;
   commitDate: string;
@@ -40,18 +40,18 @@ export class RecoveryDataComponent {
   mobileNumber: string = '';
   loading : boolean = false;
   error: string | null = null;
-  private _isLoading = new BehaviorSubject<boolean>(false);
-  isLoading$: Observable<boolean> = this._isLoading.asObservable();
+  //private _isLoading = new BehaviorSubject<boolean>(false);
+  //isLoading$: Observable<boolean> = this._isLoading.asObservable();
 
   jvSnapshots: any = [];
   selectedItems: string[] = [];
-  groupedSnapshots: GroupedSnapshot[] = [];
+  //groupedSnapshots: GroupedSnapshot[] = [];
   isProcessingSnapshots: boolean = false;
 
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = ['version', 'fragment', 'state', 'commitDate'];
 
-  sendIds: any = [];
+ // sendIds: any = [];
   snapshots: SnapshotItem[] = [];
 
   constructor(private http: HttpClient, private itrMs: ItrMsService, private userMsService: UserMsService,

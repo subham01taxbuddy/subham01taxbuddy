@@ -22,14 +22,14 @@
           </div>
           <div class="col-sm-4 spsTp">
             <mat-label>Title:</mat-label>
-            <mat-form-field appearance="outline" class="class1" 
+            <mat-form-field appearance="outline" class="class1"
             [ngClass]="{'is-invalid': alertForm.get('title').invalid && (alertForm.get('title').dirty || alertForm.get('title').touched)}">
               <input matInput placeholder="Title" formControlName="title" autocomplete="off" type="text">
             </mat-form-field>
           </div>
           <div class="col-sm-4 spsTp">
             <mat-label>Message:</mat-label>
-            <mat-form-field appearance="outline" class="class1" 
+            <mat-form-field appearance="outline" class="class1"
             [ngClass]="{'is-invalid': alertForm.get('message').invalid && (alertForm.get('message').dirty || alertForm.get('message').touched)}">
               <input matInput placeholder="Message" formControlName="message" required type="text">
             </mat-form-field>
@@ -41,9 +41,9 @@
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="class1">
-                  <input matInput [matDatepicker]="pickerFrom" 
+                  <input matInput [matDatepicker]="pickerFrom"
                     placeholder="Choose a date"
-                    [min]="minDate"
+                    [min]="minDateTo"
                     formControlName="applicableFromDate">
                   <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
                   <mat-datepicker #pickerFrom></mat-datepicker>
@@ -63,8 +63,10 @@
             <div class="row">
               <div class="col-sm-6">
                 <mat-form-field appearance="outline" class="class1">
-                  <input matInput [matDatepicker]="pickerTo" placeholder="DD/MM/YYYY"
-                    formControlName="applicableToDate">
+                  <input matInput [matDatepicker]="pickerTo"
+                   placeholder="DD/MM/YYYY"
+                   [min]="minDateTo"
+                  formControlName="applicableToDate">
                   <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTo></mat-datepicker>
                 </mat-form-field>
@@ -83,7 +85,7 @@
           <div class="col-sm-12 spsTp bdrTp">
             <button type="submit" class="rt-btn" [disabled]="loading" >
               Create Alert
-            </button> 
+            </button>
           </div>
         </div>
         <div class="row">

@@ -577,6 +577,31 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       currAssmntYr.enable();
     }
 
+    if(this.ITR_JSON.isRevised === 'Y'){
+      let origItrText = sessionStorage.getItem('ORIGINAL_ITR');
+      if(this.utilsService.isNonEmpty(origItrText)) {
+        let originalItr = JSON.parse(origItrText);
+        let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
+
+        if (originalItr.regime === 'OLD' ||
+            (originalItr.regime === 'NEW' && originalItr.form10IEDate < itrFilingDueDate
+                && originalItr.itrType !== '1' && originalItr.itrType !== '2')) {
+          let currAssmntYr = (
+              this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+          ).controls['currentYearRegime'];
+          currAssmntYr.enable();
+          currAssmntYr.updateValueAndValidity();
+        } else {
+          let currAssmntYr = (
+              this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+          ).controls['currentYearRegime'];
+          currAssmntYr.setValue('NEW');
+          currAssmntYr.disable();
+          currAssmntYr.updateValueAndValidity();
+        }
+      }
+    }
+
     if(this.ITR_JSON.isLate === 'Y'){
       let currAssmntYr = (
           this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup

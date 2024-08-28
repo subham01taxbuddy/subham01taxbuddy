@@ -36,6 +36,7 @@ import { PersonalInformationComponent } from '../personal-information/personal-i
 import { RequestManager } from '../../../../shared/services/request-manager';
 import { NorDetailsDialogComponent } from "../../../components/nor-details-dialog/nor-details-dialog.component";
 
+
 declare let $: any;
 export const MY_FORMATS = {
   parse: {

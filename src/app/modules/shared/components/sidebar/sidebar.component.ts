@@ -207,6 +207,7 @@ export class SidebarComponent {
         { name: 'Prefill Summary Pending', url: '/reports/prefill-uploaded-pending-summary', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Client Added But UnFiled', url: '/reports/client-added-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        // { name: 'Transaction Report', url: '/reports/transaction-report', roles: ['ROLE_ADMIN','ROLE_LEADER']  },
 
       ]
     },
@@ -238,7 +239,7 @@ export class SidebarComponent {
       submenu:[
         {name: 'Create Alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
       ]
-  },
+   },
 
     // {
     //   name:'Data Recovery',
@@ -250,7 +251,7 @@ export class SidebarComponent {
     //     {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
     //   ]
     // },
-    {
+   {
       name: 'PAN Exception',
       icon: 'invoice.png',
       active: false,

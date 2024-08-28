@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable ,Subject,BehaviorSubject} from 'rxjs';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { InterceptorSkipHeader } from './token-interceptor';
 import { environment } from 'src/environments/environment';
 
@@ -161,4 +161,14 @@ export class UserMsService {
     return this.httpClient.post(environment.url + '/itr/cloud/upload/temp', data);
   }
 
+  uploadReport(file: File): Observable<Blob> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpClient.post('http://localhost:9050/itr/script-add-invoiceNo-in-csv', formData, {
+    //return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData,{
+    responseType: 'blob',
+    headers: new HttpHeaders().append('Accept', 'text/csv')
+    });
+  }
+  
 }
