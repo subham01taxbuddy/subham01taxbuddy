@@ -200,11 +200,13 @@ export class AppComponent implements OnInit {
       console.log('logging out', this.router.url);
       this.logout();
       this.smeLogout();
+      this.chatManager.closeChat();
     });
     this.dialogRef.backdropClick().subscribe(() => {
       console.log('logging out');
       this.logout();
       this.smeLogout();
+      this.chatManager.closeChat();
     })
   }
 
