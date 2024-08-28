@@ -201,16 +201,21 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         const name = typeof value === 'string' ? value : value?.name;
         return name
           ? this._filter(name as string, this.filerOptions)
-          : this.filerOptions.slice();
+          : this.filerOptions?.slice();
       })
     );
   }
 
+
+  displayFn(label: any) {
+    return label ? label : undefined;
+  }
+
   private _filter(name: string, options): User[] {
-    const filterValue = name.toLowerCase();
+    const filterValue = name?.toLowerCase();
 
     return options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
+      option?.name?.toLowerCase().includes(filterValue)
     );
   }
 
