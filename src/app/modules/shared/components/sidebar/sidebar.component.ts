@@ -207,7 +207,6 @@ export class SidebarComponent {
         { name: 'Prefill Summary Pending', url: '/reports/prefill-uploaded-pending-summary', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Doc Uploaded But UnFiled', url: '/reports/documents-uploaded-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Client Added But UnFiled', url: '/reports/client-added-filing-not-done', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'Transaction Report', url: '/reports/transaction-report', roles: ['ROLE_ADMIN','ROLE_LEADER']  },
 
       ]
     },
@@ -219,6 +218,7 @@ export class SidebarComponent {
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
         { name : 'ITR Filed Users', url: '/reports/itr-filed-users',roles: [] },
+        { name: 'Transaction Report', url: '/reports/transaction-report', roles: []}
       ]
     },
     {
