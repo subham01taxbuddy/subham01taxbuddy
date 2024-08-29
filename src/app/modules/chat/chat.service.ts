@@ -48,6 +48,10 @@ export class ChatService {
   userId: any;
   private deptList: any[] = [];
   private deptListData: any[] = [];
+  shouldReconnect: boolean = true;
+
+  pingInterval: any;
+  private connectionCheckInterval: any;
 
 
 
@@ -56,6 +60,20 @@ export class ChatService {
 
   private closeFloatingWidgetSubject = new Subject<void>();
   closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
+
+  startPingInterval() {
+    this.pingInterval = setInterval(() => {
+      if (this.chatClient && this.chatClient.connected) {
+        this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
+      }
+    }, 10000);
+  }
+
+  stopPingInterval() {
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+    }
+  }
 
 
   closeFloatingWidget() {
@@ -436,6 +454,7 @@ export class ChatService {
   chatSubscription = null;
 
   websocketConnection(chat21Token, requestId) {
+    this.shouldReconnect = true;
 
     this.initChatVariables(requestId);
 
@@ -461,6 +480,9 @@ export class ChatService {
 
     this.chatClient.on("connect",
       () => {
+        if(!this.shouldReconnect){
+          return;
+        }
         if (this.log) {
           console.log("Chat client connected. this.connected:" + this.connected);
         }
@@ -657,6 +679,8 @@ export class ChatService {
           }
         }
 
+        this.startPingInterval();
+
       }
     );
     this.chatClient.on("reconnect",
@@ -664,6 +688,7 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
+        this.startPingInterval();
       }
     );
     this.chatClient.on("close",
@@ -832,10 +857,15 @@ export class ChatService {
   }
 
   closeWebSocket() {
+    this.stopPingInterval();
+    if (this.connectionCheckInterval) {
+      clearInterval(this.connectionCheckInterval);
+    }
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
-        this.chatClient.end(() => {
+        this.chatClient.end(true,() => {
+          this.shouldReconnect = false;
           this.connected = false
           // reset all subscriptions
           this.onConversationAddedCallbacks = new Map();
@@ -849,7 +879,7 @@ export class ChatService {
           this.callbackHandlers = new Map();
           this.chatSubscription = null;
           this.topicInbox = null;
-        })
+         })
       });
     }
   }

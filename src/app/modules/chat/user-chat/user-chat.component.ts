@@ -114,6 +114,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   originalCannedMessageList: any[] = [];
   userCurrentStatus = 'online';
   userLastSeen: any;
+  page = 0;
 
   constructor(
     private chatService: ChatService,
@@ -211,12 +212,15 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   goBack() {
     this.chatService.unsubscribeRxjsWebsocket();
+    this.chatManager.closeChat();
     this.back.emit();
   }
 
   showFullScreen() {
+    this.page = 0;
     this.fullChatScreen = true;
     this.chatManager.getDepartmentList();
+    this.chatManager.conversationList(this.page);
     document.body.classList.add('no-scroll');
 
   }
@@ -226,9 +230,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     if (this.messageSent) {
       this.chatManager.sendMessage(this.messageSent, '', payload);
       this.messageSent = '';
-      setTimeout(() => {
-        this.scrollToBottom()
-      })
+      this.scrollToBottom();
     }
   }
 
@@ -345,13 +347,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       this.fetchedMessages = JSON.parse(messagesString);
       console.log('fetchMessages',this.fetchedMessages);
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
-      const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId)
-      if (filteredMessage.length > 0) {
-        this.newMessageCount += filteredMessage.length;
-      }
-      else {
-        this.scrollToBottom();
-      }
+      const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
     }
     this.isAtBottom = isAtBottom;
     this.messageCountTo0();
@@ -396,8 +392,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   });
 
   messageCountTo0() {
-    this.scrollToBottom();
-    this.newMessageCount = 0;
+     this.newMessageCount = 0;
   }
 
   formatTimestamp(timestamp: number): string {
