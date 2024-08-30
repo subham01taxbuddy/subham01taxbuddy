@@ -114,6 +114,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   filerNames: User[]
   filerOptions: User[] = [];
   allOldNewFilerList: any;
+  showAllFilerList = new UntypedFormControl(false);
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -191,6 +192,10 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
     this.setFilteredFiler()
+  }
+
+  onCheckBoxChange() {
+    this.resetFilters();
   }
 
   setFilteredFiler(){
