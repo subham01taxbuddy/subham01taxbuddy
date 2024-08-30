@@ -154,6 +154,7 @@ export class SidebarComponent {
         { name: 'Payouts', url: '/payouts', roles: [] },
         { name: 'Pay Processing', url: '/payouts/pay-processing', roles: ['ROLE_ADMIN'] },
         { name: 'Payout Adjustment', url: '/payouts/payouts-adjustments', roles: ['ROLE_ADMIN'] },
+        { name: 'Payout Adjustment Report', url: '/payouts/payouts-adjustment-report', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
