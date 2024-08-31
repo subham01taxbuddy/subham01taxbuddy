@@ -237,25 +237,33 @@ export class ChatService {
     }
   }
 
-  fetchConversationList(page, userId: any, departmentId?: any, removeCallback?) {
-    // if (!departmentId) {
-    //   departmentId = "65e56e777c8dbc0013851f4d";
-    // }
+  fetchConversationList(page, userId: any, departmentId?: any, removeCallback?): Promise<void> {
     let CONVERSATION_URL = this.CONVERSATION_URL + userId + '/conversations?page=' + page + '&pageSize=20'
     if (departmentId) {
       CONVERSATION_URL += `&departmentId=${departmentId}`
     }
     console.log('conversation url', CONVERSATION_URL);
-    this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe((conversationResult: any) => {
-      console.log('conversation result', conversationResult);
-      this.conversationList(page, conversationResult.result)
-      if (!removeCallback) {
-        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(ChatEvents.CONVERSATION_UPDATED);
-        });
-      }
+    
+    return new Promise((resolve, reject) => {
+      this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe(
+        (conversationResult: any) => {
+          console.log('conversation result', conversationResult);
+          this.conversationList(page, conversationResult.result)
+          if (!removeCallback) {
+            this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+              callback(ChatEvents.CONVERSATION_UPDATED);
+            });
+          }
+          resolve();
+        },
+        (error) => {
+          console.error('Error fetching conversations:', error);
+          reject(error);
+        }
+      );
     });
   }
+
 
 
 

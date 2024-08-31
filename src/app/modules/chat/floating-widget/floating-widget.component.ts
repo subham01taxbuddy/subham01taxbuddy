@@ -6,6 +6,7 @@ import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
+import { ElementRef } from '@angular/core';
 
 interface Department {
     name: string,
@@ -18,6 +19,9 @@ interface Department {
     animations: [widgetVisibility],
 })
 export class FloatingWidgetComponent implements OnInit {
+    selector: string = ".main-panel-chat";
+
+    @ViewChild('scrollContainer') scrollContainer: ElementRef;
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
     centralizedChatDetails: any;
@@ -44,6 +48,7 @@ export class FloatingWidgetComponent implements OnInit {
     fullChatScreen: boolean = false;
     selectedDepartmentId: any;
     page = 0;
+    isLoading: boolean = false;
 
     newMessageSubscription: Subscription;
     showFullScreen() {
@@ -161,7 +166,6 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.page = 0;
         this.chatManager.getDepartmentList();
         console.log('full conversation list');
         this.chatManager.conversationList(this.page);
@@ -176,36 +180,63 @@ export class FloatingWidgetComponent implements OnInit {
 
 
     onScrollDown() {
-        if (!this.fullChatScreen) {
-            console.log('Scrolled down')
+        if (!this.fullChatScreen && !this.isLoading) {
+            this.isLoading = true;
+            console.log('Scrolled down');
             this.page = this.page + 1;
-            this.chatManager.conversationList(this.page, this.selectedDepartmentId);
-            setTimeout(() => {
-                this.handleConversationList();
-            }, 500);
+            this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
+        }
+    }
+
+    scrollToTop() {
+        if (this.scrollContainer) {
+            this.scrollContainer.nativeElement.scrollTop = 0;
         }
     }
 
     fetchList(departmentId: any) {
-        this.page = 0;
         this.selectedDepartmentId = departmentId;
+        this.isLoading = true;
+        this.scrollToTop();
+        this.page = 0;
         if (departmentId) {
-            this.chatManager.conversationList(this.page, departmentId);
+            this.chatManager.conversationList(this.page, departmentId).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
+        } else {
+            this.chatManager.conversationList(this.page).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
         }
-        else {
-            this.chatManager.conversationList(this.page);
-        }
-        setTimeout(() => {
-            this.handleConversationList();
-        }, 500);
     }
 
     handleConversationList = () => {
         console.log('started')
         const convdata = this.localStorage.getItem('conversationList', true);
         if (convdata) {
+            let newConversations;
             if (this.selectedDepartmentId) {
-                this.conversationList = convdata.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                newConversations = convdata.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
@@ -219,13 +250,10 @@ export class FloatingWidgetComponent implements OnInit {
                             userFullName: conversation.userFullName,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
-
-
                         };
                     });
-            }
-            else {
-                this.conversationList = convdata.map((conversation: any) => {
+            } else {
+                newConversations = convdata.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
                         image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
@@ -239,9 +267,14 @@ export class FloatingWidgetComponent implements OnInit {
                         userFullName: conversation.userFullName,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
-
                     };
                 });
+            }
+
+            if (this.page === 0) {
+                this.conversationList = newConversations;
+            } else {
+                this.conversationList = [...this.conversationList, ...newConversations];
             }
         }
     }
@@ -252,8 +285,6 @@ export class FloatingWidgetComponent implements OnInit {
         // this.selectedDepartmentId = data[0]._id;
         // this.chatManager.conversationList(this.page, this.selectedDepartmentId);
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }));
-        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
-
     }
 
 

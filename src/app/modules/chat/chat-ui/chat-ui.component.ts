@@ -21,7 +21,7 @@ interface Department {
 
 
 export class ChatUIComponent implements OnInit {
-    selector: string = ".main-panel-chat";
+    selector: string = ".main-panel-chats";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
 
@@ -52,6 +52,7 @@ export class ChatUIComponent implements OnInit {
     selectedDepartmentId: any;
     page = 0;
     newMessageSubscription: Subscription;
+    isLoading: boolean = false;
 
 
     openUserChat(conversation: any) {
@@ -82,8 +83,8 @@ export class ChatUIComponent implements OnInit {
 
 
     closeUserChat() {
-        this.page = 0;
-        this.showWidget = true;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatManager.closeChat();
     }
 
     goBack() {
@@ -144,42 +145,55 @@ export class ChatUIComponent implements OnInit {
 
     fetchList(departmentId: any) {
         this.selectedDepartmentId = departmentId;
+        this.isLoading = true;
+        this.page = 0;
         if (departmentId) {
-            this.chatManager.conversationList(this.page, departmentId);
+            this.chatManager.conversationList(this.page, departmentId).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
+        } else {
+            this.chatManager.conversationList(this.page).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
         }
-        else {
-            this.chatManager.conversationList(this.page);
-        }
-        setTimeout(() => {
-            this.handleConversationList();
-        }, 500);
     }
 
     handleConversationList = () => {
-        const convData = this.localStorage.getItem('conversationList', true);
-        if (convData) {
-            const conversations = convData;
+        console.log('started')
+        const convdata = this.localStorage.getItem('conversationList', true);
+        if (convdata) {
+            let newConversations;
             if (this.selectedDepartmentId) {
-                this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                newConversations = convdata.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
                             image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
-                            name: conversation.name,
                             text: conversation.text,
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
                             type: conversation.type,
-                            userFullName: conversation.userFullName,
                             departmentId: conversation.departmentId,
                             sender: conversation.sender,
+                            userFullName: conversation.userFullName,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
                         };
                     });
-            }
-            else {
-                this.conversationList = conversations.map((conversation: any) => {
+            } else {
+                newConversations = convdata.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
                         image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
@@ -188,19 +202,22 @@ export class ChatUIComponent implements OnInit {
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id,
                         type: conversation.type,
-                        userFullName: conversation.userFullName,
                         departmentId: conversation.departmentId,
                         sender: conversation.sender,
+                        userFullName: conversation.userFullName,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
-
                     };
                 });
             }
-            // this.conversationList = [...this.conversationList]
+
+            if (this.page === 0) {
+                this.conversationList = newConversations;
+            } else {
+                this.conversationList = [...this.conversationList, ...newConversations];
+            }
         }
     }
-
     handleDeptList = (data: any) => {
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         // this.selectedDepartmentId = data[0]._id;
@@ -210,8 +227,20 @@ export class ChatUIComponent implements OnInit {
 
 
     onScrollDown() {
-        this.page = this.page + 1;
-        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
+        if (!this.isLoading) {
+            this.isLoading = true;
+            console.log('Scrolled down');
+            this.page = this.page + 1;
+            this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
+                setTimeout(() => {
+                    this.handleConversationList();
+                    this.isLoading = false;
+                }, 500);
+            }).catch((error) => {
+                console.error('Error fetching conversations:', error);
+                this.isLoading = false;
+            });
+        }
     }
 
 

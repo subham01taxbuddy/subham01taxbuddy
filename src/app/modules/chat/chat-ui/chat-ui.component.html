@@ -17,7 +17,7 @@
                 deptName.name }}</div>
         </div>
 
-        <div class="user-list main-panel-chat">
+        <div class="user-list main-panel-chats">
             <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true"
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
@@ -43,6 +43,9 @@
 
                     </div>
 
+                </div>
+                <div class="loader" *ngIf="isLoading">
+                    <span><i class="fa fa-spinner fa-spin"></i> Loading more conversations...</span>
                 </div>
             </div>
         </div>

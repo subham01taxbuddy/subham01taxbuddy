@@ -103,8 +103,8 @@ export class ChatManager {
     this.chatService.closeWebSocket();
   }
 
-  conversationList(page: number, departmentId?: any) {
+  conversationList(page: number, departmentId?: any): Promise<void> {
     let chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
-    this.chatService.fetchConversationList(page, chat21UserID, departmentId, false);
+    return this.chatService.fetchConversationList(page, chat21UserID, departmentId, false);
   }
 }
