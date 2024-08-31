@@ -18,11 +18,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertPopupComponent } from './components/alert-popup/alert-popup.component';
+import { AlertPushNotificationComponent } from './components/alert-push-notification/alert-push-notification.component';
 
 
 @NgModule({
   declarations: [
-    CreateAlertComponent
+    CreateAlertComponent,
+    AlertPopupComponent,
+    AlertPushNotificationComponent
   ],
   imports: [
     CommonModule,

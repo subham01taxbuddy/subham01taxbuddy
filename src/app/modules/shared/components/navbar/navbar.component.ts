@@ -1,11 +1,11 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, Renderer2,OnInit } from '@angular/core';
+import { Component, DoCheck, ElementRef, Renderer2, OnInit, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { NeedHelpComponent } from 'src/app/pages/need-help/need-help.component';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -15,8 +15,10 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import { Subscription } from "rxjs";
+import {  Subscription } from "rxjs";
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { AlertService } from 'src/app/services/alert.service';
+import { AlertPushNotificationComponent } from 'src/app/modules/alert/components/alert-push-notification/alert-push-notification.component';
 
 
 export interface DialogData {
@@ -35,9 +37,10 @@ interface Alert {
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.sass', './navbar.component.scss']
+  styleUrls: ['./navbar.component.sass', './navbar.component.scss'],
+  providers: [DatePipe]
 })
-export class NavbarComponent implements DoCheck,OnInit {
+export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   sidebar_open: boolean = false;
   menu_btn_rotate: boolean = false;
@@ -63,12 +66,17 @@ export class NavbarComponent implements DoCheck,OnInit {
 
   alerts: Alert[] = [];
   showNotifications = false;
-  private intervalId: any;
   unreadAlertCount: number = 0;
- 
+  private alertSubscription: Subscription;
+ // private periodicAlertSubscription: Subscription;
+  //private dialogRef: MatDialogRef<AlertPushNotificationComponent> | null = null;
+ //private overlayRef: OverlayRef | null = null;
+ private dialogRef: any = null;
+
   constructor(
     private router: Router,
     public dialog: MatDialog,
+    private datePipe: DatePipe,
     public location: Location,
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
@@ -78,7 +86,9 @@ export class NavbarComponent implements DoCheck,OnInit {
     private sidebarService: SidebarService,
     private renderer: Renderer2,
     private elementRef: ElementRef,
-    private dbService: NgxIndexedDBService
+    private dbService: NgxIndexedDBService,
+    private alertService: AlertService,
+   // private overlay: Overlay
 
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -102,18 +112,39 @@ export class NavbarComponent implements DoCheck,OnInit {
         this.isDropdownOpen = false;
       }
     });
+
+
   }
 
   ngDoCheck() {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
-   
+
   }
 
   ngOnInit(): void {
-    this.getAlerts();
+    // this.subscribeToAlerts();
+    // this.subscribeToPeriodicAlerts();
+    // this.alertService.fetchAlertsImmediately();
+    //this.getAlerts();
+    this.subscribeToAlerts();
+    this.alertService.getAllAlert().subscribe();
   }
+   ngOnDestroy() {
+  //    if (this.alertSubscription) {
+  //      this.alertSubscription.unsubscribe();
+  //    }
+  //    if (this.periodicAlertSubscription) {
+  //      this.periodicAlertSubscription.unsubscribe();
+  //    }
+  if (this.alertSubscription) {
+      this.alertSubscription.unsubscribe();
+    }
+  
+   }
+
+
 
   sideBar() {
     if (window.innerWidth < 768) {
@@ -343,38 +374,103 @@ export class NavbarComponent implements DoCheck,OnInit {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  getAlerts() {
-    this.loading = true;
-    this.userMsService.getAllAlert().subscribe(
-      (response: Alert[]) => {
-        this.alerts = response.map(alert => ({
-          ...alert,
-          applicableFrom: new Date(alert.applicableFrom),
-          applicableTo: new Date(alert.applicableTo),
-        }));
-        this.loading = false;
-        this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-      
-        console.log('All Alert list get:', this.alerts);
-      },
-      error => {
-        this.loading = false;
-        console.error('Error fetching alerts:', error);
-      }
-    );
-  }
+  // getAlerts() {
+  //     this.loading = true;
+  //     this.alertService.getAllAlert().subscribe(
+  //       (response: Alert[]) => {
+  //         this.alerts = response.map(alert => ({
+  //           ...alert,
+  //           applicableFrom: new Date(alert.applicableFrom),
+  //           applicableTo: new Date(alert.applicableTo),
+  //         }));
+  //         this.loading = false;
+  //         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+        
+  //         console.log('All Alert list get:', this.alerts);
+  //       },
+  //       error => {
+  //         this.loading = false;
+  //         console.error('Error fetching alerts:', error);
+  //       }
+  //     );
+  //   }
+  //   toggleNotifications() {
+  //       this.showNotifications = !this.showNotifications;
+  //       if (this.showNotifications) {
+  //         this.alerts.forEach(alert => alert.seen = true);
+  //        // this.updateUnreadAlertCount();
+  //         //this.processAlerts();
+  //       }
+  //     }
 
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) {
-      if (this.alerts.length === 0) {
-        this.getAlerts();
-      } else {
-        this.alerts.forEach(alert => alert.seen = true);
+      getAlerts() {
+        this.alertService.getAllAlert().subscribe(
+          (response: Alert[]) => {
+            this.alerts = response.map(alert => ({
+              ...alert,
+              applicableFrom: new Date(alert.applicableFrom),
+              applicableTo: new Date(alert.applicableTo),
+            }));
+            this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
+            this.updateUnreadAlertCount();
+          },
+          error => {
+            console.error('Error fetching alerts:', error);
+          }
+        );
       }
-    }
-  }
- 
+    
+      subscribeToAlerts() {
+        this.alertSubscription = this.alertService.alerts$.subscribe(
+          (alerts: Alert[]) => {
+            this.alerts = alerts;
+            this.updateUnreadAlertCount();
+            this.showPushNotifications();
+          }
+        );
+      }
+      // handleNewAlerts(newAlerts: Alert[]) {
+      //   newAlerts.forEach(alert => {
+      //     if (alert.type === 'Information' || alert.type === 'Update') {
+      //       this.showPushNotification(alert);
+      //     }
+      //   });
+      //   this.updateUnreadAlertCount();
+      // }
+    
+      showPushNotifications() {
+        const unseenAlerts = this.alerts.filter(alert => !alert.seen);
+        if (unseenAlerts.length > 0) {
+          if (this.dialogRef) {
+            this.dialogRef.componentInstance.updateAlerts(unseenAlerts);
+          } else {
+            this.dialogRef = this.dialog.open(AlertPushNotificationComponent, {
+              panelClass: 'alert-notification',
+              data: unseenAlerts,
+              position: { top: '20px', right: '20px' }
+            });
+            this.dialogRef.afterClosed().subscribe(() => {
+              this.dialogRef = null;
+            });
+          }
+        }
+      }
+    
+      updateUnreadAlertCount() {
+        this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
+      }
+    
+    
+      toggleNotifications() {
+        this.showNotifications = !this.showNotifications;
+        if (this.showNotifications) {
+          this.alerts.forEach(alert => alert.seen = true);
+          this.updateUnreadAlertCount();
+        }
+      }
 }
+  
+ 
+  
 
 

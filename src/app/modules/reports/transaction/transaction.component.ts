@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -51,6 +51,35 @@ export class TransactionComponent {
       this.utilsService.showSnackBar('Please select a file first');
     }
   }
+
+  // uploadFile() {
+  //   if (this.selectedFile) {
+  //     this.userMsService.uploadReport(this.selectedFile).subscribe(
+  //       (response: HttpResponse<Blob>) => {
+  //         console.log('Response headers:', response.headers);
+  //         console.log('Response status:', response.status);
+  
+  //         if (response.body) {
+  //           const blob: Blob = response.body;
+  //           const url = window.URL.createObjectURL(blob);
+  //           const a = document.createElement('a');
+  //           document.body.appendChild(a);
+  //           a.setAttribute('style', 'display: none');
+  //           a.href = url;
+  //           a.download = 'report.csv';
+  //           a.click();
+  //           window.URL.revokeObjectURL(url);
+  //           a.remove();
+  //         } else {
+  //           console.error('Response body is null');
+  //         }
+  //       },
+  //       (error) => {
+  //         console.error('Upload failed', error);
+  //       }
+  //     );
+  //   }
+  // }
 
   downloadFile(blob: Blob, fileName: string): void {
     const url = window.URL.createObjectURL(blob);

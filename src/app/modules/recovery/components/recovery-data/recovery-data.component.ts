@@ -6,7 +6,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { PopUpComponent } from '../pop-up/pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, finalize, Observable } from 'rxjs';
+import { finalize } from 'rxjs';
 
 // interface FragmentData {
 //   fragmentName: string;

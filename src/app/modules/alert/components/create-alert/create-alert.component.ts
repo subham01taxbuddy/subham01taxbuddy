@@ -1,13 +1,11 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, NgForm, UntypedFormControl, ValidationErrors, Validators } from '@angular/forms';
-import { UserMsService } from 'src/app/services/user-ms.service';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker} from '@angular/material/datepicker';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-
+import { AlertService } from 'src/app/services/alert.service';
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -44,12 +42,11 @@ export class CreateAlertComponent {
   minDate: Date = new Date(); 
   minDateTo: Date;
  
-  constructor(private userMsService: UserMsService,
+  constructor(private alertService: AlertService,
               private fb: FormBuilder, 
               private snackbar : MatSnackBar,
-              private changeDetectorRef: ChangeDetectorRef) {} 
-               
-              
+              private changeDetectorRef: ChangeDetectorRef,
+              ) {} 
 
   ngOnInit() {
     this.initForm();
@@ -96,7 +93,7 @@ export class CreateAlertComponent {
         applicableTo: toDateTime.toISOString()
       };
 
-      this.userMsService.postMethodAlert(formattedData).subscribe(
+      this.alertService.postMethodAlert(formattedData).subscribe(
         response => {
           console.log('Alert created successfully:', response);
           this.loading = false;
