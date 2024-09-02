@@ -39,7 +39,6 @@ export class TransactionComponent {
         next: (response: Blob) => {
           this.loading = false;
           this.utilsService.showSnackBar('File processed successfully');
-        // this.downloadFile(response, this.selectedFileName);
         },
         error: (error) => {
           console.error('Error processing file:', error);
@@ -52,8 +51,7 @@ export class TransactionComponent {
     }
   }
 
-
-  clearErrorMessage(): void {
+ clearErrorMessage(): void {
     this.errorMessage = null;
   }
 
