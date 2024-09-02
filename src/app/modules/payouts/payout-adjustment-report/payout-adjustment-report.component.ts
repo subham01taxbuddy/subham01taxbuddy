@@ -112,8 +112,8 @@ export class PayoutAdjustmentReportComponent implements OnInit {
       let agentReportInfo = {
         partnerName: payoutData[i].partnerName,
         partnerNumber: payoutData[i].partnerNumber,
-        partnerUserId: payoutData[i].partnerUserId,
-        amountPending: payoutData[i].amountPending,
+        userId: payoutData[i].userId,
+        amtPending: payoutData[i].amtPending,
         status: payoutData[i].status,
         adjustmentAdditions: payoutData[i].adjustmentAdditions,
       };
@@ -128,7 +128,7 @@ export class PayoutAdjustmentReportComponent implements OnInit {
     return [
       {
         headerName: 'Sr. No.',
-        width: 80,
+        width: 100,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -139,15 +139,22 @@ export class PayoutAdjustmentReportComponent implements OnInit {
       {
         headerName: 'Partner Name',
         field: 'partnerName',
-        width: 180,
+        width: 210,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (params) => {
+          if (params.value) {
+            return params.value;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Partner Number',
         field: 'partnerNumber',
-        width: 150,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -155,30 +162,51 @@ export class PayoutAdjustmentReportComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
+        cellRenderer: (params) => {
+          if (params.value) {
+            return params.value;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'User Id',
-        field: 'partnerUserId',
-        width: 100,
+        field: 'userId',
+        width: 120,
         suppressMovable: true,
-        filter: 'agTextColumnFilter',
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (params) => {
+          if (params.value) {
+            return params.value;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Payout Status',
         field: 'status',
-        width: 130,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-      {
-        headerName: 'Amount Pending',
-        field: 'amountPending',
-        width: 150,
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (params) => {
           if (params.value) {
-            return `₹${params.value}`;
+            return params.value;
+          } else {
+            return '-';
+          }
+        }
+      },
+      {
+        headerName: 'Amount Pending',
+        field: 'amtPending',
+        width: 180,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (params) => {
+          if (params.value) {
+            return `₹${parseFloat(params.value).toFixed(2)}`;
           } else {
             return '-';
           }
@@ -188,6 +216,7 @@ export class PayoutAdjustmentReportComponent implements OnInit {
         headerName: 'Adjustment Additions',
         field: 'adjustmentAdditions',
         width: 400,
+        hide:true,
         autoHeight: true,
         suppressMovable: true,
         cellStyle: { textAlign: 'left', 'font-weight': 'normal' },
@@ -224,10 +253,9 @@ export class PayoutAdjustmentReportComponent implements OnInit {
     let fieldName = [
       { key: 'partnerName', value: 'Partner Name' },
       { key: 'partnerNumber', value: 'Partner Number' },
-      { key: 'partnerUserId', value: 'User Id' },
+      { key: 'userId', value: 'User Id' },
       { key: 'status', value: 'Payout Status' },
-      { key: 'amountPending', value: 'Amount Pending' },
-      { key: 'adjustmentAdditions', value: 'Adjustment Addition' },
+      { key: 'amtPending', value: 'Amount Pending' },
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-adjustment-report', fieldName, {});
     this.loading = false;
@@ -236,7 +264,7 @@ export class PayoutAdjustmentReportComponent implements OnInit {
 
 
   resetFilters() {
-    this.selectedStatus.setValue(null);
+    this.selectedStatus.setValue('');
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
