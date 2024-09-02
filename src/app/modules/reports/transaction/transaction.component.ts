@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -39,7 +39,7 @@ export class TransactionComponent {
         next: (response: Blob) => {
           this.loading = false;
           this.utilsService.showSnackBar('File processed successfully');
-          this.downloadFile(response, this.selectedFileName);
+        // this.downloadFile(response, this.selectedFileName);
         },
         error: (error) => {
           console.error('Error processing file:', error);
@@ -52,14 +52,6 @@ export class TransactionComponent {
     }
   }
 
-  downloadFile(blob: Blob, fileName: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'updated_' + fileName;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
 
   clearErrorMessage(): void {
     this.errorMessage = null;

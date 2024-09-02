@@ -123,20 +123,6 @@ export class UserMsService {
     //  .map(response => response.json());
 }
 
-  postMethodAlert<T>(alertData: any): Observable<T> {
-    this.headers = new HttpHeaders();
-    this.headers.append('Content-Type', 'application/json');
-    return this.httpClient.post<T>(
-      environment.url +this.microService +`/api-alert/create`, alertData, { headers: this.headers });
-  }
-  
-  getAllAlert<T>(): Observable<T> {
-    this.headers = new HttpHeaders();
-    this.headers.append('Content-Type', 'application/json');
-    return this.httpClient.get<T>(
-      environment.url +this.microService + `/api-alert/All-active`, { headers: this.headers });
-  }
-
   removeExpiredAlerts<T>(): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
@@ -161,13 +147,24 @@ export class UserMsService {
     return this.httpClient.post(environment.url + '/itr/cloud/upload/temp', data);
   }
 
-  uploadReport(file: File): Observable<Blob> {
+  
+
+  uploadReport(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData,{
-    responseType: 'blob',
-    headers: new HttpHeaders().append('Accept', 'text/csv')
+    
+    this.headers = new HttpHeaders()
+      .append('Accept', 'text/csv, application/json')
+      .append('Authorization', 'Bearer ' + this.getAuthToken()); 
+    
+     return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData, {
+      headers: this.headers,
+      responseType: 'blob' 
     });
+  }
+
+  private getAuthToken(): string {
+    return localStorage.getItem('auth_token');
   }
   
 }

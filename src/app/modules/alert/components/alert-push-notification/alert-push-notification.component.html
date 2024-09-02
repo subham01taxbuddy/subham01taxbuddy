@@ -1,0 +1,93 @@
+
+  <div class="notifications-container">
+    <div *ngFor="let alert of notifications" class="push-notification-card">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-11 row">
+            <div class="col-2">
+              <i class="fas fa-bell alert-icon"></i>
+            </div>
+            <div class="title col-10">{{ alert.title }}</div>
+          </div>
+          <div class="col-1 row" (click)="closeNotification(alert)">
+            <i class="fas fa-times close-icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="alert-type">{{ alert.type }}</div>
+        <div class="alert-message">{{ alert.message }}</div>
+      </div>
+      <div class="footer">
+        <span class="alert-date">From: {{ formatDate(alert.applicableFrom) }}</span>
+        <span class="alert-date">To: {{ formatDate(alert.applicableTo) }}</span>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="notifications-container">
+    <div *ngFor="let notification of notifications" class="push-notification-card">
+        <div class="notification-header">
+            <span class="close-icon" (click)="closeNotification(notification, $event)">&times;</span>
+            <h3 class="notification-title">Notification</h3>
+        </div>
+        <div class="notification-content">
+            <div class="alert-title">{{ notification.title }}</div>
+            <div class="alert-message">{{ notification.message }}</div>           
+        </div>
+    </div>
+</div> -->
+
+<!-- <div class="notifications-container">
+    <div class="push-notification-card">
+        <div class="notification-header">
+            <span class="close-icon" onclick="closeNotification()">&times;</span>
+            <h3 class="notification-title">Notification</h3>
+        </div>
+        <div class="notification-content">
+            <div class="alert-title">Sample Notification Title</div>
+            <div class="alert-message">This is a sample notification message.</div>           
+        </div>
+    </div>
+    <div class="push-notification-card">
+        <div class="notification-header">
+            <span class="close-icon" onclick="closeNotification()">&times;</span>
+            <h3 class="notification-title">Notification</h3>
+        </div>
+        <div class="notification-content">
+            <div class="alert-title">Another Notification Title</div>
+            <div class="alert-message">This is another sample notification message.</div>           
+        </div>
+    </div>
+</div> -->

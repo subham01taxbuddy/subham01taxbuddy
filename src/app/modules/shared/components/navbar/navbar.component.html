@@ -52,7 +52,7 @@
                 <h4>{{ alert.title }}</h4>
                 <p class="notification-message">{{ alert.message }}</p>
                 <span class="notification-date">
-                  {{ alert.applicableFrom | date:'short' }} - {{ alert.applicableTo | date:'short' }}
+                  {{ formatDate(alert.applicableFrom) }} - {{ formatDate(alert.applicableTo) }}
                 </span>
               </div>
               <div class="no-notifications" *ngIf="alerts.length === 0">
