@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable ,Subject,BehaviorSubject} from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { InterceptorSkipHeader } from './token-interceptor';
 import { environment } from 'src/environments/environment';
@@ -20,8 +20,8 @@ export class UserMsService {
   activeAlertCount$ = this.activeAlertCountSource.asObservable();
 
   constructor(private httpClient: HttpClient, private http: HttpClient) { }
-   
-  
+
+
 
   getMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
@@ -121,13 +121,13 @@ export class UserMsService {
 
     return this.httpClient.delete(environment.url + param[0], this.headers);
     //  .map(response => response.json());
-}
+  }
 
   removeExpiredAlerts<T>(): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.delete<T>(
-      environment.url +this.microService +`/api-alert/All-active`, { headers: this.headers });
+      environment.url + this.microService + `/api-alert/All-active`, { headers: this.headers });
   }
 
   postMethodAWSURL<T>(...param: any): Observable<any> {
@@ -147,24 +147,22 @@ export class UserMsService {
     return this.httpClient.post(environment.url + '/itr/cloud/upload/temp', data);
   }
 
-  
-
   uploadReport(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     this.headers = new HttpHeaders()
       .append('Accept', 'text/csv, application/json')
-      .append('Authorization', 'Bearer ' + this.getAuthToken()); 
-    
-     return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData, {
+      .append('Authorization', 'Bearer ' + this.getAuthToken());
+
+    return this.httpClient.post(environment.url + '/itr/script-add-invoiceNo-in-csv', formData, {
       headers: this.headers,
-      responseType: 'blob' 
+      responseType: 'blob'
     });
   }
 
   private getAuthToken(): string {
     return localStorage.getItem('auth_token');
   }
-  
+
 }
