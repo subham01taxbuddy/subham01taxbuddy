@@ -49,7 +49,7 @@ export class FloatingWidgetComponent implements OnInit {
     selectedDepartmentId: any;
     page = 0;
     isLoading: boolean = false;
-
+ 
     newMessageSubscription: Subscription;
     showFullScreen() {
         this.fullChatScreen = true;
@@ -186,7 +186,6 @@ export class FloatingWidgetComponent implements OnInit {
             this.page = this.page + 1;
             this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
                 setTimeout(() => {
-                    this.handleConversationList();
                     this.isLoading = false;
                 }, 500);
             }).catch((error) => {
@@ -195,6 +194,7 @@ export class FloatingWidgetComponent implements OnInit {
             });
         }
     }
+    
 
     scrollToTop() {
         if (this.scrollContainer) {
@@ -231,29 +231,30 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     handleConversationList = () => {
-        console.log('started')
-        const convdata = this.localStorage.getItem('conversationList', true);
-        if (convdata) {
-            let newConversations;
+        const convData = this.localStorage.getItem('conversationList', true);
+        if (convData) {
+            const conversations = convData;
             if (this.selectedDepartmentId) {
-                newConversations = convdata.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
+                this.conversationList = conversations.filter((conversation: any) => conversation.departmentId === this.selectedDepartmentId)
                     .map((conversation: any) => {
                         const user = this.users.find(u => u.name === conversation.name);
                         return {
                             image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
+                            name: conversation.name,
                             text: conversation.text,
                             timestamp: conversation.timestamp,
                             request_id: conversation.request_id,
                             type: conversation.type,
+                            userFullName: conversation.userFullName,
                             departmentId: conversation.departmentId,
                             sender: conversation.sender,
-                            userFullName: conversation.userFullName,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
                         };
                     });
-            } else {
-                newConversations = convdata.map((conversation: any) => {
+            }
+            else {
+                this.conversationList = conversations.map((conversation: any) => {
                     const user = this.users.find(u => u.name === conversation.name);
                     return {
                         image: user ? user.image : conversation.userFullName ? conversation.userFullName[0] : '',
@@ -262,23 +263,19 @@ export class FloatingWidgetComponent implements OnInit {
                         timestamp: conversation.timestamp,
                         request_id: conversation.request_id,
                         type: conversation.type,
+                        userFullName: conversation.userFullName,
                         departmentId: conversation.departmentId,
                         sender: conversation.sender,
-                        userFullName: conversation.userFullName,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
+
                     };
                 });
             }
-
-            if (this.page === 0) {
-                this.conversationList = newConversations;
-            } else {
-                this.conversationList = [...this.conversationList, ...newConversations];
-            }
+            // this.conversationList = [...this.conversationList]
         }
     }
-
+    
 
     handleDeptList = (data: any) => {
         // this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
