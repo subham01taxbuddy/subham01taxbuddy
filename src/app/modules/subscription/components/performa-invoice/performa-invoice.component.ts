@@ -196,7 +196,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.roles.includes('ROLE_FILER') ? this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList),
+      columnDefs: this.roles.includes('ROLE_FILER')  ? this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -514,9 +514,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
-        if (this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1) {
-          this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
-        }
+        // if (this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1) {
+        //   this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
+        // }
 
         if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));

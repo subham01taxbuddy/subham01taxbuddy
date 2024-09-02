@@ -67,6 +67,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   alerts: Alert[] = [];
   showNotifications = false;
+  private intervalId: any;
   unreadAlertCount: number = 0;
   private alertSubscription: Subscription;
   private newAlertSubscription: Subscription;
@@ -134,7 +135,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
      if (this.periodicAlertSubscription) {
        this.periodicAlertSubscription.unsubscribe();
      }
-    
+
    }
 
   sideBar() {
@@ -365,7 +366,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
- 
+
 
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
@@ -382,16 +383,16 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   private processPeriodicAlerts(alerts: Alert[]) {
       const criticalAlert = alerts.find(alert => alert.type === 'CRITICAL');
       const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
-  
+
       if (criticalAlert) {
         this.showCriticalAlertDialog(criticalAlert);
       }
-  
+
       if (nonCriticalAlerts.length > 0) {
         this.showPushNotification(nonCriticalAlerts);
       }
     }
-  
+
   private processAlerts() {
     const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
     const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
@@ -401,9 +402,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     }
 
     if (nonCriticalAlerts.length > 0) {
-      
+
         this.showPushNotification(nonCriticalAlerts);
-    
+
     }
   }
 
@@ -433,7 +434,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
     dialogRef.afterClosed().subscribe(() => {
       this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
-    
+
     });
   }
   toggleNotifications() {
@@ -441,7 +442,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     if (this.showNotifications) {
       this.alerts.forEach(alert => alert.seen = true);
       this.updateUnreadAlertCount();
-      
+
     }
   }
   formatDate(date: string | Date): string {
@@ -458,10 +459,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   private updateUnreadAlertCount() {
     this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
-    
+
   }
 }
-   
+
 
 
 
@@ -502,7 +503,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   //         }));
   //         this.loading = false;
   //         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-        
+
   //         console.log('All Alert list get:', this.alerts);
   //       },
   //       error => {
@@ -537,7 +538,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //     }
       //   );
       // }
-    
+
       // subscribeToAlerts() {
       //   this.alertSubscription = this.alertService.alerts$.subscribe(
       //     (alerts: Alert[]) => {
@@ -559,7 +560,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // //   });
       // //   this.updateUnreadAlertCount();
       // // }
-    
+
       // // showPushNotifications() {
       // //   const unseenAlerts = this.alerts.filter(alert => !alert.seen);
       // //   if (unseenAlerts.length > 0) {
@@ -579,10 +580,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // // }
       // // showPushNotifications() {
       // //   const now = new Date();
-      // //   const activeAlerts = this.alerts.filter(alert => 
+      // //   const activeAlerts = this.alerts.filter(alert =>
       // //     !alert.seen && new Date(alert.applicableTo) > now
       // //   );
-    
+
       // //   activeAlerts.forEach(alert => {
       // //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
       // //       panelClass: 'alert-notification',
@@ -600,13 +601,13 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // //     });
       // //   });
       // // }
-    
+
       // showPushNotifications() {
       //   const now = new Date();
-      //   const activeAlerts = this.alerts.filter(alert => 
+      //   const activeAlerts = this.alerts.filter(alert =>
       //     !alert.seen && new Date(alert.applicableTo) > now
       //   );
-    
+
       //   if (activeAlerts.length > 0) {
       //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
       //       panelClass: 'alert-notification',
@@ -614,7 +615,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //       position: { bottom: '40px', right: '30px' }
       //     });
       //     this.dialogRef.push(dialogRef);
-    
+
       //     dialogRef.afterClosed().subscribe(() => {
       //       const index = this.dialogRef.indexOf(dialogRef);
       //       if (index > -1) {
@@ -623,7 +624,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //       activeAlerts.forEach(alert => alert.seen = true);
       //       this.updateUnreadAlertCount();
       //     });
-    
+
       //     setTimeout(() => dialogRef.close(), 60000);
       //   }
       // }
@@ -635,8 +636,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // updateUnreadAlertCount() {
       //   this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
       // }
-    
-    
+
+
       // toggleNotifications() {
       //   this.showNotifications = !this.showNotifications;
       //   if (this.showNotifications) {
@@ -652,8 +653,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //   return this.datePipe.transform(new Date(date), 'dd/MM/yy hh:mm a') || '';
       // }
 
-  
- 
-  
+
+
+
 
 

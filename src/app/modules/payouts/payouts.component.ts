@@ -24,6 +24,8 @@ import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { map, Observable, startWith } from 'rxjs';
+import { User } from '../subscription/components/performa-invoice/performa-invoice.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -105,6 +107,14 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   serviceType = new UntypedFormControl('');
+  isCreateAllowed :boolean = false;
+  txbdyInvoiceId:any;
+  searchFiler = new UntypedFormControl('');
+  filteredFiler : Observable<any[]>;
+  filerNames: User[]
+  filerOptions: User[] = [];
+  allOldNewFilerList: any;
+  showAllFilerList = new UntypedFormControl(false);
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -121,6 +131,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
+    this.getAllFilerList();
     this.startDate.setValue(this.minDate);
     this.endDate.setValue(new Date());
     this.setToDateValidation();
@@ -180,6 +191,76 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
+    this.setFilteredFiler()
+  }
+
+  onCheckBoxChange() {
+    this.resetFilters();
+  }
+
+  setFilteredFiler(){
+    this.filteredFiler = this.searchFiler.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        console.log('change', value);
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.filerOptions)
+          : this.filerOptions?.slice();
+      })
+    );
+  }
+
+
+  displayFn(label: any) {
+    return label ? label : undefined;
+  }
+
+  private _filter(name: string, options): User[] {
+    const filterValue = name?.toLowerCase();
+
+    return options.filter((option) =>
+      option?.name?.toLowerCase().includes(filterValue)
+    );
+  }
+
+  getFilerNameId(option){
+    console.log(option);
+    if(option.leader){
+      this.leaderId = option.userId;
+      this.agentId = this.leaderId;
+    }else{
+      this.filerId = option.userId;
+      this.agentId = this.filerId;
+    }
+    if (option?.partnerType === 'PRINCIPAL') {
+      this.searchAsPrinciple = true;
+    } else {
+      this.searchAsPrinciple = false;
+    }
+  }
+
+  getAllFilerList(){
+    this.loading = true;
+    const param = `/bo/sme/all-list?page=0&pageSize=10000`;
+    this.reportService.getMethod(param).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res.success) {
+          console.log('filingTeamMemberId: ', res);
+          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
+            this.allOldNewFilerList = res?.data?.content;
+            this.filerNames = this.allOldNewFilerList.map((item) => {
+              return { name: item.name, userId: item.userId, partnerType: item.partnerType, leader: item.leader };
+            });
+            this.filerOptions = this.filerNames
+            this.setFilteredFiler();
+          }
+        }else{
+          console.log('error', res);
+          this.utilsService.showSnackBar('Error While Getting All Filer List')
+        }
+      });
   }
 
   getLeaders() {
@@ -357,22 +438,56 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
           this.userInfo = result.data.content;
           this.config.totalItems = result.data.totalElements;
+          // this.txbdyInvoiceId = result.data.content.length > 0 ? result?.data?.content[0]?.txbdyInvoiceId : '';
           this.cacheManager.initializeCache(result.data.content);
 
           const currentPageNumber = pageChange || this.config.currentPage;
           this.cacheManager.cachePageContent(currentPageNumber, result.data.content);
           this.config.currentPage = currentPageNumber;
+          if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
+            if(result.data.content.length === 0){
+              this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.txbdyInvoiceId = null;
+              this.isCreateAllowed = true;
+            }else{
+              this.isCreateAllowed = true;
+            }
+          }else{
+            this.isCreateAllowed = false;
+          }
           resolve();
         } else {
           this.usersGridOptions.api?.setRowData([]);
           this.userInfo = [];
           this.config.totalItems = 0;
           this.utilsService.showSnackBar(result.message);
+          if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
+            if(result.data.content.length === 0){
+              this.utilsService.showSnackBar("No payouts found against this invoice");
+              this.txbdyInvoiceId = null;
+              this.isCreateAllowed = true;
+            }else{
+              this.isCreateAllowed = true;
+            }
+          }else{
+            this.isCreateAllowed = false;
+          }
           reject(result.message);
         }
       }, error => {
         this.loading = false;
-        this.utilsService.showSnackBar('Data not found');
+        if((this.key === 'txbdyInvoiceId' || this.key === 'invoiceNo') && (this.searchVal !== "") ){
+          if(error.error.httpErrorCode === 404){
+            this.utilsService.showSnackBar("No payouts found against this invoice");
+            this.txbdyInvoiceId = null;
+            this.isCreateAllowed = true;
+          }else{
+            this.isCreateAllowed = true;
+          }
+        }else{
+          this.isCreateAllowed = false;
+          this.utilsService.showSnackBar('Data not found');
+        }
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
         this.config.totalItems = 0;
@@ -412,7 +527,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Filer Name',
-        field: 'filerUserId',
+        field: 'filerName',
         width: 150,
         pinned: 'left',
         suppressMovable: true,
@@ -423,20 +538,24 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.filerUserId)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+          if(params?.data?.filerName){
+            return params.data.filerName;
+          }else{
+            let createdUserId = parseInt(params?.data?.filerUserId)
+            let filer1 = list;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer
+          }
         }
       },
       {
         headerName: 'Leader Name',
-        field: 'leaderUserId',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -446,15 +565,19 @@ export class PayoutsComponent implements OnInit, OnDestroy {
           debounceMs: 0
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.leaderUserId)
-          let filer1 = list;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          console.log('filer', filer);
-          return filer
+          if(params?.data?.leaderName){
+            return params.data.leaderName;
+          }else{
+            let createdUserId = parseInt(params?.data?.leaderUserId)
+            let filer1 = list;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            console.log('filer', filer);
+            return filer
+          }
         }
       },
       {
@@ -562,6 +685,18 @@ export class PayoutsComponent implements OnInit, OnDestroy {
         width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Invoice ID',
+        field: 'txbdyInvoiceId',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center'},
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
@@ -938,6 +1073,54 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     }
   }
 
+  createPayouts = (): Promise<any> => {
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Payout!',
+        message: 'Are you sure you want to create a payout for this invoice?',
+      },
+    });
+
+    return this.dialogRef.afterClosed().toPromise().then(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let queryString = '';
+
+        if(this.utilsService.isNonEmpty(this.txbdyInvoiceId)){
+          queryString += `txbdyInvoiceId=${this.txbdyInvoiceId}`
+        }else if (this.utilsService.isNonEmpty(this.searchVal)) {
+          const isNumeric = /^\d+$/.test(this.searchVal);
+          if (isNumeric) {
+            queryString = `txbdyInvoiceId=${this.searchVal}`;
+          } else {
+            queryString = `invoiceNo=${this.searchVal}`;
+          }
+        }
+
+        let param = `/v2/bo/partnerCommission?${queryString}`;
+
+        return this.itrMsService.postMethod(param, {}).toPromise().then((result: any) => {
+          this.loading = false;
+          if (result.success) {
+            this.utilsService.showSnackBar('Payouts created successfully');
+            this.serviceCall('');
+          } else {
+            this.utilsService.showSnackBar('Failed to create payouts');
+          }
+        }).catch((error) => {
+          this.loading = false;
+          if(error.error.message){
+            this.utilsService.showSnackBar(error.error.message);
+          }else{
+            this.utilsService.showSnackBar('Error in creating payouts. Please try again later.');
+          }
+        });
+      } else {
+        return Promise.resolve();
+      }
+    });
+  }
+
   approveSelected=():Promise<any> =>{
     // new api for approval 13-5-24- 'https://uat-api.taxbuddy.com/itr/v2/partnerCommission' \
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
@@ -1105,8 +1288,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
 
 
     let fieldName = [
-      { key: 'filerUserId', value: 'Filer Name' },
-      { key: 'leaderUserId', value: 'Leader Name' },
+      { key: 'filerName', value: 'Filer Name' },
+      { key: 'leaderName', value: 'Leader Name' },
       { key: 'userName', value: 'User Name' },
       { key: 'userMobileNumber', value: 'User Phone Number' },
       { key: 'serviceType', value: 'Service Type' },
@@ -1137,6 +1320,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
 
   resetFilters() {
+    this.searchFiler.setValue(null);
     this.cacheManager.clearCache();
     this?.serviceDropDown?.resetService();
     this.serviceType.setValue(null);

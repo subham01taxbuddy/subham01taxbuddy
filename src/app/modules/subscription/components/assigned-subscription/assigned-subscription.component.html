@@ -21,7 +21,7 @@
                 <div class="row">
                   <div class="col-sm-12" *ngIf="roles.includes('ROLE_LEADER')">
                     <section class="example-section checkbox-right">
-                      <button class="srch-btn-1" (click)="deleteSub(template)"><i class="fa fa-trash fa-xs" aria-hidden="true"></i>
+                      <button class="srch-btn-1" *ngIf="false" (click)="deleteSub(template)"><i class="fa fa-trash fa-xs" aria-hidden="true"></i>
                         Stale subscription Delete
                       </button>
                     </section>

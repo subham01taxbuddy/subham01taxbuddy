@@ -494,7 +494,6 @@ export class SubscriptionAdjustmentComponent implements OnInit {
           }else{
             return'-';
           }
-
         },
       },
     ];
