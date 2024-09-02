@@ -31,7 +31,8 @@ export class AlertService {
   constructor(private http: HttpClient) {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchAlerts();
-    this.startPeriodicAlerts();
+    //commented periodic alert code for now
+    // this.startPeriodicAlerts();
 
   }
 
