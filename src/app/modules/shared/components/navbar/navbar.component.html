@@ -42,7 +42,6 @@
           <button class="notification-icon" (click)="toggleNotifications()">
             <i class="fa-solid fa-bell"></i>
             <span class="notification-badge" *ngIf="alerts.length > 0">{{ alerts.length }}</span>
-            <!-- <span class="notification-badge" *ngIf="unreadAlertCount > 0">{{ unreadAlertCount }}</span> -->
           </button>
           <div class="notification-dropdown" *ngIf="showNotifications">
             <div class="notification-header">
@@ -53,8 +52,7 @@
                 <h4>{{ alert.title }}</h4>
                 <p class="notification-message">{{ alert.message }}</p>
                 <span class="notification-date">
-                  {{ (alert.applicableFrom) }} - {{ (alert.applicableTo) }}
-                  <!-- {{ formatDate(alert.applicableFrom) }} - {{ formatDate(alert.applicableTo) }} -->
+                  {{ formatDate(alert.applicableFrom) }} - {{ formatDate(alert.applicableTo) }}
                 </span>
               </div>
               <div class="no-notifications" *ngIf="alerts.length === 0">

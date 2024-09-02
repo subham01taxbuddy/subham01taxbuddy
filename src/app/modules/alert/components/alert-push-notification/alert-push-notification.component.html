@@ -1,31 +1,6 @@
-<!-- <div class="notifications-container">
-    <div *ngFor="let alert of alerts" class="push-notification-card">
-      <div class="col-12">
-        <div class="row">
-          <div class="col-11 row">
-            <div class="col-2">
-              <i class="fas fa-bell alert-icon"></i>
-            </div>
-            <div class="title col-10">{{ alert.title }}</div>
-          </div>
-          <div class="col-1 row" (click)="closeNotification(alert)">
-            <i class="fas fa-times close-icon"></i>
-          </div>
-        </div>
-      </div>
-      <div class="body">
-        <div class="alert-type">{{ alert.type }}</div>
-        <div class="alert-message">{{ alert.message }}</div>
-      </div>
-      <div class="footer">
-        <span class="alert-date">From: {{ alert.applicableFrom | date:'short' }}</span>
-        <span class="alert-date">To: {{ alert.applicableTo | date:'short' }}</span>
-      </div>
-    </div>
-  </div> -->
 
   <div class="notifications-container">
-    <div *ngFor="let alert of alerts" class="push-notification-card">
+    <div *ngFor="let alert of notifications" class="push-notification-card">
       <div class="col-12">
         <div class="row">
           <div class="col-11 row">
@@ -44,11 +19,13 @@
         <div class="alert-message">{{ alert.message }}</div>
       </div>
       <div class="footer">
-        <span class="alert-date">From: {{ alert.applicableFrom | date:'short' }}</span>
-        <span class="alert-date">To: {{ alert.applicableTo | date:'short' }}</span>
+        <span class="alert-date">From: {{ formatDate(alert.applicableFrom) }}</span>
+        <span class="alert-date">To: {{ formatDate(alert.applicableTo) }}</span>
       </div>
     </div>
   </div>
+
+
 
 
 

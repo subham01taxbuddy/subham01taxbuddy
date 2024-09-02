@@ -39,7 +39,7 @@ export class TransactionComponent {
         next: (response: Blob) => {
           this.loading = false;
           this.utilsService.showSnackBar('File processed successfully');
-          this.downloadFile(response, this.selectedFileName);
+        // this.downloadFile(response, this.selectedFileName);
         },
         error: (error) => {
           console.error('Error processing file:', error);
@@ -52,43 +52,6 @@ export class TransactionComponent {
     }
   }
 
-  // uploadFile() {
-  //   if (this.selectedFile) {
-  //     this.userMsService.uploadReport(this.selectedFile).subscribe(
-  //       (response: HttpResponse<Blob>) => {
-  //         console.log('Response headers:', response.headers);
-  //         console.log('Response status:', response.status);
-  
-  //         if (response.body) {
-  //           const blob: Blob = response.body;
-  //           const url = window.URL.createObjectURL(blob);
-  //           const a = document.createElement('a');
-  //           document.body.appendChild(a);
-  //           a.setAttribute('style', 'display: none');
-  //           a.href = url;
-  //           a.download = 'report.csv';
-  //           a.click();
-  //           window.URL.revokeObjectURL(url);
-  //           a.remove();
-  //         } else {
-  //           console.error('Response body is null');
-  //         }
-  //       },
-  //       (error) => {
-  //         console.error('Upload failed', error);
-  //       }
-  //     );
-  //   }
-  // }
-
-  downloadFile(blob: Blob, fileName: string): void {
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'updated_' + fileName;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
 
   clearErrorMessage(): void {
     this.errorMessage = null;
