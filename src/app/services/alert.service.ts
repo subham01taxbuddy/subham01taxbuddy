@@ -1,11 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
-import { BehaviorSubject, interval, Observable, timer } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, interval, Observable, timer} from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SessionStorageService } from './storage.service';
 
 export interface Alert {
-  filter: any;
+  alertId:string,
+ // filter: any;
   type: string;
   message: string;
   title: string;
@@ -27,11 +29,15 @@ export class AlertService {
   newAlerts$ = this.newAlertsSubject.asObservable();
   private periodicAlertsSubject = new BehaviorSubject<Alert[]>([]);
   periodicAlerts$ = this.periodicAlertsSubject.asObservable();
+  private readonly READ_ALERTS_KEY = 'ReadAlertData';
+ // alertData:any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private sessionStorage:SessionStorageService) {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchAlerts();
+    //commented periodic alert code for now
     this.startPeriodicAlerts();
+    this.startAutoRemoveExpiredAlerts();
 
   }
 
@@ -73,12 +79,22 @@ export class AlertService {
     );
   }
 
+  removeExpiredAlerts<T>(): Observable<T> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.http.delete<T>(
+      environment.url + this.microService + `/api-alert/expired`, { headers: this.headers });
+  }
+
+
   private startPeriodicAlerts() {
     interval(600000).pipe(
       tap(() => {
         const currentAlerts = this.alertsSubject.value;
-        const criticalAlerts = currentAlerts.filter(alert => alert.type === 'CRITICAL');
-        const otherAlerts = currentAlerts.filter(alert => alert.type !== 'CRITICAL');
+        const readAlerts = this.getReadAlerts();
+        const unreadAlerts = currentAlerts.filter(alert => !readAlerts.includes(alert.alertId));
+        const criticalAlerts = unreadAlerts.filter(alert => alert.type === 'CRITICAL');
+        const otherAlerts = unreadAlerts.filter(alert => alert.type !== 'CRITICAL');
         this.periodicAlertsSubject.next([
           ...(criticalAlerts.length > 0 ? [criticalAlerts[0]] : []),
           ...otherAlerts.slice(0, 5)
@@ -87,6 +103,43 @@ export class AlertService {
     ).subscribe();
   }
 
+  private startAutoRemoveExpiredAlerts() {
+    timer(0, 30000).pipe( // Check every minute
+      switchMap(() => this.getAllAlert())
+    ).subscribe(alerts => {
+      const currentTime = new Date().getTime();
+      const activeAlerts = alerts.filter(alert => new Date(alert.applicableTo).getTime() > currentTime);
+      
+      if (activeAlerts.length !== alerts.length) {
+        this.removeExpiredAlerts().subscribe({
+          next: () => {
+            console.log('Expired alerts removed successfully');
+            this.alertsSubject.next(activeAlerts);
+          },
+          error: (error) => {
+            console.error('Error removing expired alerts:', error);
+          }
+        });
+      }
+    });
+  }
+
+  updateAlerts(alerts: Alert[]) {
+    this.alertsSubject.next(alerts);
+  }
+
+  markAlertAsRead(alertId: string) {
+    const readAlerts = this.getReadAlerts();
+    if (!readAlerts.includes(alertId)) {
+      readAlerts.push(alertId);
+      sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
+    }
+  }
+
+  private getReadAlerts(): string[] {
+    const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
+    return readAlertsString ? JSON.parse(readAlertsString) : [];
+  }
 
 }
 
