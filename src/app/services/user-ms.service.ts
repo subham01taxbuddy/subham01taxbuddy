@@ -123,13 +123,6 @@ export class UserMsService {
     //  .map(response => response.json());
   }
 
-  removeExpiredAlerts<T>(): Observable<T> {
-    this.headers = new HttpHeaders();
-    this.headers.append('Content-Type', 'application/json');
-    return this.httpClient.delete<T>(
-      environment.url + this.microService + `/api-alert/All-active`, { headers: this.headers });
-  }
-
   postMethodAWSURL<T>(...param: any): Observable<any> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

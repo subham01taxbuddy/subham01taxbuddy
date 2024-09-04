@@ -15,11 +15,13 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import {  Subscription } from "rxjs";
+import {  interval, Subscription } from "rxjs";
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { AlertService } from 'src/app/services/alert.service';
 import { AlertPushNotificationComponent } from 'src/app/modules/alert/components/alert-push-notification/alert-push-notification.component';
 import { AlertPopupComponent } from 'src/app/modules/alert/components/alert-popup/alert-popup.component';
+import { SessionStorageService } from 'src/app/services/storage.service';
+import { DialogRef } from '@angular/cdk/dialog';
 
 
 export interface DialogData {
@@ -27,6 +29,7 @@ export interface DialogData {
 }
 
 interface Alert {
+  alertId:string,
   type: string;
   message: string;
   title: string;
@@ -69,11 +72,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   showNotifications = false;
   unreadAlertCount: number = 0;
   private alertSubscription: Subscription;
-  private newAlertSubscription: Subscription;
   private periodicAlertSubscription: Subscription;
- private dialogRef: any = null;
- private pushNotificationInterval: any;
  alertCount: number = 0;
+ private autoRemoveSubscription: Subscription;
+ alertData:any;
+ 
 
   constructor(
     private router: Router,
@@ -90,7 +93,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private elementRef: ElementRef,
     private dbService: NgxIndexedDBService,
     private alertService: AlertService,
-
+    private dialogRef: DialogRef
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
@@ -126,6 +129,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   ngOnInit(): void {
      this.subscribeToAlerts();
      this.subscribeToPeriodicAlerts();
+     //this.setupAutoRemoveExpiredAlerts();
+     this.alertData = JSON.parse(sessionStorage.getItem('READ-ALERT'))
+     
   }
    ngOnDestroy() {
      if (this.alertSubscription) {
@@ -134,6 +140,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
      if (this.periodicAlertSubscription) {
        this.periodicAlertSubscription.unsubscribe();
      }
+     if (this.autoRemoveSubscription) {
+      this.autoRemoveSubscription.unsubscribe();
+    }
     
    }
 
@@ -365,12 +374,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
- 
-
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
-      this.alerts = this.sortAlertsByDate(alerts);;
-     this.processAlerts();
+      this.alerts = this.sortAlertsByDate(alerts);
+      //sessionStorage.setItem('ReadAlertData', JSON.stringify(alerts));
+     //this.processAlerts();
     });
   }
 
@@ -381,65 +389,93 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   }
   private processPeriodicAlerts(alerts: Alert[]) {
       const criticalAlert = alerts.find(alert => alert.type === 'CRITICAL');
-      const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
+      //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
   
       if (criticalAlert) {
         this.showCriticalAlertDialog(criticalAlert);
       }
-  
-      if (nonCriticalAlerts.length > 0) {
-        this.showPushNotification(nonCriticalAlerts);
-      }
+        // if (nonCriticalAlerts.length > 0) {
+        //   this.showPushNotification(nonCriticalAlerts);
+        // }
     }
+    // private setupAutoRemoveExpiredAlerts() {
+    //   this.autoRemoveSubscription = interval(30000).subscribe(() => {
+    //     const currentTime = new Date();
+    //     const activeAlerts = this.alerts.filter(alert => new Date(alert.applicableTo) > currentTime);
+        
+    //     if (activeAlerts.length !== this.alerts.length) {
+    //       this.alertService.removeExpiredAlerts().subscribe({
+    //         next: () => {
+    //           console.log('Expired alerts removed successfully');
+    //           this.alerts = activeAlerts;
+    //           this.alertService.updateAlerts(activeAlerts);
+    //         },
+    //         error: (error) => {
+    //           console.error('Error removing expired alerts:', error);
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
+
+    // private isAlertRead(alertId: string): boolean {
+    //   return this.sessionStorageService.getItem(`alert_${alertId}_read`) === 'true';
+    // }
   
-  private processAlerts() {
-    const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
-    const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
+    // private markAlertAsRead(alertId: string) {
+    //   this.sessionStorageService.setItem(`alert_${alertId}_read`, 'true');
+    // }
+  
+  // private processAlerts() {
+  //   const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
+  //   const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
 
-    if (criticalAlerts.length > 0) {
-      this.showCriticalAlertDialog(criticalAlerts[0]);
-    }
+  //   if (criticalAlerts.length > 0) {
+  //     this.showCriticalAlertDialog(criticalAlerts[0]);
+  //   }
 
-    if (nonCriticalAlerts.length > 0) {
+  //   if (nonCriticalAlerts.length > 0) {
       
-        this.showPushNotification(nonCriticalAlerts);
+  //       this.showPushNotification(nonCriticalAlerts);
     
-    }
-  }
+  //   }
+  // }
 
-  private showPushNotification(alerts: Alert[]) {
-    if (this.dialogRef) {
-      this.dialogRef.componentInstance.addNotifications(alerts);
-    } else {
-      this.dialogRef = this.dialog.open(AlertPushNotificationComponent, {
-        data: alerts,
-        position: { bottom: '40px', right: '35px' },
-        panelClass: 'push-notification-dialog',
-        hasBackdrop: false,
-        autoFocus: false
-      });
+  // private showPushNotification(alerts: Alert[]) {
+  //   if (this.dialogRef) {
+  //     this.dialogRef.componentInstance.addNotifications(alerts);
+  //   } else {
+  //     this.dialogRef = this.dialog.open(AlertPushNotificationComponent, {
+  //       data: alerts,
+  //       position: { bottom: '40px', right: '35px' },
+  //       panelClass: 'push-notification-dialog',
+  //       hasBackdrop: false,
+  //       autoFocus: false
+  //     });
 
-      this.dialogRef.afterClosed().subscribe(() => {
-        this.dialogRef = null;
-      });
-    }
-  }
+  //     this.dialogRef.afterClosed().subscribe(() => {
+  //       this.dialogRef = null;
+  //     });
+  //   }
+  // }
 
   private showCriticalAlertDialog(alert: Alert) {
     const dialogRef = this.dialog.open(AlertPopupComponent, {
-      data: { title: alert.title, message: alert.message },
-      width: '400px'
-    });
+      data: { alertId:alert.alertId, title: alert.title, message: alert.message },
+      width: '400px',
+  });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
-    
-    });
+    // dialogRef.afterClosed().subscribe(() => {
+    //   this.updateUnreadAlertCount();
+    //   //this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
+    // });
   }
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     if (this.showNotifications) {
-      this.alerts.forEach(alert => alert.seen = true);
+      this.alerts.forEach(alert =>{
+         alert.seen = true
+      });
       this.updateUnreadAlertCount();
       
     }
@@ -457,9 +493,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   }
 
   private updateUnreadAlertCount() {
-    this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
-    
-  }
+  this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
+  
+   }
 }
    
 
