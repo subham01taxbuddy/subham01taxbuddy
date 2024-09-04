@@ -30,12 +30,11 @@ export class AlertService {
   private periodicAlertsSubject = new BehaviorSubject<Alert[]>([]);
   periodicAlerts$ = this.periodicAlertsSubject.asObservable();
   private readonly READ_ALERTS_KEY = 'ReadAlertData';
- // alertData:any;
+ 
 
   constructor(private http: HttpClient, private sessionStorage:SessionStorageService) {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchAlerts();
-    //commented periodic alert code for now
     this.startPeriodicAlerts();
     this.startAutoRemoveExpiredAlerts();
 
@@ -86,23 +85,19 @@ export class AlertService {
       environment.url + this.microService + `/api-alert/expired`, { headers: this.headers });
   }
 
-
   private startPeriodicAlerts() {
-    interval(600000).pipe(
+    interval(75000).pipe(
       tap(() => {
         const currentAlerts = this.alertsSubject.value;
         const readAlerts = this.getReadAlerts();
-        const unreadAlerts = currentAlerts.filter(alert => !readAlerts.includes(alert.alertId));
-        const criticalAlerts = unreadAlerts.filter(alert => alert.type === 'CRITICAL');
-        const otherAlerts = unreadAlerts.filter(alert => alert.type !== 'CRITICAL');
-        this.periodicAlertsSubject.next([
-          ...(criticalAlerts.length > 0 ? [criticalAlerts[0]] : []),
-          ...otherAlerts.slice(0, 5)
-        ]);
+        const unreadCriticalAlerts = currentAlerts.filter(alert => 
+          alert.type === 'CRITICAL' && !readAlerts.some(readAlert => readAlert.alertId === alert.alertId)
+        );
+        
+        this.periodicAlertsSubject.next(unreadCriticalAlerts);
       })
     ).subscribe();
   }
-
   private startAutoRemoveExpiredAlerts() {
     timer(0, 30000).pipe( // Check every minute
       switchMap(() => this.getAllAlert())
@@ -134,13 +129,15 @@ export class AlertService {
       readAlerts.push(alertId);
       sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
     }
+  
   }
 
-  private getReadAlerts(): string[] {
+  private getReadAlerts(): any[] {
     const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
     return readAlertsString ? JSON.parse(readAlertsString) : [];
   }
 
+ 
 }
 
 

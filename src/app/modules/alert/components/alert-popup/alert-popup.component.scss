@@ -1,42 +1,45 @@
 .critical-alert-dialog {
-    background-color: #f9f9f9; /* Light background for the dialog */
-    border-radius: 10px; /* Rounded corners */
-   // box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* Soft shadow for a raised effect */
-    padding: 20px; /* Spacing inside the dialog */
-    max-width: 400px; /* Maximum width of the dialog */
-    margin: auto; /* Center the dialog horizontally */
+    background-color: #f9f9f9; 
+    border-radius: 10px; 
+    padding: 20px; 
+    max-width: 400px; 
+    margin: auto; 
     text-align: center;
 }
 
 .critical-alert-dialog h2 {
-    color: #d32f2f; /* Dark red color for the title */
-    font-size: 10px; /* Larger font size for the title */
-    margin-bottom: 15px; /* Space below the title */
+    color: #d32f2f;
+    font-size: 18px; 
+    margin-bottom: 15px; 
+    line-height: 1.4; 
+    font-weight: bold; 
+    word-wrap: break-word; 
+    max-width: 100%; 
+    padding: 0 15px;
 }
 
 .critical-alert-dialog mat-dialog-content p {
-    color: #333; /* Dark gray color for the message text */
-    font-size: 16px; /* Standard font size for the message */
-    line-height: 1.5; /* Improved readability with line spacing */
+    color: #333; 
+    line-height: 1.5; 
     text-align: center;
 }
 
 .critical-alert-dialog mat-dialog-actions {
     display: flex;
-    justify-content: center; /* Align the button to the right */
-    margin-top: 20px; /* Space above the actions */
+    justify-content: center; 
+    margin-top: 20px; 
 }
 
 .critical-alert-dialog mat-dialog-actions button {
-    background-color: #a5d6a7; /* Faint green background color */
-    color: #ffffff; /* White text color */
-    border: none; /* Remove the default border */
-    padding: 10px 20px; /* Padding for the button */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth background color transition */
+    background-color: #a5d6a7; 
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
 }
 
 .critical-alert-dialog mat-dialog-actions button:hover {
-    background-color: #81c784; /* Slightly darker green on hover */
+    background-color: #81c784; 
 }
