@@ -49,10 +49,12 @@ export class FloatingWidgetComponent implements OnInit {
     selectedDepartmentId: any;
     page = 0;
     isLoading: boolean = false;
- 
+
     newMessageSubscription: Subscription;
     showFullScreen() {
-        this.fullChatScreen = true;
+      const chatUrl = '/chat-full-screen';
+      window.open(chatUrl, '_blank');
+        this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
@@ -194,7 +196,7 @@ export class FloatingWidgetComponent implements OnInit {
             });
         }
     }
-    
+
 
     scrollToTop() {
         if (this.scrollContainer) {
@@ -275,7 +277,7 @@ export class FloatingWidgetComponent implements OnInit {
             // this.conversationList = [...this.conversationList]
         }
     }
-    
+
 
     handleDeptList = (data: any) => {
         // this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
