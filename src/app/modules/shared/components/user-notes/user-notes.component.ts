@@ -200,6 +200,7 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  
 
   // pageChangeData(event: any) {
   //   this.currentPage = event;

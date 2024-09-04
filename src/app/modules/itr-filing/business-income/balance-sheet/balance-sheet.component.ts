@@ -220,7 +220,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   calDifference() {
     let difference = 0;
-    difference = Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds);
+    difference = Math.round(Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds));
     this.assetLiabilitiesForm.controls['difference'].setValue(difference);
   }
 
@@ -230,6 +230,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
+    this.assetLiabilitiesForm.controls['fixedAssets'].setValue(Math.round(this.totalNetBlock));
     let valid: boolean = false;
     if (this.assetLiabilitiesForm.valid) {
       valid = true;
@@ -287,7 +288,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       if (!this.utilsService.isNonEmpty(this.assetLiabilitiesForm.controls['GSTRNumber'].value)) {
         this.assetLiabilitiesForm.controls['GSTRNumber'].setValue(null);
       }
-      this.assetLiabilitiesForm.controls['fixedAssets'].setValue(this.totalNetBlock);
+      this.assetLiabilitiesForm.controls['fixedAssets'].setValue(Math.round(this.totalNetBlock));
       this.Copy_ITR_JSON.business.financialParticulars =
         this.assetLiabilitiesForm.value;
       this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
