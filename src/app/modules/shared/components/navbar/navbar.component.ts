@@ -93,8 +93,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private renderer: Renderer2,
     private elementRef: ElementRef,
     private dbService: NgxIndexedDBService,
-    private alertService: AlertService,
-    private dialogRef: DialogRef
+    private alertService: AlertService
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
