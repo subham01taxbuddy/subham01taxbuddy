@@ -27,6 +27,7 @@ export class PresumptiveIncomeComponent
   presProfessionalSaved: boolean;
   presBusinessSaved: boolean;
   PREV_ITR_JSON: any;
+  selectedForm: string = 'businessIncome';
 
   constructor(private utilsService: UtilsService) {
     super();

@@ -2,12 +2,45 @@
 <div class="page-wrapper">
   <main>
     <div class="spc-blw ">
-      <mat-accordion class="headers-align">
+      <!-- <mat-accordion class="headers-align">
         <app-presumptive-business-income #PresumptiveBusinessIncomeComponentRef
           (presBusinessSaved)="onPresBusinessSaved($event)"></app-presumptive-business-income>
         <app-presumptive-professional-income #PresumptiveProfessinalIncomeComponentRef
           (presProfessionalSaved)="onPresProfessionalSaved($event)"></app-presumptive-professional-income>
-      </mat-accordion>
+      </mat-accordion> -->
+      <div class="frameC">
+        <div class="div">
+          <div class="text-wrapper">Presumptive Income</div>
+          <div class="mingcute-down-fill"></div>
+        </div>
+        <div class="space ">
+          <div class="flex justify-around p-[30px]">
+            <button class="tbd-btn-10"  [class.selected]="selectedForm === 'businessIncome'"  (click)="selectedForm = 'businessIncome'">
+              Business Income 44AD
+            </button>
+
+            <button class="tbd-btn-10"  [class.selected]="selectedForm === 'professionalIncome'"  (click)="selectedForm = 'professionalIncome'">
+              Professional Income 44ADA
+            </button>
+          </div>
+
+          <div class="marginReduce">
+            <div *ngIf="selectedForm === 'businessIncome'">
+              <app-presumptive-business-income
+                #PresumptiveBusinessIncomeComponentRef
+                (presBusinessSaved)="onPresBusinessSaved($event)"
+              ></app-presumptive-business-income>
+            </div>
+
+            <div *ngIf="selectedForm === 'professionalIncome'">
+              <app-presumptive-professional-income
+                #PresumptiveProfessinalIncomeComponentRef
+                (presProfessionalSaved)="onPresProfessionalSaved($event)"
+              ></app-presumptive-professional-income>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="flex justify-between p-[30px] back-foot">
         <button class="lgtBtn" (click)="goBack()">
