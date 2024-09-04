@@ -70,6 +70,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   alerts: Alert[] = [];
   showNotifications = false;
+  private intervalId: any;
   unreadAlertCount: number = 0;
   private alertSubscription: Subscription;
   private periodicAlertSubscription: Subscription;
@@ -140,10 +141,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
      if (this.periodicAlertSubscription) {
        this.periodicAlertSubscription.unsubscribe();
      }
-     if (this.autoRemoveSubscription) {
-      this.autoRemoveSubscription.unsubscribe();
-    }
-    
+
    }
 
   sideBar() {
@@ -374,6 +372,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+
+
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
       this.alerts = this.sortAlertsByDate(alerts);
@@ -389,57 +389,31 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   }
   private processPeriodicAlerts(alerts: Alert[]) {
       const criticalAlert = alerts.find(alert => alert.type === 'CRITICAL');
-      //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
-  
+      const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
+
       if (criticalAlert) {
         this.showCriticalAlertDialog(criticalAlert);
       }
-        // if (nonCriticalAlerts.length > 0) {
-        //   this.showPushNotification(nonCriticalAlerts);
-        // }
-    }
-    // private setupAutoRemoveExpiredAlerts() {
-    //   this.autoRemoveSubscription = interval(30000).subscribe(() => {
-    //     const currentTime = new Date();
-    //     const activeAlerts = this.alerts.filter(alert => new Date(alert.applicableTo) > currentTime);
-        
-    //     if (activeAlerts.length !== this.alerts.length) {
-    //       this.alertService.removeExpiredAlerts().subscribe({
-    //         next: () => {
-    //           console.log('Expired alerts removed successfully');
-    //           this.alerts = activeAlerts;
-    //           this.alertService.updateAlerts(activeAlerts);
-    //         },
-    //         error: (error) => {
-    //           console.error('Error removing expired alerts:', error);
-    //         }
-    //       });
-    //     }
-    //   });
-    // }
 
-    // private isAlertRead(alertId: string): boolean {
-    //   return this.sessionStorageService.getItem(`alert_${alertId}_read`) === 'true';
-    // }
-  
-    // private markAlertAsRead(alertId: string) {
-    //   this.sessionStorageService.setItem(`alert_${alertId}_read`, 'true');
-    // }
-  
-  // private processAlerts() {
-  //   const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
-  //   const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
+      if (nonCriticalAlerts.length > 0) {
+        this.showPushNotification(nonCriticalAlerts);
+      }
+    }
+
+  private processAlerts() {
+    const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
+    const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
 
   //   if (criticalAlerts.length > 0) {
   //     this.showCriticalAlertDialog(criticalAlerts[0]);
   //   }
 
-  //   if (nonCriticalAlerts.length > 0) {
-      
-  //       this.showPushNotification(nonCriticalAlerts);
-    
-  //   }
-  // }
+    if (nonCriticalAlerts.length > 0) {
+
+        this.showPushNotification(nonCriticalAlerts);
+
+    }
+  }
 
   // private showPushNotification(alerts: Alert[]) {
   //   if (this.dialogRef) {
@@ -465,10 +439,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       width: '400px',
   });
 
-    // dialogRef.afterClosed().subscribe(() => {
-    //   this.updateUnreadAlertCount();
-    //   //this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
-    // });
+    dialogRef.afterClosed().subscribe(() => {
+      this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
+
+    });
   }
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
@@ -477,7 +451,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
          alert.seen = true
       });
       this.updateUnreadAlertCount();
-      
+
     }
   }
   formatDate(date: string | Date): string {
@@ -493,11 +467,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   }
 
   private updateUnreadAlertCount() {
-  this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
-  
-   }
+    this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
+
+  }
 }
-   
+
 
 
 
@@ -538,7 +512,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   //         }));
   //         this.loading = false;
   //         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-        
+
   //         console.log('All Alert list get:', this.alerts);
   //       },
   //       error => {
@@ -573,7 +547,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //     }
       //   );
       // }
-    
+
       // subscribeToAlerts() {
       //   this.alertSubscription = this.alertService.alerts$.subscribe(
       //     (alerts: Alert[]) => {
@@ -595,7 +569,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // //   });
       // //   this.updateUnreadAlertCount();
       // // }
-    
+
       // // showPushNotifications() {
       // //   const unseenAlerts = this.alerts.filter(alert => !alert.seen);
       // //   if (unseenAlerts.length > 0) {
@@ -615,10 +589,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // // }
       // // showPushNotifications() {
       // //   const now = new Date();
-      // //   const activeAlerts = this.alerts.filter(alert => 
+      // //   const activeAlerts = this.alerts.filter(alert =>
       // //     !alert.seen && new Date(alert.applicableTo) > now
       // //   );
-    
+
       // //   activeAlerts.forEach(alert => {
       // //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
       // //       panelClass: 'alert-notification',
@@ -636,13 +610,13 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // //     });
       // //   });
       // // }
-    
+
       // showPushNotifications() {
       //   const now = new Date();
-      //   const activeAlerts = this.alerts.filter(alert => 
+      //   const activeAlerts = this.alerts.filter(alert =>
       //     !alert.seen && new Date(alert.applicableTo) > now
       //   );
-    
+
       //   if (activeAlerts.length > 0) {
       //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
       //       panelClass: 'alert-notification',
@@ -650,7 +624,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //       position: { bottom: '40px', right: '30px' }
       //     });
       //     this.dialogRef.push(dialogRef);
-    
+
       //     dialogRef.afterClosed().subscribe(() => {
       //       const index = this.dialogRef.indexOf(dialogRef);
       //       if (index > -1) {
@@ -659,7 +633,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //       activeAlerts.forEach(alert => alert.seen = true);
       //       this.updateUnreadAlertCount();
       //     });
-    
+
       //     setTimeout(() => dialogRef.close(), 60000);
       //   }
       // }
@@ -671,8 +645,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // updateUnreadAlertCount() {
       //   this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
       // }
-    
-    
+
+
       // toggleNotifications() {
       //   this.showNotifications = !this.showNotifications;
       //   if (this.showNotifications) {
@@ -688,8 +662,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       //   return this.datePipe.transform(new Date(date), 'dd/MM/yy hh:mm a') || '';
       // }
 
-  
- 
-  
+
+
+
 
 

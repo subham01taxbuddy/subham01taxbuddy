@@ -154,6 +154,7 @@ export class SidebarComponent {
         { name: 'Payouts', url: '/payouts', roles: [] },
         { name: 'Pay Processing', url: '/payouts/pay-processing', roles: ['ROLE_ADMIN'] },
         { name: 'Payout Adjustment', url: '/payouts/payouts-adjustments', roles: ['ROLE_ADMIN'] },
+        { name: 'Payout Adjustment Report', url: '/payouts/payouts-adjustment-report', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
@@ -240,16 +241,17 @@ export class SidebarComponent {
         {name: 'Create Alert', url: '/alert/create', roles: ['ROLE_ADMIN']}
       ]
    },
-   {
-      name:'Data Recovery',
-      icon:'recovery.png',
-      active:false,
-      url:null,
-      roles:['ROLE_ADMIN'],
-      submenu:[
-        {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
-      ]
-   },
+
+    // {
+    //   name:'Data Recovery',
+    //   icon:'recovery.png',
+    //   active:false,
+    //   url:null,
+    //   roles:['ROLE_ADMIN'],
+    //   submenu:[
+    //     {name: 'Itr Recovery', url: '/recovery/data', roles: ['ROLE_ADMIN']}
+    //   ]
+    // },
    {
       name: 'PAN Exception',
       icon: 'invoice.png',

@@ -50,7 +50,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduledCallComponent implements OnInit, OnDestroy {
+export class ScheduledCallComponent implements OnInit, OnDestroy { 
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;

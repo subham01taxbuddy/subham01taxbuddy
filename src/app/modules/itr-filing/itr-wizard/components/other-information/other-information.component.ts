@@ -1,4 +1,3 @@
-import { headOfIncome } from './../../../../shared/interfaces/itr-input.interface';
 import {
   Component, ElementRef,
   EventEmitter,
@@ -19,6 +18,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+
 
 @Component({
   selector: 'app-other-information',

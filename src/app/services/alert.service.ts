@@ -35,8 +35,8 @@ export class AlertService {
   constructor(private http: HttpClient, private sessionStorage:SessionStorageService) {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchAlerts();
-    this.startPeriodicAlerts();
-    this.startAutoRemoveExpiredAlerts();
+    //commented periodic alert code for now
+    // this.startPeriodicAlerts();
 
   }
 

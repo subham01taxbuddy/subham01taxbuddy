@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewDocumentsDialogComponent } from 'src/app/modules/shared/components/view-documents-dialog/view-documents-dialog.component';
 
+
 @Component({
   selector: 'app-file-parser',
   templateUrl: './file-parser.component.html',
@@ -58,7 +59,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Angel One.pdf',
-        note: ''
+        note:''
       },
       {
         name: 'Paytm',
@@ -66,7 +67,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download PayTM.pdf',
-        note: 'Equity/F&O'
+        note:'Equity/F&O'
       },
       {
         name: 'Axis',
@@ -74,7 +75,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: '',
-        note: ''
+        note:''
       },
       {
         name: 'Upstox',
@@ -82,7 +83,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download upstox statement.pdf',
-        note: ''
+        note:''
       },
       {
         name: 'Groww',
@@ -90,7 +91,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download Groww statement.pdf',
-        note: 'Equity/Intraday/MF'
+        note:'Equity/Intraday/MF'
       },
       {
         name: 'Zerodha',
@@ -106,7 +107,7 @@ export class FileParserComponent implements OnInit {
         loading: false,
         filesUploaded: [],
         steps: './assets/files/Steps to download ICICI Statement.pdf',
-        note: ''
+        note:''
       },
       // {
       //   name: 'Jainam',

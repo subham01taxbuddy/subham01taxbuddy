@@ -315,7 +315,7 @@
               </button>-->
 
         <app-custom-button class="btn grBut"
-          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [disabled]="!isValidateJson || (( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
           [actions]="[downloadPDF]">
           Download PDF
         </app-custom-button>
@@ -326,7 +326,7 @@
           Send PDF to Kommunicate
         </button>-->
         <app-custom-button class="btn kommBut"
-          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [disabled]="!isValidateJson || (( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
           [actions]="[sendPdf]" [actionParams]="[['both']]">
           Send PDF to Kommunicate
         </app-custom-button>
@@ -337,7 +337,7 @@
         </button>-->
 
         <app-custom-button class="btn whatsAppBut"
-          [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [disabled]="!isValidateJson || (( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
           [actions]="[sendPdf]" [actionParams]="[['whatsapp']]">
           Send PDF to WhatsApp
         </app-custom-button>
@@ -8953,7 +8953,7 @@
               File ITR
             </button>
             <button type="button"
-              [disabled]="(( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+              [disabled]="!isValidateJson || (( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
               (click)="downloadPDF()" class="btn grBut">
               Download PDF
             </button>

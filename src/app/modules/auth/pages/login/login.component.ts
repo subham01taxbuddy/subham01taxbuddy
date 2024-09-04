@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
     private kommunicateSsoService: KommunicateSsoService,
-    private idleService: IdleService
+    private idleService:IdleService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -137,6 +137,7 @@ export class LoginComponent implements OnInit {
       if (allowedUsers.filter(value => value === userNumber).length > 0) {
         sessionStorage.setItem('CG_MODULE', 'YES');
       }
+      sessionStorage.setItem("SOI", "true");
     }
   }
 

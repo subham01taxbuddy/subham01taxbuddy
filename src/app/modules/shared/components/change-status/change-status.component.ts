@@ -263,11 +263,13 @@ export class ChangeStatusComponent implements OnInit {
           } else {
             this.loading = true;
             let param = '/previous-status';
-            let reqBody = {
+            let reqBody:any = {
               userId: this.data.userInfo.userId,
               serviceType: this.data.userInfo.serviceType,
-              assessmentYear: this.data.userInfo.assessmentYear,
             };
+            if (this.data.userInfo.serviceType !== 'ITRU') {
+              reqBody.assessmentYear = this.data.userInfo.assessmentYear;
+            }
             this.userService.postMethod(param, reqBody).toPromise().then(
               (response: any) => {
                 console.log('undo Status response: ', response);
