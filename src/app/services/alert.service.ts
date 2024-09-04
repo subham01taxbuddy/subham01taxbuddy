@@ -36,7 +36,8 @@ export class AlertService {
     this.headers = new HttpHeaders().set('Content-Type', 'application/json');
     this.fetchAlerts();
     //commented periodic alert code for now
-    // this.startPeriodicAlerts();
+    this.startPeriodicAlerts();
+    this.startAutoRemoveExpiredAlerts();
 
   }
 
@@ -103,7 +104,7 @@ export class AlertService {
   }
 
   private startAutoRemoveExpiredAlerts() {
-    timer(0, 60000).pipe( // Check every minute
+    timer(0, 30000).pipe( // Check every minute
       switchMap(() => this.getAllAlert())
     ).subscribe(alerts => {
       const currentTime = new Date().getTime();
