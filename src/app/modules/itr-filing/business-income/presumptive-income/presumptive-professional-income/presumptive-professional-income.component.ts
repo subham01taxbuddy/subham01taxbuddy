@@ -438,6 +438,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.cashPerWidth = 0;
     this.anyOtherPerWidth = 0;
     this.anyOtherPerWidth = 0;
+    this.onContinue();
     this.utilsService.showSnackBar("Record saved successfully.");
   }
 
