@@ -6,6 +6,7 @@ import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
+import { Router } from '@angular/router';
 
 interface Department {
     name: string,
@@ -27,10 +28,10 @@ export class ChatUIComponent implements OnInit {
 
 
     centralizedChatDetails: any;
+    showBackButton:boolean = true;
 
 
-
-    constructor(private chatManager: ChatManager,
+    constructor(private chatManager: ChatManager,private router: Router,
         private localStorage: LocalStorageService, private chatService: ChatService) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -77,7 +78,7 @@ export class ChatUIComponent implements OnInit {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
          }
-     
+
 
     }
 
@@ -127,6 +128,7 @@ export class ChatUIComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      this.checkUrlForFullScreen()
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
@@ -137,6 +139,12 @@ export class ChatUIComponent implements OnInit {
             this.openUserChat(data);
 
         }
+    }
+
+    checkUrlForFullScreen() {
+      if (this.router.url.includes('/chat-full-screen')) {
+        this.showBackButton = false;
+      }
     }
 
     handleReceivedMessages = (data: any) => {
@@ -215,7 +223,7 @@ export class ChatUIComponent implements OnInit {
             // this.conversationList = [...this.conversationList]
         }
     }
-    
+
     handleDeptList = (data: any) => {
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         // this.selectedDepartmentId = data[0]._id;
