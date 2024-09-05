@@ -35,7 +35,7 @@ export class PresumptiveIncomeComponent
   }
 
   ngOnInit(): void {
-    console.log();
+    console.log('Component initialized');
   }
   setStep(index: number) {
     this.step = index;
@@ -107,7 +107,6 @@ export class PresumptiveIncomeComponent
 
   onPresBusinessSaved(event) {
     this.presBusinessSaved = event;
-
     if (this.presBusinessSaved) {
       this.save();
     }
@@ -115,6 +114,7 @@ export class PresumptiveIncomeComponent
 
   saveAll() {
     this.PresumptiveProfessionalIncomeComponent.onContinue();
+    this.save();
   }
 
   unsubscribe() {
