@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
-import { BehaviorSubject, interval, Observable, timer} from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription, timer} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { SessionStorageService } from './storage.service';
 
@@ -13,7 +13,8 @@ export interface Alert {
   title: string;
   applicableFrom: Date;
   applicableTo: Date;
-  seen: boolean;
+  popupShown?: boolean; 
+  seen:boolean;
 }
 
 @Injectable({
@@ -29,7 +30,8 @@ export class AlertService {
   newAlerts$ = this.newAlertsSubject.asObservable();
   private periodicAlertsSubject = new BehaviorSubject<Alert[]>([]);
   periodicAlerts$ = this.periodicAlertsSubject.asObservable();
-  private readonly READ_ALERTS_KEY = 'ReadAlertData';
+  private readonly READ_ALERTS_KEY = 'readAlerts';
+  private readonly POPUP_SHOWN_ALERTS_KEY = 'popupShownAlerts';
  
 
   constructor(private http: HttpClient, private sessionStorage:SessionStorageService) {
@@ -37,7 +39,6 @@ export class AlertService {
     this.fetchAlerts();
     this.startPeriodicAlerts();
     this.startAutoRemoveExpiredAlerts();
-
   }
 
   postMethodAlert(alertData: any): Observable<any> {
@@ -85,63 +86,84 @@ export class AlertService {
       environment.url + this.microService + `/api-alert/expired`, { headers: this.headers });
   }
 
-  // private startPeriodicAlerts() {
-  //   interval(75000).pipe(
-  //     tap(() => {
-  //       const currentAlerts = this.alertsSubject.value;
-  //       const readAlerts = this.getReadAlerts();
-  //       const unreadCriticalAlerts = currentAlerts.filter(alert => 
-  //         alert.type === 'CRITICAL' && !readAlerts.some(readAlert => readAlert.alertId === alert.alertId)
-  //       );
-        
-  //       this.periodicAlertsSubject.next(unreadCriticalAlerts);
-  //     })
-  //   ).subscribe();
-  // }
-
-  // private startPeriodicAlerts() {
-  //     interval(180000).pipe(
-  //       tap(() => {
-  //         const currentAlerts = this.alertsSubject.value;
-  //         const readAlerts = this.getReadAlerts();
-  //         const unreadAlerts = currentAlerts.filter(alert => !readAlerts.includes(alert.alertId));
-  //         const criticalAlerts = unreadAlerts.filter(alert => alert.type === 'CRITICAL');
-  //         const otherAlerts = unreadAlerts.filter(alert => alert.type !== 'CRITICAL');
-  //         console.log("alert time on");
-  //         this.periodicAlertsSubject.next([
-  //           ...(criticalAlerts.length > 0 ? [criticalAlerts[0]] : []),
-  //           ...otherAlerts.slice(0, 5)
-  //         ]);
-  //       })
-  //     ).subscribe();
-  //   }
-
+  
   isAlertRead(alertId: string): boolean {
     const readAlerts = this.getReadAlerts();
     return readAlerts.includes(alertId);
   }
+ private isAlertActive(alert: Alert, currentTime: Date): boolean {
+    const applicableFrom = new Date(alert.applicableFrom);
+    const applicableTo = new Date(alert.applicableTo);
+    return currentTime >= applicableFrom && currentTime <= applicableTo;
+  }
 
-  private startPeriodicAlerts() {
+  updateAlerts(alerts: Alert[]) {
+    this.alertsSubject.next(alerts);
+  }
+
+  markAlertAsRead(alert: Alert) {
+    const readAlerts = this.getReadAlerts();
+    if (!readAlerts.some(readAlert => readAlert.alertId === alert.alertId)) {
+      readAlerts.push({
+        alertId: alert.alertId,
+        title: alert.title,
+        message: alert.message
+      });
+      this.sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
+    }
+    
+    const currentAlerts = this.alertsSubject.value;
+    const updatedAlerts = currentAlerts.map(a => 
+      a.alertId === alert.alertId ? { ...a, seen: true } : a
+    );
+    this.alertsSubject.next(updatedAlerts);
+  }
+
+  startPeriodicAlerts() {
     interval(60000).pipe(
+      switchMap(() => this.getAllAlert()),
       tap(() => {
         const currentTime = new Date();
         const currentAlerts = this.alertsSubject.value;
-        const activeAlerts = currentAlerts.filter(alert => 
-          this.isAlertActive(alert, currentTime) && !this.isAlertRead(alert.alertId)
+        const readAlerts = this.getReadAlerts();
+        const popupShownAlerts = this.getPopupShownAlerts();
+        
+        const activeAlerts = currentAlerts.filter(alert =>
+          this.isAlertActive(alert, currentTime) &&
+          !readAlerts.some(readAlert => readAlert.alertId === alert.alertId) &&
+          !popupShownAlerts.includes(alert.alertId)
         );
 
-        const criticalAlerts = activeAlerts.filter(alert => alert.type === 'CRITICAL');
-        const otherAlerts = activeAlerts.filter(alert => alert.type !== 'CRITICAL');
-
-        this.periodicAlertsSubject.next([
-          ...(criticalAlerts.length > 0 ? [criticalAlerts[0]] : []),
-          ...otherAlerts.slice(0, 5)
-        ]);
+        activeAlerts.forEach(alert => {
+          const alertActivationTime = new Date(alert.applicableFrom);
+          const delayInMs = Math.max(0, alertActivationTime.getTime() + 180000 - currentTime.getTime());
+          
+          timer(delayInMs).subscribe(() => {
+            if (!this.getPopupShownAlerts().includes(alert.alertId)) {
+              this.periodicAlertsSubject.next([alert]);
+              this.markPopupAsShown(alert.alertId);
+            }
+          });
+        });
       })
     ).subscribe();
   }
+
+  private getPopupShownAlerts(): string[] {
+    const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
+    return popupShownAlertsString ? JSON.parse(popupShownAlertsString) : [];
+  }
+
+  private markPopupAsShown(alertId: string) {
+    const popupShownAlerts = this.getPopupShownAlerts();
+    if (!popupShownAlerts.includes(alertId)) {
+      popupShownAlerts.push(alertId);
+      this.sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY, JSON.stringify(popupShownAlerts));
+    }
+  }
+
   private startAutoRemoveExpiredAlerts() {
-    timer(0, 30000).pipe( // Check every minute
+    timer(0, 30000).pipe( 
       switchMap(() => this.getAllAlert())
     ).subscribe(alerts => {
       const currentTime = new Date().getTime();
@@ -159,40 +181,11 @@ export class AlertService {
         });
       }
     });
-  }
-
-  private isAlertActive(alert: Alert, currentTime: Date): boolean {
-    const applicableFrom = new Date(alert.applicableFrom);
-    const applicableTo = new Date(alert.applicableTo);
-    return currentTime >= applicableFrom && currentTime <= applicableTo;
-  }
-
-  updateAlerts(alerts: Alert[]) {
-    this.alertsSubject.next(alerts);
-  }
-
-  // markAlertAsRead(alertId: string) {
-  //   const readAlerts = this.getReadAlerts();
-  //   if (!readAlerts.includes(alertId)) {
-  //     readAlerts.push(alertId);
-  //     sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
-  //   }
-  
-  // }
-  markAlertAsRead(alertId: string) {
-    const readAlerts = this.getReadAlerts();
-    if (!readAlerts.includes(alertId)) {
-      readAlerts.push(alertId);
-      sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
-    }
+    
   }
 
   private getReadAlerts(): any[] {
     const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
     return readAlertsString ? JSON.parse(readAlertsString) : [];
-  }
-
- 
+  } 
 }
-
-
