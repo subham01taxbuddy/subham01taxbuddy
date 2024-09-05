@@ -36,6 +36,7 @@ interface Alert {
   applicableFrom: Date;
   applicableTo: Date;
   seen: boolean;
+  popupShown?: boolean;
 }
 
 @Component({
@@ -70,13 +71,14 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   alerts: Alert[] = [];
   showNotifications = false;
-  private intervalId: any;
+ // private intervalId: any;
   unreadAlertCount: number = 0;
   private alertSubscription: Subscription;
   private periodicAlertSubscription: Subscription;
  alertCount: number = 0;
- private autoRemoveSubscription: Subscription;
+// private autoRemoveSubscription: Subscription;
  alertData:any;
+ 
  
 
   constructor(
@@ -130,7 +132,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
      this.subscribeToAlerts();
      this.subscribeToPeriodicAlerts();
      //this.setupAutoRemoveExpiredAlerts();
-     this.alertData = JSON.parse(sessionStorage.getItem('READ-ALERT'))
+    // this.alertData = JSON.parse(sessionStorage.getItem('READ-ALERT'))
      
   }
    ngOnDestroy() {
@@ -287,7 +289,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       .catch(err => {
         this.loading = false;
       });
-
+       this.alertService.startPeriodicAlerts();
   }
 
   smeLogout() {
@@ -381,14 +383,21 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     });
   }
 
+  // private subscribeToPeriodicAlerts() {
+  //   this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
+  //     this.processPeriodicAlerts(alerts);
+  //   });
+  // }
+
   private subscribeToPeriodicAlerts() {
-    this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
+      this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
       this.processPeriodicAlerts(alerts);
     });
   }
+
   private processPeriodicAlerts(alerts: Alert[]) {
       const criticalAlert = alerts.find(alert => alert.type === 'CRITICAL');
-      const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
+      //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
 
       if (criticalAlert) {
         this.showCriticalAlertDialog(criticalAlert);
@@ -451,15 +460,23 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   //   }
   // }
 
+  // markAlertAsRead(alert: Alert) {
+  //   this.alertService.markAlertAsRead(alert);  // Call the service method here
+  // }
+
+  
   private showCriticalAlertDialog(alert: Alert) {
     const dialogRef = this.dialog.open(AlertPopupComponent, {
-      data: { alertId:alert.alertId, title: alert.title, message: alert.message },
+      data: alert,
       width: '400px',
   });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((result) => {
       //this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
-
+      if (result === true){
+        console.log("alert complete");
+        this.alertService.markAlertAsRead(alert);
+      }
     });
   }
   toggleNotifications() {
@@ -516,169 +533,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
 
 
-
-
-
-  // getAlerts() {
-  //     this.loading = true;
-  //     this.alertService.getAllAlert().subscribe(
-  //       (response: Alert[]) => {
-  //         this.alerts = response.map(alert => ({
-  //           ...alert,
-  //           applicableFrom: new Date(alert.applicableFrom),
-  //           applicableTo: new Date(alert.applicableTo),
-  //         }));
-  //         this.loading = false;
-  //         this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-
-  //         console.log('All Alert list get:', this.alerts);
-  //       },
-  //       error => {
-  //         this.loading = false;
-  //         console.error('Error fetching alerts:', error);
-  //       }
-  //     );
-  //   }
-  //   toggleNotifications() {
-  //       this.showNotifications = !this.showNotifications;
-  //       if (this.showNotifications) {
-  //         this.alerts.forEach(alert => alert.seen = true);
-  //        // this.updateUnreadAlertCount();
-  //         //this.processAlerts();
-  //       }
-  //     }
-
-      // getAlerts() {
-      //   this.alertService.getAllAlert().subscribe(
-      //     (response: Alert[]) => {
-      //       this.alerts = response.map(alert => ({
-      //         ...alert,
-      //         applicableFrom: new Date(alert.applicableFrom),
-      //         applicableTo: new Date(alert.applicableTo),
-      //       }));
-      //      // this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-      //       this.updateUnreadAlertCount();
-      //       this.sortAlerts();
-      //     },
-      //     error => {
-      //       console.error('Error fetching alerts:', error);
-      //     }
-      //   );
-      // }
-
-      // subscribeToAlerts() {
-      //   this.alertSubscription = this.alertService.alerts$.subscribe(
-      //     (alerts: Alert[]) => {
-      //       this.alerts = alerts;
-      //       this.updateUnreadAlertCount();
-      //       this.showPushNotifications();
-      //       this.sortAlerts();
-      //     }
-      //   );
-      // }
-      // sortAlerts() {
-      //   this.alerts.sort((a, b) => b.applicableFrom.getTime() - a.applicableFrom.getTime());
-      // }
-      // // handleNewAlerts(newAlerts: Alert[]) {
-      // //   newAlerts.forEach(alert => {
-      // //     if (alert.type === 'Information' || alert.type === 'Update') {
-      // //       this.showPushNotification(alert);
-      // //     }
-      // //   });
-      // //   this.updateUnreadAlertCount();
-      // // }
-
-      // // showPushNotifications() {
-      // //   const unseenAlerts = this.alerts.filter(alert => !alert.seen);
-      // //   if (unseenAlerts.length > 0) {
-      // //     if (this.dialogRef) {
-      // //       this.dialogRef.componentInstance.updateAlerts(unseenAlerts);
-      // //     } else {
-      // //       this.dialogRef = this.dialog.open(AlertPushNotificationComponent, {
-      // //         panelClass: 'alert-notification',
-      // //         data: unseenAlerts,
-      // //         position: { top: '20px', right: '20px' }
-      // //       });
-      // //       this.dialogRef.afterClosed().subscribe(() => {
-      // //         this.dialogRef = null;
-      // //       });
-      // //     }
-      // //   }
-      // // }
-      // // showPushNotifications() {
-      // //   const now = new Date();
-      // //   const activeAlerts = this.alerts.filter(alert =>
-      // //     !alert.seen && new Date(alert.applicableTo) > now
-      // //   );
-
-      // //   activeAlerts.forEach(alert => {
-      // //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
-      // //       panelClass: 'alert-notification',
-      // //       data: [alert],
-      // //       position: { bottom: '40px', right: '30px' }
-      // //     });
-      // //     this.dialogRef.push(dialogRef);
-      // //     dialogRef.afterClosed().subscribe(() => {
-      // //       const index = this.dialogRef.indexOf(dialogRef);
-      // //       if (index > -1) {
-      // //         this.dialogRef.splice(index, 1);
-      // //       }
-      // //       alert.seen = true;
-      // //       this.updateUnreadAlertCount();
-      // //     });
-      // //   });
-      // // }
-
-      // showPushNotifications() {
-      //   const now = new Date();
-      //   const activeAlerts = this.alerts.filter(alert =>
-      //     !alert.seen && new Date(alert.applicableTo) > now
-      //   );
-
-      //   if (activeAlerts.length > 0) {
-      //     const dialogRef = this.dialog.open(AlertPushNotificationComponent, {
-      //       panelClass: 'alert-notification',
-      //       data: activeAlerts,
-      //       position: { bottom: '40px', right: '30px' }
-      //     });
-      //     this.dialogRef.push(dialogRef);
-
-      //     dialogRef.afterClosed().subscribe(() => {
-      //       const index = this.dialogRef.indexOf(dialogRef);
-      //       if (index > -1) {
-      //         this.dialogRef.splice(index, 1);
-      //       }
-      //       activeAlerts.forEach(alert => alert.seen = true);
-      //       this.updateUnreadAlertCount();
-      //     });
-
-      //     setTimeout(() => dialogRef.close(), 60000);
-      //   }
-      // }
-      // startPushNotificationInterval() {
-      //   this.pushNotificationInterval = setInterval(() => {
-      //     this.showPushNotifications();
-      //   }, 600000); // 10 minutes
-      // }
-      // updateUnreadAlertCount() {
-      //   this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
-      // }
-
-
-      // toggleNotifications() {
-      //   this.showNotifications = !this.showNotifications;
-      //   if (this.showNotifications) {
-      //     this.alerts.forEach(alert => alert.seen = true);
-      //     this.updateUnreadAlertCount();
-      //   }
-      // }
-
-      // formatDate(date: string | Date): string {
-      //   if (date instanceof Date) {
-      //     return this.datePipe.transform(date, 'dd/MM/yy hh:mm a') || '';
-      //   }
-      //   return this.datePipe.transform(new Date(date), 'dd/MM/yy hh:mm a') || '';
-      // }
 
 
 
