@@ -399,6 +399,25 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       // }
     }
 
+  // private processPeriodicAlerts(alerts: Alert[]) {
+  //   const currentTime = new Date();
+  //   const activeUnreadAlerts = alerts.filter(alert => 
+  //     //this.isAlertActive(alert, currentTime) && !this.alertService.isAlertRead(alert.alertId)
+  //   );
+
+  //   const criticalAlert = activeUnreadAlerts.find(alert => alert.type === 'CRITICAL');
+  //   const nonCriticalAlerts = activeUnreadAlerts.filter(alert => alert.type !== 'CRITICAL');
+
+  //   if (criticalAlert) {
+  //     this.showCriticalAlertDialog(criticalAlert);
+  //   }
+
+  //   // if (nonCriticalAlerts.length > 0) {
+  //   //   this.showPushNotification(nonCriticalAlerts);
+  //   // }
+  // }
+
+
   // private processAlerts() {
   //   const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
   //   const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-alert-popup',
@@ -9,13 +10,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class AlertPopupComponent {
 
   constructor(
-    
+    private alertService: AlertService,
     public dialogRef: MatDialogRef<AlertPopupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {alertId:string; title: string; message: string;}){
 
     }
 
     onOkClick(): void {
+
+      // this.alertService.markAlertAsRead(this.data.alertId);
+      // this.dialogRef.close();
       const READ_ALERTS_KEY = 'ReadAlertData';
      
       const existingAlertsString = sessionStorage.getItem(READ_ALERTS_KEY);
@@ -42,7 +46,8 @@ export class AlertPopupComponent {
       
       sessionStorage.setItem(READ_ALERTS_KEY, JSON.stringify(existingAlerts));
       
-      this.dialogRef.close();
-    }
+    //   this.dialogRef.close();
+    // }
     }
 
+  }
