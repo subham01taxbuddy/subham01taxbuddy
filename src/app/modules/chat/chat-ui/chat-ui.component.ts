@@ -219,7 +219,6 @@ export class ChatUIComponent implements OnInit {
     handleDeptList = (data: any) => {
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
         // this.selectedDepartmentId = data[0]._id;
-        this.chatManager.conversationList(this.page, this.selectedDepartmentId);
     }
 
 
