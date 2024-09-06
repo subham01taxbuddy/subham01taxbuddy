@@ -41,7 +41,7 @@ export class ChatUIComponent implements OnInit {
     }
 
 
-
+ 
 
     showWidget = true;
     selectedUser: any;
