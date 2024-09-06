@@ -4,7 +4,7 @@
 
 
         <div class="header">
-            <button (click)="goBack()">
+            <button (click)="goBack()" *ngIf="showBackButton">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
             </button>
             <span class="widget-title">Chat</span>

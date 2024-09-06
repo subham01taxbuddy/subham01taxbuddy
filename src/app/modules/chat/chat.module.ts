@@ -7,7 +7,8 @@ import { FloatingWidgetComponent } from './floating-widget/floating-widget.compo
 import { FormsModule } from '@angular/forms';
 import { PushNotificationComponent } from './push-notification/push-notification.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-   
+import { ChatRoutingModule } from './chat-routing.module';
+
 @NgModule({
   declarations: [
      UserChatComponent,
@@ -18,9 +19,10 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
    ],
   imports: [
     CommonModule,
+    ChatRoutingModule,
     FormsModule,
     MaterialModule,
-    InfiniteScrollModule    
+    InfiniteScrollModule
   ],
   exports: [UserChatComponent,ChatUIComponent, FloatingWidgetComponent]
 })

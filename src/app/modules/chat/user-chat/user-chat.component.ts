@@ -217,8 +217,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
+    const chatUrl = '/chat-full-screen';
+    window.open(chatUrl, '_blank');
     this.page = 0;
-    this.fullChatScreen = true;
+    this.fullChatScreen = false;
     this.chatManager.getDepartmentList();
     this.chatManager.conversationList(this.page);
     document.body.classList.add('no-scroll');
@@ -348,7 +350,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
         this.onScrollUp();
       }
-    });    
+    });
     this.scrollToBottom();
     this.toggleArrowVisibility();
   }
