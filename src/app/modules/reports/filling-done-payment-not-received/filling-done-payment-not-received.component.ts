@@ -57,6 +57,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  leaderTotalInvoice :any ;
 
 
   constructor(
@@ -177,6 +178,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       if (response.success) {
         this.filingDoneReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
+        this.leaderTotalInvoice = this.filingDoneReport[0].totalInvoiceAmount
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData(this.filingDoneReport));
         this.cacheManager.initializeCache(this.createRowData(this.filingDoneReport));
 
@@ -214,6 +216,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         panNumber: fillingData[i].panNumber,
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
+        invoiceAmount:fillingData[i].invoiceAmount,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -269,7 +272,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         headerName: 'Customer Number',
         field: 'customerNumber',
         sortable: true,
-        width: 200,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -281,7 +284,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       {
         headerName: 'Pan Number',
         field: 'panNumber',
-        width: 200,
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -302,6 +305,14 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
           debounceMs: 0
         },
       },
+      {
+        headerName: 'Invoice Amount',
+        field: 'invoiceAmount',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+
       {
         headerName: 'Leader Name',
         field: 'leaderName',
@@ -356,6 +367,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       { key: 'customerNumber', value: 'Customer Number' },
       { key: 'panNumber', value: 'Pan Number' },
       { key: 'statusName', value: 'Status' },
+      { key: 'invoiceAmount', value:'Invoice Amount' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'filerName', value: 'Filer Name' },
     ]
@@ -366,6 +378,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.leaderTotalInvoice =null;
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
