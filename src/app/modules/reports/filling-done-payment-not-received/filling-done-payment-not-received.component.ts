@@ -109,7 +109,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       this.leaderId = event ? event.userId : null;
       console.log('fromowner:', event);
       this.agentId = this.leaderId;
-
+      this.leaderTotalInvoice =null;
     }
   }
   fromPrinciple(event) {
