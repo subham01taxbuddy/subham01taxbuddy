@@ -25,14 +25,14 @@
           </div>
 
           <div class="marginReduce">
-            <div [hidden]="selectedForm !== 'businessIncome'">
+            <div style="width: 100%;" [hidden]="selectedForm !== 'businessIncome'">
               <app-presumptive-business-income
                 #PresumptiveBusinessIncomeComponentRef
                 (presBusinessSaved)="onPresBusinessSaved($event)"
               ></app-presumptive-business-income>
             </div>
 
-            <div [hidden]="selectedForm !== 'professionalIncome'">
+            <div style="width: 100%;" [hidden]="selectedForm !== 'professionalIncome'">
               <app-presumptive-professional-income
                 #PresumptiveProfessionalIncomeComponentRef
                 (presProfessionalSaved)="onPresProfessionalSaved($event)"
