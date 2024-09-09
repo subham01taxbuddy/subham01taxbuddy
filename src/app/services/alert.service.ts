@@ -135,8 +135,8 @@ export class AlertService {
         );
 
         activeAlerts.forEach(alert => {
-          const alertActivationTime = new Date(alert.applicableFrom);
-          const delayInMs = Math.max(0, alertActivationTime.getTime() + 180000 - currentTime.getTime());
+         const alertActivationTime = new Date(alert.applicableFrom);
+         const delayInMs = Math.max(0, alertActivationTime.getTime() + 18 - currentTime.getTime());
           
           timer(delayInMs).subscribe(() => {
             if (!this.getPopupShownAlerts().includes(alert.alertId)) {
@@ -151,7 +151,8 @@ export class AlertService {
 
   private getPopupShownAlerts(): string[] {
     const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
-    return popupShownAlertsString ? JSON.parse(popupShownAlertsString) : [];
+   //console.log(`popup check: ${popupShownAlertsString ? JSON.parse(popupShownAlertsString) : []}`);
+   return popupShownAlertsString ? JSON.parse(popupShownAlertsString) : [];
   }
 
   private markPopupAsShown(alertId: string) {
@@ -161,6 +162,11 @@ export class AlertService {
       this.sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY, JSON.stringify(popupShownAlerts));
     }
   }
+
+  private getReadAlerts(): any[] {
+    const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
+    return readAlertsString ? JSON.parse(readAlertsString) : [];
+  } 
 
   private startAutoRemoveExpiredAlerts() {
     timer(0, 30000).pipe( 
@@ -184,8 +190,4 @@ export class AlertService {
     
   }
 
-  private getReadAlerts(): any[] {
-    const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
-    return readAlertsString ? JSON.parse(readAlertsString) : [];
-  } 
 }

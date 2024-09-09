@@ -78,6 +78,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
  alertCount: number = 0;
 // private autoRemoveSubscription: Subscription;
  alertData:any;
+ private readonly POPUP_SHOWN_ALERTS_KEY = 'popupShownAlerts';
  
  
 
@@ -95,7 +96,9 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private renderer: Renderer2,
     private elementRef: ElementRef,
     private dbService: NgxIndexedDBService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private sessionStorage : SessionStorageService,
+    
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
@@ -466,18 +469,26 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   
   private showCriticalAlertDialog(alert: Alert) {
-    const dialogRef = this.dialog.open(AlertPopupComponent, {
-      data: alert,
-      width: '400px',
-  });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      //this.showPushNotification(this.alerts.filter(a => a.type !== 'CRITICAL'));
-      if (result === true){
-        console.log("alert complete");
-        this.alertService.markAlertAsRead(alert);
-      }
+    const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
+    console.log(popupShownAlertsString);
+    console.log(!popupShownAlertsString.includes(alert.alertId))
+    if(!popupShownAlertsString.includes(alert.alertId)){
+      console.log("inside condition")
+      const dialogRef = this.dialog.open(AlertPopupComponent, {
+        data: alert,
+        width: '400px',
+        disableClose: true
     });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        
+        if (result === true){
+          console.log("alert complete");
+          
+        }
+      });
+    }
+    
   }
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
