@@ -89,7 +89,7 @@ export class PresumptiveIncomeComponent
         this.utilsService.smoothScrollToTop();
       }
     );
-    if (this.presProfessionalSaved || this.presBusinessSaved) {
+    if (this.presProfessionalSaved && this.presBusinessSaved) {
       this.utilsService.showSnackBar(
         'Presumptive Income details were saved successfully'
       );
