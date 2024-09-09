@@ -175,7 +175,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
-      if (response.success) {
+      if (response.success && response?.data?.content.length > 0) {
         this.filingDoneReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.leaderTotalInvoice = this.filingDoneReport[0].totalInvoiceAmount
@@ -185,15 +185,16 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         const currentPageNumber = pageChange || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.filingDoneReport));
         this.config.currentPage = currentPageNumber;
-        if(response?.data?.content == ''){
-          this._toastMessageService.alert("error", "No Data Found ");
-        }
-
       } else {
         this.loading = false;
         this.config.totalItems = 0;
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
-        this._toastMessageService.alert("error", response.message);
+        if(response?.data?.content.length === 0){
+          this._toastMessageService.alert("error", "No Data Found ");
+        }else{
+          this._toastMessageService.alert("error", response.message);
+        }
+
       }
     }).catch(() =>{
       this.config.totalItems = 0;
