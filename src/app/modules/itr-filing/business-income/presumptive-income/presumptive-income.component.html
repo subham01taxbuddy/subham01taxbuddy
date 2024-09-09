@@ -25,16 +25,16 @@
           </div>
 
           <div class="marginReduce">
-            <div *ngIf="selectedForm === 'businessIncome'">
+            <div [hidden]="selectedForm !== 'businessIncome'">
               <app-presumptive-business-income
                 #PresumptiveBusinessIncomeComponentRef
                 (presBusinessSaved)="onPresBusinessSaved($event)"
               ></app-presumptive-business-income>
             </div>
 
-            <div *ngIf="selectedForm === 'professionalIncome'">
+            <div [hidden]="selectedForm !== 'professionalIncome'">
               <app-presumptive-professional-income
-                #PresumptiveProfessinalIncomeComponentRef
+                #PresumptiveProfessionalIncomeComponentRef
                 (presProfessionalSaved)="onPresProfessionalSaved($event)"
               ></app-presumptive-professional-income>
             </div>

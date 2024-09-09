@@ -20,10 +20,10 @@ export class PresumptiveIncomeComponent
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
+  @ViewChild('PresumptiveProfessionalIncomeComponentRef', { static: false })
+  PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   @ViewChild('PresumptiveBusinessIncomeComponentRef', { static: false })
   PresumptiveBusinessIncomeComponent!: PresumptiveBusinessIncomeComponent;
-  @ViewChild('PresumptiveProfessinalIncomeComponentRef', { static: false })
-  PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   presProfessionalSaved: boolean;
   presBusinessSaved: boolean;
   PREV_ITR_JSON: any;
@@ -89,7 +89,7 @@ export class PresumptiveIncomeComponent
         this.utilsService.smoothScrollToTop();
       }
     );
-    if (this.presProfessionalSaved && this.presBusinessSaved) {
+    if (this.presProfessionalSaved || this.presBusinessSaved) {
       this.utilsService.showSnackBar(
         'Presumptive Income details were saved successfully'
       );
@@ -113,10 +113,22 @@ export class PresumptiveIncomeComponent
   }
 
   saveAll() {
-    this.PresumptiveProfessionalIncomeComponent.onContinue();
+    if (this.PresumptiveProfessionalIncomeComponent) {
+      this.PresumptiveProfessionalIncomeComponent.onContinue();
+    } else {
+      console.error('PresumptiveProfessionalIncomeComponent is undefined');
+    }
     this.save();
   }
 
+  ngAfterViewInit() {
+    if (this.PresumptiveBusinessIncomeComponent) {
+      console.log('PresumptiveBusinessIncomeComponent initialized');
+    }
+    if (this.PresumptiveProfessionalIncomeComponent) {
+      console.log('PresumptiveProfessionalIncomeComponent initialized');
+    }
+  }
   unsubscribe() {
     if (this.subscription) {
       this.subscription.unsubscribe();
