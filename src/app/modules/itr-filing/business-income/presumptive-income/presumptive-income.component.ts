@@ -118,7 +118,6 @@ export class PresumptiveIncomeComponent
     } else {
       console.error('PresumptiveProfessionalIncomeComponent is undefined');
     }
-    this.save();
   }
 
   ngAfterViewInit() {
