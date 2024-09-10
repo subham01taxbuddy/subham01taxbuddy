@@ -925,3 +925,14 @@ button:disabled {
   margin-right: 43px;
   margin-left: 74px;
 }
+
+.archived-message {
+  font-weight: bold;            
+  text-align: center;          
+  margin: 20px auto;            
+  display: flex;
+  justify-content: center;      
+  align-items: center;          
+  height: 100%;                
+  color: #333;                 
+}

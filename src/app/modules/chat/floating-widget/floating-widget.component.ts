@@ -51,6 +51,7 @@ export class FloatingWidgetComponent implements OnInit {
     isLoading: boolean = false;
 
     newMessageSubscription: Subscription;
+    conversationDeletedSubscription: Subscription;
     showFullScreen() {
       const chatUrl = 'chat/chat-full-screen';
       window.open(chatUrl, '_blank');
@@ -173,8 +174,12 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
-                this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
+             this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
             }
+        });
+
+        this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+            this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
         });
 
     }
