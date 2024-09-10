@@ -208,8 +208,8 @@
                                 <label>{{ item.data.label }}</label>
                                 <input type="password" class="form-control"
                                   [attr.disabled]="isBotSender(message.sender)"
-                                  name="{{ item.data.label }}" placeholder="(message?.action != null) ? (message?.action[item.data.label]) : item.data.placeholder"
-                                  [value]="(message?.action != null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
+                                  name="{{ item.data.label }}" [placeholder]="(message?.action !== null) ? (message?.action[item.data.label]) : item.data.placeholder"
+                                  [value]="(message?.action !== null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
                                   (input)="onInputChange($event, item.data.label,message.message_id)" required>
                               </div>
                             </ng-container>
@@ -265,7 +265,7 @@
                                   {{ item.data.validation.errorText }}
                                 </div>
                               </div>
-                              
+
                             </ng-container>
 
 
