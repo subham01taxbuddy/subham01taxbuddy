@@ -52,7 +52,7 @@ export class FloatingWidgetComponent implements OnInit {
 
     newMessageSubscription: Subscription;
     showFullScreen() {
-      const chatUrl = '/chat-full-screen';
+      const chatUrl = 'chat/chat-full-screen';
       window.open(chatUrl, '_blank');
         this.fullChatScreen = false;
         this.page = 0;

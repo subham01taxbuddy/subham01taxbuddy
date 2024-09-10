@@ -217,7 +217,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    const chatUrl = '/chat-full-screen';
+    const chatUrl = 'chat/chat-full-screen';
     window.open(chatUrl, '_blank');
     this.page = 0;
     this.fullChatScreen = false;

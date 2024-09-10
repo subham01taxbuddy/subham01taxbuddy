@@ -142,7 +142,7 @@ export class ChatUIComponent implements OnInit {
     }
 
     checkUrlForFullScreen() {
-      if (this.router.url.includes('/chat-full-screen')) {
+      if (this.router.url.includes('chat/chat-full-screen')) {
         this.showBackButton = false;
       }
     }
