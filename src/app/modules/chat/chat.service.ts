@@ -58,6 +58,10 @@ export class ChatService {
   private newMessageReceived = new Subject<any>();
   newMessageReceived$ = this.newMessageReceived.asObservable();
 
+  private conversationDeleted = new Subject<any>();
+  conversationDeleted$ = this.conversationDeleted.asObservable();
+
+
   private closeFloatingWidgetSubject = new Subject<void>();
   closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
 
@@ -243,7 +247,7 @@ export class ChatService {
       CONVERSATION_URL += `&departmentId=${departmentId}`
     }
     console.log('conversation url', CONVERSATION_URL);
-    
+
     return new Promise((resolve, reject) => {
       this.httpClient.get(CONVERSATION_URL, this.setHeaders("chat21")).subscribe(
         (conversationResult: any) => {
@@ -293,7 +297,7 @@ export class ChatService {
     }
     this.httpClient.get(url, this.setHeaders("chat21")
     ).subscribe((chat21Result: any) => {
-      console.log('fetch messages',chat21Result);
+      console.log('fetch messages', chat21Result);
       if (chat21Result.success) {
         if (!timeStamp) {
           this.clearMessagesDB();
@@ -340,39 +344,51 @@ export class ChatService {
 
 
   updateConversationList(newMessage: any, conversationLists: any, selectedDepartmentId: any) {
-    const shouldUpdate = 
-        !selectedDepartmentId || 
-        newMessage.attributes.departmentId === selectedDepartmentId;
+    const shouldUpdate =
+      !selectedDepartmentId ||
+      newMessage.attributes.departmentId === selectedDepartmentId;
 
     if (shouldUpdate) {
-        const existingConversationIndex = conversationLists.findIndex(
-            (conversation) => conversation.request_id === newMessage.recipient
-        );
+      const existingConversationIndex = conversationLists.findIndex(
+        (conversation) => conversation.request_id === newMessage.recipient
+      );
 
-        const newConversation = {
-            image: newMessage.attributes.userFullname[0],
-            userFullName: newMessage.attributes.userFullname,
-            text: newMessage.text,
-            timestamp: newMessage.timestamp,
-            request_id: newMessage.recipient,
-            type: newMessage.type,
-            departmentId: newMessage.attributes.departmentId,
-            sender: newMessage.sender,
-            recipientFullName: newMessage.recipient_fullname,
-        };
+      const newConversation = {
+        image: newMessage.attributes.userFullname[0],
+        userFullName: newMessage.attributes.userFullname,
+        text: newMessage.text,
+        timestamp: newMessage.timestamp,
+        request_id: newMessage.recipient,
+        type: newMessage.type,
+        departmentId: newMessage.attributes.departmentId,
+        sender: newMessage.sender,
+        recipientFullName: newMessage.recipient_fullname,
+      };
 
-        if (existingConversationIndex !== -1) {
-            conversationLists[existingConversationIndex] = newConversation;
-            conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]);
-        } else {
-            conversationLists.unshift(newConversation);
-        }
+      if (existingConversationIndex !== -1) {
+        conversationLists[existingConversationIndex] = newConversation;
+        conversationLists.unshift(conversationLists.splice(existingConversationIndex, 1)[0]);
+      } else {
+        conversationLists.unshift(newConversation);
+      }
 
-        console.log('Conversation list updated.');
+      console.log('Conversation list updated.');
     } else {
-        console.log('Message from non-selected department, no update performed.');
+      console.log('Message from non-selected department, no update performed.');
     }
-}
+  }
+
+  removeConversationFromList(conversWith: string, conversationLists: any[]) {
+    const index = conversationLists.findIndex(conversation => conversation.conversWith === conversWith);
+
+    if (index !== -1) {
+      conversationLists.splice(index, 1);
+      console.log(`Conversation with request_id: ${conversWith} has been removed.`);
+    } else {
+      console.log(`No conversation found with request_id: ${conversWith}.`);
+    }
+  }
+
 
 
   clearMessagesDB() {
@@ -488,7 +504,7 @@ export class ChatService {
 
     this.chatClient.on("connect",
       () => {
-        if(!this.shouldReconnect){
+        if (!this.shouldReconnect) {
           return;
         }
         if (this.log) {
@@ -530,6 +546,7 @@ export class ChatService {
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
                   let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
+
                   if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && this.roles?.includes('ROLE_LEADER') && this.loggedInUserInfo[0]?.serviceEligibility_GST) {
                     this.messageObservable.next(messageJson);
                   }
@@ -562,6 +579,8 @@ export class ChatService {
                   if (this.onConversationDeletedCallbacks) {
                     if (topic.includes("/conversations/") && topic.endsWith(this._CLIENT_DELETED)) {
                       // map.forEach((value, key, map) =>)
+                      const messageJson = JSON.parse(message.toString());
+                      this.conversationDeleted.next(messageJson);
                       if (this.log) {
                         console.log("conversation deleted! /conversations/, topic:", topic, message.toString());
                       }
@@ -795,10 +814,10 @@ export class ChatService {
       "lang": "en",
       "tempUID": this.uuidv4()
     }
-    
+
     if (!isFromPushNotification) {
       attributes["action"] = payload;
-  }
+    }
     return attributes;
   };
 
@@ -872,7 +891,7 @@ export class ChatService {
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
-        this.chatClient.end(true,() => {
+        this.chatClient.end(true, () => {
           this.shouldReconnect = false;
           this.connected = false
           // reset all subscriptions
@@ -887,7 +906,7 @@ export class ChatService {
           this.callbackHandlers = new Map();
           this.chatSubscription = null;
           this.topicInbox = null;
-         })
+        })
       });
     }
   }

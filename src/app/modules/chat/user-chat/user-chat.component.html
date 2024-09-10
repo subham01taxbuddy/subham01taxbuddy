@@ -47,6 +47,9 @@
   </div>
 
   <div class="message-input-container">
+    <div *ngIf="isInputDisabled" class="archived-message">
+      This conversation has been archived or deleted
+    </div>
     <div class="chat-messages main-panel" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}"
       (scroll)="onScrollToBottom()" #chatWindow>
       <div infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
@@ -324,7 +327,7 @@
     <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
     <div #fileInputContainer style="display: none;"></div>
     <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
-      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize></textarea>
+      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize  [disabled]="isInputDisabled"></textarea>
 
     <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
