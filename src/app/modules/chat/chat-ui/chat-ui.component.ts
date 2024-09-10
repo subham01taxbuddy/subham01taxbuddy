@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { widgetVisibility } from '../floating-widget/animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -21,7 +21,7 @@ interface Department {
 })
 
 
-export class ChatUIComponent implements OnInit {
+export class ChatUIComponent implements OnInit,OnDestroy {
     selector: string = ".main-panel-chats";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
@@ -54,6 +54,7 @@ export class ChatUIComponent implements OnInit {
     page = 0;
     newMessageSubscription: Subscription;
     isLoading: boolean = false;
+    conversationDeletedSubscription: Subscription;
 
 
     openUserChat(conversation: any) {
@@ -77,6 +78,7 @@ export class ChatUIComponent implements OnInit {
         if (this.userChatComp) {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
+            this.userChatComp.isInputDisabled = false;
          }
 
 
@@ -134,6 +136,13 @@ export class ChatUIComponent implements OnInit {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
             }
         });
+
+        this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+            this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
+            this.userChatComp.isInputDisabled = true;
+            this.chatManager.closeChat();
+         });
+
         const data = this.localStorage.getItem('SELECTED_CHAT', true);
         if (data) {
             this.openUserChat(data);
@@ -245,6 +254,15 @@ export class ChatUIComponent implements OnInit {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
+        }
+    }
+
+    ngOnDestroy(): void {
+         if (this.newMessageSubscription) {
+            this.newMessageSubscription.unsubscribe();
+        }
+        if (this.conversationDeletedSubscription) {
+            this.conversationDeletedSubscription.unsubscribe();
         }
     }
 
