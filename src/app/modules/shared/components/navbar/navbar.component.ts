@@ -71,14 +71,13 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   alerts: Alert[] = [];
   showNotifications = false;
- // private intervalId: any;
   unreadAlertCount: number = 0;
   private alertSubscription: Subscription;
   private periodicAlertSubscription: Subscription;
  alertCount: number = 0;
-// private autoRemoveSubscription: Subscription;
  alertData:any;
  private readonly POPUP_SHOWN_ALERTS_KEY = 'popupShownAlerts';
+ private readonly READ_ALERTS_KEY = 'readAlerts';
  
  
 
@@ -133,10 +132,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   ngOnInit(): void {
      this.subscribeToAlerts();
-     this.subscribeToPeriodicAlerts();
-     //this.setupAutoRemoveExpiredAlerts();
-    // this.alertData = JSON.parse(sessionStorage.getItem('READ-ALERT'))
-     
+     this.subscribeToPeriodicAlerts();   
   }
    ngOnDestroy() {
      if (this.alertSubscription) {
@@ -398,19 +394,28 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     });
   }
 
-  private processPeriodicAlerts(alerts: Alert[]) {
-      const criticalAlert = alerts.find(alert => alert.type === 'CRITICAL');
-      //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
+  // private processPeriodicAlerts(alerts: Alert[]) {
+  //     const criticalAlert = alerts?.find(alert => alert.type === 'CRITICAL');
+  //     //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
+  //    // const criticalAlerts = allAlerts.filter(alert => alert.isCritical);
+  //     this.showCriticalAlertDialog(criticalAlert);
 
-      if (criticalAlert) {
-        this.showCriticalAlertDialog(criticalAlert);
+  //     if (criticalAlert) {
+  //       this.showCriticalAlertDialog(criticalAlert);
+  //     }
+
+  //     // if (nonCriticalAlerts.length > 0) {
+  //     //   this.showPushNotification(nonCriticalAlerts);
+  //     // }
+  //   }
+
+    private processPeriodicAlerts(alerts: Alert[]) {
+      const criticalAlerts = alerts.filter(alert => alert.type === 'CRITICAL');
+      
+      if (criticalAlerts.length > 0) {
+        this.showCriticalAlertDialog(criticalAlerts);
       }
-
-      // if (nonCriticalAlerts.length > 0) {
-      //   this.showPushNotification(nonCriticalAlerts);
-      // }
     }
-
   // private processPeriodicAlerts(alerts: Alert[]) {
   //   const currentTime = new Date();
   //   const activeUnreadAlerts = alerts.filter(alert => 
@@ -445,51 +450,104 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     // }
 //  }
 
-  // private showPushNotification(alerts: Alert[]) {
-  //   if (this.dialogRef) {
-  //     this.dialogRef.componentInstance.addNotifications(alerts);
-  //   } else {
-  //     this.dialogRef = this.dialog.open(AlertPushNotificationComponent, {
-  //       data: alerts,
-  //       position: { bottom: '40px', right: '35px' },
-  //       panelClass: 'push-notification-dialog',
-  //       hasBackdrop: false,
-  //       autoFocus: false
-  //     });
-
-  //     this.dialogRef.afterClosed().subscribe(() => {
-  //       this.dialogRef = null;
-  //     });
-  //   }
-  // }
-
-  // markAlertAsRead(alert: Alert) {
-  //   this.alertService.markAlertAsRead(alert);  // Call the service method here
-  // }
-
+ 
   
-  private showCriticalAlertDialog(alert: Alert) {
-    const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
-    console.log(popupShownAlertsString);
-    console.log(!popupShownAlertsString.includes(alert.alertId))
-    if(!popupShownAlertsString.includes(alert.alertId)){
-      console.log("inside condition")
+//   private showCriticalAlertDialog(alert: Alert) {
+//    // const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
+//    const popupShownAlertsString = localStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
+//    console.log("check log")
+//     console.log(popupShownAlertsString);
+//     // console.log(!popupShownAlertsString.includes(alert.alertId))
+//     if(popupShownAlertsString== null || !popupShownAlertsString.includes(alert.alertId)){
+//       console.log("inside condition")
+//       const dialogRef = this.dialog.open(AlertPopupComponent, {
+//         data: alert,
+//         width: '400px',
+//         disableClose: true
+//     });
+  
+//       dialogRef.afterClosed().subscribe((result) => {
+        
+//         if (result === true){
+//           console.log("alert complete");
+          
+//         }
+//       });
+//     }
+    
+// }
+
+private showCriticalAlertDialog(alerts: Alert[]) {
+  const storedAlertsString = this.sessionStorage.getItem(this.READ_ALERTS_KEY);
+  let storedAlerts: any[] = [];
+
+  if (storedAlertsString) {
+    try {
+      storedAlerts = JSON.parse(storedAlertsString);
+    } catch (error) {
+      console.error('Error parsing stored alerts:', error);
+    }
+  }
+
+  const newAlerts = alerts.filter(alert => 
+    !storedAlerts.some(storedAlert => storedAlert.alertId === alert.alertId)
+  );
+
+  const showNextAlert = (index: number) => {
+    if (index < newAlerts.length) {
+      const alert = newAlerts[index];
+      console.log("Showing popup for alert:", alert.alertId);
+      
       const dialogRef = this.dialog.open(AlertPopupComponent, {
         data: alert,
         width: '400px',
         disableClose: true
-    });
-  
+      });
+
       dialogRef.afterClosed().subscribe((result) => {
-        
-        if (result === true){
-          console.log("alert complete");
-          
+        if (result === true) {
+          console.log("Alert acknowledged:", alert.alertId);
+          this.updateStoredAlerts(alert);
         }
+       
+        showNextAlert(index + 1);
       });
     }
-    
+  };
+
+  // Start showing alerts
+  if (newAlerts.length > 0) {
+    showNextAlert(0);
   }
+}
+
+private updateStoredAlerts(newAlert: Alert) {
+  const storedAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
+  let storedAlerts: any[] = [];
+
+  if (storedAlertsString) {
+    try {
+      storedAlerts = JSON.parse(storedAlertsString);
+    } catch (error) {
+      console.error('Error parsing stored alerts:', error);
+    }
+  }
+
+  // Add new alert to stored alerts
+  storedAlerts.push({
+    alertId: newAlert.alertId,
+    title: newAlert.title,
+    message: newAlert.message
+  });
+
+  sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(storedAlerts));
+}
+
+
+
+// Other methods of your NavbarComponent...
+
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     if (this.showNotifications) {
@@ -517,6 +575,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   }
 }
+
 
 
 
