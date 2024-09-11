@@ -60,7 +60,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
         this.chatManager.conversationList(this.page);
-        document.body.classList.add('no-scroll');
+        // document.body.classList.add('no-scroll');
         this.localStorage.removeItem('SELECTED_CHAT');
     }
 

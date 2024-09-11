@@ -212,6 +212,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
+    localStorage.setItem('loggedOut', 'true');
     Auth.signOut()
       .then(data => {
         this.chatService.unsubscribeRxjsWebsocket();

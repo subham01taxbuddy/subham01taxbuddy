@@ -7,6 +7,9 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { Router } from '@angular/router';
+import Auth from '@aws-amplify/auth';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { HttpClient } from '@angular/common/http';
 
 interface Department {
     name: string,
@@ -31,7 +34,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     showBackButton:boolean = true;
 
 
-    constructor(private chatManager: ChatManager,private router: Router,
+    constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
         private localStorage: LocalStorageService, private chatService: ChatService) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -148,11 +151,36 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             this.openUserChat(data);
 
         }
+
+        window.addEventListener('storage', (event) => {
+          if (event.key === 'loggedOut' && event.newValue === 'true') {
+              this.handleLogOut();
+          }
+      });
+    }
+
+    handleLogOut(){
+      Auth.signOut()
+      .then(data => {
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatManager.closeChat();
+        sessionStorage.clear();
+        NavbarService.getInstance().clearAllSessionData();
+        this.router.navigate(['/login']);
+
+        NavbarService.getInstance(this.http).logout();
+
+      })
+      .catch(err => {
+        console.log(err);
+        this.router.navigate(['/login']);
+      });
     }
 
     checkUrlForFullScreen() {
       if (this.router.url.includes('chat/chat-full-screen')) {
         this.showBackButton = false;
+        document.body.classList.add('no-scroll');
       }
     }
 
