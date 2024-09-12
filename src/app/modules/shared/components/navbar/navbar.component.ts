@@ -290,6 +290,7 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
 
   logout() {
     this.loading = true;
+    localStorage.setItem('loggedOut', 'true');
     Auth.signOut()
       .then(data => {
         this.chatService.unsubscribeRxjsWebsocket();

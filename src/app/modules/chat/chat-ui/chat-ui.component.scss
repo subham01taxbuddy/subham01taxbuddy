@@ -153,10 +153,10 @@ input[type="text"] {
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
-    color: black;  
+    color: black;
     z-index: 10;
-    font-weight: bold;  
-    letter-spacing: 1px; 
+    font-weight: bold;
+    letter-spacing: 1px;
 
     span {
         display: inline-block;
@@ -171,7 +171,7 @@ input[type="text"] {
   100% { opacity: 0.7; transform: scale(1); }
 }
 
- 
+
 
 .user-box {
   //display: flex;
@@ -294,13 +294,23 @@ input[type="text"] {
     bottom: 44px;
   }
 
+  @media (min-width: 1201px) {
+    .floating {
+      width: calc(100% - 400px);
+      left: 380px;
+      bottom: 20px;
+      height: auto;
+      max-height: calc(100vh - 40px);
+    }
+  }
+
   @media (max-width: 1200px) {
     .floating {
       width: calc(100% - 360px);
       left: 355px;
-      bottom: 20px;  
-      height: auto;  
-      max-height: calc(100vh - 40px);  
+      bottom: 20px;
+      height: auto;
+      max-height: calc(100vh - 40px);
     }
 
    }
@@ -310,35 +320,35 @@ input[type="text"] {
       width: 100%;
       left: 0;
       top: 0;
-      height: calc(100vh - 20px);  
-      max-height: calc(100vh - 20px); 
-      bottom: 20px; 
+      height: calc(100vh - 20px);
+      max-height: calc(100vh - 20px);
+      bottom: 20px;
     }
 
     .chat-messages {
-      max-height: calc(100vh - 220px);  
+      max-height: calc(100vh - 220px);
     }
 
     .user-input {
-      bottom: 30px;  
+      bottom: 30px;
     }
 
     .cannedMessageBox {
-      bottom: 80px;  
+      bottom: 80px;
     }
   }
 
   @media (max-width: 576px) {
     .floating {
-      bottom: 30px;  
+      bottom: 30px;
     }
 
     .user-input {
-      bottom: 40px;  
+      bottom: 40px;
     }
 
     .cannedMessageBox {
-      bottom: 90px;  
+      bottom: 90px;
     }
   }
 

@@ -44,6 +44,9 @@ export const appRoutes: Routes = [
   {
     path: 'reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)
   },
+  {
+    path: 'chat', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/chat/chat.module').then(m => m.ChatModule)
+  },
   { path: '**', redirectTo: 'login' },
 ];
 

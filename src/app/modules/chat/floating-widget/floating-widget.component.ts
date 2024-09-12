@@ -53,15 +53,15 @@ export class FloatingWidgetComponent implements OnInit {
     newMessageSubscription: Subscription;
     conversationDeletedSubscription: Subscription;
     showFullScreen() {
-      const chatUrl = '/chat-full-screen';
+      const chatUrl = 'chat/chat-full-screen';
       window.open(chatUrl, '_blank');
         this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;
         this.chatManager.getDepartmentList();
         this.chatManager.conversationList(this.page);
-        document.body.classList.add('no-scroll');
-        this.localStorage.removeItem('SELECTED_CHAT');
+        // document.body.classList.add('no-scroll');
+        // this.localStorage.removeItem('SELECTED_CHAT');
     }
 
     openUserChat(user: any) {
