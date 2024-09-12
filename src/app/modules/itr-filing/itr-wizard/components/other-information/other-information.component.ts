@@ -13,8 +13,11 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import {
   AbstractControl,
+  FormArray,
+  FormGroup,
   UntypedFormArray,
   UntypedFormBuilder,
+  UntypedFormControl,
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
@@ -54,6 +57,7 @@ export class OtherInformationComponent implements OnInit {
     { value: 'D', label: 'Domestic' },
     { value: 'F', label: 'Foreign' },
   ];
+  sharesAcquired = new UntypedFormControl(false);
 
   constructor(
     public matDialog: MatDialog,
@@ -135,6 +139,40 @@ export class OtherInformationComponent implements OnInit {
     this.changeGovernedByPortugueseStatus();
   }
 
+  onSharesAcquiredChange(index: number) {
+    console.log('Shares acquired change detected for index:', index);
+    console.log("share form ", this.sharesForm);
+    const sharesArray = this.sharesForm.get('sharesArray') as FormArray;
+    const shareFormGroup = sharesArray.at(index) as FormGroup;
+
+    const acquiredSharesControl = shareFormGroup.get('acquiredShares');
+    const purchaseDateControl = shareFormGroup.get('purchaseDate');
+    const faceValueControl = shareFormGroup.get('faceValuePerShare');
+    const issuePriceControl = shareFormGroup.get('issuePricePerShare');
+    const purchasePriceControl = shareFormGroup.get('purchasePricePerShare');
+
+    if (this.sharesAcquired.value) {
+      acquiredSharesControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
+      purchaseDateControl.setValidators([Validators.required]);
+      faceValueControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
+      issuePriceControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
+      purchasePriceControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
+    } else {
+      acquiredSharesControl.clearValidators();
+      purchaseDateControl.clearValidators();
+      faceValueControl.clearValidators();
+      issuePriceControl.clearValidators();
+      purchasePriceControl.clearValidators();
+    }
+
+    acquiredSharesControl.updateValueAndValidity();
+    purchaseDateControl.updateValueAndValidity();
+    faceValueControl.updateValueAndValidity();
+    issuePriceControl.updateValueAndValidity();
+    purchasePriceControl.updateValueAndValidity();
+
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     this.isEditable();
   }
@@ -145,6 +183,7 @@ export class OtherInformationComponent implements OnInit {
     let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     for (let i = 0; i < this.ITR_JSON?.unlistedSharesDetails.length; i++) {
       const val = this.ITR_JSON.unlistedSharesDetails[i];
+      const acquiredShares = val.acquiredShares != null && val.acquiredShares !== 0;
       const temp = {
         id: i + 1,
         companyName: val.companyName,
@@ -161,6 +200,7 @@ export class OtherInformationComponent implements OnInit {
         saleConsideration: val.saleConsideration,
         closingShares: val.closingShares,
         closingCOA: val.closingCOA,
+        sharesAcquired: acquiredShares
       };
       formArray.push(this.createSharesForm(temp));
     }
@@ -360,6 +400,8 @@ export class OtherInformationComponent implements OnInit {
         ]),
       ],
     });
+    this.updateValidatorsBasedOnAcquiredShares(form, share?.acquiredShares);
+
     form.get('issuePricePerShare')?.valueChanges.subscribe(value => {
       if (value) {
         form.get('purchasePricePerShare').setValue(null);
@@ -370,6 +412,36 @@ export class OtherInformationComponent implements OnInit {
       }
     });
     return form;
+  }
+
+  updateValidatorsBasedOnAcquiredShares(form: FormGroup, acquiredShares: any) {
+    const acquiredSharesControl = form.get('acquiredShares');
+    const purchaseDateControl = form.get('purchaseDate');
+    const faceValueControl = form.get('faceValuePerShare');
+    const issuePriceControl = form.get('issuePricePerShare');
+    const purchasePriceControl = form.get('purchasePricePerShare');
+
+    if (acquiredShares) {
+      this.sharesAcquired.setValue(true);
+      acquiredSharesControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
+      purchaseDateControl?.setValidators([Validators.required]);
+      faceValueControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
+      issuePriceControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
+      purchasePriceControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
+    } else {
+      this.sharesAcquired.setValue(false);
+      acquiredSharesControl?.clearValidators();
+      purchaseDateControl?.clearValidators();
+      faceValueControl?.clearValidators();
+      issuePriceControl?.clearValidators();
+      purchasePriceControl?.clearValidators();
+    }
+
+    acquiredSharesControl?.updateValueAndValidity();
+    purchaseDateControl?.updateValueAndValidity();
+    faceValueControl?.updateValueAndValidity();
+    issuePriceControl?.updateValueAndValidity();
+    purchasePriceControl?.updateValueAndValidity();
   }
 
   createFirmsForm(director?: any) {
@@ -736,7 +808,7 @@ export class OtherInformationComponent implements OnInit {
         this.Copy_ITR_JSON?.portugeseCC5AFlag ||
         '';
 
-      if(this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') { 
+      if(this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
 
         const schedule5a = {
           nameOfSpouse: this.schedule5AForm.get('nameOfSpouse').value || '',
