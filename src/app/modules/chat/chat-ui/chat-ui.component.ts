@@ -66,7 +66,7 @@ export class ChatUIComponent implements OnInit {
             conversation.departmentName = selectedDepartment.name;
         }
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
-        this.chatService.unsubscribeRxjsWebsocket();
+        this.closeUserChat();
         this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
