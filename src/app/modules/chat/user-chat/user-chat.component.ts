@@ -343,10 +343,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       }
     });
     this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
-      const currentChat = this.localStorageService.getItem('SELECTED_CHAT', true);
-
-      if (currentChat && currentChat.conversWith === deletedConversation.conversWith) {
+ 
+      if (deletedConversation?.archived && deletedConversation?.archived === true) {
         this.handleDeletedConversation();
+        this.cd.detectChanges();
       }
     });
     this.updateBotIconVisibility();
@@ -356,6 +356,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
      this.isInputDisabled = true;
      this.messageSent = '';
      this.localStorage.removeItem('SELECTED_CHAT');
+     this.cd.detectChanges();
   }
 
 
