@@ -196,21 +196,23 @@ export class AppComponent implements OnInit {
       disableClose: true,
       panelClass: 'reloadWindowPopup'
     });
+
+    this.chatManager.closeChat();
+
     this.dialogRef.afterClosed().subscribe(result => {
       console.log('logging out', this.router.url);
       this.logout();
       this.smeLogout();
-      this.chatManager.closeChat();
     });
     this.dialogRef.backdropClick().subscribe(() => {
       console.log('logging out');
       this.logout();
       this.smeLogout();
-      this.chatManager.closeChat();
-    })
+     })
   }
 
   logout() {
+    localStorage.setItem('loggedOut', 'true');
     Auth.signOut()
       .then(data => {
         this.chatService.unsubscribeRxjsWebsocket();

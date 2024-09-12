@@ -14,24 +14,24 @@ import { debounceTime } from 'rxjs';
   name: 'highlight'
 })
 export class HighlightSearch implements PipeTransform {
-constructor(private sanitizer: DomSanitizer){}
+  constructor(private sanitizer: DomSanitizer) { }
 
-transform(value: any, args: any): any {
-  if (!args) {
-    return value;
+  transform(value: any, args: any): any {
+    if (!args) {
+      return value;
+    }
+    // Match in a case insensitive maneer
+    const re = new RegExp(args, 'gi');
+    const match = value.match(re);
+
+    // If there's no match, just return the original value.
+    if (!match) {
+      return value;
+    }
+
+    const replacedValue = value.replace(re, "<mark>" + match[0] + "</mark>")
+    return this.sanitizer.bypassSecurityTrustHtml(replacedValue)
   }
-  // Match in a case insensitive maneer
-  const re = new RegExp(args, 'gi');
-  const match = value.match(re);
-
-  // If there's no match, just return the original value.
-  if (!match) {
-    return value;
-  }
-
-  const replacedValue = value.replace(re, "<mark>" + match[0] + "</mark>")
-  return this.sanitizer.bypassSecurityTrustHtml(replacedValue)
-}
 }
 
 @Component({
@@ -115,6 +115,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   userCurrentStatus = 'online';
   userLastSeen: any;
   page = 0;
+  conversationDeletedSubscription: Subscription;
+  @Input() isInputDisabled: boolean = false;
 
   constructor(
     private chatService: ChatService,
@@ -217,13 +219,13 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    const chatUrl = '/chat-full-screen';
+    const chatUrl = 'chat/chat-full-screen';
     window.open(chatUrl, '_blank');
     this.page = 0;
     this.fullChatScreen = false;
     this.chatManager.getDepartmentList();
     this.chatManager.conversationList(this.page);
-    document.body.classList.add('no-scroll');
+    // document.body.classList.add('no-scroll');
 
   }
 
@@ -233,9 +235,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       this.chatManager.sendMessage(this.messageSent, '', payload);
       this.messageSent = '';
       setTimeout(() => {
-         this.sendMessageScrollToBottom();
-        
-         setTimeout(() => {
+        this.sendMessageScrollToBottom();
+
+        setTimeout(() => {
           this.sendMessageScrollToBottom();
         }, 300);
       }, 0);
@@ -310,11 +312,11 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     if (this.chatWindowContainer && this.chatWindowContainer.nativeElement) {
       const container = this.chatWindowContainer.nativeElement;
       const inputBar = this.elementRef.nativeElement.querySelector('.user-input');
-      
+
       setTimeout(() => {
-         const inputBarHeight = inputBar ? inputBar.offsetHeight : 0;
-         container.scrollTop = container.scrollHeight - container.clientHeight + inputBarHeight + 20;
-         this.toggleArrowVisibility();
+        const inputBarHeight = inputBar ? inputBar.offsetHeight : 0;
+        container.scrollTop = container.scrollHeight - container.clientHeight + inputBarHeight + 20;
+        this.toggleArrowVisibility();
       }, 100); // Increased timeout to ensure DOM has updated
     }
   }
@@ -340,17 +342,31 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         this.cd.detectChanges();
       }
     });
+    this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+      const currentChat = this.localStorageService.getItem('SELECTED_CHAT', true);
+
+      if (currentChat && currentChat.conversWith === deletedConversation.conversWith) {
+        this.handleDeletedConversation();
+      }
+    });
     this.updateBotIconVisibility();
   }
 
+  handleDeletedConversation() {
+     this.isInputDisabled = true;
+     this.messageSent = '';
+     this.localStorage.removeItem('SELECTED_CHAT');
+  }
+
+
   ngAfterViewInit(): void {
     fromEvent(this.chatWindowContainer.nativeElement, 'scroll')
-    .pipe(debounceTime(50))
-    .subscribe(() => {
-      if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
-        this.onScrollUp();
-      }
-    });
+      .pipe(debounceTime(50))
+      .subscribe(() => {
+        if (this.chatWindowContainer.nativeElement.scrollTop === 0) {
+          this.onScrollUp();
+        }
+      });
     this.scrollToBottom();
     this.toggleArrowVisibility();
   }
@@ -367,7 +383,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     const messagesString = sessionStorage.getItem('fetchedMessages');
     if (messagesString) {
       this.fetchedMessages = JSON.parse(messagesString);
-      console.log('fetchMessages',this.fetchedMessages);
+      console.log('fetchMessages', this.fetchedMessages);
       this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
       const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
     }
@@ -414,7 +430,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   });
 
   messageCountTo0() {
-     this.newMessageCount = 0;
+    this.newMessageCount = 0;
   }
 
   formatTimestamp(timestamp: number): string {
@@ -525,13 +541,17 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    if(this.conversationDeletedSubscription){
+      this.conversationDeletedSubscription.unsubscribe();
+    }
+
   }
 
   search() {
     this.chatService.fetchMessages(this.requestId, '', 100000);
   }
 
-  closeFullScreen(){
+  closeFullScreen() {
     this.fullChatScreen = false;
   }
 }

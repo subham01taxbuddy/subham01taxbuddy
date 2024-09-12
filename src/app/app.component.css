@@ -1,3 +1,7 @@
 .reloadWindowPopup{
-    z-index: 1000000 !important;
+    z-index: 10000000 !important;
+}
+
+.cdk-overlay-container {
+  z-index: 10000000 !important;
 }

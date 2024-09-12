@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { widgetVisibility } from '../floating-widget/animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -7,6 +7,9 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { Router } from '@angular/router';
+import Auth from '@aws-amplify/auth';
+import { NavbarService } from 'src/app/services/navbar.service';
+import { HttpClient } from '@angular/common/http';
 
 interface Department {
     name: string,
@@ -21,7 +24,7 @@ interface Department {
 })
 
 
-export class ChatUIComponent implements OnInit {
+export class ChatUIComponent implements OnInit,OnDestroy {
     selector: string = ".main-panel-chats";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
@@ -31,7 +34,7 @@ export class ChatUIComponent implements OnInit {
     showBackButton:boolean = true;
 
 
-    constructor(private chatManager: ChatManager,private router: Router,
+    constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
         private localStorage: LocalStorageService, private chatService: ChatService) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
@@ -54,6 +57,7 @@ export class ChatUIComponent implements OnInit {
     page = 0;
     newMessageSubscription: Subscription;
     isLoading: boolean = false;
+    conversationDeletedSubscription: Subscription;
 
 
     openUserChat(conversation: any) {
@@ -77,6 +81,7 @@ export class ChatUIComponent implements OnInit {
         if (this.userChatComp) {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
+            this.userChatComp.isInputDisabled = false;
          }
 
 
@@ -134,16 +139,48 @@ export class ChatUIComponent implements OnInit {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
             }
         });
+
+        this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+            this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
+            this.userChatComp.isInputDisabled = true;
+            this.chatManager.closeChat();
+         });
+
         const data = this.localStorage.getItem('SELECTED_CHAT', true);
         if (data) {
             this.openUserChat(data);
 
         }
+
+        window.addEventListener('storage', (event) => {
+          if (event.key === 'loggedOut' && event.newValue === 'true') {
+              this.handleLogOut();
+          }
+      });
+    }
+
+    handleLogOut(){
+      Auth.signOut()
+      .then(data => {
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatManager.closeChat();
+        sessionStorage.clear();
+        NavbarService.getInstance().clearAllSessionData();
+        this.router.navigate(['/login']);
+
+        NavbarService.getInstance(this.http).logout();
+
+      })
+      .catch(err => {
+        console.log(err);
+        this.router.navigate(['/login']);
+      });
     }
 
     checkUrlForFullScreen() {
-      if (this.router.url.includes('/chat-full-screen')) {
+      if (this.router.url.includes('chat/chat-full-screen')) {
         this.showBackButton = false;
+        document.body.classList.add('no-scroll');
       }
     }
 
@@ -245,6 +282,15 @@ export class ChatUIComponent implements OnInit {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
+        }
+    }
+
+    ngOnDestroy(): void {
+         if (this.newMessageSubscription) {
+            this.newMessageSubscription.unsubscribe();
+        }
+        if (this.conversationDeletedSubscription) {
+            this.conversationDeletedSubscription.unsubscribe();
         }
     }
 

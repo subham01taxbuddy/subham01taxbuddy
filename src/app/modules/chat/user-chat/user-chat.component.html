@@ -47,6 +47,9 @@
   </div>
 
   <div class="message-input-container">
+    <div *ngIf="isInputDisabled" class="archived-message">
+      This conversation has been archived or deleted
+    </div>
     <div class="chat-messages main-panel" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}"
       (scroll)="onScrollToBottom()" #chatWindow>
       <div infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
@@ -205,8 +208,8 @@
                                 <label>{{ item.data.label }}</label>
                                 <input type="password" class="form-control"
                                   [attr.disabled]="isBotSender(message.sender)"
-                                  name="{{ item.data.label }}" placeholder="(message?.action != null) ? (message?.action[item.data.label]) : item.data.placeholder"
-                                  [value]="(message?.action != null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
+                                  name="{{ item.data.label }}" [placeholder]="(message?.action !== null) ? (message?.action[item.data.label]) : item.data.placeholder"
+                                  [value]="(message?.action !== null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
                                   (input)="onInputChange($event, item.data.label,message.message_id)" required>
                               </div>
                             </ng-container>
@@ -262,7 +265,7 @@
                                   {{ item.data.validation.errorText }}
                                 </div>
                               </div>
-                              
+
                             </ng-container>
 
 
@@ -324,7 +327,7 @@
     <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
     <div #fileInputContainer style="display: none;"></div>
     <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
-      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize></textarea>
+      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize  [disabled]="isInputDisabled"></textarea>
 
     <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
       <i class="fa fa-paper-plane" aria-hidden="true"></i>
