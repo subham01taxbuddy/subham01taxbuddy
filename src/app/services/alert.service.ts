@@ -100,7 +100,7 @@ export class AlertService {
   updateAlerts(alerts: Alert[]) {
     this.alertsSubject.next(alerts);
   }
-
+  
   markAlertAsRead(alert: Alert) {
     const readAlerts = this.getReadAlerts();
     if (!readAlerts.some(readAlert => readAlert.alertId === alert.alertId)) {
@@ -109,7 +109,8 @@ export class AlertService {
         title: alert.title,
         message: alert.message
       });
-      this.sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
+      sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
+      sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY,JSON.stringify(alert.alertId))
     }
     
     const currentAlerts = this.alertsSubject.value;
@@ -136,12 +137,12 @@ export class AlertService {
 
         activeAlerts.forEach(alert => {
          const alertActivationTime = new Date(alert.applicableFrom);
-         const delayInMs = Math.max(0, alertActivationTime.getTime() + 18 - currentTime.getTime());
+         const delayInMs = Math.max(0, alertActivationTime.getTime() + 60000 - currentTime.getTime());
           
           timer(delayInMs).subscribe(() => {
             if (!this.getPopupShownAlerts().includes(alert.alertId)) {
               this.periodicAlertsSubject.next([alert]);
-              this.markPopupAsShown(alert.alertId);
+             // this.markPopupAsShown(alert.alertId);
             }
           });
         });
@@ -151,17 +152,11 @@ export class AlertService {
 
   private getPopupShownAlerts(): string[] {
     const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
-   //console.log(`popup check: ${popupShownAlertsString ? JSON.parse(popupShownAlertsString) : []}`);
    return popupShownAlertsString ? JSON.parse(popupShownAlertsString) : [];
+
   }
 
-  private markPopupAsShown(alertId: string) {
-    const popupShownAlerts = this.getPopupShownAlerts();
-    if (!popupShownAlerts.includes(alertId)) {
-      popupShownAlerts.push(alertId);
-      this.sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY, JSON.stringify(popupShownAlerts));
-    }
-  }
+  
 
   private getReadAlerts(): any[] {
     const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
