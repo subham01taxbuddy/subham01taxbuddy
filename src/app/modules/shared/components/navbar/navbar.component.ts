@@ -78,8 +78,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
  alertData:any;
  private readonly POPUP_SHOWN_ALERTS_KEY = 'popupShownAlerts';
  private readonly READ_ALERTS_KEY = 'readAlerts';
- 
- 
+
+
 
   constructor(
     private router: Router,
@@ -97,7 +97,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private dbService: NgxIndexedDBService,
     private alertService: AlertService,
     private sessionStorage : SessionStorageService,
-    
+
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let role = this.utilsService.getUserRoles();
@@ -132,7 +132,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   ngOnInit(): void {
      this.subscribeToAlerts();
-     this.subscribeToPeriodicAlerts();   
+     this.subscribeToPeriodicAlerts();
   }
    ngOnDestroy() {
      if (this.alertSubscription) {
@@ -377,7 +377,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
       this.alerts = this.sortAlertsByDate(alerts);
-      
+
      //this.processAlerts();
     });
   }
@@ -411,14 +411,14 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
     private processPeriodicAlerts(alerts: Alert[]) {
       const criticalAlerts = alerts.filter(alert => alert.type === 'CRITICAL');
-      
+
       if (criticalAlerts.length > 0) {
         this.showCriticalAlertDialog(criticalAlerts);
       }
     }
   // private processPeriodicAlerts(alerts: Alert[]) {
   //   const currentTime = new Date();
-  //   const activeUnreadAlerts = alerts.filter(alert => 
+  //   const activeUnreadAlerts = alerts.filter(alert =>
   //     //this.isAlertActive(alert, currentTime) && !this.alertService.isAlertRead(alert.alertId)
   //   );
 
@@ -450,8 +450,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     // }
 //  }
 
- 
-  
+
+
 //   private showCriticalAlertDialog(alert: Alert) {
 //    // const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
 //    const popupShownAlertsString = localStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
@@ -465,16 +465,16 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 //         width: '400px',
 //         disableClose: true
 //     });
-  
+
 //       dialogRef.afterClosed().subscribe((result) => {
-        
+
 //         if (result === true){
 //           console.log("alert complete");
-          
+
 //         }
 //       });
 //     }
-    
+
 // }
 
 private showCriticalAlertDialog(alerts: Alert[]) {
@@ -489,7 +489,7 @@ private showCriticalAlertDialog(alerts: Alert[]) {
     }
   }
 
-  const newAlerts = alerts.filter(alert => 
+  const newAlerts = alerts.filter(alert =>
     !storedAlerts.some(storedAlert => storedAlert.alertId === alert.alertId)
   );
 
@@ -497,21 +497,21 @@ private showCriticalAlertDialog(alerts: Alert[]) {
     if (index < newAlerts.length) {
       const alert = newAlerts[index];
       console.log("Showing popup for alert:", alert.alertId);
-      
-      const dialogRef = this.dialog.open(AlertPopupComponent, {
-        data: alert,
-        width: '400px',
-        disableClose: true
-      });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result === true) {
-          console.log("Alert acknowledged:", alert.alertId);
-          this.updateStoredAlerts(alert);
-        }
-       
-        showNextAlert(index + 1);
-      });
+      // const dialogRef = this.dialog.open(AlertPopupComponent, {
+      //   data: alert,
+      //   width: '400px',
+      //   disableClose: true
+      // });
+      //
+      // dialogRef.afterClosed().subscribe((result) => {
+      //   if (result === true) {
+      //     console.log("Alert acknowledged:", alert.alertId);
+      //     this.updateStoredAlerts(alert);
+      //   }
+      //
+      //   showNextAlert(index + 1);
+      // });
     }
   };
 
