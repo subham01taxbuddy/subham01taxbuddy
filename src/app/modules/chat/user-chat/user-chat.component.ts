@@ -232,7 +232,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   sendMessage(payload?: any) {
     this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
-      this.chatManager.sendMessage(this.messageSent, '', payload);
+      let recipient = this.requestId ? this.requestId : '';
+      this.chatManager.sendMessage(this.messageSent, recipient, payload);
       this.messageSent = '';
       setTimeout(() => {
         this.sendMessageScrollToBottom();
