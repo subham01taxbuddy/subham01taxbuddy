@@ -48,7 +48,7 @@
 
   <div class="message-input-container">
     <div *ngIf="isInputDisabled" class="archived-message">
-      This conversation has been archived or deleted
+      Note: You do not have access to send replies to this conversation
     </div>
     <div class="chat-messages main-panel" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}"
       (scroll)="onScrollToBottom()" #chatWindow>
@@ -280,10 +280,13 @@
 
 
                 </div>
-
+                <span *ngIf="message.sender === 'system' && message.content.startsWith('Assigned to')" class="timestamp">
+                  {{ formatTimestampForSystem(message.timestamp) }}
+                </span>
               </div>
               <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
                 formatTimestamp(message.timestamp) }}</span>
+               
             </div>
 
           </div>

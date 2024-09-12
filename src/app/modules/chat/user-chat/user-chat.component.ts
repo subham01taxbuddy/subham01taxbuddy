@@ -452,6 +452,21 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     return `${month} ${day}, ${hours}:${minutesStr} ${ampm}`;
   }
 
+  formatTimestampForSystem(timestamp: number): string {
+    const date = new Date(timestamp);
+
+    // Get hours, minutes, and AM/PM
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+
+    // Return time in format "11:02 AM"
+    return `${hours}:${minutesStr} ${ampm}`;
+}
+
 
   getSanitizedHtml(message) {
     return message;
