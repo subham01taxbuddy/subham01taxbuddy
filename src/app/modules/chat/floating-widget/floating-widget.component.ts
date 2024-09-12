@@ -7,6 +7,7 @@ import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { ElementRef } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 
 interface Department {
     name: string,
@@ -17,6 +18,7 @@ interface Department {
     templateUrl: './floating-widget.component.html',
     styleUrls: ['./floating-widget.component.scss'],
     animations: [widgetVisibility],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloatingWidgetComponent implements OnInit {
     selector: string = ".main-panel-chat";
@@ -28,14 +30,18 @@ export class FloatingWidgetComponent implements OnInit {
 
     @Output() widgetClosed = new EventEmitter<void>();
 
+    private cd: ChangeDetectorRef;
+
+
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService, private chatService: ChatService
+        private localStorage: LocalStorageService, private chatService: ChatService,cd: ChangeDetectorRef
     ) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
+        this.cd = cd
 
     }
 
@@ -175,11 +181,14 @@ export class FloatingWidgetComponent implements OnInit {
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
              this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
+             this.cd.detectChanges();
             }
         });
 
         this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
+            this.chatManager.closeChat();
+            this.cd.detectChanges();
         });
 
     }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import Auth from '@aws-amplify/auth';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
 
 interface Department {
     name: string,
@@ -21,6 +22,7 @@ interface Department {
     templateUrl: './chat-ui.component.html',
     styleUrls: ['./chat-ui.component.scss'],
     animations: [widgetVisibility],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 
@@ -30,16 +32,18 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
 
 
+    private cd: ChangeDetectorRef;
     centralizedChatDetails: any;
     showBackButton:boolean = true;
 
 
     constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
-        private localStorage: LocalStorageService, private chatService: ChatService) {
+        private localStorage: LocalStorageService, private chatService: ChatService,cd: ChangeDetectorRef) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
+        this.cd = cd;
         // this.handleConversationList();
     }
 
@@ -137,6 +141,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
+                this.cd.detectChanges();
             }
         });
 
@@ -144,6 +149,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
             this.userChatComp.isInputDisabled = true;
             this.chatManager.closeChat();
+            this.cd.detectChanges();
          });
 
         const data = this.localStorage.getItem('SELECTED_CHAT', true);
