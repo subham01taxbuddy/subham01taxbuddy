@@ -44,7 +44,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.cd = cd;
-        // this.handleConversationList();
+        this.handleConversationList();
     }
 
 
@@ -94,7 +94,6 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     closeUserChat() {
         this.chatService.unsubscribeRxjsWebsocket();
-        this.chatManager.closeChat();
     }
 
     goBack() {
