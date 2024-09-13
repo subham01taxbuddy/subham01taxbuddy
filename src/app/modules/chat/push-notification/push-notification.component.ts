@@ -30,6 +30,7 @@ export class PushNotificationComponent {
   }
 
   openChat(notification: any, event: Event) {
+    event.stopPropagation();
     if (event.target instanceof HTMLInputElement || event.target instanceof HTMLButtonElement) {
       return;
     }
@@ -55,6 +56,8 @@ export class PushNotificationComponent {
     if (this.notifications.length > this.maxNotifications) {
       this.notifications.pop();
     }
+
+    this.changeDetectorRef.detectChanges();
 
     setTimeout(() => {
       this.removeNotification(notification);
@@ -85,6 +88,7 @@ export class PushNotificationComponent {
   }
 
   closeNotification(notification: any, event: Event) {
+    event.preventDefault();
     event.stopPropagation();
     this.removeNotification(notification);
   }
