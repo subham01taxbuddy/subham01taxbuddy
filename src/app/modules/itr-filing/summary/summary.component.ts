@@ -904,6 +904,7 @@ export class SummaryComponent implements OnInit {
       this.selfObj = self[0];
     }
     this.isValidItr = environment.isValidItr;
+    this.isValidateJson = environment.environment === 'UAT';
   }
 
   ngOnInit() {
@@ -7477,6 +7478,10 @@ export class SummaryComponent implements OnInit {
                     }
                   } else if (res.messages instanceof Array && res.messages.length > 0) {
                     errors = res.messages.map((error) => error.desc).join(', ');
+                    let eriNotAdded = res.messages.filter(message => message.code === "EF500058");
+                    if(eriNotAdded && eriNotAdded.length == 1){
+                      this.isValidateJson = true;
+                    }
                     console.log(errors, 'errors');
                     this.utilsService.showSnackBar(errors);
                   }
