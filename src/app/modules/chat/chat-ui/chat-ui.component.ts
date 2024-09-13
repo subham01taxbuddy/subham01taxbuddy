@@ -268,6 +268,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     handleDeptList = (data: any) => {
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }))
+        this.cd.detectChanges();
         // this.selectedDepartmentId = data[0]._id;
     }
 

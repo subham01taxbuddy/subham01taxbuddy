@@ -298,6 +298,7 @@ export class FloatingWidgetComponent implements OnInit {
         // this.selectedDepartmentId = data[0]._id;
         // this.chatManager.conversationList(this.page, this.selectedDepartmentId);
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }));
+        this.cd.detectChanges();
     }
 
 
