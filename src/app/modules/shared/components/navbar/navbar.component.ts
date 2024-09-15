@@ -288,7 +288,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       .catch(err => {
         this.loading = false;
       });
-       this.alertService.startPeriodicAlerts();
+     //  this.alertService.startPeriodicAlerts();
   }
 
   smeLogout() {
@@ -372,8 +372,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-
-
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
       this.alerts = this.sortAlertsByDate(alerts);
@@ -381,18 +379,139 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
      //this.processAlerts();
     });
   }
+  private subscribeToPeriodicAlerts() {
+    this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
+    this.processPeriodicAlerts(alerts);
+  });
+}
 
-  // private subscribeToPeriodicAlerts() {
+private processPeriodicAlerts(alerts: Alert[]) {
+  const criticalAlerts = alerts.filter(alert => alert.type === 'CRITICAL');
+  
+  if (criticalAlerts.length > 0) {
+    this.showCriticalAlertDialog(criticalAlerts);
+  }
+}
+
+private showCriticalAlertDialog(alerts: Alert[]) {
+  console.log('inside the show crititcal alert = ??????????')
+  const storedAlertsString = this.sessionStorage.getItem(this.READ_ALERTS_KEY);
+  const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
+  let storedAlerts: any[] = [];
+
+  if (storedAlertsString) {
+    try {
+      storedAlerts = JSON.parse(storedAlertsString);
+    } catch (error) {
+      console.error('Error parsing stored alerts:', error);
+    }
+  }
+
+  const newAlerts = alerts.filter(alert => 
+    !storedAlerts.some(storedAlert => storedAlert.alertId === alert.alertId)
+  );
+
+  const showNextAlert = (index: number) => {
+
+    if (index < newAlerts.length) {
+      const alert = newAlerts[index];
+      console.log("Showing popup for alert:", alert.alertId);
+      if(popupShownAlertsString== null || !popupShownAlertsString.includes(alert.alertId)){
+        let storedAlertIds: string[] = [];
+        if (popupShownAlertsString) {
+          try {
+            
+            storedAlertIds = JSON.parse(popupShownAlertsString);
+          } catch (error) {
+            console.error('Error parsing stored alert IDs:', error);
+          }
+        }
+        storedAlertIds.push(alert.alertId)
+        sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY, JSON.stringify(storedAlertIds));
+
+      const dialogRef = this.dialog.open(AlertPopupComponent, {
+       data: alert,
+        width: '400px',
+        disableClose: true,
+        hasBackdrop: false
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result === true) {
+          console.log("Alert acknowledged:", alert.alertId);
+          this.updateStoredAlerts(alert);
+        }
+       
+        showNextAlert(index + 1);
+      });
+      }
+      
+    }
+  };
+  
+  if (newAlerts.length > 0) {
+    showNextAlert(0);
+  }
+}
+
+private updateStoredAlerts(newAlert: Alert) {
+  const storedAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
+  let storedAlerts: any[] = [];
+
+  if (storedAlertsString) {
+    try {
+      storedAlerts = JSON.parse(storedAlertsString);
+    } catch (error) {
+      console.error('Error parsing stored alerts:', error);
+    }
+  }
+  
+  storedAlerts.push({
+    alertId: newAlert.alertId,
+    title: newAlert.title,
+    message: newAlert.message
+  });
+
+  sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(storedAlerts));
+}
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.alerts.forEach(alert =>{
+         alert.seen = true
+      });
+      this.updateUnreadAlertCount();
+
+    }
+  }
+  formatDate(date: string | Date): string {
+    return this.datePipe.transform(date, 'dd/MM/yy hh:mma') || '';
+  }
+
+  private sortAlertsByDate(alerts: Alert[]): Alert[] {
+    return alerts.sort((a, b) => {
+      const dateA = new Date(a.applicableFrom).getTime();
+      const dateB = new Date(b.applicableFrom).getTime();
+      return dateB - dateA;
+    });
+  }
+
+  private updateUnreadAlertCount() {
+    this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
+
+  }
+}
+
+
+
+// private subscribeToPeriodicAlerts() {
   //   this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
   //     this.processPeriodicAlerts(alerts);
   //   });
   // }
 
-  private subscribeToPeriodicAlerts() {
-      this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
-      this.processPeriodicAlerts(alerts);
-    });
-  }
+ 
 
   // private processPeriodicAlerts(alerts: Alert[]) {
   //     const criticalAlert = alerts?.find(alert => alert.type === 'CRITICAL');
@@ -409,13 +528,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   //     // }
   //   }
 
-    private processPeriodicAlerts(alerts: Alert[]) {
-      const criticalAlerts = alerts.filter(alert => alert.type === 'CRITICAL');
-      
-      if (criticalAlerts.length > 0) {
-        this.showCriticalAlertDialog(criticalAlerts);
-      }
-    }
+   
   // private processPeriodicAlerts(alerts: Alert[]) {
   //   const currentTime = new Date();
   //   const activeUnreadAlerts = alerts.filter(alert => 
@@ -449,136 +562,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
     // }
 //  }
-
- 
-  
-//   private showCriticalAlertDialog(alert: Alert) {
-//    // const popupShownAlertsString = this.sessionStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
-//    const popupShownAlertsString = localStorage.getItem(this.POPUP_SHOWN_ALERTS_KEY);
-//    console.log("check log")
-//     console.log(popupShownAlertsString);
-//     // console.log(!popupShownAlertsString.includes(alert.alertId))
-//     if(popupShownAlertsString== null || !popupShownAlertsString.includes(alert.alertId)){
-//       console.log("inside condition")
-//       const dialogRef = this.dialog.open(AlertPopupComponent, {
-//         data: alert,
-//         width: '400px',
-//         disableClose: true
-//     });
-  
-//       dialogRef.afterClosed().subscribe((result) => {
-        
-//         if (result === true){
-//           console.log("alert complete");
-          
-//         }
-//       });
-//     }
-    
-// }
-
-private showCriticalAlertDialog(alerts: Alert[]) {
-  const storedAlertsString = this.sessionStorage.getItem(this.READ_ALERTS_KEY);
-  let storedAlerts: any[] = [];
-
-  if (storedAlertsString) {
-    try {
-      storedAlerts = JSON.parse(storedAlertsString);
-    } catch (error) {
-      console.error('Error parsing stored alerts:', error);
-    }
-  }
-
-  const newAlerts = alerts.filter(alert => 
-    !storedAlerts.some(storedAlert => storedAlert.alertId === alert.alertId)
-  );
-
-  const showNextAlert = (index: number) => {
-    if (index < newAlerts.length) {
-      const alert = newAlerts[index];
-      console.log("Showing popup for alert:", alert.alertId);
-      
-      const dialogRef = this.dialog.open(AlertPopupComponent, {
-        data: alert,
-        width: '400px',
-        disableClose: true
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result === true) {
-          console.log("Alert acknowledged:", alert.alertId);
-          this.updateStoredAlerts(alert);
-        }
-       
-        showNextAlert(index + 1);
-      });
-    }
-  };
-
-  // Start showing alerts
-  if (newAlerts.length > 0) {
-    showNextAlert(0);
-  }
-}
-
-private updateStoredAlerts(newAlert: Alert) {
-  const storedAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
-  let storedAlerts: any[] = [];
-
-  if (storedAlertsString) {
-    try {
-      storedAlerts = JSON.parse(storedAlertsString);
-    } catch (error) {
-      console.error('Error parsing stored alerts:', error);
-    }
-  }
-
-  // Add new alert to stored alerts
-  storedAlerts.push({
-    alertId: newAlert.alertId,
-    title: newAlert.title,
-    message: newAlert.message
-  });
-
-  sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(storedAlerts));
-}
-
-
-
-// Other methods of your NavbarComponent...
-
-
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-    if (this.showNotifications) {
-      this.alerts.forEach(alert =>{
-         alert.seen = true
-      });
-      this.updateUnreadAlertCount();
-
-    }
-  }
-  formatDate(date: string | Date): string {
-    return this.datePipe.transform(date, 'dd/MM/yy hh:mma') || '';
-  }
-
-  private sortAlertsByDate(alerts: Alert[]): Alert[] {
-    return alerts.sort((a, b) => {
-      const dateA = new Date(a.applicableFrom).getTime();
-      const dateB = new Date(b.applicableFrom).getTime();
-      return dateB - dateA;
-    });
-  }
-
-  private updateUnreadAlertCount() {
-    this.unreadAlertCount = this.alerts.filter(alert => !alert.seen).length;
-
-  }
-}
-
-
-
-
 
 
 
