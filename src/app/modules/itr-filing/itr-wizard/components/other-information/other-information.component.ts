@@ -634,6 +634,8 @@ export class OtherInformationComponent implements OnInit {
   addSharesDetails(title, mode, i) {
     let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
     formArray.insert(0, this.createSharesForm());
+    this.sharesAcquired.setValue(false);
+    this.utilsService.showSnackBar('Added New unlisted Company Please Add unlisted shares details ')
   }
 
   addDirectorDetails(title, mode, i) {
@@ -684,6 +686,8 @@ export class OtherInformationComponent implements OnInit {
     formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
         formArray.removeAt(index);
+      }else{
+        this.utilsService.showSnackBar('Please Select the company (checkbox having name of company) to delete ')
       }
       index++;
     });
