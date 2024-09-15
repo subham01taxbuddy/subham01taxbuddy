@@ -187,7 +187,9 @@ export class DonationsComponent implements OnInit {
           this.addMoreDonations(item);
         }
       });
-      this.panValidation();
+      if(this.type !== '80g') {
+        this.panValidation();
+      }
     }
   }
 
@@ -334,7 +336,7 @@ export class DonationsComponent implements OnInit {
     );
     this.loading = true;
 
-    if ((this.type === '80g' || this.type === '80ggc') && this.panValidation()) {
+    if (this.type === '80ggc' && this.panValidation()) {
       this.loading = false;
       return false;
     }
@@ -395,7 +397,9 @@ export class DonationsComponent implements OnInit {
           .controls[i] as UntypedFormGroup
       ).controls['panNumber'].setErrors({ incorrect: true });
     }
-    this.panValidation();
+    if(this.type !== '80G') {
+      this.panValidation();
+    }
   }
 
   panValidation() {
