@@ -327,6 +327,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     return sender.startsWith('bot_');
   }
 
+
+
+
   ngOnInit(): void {
     if (this.requestId) {
       this.chatManager.openConversation(this.requestId);
@@ -392,6 +395,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.isAtBottom = isAtBottom;
     this.messageCountTo0();
     this.updateBotIconVisibility();
+    if(!this.showArrow){
+      this.scrollToBottom();
+    }
     this.cd.detectChanges();
 
   };
