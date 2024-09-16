@@ -411,6 +411,11 @@ export class OtherInformationComponent implements OnInit {
         form.get('purchasePricePerShare')?.enable();
       }
     });
+
+    form.get('purchasePricePerShare')?.valueChanges.subscribe(value => {
+      form.get('issuePricePerShare')?.clearValidators();
+      form.get('issuePricePerShare').updateValueAndValidity();
+    });
     return form;
   }
 
@@ -633,7 +638,9 @@ export class OtherInformationComponent implements OnInit {
 
   addSharesDetails(title, mode, i) {
     let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
-    formArray.insert(0, this.createSharesForm());
+    const newFormGroup = this.createSharesForm();
+    formArray.insert(0, newFormGroup);
+    this.updateValidatorsBasedOnAcquiredShares(newFormGroup, false);
     this.sharesAcquired.setValue(false);
     this.utilsService.showSnackBar('Added New unlisted Company Please Add unlisted shares details ')
   }
