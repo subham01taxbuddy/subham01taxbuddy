@@ -101,9 +101,10 @@ export class ChatService {
   }
 
 
-
+  tempMessageReceivedCallback = null;
 
   registerMessageReceived(messageReceivedCallback) {
+    this.tempMessageReceivedCallback = messageReceivedCallback;
     this.onConversationUpdatedCallbacks.set(0, messageReceivedCallback);
     this.onMessageAddedCallbacks.set(0, messageReceivedCallback);
     this.onMessageUpdatedCallbacks.set(0, messageReceivedCallback);
@@ -510,6 +511,8 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client connected. this.connected:" + this.connected);
         }
+        this.registerMessageReceived(this.tempMessageReceivedCallback);
+
         if (!this.connected) {
           if (this.log) {
             console.log("Chat client first connection for:" + this.chat21UserID);
@@ -724,6 +727,19 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client close event");
         }
+        // reset all subscriptions
+        this.onConversationAddedCallbacks = new Map();
+        this.onConversationUpdatedCallbacks = new Map();
+        this.onConversationDeletedCallbacks = new Map();
+        this.onArchivedConversationAddedCallbacks = new Map();
+        this.onArchivedConversationDeletedCallbacks = new Map();
+        this.onMessageAddedCallbacks = new Map();
+        this.onMessageUpdatedCallbacks = new Map();
+        this.onGroupUpdatedCallbacks = new Map();
+        this.callbackHandlers = new Map();
+        // this.on_message_handler = null
+        this.topicInbox = null;
+        this.chatSubscription = null;
       }
     );
     this.chatClient.on("offline",
@@ -893,19 +909,7 @@ export class ChatService {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
         this.chatClient.end(true, () => {
           this.shouldReconnect = false;
-          this.connected = false
-          // reset all subscriptions
-          this.onConversationAddedCallbacks = new Map();
-          this.onConversationUpdatedCallbacks = new Map();
-          this.onConversationDeletedCallbacks = new Map();
-          this.onArchivedConversationAddedCallbacks = new Map();
-          this.onArchivedConversationDeletedCallbacks = new Map();
-          this.onMessageAddedCallbacks = new Map();
-          this.onMessageUpdatedCallbacks = new Map();
-          this.onGroupUpdatedCallbacks = new Map();
-          this.callbackHandlers = new Map();
-          this.chatSubscription = null;
-          this.topicInbox = null;
+          this.connected = false;
         })
       });
     }
