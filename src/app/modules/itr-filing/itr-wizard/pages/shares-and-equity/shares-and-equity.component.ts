@@ -1,6 +1,5 @@
 import {
-  Component,
-  ElementRef,
+  Component, ElementRef,
   Inject,
   Input,
   LOCALE_ID,
@@ -454,6 +453,7 @@ export class SharesAndEquityComponent
       this.clearFieldValidators('purchaseDate');
       this.clearFieldValidators('costOfNewAssets');
     }
+    this.calculateDeductionGain();
   }
 
   onToggleCGAS(isChecked: boolean): void {
@@ -468,6 +468,7 @@ export class SharesAndEquityComponent
       this.clearFieldValidators('ifscCode');
       this.clearFieldValidators('dateOfDeposit');
     }
+    this.calculateDeductionGain();
   }
 
   // ==================== ADD FUNCTIONS====================
@@ -2084,6 +2085,9 @@ export class SharesAndEquityComponent
           this.deduction = !this.deduction;
         }
       });
+    }else{
+      this.onToggleNewAsset(false);
+      this.onToggleCGAS(false);
     }
   }
 
@@ -2135,6 +2139,7 @@ export class SharesAndEquityComponent
   }
 
   saveAll() {
+  debugger
     if (this.deductionForm.controls['totalDeductionClaimed'].errors && this.deductionForm.controls['totalDeductionClaimed'].errors['max']) {
       this.utilsService.showSnackBar(
         'Amount against 54F shall be restricted to 10 Crore.'
@@ -2144,11 +2149,9 @@ export class SharesAndEquityComponent
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
-    } else if (this.deduction === true) {
-      if (!this.showCGAS.value && !this.showNewAsset.value) {
-        this.utilsService.showSnackBar(
-          'Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.'
-        );
+    }else if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
         return;
       }
     }
