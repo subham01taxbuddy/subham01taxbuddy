@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { SessionStorageService } from './storage.service';
 
 export interface Alert {
+  activeFrom: string | number | Date;
   alertId:string,
   type: string;
   message: string;
@@ -38,6 +39,7 @@ export class AlertService {
     this.fetchAlerts();
     this.startPeriodicAlerts();
     this.startAutoRemoveExpiredAlerts();
+    
   }
 
   postMethodAlert(alertData: any): Observable<any> {
