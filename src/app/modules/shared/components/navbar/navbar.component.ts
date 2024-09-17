@@ -22,6 +22,7 @@ import { AlertPushNotificationComponent } from 'src/app/modules/alert/components
 import { AlertPopupComponent } from 'src/app/modules/alert/components/alert-popup/alert-popup.component';
 import { SessionStorageService } from 'src/app/services/storage.service';
 import { DialogRef } from '@angular/cdk/dialog';
+import {IdleService} from "../../../../services/idle-service";
 
 
 export interface DialogData {
@@ -97,6 +98,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private dbService: NgxIndexedDBService,
     private alertService: AlertService,
     private sessionStorage : SessionStorageService,
+    private idleService: IdleService
     
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -121,6 +123,14 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       }
     });
 
+    idleService.idle$.subscribe(s => {
+      if (this.router.url !== '/login') {
+        this.dialog.closeAll();
+        this.subscription.unsubscribe();
+        this.alertSubscription.unsubscribe();
+        this.alertService.stopService();
+      }
+    });
   }
 
   ngDoCheck() {
@@ -132,11 +142,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   ngOnInit(): void {
      this.subscribeToAlerts();
-     this.periodicAlertSubscription = timer(0, 30000).pipe(
-    switchMap(() => this.alertService.getAllAlert())  
-  ).subscribe(alerts => {
-    this.checkAndProcessAlerts(alerts);
-  });
+  //    this.periodicAlertSubscription = timer(0, 30000).pipe(
+  //   switchMap(() => this.alertService.getAllAlert())
+  // ).subscribe(alerts => {
+  //   this.checkAndProcessAlerts(alerts);
+  // });
   }
    ngOnDestroy() {
      if (this.alertSubscription) {
@@ -379,7 +389,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
       this.alerts = this.sortAlertsByDate(alerts);
-    
+      this.checkAndProcessAlerts(this.alerts);
     });
   }
 

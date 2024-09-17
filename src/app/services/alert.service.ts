@@ -119,8 +119,11 @@ export class AlertService {
     this.alertsSubject.next(updatedAlerts);
   }
 
+  interval:any;
+
   startPeriodicAlerts() {
-    interval(60000).pipe(
+    this.interval = interval(60000);
+    this.interval.pipe(
       switchMap(() => this.getAllAlert()),
       tap(() => {
         const currentTime = new Date();
@@ -179,6 +182,10 @@ export class AlertService {
       }
     });
     
+  }
+
+  stopService(){
+      clearInterval(this.interval);
   }
 
 }
