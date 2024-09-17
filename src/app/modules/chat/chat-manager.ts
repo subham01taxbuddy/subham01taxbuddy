@@ -90,14 +90,15 @@ export class ChatManager {
     }
   }
 
-  sendMessage(message: any, recipient: string, payload?: any,notification?: any,isFromPushNotification: boolean = false) {
-    this.chatService.sendMessage(message, recipient, payload, notification,isFromPushNotification);
+  sendMessage(message: any, recipient: string, payload?: any, notification?: any, isFromPushNotification: boolean = false) {
+    this.chatService.sendMessage(message, recipient, payload, notification, isFromPushNotification);
 
   }
 
-  openConversation(conversationId: string, timeStamp?: number) {
-    this.chatService.fetchMessages(conversationId, timeStamp);
+  openConversation(conversationId: string, timeStamp?: number, onComplete?: (hasMoreMessages: boolean) => void) {
+    this.chatService.fetchMessages(conversationId, timeStamp, undefined, onComplete);
   }
+
 
   closeChat() {
     this.chatService.closeWebSocket();

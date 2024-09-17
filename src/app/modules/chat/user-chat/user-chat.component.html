@@ -54,6 +54,10 @@
       (scroll)="onScrollToBottom()" #chatWindow>
       <div infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
         [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolledUp)="onScrollUp()">
+        <div *ngIf="isLoadingMoreMessages" class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Loading more messages...</p>
+        </div>
         <ng-container *ngFor="let message of fetchedMessages">
           <div [ngClass]="{
               'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId && displaySystemMessage(message) ,

@@ -284,35 +284,50 @@ export class ChatService {
     return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } })
   }
 
-  fetchMessages(requestId, timeStamp?, pageSize?) {
+  fetchMessages(requestId, timeStamp?, pageSize?, onComplete?: (hasMoreMessages: boolean) => void) {
     let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
     let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?`;
 
     if (pageSize) {
-      url = url + 'pageSize=' + pageSize;
+        url = url + 'pageSize=' + pageSize;
     } else {
-      url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=20`;
+        url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=20`;
     }
     if (timeStamp) {
-      url = url + '&timeStamp=' + timeStamp;
+        url = url + '&timeStamp=' + timeStamp;
     }
-    this.httpClient.get(url, this.setHeaders("chat21")
-    ).subscribe((chat21Result: any) => {
-      console.log('fetch messages', chat21Result);
-      if (chat21Result.success) {
-        if (!timeStamp) {
-          this.clearMessagesDB();
-        }
-        this.updateMessagesDB(chat21Result.result, timeStamp);
+    
+    this.httpClient.get(url, this.setHeaders("chat21")).subscribe((chat21Result: any) => {
+        console.log('fetch messages', chat21Result);
+        if (chat21Result.success) {
+            if (!timeStamp) {
+                this.clearMessagesDB();
+            }
+            this.updateMessagesDB(chat21Result.result, timeStamp);
 
-        this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(ChatEvents.MESSAGE_RECEIVED);
-        });
-      }
+            // Check if there are more messages
+            const hasMoreMessages = chat21Result.result.length > 0;
+
+            this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+                callback(ChatEvents.MESSAGE_RECEIVED);
+            });
+
+            // Call the callback to remove the loader and indicate if there are more messages
+            if (onComplete) onComplete(hasMoreMessages);
+        } else {
+            // Call the callback to remove the loader if there was an error
+            if (onComplete) onComplete(false);
+        }
+    }, () => {
+        // Handle error and remove loader
+        if (onComplete) onComplete(false);
     });
+
     let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
     this.websocketConnection(TOKEN, requestId);
-  }
+}
+
+
 
   conversationList(page, data: any) {
 

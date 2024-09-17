@@ -117,6 +117,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   page = 0;
   conversationDeletedSubscription: Subscription;
   @Input() isInputDisabled: boolean = false;
+  isLoadingMoreMessages: boolean = false;
+
 
   constructor(
     private chatService: ChatService,
@@ -525,9 +527,20 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   onScrollUp() {
-    this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp);
-    console.log('triggered scrollup');
-  }
+    // Set loader to true before making the API call
+    this.isLoadingMoreMessages = true;
+
+    this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp, (hasMoreMessages: boolean) => {
+        // Set loader to false once the API call completes
+        this.isLoadingMoreMessages = false;
+
+        // Optionally handle scenarios when no more messages are available
+        if (!hasMoreMessages) {
+            console.log('No more messages to load');
+        }
+    });
+}
+
 
   displaySystemMessage(message: any): boolean {
     if (message.subtype === 'info' || message.subtype === 'info/support') {
