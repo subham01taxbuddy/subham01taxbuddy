@@ -380,7 +380,7 @@ export class ChatService {
   }
 
   removeConversationFromList(conversWith: string, conversationLists: any[]) {
-    const index = conversationLists.findIndex(conversation => conversation.conversWith === conversWith);
+    const index = conversationLists.findIndex(conversation => conversation.request_id === conversWith);
 
     if (index !== -1) {
       conversationLists.splice(index, 1);
