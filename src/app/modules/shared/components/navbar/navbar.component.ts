@@ -15,7 +15,7 @@ import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.co
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
-import {  interval, Subscription } from "rxjs";
+import {  interval, Subscription, switchMap, timer } from "rxjs";
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { AlertService } from 'src/app/services/alert.service';
 import { AlertPushNotificationComponent } from 'src/app/modules/alert/components/alert-push-notification/alert-push-notification.component';
@@ -132,7 +132,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   ngOnInit(): void {
      this.subscribeToAlerts();
-     this.subscribeToPeriodicAlerts();   
+     this.periodicAlertSubscription = timer(0, 30000).pipe(
+    switchMap(() => this.alertService.getAllAlert())  
+  ).subscribe(alerts => {
+    this.checkAndProcessAlerts(alerts);
+  });
   }
    ngOnDestroy() {
      if (this.alertSubscription) {
@@ -288,7 +292,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
       .catch(err => {
         this.loading = false;
       });
-     //  this.alertService.startPeriodicAlerts();
+     
   }
 
   smeLogout() {
@@ -375,15 +379,20 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   private subscribeToAlerts() {
     this.alertSubscription = this.alertService.alerts$.subscribe(alerts => {
       this.alerts = this.sortAlertsByDate(alerts);
-      
-     //this.processAlerts();
+    
     });
   }
-  private subscribeToPeriodicAlerts() {
-    this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
-    this.processPeriodicAlerts(alerts);
+
+
+private checkAndProcessAlerts(alerts: Alert[]) {
+  this.alertService.getAllAlert().subscribe(alerts => {
+    const activeAlerts = alerts.filter(alert => new Date(alert.applicableFrom) <= new Date());
+    if (activeAlerts.length > 0) {
+      this.processPeriodicAlerts(alerts);
+    }
   });
 }
+
 
 private processPeriodicAlerts(alerts: Alert[]) {
   const criticalAlerts = alerts.filter(alert => alert.type === 'CRITICAL');
@@ -505,63 +514,6 @@ private updateStoredAlerts(newAlert: Alert) {
 
 
 
-// private subscribeToPeriodicAlerts() {
-  //   this.periodicAlertSubscription = this.alertService.periodicAlerts$.subscribe(alerts => {
-  //     this.processPeriodicAlerts(alerts);
-  //   });
-  // }
-
- 
-
-  // private processPeriodicAlerts(alerts: Alert[]) {
-  //     const criticalAlert = alerts?.find(alert => alert.type === 'CRITICAL');
-  //     //const nonCriticalAlerts = alerts.filter(alert => alert.type !== 'CRITICAL');
-  //    // const criticalAlerts = allAlerts.filter(alert => alert.isCritical);
-  //     this.showCriticalAlertDialog(criticalAlert);
-
-  //     if (criticalAlert) {
-  //       this.showCriticalAlertDialog(criticalAlert);
-  //     }
-
-  //     // if (nonCriticalAlerts.length > 0) {
-  //     //   this.showPushNotification(nonCriticalAlerts);
-  //     // }
-  //   }
-
-   
-  // private processPeriodicAlerts(alerts: Alert[]) {
-  //   const currentTime = new Date();
-  //   const activeUnreadAlerts = alerts.filter(alert => 
-  //     //this.isAlertActive(alert, currentTime) && !this.alertService.isAlertRead(alert.alertId)
-  //   );
-
-  //   const criticalAlert = activeUnreadAlerts.find(alert => alert.type === 'CRITICAL');
-  //   const nonCriticalAlerts = activeUnreadAlerts.filter(alert => alert.type !== 'CRITICAL');
-
-  //   if (criticalAlert) {
-  //     this.showCriticalAlertDialog(criticalAlert);
-  //   }
-
-  //   // if (nonCriticalAlerts.length > 0) {
-  //   //   this.showPushNotification(nonCriticalAlerts);
-  //   // }
-  // }
-
-
-  // private processAlerts() {
-  //   const criticalAlerts = this.alerts.filter(alert => alert.type === 'CRITICAL');
-  //   const nonCriticalAlerts = this.alerts.filter(alert => alert.type !== 'CRITICAL');
-
-  //   if (criticalAlerts.length > 0) {
-  //     this.showCriticalAlertDialog(criticalAlerts[0]);
-  //   }
-
-    // if (nonCriticalAlerts.length > 0) {
-
-    //     this.showPushNotification(nonCriticalAlerts);
-
-    // }
-//  }
 
 
 
