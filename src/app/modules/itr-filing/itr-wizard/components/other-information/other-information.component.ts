@@ -57,7 +57,7 @@ export class OtherInformationComponent implements OnInit {
     { value: 'D', label: 'Domestic' },
     { value: 'F', label: 'Foreign' },
   ];
-  sharesAcquired = new UntypedFormControl(false);
+  // sharesAcquired = new UntypedFormControl(false);
 
   constructor(
     public matDialog: MatDialog,
@@ -140,8 +140,6 @@ export class OtherInformationComponent implements OnInit {
   }
 
   onSharesAcquiredChange(index: number) {
-    console.log('Shares acquired change detected for index:', index);
-    console.log("share form ", this.sharesForm);
     const sharesArray = this.sharesForm.get('sharesArray') as FormArray;
     const shareFormGroup = sharesArray.at(index) as FormGroup;
 
@@ -151,7 +149,9 @@ export class OtherInformationComponent implements OnInit {
     const issuePriceControl = shareFormGroup.get('issuePricePerShare');
     const purchasePriceControl = shareFormGroup.get('purchasePricePerShare');
 
-    if (this.sharesAcquired.value) {
+    const isAcquired = shareFormGroup.get('sharesAcquired').value;
+
+    if (isAcquired) {
       acquiredSharesControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
       purchaseDateControl.setValidators([Validators.required]);
       faceValueControl.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
@@ -170,7 +170,6 @@ export class OtherInformationComponent implements OnInit {
     faceValueControl.updateValueAndValidity();
     issuePriceControl.updateValueAndValidity();
     purchasePriceControl.updateValueAndValidity();
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -399,9 +398,9 @@ export class OtherInformationComponent implements OnInit {
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],
+      sharesAcquired: [share?.acquiredShares ? true : false, Validators.required]
     });
     this.updateValidatorsBasedOnAcquiredShares(form, share?.acquiredShares);
-
     form.get('issuePricePerShare')?.valueChanges.subscribe(value => {
       if (value) {
         form.get('purchasePricePerShare').setValue(null);
@@ -412,29 +411,26 @@ export class OtherInformationComponent implements OnInit {
       }
     });
 
-    form.get('purchasePricePerShare')?.valueChanges.subscribe(value => {
-      form.get('issuePricePerShare')?.clearValidators();
-      form.get('issuePricePerShare').updateValueAndValidity();
-    });
     return form;
   }
 
-  updateValidatorsBasedOnAcquiredShares(form: FormGroup, acquiredShares: any) {
+  updateValidatorsBasedOnAcquiredShares(form: FormGroup, acquiredShares: boolean) {
     const acquiredSharesControl = form.get('acquiredShares');
     const purchaseDateControl = form.get('purchaseDate');
     const faceValueControl = form.get('faceValuePerShare');
     const issuePriceControl = form.get('issuePricePerShare');
     const purchasePriceControl = form.get('purchasePricePerShare');
+    const sharesAcquired = form.get('sharesAcquired');
 
     if (acquiredShares) {
-      this.sharesAcquired.setValue(true);
+      sharesAcquired.setValue(true);
       acquiredSharesControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
       purchaseDateControl?.setValidators([Validators.required]);
       faceValueControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
       issuePriceControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithoutDecimal)]);
       purchasePriceControl?.setValidators([Validators.required, Validators.pattern(AppConstants.amountWithDecimal)]);
     } else {
-      this.sharesAcquired.setValue(false);
+      sharesAcquired.setValue(false);
       acquiredSharesControl?.clearValidators();
       purchaseDateControl?.clearValidators();
       faceValueControl?.clearValidators();
@@ -636,12 +632,9 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-  addSharesDetails(title, mode, i) {
+   addSharesDetails(title, mode, i) {
     let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
-    const newFormGroup = this.createSharesForm();
-    formArray.insert(0, newFormGroup);
-    this.updateValidatorsBasedOnAcquiredShares(newFormGroup, false);
-    this.sharesAcquired.setValue(false);
+    formArray.insert(0, this.createSharesForm());
     this.utilsService.showSnackBar('Added New unlisted Company Please Add unlisted shares details ')
   }
 
