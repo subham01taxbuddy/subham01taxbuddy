@@ -298,6 +298,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
         });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
+        //all alert related variable to be reset
+        this.alerts = [];
         this.dialog.closeAll();
         this.subscription.unsubscribe();
         this.alertSubscription.unsubscribe();
@@ -436,7 +438,7 @@ private showCriticalAlertDialog(alerts: Alert[]) {
 
   const showNextAlert = (index: number) => {
 
-    if (index < newAlerts.length) {
+    if (!this.alertSubscription.closed && index < newAlerts.length) {
       const alert = newAlerts[index];
       console.log("Showing popup for alert:", alert.alertId);
       if(popupShownAlertsString== null || !popupShownAlertsString.includes(alert.alertId)){
