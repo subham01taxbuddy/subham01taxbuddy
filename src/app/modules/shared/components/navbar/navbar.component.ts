@@ -401,12 +401,12 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
 
 private checkAndProcessAlerts(alerts: Alert[]) {
-  this.alertService.getAllAlert().subscribe(alerts => {
+  // this.alertService.getAllAlert().subscribe(alerts => {
     const activeAlerts = alerts.filter(alert => new Date(alert.applicableFrom) <= new Date());
     if (activeAlerts.length > 0) {
       this.processPeriodicAlerts(alerts);
     }
-  });
+  // });
 }
 
 

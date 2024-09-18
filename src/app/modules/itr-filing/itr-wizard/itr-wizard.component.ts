@@ -21,6 +21,7 @@ import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
 import { SummaryConversionService } from "../../../services/summary-conversion.service";
 import { ChangeStatusComponent } from '../../shared/components/change-status/change-status.component';
+import {ReportService} from "../../../services/report-service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -55,6 +56,7 @@ export class ItrWizardComponent implements OnInit {
     private matDialog: MatDialog,
     private itrValidationService: ItrValidationService,
     private summaryConversionService: SummaryConversionService,
+    private reportService: ReportService,
     private dialog: MatDialog,
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
@@ -97,6 +99,24 @@ export class ItrWizardComponent implements OnInit {
     this.getCustomerName();
 
     this.summaryConversionService.getPreviousItrs(this.ITR_JSON.userId, '2023-24', '2022-23');
+    this.getOriginalItr();
+  }
+
+  getOriginalItr(){
+    //https://uat-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED&mobileNumber=2223334510
+    let param = `/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED&mobileNumber=${this.ITR_JSON.contactNumber}`;
+    this.reportService.getMethod(param).subscribe((res:any)=>{
+      if (res.success) {
+        console.log('filingTeamMemberId: ', res);
+        if (
+            res?.data?.content instanceof Array &&
+            res?.data?.content?.length > 0
+        ) {
+          let originalItr = res.data.content.filter(itr=> itr.isRevised === 'N')[0];
+          sessionStorage.setItem('ORIGINAL_ITR', JSON.stringify(originalItr));
+        }
+      }
+    });
   }
 
   getCustomerName() {
