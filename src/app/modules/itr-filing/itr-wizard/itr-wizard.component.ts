@@ -104,7 +104,7 @@ export class ItrWizardComponent implements OnInit {
 
   getOriginalItr(){
     //https://uat-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED&mobileNumber=2223334510
-    let param = `/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED&mobileNumber=${this.ITR_JSON.contactNumber}`;
+    let param = `/bo/itr-list?page=0&pageSize=20&financialYear=2023-2024&status=ITR_FILED&mobileNumber=${this.ITR_JSON.contactNumber}`;
     this.reportService.getMethod(param).subscribe((res:any)=>{
       if (res.success) {
         console.log('filingTeamMemberId: ', res);
