@@ -74,8 +74,8 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             conversation.departmentName = selectedDepartment.name;
         }
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
-        this.closeUserChat();
-        this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
+        // this.closeUserChat();
+        // this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
         this.chatManager.openConversation(conversation.request_id);
         setTimeout(() => {
             if (this.userChatComp) {
@@ -97,7 +97,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     }
 
     goBack() {
-        this.chatService.unsubscribeRxjsWebsocket();
+       // this.chatService.unsubscribeRxjsWebsocket();
         this.page = 0;
         this.isBlankScreenVisible = false;
         document.body.classList.remove('no-scroll');
@@ -195,24 +195,24 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     fetchList(departmentId: any) {
         this.selectedDepartmentId = departmentId;
-        this.isLoading = true;
         this.page = 0;
         if (departmentId) {
             this.chatManager.conversationList(this.page, departmentId).then(() => {
-                setTimeout(() => {
+                 
                     this.handleConversationList();
                     this.isLoading = false;
-                }, 500);
+                    this.cd.detectChanges();
+                 
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
         } else {
             this.chatManager.conversationList(this.page).then(() => {
-                setTimeout(() => {
+                 
                     this.handleConversationList();
                     this.isLoading = false;
-                }, 500);
+                    this.cd.detectChanges();
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
@@ -280,10 +280,10 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             console.log('Scrolled down');
             this.page = this.page + 1;
             this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
-                setTimeout(() => {
+                
                     this.handleConversationList();
                     this.isLoading = false;
-                }, 500);
+                    this.cd.detectChanges();
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;

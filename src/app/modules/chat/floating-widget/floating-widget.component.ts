@@ -201,9 +201,8 @@ export class FloatingWidgetComponent implements OnInit {
             console.log('Scrolled down');
             this.page = this.page + 1;
             this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
-                setTimeout(() => {
-                    this.isLoading = false;
-                },500)
+                this.isLoading = false;
+                this.cd.detectChanges();
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
@@ -220,25 +219,25 @@ export class FloatingWidgetComponent implements OnInit {
 
     fetchList(departmentId: any) {
         this.selectedDepartmentId = departmentId;
-        this.isLoading = true;
         this.scrollToTop();
         this.page = 0;
         if (departmentId) {
             this.chatManager.conversationList(this.page, departmentId).then(() => {
-                setTimeout(() => {
                     this.handleConversationList();
                     this.isLoading = false;
-                }, 500);
+                    this.cd.detectChanges();
+                
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
         } else {
             this.chatManager.conversationList(this.page).then(() => {
-                setTimeout(() => {
+                 
                     this.handleConversationList();
                     this.isLoading = false;
-                }, 500);
+                    this.cd.detectChanges();
+                 
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
