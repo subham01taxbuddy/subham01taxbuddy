@@ -426,10 +426,16 @@ export class ChatService {
 
     if (timeStamp) {
       const msgString = this.sessionStorageService.getItem('fetchedMessages');
-      const oldMessageList = JSON.parse(msgString);
-      transformedMessages = [...transformedMessages, ...oldMessageList];
-    }
+      const oldMessageList = JSON.parse(msgString) || [];
 
+      const existingMessageIds = oldMessageList.map(message => message.message_id);
+      transformedMessages = transformedMessages.filter(message => !existingMessageIds.includes(message.message_id));
+
+      transformedMessages = [...oldMessageList, ...transformedMessages];
+  }
+
+
+   
     this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
     return transformedMessages;
   }
