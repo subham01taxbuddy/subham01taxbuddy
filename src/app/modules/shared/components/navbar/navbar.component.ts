@@ -298,6 +298,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
         });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
+        this.dialog.closeAll();
+        this.subscription.unsubscribe();
+        this.alertSubscription.unsubscribe();
+        this.alertService.stopService();
       })
       .catch(err => {
         this.loading = false;
