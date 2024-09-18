@@ -571,7 +571,7 @@ export class ChatService {
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
                   let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
 
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && (this.roles?.includes('ROLE_LEADER') || this.roles?.includes('ROLE_FILER'))) {
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && !this.roles?.includes('ROLE_ADMIN')) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);
