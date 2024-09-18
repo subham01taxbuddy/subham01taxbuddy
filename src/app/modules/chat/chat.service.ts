@@ -49,6 +49,7 @@ export class ChatService {
   private deptList: any[] = [];
   private deptListData: any[] = [];
   shouldReconnect: boolean = true;
+  reconnectionPeriod = 1000;//in msec
 
   pingInterval: any;
   private connectionCheckInterval: any;
@@ -501,12 +502,13 @@ export class ChatService {
 
   websocketConnection(chat21Token, requestId) {
     this.shouldReconnect = true;
+    this.reconnectionPeriod = 1000;
 
     this.initChatVariables(requestId);
 
     let options = {
       keepalive: 60,
-      reconnectPeriod: 1000,
+      reconnectPeriod: this.reconnectionPeriod,
       will: {
         topic: this.presenceTopic,
         payload: "{\"disconnected\":true}",
@@ -931,6 +933,7 @@ export class ChatService {
         this.chatClient.end(true, () => {
           this.shouldReconnect = false;
           this.connected = false;
+          this.reconnectionPeriod = 0;
         })
       });
     }
