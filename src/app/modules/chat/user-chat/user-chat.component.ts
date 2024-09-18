@@ -215,7 +215,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    this.chatService.unsubscribeRxjsWebsocket();
+    // this.chatService.unsubscribeRxjsWebsocket();
     this.chatManager.closeChat();
     this.back.emit();
   }

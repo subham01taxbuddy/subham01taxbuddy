@@ -71,9 +71,9 @@ export class FloatingWidgetComponent implements OnInit {
     }
 
     openUserChat(user: any) {
-        if (this.isUserChatVisible) {
-            this.chatService.unsubscribeRxjsWebsocket();
-        }
+        // if (this.isUserChatVisible) {
+        //     this.chatService.unsubscribeRxjsWebsocket();
+        // }
 
         this.selectedUser = user;
         this.isUserChatVisible = true;
@@ -86,8 +86,8 @@ export class FloatingWidgetComponent implements OnInit {
         }
 
         localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
-        this.chatService.unsubscribeRxjsWebsocket();
-        this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
+        // this.chatService.unsubscribeRxjsWebsocket();
+        // this.chatService.initRxjsWebsocket(this.selectedUser.request_id);
 
         setTimeout(() => {
             if (this.userChatComponent) {
@@ -203,7 +203,7 @@ export class FloatingWidgetComponent implements OnInit {
             this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
                 setTimeout(() => {
                     this.isLoading = false;
-                }, 500);
+                },500)
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
