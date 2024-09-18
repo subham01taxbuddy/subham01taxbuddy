@@ -236,14 +236,14 @@
                     <div class="row row-title">Shares Acquired during the year</div>
                   </div>
                   <div class="col-4">
-                    <mat-radio-group [formControl]="sharesAcquired" name="sharesAcquired" (change)="onSharesAcquiredChange(i)">
+                    <mat-radio-group formControlName="sharesAcquired" name="sharesAcquired_{{i}}" (change)="onSharesAcquiredChange(i)">
                       <mat-radio-button [value]="true" labelPosition="before">Yes</mat-radio-button>
                       &nbsp;&nbsp;&nbsp;
                       <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
                     </mat-radio-group>
                   </div>
                 </div>
-                <div *ngIf="sharesAcquired.value">
+                <div *ngIf="share.get('sharesAcquired').value">
 
                   <div class="div-6 ">
                     <div class="form-field">
