@@ -95,7 +95,12 @@
                           <div class="row cardClr"
                             *ngFor="let deduction of getDeductions?.controls | paginate : config;let i = index"
                             [formGroupName]="fieldGlobalIndex(i)">
-
+                            <div class="row">
+                              <div class="col-12">
+                                <mat-checkbox [formControl]="showNewAsset" (change)="onToggleNewAsset($event.checked)">New Asset Purchase</mat-checkbox>
+                              </div>
+                            </div>
+                            <div  class="nBorder" *ngIf="showNewAsset.value">
                             <div class="div-6 mb-20">
                               <div class="form-field">
                                 <div><span class="span">Type of deduction </span> <span class="text-wrapper-2">*</span>
@@ -140,6 +145,13 @@
                                 </mat-form-field>
                               </div>
                             </div>
+                            </div>
+                            <div class="row mt-3">
+                              <div class="col-12 ">
+                                <mat-checkbox [formControl]="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
+                              </div>
+                            </div>
+                            <div class="nBorder" *ngIf="showCGAS.value">
                             <div class="div-6 mb-20">
                               <div class="form-field">
                                 <div><span class="span">Amount Deposited on CGAS </span> <span
@@ -152,23 +164,6 @@
                                     class="input-field" maxlength="14"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     (change)="updateValidations(deduction);calculateDeduction()" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="span">Amount Of Deduction Claimed </span> <span
-                                    class="text-wrapper-2">*</span></div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                  <input matInput digitsOnly formControlName="deductionClaimed"
-                                    placeholder="Amount of Deduction Claimed" name="deductionClaimed"
-                                    class="input-field" maxlength="14" readonly
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="deduction.get('deductionClaimed').hasError('max')">
-                                    Amount against 54F shall be restricted to 10 Crore.
-                                  </mat-error>
                                 </mat-form-field>
                               </div>
                             </div>
@@ -214,6 +209,24 @@
                                   <mat-datepicker #dateOfDeposit></mat-datepicker>
                                   <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">
                                     Enter valid date.
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="div-6 mt-3 mb-20">
+                              <div class="form-field">
+                                <div><span class="span">Amount Of Deduction Claimed </span> <span
+                                    class="text-wrapper-2">*</span></div>
+                              </div>
+                              <div class="form-field">
+                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
+                                  <input matInput digitsOnly formControlName="deductionClaimed"
+                                    placeholder="Amount of Deduction Claimed" name="deductionClaimed"
+                                    class="input-field" maxlength="14" readonly
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                                  <mat-error *ngIf="deduction.get('deductionClaimed').hasError('max')">
+                                    Amount against 54F shall be restricted to 10 Crore.
                                   </mat-error>
                                 </mat-form-field>
                               </div>

@@ -239,9 +239,15 @@
                     </div>
                   </div>
                   <div class="gray_container" *ngIf="this.deduction">
-                    <form [formGroup]="deductionForm" style="margin-top: 20px">
+                    <form [formGroup]="deductionForm">
                       <div>
                         <div class="row cardClr">
+                          <div class="row">
+                            <div class="col-12">
+                              <mat-checkbox [formControl]="showNewAsset" (change)="onToggleNewAsset($event.checked)">New Asset Purchase</mat-checkbox>
+                            </div>
+                          </div>
+                          <div  class="nBorder" *ngIf="showNewAsset.value">
                           <div class="div-6 mb-20">
                             <div class="form-field">
                               <div><span class="span">Type of Deduction*</span></div>
@@ -289,6 +295,13 @@
                               </mat-form-field>
                             </div>
                           </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-12 ">
+                            <mat-checkbox [formControl]="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
+                          </div>
+                        </div>
+                        <div class="nBorder" *ngIf="showCGAS.value">
                           <div class="div-6 mb-20">
                             <div class="form-field">
                               <div><span class="span">CGAS Amount Deposited Before Due Date*</span></div>
@@ -303,24 +316,6 @@
                                   matTooltipPosition="above" />
                                 <mat-error *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
                               'required')">Please enter amount
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
-                          </div>
-
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Amount of Deduction Claimed*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput readonly class="input-field" placeholder="Amount of deduction claimed"
-                                  formControlName="totalDeductionClaimed" maxlength="14" />
-                                <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
-                                                  'required')">Please enter amount
-                                </mat-error>
-                                <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('max')">
-                                  Amount against 54F shall be restricted to 10 Crore.
                                 </mat-error>
                               </mat-form-field>
                             </div>
@@ -369,6 +364,24 @@
                               </mat-form-field>
                             </div>
                           </div>
+                        </div>
+                        <div class="div-6 mt-3 mb-20">
+                          <div class="form-field">
+                            <div><span class="span">Amount of Deduction Claimed*</span></div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline" class="small-inp no-height">
+                              <input matInput readonly class="input-field" placeholder="Amount of deduction claimed"
+                                formControlName="totalDeductionClaimed" maxlength="14" />
+                              <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
+                                                'required')">Please enter amount
+                              </mat-error>
+                              <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('max')">
+                                Amount against 54F shall be restricted to 10 Crore.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
                         </div>
                       </div>
                     </form>
