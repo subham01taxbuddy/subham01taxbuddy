@@ -231,79 +231,94 @@
 
                 </div>
 
-                <div class="row row-title">Shares Acquired during the year</div>
-                <div class="div-6 ">
-                  <div class="form-field">
-                    <div><span class="span">No. of shares acquired</span> <span class="text-wrapper-2">*</span>
-                    </div>
-                    <mat-form-field class="input-field-width" appearance="outline">
-                      <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
-                        name="acquiredShares" class="input-field" maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="event.charCode >= 48 && event.charCode <= 57" />
-                      <mat-error *ngIf="share.get('acquiredShares').hasError('required')">Enter No. of shares acquired.
-                      </mat-error>
-                    </mat-form-field>
+                <div class="row mb-10">
+                  <div class="col-8">
+                    <div class="row row-title">Shares Acquired during the year</div>
                   </div>
-                  <div class="form-field">
-                    <div><span class="span">Date of Purchase</span> <span class="text-wrapper-2">*</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput readonly formControlName="purchaseDate" name="purchaseDate"
-                        [matDatepicker]="purchaseDate" [min]="minDate" [max]="maxDate" placeholder="Date of purchase"
-                        [required]="share.get('acquiredShares').value" />
-                      <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                      <mat-datepicker #purchaseDate></mat-datepicker>
-                    </mat-form-field>
+                  <div class="col-4">
+                    <mat-radio-group formControlName="sharesAcquired" name="sharesAcquired_{{i}}" (change)="onSharesAcquiredChange(i)">
+                      <mat-radio-button [value]="true" labelPosition="before">Yes</mat-radio-button>
+                      &nbsp;&nbsp;&nbsp;
+                      <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
+                    </mat-radio-group>
                   </div>
                 </div>
-                <div class="div-6 ">
-                  <div class="form-field">
-                    <div><span class="span">Face value per share</span> <span class="text-wrapper-2">*</span>
+                <div *ngIf="share.get('sharesAcquired').value">
+
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span">No. of shares acquired</span><span class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field class="input-field-width" appearance="outline">
+                        <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
+                          name="acquiredShares" class="input-field" maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          onkeypress="event.charCode >= 48 && event.charCode <= 57" />
+                          <mat-error *ngIf="share.get('acquiredShares').hasError('required')">Enter No. of shares acquired.
+                          </mat-error>
+                      </mat-form-field>
                     </div>
-                    <mat-form-field class="input-field-width" appearance="outline">
-                      <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
-                        name="faceValuePerShare" class="input-field" maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                        [required]="share.get('acquiredShares').value" />
-                      <mat-error *ngIf="share.get('faceValuePerShare').hasError('required')">Enter face value per share.
-                      </mat-error>
-                    </mat-form-field>
+                    <div class="form-field" style="margin-left: -15px;">
+                      <div><span class="span">Date of Purchase</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field appearance="outline">
+                        <input matInput readonly formControlName="purchaseDate" name="purchaseDate"
+                          [matDatepicker]="purchaseDate" [min]="minDate" [max]="maxDate" placeholder="Date of purchase"
+                          [required]="share.get('acquiredShares').value" />
+                        <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                        <mat-datepicker #purchaseDate></mat-datepicker>
+                      </mat-form-field>
+                    </div>
                   </div>
-                  <div class="form-field">
-                    <div><span class="span">Issue price per share(In case of fresh issue) </span><span
-                        class="text-wrapper-2">*</span>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span">Face value per share</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field class="input-field-width" appearance="outline">
+                        <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
+                          name="faceValuePerShare" class="input-field" maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                          [required]="share.get('acquiredShares').value" />
+                        <mat-error *ngIf="share.get('faceValuePerShare').hasError('required')">Enter face value per share.
+                        </mat-error>
+                      </mat-form-field>
                     </div>
-                    <mat-form-field class="input-field-width" appearance="outline">
-                      <input digitsOnly matInput formControlName="issuePricePerShare"
-                        placeholder="Issue price per share" name="issuePricePerShare" class="input-field" maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="event.charCode >= 48 && event.charCode <= 57"
-                        [required]="share.get('acquiredShares').value && !share.get('purchasePricePerShare').value" />
-                      <mat-error *ngIf="share.get('issuePricePerShare').hasError('required')">Enter issue price per
-                        share.
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <div><span class="span">Purchase Price per share(In case of purchase from existing
-                        shareholder)</span> <span class="text-wrapper-2">*</span>
+                    <div class="form-field">
+                      <div><span class="span">Issue price per share(In case of fresh issue) </span><span
+                          class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field class="input-field-width" appearance="outline">
+                        <input digitsOnly matInput formControlName="issuePricePerShare"
+                          placeholder="Issue price per share" name="issuePricePerShare" class="input-field" maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                          [required]="share.get('acquiredShares').value && !share.get('purchasePricePerShare').value" />
+                        <mat-error *ngIf="share.get('issuePricePerShare').hasError('required')">Enter issue price per
+                          share.
+                        </mat-error>
+                      </mat-form-field>
                     </div>
-                    <mat-form-field class="input-field-width" appearance="outline">
-                      <input digitsOnly matInput formControlName="purchasePricePerShare"
-                        placeholder="Purchase price per share" name="purchasePricePerShare" class="input-field"
-                        maxlength="14"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                        [required]="share.get('acquiredShares').value && !share.get('issuePricePerShare').value" />
-                      <mat-error *ngIf="
-                      share.get('purchasePricePerShare').hasError('required')
-                    ">Enter Purchase price per share.
-                      </mat-error>
-                    </mat-form-field>
+                    <div class="form-field">
+                      <div><span class="span">Purchase Price per share(In case of purchase from existing
+                          shareholder)</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field class="input-field-width" appearance="outline">
+                        <input digitsOnly matInput formControlName="purchasePricePerShare"
+                          placeholder="Purchase price per share" name="purchasePricePerShare" class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
+                          [required]="share.get('acquiredShares').value && !share.get('issuePricePerShare').value" (change)="onPurchasePriceChange(share)" />
+                        <mat-error *ngIf="
+                        share.get('purchasePricePerShare').hasError('required')
+                      ">Enter Purchase price per share.
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
                   </div>
                 </div>
+
 
                 <div class="row row-title">Shares transferred during the year</div>
                 <div class="div-6 ">
@@ -364,7 +379,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                   <div class="col-2">
                     <button class="btn__primary" (click)="deleteShares()"> <i class="fa-solid fa-trash-can"></i> Delete
                     </button>

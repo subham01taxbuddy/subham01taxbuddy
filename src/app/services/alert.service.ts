@@ -6,8 +6,8 @@ import { environment } from 'src/environments/environment';
 import { SessionStorageService } from './storage.service';
 
 export interface Alert {
+  activeFrom: string | number | Date;
   alertId:string,
- // filter: any;
   type: string;
   message: string;
   title: string;
@@ -39,6 +39,7 @@ export class AlertService {
     this.fetchAlerts();
     this.startPeriodicAlerts();
     this.startAutoRemoveExpiredAlerts();
+    
   }
 
   postMethodAlert(alertData: any): Observable<any> {
@@ -69,10 +70,11 @@ export class AlertService {
           !currentAlerts.some(currentAlert =>
             currentAlert.title === alert.title &&
             currentAlert.message === alert.message
+           
           )
         );
         this.alertsSubject.next(alerts);
-        if (newAlerts.length > 0) {
+        if (newAlerts.length > 0 ) { 
           this.newAlertsSubject.next(newAlerts);
         }
       })
@@ -85,7 +87,6 @@ export class AlertService {
     return this.http.delete<T>(
       environment.url + this.microService + `/api-alert/expired`, { headers: this.headers });
   }
-
   
   isAlertRead(alertId: string): boolean {
     const readAlerts = this.getReadAlerts();
@@ -102,6 +103,7 @@ export class AlertService {
   }
   
   markAlertAsRead(alert: Alert) {
+    const count = 0;
     const readAlerts = this.getReadAlerts();
     if (!readAlerts.some(readAlert => readAlert.alertId === alert.alertId)) {
       readAlerts.push({
@@ -109,10 +111,7 @@ export class AlertService {
         title: alert.title,
         message: alert.message
       });
-      sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(readAlerts));
-      sessionStorage.setItem(this.POPUP_SHOWN_ALERTS_KEY,JSON.stringify(alert.alertId))
     }
-    
     const currentAlerts = this.alertsSubject.value;
     const updatedAlerts = currentAlerts.map(a => 
       a.alertId === alert.alertId ? { ...a, seen: true } : a
@@ -120,8 +119,11 @@ export class AlertService {
     this.alertsSubject.next(updatedAlerts);
   }
 
+  interval:any;
+
   startPeriodicAlerts() {
-    interval(60000).pipe(
+    this.interval = interval(60000);
+    this.interval.pipe(
       switchMap(() => this.getAllAlert()),
       tap(() => {
         const currentTime = new Date();
@@ -131,8 +133,8 @@ export class AlertService {
         
         const activeAlerts = currentAlerts.filter(alert =>
           this.isAlertActive(alert, currentTime) &&
-          !readAlerts.some(readAlert => readAlert.alertId === alert.alertId) &&
-          !popupShownAlerts.includes(alert.alertId)
+          !readAlerts.some(readAlert => readAlert.alertId === alert.alertId)
+          // !popupShownAlerts.includes(alert.alertId)
         );
 
         activeAlerts.forEach(alert => {
@@ -142,7 +144,6 @@ export class AlertService {
           timer(delayInMs).subscribe(() => {
             if (!this.getPopupShownAlerts().includes(alert.alertId)) {
               this.periodicAlertsSubject.next([alert]);
-             // this.markPopupAsShown(alert.alertId);
             }
           });
         });
@@ -155,8 +156,6 @@ export class AlertService {
    return popupShownAlertsString ? JSON.parse(popupShownAlertsString) : [];
 
   }
-
-  
 
   private getReadAlerts(): any[] {
     const readAlertsString = sessionStorage.getItem(this.READ_ALERTS_KEY);
@@ -183,6 +182,10 @@ export class AlertService {
       }
     });
     
+  }
+
+  stopService(){
+      clearInterval(this.interval);
   }
 
 }

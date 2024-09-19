@@ -403,10 +403,17 @@ export class DonationsComponent implements OnInit {
       this.generalDonationForm.get('donationArray')
     );
     // This method is written in utils service for common usablity.
-    let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
-      'panNumber',
-      buyersDetails.value
-    );
+    let panRepeat: boolean;
+    if(this.type === '80g'){
+        panRepeat = this.utilsService.checkDuplicatePANWithDifferentScheme(
+            buyersDetails.value
+        );
+    } else {
+      panRepeat = this.utilsService.checkDuplicateInObject(
+          'panNumber',
+          buyersDetails.value
+      );
+    }
     let userPanExist = [];
     if (buyersDetails.value instanceof Array) {
       userPanExist = buyersDetails.value.filter(

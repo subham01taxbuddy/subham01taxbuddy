@@ -273,7 +273,7 @@
   text-align: center;
   color: #121212;
   font-size: 14px;
-  
+
   font-weight: 500;
   line-height: 21px;
   word-wrap: break-word;
@@ -282,7 +282,7 @@
 .broker-view-value {
   color: #121212;
   font-size: 14px;
-  
+
   font-weight: 700;
   word-wrap: break-word;
   text-align: center;
@@ -337,7 +337,7 @@
   border-radius: 40px;
   background: rgba(145, 197, 97, 0.12);
   color: #91C561;
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -352,7 +352,7 @@
   border-radius: 40px;
   background: rgba(214, 162, 67, 0.12);
   color: #D6A243;
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -378,4 +378,10 @@
 
 .align-center {
   text-align: center;
+}
+
+.nBorder{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
 }

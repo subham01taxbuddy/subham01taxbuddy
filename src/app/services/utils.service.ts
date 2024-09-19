@@ -741,6 +741,35 @@ export class UtilsService {
     return seenDuplicate;
   }
 
+  checkDuplicatePANWithDifferentScheme(data) {
+    // Create a map to store panNumber as key and set of schemeCodes as value
+    const panSchemeMap = new Map();
+
+    for (let donation of data) {
+      const { panNumber, schemeCode } = donation;
+
+      // If panNumber is already present in the map
+      if (panSchemeMap.has(panNumber)) {
+        const schemeCodes = panSchemeMap.get(panNumber);
+
+        // Check if the schemeCode is already associated with the panNumber
+        if (!schemeCodes.has(schemeCode)) {
+          // Duplicate PAN found with different schemeCode
+          return true;
+        }
+      } else {
+        // Add the panNumber and schemeCode to the map
+        panSchemeMap.set(panNumber, new Set([schemeCode]));
+      }
+
+      // Add the current schemeCode to the set of schemeCodes for the panNumber
+      panSchemeMap.get(panNumber).add(schemeCode);
+    }
+
+    // No duplicates found
+    return false;
+  }
+
   async getPincodeData(pinCode) {
     const promise = new Promise<any>((resolve, reject) => {
       let data = null;
