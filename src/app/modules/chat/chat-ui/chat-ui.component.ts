@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy, ElementRef,NgZone } from '@angular/core';
 import { widgetVisibility } from '../floating-widget/animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -30,6 +30,8 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     selector: string = ".main-panel-chats";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
+    @ViewChild('scrollContainer', { static: false }) scrollContainer: ElementRef;
+
 
 
     private cd: ChangeDetectorRef;
@@ -38,7 +40,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
 
     constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
-        private localStorage: LocalStorageService, private chatService: ChatService,cd: ChangeDetectorRef) {
+        private localStorage: LocalStorageService, private chatService: ChatService,cd: ChangeDetectorRef,private ngZone: NgZone) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
@@ -103,6 +105,22 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         document.body.classList.remove('no-scroll');
         this.back.emit();
     }
+
+    scrollToTop() {
+        if (this.scrollContainer) {
+            this.scrollContainer.nativeElement.scrollTop = 0;
+        }
+    }
+
+    scrollToTopList() {
+        if (this.scrollContainer && this.scrollContainer.nativeElement) {
+            this.scrollContainer.nativeElement.scrollTop = 0;
+            console.log('Scrolled to top');
+        } else {
+            console.warn('Scroll container not found');
+        }
+    }
+
 
     users = [];
 
@@ -201,6 +219,13 @@ export class ChatUIComponent implements OnInit,OnDestroy {
                     this.handleConversationList();
                     this.isLoading = false;
                     this.cd.detectChanges();
+
+                    this.ngZone.runOutsideAngular(() => {
+                        setTimeout(() => {
+                            this.scrollToTopList();
+                            this.cd.detectChanges();
+                        });
+                    });
                  
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
