@@ -309,7 +309,7 @@
                           maxlength="14"
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                          [required]="share.get('acquiredShares').value && !share.get('issuePricePerShare').value" />
+                          [required]="share.get('acquiredShares').value && !share.get('issuePricePerShare').value" (change)="onPurchasePriceChange(share)" />
                         <mat-error *ngIf="
                         share.get('purchasePricePerShare').hasError('required')
                       ">Enter Purchase price per share.

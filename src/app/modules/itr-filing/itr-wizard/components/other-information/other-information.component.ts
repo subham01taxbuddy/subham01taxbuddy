@@ -414,6 +414,16 @@ export class OtherInformationComponent implements OnInit {
     return form;
   }
 
+  onPurchasePriceChange(form) {
+    if (form.get('purchasePricePerShare')?.value) {
+      form.get('issuePricePerShare')?.clearValidators();
+      form.get('issuePricePerShare')?.updateValueAndValidity();
+    } else {
+      form.get('issuePricePerShare')?.setValidators(Validators.required);
+      form.get('issuePricePerShare')?.updateValueAndValidity();
+    }
+  }
+
   updateValidatorsBasedOnAcquiredShares(form: FormGroup, acquiredShares: boolean) {
     const acquiredSharesControl = form.get('acquiredShares');
     const purchaseDateControl = form.get('purchaseDate');
