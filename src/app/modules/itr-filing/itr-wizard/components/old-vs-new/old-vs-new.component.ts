@@ -449,7 +449,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       currAssmntYr.value === 'OLD'
     ) {
       this.showCurrentAYOptions = true;
-    }*/ else {
+    }*/ else if(this.ITR_JSON.isRevised !== 'Y'){
       this.showCurrentAYOptions = false;
     }
 
@@ -503,36 +503,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
     ).controls['currentYearRegime'];
 
-    // setting values null if no is selected
-    // this.regimeSelectionForm.controls[
-    //   'everOptedNewRegime'
-    // ].valueChanges.subscribe((value) => {
-    //   if (value === 'false') {
-    //     // set all form controls to null
-    //     this.regimeSelectionForm.controls['everOptedNewRegime']
-    //       .get('acknowledgementNumber')
-    //       .setValue(null);
-    //     this.regimeSelectionForm.controls['everOptedNewRegime']
-    //       .get('date')
-    //       .setValue(null);
-    //     // ... continue with resetting all nested form controls
-    //   }
-    // });
-
-    // if (!optOut) {
-    //   this.newRegimeLabel = 'Continue to opt';
-    //   this.oldRegimeLabel = 'Opt Out';
-    //   (
-    //     this.regimeSelectionForm.controls[
-    //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
-    //   ).controls['everOptedOutOfNewRegime'].setValue(false);
-    //   (
-    //     this.regimeSelectionForm.controls[
-    //       'everOptedOutOfNewRegime'
-    //     ] as FormGroup
-    //   ).controls['everOptedOutOfNewRegime'].disable();
-    // }
 
     if (optIn) {
       this.newRegimeLabel = 'Continue to opt';
@@ -581,10 +551,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       let origItrText = sessionStorage.getItem('ORIGINAL_ITR');
       if(this.utilsService.isNonEmpty(origItrText)) {
         let originalItr = JSON.parse(origItrText);
-        let itrFilingDueDate = sessionStorage.getItem('itrFilingDueDate');
-
+        let itrFilingDueDate = new Date(sessionStorage.getItem('itrFilingDueDate'));
+        let form10IEDate = this.utilsService.isNonEmpty(originalItr.optionForCurrentAY?.date) ?
+            new Date(originalItr.optionForCurrentAY.date) : new Date();
+        this.showCurrentAYOptions = true;
         if (originalItr.regime === 'OLD' ||
-            (originalItr.regime === 'NEW' && originalItr.form10IEDate < itrFilingDueDate
+            (originalItr.regime === 'NEW' && form10IEDate < itrFilingDueDate
                 && originalItr.itrType !== '1' && originalItr.itrType !== '2')) {
           let currAssmntYr = (
               this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
@@ -599,6 +571,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           currAssmntYr.disable();
           currAssmntYr.updateValueAndValidity();
         }
+      } else {
+        this.showCurrentAYOptions = true;
+        let currAssmntYr = (
+            this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+        ).controls['currentYearRegime'];
+        currAssmntYr.enable();
+        currAssmntYr.updateValueAndValidity();
       }
     }
 
