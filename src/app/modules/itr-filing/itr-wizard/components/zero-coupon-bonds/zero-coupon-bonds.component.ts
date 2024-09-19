@@ -1302,7 +1302,7 @@ export class ZeroCouponBondsComponent
     }
   }
 
-  calculateDeductionGain(fromToggle?) {
+  calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
       this.deductionForm.controls['costOfNewAssets'].valid &&
       this.deductionForm.controls['investmentInCGAccount'].valid;
@@ -1365,9 +1365,7 @@ export class ZeroCouponBondsComponent
         }
       );
     } else {
-      if(!fromToggle){
-        this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
-      }
+      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
     }
   }
 
@@ -1385,11 +1383,6 @@ export class ZeroCouponBondsComponent
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
-    }else if (this.deduction === true){
-      if(!this.showCGAS.value && !this.showNewAsset.value){
-        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
-        return;
-      }
     }
     this.save('bonds');
   }
@@ -1421,7 +1414,7 @@ export class ZeroCouponBondsComponent
       this.clearFieldValidators('purchaseDate');
       this.clearFieldValidators('costOfNewAssets');
     }
-    this.calculateDeductionGain('fromToggle');
+    this.calculateDeductionGain();
   }
   onToggleCGAS(isChecked: boolean): void{
     if (isChecked) {
@@ -1435,7 +1428,7 @@ export class ZeroCouponBondsComponent
       this.clearFieldValidators('ifscCode');
       this.clearFieldValidators('dateOfDeposit');
     }
-    this.calculateDeductionGain('fromToggle');
+    this.calculateDeductionGain();
   }
 
   setFieldValidators(controlName: string, validators: any[]): void {
