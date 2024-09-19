@@ -146,7 +146,6 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
         this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
-            this.userChatComp.isInputDisabled = true;
             this.chatManager.closeChat();
             this.cd.detectChanges();
          });

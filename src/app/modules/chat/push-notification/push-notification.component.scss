@@ -138,3 +138,24 @@
      margin-left: 50px;
      margin-top: 13px;
  }
+
+ .footer .inactive-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #999;
+    cursor: text;
+  }
+  
+  .footer input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .footer input:focus {
+    outline: none;
+    border-color: #007bff;
+  }

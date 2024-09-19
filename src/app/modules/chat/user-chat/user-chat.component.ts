@@ -349,20 +349,24 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       }
     });
     this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
- 
+
       if (deletedConversation?.archived && deletedConversation?.archived === true) {
-        this.handleDeletedConversation();
-        this.cd.detectChanges();
+        const currentChat = this.localStorageService.getItem('SELECTED_CHAT', true);
+
+        if (currentChat && currentChat?.request_id === deletedConversation?.conversWith) {
+          this.handleDeletedConversation();
+          this.cd.detectChanges();
+        }
       }
     });
     this.updateBotIconVisibility();
   }
 
   handleDeletedConversation() {
-     this.isInputDisabled = true;
-     this.messageSent = '';
-     this.localStorage.removeItem('SELECTED_CHAT');
-     this.cd.detectChanges();
+    this.isInputDisabled = true;
+    this.messageSent = '';
+    this.localStorage.removeItem('SELECTED_CHAT');
+    this.cd.detectChanges();
   }
 
 
@@ -397,7 +401,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.isAtBottom = isAtBottom;
     this.messageCountTo0();
     this.updateBotIconVisibility();
-    if(!this.showArrow){
+    if (!this.showArrow) {
       this.scrollToBottom();
     }
     this.cd.detectChanges();
@@ -475,7 +479,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
     // Return time in format "11:02 AM"
     return `${hours}:${minutesStr} ${ampm}`;
-}
+  }
 
 
   getSanitizedHtml(message) {
@@ -531,15 +535,16 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.isLoadingMoreMessages = true;
 
     this.chatManager.openConversation(this.requestId, this.fetchedMessages[0].timestamp, (hasMoreMessages: boolean) => {
-        // Set loader to false once the API call completes
-        this.isLoadingMoreMessages = false;
+      // Set loader to false once the API call completes
+      this.isLoadingMoreMessages = false;
+      this.cd.detectChanges();
 
-        // Optionally handle scenarios when no more messages are available
-        if (!hasMoreMessages) {
-            console.log('No more messages to load');
-        }
+      // Optionally handle scenarios when no more messages are available
+      if (!hasMoreMessages) {
+        console.log('No more messages to load');
+      }
     });
-}
+  }
 
 
   displaySystemMessage(message: any): boolean {
@@ -577,7 +582,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    if(this.conversationDeletedSubscription){
+    if (this.conversationDeletedSubscription) {
       this.conversationDeletedSubscription.unsubscribe();
     }
 
