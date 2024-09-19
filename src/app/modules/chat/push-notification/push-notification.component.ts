@@ -1,4 +1,4 @@
-import { Component, Inject, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, ChangeDetectorRef, Output, EventEmitter, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChatManager } from '../chat-manager';
 import { ChatService } from '../chat.service';
@@ -10,6 +10,7 @@ import { ChatService } from '../chat.service';
 })
 export class PushNotificationComponent {
   @Output() notificationClicked = new EventEmitter<any>();
+  @ViewChildren('messageInput') messageInputs!: QueryList<ElementRef>;
   messageSent: string = '';
   notifications: any[] = [];
   maxNotifications = 5;
@@ -99,6 +100,18 @@ export class PushNotificationComponent {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  activateInput(notification: any, index: number, event: MouseEvent) {
+    event.stopPropagation();
+    if (!notification.inputActive) {
+      notification.inputActive = true;
+      this.changeDetectorRef.detectChanges();
+      setTimeout(() => {
+        const inputElement = this.messageInputs.toArray()[index].nativeElement;
+        inputElement.focus();
+      });
     }
   }
 
