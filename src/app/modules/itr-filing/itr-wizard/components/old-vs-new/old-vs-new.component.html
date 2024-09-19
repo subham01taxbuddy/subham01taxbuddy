@@ -278,7 +278,7 @@
                   <mat-label class="option-label">Date:</mat-label>
                   <mat-form-field appearance="outline">
                     <input matInput placeholder="Date of filling" [max]="fillingMaxDate" readonly name="date"
-                      formControlName="date" [matDatepicker]="picker1" autocomplete="off" />
+                      formControlName="date" [matDatepicker]="picker1" autocomplete="off" (dateChange)="updateRegimeLabels()"/>
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                     <mat-error *ngIf="
