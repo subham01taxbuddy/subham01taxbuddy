@@ -24,7 +24,7 @@
     </div>
     <div class="unread-messages-container">
         <i class='fa fa-envelope'></i>
-        <span class="unread-messages">{{notification?.text}}</span>
+        <span class="unread-messages"> {{ isJson(notification?.text) ? 'Click here to view the details' : notification?.text }}</span>
     </div>
 
 

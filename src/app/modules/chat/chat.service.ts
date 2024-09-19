@@ -778,41 +778,41 @@ export class ChatService {
   }
 
   initRxjsWebsocket(conversWith) {
-    const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
-    this.subject = webSocket(`${this.USER_STATUS_WEBSOCKET_URL}/?token=${tiledeskToken}`);
-    const projectUserMsg = { "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/requests/${conversWith}` } }
-    this.subject.next(projectUserMsg);
-    let userTopic;
-    this.subject.subscribe({
-      next: (msg: any) => {
-        if (msg.action == "heartbeat") {
-          if (msg.payload.message.text == "ping") {
-            this.subject.next({ action: "heartbeat", payload: { message: { text: "pong" } } });
-          }
-          return;
-        }
-        if (msg.action == "publish") {
-          if (msg.payload.topic === projectUserMsg.payload.topic) {
-            this.subject.next({ "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}` } });
-            userTopic = `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}`;
-            this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message.requester, true)
-            this.userOnlineOfflineEvent.next(true);
-          }
-          if (msg.payload.topic === userTopic) {
-            this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message, true)
-            this.userOnlineOfflineEvent.next(true);
-          }
-        }
-      },
-      error: err => console.log('rxjs error ' + err), // Called if at any point WebSocket API signals some kind of error.
-      complete: () => console.log('rxjs complete') // Called when connection is closed (for whatever reason).
-    });
+    // const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
+    // this.subject = webSocket(`${this.USER_STATUS_WEBSOCKET_URL}/?token=${tiledeskToken}`);
+    // const projectUserMsg = { "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/requests/${conversWith}` } }
+    // this.subject.next(projectUserMsg);
+    // let userTopic;
+    // this.subject.subscribe({
+    //   next: (msg: any) => {
+    //     if (msg.action == "heartbeat") {
+    //       if (msg.payload.message.text == "ping") {
+    //         this.subject.next({ action: "heartbeat", payload: { message: { text: "pong" } } });
+    //       }
+    //       return;
+    //     }
+    //     if (msg.action == "publish") {
+    //       if (msg.payload.topic === projectUserMsg.payload.topic) {
+    //         this.subject.next({ "action": "subscribe", "payload": { "topic": `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}` } });
+    //         userTopic = `/${this.PROJECT_ID}/project_users/users/${msg.payload.message.requester.uuid_user}`;
+    //         this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message.requester, true)
+    //         this.userOnlineOfflineEvent.next(true);
+    //       }
+    //       if (msg.payload.topic === userTopic) {
+    //         this.localStorageService.setItem('USER_ONLINE_OFFLINE_DATA', msg.payload.message, true)
+    //         this.userOnlineOfflineEvent.next(true);
+    //       }
+    //     }
+    //   },
+    //   error: err => console.log('rxjs error ' + err), // Called if at any point WebSocket API signals some kind of error.
+    //   complete: () => console.log('rxjs complete') // Called when connection is closed (for whatever reason).
+    // });
   }
 
   unsubscribeRxjsWebsocket() {
-    if (this.subject) {
-      this.subject.unsubscribe();
-    }
+    // if (this.subject) {
+    //   this.subject.unsubscribe();
+    // }
   }
 
 
