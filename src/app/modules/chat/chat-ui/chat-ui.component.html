@@ -17,7 +17,7 @@
                 deptName.name }}</div>
         </div>
 
-        <div class="user-list main-panel-chats">
+        <div class="user-list main-panel-chats" #scrollContainer>
             <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true"
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
