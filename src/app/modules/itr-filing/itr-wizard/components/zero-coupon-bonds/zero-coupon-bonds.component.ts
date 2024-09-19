@@ -5,7 +5,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -51,6 +51,9 @@ export class ZeroCouponBondsComponent
   selectedFormGroup: UntypedFormGroup;
   activeIndex: number;
   PREV_ITR_JSON: any;
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
+
   constructor(
     private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
@@ -196,6 +199,7 @@ export class ZeroCouponBondsComponent
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
               this.updateValidations(this.deductionForm);
+              this.initializeFormFlags(this.deductionForm);
             });
             this.deduction = true;
           }
@@ -1381,5 +1385,66 @@ export class ZeroCouponBondsComponent
       return;
     }
     this.save('bonds');
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean): void {
+    if (isChecked) {
+      this.setFieldValidators('purchaseDate', [Validators.required]);
+      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators('purchaseDate');
+      this.clearFieldValidators('costOfNewAssets');
+    }
+    this.calculateDeductionGain();
+  }
+  onToggleCGAS(isChecked: boolean): void{
+    if (isChecked) {
+      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators('dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('accountNumber');
+      this.clearFieldValidators('ifscCode');
+      this.clearFieldValidators('dateOfDeposit');
+    }
+    this.calculateDeductionGain();
+  }
+
+  setFieldValidators(controlName: string, validators: any[]): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(controlName: string): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
+    }
   }
 }
