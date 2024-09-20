@@ -121,9 +121,6 @@ export class ChatService {
         this.deptID = result.data[0]._id;
         this.deptList = result.data;
         this.deptListData = result.data;
-        this.localStorageService.setItem("CHATBUDDY_DEPT_DETAILS", result.data, true);
-        this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
-        this.deptList = this.deptList.filter((dept) => this.centralizedChatDetails[dept.name] === 'chatbuddy');
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
           callback(ChatEvents.DEPT_RECEIVED, this.deptList);
         });
@@ -565,13 +562,10 @@ export class ChatService {
                 if (this.log) {
                   const messageJson = JSON.parse(message.toString())
                   console.log('message received', messageJson);
-                  this.chatbuddyDeptDetails = this.localStorageService.getItem('CHATBUDDY_DEPT_DETAILS', true);
-                  this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
-                  let receivedMessageDeptName = this.chatbuddyDeptDetails.filter(element => element._id === messageJson?.attributes?.departmentId);
-
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID && this.centralizedChatDetails[receivedMessageDeptName[0].name] === 'chatbuddy' && !this.roles?.includes('ROLE_ADMIN')) {
+ 
+                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID  && !this.roles?.includes('ROLE_ADMIN')) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);

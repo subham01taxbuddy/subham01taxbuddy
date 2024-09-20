@@ -58,6 +58,10 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
 
     newMessageSubscription: Subscription;
     conversationDeletedSubscription: Subscription;
+
+    isLoadingInitialData: boolean = true;
+    isDepartmentListLoaded: boolean = false;
+    isConversationListLoaded: boolean = false;
     showFullScreen() {
         const chatUrl = 'chat/chat-full-screen';
         window.open(chatUrl, '_blank');
@@ -175,9 +179,24 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.isLoadingInitialData = true;
+        this.isDepartmentListLoaded = false;
+        this.isConversationListLoaded = false;
         this.chatManager.getDepartmentList();
-        console.log('full conversation list');
-        this.chatManager.conversationList(this.page);
+        this.chatService.onConversationUpdatedCallbacks.set('floating-widget', (event: string, data?: any) => {
+            if (event === ChatEvents.DEPT_RECEIVED) {
+              this.isDepartmentListLoaded = true;
+              this.checkInitialDataLoaded();
+            }
+          });
+          this.chatManager.conversationList(this.page).then(() => {
+            this.isConversationListLoaded = true;
+            this.checkInitialDataLoaded();
+          }).catch((error) => {
+            console.error('Error loading conversations:', error);
+            this.isConversationListLoaded = true;
+            this.checkInitialDataLoaded();
+          });
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
@@ -192,6 +211,15 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         });
 
     }
+
+    private checkInitialDataLoaded(): void {
+        if (this.isDepartmentListLoaded && this.isConversationListLoaded) {
+          this.ngZone.run(() => {
+            this.isLoadingInitialData = false;
+            this.cd.detectChanges();
+          });
+        }
+      }
 
     ngAfterViewInit(): void {
         this.scrollToTopList();
@@ -237,7 +265,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
             this.chatManager.conversationList(this.page, departmentId).then(() => {
                 this.handleConversationList();
                 this.isLoading = false;
-                 this.cd.detectChanges();
+                this.cd.detectChanges();
 
                 this.ngZone.runOutsideAngular(() => {
                     setTimeout(() => {
