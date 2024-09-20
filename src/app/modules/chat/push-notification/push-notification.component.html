@@ -1,38 +1,46 @@
 <div class="notifications-container">
-<div *ngFor="let notification of notifications" class="push-notification-card" (click)="openChat(notification,$event)">
-    <div class="col-12">
-        <div class="row">
-            <div class="col-11 row">
-                <div class="col-2"> <i class="fas fa-comment message-icon"></i></div>
-                <div class="title col-10">Chat Notification</div>
-            </div>
-            <div class="col-1 row" (click)="closeNotification(notification,$event)">
-                <i class="fas fa-times close-icon"></i>
-            </div>
-        </div>
-    </div>
-    <div class="body">
-        <div class="profile">
-            <div class="profile-img">
-                <img src="assets/img/profile.webp" alt="">
-            </div>
-            <div class="profile-info">
-                <span class="name">{{notification?.sender_fullname}}</span>
+    <div *ngFor="let notification of notifications; let i=index" class="push-notification-card"
+        (click)="openChat(notification,$event)">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-11 row">
+                    <div class="col-2"> <i class="fas fa-comment message-icon"></i></div>
+                    <div class="title col-10">Chat Notification</div>
+                </div>
+                <div class="col-1 row" (click)="closeNotification(notification,$event)">
+                    <i class="fas fa-times close-icon"></i>
+                </div>
             </div>
         </div>
+        <div class="body">
+            <div class="profile">
+                <div class="profile-img">
+                    <img src="assets/img/profile.webp" alt="">
+                </div>
+                <div class="profile-info">
+                    <span class="name">{{notification?.sender_fullname}}</span>
+                </div>
+            </div>
 
+        </div>
+        <div class="unread-messages-container">
+            <i class='fa fa-envelope'></i>
+            <span class="unread-messages"> {{ isJson(notification?.text) ? 'Click here to view the details' :
+                notification?.text }}</span>
+        </div>
+
+
+        <div class="footer" (click)="$event.stopPropagation()">
+            <ng-container *ngIf="!notification.inputActive">
+                <div class="inactive-input" (click)="activateInput(notification, i, $event)">
+                    Type a reply...
+                </div>
+            </ng-container>
+            <ng-container *ngIf="notification.inputActive">
+                <input #messageInput type="text" placeholder="Type a reply..."
+                    (keyup.enter)="sendMessage(notification,$event)" [(ngModel)]="notification.messageSent">
+                <button class="send-btn" (click)="sendMessage(notification,$event)">Send</button>
+            </ng-container>
+        </div>
     </div>
-    <div class="unread-messages-container">
-        <i class='fa fa-envelope'></i>
-        <span class="unread-messages"> {{ isJson(notification?.text) ? 'Click here to view the details' : notification?.text }}</span>
-    </div>
-
-
-    <div class="footer" (click)="$event.stopPropagation()">
-
-        <input type="text" placeholder="Type a reply..." (keyup.enter)="sendMessage(notification,$event)" [(ngModel)]="notification.messageSent">
-        <button class="send-btn" (click)="sendMessage(notification,$event)">Send</button>
-
-    </div>
-</div>
 </div>

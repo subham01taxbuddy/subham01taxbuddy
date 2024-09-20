@@ -14,9 +14,9 @@
             [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
             (click)="fetchList(deptName.id)">{{deptName.name }}</div>
     </div>
-    <div class="user-list main-panel-chat" *ngIf="!isUserChatVisible">
+    <div class="user-list main-panel-chat" *ngIf="!isUserChatVisible" #scrollContainer>
         <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="2" [infiniteScrollUpDistance]="1"
-            [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolled)="onScrollDown()" #scrollContainer>
+            [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolled)="onScrollDown()" >
             <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)">
                 <div class="row" style="width: 100%;">
                     <div class="col-2">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild, NgZone } from '@angular/core';
 import { widgetVisibility } from './animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -20,10 +20,10 @@ interface Department {
     animations: [widgetVisibility],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloatingWidgetComponent implements OnInit {
+export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     selector: string = ".main-panel-chat";
 
-    @ViewChild('scrollContainer') scrollContainer: ElementRef;
+    @ViewChild('scrollContainer', { static: false }) scrollContainer: ElementRef;
 
     @ViewChild(UserChatComponent) userChatComponent: UserChatComponent;
     centralizedChatDetails: any;
@@ -35,7 +35,7 @@ export class FloatingWidgetComponent implements OnInit {
 
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService, private chatService: ChatService,cd: ChangeDetectorRef
+        private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone
     ) {
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
@@ -59,8 +59,8 @@ export class FloatingWidgetComponent implements OnInit {
     newMessageSubscription: Subscription;
     conversationDeletedSubscription: Subscription;
     showFullScreen() {
-      const chatUrl = 'chat/chat-full-screen';
-      window.open(chatUrl, '_blank');
+        const chatUrl = 'chat/chat-full-screen';
+        window.open(chatUrl, '_blank');
         this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;
@@ -110,7 +110,7 @@ export class FloatingWidgetComponent implements OnInit {
         this.showWidget = true;
     }
 
-    closeFullScreen(){
+    closeFullScreen() {
         this.fullChatScreen = false;
     }
 
@@ -180,8 +180,8 @@ export class FloatingWidgetComponent implements OnInit {
         this.chatManager.conversationList(this.page);
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
-             this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
-             this.cd.detectChanges();
+                this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
+                this.cd.detectChanges();
             }
         });
 
@@ -191,6 +191,10 @@ export class FloatingWidgetComponent implements OnInit {
             this.cd.detectChanges();
         });
 
+    }
+
+    ngAfterViewInit(): void {
+        this.scrollToTopList();
     }
 
 
@@ -217,27 +221,42 @@ export class FloatingWidgetComponent implements OnInit {
         }
     }
 
+    scrollToTopList() {
+        if (this.scrollContainer && this.scrollContainer.nativeElement) {
+            this.scrollContainer.nativeElement.scrollTop = 0;
+            console.log('Scrolled to top');
+        } else {
+            console.warn('Scroll container not found');
+        }
+    }
+
     fetchList(departmentId: any) {
         this.selectedDepartmentId = departmentId;
-        this.scrollToTop();
         this.page = 0;
         if (departmentId) {
             this.chatManager.conversationList(this.page, departmentId).then(() => {
-                    this.handleConversationList();
-                    this.isLoading = false;
-                    this.cd.detectChanges();
-                
+                this.handleConversationList();
+                this.isLoading = false;
+                 this.cd.detectChanges();
+
+                this.ngZone.runOutsideAngular(() => {
+                    setTimeout(() => {
+                        this.scrollToTopList();
+                        this.cd.detectChanges();
+                    });
+                });
+
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
         } else {
             this.chatManager.conversationList(this.page).then(() => {
-                 
-                    this.handleConversationList();
-                    this.isLoading = false;
-                    this.cd.detectChanges();
-                 
+
+                this.handleConversationList();
+                this.isLoading = false;
+                this.cd.detectChanges();
+
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
