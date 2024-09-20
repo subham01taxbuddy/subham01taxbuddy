@@ -34,7 +34,6 @@ export class ChatService {
   topicInbox;
   clientId;
   chat21UserID = null;
-  chatRequestID = null;
   userFullName = '';
   deptName = '';
   deptID = '';
@@ -139,7 +138,6 @@ export class ChatService {
     this.clientId = this.uuidv4();
     this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
     this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
-    this.chatRequestID = requestId;
     this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
   }
   async initTokens(initializeSocket: boolean, service?: string) {
@@ -860,7 +858,8 @@ export class ChatService {
     if (recipient) {
       dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${recipient}/outgoing`;
     } else {
-      dest_topic = `apps/tilechat/outgoing/users/${this.chat21UserID}/messages/${this.chatRequestID}/outgoing`;
+      console.error('recipient is null in send message');
+      return;
     }
     let outgoing_message = {
       text: message,
