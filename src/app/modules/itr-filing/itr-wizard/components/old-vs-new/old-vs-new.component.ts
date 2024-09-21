@@ -552,8 +552,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       if(this.utilsService.isNonEmpty(origItrText)) {
         let originalItr = JSON.parse(origItrText);
         let itrFilingDueDate = new Date(sessionStorage.getItem('itrFilingDueDate'));
-        let form10IEDate = this.utilsService.isNonEmpty(originalItr.optionForCurrentAY?.date) ?
-            new Date(originalItr.optionForCurrentAY.date) : new Date();
+        let form10IEField = (
+            this.regimeSelectionForm.controls['optionForCurrentAY'] as UntypedFormGroup
+        ).controls['date'];
+        let form10IEDate = this.utilsService.isNonEmpty(form10IEField.value) ?
+            new Date(form10IEField.value) : new Date();
         this.showCurrentAYOptions = true;
         if (originalItr.regime === 'OLD' ||
             (originalItr.regime === 'NEW' && form10IEDate < itrFilingDueDate
@@ -1979,6 +1982,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
       (formGroup as UntypedFormGroup).controls['date'].setValue(moment(dateString).toDate());
     }
+    this.updateRegimeLabels();
   }
 
   getCrypto(summary, type) {
