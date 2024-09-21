@@ -291,6 +291,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       );
       return;
     }
+    if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+        return;
+      }
+    }
     const deductionsArray = (
       (this.deductionForm.controls['deductions'] as UntypedFormArray)
         ?.controls[0] as UntypedFormGroup

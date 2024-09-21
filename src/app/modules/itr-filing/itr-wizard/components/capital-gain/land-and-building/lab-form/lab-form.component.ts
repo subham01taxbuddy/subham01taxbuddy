@@ -71,6 +71,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   PREV_ITR_JSON: any;
 
   labData: NewCapitalGain[] = [];
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
   constructor(
     private fb: UntypedFormBuilder,
     private itrMsService: ItrMsService,
@@ -1040,6 +1042,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     ).controls[index] as UntypedFormGroup;
 
     this.updateValidations(deductionForm);
+    this.initializeFormFlags(deductionForm,index);
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as UntypedFormArray
     ).controls[0] as UntypedFormGroup;
@@ -1095,6 +1098,12 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       !this.calPercentage())
     ) {
       this.saveBusy = true;
+      if (this.isDeductions.value) {
+        if (!this.showCGAS.value && !this.showNewAsset.value) {
+          this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+          return;
+        }
+      }
       if (this.utilsService.isNonEmpty(this.cgOutput)) {
         console.log('cgOutput is non empty');
         let formValue = formGroupName.getRawValue();
@@ -1252,6 +1261,70 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       formGroup.controls['ifscCode'].updateValueAndValidity();
       formGroup.controls['dateOfDeposit'].setValidators(null);
       formGroup.controls['dateOfDeposit'].updateValueAndValidity();
+    }
+  }
+
+  initializeFormFlags(formGroup: any,index?): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true ,index);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false,index);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true,index);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false,index);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean, index?): void {
+    if (isChecked) {
+      this.setFieldValidators(index,'purchaseDate', [Validators.required]);
+      this.setFieldValidators(index,'costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators(index,'purchaseDate');
+      this.clearFieldValidators(index,'costOfNewAssets');
+    }
+    this.calculateDeduction();
+  }
+
+  onToggleCGAS(isChecked: boolean,index?): void{
+    if (isChecked) {
+      this.setFieldValidators(index,'investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators(index,'accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators(index,'ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators(index,'dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators(index,'investmentInCGAccount');
+      this.clearFieldValidators(index,'accountNumber');
+      this.clearFieldValidators(index,'ifscCode');
+      this.clearFieldValidators(index,'dateOfDeposit');
+    }
+    this.calculateDeduction();
+  }
+
+  setFieldValidators(index,controlName: string, validators: any[]): void {
+    const deductions = this.getDeductionsArray;
+    const control = deductions.at(index).get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(index,controlName: string): void {
+    const deductions = this.getDeductionsArray;
+    const control = deductions.at(index).get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
     }
   }
 
@@ -1565,7 +1638,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  calculateDeduction(index, singleCg?) {
+  calculateDeduction(index?, singleCg?) {
     if (this.deductionValidation(false)) {
       return;
     }
