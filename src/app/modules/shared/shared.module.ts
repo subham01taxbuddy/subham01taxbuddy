@@ -59,6 +59,7 @@ import { IncomeSourceDialogComponent } from './components/income-source-dialog/i
 import {ZipcodeDirective} from "./directives/zipcode.directive";
 import { AddManualUpdateReasonComponent } from './components/add-manual-update-reason/add-manual-update-reason.component';
 import {WholeNumberPipe} from "./directives/wholeNumber.directive";
+import {DateInputDirective } from './directives/auto-slash-date.directive';
 @NgModule({
     declarations: [
         UpperCaseDirective,
@@ -104,7 +105,8 @@ import {WholeNumberPipe} from "./directives/wholeNumber.directive";
         CalculatorModalComponent,
         CustomButtonComponent,
         IncomeSourceDialogComponent,
-        AddManualUpdateReasonComponent
+        AddManualUpdateReasonComponent,
+        DateInputDirective
     ],
     imports: [
         CommonModule,
@@ -167,7 +169,8 @@ import {WholeNumberPipe} from "./directives/wholeNumber.directive";
         CalculatorModalComponent,
         CustomButtonComponent,
         IncomeSourceDialogComponent,
-        AddManualUpdateReasonComponent
+        AddManualUpdateReasonComponent,
+        DateInputDirective
     ],
     providers: [StorageService, Schedules, RequestManager]
 })

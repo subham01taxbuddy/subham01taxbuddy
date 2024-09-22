@@ -47,8 +47,8 @@
                                 <span class="span">Date of Sale </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput [min]="minSellDate" [max]="maxSellDate" formControlName="sellDate"
-                                  name="asset[i]" readonly [matDatepicker]="sellDate" placeholder="Date of Sale" (blur)="calculateIndexCost(i);
+                                <input appDateInput matInput [min]="minSellDate" [max]="maxSellDate" formControlName="sellDate"
+                                  name="asset[i]" [matDatepicker]="sellDate" placeholder="Date of Sale" (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)"
                                   (dateChange)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
                                   (dateInput)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
@@ -68,7 +68,7 @@
                                 <span class="span">Date of Acquisition </span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput [max]="maxPurchaseDate" [min]="minPurchaseDate"
+                                <input appDateInput matInput [max]="maxPurchaseDate" [min]="minPurchaseDate"
                                   formControlName="purchaseDate" name="asset[i]" readonly [matDatepicker]="purchaseDate"
                                   placeholder="Date of Acquisition" (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)"
