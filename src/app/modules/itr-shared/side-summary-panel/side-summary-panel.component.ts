@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SummaryHelperService } from "../../../services/summary-helper-service";
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './side-summary-panel.component.html',
   styleUrls: ['./side-summary-panel.component.scss']
 })
-export class SideSummaryPanelComponent implements OnInit {
+export class SideSummaryPanelComponent {
 
   @Input() type: string;
 
@@ -33,10 +33,6 @@ export class SideSummaryPanelComponent implements OnInit {
   unlistedBonds: any = {};
   subscription: Subscription;
   constructor(private summaryHelper: SummaryHelperService, public utilsService: UtilsService) {
-
-  }
-
-  ngOnInit(): void {
 
   }
 

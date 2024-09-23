@@ -172,12 +172,6 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
     }
-    
-    this.loading = true;
-    this.reportService.getMethod('/bo/future-year-subscription-exists?mobileNumber='+number).subscribe((response: any) => {
-      this.disableItrSubPlan = response.data.itrSubscriptionExists;
-      this.loading = false;
-    });
 
     this.loading = true;
     let futureParam

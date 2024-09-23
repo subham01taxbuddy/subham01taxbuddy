@@ -145,8 +145,9 @@ export class CreateNewUserComponent implements OnInit {
   leaderId: number;
   filerId: number;
   agentId: number;
+  filerSelected:boolean =false;
 
-  fromSme(event, item) {
+  fromSme(event, item,fromFiler?) {
     if (item === 1) {
       if (event && Object.keys(event).length > 0) {
         this.leaderName = event ? event.name : null;
@@ -164,6 +165,11 @@ export class CreateNewUserComponent implements OnInit {
         if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
           this.getSmeInfoDetails(this.filerId);
         }
+        if(this.partnerType ==="PRINCIPAL"){
+          this.filerSelected = false;
+        }else{
+          this.filerSelected = true;
+        }
       }
     } else if (item === 3) {
       if (event && Object.keys(event).length > 0) {
@@ -172,6 +178,11 @@ export class CreateNewUserComponent implements OnInit {
         this.filerName = event ? event.name : null;
         if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
           this.getSmeInfoDetails(this.filerId);
+        }
+        if(fromFiler){
+          this.filerSelected = true;
+        }else{
+          this.filerSelected = false;
         }
       }
     }
@@ -252,26 +263,33 @@ export class CreateNewUserComponent implements OnInit {
 
   createUserInCognito() {
     if (this.signUpForm.valid) {
+      if ((!this.filerId || !this.filerSelected)) {
+        this.utilsService.showSnackBar("Please Select Filer.");
+        return;
+      }
       const signUp = this.createSignUpObj();
       console.log('SignUp Object:', signUp);
-      Auth.signUp(signUp).then(res => {
-        console.log('SignUp Result:', res);
-        // Auth.signIn(res.user.getUsername()).then(signInRes => {
-        //   console.log('Sign In Result After Sign Up:', signInRes);
+      Auth.signUp(signUp)
+        .then(res => {
+          console.log('SignUp Result:', res);
+          // Auth.signIn(res.user.getUsername()).then(signInRes => {
+          //   console.log('Sign In Result After Sign Up:', signInRes);
 
-        // }).catch(signInErr => {
-        //   console.log('Sign In err After Sign Up:', signInErr);
-        // });
-        this.userSignUp(res);
-      }).catch(err => {
-        console.log('Sign Up err:', err);
-        console.log('sign up error', err.message)
-        this.utilsService.showSnackBar(err.message);
-      });
+          // }).catch(signInErr => {
+          //   console.log('Sign In err After Sign Up:', signInErr);
+          // });
+          this.userSignUp(res);
+        })
+        .catch(err => {
+          console.log('Sign Up err:', err);
+          console.log('sign up error', err.message);
+          this.utilsService.showSnackBar(err.message);
+        });
     } else {
       $('input.ng-invalid').first().focus();
     }
   }
+
 
   userSignUp(cognitoData) {
     if (this.signUpForm.valid) {
@@ -283,29 +301,33 @@ export class CreateNewUserComponent implements OnInit {
       finalReq.cognitoId = cognitoData['userSub'];
       this.loading = true;
       let param = "/user_account";
-      this.userService.postMethod(param, finalReq).subscribe((res: any) => {
-        if (res.status === 406) {
+      this.userService.postMethod(param, finalReq).subscribe({
+        next: (res: any) => {
           this.loading = false;
-          this.utilsService.showSnackBar(res.message);
-          return;
+          if (res.status === 406) {
+            this.utilsService.showSnackBar(res.message);
+            return;
+          }
+          this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
+        },
+        error: (error) => {
+          this.loading = false;
+          console.log("Error when creating user: ", error);
+          this.utilsService.showSnackBar("Some issue to create user.");
         }
-        this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
-      }, (error) => {
-        this.loading = false;
-        console.log("Error when creating user: ", error);
-        this.utilsService.showSnackBar("Some issue to create user.");
-      }
-      );
+      });
     }
   }
 
   assignUser(userId, serviceType) {
     //'https://dev-api.taxbuddy.com/user/v2/manual-assignment?userId=8729&serviceType=ITR&leaderUserId=8149&filerUserId=8149&statusId=16'
     let param = `/v2/manual-assignment?userId=${userId}&serviceType=${serviceType}&statusId=16`
-    if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+    if (this.loggedInUserRoles.includes('ROLE_LEADER') && this.filerId) {
+      param = param + `&leaderUserId=${this.loggedInId}&filerUserId=${this.filerId}`;
+    }else if(this.loggedInUserRoles.includes('ROLE_LEADER') && !this.filerId){
       param = param + `&leaderUserId=${this.loggedInId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
-      param = param + `&filerUserId=${this.loggedInId}`;
+      param = param + `&filerUserId=${this.filerId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
       if (this.leaderId && !this.filerId) {
         param = param + `&leaderUserId=${this.leaderId}`;
@@ -315,43 +337,50 @@ export class CreateNewUserComponent implements OnInit {
         param = param + `&filerUserId=${this.filerId}`
       }
     }
-    this.userService.getMethod(param).subscribe((res: any) => {
-      if (res.success == true) {
+    this.userService.getMethod(param).subscribe({
+      next: (res: any) => {
         this.loading = false;
-        this.utilsService.showSnackBar("User created succesfully.");
-      } else {
+        if (res.success) {
+          this.utilsService.showSnackBar("User created successfully.");
+        } else {
+          this.utilsService.showSnackBar("Error while assigning user! Please select leader or Filer Name.");
+        }
+      },
+      error: (error) => {
         this.loading = false;
-        this.utilsService.showSnackBar("Error while assigning user!!! Please select leader or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!");
       }
-
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar("Error while assigning user!!!");
-    })
+    });
   }
 
   getUserInfoByPan() {
-    let pan = this.signUpForm.controls['panNumber'];
+    const pan = this.signUpForm.controls['panNumber'];
+
     if (this.utilsService.isNonEmpty(pan.value) && pan.valid) {
-      this.utilsService.getPanDetails(pan.value).subscribe((result: any) => {
-        console.log('userData from PAN: ', result);
-        if (result.isValid && result.isValid === 'INVALID PAN') {
-          this.utilsService.showSnackBar('The PAN number is invalid');
-          this.signUpForm.patchValue({
-            firstName: '',
-            lastName: '',
-            middleName: ''
-          });
-        } else if (result.isValid && result.isValid === 'EXISTING AND VALID') {
-          this.signUpForm.patchValue(result);
-        } else {
-          this.utilsService.showSnackBar(result.isValid);
+      this.utilsService.getPanDetails(pan.value).subscribe({
+        next: (result: any) => {
+          console.log('userData from PAN: ', result);
+          if (result.isValid === 'INVALID PAN') {
+            this.utilsService.showSnackBar('The PAN number is invalid');
+            this.signUpForm.patchValue({
+              firstName: '',
+              lastName: '',
+              middleName: ''
+            });
+          } else if (result.isValid === 'EXISTING AND VALID') {
+            this.signUpForm.patchValue(result);
+          } else {
+            this.utilsService.showSnackBar(result.isValid);
+          }
+        },
+        error: (error) => {
+          console.log('Error during fetching data using PAN number: ', error);
+          this.utilsService.showSnackBar('Error fetching data. Please try again.');
         }
-      }, error => {
-        console.log('Error during fetching data using PAN number: ', error)
-      })
+      });
     }
   }
+
 
   changeServiceType() {
     let loggedInSmeInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));

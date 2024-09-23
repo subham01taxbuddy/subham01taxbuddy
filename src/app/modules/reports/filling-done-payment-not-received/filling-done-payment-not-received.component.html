@@ -87,12 +87,16 @@
 <div class="tableSpc mt-3">
   <div>
     <div class="row">
-      <div class="col-sm-8 row">
+      <div class="col-sm-6 row" [ngClass]="leaderTotalInvoice && this.leaderId ? 'col-sm-6' : 'col-sm-8'">
         <div class="table-info-text">
           Filing Done But Payment NOT Received Report Details:
         </div>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-3" *ngIf="this.leaderTotalInvoice && this.leaderId">
+        <div style="font-size: 18px;display: flex;align-items: flex-end;float: right;"> Total Invoice Amount:&nbsp; <b>₹{{
+           leaderTotalInvoice || 0}}</b></div>
+      </div>
+      <div class="col-sm-3" [ngClass]="leaderTotalInvoice && this.leaderId ? 'col-sm-3' : 'col-sm-4'">
         <div style="font-size: 18px;display: flex;align-items: flex-end;float: right;"> Total:&nbsp; <b>{{
             this.config.totalItems || 0}}</b></div>
       </div>

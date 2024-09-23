@@ -184,13 +184,6 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
     }
-
-    // if (this.searchVal !== "" && this.key) {
-    //   this.getSmeSearchList(key, this.searchVal);
-    // }else{
-    //   this.showError = true;
-    //   this._toastMessageService.alert('error','Please select attribute and enter search value.');
-    // }
   }
 
   getSmeSearchList(key: any, searchValue: any) {
@@ -229,7 +222,6 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           this._toastMessageService.alert('error', 'No Lead Data Found .');
           this.smeListGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
-          // this.getSmeList();
         }
       },
       (error) => {
@@ -243,7 +235,6 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
 
   getSmeList=(pageChange?):Promise <any> => {
     // 'https://uat-api.taxbuddy.com/report/bo/sme-details?page=0&pageSize=1&assigned=false' \
-    // ${this.config.currentPage - 1}
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache');
@@ -318,7 +309,6 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
       {
         field: 'selection',
         headerName: '',
-        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -463,30 +453,7 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           return filer;
         }
       },
-      // {
-      //   headerName: 'Income Tax Expertise',
-      //   field: 'itrTypes',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-      // {
-      //   headerName: 'State',
-      //   field: 'state',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
+
       {
         headerName: 'View/Edit Profile',
         field: '',
@@ -540,42 +507,12 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
           };
         },
       },
-      // {
-      //   headerName: 'Reject/Backed Out',
-      //   field: '',
-      //   width: 120,
-      //    pinned: 'right',
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Click to reject/Backed out " data-action-type="reject"
-      //     style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
-      //     <i class="fas fa-times-circle" style="color: red;" data-action-type="reject"> </i>
-      //      </button>`;
-      //   },
-      // },
     ];
   }
   public rowSelection: 'single';
   rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
-    var smeArray = [];
-    // for (let i = 0; i < data.length; i++) {
-    //   let smeInfo: any = Object.assign({}, smeArray[i], {
-    //     mobileNumber: data[i].mobileNumber,
-    //     name: data[i].name,
-    //     email: data[i].email,
-    //     referredPerson:data[i].referredPerson,
-    //     qualification:data[i].qualification,
-    //     languages: data[i].languages,
-    //     itrTypes:data[i].itrTypes,
-    //     state:data[i].state,
-
-    //   });
-    // smeArray.push(smeInfo);
-    // }
     return data;
   }
 
@@ -663,16 +600,11 @@ export class UnassignedSmeComponent implements OnInit, OnDestroy {
 
     disposable.afterClosed().subscribe(result => {
       if (result === 'YES') {
+        console.log('Result',result)
       }
     })
 
   }
-
-  //   pageChanged(event: any) {
-  //     this.config.currentPage = event;
-  //     this.searchParam.page = event - 1
-  //     this.getSmeList();
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);

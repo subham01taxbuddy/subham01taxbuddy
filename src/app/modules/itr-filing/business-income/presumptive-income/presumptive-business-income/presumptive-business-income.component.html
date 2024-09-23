@@ -2,21 +2,21 @@
   <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
   <div>
     <main id="business_id">
-      <div class="frameC p-10">
-        <div class="div">
-          <div class="text-wrapper">Presumptive Income</div>
+      <div class="frameC p-0">
+        <!-- <div class="div">
+          <div class="text-wrapper">Business Income 44AD</div>
           <div class="mingcute-down-fill"></div>
-        </div>
+        </div> -->
         <div class="space ">
           <div class="div-2 p-0">
-            <div class="div-4 p-15">
+            <div class="div-4 p-10">
               <div class="frame-wrapper-2A">
                 <div class="accordion" id="myAccordion">
                   <div class="accordion-item">
                     <div class="accordion-item mt-3">
                       <h2 class="accordion-header accoHdclr" id="headingOne">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                          data-bs-target="#collapseOne">Add / Edit Business Income</button>
+                                data-bs-target="#collapseOne">Add / Edit Business Income</button>
                       </h2>
                       <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                         <div class="card-body p-15">
@@ -26,7 +26,7 @@
                                 <div class="field">
                                   <app-business-input-autocomplete [businessType]="'44AD'" [selectedInput]="
                                   selectedFormGroup.controls['natureOfBusiness'].value"
-                                    (businessSelected)="businessClicked($event)">
+                                                                   (businessSelected)="businessClicked($event)">
                                   </app-business-input-autocomplete>
 
                                   <mat-error *ngIf="
@@ -41,7 +41,7 @@
                                   </div>
                                   <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input formControlName="tradeName" matInput name="tradeName" class="input-field"
-                                      required />
+                                           required />
                                   </mat-form-field>
                                   <mat-error *ngIf="(selectedFormGroup.controls['tradeName'].touched ||
                                         submitted) && selectedFormGroup.controls['tradeName'].hasError('required')
@@ -54,7 +54,7 @@
                                   </div>
                                   <mat-form-field appearance="outline" class="small-inp no-height">
                                     <input matInput class="input-field" formControlName="description"
-                                      name="description" />
+                                           name="description" />
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -64,8 +64,8 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankReceipts" matInput name="bankReceipts"
-                                        class="input-field" maxlength="8" required digitsOnly
-                                        placeholder="₹ Enter Amount" (change)="
+                                             class="input-field" maxlength="8" required digitsOnly
+                                             placeholder="₹ Enter Amount" (change)="
                                         calculatePresumptiveIncome('bank', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="(selectedFormGroup.controls['bankReceipts'].touched || submitted) &&
@@ -83,12 +83,12 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankMinIncome" matInput name="bankMinIncome"
-                                        class="input-field" required digitsOnly readonly />
+                                             class="input-field" required digitsOnly readonly />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
                                           6% </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': bankMinIncomePercentage+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': bankMinIncomePercentage+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -103,16 +103,16 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="bankPreIncome" placeholder="₹ Enter Amount" matInput
-                                        name="bankPreIncome" class="input-field"
-                                        maxlength="{{selectedFormGroup.controls['bankReceipts'].value?.length}}"
-                                        required digitsOnly (change)="
+                                             name="bankPreIncome" class="input-field"
+                                             maxlength="{{selectedFormGroup.controls['bankReceipts'].value?.length}}"
+                                             required digitsOnly (change)="
                                         calculatePresumptiveIncome('bank', true)" />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
                                           {{bankPercentage?bankPercentage:0}}%
                                         </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': bankPerWidth?bankPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': bankPerWidth?bankPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -132,8 +132,8 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashReceipts" placeholder="₹ Enter Amount" matInput
-                                        name="cashReceipts" maxlength="8" class="input-field" required digitsOnly
-                                        (change)="calculatePresumptiveIncome('cash', true)" />
+                                             name="cashReceipts" maxlength="8" class="input-field" required digitsOnly
+                                             (change)="calculatePresumptiveIncome('cash', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="(selectedFormGroup.controls['cashReceipts'].touched || submitted) &&
                                           selectedFormGroup.controls['cashReceipts'].hasError('required')">
@@ -149,12 +149,12 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashMinIncome" matInput name="cashMinIncome"
-                                        class="input-field" required digitsOnly readonly />
+                                             class="input-field" required digitsOnly readonly />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
                                           8% </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': cashMinIncomePercentage+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': cashMinIncomePercentage+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -169,9 +169,9 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="cashPreIncome" placeholder="₹ Enter Amount" matInput
-                                        name="cashPreIncome" class="input-field"
-                                        maxlength="{{selectedFormGroup.controls['cashReceipts'].value?.length}}"
-                                        required digitsOnly (change)="
+                                             name="cashPreIncome" class="input-field"
+                                             maxlength="{{selectedFormGroup.controls['cashReceipts'].value?.length}}"
+                                             required digitsOnly (change)="
                                         calculatePresumptiveIncome('cash', true)
                                         " />
                                       <div class="percentage-head" style="width: 50px;">
@@ -179,7 +179,7 @@
                                           {{cashPercentage?cashPercentage:0}}%
                                         </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': cashPerWidth?cashPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': cashPerWidth?cashPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -198,8 +198,8 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="anyOtherMode" placeholder="₹ Enter Amount" matInput
-                                        name="anyOtherMode" maxlength="8" class="input-field" required digitsOnly
-                                        (change)="calculatePresumptiveIncome('anyOther', true)" />
+                                             name="anyOtherMode" maxlength="8" class="input-field" required digitsOnly
+                                             (change)="calculatePresumptiveIncome('anyOther', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="(selectedFormGroup.controls['anyOtherMode'].touched || submitted) &&
                                           selectedFormGroup.controls['anyOtherMode'].hasError('required')">
@@ -215,12 +215,12 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="anyOtherMinIncome" matInput name="anyOtherMinIncome"
-                                        class="input-field" required digitsOnly readonly />
+                                             class="input-field" required digitsOnly readonly />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
                                           8% </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': cashMinIncomePercentage+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': cashMinIncomePercentage+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -235,15 +235,15 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline" class="small-inp no-height">
                                       <input formControlName="anyOtherPreIncome" placeholder="₹ Enter Amount" matInput
-                                        name="anyOtherPreIncome" class="input-field"
-                                        maxlength="{{selectedFormGroup.controls['anyOtherMode'].value?.length}}"
-                                        required digitsOnly (change)="calculatePresumptiveIncome('anyOther', true)" />
+                                             name="anyOtherPreIncome" class="input-field"
+                                             maxlength="{{selectedFormGroup.controls['anyOtherMode'].value?.length}}"
+                                             required digitsOnly (change)="calculatePresumptiveIncome('anyOther', true)" />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
                                           {{anyOtherPercentage?anyOtherPercentage:0}}%
                                         </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': anyOtherPerWidth?anyOtherPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                             [ngStyle]="{'width': anyOtherPerWidth?anyOtherPerWidth+'px' : 0+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>

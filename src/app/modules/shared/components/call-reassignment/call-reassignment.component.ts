@@ -69,7 +69,7 @@ export class CallReassignmentComponent implements OnInit {
 
   getAllCallerUser() {
     this.loading = true;
-    var param = `/call-management/caller-agents`;
+    let param = `/call-management/caller-agents`;
     this.userMsService.getMethod(param).subscribe(res => {
       console.log('caller users: ', res);
       this.loading = false;

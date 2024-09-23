@@ -1,19 +1,15 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="div-3" *ngFor="let salary of getSalaryArray.controls;
             let i = index">
-  <!--      <div>-->
   <div class="contents-wrapper">
     <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
-      <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}
+      </div>
       <div class="group" (click)="deleteSalaryArray(i)">
         <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'"></i>
       </div>
     </div>
   </div>
-  <!--      </div>-->
 </div>
 <div class="contents-wrapper">
   <div class="field-text-wrapper">
@@ -22,67 +18,33 @@
 </div>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
-    <div
-      class="display-flex"
-      *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+    <div class="display-flex" *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
       [formGroupName]="activeIndex">
-      <mat-checkbox *ngIf="false"
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class="mv"
-      >
+      <mat-checkbox *ngIf="false" color="primary" name="hasEdit[i]" formControlName="hasEdit" class="mv">
       </mat-checkbox>
       <div class="row" *ngIf="activeIndex === i">
         <div class="div-6 ">
           <div class="form-field">
-            <mat-label style="margin-bottom: 16.4px"
-              >TAN of Collector*
+            <mat-label style="margin-bottom: 16.4px">TAN of Collector*
             </mat-label>
             <mat-form-field appearance="outline">
-              <input
-                matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
-                matTooltipClass="tab-tooltip"
-                matTooltipPosition="above"
-                formControlName="collectorTAN"
-                matInput
-                currencyMask
-                placeholder="XXXXNNNNNX"
-                name="collectorTAN[i]"
-                class="input-field"
-                maxlength="10"
-                minlength="10"
-                required
-                type="text"
-                trim
-                upperCase
-              />
+              <input matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
+                matTooltipClass="tab-tooltip" matTooltipPosition="above" formControlName="collectorTAN" matInput
+                currencyMask placeholder="XXXXNNNNNX" name="collectorTAN[i]" class="input-field" maxlength="10"
+                minlength="10" required type="text" trim upperCase />
 
               <mat-error *ngIf="donation.get('collectorTAN').hasError('pattern')">
-                Enter valid TAN (e.g XXXX12345X)</mat-error
-              >
+                Enter valid TAN (e.g XXXX12345X)</mat-error>
             </mat-form-field>
           </div>
 
           <div class="form-field">
             <mat-label style="margin-bottom: 16.4px">Collector Name* </mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="collectorName"
-                matInput
-                placeholder="Collector Name"
-                name="collectorName[i]"
-                class="input-field"
-                maxlength="125"
-                required
-                type="text"
-                trim
-              />
-              <mat-error
-                *ngIf="donation.get('collectorName').hasError('pattern')"
-              >
-                Name should be character only</mat-error
-              >
+              <input formControlName="collectorName" matInput placeholder="Collector Name" name="collectorName[i]"
+                class="input-field" maxlength="125" required type="text" trim />
+              <mat-error *ngIf="donation.get('collectorName').hasError('pattern')">
+                Name should be character only</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -91,44 +53,22 @@
           <div class="form-field">
             <mat-label style="margin-bottom: 16.4px">Amount*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="totalAmountPaid"
-                matInput
-                placeholder="Amount"
-                name="totalAmountPaid[i]"
-                required
-                class="input-field"
-                maxlength="14"
-                digitsOnly
-              />
-              <mat-error
-                *ngIf="donation.get('totalAmountPaid').hasError('pattern')"
-              >
-                Enter positive amount without decimal.</mat-error
-              >
+              <input formControlName="totalAmountPaid" matInput placeholder="Amount" name="totalAmountPaid[i]" required
+                class="input-field" maxlength="14" digitsOnly />
+              <mat-error *ngIf="donation.get('totalAmountPaid').hasError('pattern')">
+                Enter positive amount without decimal.</mat-error>
             </mat-form-field>
           </div>
 
           <div class="form-field">
-          <mat-label>Total TCS Deposited*</mat-label>
-          <mat-form-field appearance="outline">
-            <input
-              formControlName="totalTcsDeposited"
-              matInput
-              placeholder="Total TCS Deposited"
-              name="totalTcsDeposited[i]"
-              required
-              class="input-field"
-              maxlength="14"
-              digitsOnly
-            />
-            <mat-error
-              *ngIf="donation.get('totalTcsDeposited').hasError('pattern')"
-            >
-              Enter positive amount without decimal.</mat-error
-            >
-          </mat-form-field>
-        </div>
+            <mat-label>Total TCS Deposited*</mat-label>
+            <mat-form-field appearance="outline">
+              <input formControlName="totalTcsDeposited" matInput placeholder="Total TCS Deposited"
+                name="totalTcsDeposited[i]" required class="input-field" maxlength="14" digitsOnly />
+              <mat-error *ngIf="donation.get('totalTcsDeposited').hasError('pattern')">
+                Enter positive amount without decimal.</mat-error>
+            </mat-form-field>
+          </div>
         </div>
       </div>
 

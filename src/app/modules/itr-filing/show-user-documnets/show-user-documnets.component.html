@@ -13,23 +13,6 @@
             </button>
           </span>
         </div>
-
-        <!-- <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
-                <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
-            </span> &nbsp;
-        </div> -->
-        <!-- <div class="card__row">
-          <div class="card__col-xs-4 card__col-lg-4 tpSpc">
-            <div class="container">
-              <div >
-                <button class="btn" (click)="getCloudFilePath(folder)">ITR</button>
-              </div>
-              <button class="btn">TPA</button>
-              <button class="btn">NOTICE</button>
-              <button class="btn">GST</button>
-            </div>
-          </div>
-        </div> -->
         <div class="card__row">
             <ul class="breadcrumb breadTx" style="overflow: hidden;">
                 <li *ngFor="let breadcrumb of breadcrumbsPart; let i=index" class="breadcrumb-item"
@@ -49,14 +32,6 @@
                                 (click)="getCloudFilePath(folder)">{{folder}}
 
                             </button></span><br>
-                        <!-- <button mat-button>{{folder}}</button> -->
-
-
-                        <!--   <a (click)="getCloudFilePath(folder)"><i class="fa fa-folder" style="font-size: 40px;"
-                                aria-hidden="true"></i><br>
-                            {{folder}}
-                        </a> -->
-
                     </div>
                 </span>
                 <div class="listVw" *ngIf="isFile">
@@ -91,20 +66,7 @@
                             </div>
 
                         </div>
-
-                        <!-- <a class="txtLf" *ngIf="isFile" href="javascript:void(0)" (click)="getCommonDocsUrl(folder)">
-                                    {{folder.fileName}}</a> -->
-                        <!-- <p class="txtRt" *ngIf="isFile && folder.isDeleted">Deleted By {{folder.deletedBy === "USER"
-                            ?
-                            'You'
-                            : 'Tax Buddy'}} on {{folder.date | date}}</p> -->
                     </span>
-
-
-
-                    <!-- <button class="dwLdBtn" *ngIf="isFile && !folder.isDeleted"
-                        (click)="downloadFile(folder.fileName)"><i class="fal fa-arrow-alt-to-bottom"></i>
-                        Download</button> -->
                 </div>
             </div>
             <div class="card__col-xs-9 card__col-lg-9 tpSpc">
@@ -117,24 +79,6 @@
                 <div *ngIf="viewer === 'DOC'">
                   <ngx-doc-viewer *ngIf="docType !== 'pdf'" [url]="docUrl" viewer="google" style="width:100%;height:93vh;">
                   </ngx-doc-viewer>
-<!--                  <pdf-viewer *ngIf="docType === 'pdf'" src="https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf" [zoom]="zoom" [original-size]="true" [autoresize]="true"-->
-<!--                              [render-text]="true" style="display: block;height: 100%">-->
-<!--                  </pdf-viewer>-->
-                  <!-- <pdf-viewer *ngIf="docType === 'pdf'"
-                  [src]="docUrl"
-                  [rotation]="0"
-                  [original-size]="false"
-                  [show-all]="true"
-                  [fit-to-page]="false"
-                  [zoom]="1"
-                  [zoom-scale]="'page-width'"
-                  [stick-to-page]="false"
-                  [render-text]="true"
-                  [external-link-target]="'blank'"
-                  [autoresize]="true"
-                  [show-borders]="false"
-                  style="width: 100%; height: 93vh;"
-                  ></pdf-viewer> -->
                  <ngx-extended-pdf-viewer *ngIf="docType === 'pdf'" [src]="docUrl" useBrowserLocale="false" height="85vh" [enableDragAndDrop]="false"
                                           [showUnverifiedSignatures]="false" [showToolbar]="false" [handTool]="false"
                                           [showHandToolButton]="true"></ngx-extended-pdf-viewer>
@@ -142,27 +86,5 @@
 
             </div>
         </div>
-
-
-
-
-        <!-- <ngx-image-zoom *ngIf="docDetails.docType !== 'pdf'" [thumbImage]="docDetails.docUrl"
-            [fullImage]="docDetails.docUrl" [magnification]="1" [enableScrollZoom]="true" [enableLens]="true"
-            [lensWidth]="200">
-        </ngx-image-zoom>
-        <div *ngIf="docDetails.docType === 'pdf'" style="padding-left: 30px;">
-            <button ion-button (click)="incrementZoom(-0.1)">
-                -
-            </button>&nbsp;
-            <button ion-button (click)="incrementZoom(0.1)">
-                +
-            </button>
-            <pdf-viewer [src]="docDetails.docUrl" [zoom]="zoom" [original-size]="true" [autoresize]="true"
-                [render-text]="true" style="display: block;height: 100%">
-            </pdf-viewer>
-        </div>
-        <div *ngIf="breadcrumbsPart.length > 0 && docDetails.docUrl ===''" style="text-align: center;padding: 20px;">
-            Documents not uploaded/Selected
-        </div> -->
     </div>
 </div>

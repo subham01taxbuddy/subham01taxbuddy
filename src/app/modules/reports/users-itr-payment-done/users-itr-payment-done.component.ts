@@ -66,7 +66,6 @@ export class UsersItrPaymentDoneComponent implements OnInit {
     }
 
   ngOnInit() {
-    // this.showReports();
     if(this.roles.includes('ROLE_OWNER')){
       this.ownerId = this.loggedInSme[0].userId;
       this.showFilter =false;
@@ -290,7 +289,6 @@ export class UsersItrPaymentDoneComponent implements OnInit {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
     if (this.ownerId) {

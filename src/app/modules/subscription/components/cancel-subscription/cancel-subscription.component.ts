@@ -134,8 +134,6 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -144,7 +142,6 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilService.getStoredMasterStatusList();
   }
 
@@ -187,8 +184,6 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['email'].setValue(null);
     this?.serviceDropDown?.resetService();
-    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
     this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
@@ -278,10 +273,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       });
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.getCancelSubscriptionList(event - 1);
-  // }
+
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -291,24 +283,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.searchParam.page = event - 1;
       this.config.currentPage = event;
-      // this.selectedPageNo = event - 1;
       this.getCancelSubscriptionList(event, '', '', 'fromPageChange');
     }
   }
 
   subscriptionCreateColumnDef() {
     return [
-      // {
-      //   field: 'selection',
-      //   headerName: '',
-      //   // headerCheckboxSelection: true,
-      //   checkboxSelection: true,
-      //   width: 50,
-
-      //   lockPosition: true,
-      //   suppressMovable: false,
-      //   cellRenderer: (params) => { },
-      // },
       {
         headerName: 'User Id',
         field: 'userId',
@@ -332,30 +312,6 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
-      // {
-      //   headerName: 'Mobile No.',
-      //   field: 'reminderMobileNumber',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      // },
-      // {
-      //   headerName: 'Email Id',
-      //   field: 'reminderEmail',
-      //   width: 120,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      // },
       {
         headerName: 'Subscription Details',
         field: 'userSelected',
@@ -594,7 +550,6 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
         })
         disposable.afterClosed().subscribe(result => {
           if (result) {
-            const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
             this.getCancelSubscriptionList(this.config.currentPage);
           }
         });

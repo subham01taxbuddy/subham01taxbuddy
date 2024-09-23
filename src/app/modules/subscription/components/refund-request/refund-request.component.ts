@@ -165,7 +165,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.resetFilters();
   }
 
   searchByObject(object) {
@@ -175,7 +174,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
       setTimeout(() => {
@@ -185,7 +183,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilService.getStoredMasterStatusList();
   }
 
@@ -236,8 +233,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
     this.smeDropDown?.resetDropdown();
-    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
     this.filerId = null;
@@ -367,7 +362,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      // this.selectedPageNo = event - 1;
       this.getRefundRequestList(event-1, '', '', 'fromPageChange');
     }
   }
@@ -375,17 +369,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   refundCreateColumnDef(view) {
     console.log('view=', view)
     return [
-      // {
-      //   field: 'selection',
-      //   headerName: '',
-      //   // headerCheckboxSelection: true,
-      //   checkboxSelection: true,
-      //   width: 50,
-
-      //   lockPosition: true,
-      //   suppressMovable: false,
-      //   cellRenderer: (params) => { },
-      // },
       {
         headerName: 'User Id',
         field: 'userId',

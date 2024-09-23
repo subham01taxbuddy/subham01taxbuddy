@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ApiEndpoints } from '../../api-endpoint';
 import { AppConstants } from '../../constants';
 
 @Component({
@@ -18,13 +17,13 @@ roles: any;
   financialYear: any[] = [];
   selectedFyYear = new UntypedFormControl('', Validators.required);
   constructor(public utilsService: UtilsService,
-    private itrMsService: ItrMsService) { 
+    private itrMsService: ItrMsService) {
     let loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = loggedInSme[0]?.roles;
     }
 
   ngOnInit() {
-    
+
     console.log(this.serviceType);
     if (this.serviceType === 'GST') {
       this.financialYear = AppConstants.gstFyList;
@@ -44,23 +43,10 @@ roles: any;
       this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
       this.currentFy =currentFy.length > 0 ? currentFy[0].financialYear : null
       this.sendFy.emit(this.selectedFyYear.value);
-    } else {
-      // const param = `${ApiEndpoints.itrMs.filingDates}`;
-      // this.itrMsService.getMethod(param).subscribe((res: any) => {
-      //   if (res && res.success && res.data instanceof Array) {
-      //     sessionStorage.setItem(AppConstants.FY_LIST, JSON.stringify(res.data));
-      //     this.financialYear = res.data;
-      //     const currentFy = this.financialYear.filter((item:any) => item.isFilingActive);
-      //     this.selectedFyYear.setValue(currentFy.length > 0 ? currentFy[0].financialYear : null);
-      //     this.sendFy.emit(this.selectedFyYear.value);
-      //   }
-      // }, error => {
-      //   console.log('Error during getting all PromoCodes: ', error)
-      // })
     }
   }
 
-  changeFy(fy: String) {
+  changeFy(fy: string) {
     this.sendFy.emit(this.selectedFyYear.value);
   }
 }

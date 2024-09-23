@@ -83,25 +83,25 @@ export class AddNewCourseComponent implements OnInit {
         passcode: this.courseForm.get('passCode').value,
         zoomLink: this.courseForm.get('zoomLink').value,
       };
-      this.reviewService.postMethod(param, request).subscribe(
-        (response: any) => {
+      this.reviewService.postMethod(param, request).subscribe({
+        next: (response: any) => {
+          this.loading = false;
           if (response.success) {
-            this.loading = false;
             console.log('response', response);
             this.utilsService.showSnackBar(response.message);
             setTimeout(() => {
-              this.dialogRef.close({ event: 'close', data: 'courseAdded'})
-            }, 1500)
+              this.dialogRef.close({ event: 'close', data: 'courseAdded' });
+            }, 1500);
           } else {
             this.utilsService.showSnackBar(response.message);
-            this.loading = false;
           }
         },
-        (error) => {
+        error: (error: any) => {
           this.loading = false;
+          console.error('Error in API of get course list', error);
           this.utilsService.showSnackBar('Error in API of get course list');
         }
-      );
+      });
     }else {
       this._toastMessageService.alert("error", "Please add all required values")
     }

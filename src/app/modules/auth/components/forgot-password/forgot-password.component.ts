@@ -17,8 +17,8 @@ export class ForgotPasswordComponent implements OnInit {
   @Output() sendValue = new EventEmitter<any>();
 
   forgotPasswordForm!: UntypedFormGroup;
-  isError: Boolean = false;
-  busy: Boolean = false;
+  isError: boolean = false;
+  busy: boolean = false;
   errorMessage = '';
 
   mode = 'MOBILE';
@@ -126,20 +126,25 @@ export class ForgotPasswordComponent implements OnInit {
         userPoolId:environment.AMPLIFY_CONFIG.aws_user_pools_id,
         password:this.forgotPasswordForm.controls['password'].value
       }
-      this.userService.postMethod(param, request).subscribe((res:any)=>{
-        console.log(res);
-        this.busy = false;
-        if(res.success){
-          this.isError = false;
-          this.errorMessage = '';
-          this.utilService.showSnackBar(res.message);
-          this.changeMode('SIGN_IN');
-        } else{
-          this.isError = true;
-          this.errorMessage = res.message;
+      this.userService.postMethod(param, request).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.busy = false;
+          if (res.success) {
+            this.isError = false;
+            this.errorMessage = '';
+            this.utilService.showSnackBar(res.message);
+            this.changeMode('SIGN_IN');
+          } else {
+            this.isError = true;
+            this.errorMessage = res.message;
+          }
+        },
+        error: (error) => {
+          this.busy = false;
+          console.error('Error during forgot password process', error);
+          this.utilService.showSnackBar(error.error.message);
         }
-      }, error => {
-        this.utilService.showSnackBar(error.error.message);
       });
     } else {
       $('input.ng-invalid').first().focus();

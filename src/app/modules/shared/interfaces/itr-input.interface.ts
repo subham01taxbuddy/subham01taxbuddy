@@ -489,8 +489,8 @@ export interface PartnerFirms {
   panNumber: string;
   Sec92EFirmFlag: boolean;
   isLiableToAudit: boolean;
-  profitSharePercent: Number;
-  profitShareAmount: Number;
+  profitSharePercent: number;
+  profitShareAmount: number;
   capitalBalanceOn31stMarch: number;
 }
 
@@ -610,7 +610,7 @@ export interface NewCapitalGain {
 }
 
 export interface AssetDetails {
-  brokerName: String;
+  brokerName: string;
   capitalGain: number;
   cgBeforeDeduction: number;
   srn: number;
@@ -828,19 +828,19 @@ export interface professionalIncome {
 }
 
 export interface Bonds {
-  srn: Number;
+  srn: number;
   id: any;
   description: any;
   purchaseDate: any;
   stampDutyValue: any;
   valueInConsideration: any;
-  indexCostOfAcquisition: Number;
-  costOfImprovement: Number;
+  indexCostOfAcquisition: number;
+  costOfImprovement: number;
   sellDate: any;
-  sellValue: Number;
-  sellExpense: Number;
+  sellValue: number;
+  sellExpense: number;
   gainType: any;
-  capitalGain: Number;
+  capitalGain: number;
   purchaseCost: any;
   isinCode: any;
   nameOfTheUnits: any;
@@ -860,9 +860,9 @@ export interface Deduction {
   panOfEligibleCompany: any;
   purchaseDatePlantMachine: any;
   purchaseDate: any;
-  costOfNewAssets: Number;
-  investmentInCGAccount: Number;
-  totalDeductionClaimed: Number;
+  costOfNewAssets: number;
+  investmentInCGAccount: number;
+  totalDeductionClaimed: number;
   costOfPlantMachinary: any;
 }
 export interface BankDetails {
@@ -1083,37 +1083,37 @@ export interface NewPresumptiveIncomes {
 export interface NewIncomes {
   id: any;
   incomeType: string;
-  receipts: Number;
+  receipts: number;
   presumptiveIncome: number;
-  periodOfHolding: Number;
-  minimumPresumptiveIncome: Number;
+  periodOfHolding: number;
+  minimumPresumptiveIncome: number;
   registrationNo: any;
   ownership: any;
   tonnageCapacity: any;
 }
 
 export interface ProfitLossACIncomes {
-  id: Number;
+  id: number;
   businessType: string;
   totalgrossProfitFromNonSpeculativeIncome?: number;
   netProfitfromNonSpeculativeIncome?: number;
   incomes: ProfitLossIncomes[];
   otherIncomes?: NewIncome[];
   expenses?: NewExpenses[];
-  totalgrossProfitFromSpeculativeIncome?: Number;
+  totalgrossProfitFromSpeculativeIncome?: number;
   netProfitfromSpeculativeIncome?: number;
 }
 
 export interface ProfitLossIncomes {
-  id: Number;
-  netIncome?: Number;
+  id: number;
+  netIncome?: number;
   brokerName: string;
   incomeType: string;
-  turnOver: Number;
-  finishedGoodsOpeningStock?: Number;
-  finishedGoodsClosingStock?: Number;
-  purchase?: Number;
-  COGS?: Number;
+  turnOver: number;
+  finishedGoodsOpeningStock?: number;
+  finishedGoodsClosingStock?: number;
+  purchase?: number;
+  COGS?: number;
   grossProfit: any;
   expenditure?: number;
   netIncomeFromSpeculativeIncome?: number;
@@ -1131,7 +1131,7 @@ export interface NewIncome {
   description: any;
 }
 export interface NewFinancialParticulars {
-  id: Number;
+  id: number;
   membersOwnCapital: any;
   reservesAndSurplus?: any;
   securedLoans: any;
@@ -1139,22 +1139,22 @@ export interface NewFinancialParticulars {
   totalLoans?: any;
   advances: any;
   totalSourcesOfFunds?: any;
-  sundryCreditorsAmount: Number;
-  totalLiabilitiesProvision?: Number;
-  totalCurrentAssetsLoansAdv?: Number;
-  netCurrentAsset?: Number;
+  sundryCreditorsAmount: number;
+  totalLiabilitiesProvision?: number;
+  totalCurrentAssetsLoansAdv?: number;
+  netCurrentAsset?: number;
   otherLiabilities: any;
   totalCapitalLiabilities: any;
   fixedAssets: any;
-  inventories: Number;
-  sundryDebtorsAmount: Number;
+  inventories: number;
+  sundryDebtorsAmount: number;
   balanceWithBank: any;
-  cashInHand: Number;
+  cashInHand: number;
   loanAndAdvances: any;
   investment: any;
   longTermInvestment?: any;
   shortTermInvestment?: any;
-  totalCurrentAssets?: Number;
+  totalCurrentAssets?: number;
   otherAssets: any;
   totalAssets: any;
   GSTRNumber: any;
@@ -1164,13 +1164,13 @@ export interface NewFinancialParticulars {
 
 export interface FixedAssetsDetails {
   hasEdit: boolean;
-  id: Number;
+  id: number;
   assetType: string;
   description: string;
-  bookValue: Number;
+  bookValue: number;
   depreciationRate: string;
-  depreciationAmount: Number;
-  fixedAssetClosingAmount: Number;
+  depreciationAmount: number;
+  fixedAssetClosingAmount: number;
 }
 
 export interface BusinessDescription {

@@ -3,7 +3,6 @@
 <div>
   <div class="spcDwn">
     <div class="div-3" *ngFor="let salary of getSalaryArray.controls; let i = index">
-      <!--      <div>-->
       <div class="contents-wrapper">
         <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
           <div [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}
@@ -26,14 +25,6 @@
       <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
         [formGroupName]="activeIndex">
         <div *ngIf="activeIndex === i">
-          <!-- <mat-checkbox
-            color="primary"
-            name="hasEdit[i]"
-            formControlName="hasEdit"
-            class="chkSp"
-          >
-          </mat-checkbox> -->
-
           <div class="container spcBlw">
             <div class="row">
 

@@ -3,7 +3,7 @@
   <mat-accordion class="headers-align">
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header (click)="addIncomeDetails('presumptive')">
-        <mat-panel-title>         
+        <mat-panel-title>
           Presumptive Income
         </mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
@@ -12,15 +12,12 @@
 
     <mat-expansion-panel hideToggle *ngIf="isFnO">
       <mat-expansion-panel-header (click)="addIncomeDetails('pnlaccounts')">
-        <mat-panel-title>          
+        <mat-panel-title>
           Speculative/Non Speculative income
         </mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
         <div class="card__row edit clearfix isShow">
-          <button
-            class="edit_btn"
-            (click)="$event.stopPropagation(); editForm('customer')"
-          >
+          <button class="edit_btn" (click)="$event.stopPropagation(); editForm('customer')">
             <mat-icon> edit_square </mat-icon>Edit
           </button>
         </div>
@@ -30,15 +27,12 @@
 
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header (click)="addIncomeDetails('balance-sheet')">
-        <mat-panel-title>          
+        <mat-panel-title>
           Balance Sheet
         </mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
         <div class="card__row edit clearfix isShow">
-          <button
-            class="edit_btn"
-            (click)="$event.stopPropagation(); editForm('personal')"
-          >
+          <button class="edit_btn" (click)="$event.stopPropagation(); editForm('personal')">
             <mat-icon>
               {{ sheetData?.editForm ? "highlight_off" : "edit_square" }}
             </mat-icon>
@@ -51,19 +45,9 @@
   <div class="flex justify-between p-[30px] back-foot">
     <button class="lgtBtn">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold" (click)="gotoSources()"
-        >&nbsp;Back to Source Page</span
-      >
+      <span class="font-semibold" (click)="gotoSources()">&nbsp;Back to Source Page</span>
     </button>
   </div>
 </div>
 
-<router-outlet
-  *ngIf="!hideOutlet"
-  (activate)="subscribeToEmitter($event)"
-  (deactivate)="unsubscribe()"
-></router-outlet>
-<!--<div *ngIf="!hideOutlet">-->
-<!--  <h3 class="personal-info">Presumptive Income:</h3>-->
-<!--  <app-presumptive-income></app-presumptive-income>-->
-<!--</div>-->
+<router-outlet *ngIf="!hideOutlet" (activate)="subscribeToEmitter($event)" (deactivate)="unsubscribe()"></router-outlet>

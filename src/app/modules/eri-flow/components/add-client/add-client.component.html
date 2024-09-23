@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="card" >
+<div class="card">
   <form [formGroup]="addClientForm">
     <p *ngIf="this.addClientData?.eriClientValidUpto !== null">Client is already added under ERI and valid upto
       <b>{{this.addClientData?.eriClientValidUpto |date :'MMMM d, y'}}</b>
@@ -56,9 +56,6 @@
       <div class="card__col-xs-12 card__col-sm-4" *ngIf="otpSend">
         <button class="tbd-btn" [disabled]="loading" (click)="verifyOtp()">Verify OTP</button>
       </div>
-      <!-- <div class="card__col-xs-12 card__col-sm-4" *ngIf="addClientForm.valid">
-      <button class="btn long-btn" style="border: none;" (click)="changePage()">Next</button>
-    </div> -->
     </div>
   </form>
 </div>

@@ -1,0 +1,101 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="clearfix">
+  <div class="align-items-center row">
+    <div class="col-sm-4">
+      <div class="hdTx">Create New Alert</div>
+    </div>
+  </div>
+  <div class="rowClr">
+    <div class="surround">
+      <form [formGroup]="alertForm" (ngSubmit)="createAlert()">
+        <div class="row mb-4">
+          <div class="col-sm-4 spsTp">
+            <mat-label>Type:</mat-label>
+            <mat-form-field appearance="outline" class="class1"
+            [ngClass]="{'is-invalid': alertForm.get('type').invalid && (alertForm.get('type').dirty || alertForm.get('type').touched)}">
+              <mat-select formControlName="type" required>
+                <mat-option value="INFORMATION">Information</mat-option>
+                <mat-option value="UPDATES">Updates</mat-option>
+                <mat-option value="CRITICAL">Critical</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4 spsTp">
+            <mat-label>Title:</mat-label>
+            <mat-form-field appearance="outline" class="class1" 
+            [ngClass]="{'is-invalid': alertForm.get('title').invalid && (alertForm.get('title').dirty || alertForm.get('title').touched)}">
+              <input matInput placeholder="Title" formControlName="title" autocomplete="off" type="text">
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4 spsTp">
+            <mat-label>Message:</mat-label>
+            <mat-form-field appearance="outline" class="class1" 
+            [ngClass]="{'is-invalid': alertForm.get('message').invalid && (alertForm.get('message').dirty || alertForm.get('message').touched)}">
+              <input matInput placeholder="Message" formControlName="message" required type="text">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 spsTp">
+            <mat-label>Applicable From:</mat-label>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [matDatepicker]="pickerFrom"
+                    placeholder="Choose a date"
+                    [min]="minDateTo"
+                    formControlName="applicableFromDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [ngxTimepicker]="pickerFromTime" [format]="12" placeholder="Choose a time"
+                    formControlName="applicableFromTime" readonly>
+                  <ngx-material-timepicker #pickerFromTime></ngx-material-timepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 spsTp">
+            <mat-label>Applicable To:</mat-label>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [matDatepicker]="pickerTo"
+                   placeholder="DD/MM/YYYY"
+                   [min]="minDateTo"
+                  formControlName="applicableToDate">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTo></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field appearance="outline" class="class1">
+                  <input matInput [ngxTimepicker]="pickerToTime" [format]="11.59" placeholder="Choose a time"
+                    formControlName="applicableToTime" readonly>
+                  <ngx-material-timepicker #pickerToTime></ngx-material-timepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-sm-12 spsTp bdrTp">
+            <button type="submit" class="rt-btn" [disabled]="loading" >
+              Create Alert
+            </button> 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 ">
+            <span class="new-note1 note">
+              Note : All fields are required to add information.
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

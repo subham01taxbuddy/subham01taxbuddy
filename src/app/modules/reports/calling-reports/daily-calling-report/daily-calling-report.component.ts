@@ -5,17 +5,13 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AppConstants } from "../../../shared/constants";
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
-import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewCallDetailsComponent } from './view-call-details/view-call-details.component';
@@ -146,7 +142,6 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    // this.showReports();
   }
 
   clearValue() {
@@ -155,9 +150,6 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.filerId = null;
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
-  }
-  getRoleValue(role) {
-
   }
 
   leaderId: number;
@@ -324,7 +316,6 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
-    // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${statusFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
@@ -338,7 +329,6 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         this.parentConfig.totalItems = response?.data?.totalElements;
         this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData(this.dailyCallingReport));
         this.cacheManager.initializeCache(this.createRowData(this.dailyCallingReport));
-        // this.cacheManager.cachePageContent(0, this.createRowData(this.dailyCallingReport));
 
         const currentPageNumber = pageNumber || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.dailyCallingReport));
@@ -356,7 +346,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
   createRowData(callingData) {
     console.log('callingRepoInfo -> ', callingData);
-    var callingRepoInfoArray = [];
+    let callingRepoInfoArray = [];
     for (let i = 0; i < callingData.length; i++) {
       let agentReportInfo = Object.assign({}, callingRepoInfoArray[i], {
         filerName: callingData[i].filerName,
@@ -634,7 +624,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      // this.advanceSearch();
+      console.log(result);
     });
   }
 
@@ -716,7 +706,6 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       this.dailyCallingReportGridOptions.api?.setRowData(this.createRowData([]));
       this.parentConfig.totalItems = 0;
     }
-    // this.showReports();
   }
 
   pageChanged(event) {

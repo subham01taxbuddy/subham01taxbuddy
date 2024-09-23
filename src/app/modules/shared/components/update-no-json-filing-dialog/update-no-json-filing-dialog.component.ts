@@ -150,95 +150,6 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
           }
         );
       }
-
-      // let itrType = `ITR${this.itrType.value}`;
-
-      // const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
-      // this.itrMsService.getMethod(param1).subscribe(
-      //   (res: any) => {
-      //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-      //       if (this.data.itrObjectStatus === 'CREATE') {
-      //         //no ITR object found, create a new ITR object
-      //         this.loading = true;
-      //         let objITR = this.utilsService.createEmptyJson(
-      //           this.userProfile, this.data.serviceType,
-      //           this.data?.assessmentYear,
-      //           '2022-2023'
-      //         );
-      //         objITR.filingTeamMemberId = this.data.callerAgentUserId;
-      //         objITR.userId = this.data.userId;
-      //         objITR.assessmentYear = this.data.assessmentYear;
-      //         objITR.isRevised = this.returnType.value;
-      //         console.log('obj:', objITR);
-
-      //         const param = '/itr';
-      //         this.itrMsService.postMethod(param, objITR).subscribe(
-      //           (result: any) => {
-      //             console.log('My iTR Json successfully created-==', result);
-      //             this.loading = false;
-      //             objITR = result;
-      //             this.serviceCall(objITR);
-      //           },
-      //           (error) => {
-      //             this.loading = false;
-      //           }
-      //         );
-      //         this.loading = false;
-      //         console.log('end');
-      //       } else {
-      //         //one more ITR objects in place, use existing ITR object
-      //         let itrFilter =
-      //           this.data.itrObjectStatus !== 'MULTIPLE_ITR'
-      //             ? `&itrId=${this.data.openItrId}`
-      //             : '';
-      //         const param =
-      //           `/itr?userId=${this.data.userId}&assessmentYear=${this.data.assessmentYear}` +
-      //           itrFilter;
-      //         this.itrMsService.getMethod(param).subscribe(
-      //           async (result: any) => {
-      //             console.log(`My ITR by ${param}`, result);
-      //             if (result == null || result.length == 0) {
-      //               //no ITR found, error case
-      //               this.loading = false;
-      //               this.utilsService.showErrorMsg(
-      //                 'Something went wrong. Please try again'
-      //               );
-      //             } else if (result.length == 1) {
-
-      //               let workingItr = result[0];
-      //               let serviceType = workingItr.isITRU ? 'ITRU' : 'ITR';
-      //               let obj = this.utilsService.createEmptyJson(
-      //                 null, serviceType,
-      //                 this.data.assessmentYear,
-      //                 '2022-2023'
-      //               );
-      //               Object.assign(obj, workingItr);
-      //               workingItr.filingTeamMemberId = this.data.callerAgentUserId;
-      //               console.log('obj:', obj);
-      //               workingItr = JSON.parse(JSON.stringify(obj));
-      //               this.serviceCall(workingItr);
-      //             } else {
-      //               //multiple ITRs found, navigate to ITR tab with the results
-      //               this.router.navigateByUrl('/tasks/filings', {
-      //                 state: { mobileNumber: this.data?.mobileNumber },
-      //               });
-      //             }
-      //           },
-      //           async (error: any) => {
-      //             console.log('Error:', error);
-      //             this.utilsService.showErrorMsg(
-      //               'Something went wrong. Please try again'
-      //             );
-      //           }
-      //         );
-      //       }
-      //     } else {
-      //       this.loading = false;
-      //       this.utilsService.showSnackBar(
-      //         'Please make sure all the invoices are paid before updating the filing status.'
-      //       );
-      //     }
-      //   });
     }
   }
 
@@ -304,13 +215,12 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   }
 
   setFilingDate() {
-    // let today = moment().format("YYYY-MM-DD");
     let today = moment().startOf('day').valueOf();
-    var id = this.ackNumber.value;
-    var lastSix = id.substr(id.length - 6);
-    var day = lastSix.slice(0, 2);
-    var month = lastSix.slice(2, 4);
-    var year = lastSix.slice(4, 6);
+    let id = this.ackNumber.value;
+    let lastSix = id.substr(id.length - 6);
+    let day = lastSix.slice(0, 2);
+    let month = lastSix.slice(2, 4);
+    let year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day)
     let efillingDateTime = moment(dateString, "YYYY-MM-DD").startOf('day').valueOf();

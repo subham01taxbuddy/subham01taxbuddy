@@ -115,15 +115,13 @@ export class ViewDocumentsDialogComponent implements OnInit {
         if (error.status === 401) {
           this.toastMessageService.alert('error', error.error.detail)
         }
-        // this.utilsService.disposable.unsubscribe();
-        // this.errorHandler(error);
       }
     );
   }
 
   getCurrentPath(path, from?) {
     if (from === 'fromBreadcrum') {
-      var indexOfClickPath = this.breadcrumbsPart.indexOf(path);
+      let indexOfClickPath = this.breadcrumbsPart.indexOf(path);
       this.breadcrumbsPart.splice((indexOfClickPath + 1), this.breadcrumbsPart.length)
     }
     console.log("this.breadcrumbsPart : ", this.breadcrumbsPart);
@@ -192,9 +190,6 @@ export class ViewDocumentsDialogComponent implements OnInit {
       }else{
         this.utilsService.showSnackBar(res.response);
       }
-
-      // window.open(this.docUrl);
-      // this.utilsService.showSnackBar(res.response);
     }, error => {
       this.loading = false;
       this.utilsService.showSnackBar(error);

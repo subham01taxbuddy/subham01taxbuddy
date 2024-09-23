@@ -35,11 +35,10 @@ export class DirectCallingComponent {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
-      if (result.success == true) {
+      if (result.success) {
         this._toastMessageService.alert("success", result.message)
+      }else{
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');

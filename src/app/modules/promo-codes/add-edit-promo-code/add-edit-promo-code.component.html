@@ -65,8 +65,6 @@
                     </mat-select>
                     <mat-error *ngIf="promoCodeForm.controls['discountType'].hasError('required')">Select discount type.
                     </mat-error>
-                    <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
-                        sure want to create FIXED pricing promo code?</mat-hint> -->
                 </mat-form-field>
             </div>
         </div>
@@ -173,13 +171,6 @@
                         </td>
                         <td>
                             <input matInput formControlName="originalPrice">
-                        </td>
-                        <td>
-                            <!-- <mat-form-field> -->
-                            <input matInput name="coOwn[i]" formControlName="totalAmount" autocomplete="off"
-                                type="number" maxlength="5" required
-                                onkeypress=" event.charCode >= 48 && event.charCode <= 57">
-                            <!-- </mat-form-field> -->
                         </td>
                     </tr>
                 </tbody>

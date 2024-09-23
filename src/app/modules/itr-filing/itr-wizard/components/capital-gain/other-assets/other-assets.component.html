@@ -48,9 +48,7 @@
                                   </button>
                                 </div>
                                 <div class="col-sm-6" *ngIf="false">
-                                  <!--                                <button type="submit" class="cancel rghtBack" (click)="showCompactView()">-->
                                   <button type="submit" class="cancel rghtBack">
-                                    <!--                                  {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}-->
                                     {{'Back'}}
                                   </button>
                                 </div>
@@ -58,86 +56,7 @@
                             </div>
                           </div>
                         </mat-tab>
-                        <!-- This tab is commented for now but will be required for showing parsed entries-->
-                        <!--                      <mat-tab label="By Broker" *ngIf="bondType ==='listed'">-->
-                        <!--                        <div *ngIf="compactView">-->
-                        <!--                          <div class="card__row">-->
-                        <!--                            <div class="broker-row">-->
-                        <!--                              <div class="col-sm-1"></div>-->
-                        <!--                              <div class="col-sm-3 broker-view-title">Broker Name</div>-->
-                        <!--                              <div class="col-sm-3 broker-view-title">LTCG</div>-->
-                        <!--                              <div class="col-sm-3 broker-view-title">STCG</div>-->
-                        <!--                            </div>-->
-                        <!--                          </div>-->
-                        <!--                          <div class="card__row"-->
-                        <!--                               *ngFor="let securities of brokerList; let i = index">-->
-                        <!--                            <div class="broker-row">-->
-                        <!--                              <div class="col-sm-1">-->
-                        <!--                                <mat-checkbox-->
-                        <!--                                        color="primary"-->
-                        <!--                                        (change)="changeSelection(i)"-->
-                        <!--                                        [ngModel]="brokerSelected[i]"-->
-                        <!--                                        class="ml30"></mat-checkbox>-->
-                        <!--                              </div>-->
-                        <!--                              <div class="row col-sm-12"-->
-                        <!--                                   (click)="showBroker(securities.brokerName)">-->
-                        <!--                                <div class="col-sm-3 broker-view-value">-->
-                        <!--                                  {{ securities.brokerName }}-->
-                        <!--                                </div>-->
-                        <!--                                <div class="col-sm-3 broker-view-value">-->
-                        <!--                                  ₹{{ securities.LTCG.toFixed(2) }}-->
-                        <!--                                </div>-->
-                        <!--                                <div class="col-sm-3 broker-view-value">-->
-                        <!--                                  ₹{{ securities.STCG.toFixed(2) }}-->
-                        <!--                                </div>-->
-                        <!--                                <div class="col-sm-2 broker-view-btn">-->
-                        <!--                                  <button-->
-                        <!--                                          type="button"-->
-                        <!--                                          style="-->
-                        <!--                              border: none;-->
-                        <!--                              background: transparent;-->
-                        <!--                              font-size: 12px;-->
-                        <!--                              cursor: pointer;-->
-                        <!--                            ">-->
-                        <!--                                    <i class="fas fa-chevron-right broker-view-icon"></i>-->
-                        <!--                                  </button>-->
-                        <!--                                </div>-->
-                        <!--                              </div>-->
 
-                        <!--                            </div>-->
-                        <!--                          </div>-->
-
-                        <!--                          <button-->
-                        <!--                                  class="delete-btn delete-icon"-->
-                        <!--                                  (click)="$event.stopPropagation(); deleteBroker()"-->
-                        <!--                                  [disabled]="!isBrokerSelected()">-->
-                        <!--                            <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
-                        <!--                          </button>-->
-                        <!--                        </div>-->
-                        <!--                        <div *ngIf="!compactView">-->
-                        <!--                          <div class="col-sm-12">-->
-                        <!--                            <ag-grid-angular-->
-                        <!--                                    class="ag-theme-balham topSps"-->
-                        <!--                                    [gridOptions]="equityGridOptions"-->
-                        <!--                                    (rowClicked)="editSecuritiesForm($event)">-->
-                        <!--                            </ag-grid-angular>-->
-                        <!--                          </div>-->
-                        <!--                          <div class="row col-sm-12">-->
-                        <!--                            <div class="col-sm-6">-->
-                        <!--                              <button type="submit" class="delete-btn"-->
-                        <!--                                      [disabled]="!equitySelected()"-->
-                        <!--                                      (click)="deleteArray()">-->
-                        <!--                                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
-                        <!--                              </button>-->
-                        <!--                            </div>-->
-                        <!--                            <div class="col-sm-6">-->
-                        <!--                              <button type="submit" class="cancel rghtBack" (click)="showCompactView()">-->
-                        <!--                                {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}-->
-                        <!--                              </button>-->
-                        <!--                            </div>-->
-                        <!--                          </div>-->
-                        <!--                        </div>-->
-                        <!--                      </mat-tab>-->
                       </mat-tab-group>
                     </div>
                   </div>
@@ -176,7 +95,12 @@
                           <div class="row cardClr"
                             *ngFor="let deduction of getDeductions?.controls | paginate : config;let i = index"
                             [formGroupName]="fieldGlobalIndex(i)">
-
+                            <div class="row">
+                              <div class="col-12">
+                                <mat-checkbox [formControl]="showNewAsset" (change)="onToggleNewAsset($event.checked)">New Asset Purchase</mat-checkbox>
+                              </div>
+                            </div>
+                            <div  class="nBorder" *ngIf="showNewAsset.value">
                             <div class="div-6 mb-20">
                               <div class="form-field">
                                 <div><span class="span">Type of deduction </span> <span class="text-wrapper-2">*</span>
@@ -199,7 +123,8 @@
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input matInput formControlName="purchaseDate" name="purchaseDate"
                                     [matDatepicker]="purchaseDate" placeholder="Buy Date / Date of Acquisition"
-                                    [max]="maximumDate" (dateChange)="updateValidations(deduction);calculateDeduction()" />
+                                    [max]="maximumDate"
+                                    (dateChange)="updateValidations(deduction);calculateDeduction()" />
                                   <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                                   <mat-datepicker #purchaseDate></mat-datepicker>
                                 </mat-form-field>
@@ -220,6 +145,13 @@
                                 </mat-form-field>
                               </div>
                             </div>
+                            </div>
+                            <div class="row mt-3">
+                              <div class="col-12 ">
+                                <mat-checkbox [formControl]="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
+                              </div>
+                            </div>
+                            <div class="nBorder" *ngIf="showCGAS.value">
                             <div class="div-6 mb-20">
                               <div class="form-field">
                                 <div><span class="span">Amount Deposited on CGAS </span> <span
@@ -232,37 +164,13 @@
                                     class="input-field" maxlength="14"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     (change)="updateValidations(deduction);calculateDeduction()" />
-                                  <!-- <mat-error
-                                      *ngIf="
-                                        assetDetailsForm.controls['sellExpense'].hasError('pattern')
-                                      "
-                                      >Enter valid amount.</mat-error
-                                    > -->
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="span">Amount Of Deduction Claimed </span> <span
-                                    class="text-wrapper-2">*</span></div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                  <input matInput digitsOnly formControlName="deductionClaimed"
-                                    placeholder="Amount of Deduction Claimed" name="deductionClaimed"
-                                    class="input-field" maxlength="14" readonly
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="deduction.get('deductionClaimed').hasError('max')">
-                                    Amount against 54F shall be restricted to 10 Crore.
-                                  </mat-error>
                                 </mat-form-field>
                               </div>
                             </div>
 
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">Account Number</span><span
-                                  class="text-wrapper-2">*</span></div>
+                                <div><span class="span">Account Number</span><span class="text-wrapper-2">*</span></div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
@@ -277,8 +185,7 @@
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">IFSC Code</span><span
-                                  class="text-wrapper-2">*</span></div>
+                                <div><span class="span">IFSC Code</span><span class="text-wrapper-2">*</span></div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
@@ -291,17 +198,35 @@
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="span">Date Of Deposit</span><span
-                                  class="text-wrapper-2">*</span></div>
+                                <div><span class="span">Date Of Deposit</span><span class="text-wrapper-2">*</span>
+                                </div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
                                   <input matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
-                                    class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate"/>
+                                    class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                                   <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                                   <mat-datepicker #dateOfDeposit></mat-datepicker>
                                   <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">
                                     Enter valid date.
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="div-6 mt-3 mb-20">
+                              <div class="form-field">
+                                <div><span class="span">Amount Of Deduction Claimed </span> <span
+                                    class="text-wrapper-2">*</span></div>
+                              </div>
+                              <div class="form-field">
+                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
+                                  <input matInput digitsOnly formControlName="deductionClaimed"
+                                    placeholder="Amount of Deduction Claimed" name="deductionClaimed"
+                                    class="input-field" maxlength="14" readonly
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                                  <mat-error *ngIf="deduction.get('deductionClaimed').hasError('max')">
+                                    Amount against 54F shall be restricted to 10 Crore.
                                   </mat-error>
                                 </mat-form-field>
                               </div>

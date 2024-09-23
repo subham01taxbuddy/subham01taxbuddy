@@ -1,15 +1,9 @@
-import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'
-
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'
 import { Component, Inject, OnInit } from '@angular/core'
-
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-
 import { AppConstants } from 'src/app/modules/shared/constants'
-
 import { UtilsService } from 'src/app/services/utils.service'
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
-import {forEach} from "lodash";
-
 
 @Component({
   selector: 'app-nri-details-dialog',
@@ -303,12 +297,12 @@ export class NriDetailsDialogComponent implements OnInit {
   }
 
   get geJurisdictionsArray() {
-    return <FormArray>this.nriDetailsForm.get('jurisdictions')
+    return <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
   }
 
   addMore(jur?) {
-    const jurisdictions = <FormArray>this.nriDetailsForm.get('jurisdictions')
+    const jurisdictions = <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
     if (jurisdictions.valid) {
       jurisdictions.push(this.createJurisdictionsForm(jur))
@@ -322,7 +316,7 @@ export class NriDetailsDialogComponent implements OnInit {
   removeData(index) {
     console.log('Remove Index', index)
 
-    const jurisdictions = <FormArray>this.nriDetailsForm.get('jurisdictions')
+    const jurisdictions = <UntypedFormArray>this.nriDetailsForm.get('jurisdictions')
 
     if (jurisdictions.length > 1) {
       jurisdictions.removeAt(index)

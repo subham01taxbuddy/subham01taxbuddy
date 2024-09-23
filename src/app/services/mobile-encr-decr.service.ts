@@ -28,7 +28,6 @@ export class MobileEncryptDecryptService {
     this.remoteConfig = await this.remoteConfigService.fetchRemoteConfigData(
       AppConstants.ADMIN_GLOBAL_CONFIG
     );
-    // console.log('learn on the go config obj', this.remoteConfig);
   }
 
   encrypt(value: string): string {

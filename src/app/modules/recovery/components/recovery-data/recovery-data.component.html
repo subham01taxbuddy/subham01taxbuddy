@@ -1,0 +1,53 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="container">
+  <div class="search-box">
+    <div class="input-group">
+      <label for="mobileNumber">Mobile No:</label>
+      <input placeholder="Enter mobile number" type="tel" pattern="[0-9]{10}" [(ngModel)]="mobileNumber">
+    </div>
+    <button class="btn" (click)="search()" [disabled]="loading">
+      <span>Search</span>
+    </button>
+  </div>
+
+</div>
+
+<div class="expand">
+  <div *ngIf="isProcessingSnapshots">
+    <p>Processing snapshots...</p>
+  </div>
+  <table *ngIf="!isProcessingSnapshots && snapshots.length" class="snapshots-table">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Commit Date</th>
+        <th>Version</th>
+        <th>Fragment</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of snapshots">
+        <td>
+          <mat-checkbox [(ngModel)]="item.selected" (change)="onSelectionChange()"></mat-checkbox>
+        </td>
+        <td>{{ item.commitDate }}</td>
+        <td>{{ item.version }}</td>
+        <td>{{ item.fragmentName }}</td>
+        <td>
+          <table class="state-table">
+            <tr *ngFor="let entry of getStateEntries(item.state)">
+              <td>{{ entry.key }}:</td>
+              <td>{{ entry.value }}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<button class="btn-apply" (click)="callPutApi()" [disabled]="selectedItems.length === 0">Apply</button>
+
+
+
+

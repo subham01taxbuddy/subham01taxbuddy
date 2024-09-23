@@ -5,11 +5,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -78,7 +75,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
   showError: boolean = false;
   searchAsPrinciple: boolean = false;
   partnerType: any;
-  totalItrFiledCount:any;
+  totalItrFiledCount: any;
   selectedStatus = new UntypedFormControl();
   statusList = [
     { value: 'Doc_Uploaded_but_Unfiled', name: 'Doc Uploaded but Unfiled' },
@@ -92,7 +89,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     { value: 'totalPayment', name: 'Payment Earned (Total)' }
   ];
   clearUserFilter: number;
-  countData:any;
+  countData: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -150,6 +147,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
   }
+
   getRoleValue(role) {
 
   }
@@ -207,7 +205,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  getFilingCount= (): Promise<any> =>{
+  getFilingCount = (): Promise<any> => {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?page=0&pageSize=20&fromDate=2024-06-05&toDate=2024-06-05&count=true
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
@@ -251,8 +249,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -263,19 +261,18 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
-       this.countData = response?.data;
+        this.countData = response?.data;
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }).catch(() =>{
+    }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     })
   }
 
   showReports = (pageChange?): Promise<any> => {
-    //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -342,8 +339,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -359,31 +356,37 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
       if (response.success) {
-        this.itrFillingReport = response?.data?.content;
-        this.totalItrFiledCount=response?.data?.content[0].totalItrFiledCount;
-        this.config.totalItems = response?.data?.totalElements;
-        this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-        this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
-
-        const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
-        this.config.currentPage = currentPageNumber;
-
+        if (Array.isArray(response?.data?.content) && response?.data?.content?.length > 0){
+          this.itrFillingReport = response?.data?.content;
+          if (response?.data?.content.length > 0) {
+            this.totalItrFiledCount = response?.data?.content[0].totalItrFiledCount;
+          }
+          this.config.totalItems = response?.data?.totalElements;
+          this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
+          this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
+          const currentPageNumber = pageChange || this.searchParam.page + 1;
+          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
+          this.config.currentPage = currentPageNumber;
+        }else{
+          this.loading = false;
+          this._toastMessageService.alert("error", "Data Not Found");
+          this.totalItrFiledCount = 0;
+        }
       } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
         this.totalItrFiledCount = 0;
       }
-    }).catch(() =>{
+    }).catch(() => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Error");
+      this._toastMessageService.alert("error", "Data Not Found");
       this.totalItrFiledCount = 0;
     })
   }
 
   createRowData(fillingData) {
     console.log('fillingRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         filerName: fillingData[i].filerName,
@@ -754,8 +757,8 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
 
-    let statusFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)){
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
       statusFilter += `&statusName=${this.selectedStatus.value}`;
     }
 
@@ -833,9 +836,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
       this.config.totalItems = 0;
     }
-
-    // this.showReports();
-
   }
 
   // pageChanged(event) {
@@ -876,7 +876,6 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
       this.getFilingCount();
       this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();

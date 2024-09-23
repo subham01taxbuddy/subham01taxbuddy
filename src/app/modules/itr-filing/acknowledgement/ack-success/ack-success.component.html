@@ -9,7 +9,8 @@
   <p class="pTxSu1"><strong>Please find below your e-filling details:</strong></p>
   <ul class="pTxSu1">
     <li>Name: {{userName}}</li>
-    <li *ngIf="this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')">Phone No.: {{ITR_JSON.contactNumber}}</li>
+    <li *ngIf="this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')">Phone
+      No.: {{ITR_JSON.contactNumber}}</li>
     <li>Assessment Year: {{ITR_JSON.assessmentYear}}</li>
     <li>Financial Year: {{ITR_JSON.financialYear}}</li>
     <li>ITR Form Type: {{ITR_JSON.itrType}}</li>
@@ -25,38 +26,6 @@
     treated as valid until it is verified by the taxpayer.</p>
 
   <hr>
-
-  <!-- <p class="pTxSu1"><strong>Please follow following Steps to E verify your Income Tax Return</strong>
-  </p>
-  <ul class="pTxSu1">
-    <li>Step 1- Login to <a href="https://www.incometaxindiaefiling.gov.in"
-        target="_blank">www.incometaxindiaefiling.gov.in </a></li>
-    <li>Step 2- click on “e-Verify Return” from the quick links</li>
-    <li>Step 3 - Enter PAN, Assessment year and acknowledgement number and click on continue.</li>
-    <li>Step 4 - Select any option to e-verify your return.</li>
-    <li>Step 5 - Enter OTP and click on Submit, Your return will get verified and transaction ID will get generated.
-    </li>
-  </ul>
-  <hr> -->
-
-
-  <!-- <p class="pTxSu1">To know the detail steps of E verification process, please click on
-    <a href="https://blog.taxbuddy.com/4-easy-steps-to-e-verify-returns-without-login/#:~:text=Step%201%3A%20Login%20to%20%E2%80%9Cwww,number%20and%20click%20on%20continue."
-      target="_blank">https://blog.taxbuddy.com/4-easy-steps-to-e-verify-returns-without-login/#:~:text=Step%201%3A%20Login%20to%20%E2%80%9Cwww,number%20and%20click%20on%20continue.</a>
-  </p> -->
-
-
-  <!-- <p class="pTxSu1">If you have any queries related to your e-filing, Write to us at &nbsp;<a
-      href="mailto:support@taxbuddy.com"><strong>support@taxbuddy.com</strong></a> You can access all your documents on
-    your taxbuddy account "My Document cloud" Like this to <a href="https://itr.taxbuddy.com/#/taxcloud"
-      target="_blank">www.taxbuddy.com</a></p> -->
-  <!--
-<p class="pTxSu1">For any other queries related to your e-filing, write to us at <a
-    href="mailto:itrhelp@taxbuddy.com">itrhelp@taxbuddy.com</a></p> -->
-
-  <!-- <p class="pTxSu1">Thank you for choosing us!</p>
-  <p class="pTxSu1">Team Taxbuddy</p> -->
-
   <div class="pull-right">
     <button class="btn long-btn" style="border: none;" (click)="closeDialog()">Close
     </button>

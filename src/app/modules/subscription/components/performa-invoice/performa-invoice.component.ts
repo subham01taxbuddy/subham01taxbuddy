@@ -39,7 +39,7 @@ export const MY_FORMATS = {
 
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
@@ -155,7 +155,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     private mobileEncryptDecryptService: MobileEncryptDecryptService,
     private httpClient: HttpClient,
   ) {
-    // this.getAgentList();
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.startDate.setValue(this.minStartDate);
     this.minEndDate = this.invoiceFormGroup.controls['startDate'].value;
@@ -170,7 +169,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   }
 
   cardTitle: any;
-  // cardTitles = ['Filer View','Owner View','Leader/Admin'];
   smeList: any;
   gridApi: GridApi;
   deletedInvoiceList = new UntypedFormControl(false);
@@ -198,7 +196,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.roles.includes('ROLE_FILER') ? this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList),
+      columnDefs: this.roles.includes('ROLE_FILER')  ? this.invoicesCreateColumnDef(this.allFilerList, 'hidePaymentLink') : this.invoicesCreateColumnDef(this.allFilerList),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -217,7 +215,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         let mobileNo = params['mobile'];
         let invNo = params['invoiceNo'];
         if (this.userId) {
-          // this.invoiceFormGroup.controls['userId'].setValue(this.userId);
+         console.log('userId',this.userId);
         } else if (mobileNo) {
           this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
         } else if (invNo) {
@@ -270,8 +268,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -280,7 +276,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilService.getStoredMasterStatusList();
   }
 
@@ -319,15 +314,12 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-      // this.filerUserId = this.filerId;
     } else if (this.leaderId) {
       this.agentId = this.leaderId;
-      // this.getInvoice();
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.getInvoice();
   }
 
   onCheckBoxChange() {
@@ -512,7 +504,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
-        // this.invoicesCreateColumnDef(this.smeList);
         this.gridApi?.setRowData(this.createRowData(response?.data?.content));
         this.invoiceListGridOptions.api?.setRowData(this.createRowData(response?.data?.content))
         this.config.totalItems = response?.data?.totalElements;
@@ -523,9 +514,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
-        if (this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1) {
-          this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
-        }
+        // if (this.roles.includes('ROLE_FILER') && this.invoiceData.length === 1) {
+        //   this.invoiceListGridOptions.api?.setColumnDefs(this.invoicesCreateColumnDef(this.allFilerList, ''))
+        // }
 
         if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));
@@ -547,7 +538,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices);
-    var invoices = [];
+    let invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
       let updateInvoice = Object.assign({}, userInvoices[i], {
         userId: userInvoices[i].userId,
@@ -636,7 +627,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
         let searchByValue = Object.values(this.searchBy);
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
-      // location.href = environment.url + param;
       return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
@@ -1036,7 +1026,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           break;
         }
         case 'place-call': {
-          // this.deleteInvoice(params.data);
           this.placeCall(params.data);
           break;
         }
@@ -1126,8 +1115,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
 
   downloadInvoice(data) {
     //https://uat-api.taxbuddy.com/itr/v1/invoice/download?txbdyInvoiceId={txbdyInvoiceId}
-
-    // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.loading = true;
     let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
     this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
@@ -1154,7 +1141,6 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           return;
         } else {
           console.log('user: ', user);
-          // const param = `/prod/call-support/call`;
           const param = `tts/outbound-call`;
           const agentNumber = await this.utilService.getMyCallingNumber();
           console.log('agent number', agentNumber);
@@ -1173,14 +1159,13 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
           this.reviewService.postMethod(param, reqBody).subscribe(
             (result: any) => {
               this.loading = false;
-              if (result.success == false) {
+              if (result.success) {
+                this._toastMessageService.alert('success', result.message);
+              }else{
                 this.loading = false;
                 this.utilService.showSnackBar(
                   'Error while making call, Please try again.'
                 );
-              }
-              if (result.success == true) {
-                this._toastMessageService.alert('success', result.message);
               }
             },
             (error) => {

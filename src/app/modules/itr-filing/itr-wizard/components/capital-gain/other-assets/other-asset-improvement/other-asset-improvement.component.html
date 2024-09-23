@@ -55,16 +55,6 @@
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   (blur)="calculateCg()" />
 
-                <!-- <mat-error
-                    *ngIf="
-                      OtherAsssetImprovementForm.controls['otherAssets'].controls[
-                        i
-                      ].controls['otherAssetsArray'].controls['sellValue'].hasError(
-                        'pattern'
-                      )
-                    "
-                    >Enter valid amount.</mat-error
-                  > -->
               </mat-form-field>
             </div>
           </div>
@@ -80,14 +70,6 @@
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   (change)="calculateGainType()" />
 
-                <!-- <mat-error
-                    *ngIf="
-                      getOtherAssetsArray.controls['purchaseCost'].hasError(
-                        'pattern'
-                      )
-                    "
-                    >Enter valid amount.</mat-error
-                  > -->
               </mat-form-field>
               <div class="note new-note align-center">
                 <b>Note:</b> Click on tab button after entering buy value to get the gain amount
@@ -120,14 +102,6 @@
                   class="input-field" maxlength="14"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   (blur)="calculateGainType()" />
-                <!-- <mat-error
-                    *ngIf="
-                      getOtherAssetsArray.controls['sellExpense'].hasError(
-                        'pattern'
-                      )
-                    "
-                    >Enter valid amount.</mat-error
-                  > -->
               </mat-form-field>
             </div>
           </div>

@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl, Validators } from '@angular/forms';
@@ -250,7 +248,6 @@ export class ItrStatusDialogComponent implements OnInit {
         element.completed = true;
         this.activeIndex = index;
         this.stepper.selectedIndex = this.activeIndex;
-        // this.stepper.selected.completed = true;
         let lastStepObj = element.data[element.data.length - 1];
 
         if ((lastStepObj.taskStatus === 'Pending' && lastStepObj.uiAction === 'ReadOnly') ||
@@ -288,8 +285,6 @@ export class ItrStatusDialogComponent implements OnInit {
         });
       })
     }
-
-    // this.showSubmitButton();
     this.getPlanDetails();
   }
 
@@ -317,7 +312,7 @@ export class ItrStatusDialogComponent implements OnInit {
   getPlanDetails() {
     let userSelectedIncomeSources = [];
     this.allIncomeSources.forEach(type => {
-      if (type.selected == true) {
+      if (type.selected) {
         userSelectedIncomeSources.push(type.value);
       }
     });

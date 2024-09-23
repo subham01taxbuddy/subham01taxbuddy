@@ -86,7 +86,6 @@ export class PauseInvoiceReminderComponent implements OnInit {
         console.log('search pause invoice ', this.invoiceDetails)
         this.existingReminders = this.createRowData(this.invoiceDetails);
         this.invoiceGridOptions.api?.setRowData(this.existingReminders);
-        // this.invoiceGridOptions.api?.setRowData(this.createRowData(this.invoiceDetails));
         if (result?.data?.content.length == 0) {
           this.toastMsgService.alert("error", "No Invoice Data Found.")
         }
@@ -119,15 +118,6 @@ export class PauseInvoiceReminderComponent implements OnInit {
 
   onExistingInvoiceRowClicked(params: any) {
     console.log(params)
-    // if (params.event.target !== undefined) {
-    //   const actionType = params.event.target.getAttribute('data-action-type');
-    //   switch (actionType) {
-    //     case 'pauseReminder': {
-    //       this.pauseReminder();
-    //       break;
-    //     }
-    //   }
-    // }
   }
 
   pauseReminder() {
@@ -367,11 +357,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        // valueGetter: function (params) {
-        //   if (params.data.modeOfPayment) {
-        //     return params.data.modeOfPayment;
-        //   }
-        // },
+
       },
       {
         headerName: 'Paid Date',
@@ -409,16 +395,7 @@ export class PauseInvoiceReminderComponent implements OnInit {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        // valueGetter: function nameFromCode(params) {
-        //   if (smeList.length !== 0) {
-        //     const nameArray = smeList.filter((item: any) => item.userId.toString() === params.data.invoicePreparedBy);
-        //     if (nameArray.length !== 0) {
-        //       return nameArray[0].name;
-        //     }
-        //     return '-';
-        //   }
-        //   return params.data.statusId;
-        // },
+
       },
       {
         headerName: 'IFA / Lead Client',
@@ -469,404 +446,18 @@ export class PauseInvoiceReminderComponent implements OnInit {
           }
         },
       },
-      // {
-      //   headerName: 'Edit',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" title="Paid Invoice" disabled
-      //        style="border: none; background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-pencil-square" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Update Payment details" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-pencil-square" aria-hidden="true" data-action-type="edit"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center',
-      //         display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center',
-      //         display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Mail Notification',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Mail notification" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-envelope" aria-hidden="true" data-action-type="send-Mail-Notification"></i>
-      //      </button>`;
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
-      // {
-      //   headerName: 'Download invoice',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Download Invoice" style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //    <i class="fa fa-download" aria-hidden="true" data-action-type="download-invoice"></i>
-      //   </button>`
 
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: {
-      //     textAlign: 'center', display: 'flex',
-      //     'align-items': 'center',
-      //     'justify-content': 'center'
-      //   },
-      // },
-      // {
-      //   headerName: 'Whatsapp reminder',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Whatsapp reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-whatsapp" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Whatsapp reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-whatsapp" aria-hidden="true" data-action-type="whatsapp-reminder"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Mail reminder',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Mail reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-bell" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Mail reminder"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-bell" aria-hidden="true" data-action-type="mail-reminder"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Delete',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return `<button type="button" class="action_icon add_button" disabled title="Paid Invoice you can not delete"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:not-allowed">
-      //       <i class="fa fa-trash" aria-hidden="true"></i>
-      //      </button>`;
-      //     } else {
-      //       return `<button type="button" class="action_icon add_button" title="Delete Invoice"
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-trash" aria-hidden="true" data-action-type="delete-invoice"></i>
-      //      </button>`;
-      //     }
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     if (params.data.paymentStatus === 'Paid') {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center',
-      //         backgroundColor: '#dddddd',
-      //         color: '#dddddd',
-      //       }
-      //     } else {
-      //       return {
-      //         textAlign: 'center', display: 'flex',
-      //         'align-items': 'center',
-      //         'justify-content': 'center'
-      //       }
-      //     }
-      //   },
-      // },
-      // {
-      //   headerName: 'Call',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="By clicking on call you will be able to place a call."
-      //       style="border: none;
-      //       background: transparent; font-size: 16px; cursor:pointer">
-      //       <i class="fa fa-phone" aria-hidden="true" data-action-type="place-call"></i>
-      //      </button>`;
-      //   },
-      //   width: 55,
-      //    pinned: 'right',
-      // },
-      // {
-      //   headerName: 'See/Add Notes',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     return `<button type="button" class="action_icon add_button" title="Click see/add notes"
-      //     style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
-      //       <i class="fa fa-book" aria-hidden="true" data-action-type="addNotes"></i>
-      //      </button>`;
-      //   },
-      //   width: 60,
-      //    pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center'
-      //     }
-      //   },
-      // },
     ]
   }
 
-  // public onInvoiceRowClicked(params) {
-  //   if (params.event.target !== undefined) {
-  //     const actionType = params.event.target.getAttribute('data-action-type');
-  //     switch (actionType) {
-  //       case 'edit': {
-  //         this.updateInvoice('Update Payment Details', 'Update', params.data, 'UPDATE');
-  //         break;
-  //       }
-  //       case 'send-Mail-Notification': {
-  //         this.sendMailNotification(params.data);
-  //         break;
-  //       }
-  //       case 'download-invoice': {
-  //         this.downloadInvoice(params.data);
-  //         break;
-  //       }
-  //       case 'whatsapp-reminder': {
-  //         this.sendWhatsAppReminder(params.data);
-  //         break;
-  //       }
-  //       case 'mail-reminder': {
-  //         this.sendMailReminder(params.data);
-  //         break;
-  //       }
-  //       case 'delete-invoice': {
-  //         // this.deleteInvoice(params.data);
-  //         this.updateInvoice('Reason For Invoice Deletion', 'Delete', params.data, 'DELETE');
-  //         break;
-  //       }
-  //       case 'place-call': {
-  //         // this.deleteInvoice(params.data);
-  //         this.placeCall(params.data);
-  //         break;
-  //       }
-  //       case 'addNotes': {
-  //         this.showNotes(params.data)
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
-  // sendMailNotification(data) {
-  //   console.log(data);
-  //   this.loading = true;
-  //   const param = '/itr/invoice/send-invoice?invoiceNo=' + data.invoiceNo;
-  //   this.userService.getMethodInfo(param).subscribe((result: any) => {
-  //     this.loading = false;
-  //     console.log('Email sent response: ', result)
-  //     this.toastMessageService.alert("success", "Invoice mail sent successfully.");
-  //   }, error => {
-  //     this.loading = false;
-  //     this.toastMessageService.alert("error", "Failed to send invoice mail.");
-  //   });
-  // }
-
-  // downloadInvoice(data) {
-  //   location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
-  // }
-
-  // sendWhatsAppReminder(data) {
-  //   this.loading = true;
-  //   const param = '/itr/invoice/send-invoice-whatsapp?invoiceNo=' + data.invoiceNo;
-  //   this.userMsService.getMethodInfo(param).subscribe((res: any) => {
-  //     this.loading = false;
-  //     console.log("result: ", res);
-  //     this._toastMessageService.alert("success", "Whatsapp reminder send successfully.");
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Failed to send Whatsapp reminder.");
-  //   });
-  // }
-
-  // sendMailReminder(invoiceInfo) {
-  //   this.loading = true;
-  //   const param = '/itr/invoice/send-reminder';
-  //   this.userService.postMethodInfo(param, invoiceInfo).subscribe((result: any) => {
-  //     this.loading = false;
-  //     console.log('Email sent response: ', result);
-  //     this._toastMessageService.alert("success", "Mail Reminder sent successfully.");
-  //   }, error => {
-  //     this.loading = false;
-  //     this._toastMessageService.alert("error", "Failed to send Mail Reminder.");
-  //   });
-  // }
-
-  // downloadInvoicesSummary() {
-  //   console.log('this.summaryDetailForm.value: ', this.summaryDetailForm)
-  //   if (this.summaryDetailForm.valid) {
-  //     console.log(this.summaryDetailForm.value)
-  //     // let fromData = this.summaryDetailForm.value.fromDate;
-  //     // let toData = this.summaryDetailForm.value.toDate;
-  //     let fromData = this.datePipe.transform(this.summaryDetailForm.value.fromDate, 'yyyy-MM-dd');
-  //     let toData = this.datePipe.transform(this.summaryDetailForm.value.toDate, 'yyyy-MM-dd');
-  //     if (this.utilService.isNonEmpty(this.summaryDetailForm.value.status)) {
-  //       location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData + '&paymentStatus=' + this.summaryDetailForm.value.status;
-  //     }
-  //     else {
-  //       location.href = environment.url + '/itr/invoice/csv-report?fromDate=' + fromData + '&toDate=' + toData;;
-  //     }
-
-  //   }
-  // }
-
   getDateSutaibleInUrl(date) {
-    var time = new Date(date);
-    var deadLineDate = deadLineDate / 1000;
+    let time = new Date(date);
+    let deadLineDate
+    deadLineDate= deadLineDate / 1000;
     time.setUTCSeconds(deadLineDate);
-    var requestObject = time.toISOString().slice(0, 10);
+    let requestObject = time.toISOString().slice(0, 10);
     console.log('date format: ', requestObject)
     return requestObject;
   }
-
-  // async placeCall(user) {
-  //   console.log('user: ', user)
-  //   const param = `/prod/call-support/call`;
-  //   const agentNumber = await this.utilService.getMyCallingNumber();
-  //   console.log('agent number', agentNumber)
-  //   if (!agentNumber) {
-  //     this._toastMessageService.alert("error", 'You don\'t have calling role.')
-  //     return;
-  //   }
-  //   this.loading = true;
-  //   const reqBody = {
-  //     "agent_number": agentNumber,
-  //     "customer_number": user.phone
-  //   }
-  //   this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-  //     console.log('Call Result: ', result);
-  //     this.loading = false;
-  //     if (result.success.status) {
-  //       this._toastMessageService.alert("success", result.success.message)
-  //     }
-  //   }, error => {
-  //     this._toastMessageService.alert('error', 'Error while making call, Please try again.');
-  //     this.loading = false;
-  //   })
-  // }
-
-  // showNotes(client) {
-  //   let disposable = this.dialog.open(UserNotesComponent, {
-  //     width: '50%',
-  //     height: 'auto',
-  //     data: {
-  //       userId: client.userId,
-  //       clientName: client.billTo
-  //     }
-  //   })
-
-  //   disposable.afterClosed().subscribe(result => {
-  //     console.log('The dialog was closed');
-  //   });
-  // }
 
 }

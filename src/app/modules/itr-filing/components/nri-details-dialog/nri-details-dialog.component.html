@@ -24,9 +24,6 @@
             <td> {{i+1}}</td>
             <td>
               <mat-form-field class="input-field-width">
-                <!--  <input matInput class="input-field" name="jur[i]" formControlName="jurisdictionResidence"
-                  pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim> -->
-
                 <mat-select placeholder="" name="jur[i]" formControlName="jurisdictionResidence" required>
                   <mat-option *ngFor="let country of countryList" [value]="country.value">
                     {{ country.label | titlecase}}
@@ -61,11 +58,8 @@
     <div class="row">
       <div class="card__col-xs-12 card__col-sm-4">
         <mat-form-field appearance="outline">
-          <!-- <mat-label>Father Name</mat-label> -->
           <input type="text" matInput placeholder="" name="conditionsResStatus" formControlName="conditionsResStatus"
             class="input-field" maxlength="125">
-          <!-- <mat-error *ngIf="customerProfileForm.controls['fatherName'].hasError('pattern')">
-            Enter character only</mat-error> -->
           <mat-hint>In Days</mat-hint>
         </mat-form-field>
       </div>

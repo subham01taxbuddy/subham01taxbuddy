@@ -4,7 +4,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, lastValueFrom, map, startWith } from 'rxjs';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -41,8 +41,6 @@ export class DashboardComponent implements OnInit {
   loading = false;
   loggedInSmeUserId: any;
   roles: any;
-  // maxDate = new Date(2024,2,31);
-  // minDate = new Date(2023, 3, 1);
   minStartDate: string = '2023-04-01';
   maxEndDate = moment().toDate();
   maxStartDate = moment().toDate();
@@ -116,7 +114,6 @@ export class DashboardComponent implements OnInit {
     this.getItrFilledEVerificationPendingList('eVerificationPending');
     this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
     this.getPartnerCommission();
-    // this.getItrUserOverview();
   }
 
   config = {
@@ -188,7 +185,6 @@ export class DashboardComponent implements OnInit {
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
       this.getITRFiledButPaymentPendingList('itrFiledButPaymentPending');
-      // this.getItrUserOverview();
     }
 
   }
@@ -258,10 +254,10 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/calling-summary?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param)).then((response: any) => {
       this.callSummaryData = response?.data;
-
-    }).catch(()=>{
+      this.loading = false;
+    }).catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
     });
@@ -297,19 +293,20 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceTypeFilter}`;
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
       this.loading = false;
       if (response.success) {
         this.statusWiseCountData = response?.data?.content[0]?.statusWiseData[0];
-        console.log('data from filer dash statuswiae', this.statusWiseCountData)
+        console.log('data from filer dash statuswise', this.statusWiseCountData);
       } else {
-        this.loading = false;
         this._toastMessageService.alert('error', response.message);
       }
-    }).catch(()=>{
+    })
+    .catch(() => {
       this.loading = false;
       this._toastMessageService.alert('error', 'Error');
-    })
+    });
   }
 
   getInvoiceReports=():Promise<any> => {
@@ -337,20 +334,19 @@ export class DashboardComponent implements OnInit {
     }
 
     param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.invoiceData = response.data[0];
-
-        } else {
-          this.loading = false;
-          this._toastMessageService.alert("error", response.message);
-        }
-      }).catch(()=>{
-        this.loading = false;
-      })
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.invoiceData = response.data[0];
+      } else {
+        this._toastMessageService.alert('error', response.message);
+      }
+    })
+    .catch(() => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'Error retrieving invoice data');
+    });
   }
 
   getPaymentReceivedList=(configType):Promise<any> => {
@@ -378,16 +374,17 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/doc-uploaded-filing-not-started?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((response: any) => {
       if (response.success) {
         this.paymentReceivedData = response?.data;
         this.config.paymentReceived.totalItems = response?.data?.totalElements;
-
       } else {
-        this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
-    }).catch(()=>{
+      this.loading = false;
+    })
+    .catch(() => {
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });
@@ -417,20 +414,21 @@ export class DashboardComponent implements OnInit {
       }
     }
     let param = `/bo/dashboard/waiting-for-confirmation?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`
-
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
-      if (response.success) {
-        this.summaryConfirmationData = response?.data;
-        this.config.summaryConfirmation.totalItems = response?.data?.totalElements;
-      } else {
+    return lastValueFrom(this.reportService.getMethod(param))
+      .then((response: any) => {
+        if (response.success) {
+          this.summaryConfirmationData = response?.data;
+          this.config.summaryConfirmation.totalItems =
+            response?.data?.totalElements;
+        } else {
+          this._toastMessageService.alert('error', response.message);
+        }
         this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }, (error) => {
-      this.loading = false;
-      this._toastMessageService.alert("error", "Error");
-    })
-
+      })
+      .catch((error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      });
   }
 
   getItrFilledEVerificationPendingList=(configType):Promise<any> => {
@@ -459,16 +457,18 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/itr-filed-everification-pending?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`;
 
-    return this.reportService.getMethod(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+      .then((response: any) => {
         if (response.success) {
           this.eVerificationPendingData = response?.data;
-          this.config.eVerificationPending.totalItems = response?.data?.totalElements;
+          this.config.eVerificationPending.totalItems =
+            response?.data?.totalElements;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
+        this.loading = false;
+      })
+      .catch(() => {
         this.loading = false;
         this._toastMessageService.alert('error', 'Error');
       });
@@ -497,19 +497,21 @@ export class DashboardComponent implements OnInit {
     }
     let param = `/bo/dashboard/itr-filed-but-payment-pending?fromDate=${fromDate}&toDate=${toDate}${userFilter}&${data}`;
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
-      if (response.success) {
-        this.itrFiledButPaymentPendingData = response?.data;
-        this.config.itrFiledButPaymentPending.totalItems = response?.data?.totalElements;
-
-      } else {
+    return lastValueFrom(this.reportService.getMethod(param))
+      .then((response: any) => {
+        if (response.success) {
+          this.itrFiledButPaymentPendingData = response?.data;
+          this.config.itrFiledButPaymentPending.totalItems =
+            response?.data?.totalElements;
+        } else {
+          this._toastMessageService.alert('error', response.message);
+        }
         this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }).catch(()=>{
-      this.loading = false;
-      this._toastMessageService.alert("error", "Error");
-    })
+      })
+      .catch(() => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      });
   }
 
   getPartnerCommission=():Promise<any> => {
@@ -536,21 +538,34 @@ export class DashboardComponent implements OnInit {
 
     let param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    return this.userMsService.getMethodNew(param).toPromise().then(
-      (response: any) => {
+    return lastValueFrom(this.userMsService.getMethodNew(param))
+      .then((response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
-          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU;
-          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised;
+          this.totalOriginal =
+            this.commissionData.itr1 +
+            this.commissionData.itr2 +
+            this.commissionData.itr3 +
+            this.commissionData.itr4 +
+            this.commissionData.itrOther +
+            this.commissionData.itrU;
+          this.totalRevised =
+            this.commissionData.itr1_revised +
+            this.commissionData.itr2_revised +
+            this.commissionData.itr3_revised +
+            this.commissionData.itr4_revised;
         } else {
-          this.loading = false;
           this._toastMessageService.alert('error', response.message);
         }
-      }).catch(()=>{
         this.loading = false;
-        this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
-
       })
+      .catch(() => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'Error while filer commission report: Not_found: Data not found'
+        );
+      });
   }
 
 

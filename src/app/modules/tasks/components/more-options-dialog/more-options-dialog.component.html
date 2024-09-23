@@ -13,17 +13,11 @@
 
 
   <span *ngIf="((data.serviceType === 'ITR')
-              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' ">
+              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' && data.hideReassign != true">
     <button type="button" class="more-new-button" title="Re Assignment" (click)="reAssignUser()">
       <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>&nbsp;&nbsp;Re Assign
     </button>
   </span>
-
-  <!-- <span *ngIf="data.serviceType === 'ITR'">
-    <button type="button" class="tbd-btn-small" title="Add Client" (click)="checkSubscription('add-client')">
-      Add Client <i class="fa fa-plus" aria-hidden="true" data-action-type="add-client"></i>
-    </button>
-  </span> -->
   <span>
     <button type="button" *ngIf="showInvoiceButton" class="more-new-button" title="Go to Invoices"
       (click)="goToInvoice()">
@@ -51,7 +45,7 @@
     </button>
   </span>
   <span *ngIf="this.data.serviceType === 'ITR' && this.data.itrObjectStatus === 'ITR_FILED' ">
-    <button type="button" class="more-new-button" title="Insurance" (click)="giveInsurance()">
+    <button *ngIf="false" type="button" class="more-new-button" title="Insurance" (click)="giveInsurance()">
       <i class="fa fa-ambulance" aria-hidden="true"></i>&nbsp;&nbsp;Insurance
     </button>
   </span>
@@ -61,15 +55,6 @@
     </button>
   </span>
   <span>
-    <!-- <button type="button" title="Delete User" [disabled]="isDisable"
-   class="delete-user tbd-btn-small" [style.cursor]="isDisable ? 'no-drop': 'pointer'"
-      (click)="deleteUser()">
-      Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-    </button> -->
-    <!-- <button type="button" title="Delete User" class="delete-user more-new-button" *ngIf="isApplicable(['ROLE_ADMIN'])"
-      (click)="deleteUser()">
-      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
-    </button> -->
     <app-custom-button *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button"
       [actions]="[deleteUser]">
       <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
@@ -100,7 +85,6 @@
     <table aria-label="Other Details Service" style=" width: 100%;"
       *ngIf="optedServicesData && optedServicesData.length > 0">
       <tr>
-        <!-- <th>No</th> -->
         <th>Service Type</th>
         <th>Agent Name</th>
         <th>Agent Mobile</th>

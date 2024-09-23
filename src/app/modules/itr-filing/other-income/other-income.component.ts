@@ -6,6 +6,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 
+
 @Component({
   selector: 'app-other-income',
   templateUrl: './other-income.component.html',
@@ -423,8 +424,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
-    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid && (agriIncome && agriIncome?.value > 500000 ?
-      this.agriIncFormGroup.valid : true)) {
+    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
     } else {

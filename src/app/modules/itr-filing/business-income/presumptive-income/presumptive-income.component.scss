@@ -8,3 +8,28 @@
   font-size: 14px;
   line-height:1.5;
 }
+.tbd-btn-10 {
+  display: inline-block;
+  margin: 8px;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.2em;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid #00A4BF;
+  background-color: #f0f9fc;
+  color: #004e5f;
+}
+
+.selected {
+  background-color: #3d82cd;
+  color: #ffffff;
+  border-color: #3d82cd;
+}
+.marginReduce{
+  margin-top: -12px;
+  width: 100%;
+}

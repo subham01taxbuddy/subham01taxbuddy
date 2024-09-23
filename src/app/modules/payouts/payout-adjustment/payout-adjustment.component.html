@@ -112,7 +112,6 @@
                   <th scope="col">Date Time</th>
                   <th scope="col">Invoice Number</th>
                   <th scope="col">Invoice Date Time</th>
-                  <!-- <th scope="col">Adjustment Reason</th> -->
                 </tr>
               </thead>
               <tbody style="text-align: center;">
@@ -122,7 +121,6 @@
                   <td style="width: 150px;">{{ item.dateAdjusted | date:'d/M/yy, h:mm a':'UTC' }}</td>
                   <td style="width: 150px;">{{ item.invoiceNoList }}</td>
                   <td style="width: 150px;">{{ item.invoiceDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
-                  <!-- <td>{{ item.adjustmentReason }}</td> -->
                 </tr>
                 <tr *ngIf="adjustmentDetails?.adjustmentHistory" style="text-align: center; font-weight: bold;">
                   <td colspan="1">Total:</td>
@@ -139,7 +137,6 @@
 
   </div>
   <div class="col-sm-3" style="float: right;">
-    <!-- <button class="btn" [disabled]="loading" (click)="generateFile()"> Generate CSV File </button> -->
     <app-custom-button class="btn" [disabled]="loading" [actions]="[generateFile]">
       Generate CSV File
     </app-custom-button>
@@ -172,7 +169,6 @@
     </div>
   </div>
   <div style="text-align: center;  margin-top: 10px;">
-    <!-- <button class="tbd-btn" [disabled]="loading" (click)="saveAdjustment(amtPending.value,reason.value)">Save </button> -->
     <app-custom-button class="tbd-btn" [disabled]="loading" [actions]="[saveAdjustment]"
       [actionParams]="[[amtPending.value],[reason.value]]">
       Save

@@ -332,22 +332,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="col-sm-5">
-            <div class="card" style="margin-top: 10px;">
-              <b style="font-size: 18px">ITR's Type can Handle: </b>
-              <div class="row">
-                <section class="example-section">
-                  <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
-                    <p>
-                      <mat-checkbox [formControl]="getItrTypeControl(itrType)"
-                        (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
-                          }}</span></mat-checkbox>
-                    </p>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div> -->
           <div class="col-sm-5">
             <div class="card" style="margin-top: 10px;">
                 <b style="font-size: 18px">ITR's Type can Handle: </b>
@@ -395,8 +379,6 @@
           <button class="new-cancel-button-1" (click)="cancelUpdate()">Cancel </button>
         </div>
         <div style=" flex: 1 0 0; text-align: right;">
-          <!-- <button class="save-all" [disabled]="loading && smeFormGroup.invalid " (click)=" updateSmeDetails()">Save & Go Back to Table
-          </button> -->
           <app-custom-button class="save-all" [disabled]="loading && smeFormGroup.invalid"  [actions]="[updateSmeDetails]">
             Save & Go Back to Table
           </app-custom-button>

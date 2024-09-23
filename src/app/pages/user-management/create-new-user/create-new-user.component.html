@@ -10,11 +10,11 @@
     <div class="surround">
       <form [formGroup]="signUpForm">
         <div class="row">
-          <div class="col-sm-12 bckClr" *ngIf="isApplicable(['ROLE_ADMIN'])">
+          <div class="col-sm-12 bckClr">
             <app-sme-list-drop-down (sendLeader)="fromSme($event, 1)" (sendPrincipleIndividual)="fromSme($event, 2)"
-              (sendFiler)="fromSme($event,3)" [disabled]="assignedToMe">
+              (sendFiler)="fromSme($event,3,'fromFiler')">
             </app-sme-list-drop-down>
-            <div class="smallNot">
+            <div class="smallNot" *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER') || (this.partnerType === 'PRINCIPAL') ">
               Note : Service type will be enable after selecting Leader
             </div>
           </div>

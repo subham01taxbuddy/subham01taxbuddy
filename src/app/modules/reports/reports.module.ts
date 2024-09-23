@@ -31,6 +31,7 @@ import { ClientAddedFilingNotDoneComponent } from './client-added-filing-not-don
 import { FilingSlaComponent } from './filing-sla/filing-sla.component';
 import { PrefillUploadedSummaryNotSentComponent } from './prefill-uploaded-summary-not-sent/prefill-uploaded-summary-not-sent.component';
 import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.component';
+import { TransactionComponent } from './transaction/transaction.component';
 
 @NgModule({
     imports: [
@@ -68,7 +69,8 @@ import { ItrFiledUsersComponent } from './itr-filed-users/itr-filed-users.compon
         ClientAddedFilingNotDoneComponent,
         FilingSlaComponent,
         PrefillUploadedSummaryNotSentComponent,
-        ItrFiledUsersComponent
+        ItrFiledUsersComponent,
+        TransactionComponent
     ],
     providers: [JsonToCsvService]
 })

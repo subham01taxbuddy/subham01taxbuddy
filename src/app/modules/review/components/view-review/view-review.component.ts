@@ -56,7 +56,7 @@ export class ViewReviewComponent implements OnInit {
   }
 
   viewReviewById() {
-    var param = `review/byid`;
+    let param = `review/byid`;
     const requestBody = {
       "id": this.data.leadData.id,
       // "environment": environment.environment
@@ -89,7 +89,6 @@ export class ViewReviewComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         this.waChatLink = response.data.whatsAppChatLink;
-      } else {
       }
     }, error => {
       this.loading = false;
@@ -109,7 +108,7 @@ export class ViewReviewComponent implements OnInit {
   }
 
   getReview() {
-    var param = `review/users`;
+    let param = `review/users`;
     this.loading = true;
     const reqBody = {
       "reviewId": this.data.leadData.id,
@@ -140,13 +139,11 @@ export class ViewReviewComponent implements OnInit {
       const param2 = {
         reviewId: this.userDetails.id,
         mobileNumber: this.mobileNo,
-        // environment: environment.environment,
       };
       this.loading = true;
       this.reviewService.postMethod(param, param2).subscribe((result) => {
         console.log('Save User Data:', result);
         if (result.success) {
-          // this.getReview();
           this.getReview();
           this._toastMessageService.alert('success', 'User added successfully');
           this.loading = false;
@@ -294,7 +291,7 @@ export class ViewReviewComponent implements OnInit {
   }
 
   createRowData(data: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < data.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         fName: data[i].fName,

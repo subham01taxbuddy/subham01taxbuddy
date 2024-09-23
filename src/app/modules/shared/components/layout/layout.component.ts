@@ -1,4 +1,4 @@
-import { Component, DoCheck, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription, interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -7,8 +7,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { KnowlarityNotificationComponent } from '../knowlarity-notification/knowlarity-notification.component';
 import { AppConstants } from '../../constants';
 import { DomSanitizer } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
-import { Router, NavigationStart, NavigationEnd, ActivatedRoute, ActivationEnd, Params } from '@angular/router';
+import { Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 
@@ -91,15 +90,14 @@ export class LayoutComponent implements OnInit {
     //   (window as any).Kommunicate.logout();
     // }
     // (function (d, m) {
-    //   var kommunicateSettings =
+    //   let kommunicateSettings =
     //     { "appId": "3eb13dbd656feb3acdbdf650efbf437d1", "popupWidget": true, "automaticChatOpenOnNavigation": true };
-    //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+    //   let s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
     //   s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-    //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+    //   let h = document.getElementsByTagName("head")[0]; h.appendChild(s);
     //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
     // })(document, (window as any).kommunicate || {});
 
-    // this.loadChat();
   }
 
   loadChat() {
@@ -114,14 +112,14 @@ export class LayoutComponent implements OnInit {
     };
 
     waitForGlobal('Kommunicate', function () {
-      var defaultSettings = {
+      let defaultSettings = {
         'defaultBotIds': '3eb13dbd656feb3acdbdf650efbf437d1',
         "skipRouting": true
       };
       (window as any).Kommunicate.displayKommunicateWidget(true);
       const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
       const loginSMEInfo = data[0];
-      var css = "#km-faq{display:none!important;}";
+      let css = "#km-faq{display:none!important;}";
       (window as any).Kommunicate.customizeWidgetCss(css);
       const userDetail = {
         email: loginSMEInfo['email'],

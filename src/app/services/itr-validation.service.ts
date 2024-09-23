@@ -445,7 +445,6 @@ export class ItrValidationService {
   }
 
   getCurrentAssessmentYear(financialYear: string): string {
-    const startYear = parseInt(financialYear.split('-')[0]);
     const endYear = parseInt(financialYear.split('-')[1]);
     const assessmentYearStart = endYear; // Assessment year starts from the end of the financial year. Its basically +1 of financial year
     this.currentAssessmentYear =

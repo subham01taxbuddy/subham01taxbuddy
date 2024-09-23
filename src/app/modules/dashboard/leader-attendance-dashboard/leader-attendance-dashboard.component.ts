@@ -3,15 +3,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ReportService } from 'src/app/services/report-service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import * as moment from 'moment';
+import { lastValueFrom } from 'rxjs';
 
 export const MY_FORMATS = {
   parse: {
@@ -97,8 +96,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    // let leaderUserId = this.loggedInSmeUserId
-
     let param = ''
     let userFilter = ''
     if (this.leaderId && !this.filerId) {
@@ -115,63 +112,106 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
     param = `/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
-    return this.reportService.getMethod(param).toPromise().then((response: any) => {
-      if (response.success == false) {
+    return lastValueFrom(this.reportService.getMethod(param))
+      .then((response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.allDetails = response.data.content;
+          this.calculateCounts();
+
+          const totalNumberOfClientsAssigned = this.allDetails?.reduce(
+            (total, item) => total + item.numberOfClientsAssigned,
+            0
+          );
+          const totalItr1 = this.allDetails?.reduce(
+            (total, item) => total + item.itr1,
+            0
+          );
+          const totalItr2 = this.allDetails?.reduce(
+            (total, item) => total + item.itr2,
+            0
+          );
+          const totalItr3 = this.allDetails?.reduce(
+            (total, item) => total + item.itr3,
+            0
+          );
+          const totalItr4 = this.allDetails?.reduce(
+            (total, item) => total + item.itr4,
+            0
+          );
+          const totalItrOthers = this.allDetails?.reduce(
+            (total, item) => total + item.others,
+            0
+          );
+          const totalItrU = this.allDetails?.reduce(
+            (total, item) => total + item.itrU,
+            0
+          );
+          const totalItrFiled = this.allDetails?.reduce(
+            (total, item) => total + item.totalITRFiled,
+            0
+          );
+          const totalRevenueGenerated = this.allDetails?.reduce(
+            (total, item) => total + item.paymentGenerated,
+            0
+          );
+          const totalCommissionEarnedBeforeTDS = this.allDetails?.reduce(
+            (total, item) => total + item.totalCommissionEarnedBeforeTDS,
+            0
+          );
+          const totalTds = this.allDetails?.reduce(
+            (total, item) => total + item.tds,
+            0
+          );
+          const totalCommissionEarnedAfterTDS = this.allDetails?.reduce(
+            (total, item) => total + item.totalCommissionEarnedAfterTDS,
+            0
+          );
+          const totalCommissionPaid = this.allDetails?.reduce(
+            (total, item) => total + item.commissionPaid,
+            0
+          );
+          const totalCommissionPayable = this.allDetails?.reduce(
+            (total, item) => total + item.commissionPayable,
+            0
+          );
+          const averageUserRating = this.allDetails?.reduce(
+            (total, item) => total + item.averageUserRating,
+            0
+          );
+
+          this.grandTotal = {
+            totalNumberOfClientsAssigned,
+            totalItr1,
+            totalItr2,
+            totalItr3,
+            totalItr4,
+            totalItrOthers,
+            totalItrU,
+            totalItrFiled,
+            totalRevenueGenerated,
+            totalCommissionEarnedBeforeTDS,
+            totalTds,
+            totalCommissionEarnedAfterTDS,
+            totalCommissionPaid,
+            totalCommissionPayable,
+            averageUserRating,
+          };
+        } else {
+          this.allDetails = null;
+          this.calculateCounts();
+          this._toastMessageService.alert('error', response.message);
+        }
+      })
+      .catch(() => {
+        this.loading = false;
         this.allDetails = null;
         this.calculateCounts();
-        this._toastMessageService.alert("error", response.message);
-      }
-      if (response.success) {
+        this._toastMessageService.alert('error', 'Error');
+      })
+      .finally(() => {
         this.loading = false;
-        this.allDetails = response.data.content;
-        this.calculateCounts();
-        // this.config.docUpload.totalItems = response.data.totalElements;
-        const totalNumberOfClientsAssigned = this.allDetails?.reduce((total, item) => total + item.numberOfClientsAssigned, 0);
-        const totalItr1 = this.allDetails?.reduce((total, item) => total + item.itr1, 0);
-        const totalItr2 = this.allDetails?.reduce((total, item) => total + item.itr2, 0);
-        const totalItr3 = this.allDetails?.reduce((total, item) => total + item.itr3, 0);
-        const totalItr4 = this.allDetails?.reduce((total, item) => total + item.itr4, 0);
-        const totalItrOthers = this.allDetails?.reduce((total, item) => total + item.others, 0);
-        const totalItrU = this.allDetails?.reduce((total, item) => total + item.itrU, 0);
-        const totalItrFiled = this.allDetails?.reduce((total, item) => total + item.totalITRFiled, 0);
-        const totalRevenueGenerated = this.allDetails?.reduce((total, item) => total + item.paymentGenerated, 0);
-        const totalCommissionEarnedBeforeTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedBeforeTDS, 0);
-        const totalTds = this.allDetails?.reduce((total, item) => total + item.tds, 0);
-        const totalCommissionEarnedAfterTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedAfterTDS, 0);
-        const totalCommissionPaid = this.allDetails?.reduce((total, item) => total + item.commissionPaid, 0);
-        const totalCommissionPayable = this.allDetails?.reduce((total, item) => total + item.commissionPayable, 0);
-        const averageUserRating = this.allDetails?.reduce((total, item) => total + item.averageUserRating, 0);
-
-        this.grandTotal = {
-          totalNumberOfClientsAssigned,
-          totalItr1,
-          totalItr2,
-          totalItr3,
-          totalItr4,
-          totalItrOthers,
-          totalItrU,
-          totalItrFiled,
-          totalRevenueGenerated,
-          totalCommissionEarnedBeforeTDS,
-          totalTds,
-          totalCommissionEarnedAfterTDS,
-          totalCommissionPaid,
-          totalCommissionPayable,
-          averageUserRating
-        };
-
-      } else {
-        this.allDetails = null;
-        this.calculateCounts();
-        this.loading = false;
-        this._toastMessageService.alert("error", response.message);
-      }
-    }).catch(()=>{
-      this.allDetails = null;
-      this.calculateCounts();
-      this.loading = false;
-      this._toastMessageService.alert("error", "Error");
-    })
+      });
   }
 
   calculateCounts() {

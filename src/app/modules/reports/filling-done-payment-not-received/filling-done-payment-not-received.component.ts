@@ -57,6 +57,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
+  leaderTotalInvoice :any ;
 
 
   constructor(
@@ -108,7 +109,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       this.leaderId = event ? event.userId : null;
       console.log('fromowner:', event);
       this.agentId = this.leaderId;
-
+      this.leaderTotalInvoice =null;
     }
   }
   fromPrinciple(event) {
@@ -127,9 +128,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     if (event) {
       this.filerId = event ? event.userId : null;
       this.agentId = this.filerId;
-      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
-      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
-      // this.serviceCall('');
     }
   }
 
@@ -177,24 +175,26 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
     return this.reportService.getMethod(param).toPromise().then((response: any) => {
       this.loading = false;
-      if (response.success) {
+      if (response.success && response?.data?.content.length > 0) {
         this.filingDoneReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
+        this.leaderTotalInvoice = this.filingDoneReport[0].totalInvoiceAmount
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData(this.filingDoneReport));
         this.cacheManager.initializeCache(this.createRowData(this.filingDoneReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.filingDoneReport));
         this.config.currentPage = currentPageNumber;
-        if(response?.data?.content == ''){
-          this._toastMessageService.alert("error", "No Data Found ");
-        }
-
       } else {
         this.loading = false;
         this.config.totalItems = 0;
         this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
-        this._toastMessageService.alert("error", response.message);
+        if(response?.data?.content.length === 0){
+          this._toastMessageService.alert("error", "No Data Found ");
+        }else{
+          this._toastMessageService.alert("error", response.message);
+        }
+
       }
     }).catch(() =>{
       this.config.totalItems = 0;
@@ -206,7 +206,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
   createRowData(fillingData) {
     console.log('payoutRepoInfo -> ', fillingData);
-    var fillingRepoInfoArray = [];
+    let fillingRepoInfoArray = [];
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = {
         name: fillingData[i].name,
@@ -217,6 +217,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         panNumber: fillingData[i].panNumber,
         statusName: fillingData[i].statusName,
         userId: fillingData[i].userId,
+        invoiceAmount:fillingData[i].invoiceAmount,
       };
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -272,7 +273,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
         headerName: 'Customer Number',
         field: 'customerNumber',
         sortable: true,
-        width: 200,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -284,7 +285,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       {
         headerName: 'Pan Number',
         field: 'panNumber',
-        width: 200,
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -305,6 +306,14 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
           debounceMs: 0
         },
       },
+      {
+        headerName: 'Invoice Amount',
+        field: 'invoiceAmount',
+        width: 160,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+
       {
         headerName: 'Leader Name',
         field: 'leaderName',
@@ -337,7 +346,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = ''
@@ -360,6 +368,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
       { key: 'customerNumber', value: 'Customer Number' },
       { key: 'panNumber', value: 'Pan Number' },
       { key: 'statusName', value: 'Status' },
+      { key: 'invoiceAmount', value:'Invoice Amount' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'filerName', value: 'Filer Name' },
     ]
@@ -370,6 +379,7 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.leaderTotalInvoice =null;
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
@@ -381,7 +391,6 @@ export class FillingDonePaymentNotReceivedComponent implements OnInit {
     this.config.totalPartnersPaid = 0;
     this.filingDoneReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
-    // this.showReports();
   }
 
   pageChanged(event) {

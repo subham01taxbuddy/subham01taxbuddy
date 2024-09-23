@@ -120,7 +120,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         params.api.setRowData(this.immovableAssets);
       },
       isFullWidthRow: (params) => {
-        // return isFullWidth(params.rowNode.data);
         return params.rowNode.data.isFullWidth;
       },
       fullWidthCellRenderer: TdsTypeCellRenderer,
@@ -144,15 +143,12 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       totalItems: null,
     };
     this.editConfig = {
-      // id: 'schALPagination',
       itemsPerPage: 1,
       currentPage: 1,
-      // totalItems: this.immovableAssets.length
     };
   }
 
   ngOnInit() {
-    // this.immovableAssetForm = this.createImmovableAssetForm(0);
     this.stateDropdown = this.stateDropdownMaster;
 
     this.immovableAssetForm = this.initForm();
@@ -175,8 +171,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       this.createMovableAssetsForm();
     }
 
-    // this.immovableAssetForm?.disable();
-    //  this.movableAssetsForm?.disable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -255,7 +249,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           this.utilsService.showSnackBar(
             'To Switch/Add New Asset Please fill in all the mandatory fields in the current Asset'
           );
-          return;
         }
       });
     }

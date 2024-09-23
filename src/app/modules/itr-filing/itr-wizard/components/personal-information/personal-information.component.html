@@ -541,9 +541,9 @@
                   Account number should be between 3-20 digit
                 </mat-error>
                 <mat-error
-                *ngIf="bank.get('accountNumber').hasError('required') && (bank.get('accountNumber').dirty || bank.get('accountNumber').touched)">
-                Please enter name of the Bank
-              </mat-error>
+                  *ngIf="bank.get('accountNumber').hasError('required') && (bank.get('accountNumber').dirty || bank.get('accountNumber').touched)">
+                  Please enter name of the Bank
+                </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-2">
@@ -560,11 +560,6 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <!-- <div class="form-field inl col-1">
-              <div><span class="span">REFUND A/C*</span></div>
-              <mat-checkbox color="primary" name="hasRefund[i]" formControlName="hasRefund">
-              </mat-checkbox>
-            </div> -->
             <div class="form-field" *ngIf="false">
               <button mat-icon-button class="table-add-remove-button text-left"
                 (click)="deleteBank(i, this.customerProfileForm)">

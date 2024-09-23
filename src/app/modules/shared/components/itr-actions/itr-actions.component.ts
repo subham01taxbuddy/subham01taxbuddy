@@ -1,6 +1,6 @@
 import { ITR_JSON } from '../../interfaces/itr-input.interface';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -129,8 +129,6 @@ export class ItrActionsComponent implements OnInit {
               if (key[1] === null) {
                 delete (this.ITR_JSON as any)[key[0]];
               }
-              // if(key )
-              // delete this.ITR_JSON[key];
             });
             console.log('this.ITR_JSON after deleted keys:', this.ITR_JSON)
 
@@ -187,15 +185,13 @@ export class ItrActionsComponent implements OnInit {
   }
 
   interestedForNextYearTpa(data:any) {
-    // this.loading = true;
-    var workingItr:any = this.data.itrObjects.filter((item:any) => item.itrId === data.itrId)[0];
+    let workingItr:any = this.data.itrObjects.filter((item:any) => item.itrId === data.itrId)[0];
     workingItr['nextYearTpa'] = 'INTERESTED';
     console.log(workingItr);
     const param = '/itr/' + workingItr['userId'] + '/' + workingItr['itrId'] + '/' + workingItr['assessmentYear'];
     this.itrMsService.putMethod(param, workingItr).subscribe((result: any) => {
-      // this.getMembersItr(this.selectedMemberId);
     }, (error:any) => {
-      // this.getMembersItr(this.selectedMemberId);
+      console.log(error);
     });
   }
 }

@@ -105,9 +105,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         let form = this.createBusIncomeForm(index, element);
         this.busIncomeFormArray.push(form);
       });
-    } else {
-      // let form = this.createBusIncomeForm(0, null);
-      // this.busIncomeFormArray.push(form);
     }
     this.busIncomeForm = this.fb.group({
       busIncomeFormArray: this.busIncomeFormArray,
@@ -115,10 +112,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.gridOptions.api?.setRowData(
       this.busIncomeFormArray.controls
     );
-    this.busIncomeFormArray.controls.forEach((formgroup, index) => {
-      // this.calculatePresumptive(index, 'cash', false);
-      // this.calculatePresumptive(index, 'bank', false);
-    });
   }
 
   get getBusIncomeArray() {
@@ -166,8 +159,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   calculatePresumptiveIncome(incomeType, setValue?) {
     let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) + parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
     if (total > 20000000) {
-      let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
-      cashReceipts = total / 100 * 5;
+      let cashReceipts = total / 100 * 5;
       if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
         this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(30000000)]);
         this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();
@@ -278,11 +270,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     let bankReceiptsTotal = BusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.bankReceipts), 0);
     let cashReceiptsTotal = BusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.cashReceipts), 0);
     let anyOtherModeTotal = BusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.anyOtherMode), 0);
-
-    // if (bankReceiptsTotal + cashReceiptsTotal + anyOtherModeTotal > 20000000) {
-    //   this.utilsService.showSnackBar('Please make sure that the receipts total in Business details is within the specified limit');
-    //   return;
-    // }
     let total = bankReceiptsTotal + cashReceiptsTotal + anyOtherModeTotal;
     if (total >= 20000000) {
       let cashReceiptsInPercent = total / 100 * 5;
@@ -290,8 +277,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         if (total > 30000000) {
           this.utilsService.showSnackBar('The overall turnover limit u/s 44AD exceeds.');
           return;
-        } else {
-
         }
       } else {
         if (total != 20000000) {
@@ -505,8 +490,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         if (total > 30000000) {
           this.utilsService.showSnackBar('The overall turnover limit u/s 44AD exceeds.');
           return;
-        } else {
-
         }
       } else {
         if (total != 20000000) {
@@ -534,6 +517,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.cashPerWidth = 0;
     this.anyOtherPerWidth = 0;
     this.anyOtherPerWidth = 0;
+    // this.onContinue();
     this.utilsService.showSnackBar("Record saved successfully.");
   }
 
@@ -549,7 +533,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   columnDef() {
-    let self = this;
     return [
       {
         field: '',

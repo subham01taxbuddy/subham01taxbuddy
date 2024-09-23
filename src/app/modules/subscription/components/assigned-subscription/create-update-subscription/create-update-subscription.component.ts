@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { User } from '../../performa-invoice/performa-invoice.component';
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -119,6 +120,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       value: 'lower_deduction',
     }
   ]
+  leaderUserId :any;
+  filteredFiler : Observable<any[]>;
+  filerNames: User[]
+  filerOptions: User[] = [];
+  filerList: any;
+  subscriptionAssigneeIdForOtherPlan:number;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -152,12 +159,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.subType = (this.subscriptionObjType = JSON.parse(
       sessionStorage.getItem('subscriptionObject')
     )?.type);
-
-    // if (this.subType !== 'edit') {
-    //   this.isButtonDisable = false;
-    // } else {
-    //   this.isButtonDisable = true;
-    // }
 
     if (this.roles?.includes('ROLE_FILER') || this.assignedFilerId) {
       this.getSmeDetail();
@@ -210,7 +211,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getLeaderFilerName();
     this.getAllPlanInfo(this.serviceType);
     this.setFormValues(this.selectedUserInfo);
-
     this.isButtonDisable = true;
     if (this.serviceType === 'ITR')
       this.defaultFinancialYear = this.financialYear[0].financialYear;
@@ -226,6 +226,47 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     } else {
       this.filteredFinancialYears = this.financialYear;
     }
+  }
+
+  setFilteredFiler(){
+    this.filteredFiler = this.filerName.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        console.log('change', value);
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter1(name as string, this.filerOptions)
+          : this.filerOptions.slice();
+      })
+    );
+  }
+
+  getFilerList(){
+    this.loading = true;
+    let leaderUserId = this.leaderUserId;
+    const param = `/bo/sme-details-new/${leaderUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    this.reportService.getMethod(param).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res.success) {
+          if (res?.data instanceof Array && res?.data.length > 0) {
+            this.filerList = res?.data;
+            this.filerNames = this.filerList.map((item) => {
+              return { name: item.name, userId: item.userId};
+            });
+            this.filerOptions = this.filerNames
+            this.setFilteredFiler();
+          }
+        }else{
+          console.log('error', res);
+          this.utilsService.showSnackBar('Error While Getting All Filer List')
+        }
+      });
+  }
+
+  getFilerNameId(option){
+    console.log(option);
+    this.subscriptionAssigneeIdForOtherPlan = option.userId ;
   }
 
   printValue() {
@@ -352,6 +393,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     const filterValue = title.toLowerCase();
     return this.allPromoCodes.filter(
       (option) => option.title.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  _filter1(name: string, options): User[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
     );
   }
 
@@ -508,6 +557,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   get leaderName() {
     return this.personalInfoForm.controls['leaderName'] as UntypedFormControl;
+  }
+
+  get isOtherServiceType(): boolean {
+    return this.serviceType === 'OTHER' && this.subType === 'edit' && this.roles.includes('ROLE_ADMIN')
   }
 
   otherInfoForm: UntypedFormGroup = this.fb.group({
@@ -700,6 +753,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.assessmentYear.setValue(subscription.item.financialYear);
         this.filerName.setValue(subscription.assigneeName);
         this.leaderName.setValue(subscription.leaderName);
+        this.leaderUserId = subscription?.leaderUserId;
         if (this.utilsService.isNonEmpty(this.userSubscription)) {
           const smePlanId = this.userSubscription?.smeSelectedPlan?.planId;
           const userPlanId = this.userSubscription?.userSelectedPlan?.planId;
@@ -941,30 +995,24 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
             if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU'))) {
               this.allPlans.forEach((item: any) => {
-                item.disable = true;
-                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                  item.disable = false;
-              })
+                item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+              });
             }
           }
           else {
             this.allPlans = activePlans;
             if (this.roles.includes('ROLE_FILER')) {
               this.allPlans.forEach((item: any) => {
-                item.disable = true;
-                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                  item.disable = false;
-              })
+                item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+              });
             }
           }
         } else {
           this.allPlans = [plans];
           if (this.roles.includes('ROLE_FILER')) {
             this.allPlans.forEach((item: any) => {
-              item.disable = true;
-              if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
-                item.disable = false;
-            })
+              item.disable = !this.smeDetails?.skillSetPlanIdList.includes(item.planId);
+            });
           }
         }
         this.setServiceDetails();
@@ -1094,7 +1142,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      // this.selectedITRUFy = response?.data?.content.map(sub => sub?.item?.financialYear);
       this.selectedITRUFy = response?.data?.content.filter(sub => sub?.item?.service === 'ITRU').map(sub => sub?.item?.financialYear);
     })
   }
@@ -1168,9 +1215,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
-      // if (this.subType === 'edit' && this.service !== 'ITR') {
-      //   this.isButtonDisable = false;
-      // }
       this.serviceDetails = this.allPlans.map((item) => {
         return { service: this.service, details: item.name };
       });
@@ -1196,8 +1240,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     let param = `/bo/sme-details-new/${this.subscriptionObj?.subscriptionAssigneeId}`;
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      this.filerName.setValue(result.data[0]?.name);
-      this.leaderName.setValue(result.data[0]?.parentName);
+      if(this.leaderName.value === '' || this.leaderName.value === null ){
+        this.filerName.setValue(result.data[0]?.name);
+        this.leaderName.setValue(result.data[0]?.parentName);
+        this.leaderUserId = result.data[0]?.parentId;
+      }
+      if(this.serviceType === 'OTHER'){
+        this.getFilerList();
+      }
       if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
         if (result.data[0].filer && !result.data[0].leader) {
           this.assignedFilerId = result.data[0].userId;
@@ -1378,7 +1428,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
                 removePromoCode: this.isPromoRemoved,
                 promoCode: this.selectedPromoCode,
                 couponCodeSubscriptionIds: this.selectedCouponCodeSubscriptionIds,
-                removeCouponCode: this.removeCouponCodeFlag
+                removeCouponCode: this.removeCouponCodeFlag,
+                subscriptionAssigneeIdForOtherPlan  : this.subscriptionAssigneeIdForOtherPlan
               };
 
               if (this.scheduleCallService.value) {
@@ -1415,9 +1466,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
                   } else {
                     this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
                   }
-                  this.router.navigate(['/subscription/assigned-subscription'], {
-                    queryParams: { fromEdit: true },
-                  });
+                  // this.router.navigate(['/subscription/assigned-subscription'], {
+                  //   queryParams: { fromEdit: true },
+                  // });
                   reject(error);
                 }
               );

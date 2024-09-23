@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -8,8 +8,7 @@ import {
   NewCapitalGain,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Input } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators, FormArray } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
 import * as moment from "moment/moment";
@@ -24,7 +23,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   step = 0;
-  isAddOtherAssetsImprovement: Number;
+  isAddOtherAssetsImprovement: number;
   deductionForm!: UntypedFormGroup;
   config: any;
   index: number;
@@ -34,6 +33,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   isDisable: boolean;
   maximumDate = new Date();
   PREV_ITR_JSON: any;
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
 
   constructor(
     public matDialog: MatDialog,
@@ -51,8 +52,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (listedData?.length > 0) {
       this.goldCg = listedData[0];
       console.log(listedData);
-      // this.clearNullImprovements();
-      // this.calculateTotalCg();
     } else {
       this.goldCg = {
         assessmentYear: this.ITR_JSON.assessmentYear,
@@ -82,7 +81,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             asset.hasEdit = false;
           });
         }
-        // this.sel();
       },
       sortable: true,
       pagination: true,
@@ -183,6 +181,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   }
 
   updateValidations(formGroup) {
+    this.initializeFormFlags(formGroup);
     if (formGroup.controls['costOfNewAsset'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
@@ -214,7 +213,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   //getting the deductions Array
   get getDeductions() {
-    return this.deductionForm?.get('deductions') as FormArray;
+    return this.deductionForm?.get('deductions') as UntypedFormArray;
   }
 
   // editing the deduction array and enabling the form
@@ -259,9 +258,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (res: any) => {
         this.loading = false;
         console.log('Deduction:', res);
-        // this.goldCg.assetDetails = res.assetDetails;
-        // this.goldCg.improvement = res.improvement;
-        // this.goldCg.deduction = res.deduction;
         (this.getDeductions.controls[0] as UntypedFormGroup).controls[
           'deductionClaimed'
         ]?.setValue(res.data[0]?.deductionAmount);
@@ -283,8 +279,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     );
 
-    // this.calculateCg();
-    console.log(this.goldCg);
   }
 
   depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
@@ -297,8 +291,14 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       );
       return;
     }
+    if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+        return;
+      }
+    }
     const deductionsArray = (
-      (this.deductionForm.controls['deductions'] as FormArray)
+      (this.deductionForm.controls['deductions'] as UntypedFormArray)
         ?.controls[0] as UntypedFormGroup
     )?.controls;
     const dednArray = [
@@ -325,7 +325,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     if (this.deductionForm.valid) {
       //re-intialise the ITR objects
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
       this.loading = true;
       this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
@@ -336,7 +335,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
 
       const deductionDetails = (
-        this.deductionForm.controls['deductions'] as FormArray
+        this.deductionForm.controls['deductions'] as UntypedFormArray
       ).getRawValue();
 
       if (deductionDetails && deductionDetails.length > 0) {
@@ -414,12 +413,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deleteDeduction(index) {
     const deleteDeduction = this.getDeductions;
     deleteDeduction.removeAt(index);
-    // Condition is added because at least one deduction needs to be shown
-    // if (deleteDeduction.length === 0) {
-    //   deleteDeduction.push(this.createDeductionForm());
-    // }
-    // this.goldCg.deduction.splice(index, 1);
-    // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
   // for pagination
@@ -470,10 +463,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  editForm() { }
-
-  closed() { }
-
   isAssetSelected() {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
@@ -497,7 +486,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       (asset) =>
         !selected.includes(asset?.srn)
     );
-    this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
+    this.assetList = this.assetList.filter((asset) => !asset?.hasEdit);
 
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions
@@ -661,11 +650,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
-        // cellRenderer: (params) => {
-        //   return params.data.costOfImprovement
-        //     ? params.data.costOfImprovement
-        //     : '';
-        // },
         cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           const costOfImprovement = params.data.costOfImprovement;
@@ -760,6 +744,67 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           break;
         }
       }
+    }
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean): void {
+    if (isChecked) {
+      this.setFieldValidators('purchaseDate', [Validators.required]);
+      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators('purchaseDate');
+      this.clearFieldValidators('costOfNewAssets');
+    }
+    this.calculateDeduction();
+  }
+  onToggleCGAS(isChecked: boolean): void{
+    if (isChecked) {
+      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators('dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('accountNumber');
+      this.clearFieldValidators('ifscCode');
+      this.clearFieldValidators('dateOfDeposit');
+    }
+    this.calculateDeduction();
+  }
+
+  setFieldValidators(controlName: string, validators: any[]): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(controlName: string): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
     }
   }
 }

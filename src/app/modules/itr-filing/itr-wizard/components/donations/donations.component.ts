@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, SimpleChanges, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ElementRef } from '@angular/core';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -11,7 +11,7 @@ declare let $: any;
   styleUrls: ['./donations.component.scss'],
 })
 export class DonationsComponent implements OnInit {
-  @Input() isAddDonation: Number;
+  @Input() isAddDonation: number;
   @Input() type: string;
   generalDonationForm: UntypedFormGroup;
   donationToolTip: any;
@@ -133,9 +133,9 @@ export class DonationsComponent implements OnInit {
   config80ggc: any;
   minDate: Date;
   maxDate: Date;
-  pg80g:number;
-  pg80gga:number;
-  pg80ggc:number;
+  pg80g: number;
+  pg80gga: number;
+  pg80ggc: number;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -182,7 +182,8 @@ export class DonationsComponent implements OnInit {
         }
         if (this.type === '80gga' && item.donationType === 'SCIENTIFIC') {
           this.addMoreDonations(item);
-        } if (this.type === '80ggc' && item.donationType === 'POLITICAL') {
+        }
+        if (this.type === '80ggc' && item.donationType === 'POLITICAL') {
           this.addMoreDonations(item);
         }
       });
@@ -222,10 +223,10 @@ export class DonationsComponent implements OnInit {
 
   createDonationForm(item?): UntypedFormGroup {
     let nameValidator = this.type != '80ggc' ?
-        (this.type === '80g' ?
-            [Validators.required, Validators.pattern(AppConstants.charAllSpecialRegex),]
-            :[Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex),])
-        : '';
+      (this.type === '80g' ?
+        [Validators.required, Validators.pattern(AppConstants.charAllSpecialRegex),]
+        : [Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex),])
+      : '';
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : '', this.type === '80ggc' ? [Validators.required, Validators.maxLength(25)] : Validators.maxLength(25)],
@@ -342,7 +343,7 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'POLITICAL'
         );
-        if(!this.Copy_ITR_JSON.donations){
+        if (!this.Copy_ITR_JSON.donations) {
           this.Copy_ITR_JSON.donations = [];
         }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
@@ -354,7 +355,7 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'SCIENTIFIC'
         );
-        if(!this.Copy_ITR_JSON.donations){
+        if (!this.Copy_ITR_JSON.donations) {
           this.Copy_ITR_JSON.donations = [];
         }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
@@ -366,7 +367,7 @@ export class DonationsComponent implements OnInit {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'OTHER'
         );
-        if(!this.Copy_ITR_JSON.donations){
+        if (!this.Copy_ITR_JSON.donations) {
           this.Copy_ITR_JSON.donations = [];
         }
         if (this.generalDonationForm.value.donationArray?.length > 0) {
@@ -402,15 +403,19 @@ export class DonationsComponent implements OnInit {
       this.generalDonationForm.get('donationArray')
     );
     // This method is written in utils service for common usablity.
-    let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
-      'panNumber',
-      buyersDetails.value
-    );
+    let panRepeat: boolean;
+    if(this.type === '80g'){
+        panRepeat = this.utilsService.checkDuplicatePANWithDifferentScheme(
+            buyersDetails.value
+        );
+    } else {
+      panRepeat = this.utilsService.checkDuplicateInObject(
+          'panNumber',
+          buyersDetails.value
+      );
+    }
     let userPanExist = [];
-    // let failedCases = [];
     if (buyersDetails.value instanceof Array) {
-      // failedCases = buyersDetails.value.filter(item =>
-      //   !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
       userPanExist = buyersDetails.value.filter(
         (item) => item.pan === this.ITR_JSON.panNumber
       );
@@ -490,7 +495,8 @@ export class DonationsComponent implements OnInit {
         itemsPerPage: 2,
         currentPage: this.pg80gga,
       };
-    }if (this.type === '80ggc') {
+    }
+    if (this.type === '80ggc') {
       this.pg80ggc = event;
       this.config80g = {
         id: 'd80ggc',
@@ -512,7 +518,7 @@ export class DonationsComponent implements OnInit {
     }
   }
 
-  getPageConfig(){
+  getPageConfig() {
     if (this.type === '80g') {
       this.config80g = {
         id: 'd80g',
@@ -528,7 +534,8 @@ export class DonationsComponent implements OnInit {
         currentPage: this.pg80gga,
       };
       return this.config80gga
-    } if (this.type === '80ggc') {
+    }
+    if (this.type === '80ggc') {
       this.config80ggc = {
         id: 'd80ggc',
         itemsPerPage: 2,

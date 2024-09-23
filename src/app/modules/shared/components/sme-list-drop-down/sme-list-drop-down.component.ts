@@ -1,8 +1,7 @@
-import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { UntypedFormControl} from '@angular/forms';
 import { Observable } from 'rxjs';
-import { filter, map, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
 import { User } from "../../../subscription/components/performa-invoice/performa-invoice.component";
 import { AppConstants } from "../../constants";
@@ -57,9 +56,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   partnerType: any;
 
   constructor(public utilsService: UtilsService,
-    private userMsService: UserMsService,
     private reportService: ReportService,
-    private utilService: UtilsService,
   ) {
   }
 
@@ -109,39 +106,6 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.setChild(this.loggedInSme[0]);
     }
-
-    // this.getLeaders();
-    // this.getPrincipleIndividuals();
-    // // this.getChild();
-
-    // this.setFilteredLeaders();
-    // this.setFilteredPrincipleIndividuals();
-    // this.setFilteredChild();
-
-
-    // if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
-    //   this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-    //   console.log('all filers', this.smeList);
-    //   this.allFilers = this.smeList.map((item) => {
-    //     return {name: item.name, userId: item.userId, partnerType :item.partnerType };
-    //   });
-    //   this.childOptions = this.allFilers;
-    // } else if(this.partnerType == 'Principle'){
-    //   this.principleIndividualDetails = this.loggedInSme[0];
-    //   this.getChild();
-    //   // this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
-    //   // console.log('my agents', this.smeList);
-    //   // this.allFilers = this.smeList.map((item) => {
-    //   //   return {name: item.name, userId: item.userId};
-    //   // });
-    //   // this.childOptions = this.allFilers;
-    // }
-    // if (this.partnerType == 'Principle') {
-    //   this.setPrinciple(this.loggedInSme[0]);
-    // } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-    //   this.setChild(this.loggedInSme[0]);
-    // }
-
   }
 
   setLeader(leader: any) {
@@ -167,10 +131,6 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
           this.setPrinciple({});
-          // if (this.roles?.includes('ROLE_OWNER')) {
-          //   this.principleIndividualDetails.userId = this?.loggedInSme[0]?.userId;
-          //   this.getChild();
-          // }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name
@@ -205,10 +165,6 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
           this.setLeader({});
-          // if (this.roles?.includes('ROLE_ADMIN')) {
-          //   // this.ownerDetails.userId = this?.loggedInSme[0]?.userId;
-          //   this.getPrincipleIndividuals();
-          // }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name
@@ -240,20 +196,6 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.setChild(option);
     console.log(option);
   }
-
-  setList() {
-    // if (this.searchPrincipleIndividual.value == '' && !this.roles?.includes('ROLE_OWNER')) {
-    //   this.childOptions = this.allFilers;
-    //   this.setFiletedOptions2();
-    // } else if (this.roles?.includes('ROLE_OWNER')){
-    //   this.childOptions = this.childList;
-    // }
-  }
-
-  setList2() {
-
-  }
-
 
   getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
@@ -343,7 +285,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.childNames = this?.principleIndividualList?.map((item) => {
         return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
-      this.childOptions = this.childList; //this.filerNames;
+      this.childOptions = this.childList;
       this.setFilteredChild();
       console.log(' childNames -> ', this.childOptions);
     });

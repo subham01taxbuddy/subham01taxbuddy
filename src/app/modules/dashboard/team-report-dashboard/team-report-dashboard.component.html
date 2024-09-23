@@ -43,8 +43,6 @@
                         </div>
 
                         <div class="button-container">
-                          <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                          </button> -->
                           <app-custom-button class="srch-btn-1" [actions]="[getInvoiceReports,getOperationTeamDetails,getTotalCommission,getScheduledCallDetails,getSubPaidScheduleCallCount]">
                             <i class="fa fa-search" aria-hidden="true"></i> Search
                           </app-custom-button>
@@ -74,7 +72,6 @@
             <div class="col-sm-12 TxHd-12 mt-3">
               <span class="header-text-1">{{ service.serviceType }} Invoice</span>
             </div>
-            <!-- <div class="invoice-border-radius mt-3"> -->
             <div class="row">
               <div class="col-sm-4">
                 <div class="radius1">
@@ -131,7 +128,6 @@
                 </div>
               </div>
             </div>
-            <!-- </div> -->
           </div>
           <div class="col-sm-6">
             <div class="col-sm-12 TxHd-12 mt-3" style="padding-top: 6px;">
@@ -211,7 +207,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/totalSme.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Total SME's</span>
                     <span class="numTxSm-11">{{ operationTeamData?.totalSMEs || 'NA' }}</span>
@@ -221,7 +216,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/intFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Internal Filer</span>
                     <span class="numTxSm-11">{{operationTeamData?.internalFiler || 'NA'}}</span>
@@ -231,7 +225,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/leader.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Leaders</span>
                     <span class="numTxSm-11">{{operationTeamData?.leaders || 'NA'}}</span>
@@ -241,7 +234,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/extFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">External Filers</span>
                     <span class="numTxSm-11">{{operationTeamData?.externalFiler || 'NA'}}</span>
@@ -254,7 +246,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/extFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Total External Filers</span>
                     <span class="numTxSm-11">{{operationTeamData?.externalFiler || 'NA'}}</span>
@@ -264,7 +255,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/indFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Individual Filers</span>
                     <span class="numTxSm-11">{{operationTeamData?.individualFilers || 'NA'}}</span>
@@ -274,7 +264,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/priFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Principal Filers</span>
                     <span class="numTxSm-11">{{operationTeamData?.principalFilers || 'NA'}}</span>
@@ -284,7 +273,6 @@
               <div class="col-sm-3">
                 <div class="count-radius-1">
                   <img src="/assets/img/asstFil.png" alt="" class="imgSiz" />
-                  <!-- <img src="/assets/img/fluent_people-20-filled.png" /> -->
                   <div class="count-inBxR-1">
                     <span class="text-TxSm-1">Assistant Filers</span>
                     <span class="numTxSm-11">{{operationTeamData?.assistantFilers || 'NA'}}</span>

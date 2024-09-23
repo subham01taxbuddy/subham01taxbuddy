@@ -44,8 +44,6 @@
                           </div>
                           <div class="col-sm-6">
                             <div class="button-container">
-                              <!-- <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                              </button> -->
                               <app-custom-button class="srch-btn-1" [actions]="[getAllPartnerDetails]">
                                 <i class="fa fa-search" aria-hidden="true"></i> Search
                               </app-custom-button>
@@ -139,7 +137,6 @@
                   <th scope="col">Total ITR Filed</th>
                   <th scope="col">Revenue Generated(filed)<br>
                     Total amount of paid invoices</th>
-                  <!-- <th scope="col">Applicable Commission <br>Percentage as on date</th> -->
                   <th scope="col">Total Commission<br>Earned before TDS</th>
                   <th scope="col">TDS</th>
                   <th scope="col">Total Commission<br>Earned after TDS</th>
@@ -172,7 +169,6 @@
                   <td>{{ item.itrU}}</td>
                   <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
                   <td>{{ item.paymentGenerated}}</td>
-                  <!-- <td>{{ item.applicableCommissionPercentage}}</td> -->
                   <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
                   <td>{{ item.tds}}</td>
                   <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
@@ -192,7 +188,6 @@
                   <td class="text-success">{{ grandTotal?.totalItrU }}</td>
                   <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
                   <td class="text-success">{{ grandTotal?.totalRevenueGenerated | number:'1.2-2' }}</td>
-                  <!-- <td>{{ 'NA' }}</td> -->
                   <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
                   <td class="text-success">{{ grandTotal?.totalTds | number:'1.2-2' }}</td>
                   <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS | number:'1.2-2' }}</td>

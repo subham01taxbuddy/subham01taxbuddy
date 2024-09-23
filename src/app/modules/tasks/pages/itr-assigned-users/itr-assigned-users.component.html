@@ -1,5 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
@@ -55,7 +57,17 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-2 spsTp">
+                        <div *ngIf="searchParam.statusId === 8" class="col-sm-3 spsTp">
+                          <label class="input__label" for="attr">Tax Payable</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
+                            <mat-select placeholder=""  [(ngModel)]="taxPayable">
+                              <mat-option *ngFor="let tax of taxDropdown" [value]="tax.value">
+                                {{ tax.label }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="spsTp" [ngClass]="{'col-sm-2': searchParam.statusId !== 8, 'col-sm-3': searchParam.statusId === 8}">
                           <label class="input__label" for="attr">Filing Status </label>
                           <mat-form-field appearance="outline" class="custom-bg-new  small-inp no-height">
                             <mat-select placeholder="" [(ngModel)]="searchParam.itrObjectStatus">
@@ -66,7 +78,7 @@
                           </mat-form-field>
                         </div>
 
-                        <div class="col-sm-5 spsTp">
+                        <div class="spsTp" [ngClass]="{'col-sm-5': searchParam.statusId !== 8, 'col-sm-8': searchParam.statusId === 8}">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
@@ -84,6 +96,9 @@
                       <app-custom-button class="srch-btn-1" [actions]="[search]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
+                      <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download File
+                      </button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
                       </button>
@@ -144,6 +159,7 @@
     </div>
   </div>
 </div>
+
 
 <app-user-chat *ngIf="chatBuddyDetails" [username]="chatBuddyDetails.userFullName" [requestId]="chatBuddyDetails.request_id" [serviceType]="chatBuddyDetails.departmentName"
   [image]="chatBuddyDetails.image" [showCloseIcon]="true"  (closeChatClicked)="closeChat()" [isAssignedToBotVisible]="true"></app-user-chat>

@@ -6,16 +6,12 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ValidateOtpComponent } from './components/validate-otp/validate-otp.component';
 import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SignInComponent } from './pages/sign-in/sign-in.component';
-import { SignUpComponent } from './pages/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     ForgotPasswordComponent,
     ValidateOtpComponent,
-    SignInComponent,
-    SignUpComponent
   ],
   imports: [
     CommonModule,

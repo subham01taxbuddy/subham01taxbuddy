@@ -1,15 +1,9 @@
-import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms'
-
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms'
 import { Component, Inject, OnInit } from '@angular/core'
-
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-
 import { AppConstants } from 'src/app/modules/shared/constants'
-
 import { UtilsService } from 'src/app/services/utils.service'
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
-import {forEach} from "lodash";
-
 
 @Component({
   selector: 'app-nri-details-dialog',

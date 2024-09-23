@@ -32,13 +32,28 @@ import { SpeedTestModule } from 'ng-speed-test';
 import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import {SummaryConversionService} from "./services/summary-conversion.service";
+import { MatButtonModule } from '@angular/material/button';
+import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
+import { AppConstants } from './modules/shared/constants';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
- 
+
+
+const dbConfig: DBConfig  = {
+  name: 'taxbuddyIndexedDb',
+  version: 1,
+  objectStoresMeta: [{
+    store: 'taxbuddy',
+    storeConfig: { keyPath: 'id', autoIncrement: true },
+    storeSchema: [
+      { name: AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, keypath: AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, options: { unique: false } },
+    ]
+  }]
+};
 @NgModule({
   declarations: [
     AppComponent,
     ToastMessageComponent,
-  ],
+   ],
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig,
@@ -50,6 +65,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     PagesModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatButtonModule,
     AngularFireModule,
     AngularFireMessagingModule,
     SubscriptionModule,
@@ -57,6 +73,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     SpeedTestModule,
+    NgxIndexedDBModule.forRoot(dbConfig)
     FontAwesomeModule,
   ],
   providers: [
