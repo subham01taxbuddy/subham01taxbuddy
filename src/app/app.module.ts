@@ -73,8 +73,8 @@ const dbConfig: DBConfig  = {
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     SpeedTestModule,
-    NgxIndexedDBModule.forRoot(dbConfig)
-    FontAwesomeModule,
+    NgxIndexedDBModule.forRoot(dbConfig),
+    FontAwesomeModule
   ],
   providers: [
     NavbarService,

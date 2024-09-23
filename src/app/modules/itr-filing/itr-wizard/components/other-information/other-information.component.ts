@@ -139,8 +139,8 @@ export class OtherInformationComponent implements OnInit {
   }
 
   onSharesAcquiredChange(index: number) {
-    const sharesArray = this.sharesForm.get('sharesArray') as FormArray;
-    const shareFormGroup = sharesArray.at(index) as FormGroup;
+    const sharesArray = this.sharesForm.get('sharesArray') as UntypedFormArray;
+    const shareFormGroup = sharesArray.at(index) as UntypedFormGroup;
 
     const acquiredSharesControl = shareFormGroup.get('acquiredShares');
     const purchaseDateControl = shareFormGroup.get('purchaseDate');

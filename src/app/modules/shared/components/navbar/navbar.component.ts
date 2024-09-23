@@ -1,7 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, DoCheck, ElementRef, HostListener, NgModule, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Component, DoCheck, ElementRef, Renderer2, OnInit, OnDestroy} from '@angular/core';
+import { Component, DoCheck, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarService } from '../../../../services/navbar.service';
 import Auth from '@aws-amplify/auth/lib';
@@ -14,20 +12,16 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from "../../../../services/toast-message.service";
 import { UserMsService } from "../../../../services/user-ms.service";
 import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { SidebarService } from 'src/app/services/sidebar.service';
 import { ChatManager } from "../../../chat/chat-manager";
 import { PushNotificationComponent } from 'src/app/modules/chat/push-notification/push-notification.component';
 import { ChatService } from 'src/app/modules/chat/chat.service';
 
 import { Subscription } from "rxjs";
-import {  interval, Subscription, switchMap, timer } from "rxjs";
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { AlertService } from 'src/app/services/alert.service';
-import { AlertPushNotificationComponent } from 'src/app/modules/alert/components/alert-push-notification/alert-push-notification.component';
 import { AlertPopupComponent } from 'src/app/modules/alert/components/alert-popup/alert-popup.component';
 import { SessionStorageService } from 'src/app/services/storage.service';
-import { DialogRef } from '@angular/cdk/dialog';
 import {IdleService} from "../../../../services/idle-service";
 
 
@@ -113,7 +107,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
     private userMsService: UserMsService,
     private sidebarService: SidebarService,
     private renderer: Renderer2,
-    private elementRef: ElementRef,
     private chatManager: ChatManager,
     private chatService: ChatService,
     private elementRef: ElementRef,
@@ -157,6 +150,11 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
   }
 
   ngOnInit(): void {
+      this.chatService.closeFloatingWidgetObservable.subscribe(() => {
+          this.floatingWidgetShow = false;
+      });
+
+      this.subscribeToAlerts();
     // this.chatSubscription = this.chatService.messageObservable.subscribe(data => {
     //   this.handleNewNotification(data);
     // });
@@ -169,7 +167,7 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
           this.handleNewNotification(data);
       });
 
-    idleService.idle$.subscribe(s => {
+    this.idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
         this.dialog.closeAll();
         this.subscription.unsubscribe();
@@ -177,16 +175,8 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
         this.alertService.stopService();
       }
     });
-  }
-  }
 
-
-  ngOnDestroy(): void {
-    if (this.chatSubscription) {
-      this.chatSubscription.unsubscribe();
-    }
   }
-
 
   handleNewNotification(data: any) {
     if (this.dialogRef) {
@@ -217,19 +207,10 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
 
   }
 
-  ngOnInit(): void {
-      this.chatService.closeFloatingWidgetObservable.subscribe(() => {
-          this.floatingWidgetShow = false;
-      });
-
-      this.subscribeToAlerts();
-  //    this.periodicAlertSubscription = timer(0, 30000).pipe(
-  //   switchMap(() => this.alertService.getAllAlert())
-  // ).subscribe(alerts => {
-  //   this.checkAndProcessAlerts(alerts);
-  // });
-  }
    ngOnDestroy() {
+       if (this.chatSubscription) {
+           this.chatSubscription.unsubscribe();
+       }
      if (this.alertSubscription) {
        this.alertSubscription.unsubscribe();
      }
@@ -572,13 +553,6 @@ private updateStoredAlerts(newAlert: Alert) {
     } catch (error) {
       console.error('Error parsing stored alerts:', error);
     }
-  handleWidgetClosed() {
-    this.floatingWidgetShow = false;
-  }
-
-  closeChat() {
-    this.userDetails = null;
-  }
 
   }
 
@@ -590,6 +564,14 @@ private updateStoredAlerts(newAlert: Alert) {
 
   sessionStorage.setItem(this.READ_ALERTS_KEY, JSON.stringify(storedAlerts));
 }
+
+    handleWidgetClosed() {
+        this.floatingWidgetShow = false;
+    }
+
+    closeChat() {
+        this.userDetails = null;
+    }
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;

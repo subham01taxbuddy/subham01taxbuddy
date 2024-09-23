@@ -2,113 +2,113 @@
 
 <header class="header clearfix fixed">
 
-  <div class="row">
-    <div class="col-lg-1 col-md-1 col-sm-1">
+    <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1">
 
-      <mat-icon class="cursor-pointer hamburger" *ngIf="nav" (click)="open()">
-        menu
-      </mat-icon>
-      <mat-icon class="cursor-pointer hamburger" *ngIf="!nav" (click)="close()">
-        menu_close
-      </mat-icon>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-4">
-      <a class="header__logo" (click)="navigateToHome()">
-        <span class="header__logo-img1"></span>
-      </a>
-      <button class="btn-call ml-3" (click)="openCallDialog()">
-        <i class="fa-regular fa-phone-arrow-right"></i>&nbsp;&nbsp;Dial Any Number
-      </button>
-    </div>
+            <mat-icon class="cursor-pointer hamburger" *ngIf="nav" (click)="open()">
+                menu
+            </mat-icon>
+            <mat-icon class="cursor-pointer hamburger" *ngIf="!nav" (click)="close()">
+                menu_close
+            </mat-icon>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <a class="header__logo" (click)="navigateToHome()">
+                <span class="header__logo-img1"></span>
+            </a>
+            <button class="btn-call ml-3" (click)="openCallDialog()">
+                <i class="fa-regular fa-phone-arrow-right"></i>&nbsp;&nbsp;Dial Any Number
+            </button>
+        </div>
 
-    <div class="col-lg-2 col-md-2 col-sm-1">
-      <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
-      </div>
-    </div>
-
-
-
-    <div class="col-lg-2 col-md-2 col-sm-2">
-      <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right">
-        <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()"><i class="fa fa-copy"
-            aria-hidden="true"></i>Copy Interview Link</button>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-5">
-      <div class="header__buttons logout-btn-wrapper" style="float:right">
-        <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out" aria-hidden="true"></i></button>
-      </div>
-
-      <div class="page-container">
-        <div class="notification-container">
-          <button class="notification-icon" (click)="toggleNotifications()">
-            <i class="fa-solid fa-bell"></i>
-            <span class="notification-badge" *ngIf="alerts.length > 0">{{ alerts.length }}</span>
-          </button>
-          <div class="notification-dropdown" *ngIf="showNotifications">
-            <div class="notification-header">
-              <h3>Notifications</h3>
+        <div class="col-lg-2 col-md-2 col-sm-1">
+            <div class="note1">*<b>Please note:</b> Access and activities monitored for customer confidentiality.
             </div>
-            <div class="notification-list">
-              <div class="notification-item" *ngFor="let alert of alerts">
-                <h4>{{ alert.title }}</h4>
-                <p class="notification-message">{{ alert.message }}</p>
-                <span class="notification-date">
+        </div>
+
+
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <div *ngIf="showCopyLinkButton" class="header__breadcrumbs" style="float:right">
+                <button *ngIf="showCopyLinkButton" class="btn-copyLink" (click)="copyLink()"><i class="fa fa-copy"
+                                                                                                aria-hidden="true"></i>Copy
+                    Interview Link
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-5">
+
+            <div class="page-container">
+                <div class="notification-container">
+                    <button class="notification-icon" (click)="toggleNotifications()">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-badge" *ngIf="alerts.length > 0">{{ alerts.length }}</span>
+                    </button>
+                    <div class="notification-dropdown" *ngIf="showNotifications">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item" *ngFor="let alert of alerts">
+                                <h4>{{ alert.title }}</h4>
+                                <p class="notification-message">{{ alert.message }}</p>
+                                <span class="notification-date">
                   {{ formatDate(alert.applicableFrom) }} - {{ formatDate(alert.applicableTo) }}
                 </span>
-              </div>
-              <div class="no-notifications" *ngIf="alerts.length === 0">
-                No notifications
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="showDropDown" class="header__breadcrumbs" style="float:right;cursor: pointer;">
-        <div class="user" id="userDropdown" (click)="toggleDropdown()">
-                  <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i> &nbsp;
-        </div>
-        <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
-          <a id="option1" (click)="navigateToProfile()">My Profile</a>
-          <a id="option2" *ngIf="partnerType === 'PRINCIPAL'" (click)="navigateToAssistantManagement()">Assistant
-            Management</a>
-        </div>
-      </div>
-      <div *ngIf="!showDropDown" class="header__breadcrumbs" style="float:right">
-        <div class="user">
-          <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
-        </div>
-      </div>
-      <div *ngIf="!showAffiliateBtn && showAffButton " class="header__breadcrumbs" style="float:left">
-        <button *ngIf="showAffButton" class="btn-copyLink-1" (click)="copyAffiliateLink()"><i class="fa fa-copy"
-            aria-hidden="true"></i>Copy Affiliate Link</button>
-      </div>
-      <div *ngIf="showAffiliateBtn" class="header__breadcrumbs" style="float:right">
-        <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
-          <i class="fa-light fa-people-group"></i> Affiliate ID Linking</button>|
-
-            </div>
-            <div class="header__breadcrumbs" style="float:right">
-                <div *ngIf="!showDropDown" class="header__breadcrumbs">
-                    <div class="user">
-                        <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
+                            </div>
+                            <div class="no-notifications" *ngIf="alerts.length === 0">
+                                No notifications
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
-                    <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp; </div>
+          <div class="header__breadcrumbs" style="float:right">
+
+            <div class="header__breadcrumbs" style="position: relative;" (click)="toggleWidget()">
+              <div class="chat"><i class="fal fa-comments-alt"></i> &nbsp;</div>
+            </div>
+
+
+            <div class="header__buttons logout-btn-wrapper">
+              <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
+                                                                      aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+            <div *ngIf="showDropDown" class="header__breadcrumbs" style="float:right;cursor: pointer;">
+                <div class="user" id="userDropdown" (click)="toggleDropdown()">
+                    <i class='far fa-user-circle'></i> {{ getLoggedInUserName() }} <i class="fa fa-caret-down"></i>
+                    &nbsp;
                 </div>
+                <div class="dropdown-content" *ngIf="isDropdownOpen" id="dropdownContent">
+                    <a id="option1" (click)="navigateToProfile()">My Profile</a>
+                    <a id="option2" *ngIf="partnerType === 'PRINCIPAL'" (click)="navigateToAssistantManagement()">Assistant
+                        Management</a>
+                </div>
+            </div>
+            <div *ngIf="!showDropDown" class="header__breadcrumbs" style="float:right">
+                <div class="user">
+                    <i class='far fa-user-circle'></i> {{getLoggedInUserName()}} &nbsp;
+                </div>
+            </div>
+            <div *ngIf="!showAffiliateBtn && showAffButton " class="header__breadcrumbs" style="float:left">
+                <button *ngIf="showAffButton" class="btn-copyLink-1" (click)="copyAffiliateLink()"><i class="fa fa-copy"
+                                                                                                      aria-hidden="true"></i>Copy
+                    Affiliate Link
+                </button>
+            </div>
+            <div *ngIf="showAffiliateBtn" class="header__breadcrumbs" style="float:right">
+                <button *ngIf="showAffiliateBtn" class="btn-add-affiliate" (click)="addAffiliateId()">&nbsp;
+                    <i class="fa-light fa-people-group"></i> Affiliate ID Linking
+                </button>
+                |
+
+            </div>
 
 
-                <div class="header__buttons logout-btn-wrapper">
-                    <button class="btn-logout" (click)="logout()">Logout <i class="fa fa-sign-out"
-                            aria-hidden="true"></i></button>
-      </div>
-    </div>
 
-
-  </div>
+        </div>
     </div>
 
 
@@ -119,6 +119,6 @@
 </div>
 
 <app-user-chat *ngIf="userDetails" [username]="userDetails.userFullName" [requestId]="userDetails.request_id"
-    [serviceType]="userDetails.departmentName" [image]="userDetails.image" [showCloseIcon]="true"
-    (closeChatClicked)="closeChat()" [isAssignedToBotVisible]="true">
+               [serviceType]="userDetails.departmentName" [image]="userDetails.image" [showCloseIcon]="true"
+               (closeChatClicked)="closeChat()" [isAssignedToBotVisible]="true">
 </app-user-chat>
