@@ -75,7 +75,6 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             this.selectedUser.departmentName = selectedDepartment.name;
             conversation.departmentName = selectedDepartment.name;
         }
-        localStorage.setItem("SELECTED_CHAT", JSON.stringify(conversation));
         // this.closeUserChat();
         // this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
         this.chatManager.openConversation(conversation.request_id);
@@ -208,6 +207,15 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
+        if(data.data) {
+            let receivedMessage = JSON.parse(data.data);
+            if (receivedMessage.recipient === this.selectedUser.request_id) {
+                //the message shall be displayed
+            } else {
+                //this is not for me
+            }
+        }
+        console.log('selected', this.selectedUser.request_id);
     }
 
     fetchList(departmentId: any) {

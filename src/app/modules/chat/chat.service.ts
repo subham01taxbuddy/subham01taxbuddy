@@ -643,13 +643,13 @@ export class ChatService {
                       if (this.lastMessageId != messageJson.message_id) {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
-                        let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-                        if (messageJson.recipient === selectedUser?.request_id) {
+                        // let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
+                        // if (messageJson.recipient === selectedUser?.request_id) {
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             this.addMessageToDB(JSON.parse(message.toString()));
-                            callback(ChatEvents.MESSAGE_RECEIVED);
+                            callback(ChatEvents.MESSAGE_RECEIVED, message.toString());
                           });
-                        }
+                        // }
                       }
                     }
                     let update_conversation = true;
@@ -825,10 +825,9 @@ export class ChatService {
 
   getMessageAttributes(payload: any, notification?: any, isFromPushNotification: boolean = false) {
     let chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
-    let user = this.localStorageService.getItem('SELECTED_CHAT', true);
-    const departmentId = isFromPushNotification ? notification?.attributes?.departmentId : user?.departmentId;
-    const departmentName = isFromPushNotification ? notification?.attributes?.departmentName : user?.departmentName;
-    const userFullName = isFromPushNotification ? notification?.attributes?.userFullname : user?.userFullName;
+    const departmentId = notification?.attributes?.departmentId;
+    const departmentName = notification?.attributes?.departmentName;
+    const userFullName = notification?.attributes?.userFullname;
 
     let attributes = {
       "departmentId": departmentId,
@@ -852,6 +851,29 @@ export class ChatService {
     return attributes;
   };
 
+  getChatMessageAttributes(payload: any, departmentId, departmentName, userFullName) {
+    let chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
+
+    let attributes = {
+      "departmentId": departmentId,
+      "departmentName": departmentName,
+      "ipAddress": "103.97.240.182",
+      "client": "",
+      "sourcePage": "",
+      "sourceTitle": "Angular web app",
+      "projectId": this.PROJECT_ID,
+      "widgetVer": "v.5.0.71.3",
+      "payload": [],
+      "userFullname": userFullName,
+      "requester_id": chatToken,
+      "lang": "en",
+      "tempUID": this.uuidv4()
+    }
+
+    attributes["action"] = payload;
+    return attributes;
+  };
+
   sendMessage(message: string, recipient: string, payloads?: any, notification?: any, isFromPushNotification: boolean = false) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic;
@@ -861,16 +883,29 @@ export class ChatService {
       console.error('recipient is null in send message');
       return;
     }
+
+    let messageAttributes;
+    if(!isFromPushNotification){
+      //send message from chat window
+      let chats = this.localStorageService.getItem('conversationList', true);
+      let selectedChat = chats.filter(chat=> chat.request_id === recipient)[0];
+      messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
+          selectedChat.departmentName, selectedChat.userFullName);
+    } else {
+      messageAttributes = this.getMessageAttributes(payloads, notification, isFromPushNotification);
+    }
+
     let outgoing_message = {
       text: message,
       type: "text",
       recipient_fullname: 'Bot',
       sender_fullname: this.userFullName,
-      attributes: this.getMessageAttributes(payloads, notification, isFromPushNotification),
+      attributes: messageAttributes,
       metadata: "",
       channel_type: "group"
     };
 
+    console.log(dest_topic, outgoing_message);
     // console.log("outgoing_message:", outgoing_message)
     const payload = JSON.stringify(outgoing_message);
     this.chatClient.publish(dest_topic, payload, null, (err) => {
@@ -881,10 +916,11 @@ export class ChatService {
 
   botMessage(requestId) {
     const chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
-    let user = this.localStorageService.getItem('SELECTED_CHAT', true);
-    const departmentId = user?.departmentId;
-    const departmentName = user?.departmentName;
-    const userFullName = user?.userFullName;
+    let chats = this.localStorageService.getItem('conversationList', true);
+    let selectedChat = chats.filter(chat=> chat.request_id === requestId)[0];
+    const departmentId = selectedChat?.departmentId;
+    const departmentName = selectedChat?.departmentName;
+    const userFullName = selectedChat?.userFullName;
     const url = `${environment.TILEDESK_URL}/api/65e56b0b7c8dbc0013851dcb/requests/${requestId}/messages/`
     let requestBody = {
       "type": "text",
@@ -967,6 +1003,7 @@ export class ChatService {
   }
 
   filterCannedMessages() {
+    //TODO:pass the request id as parameter
     this.cannedMessageList = this.localStorageService.getItem("CANNED_MESSAGE_LIST", true);
     let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
     let cannedMessageArray = [];
