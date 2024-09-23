@@ -34,8 +34,6 @@ export class ChatOptionsDialogComponent implements OnInit {
   username: string;
   requestId: string;
 
-  centralizedChatDetails: any;
-
   constructor(
     public dialogRef: MatDialogRef<ChatOptionsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -44,8 +42,7 @@ export class ChatOptionsDialogComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private chatService: ChatService
   ) {
-    this.centralizedChatDetails = this.localStorageService.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
-  }
+   }
 
 
 

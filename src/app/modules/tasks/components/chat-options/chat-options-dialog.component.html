@@ -12,13 +12,7 @@
       Whatsapp
     </button>
   </span> &nbsp;&nbsp;&nbsp;&nbsp;
-  <span  *ngIf="centralizedChatDetails[data.serviceType] ==='kommunicate'">
-    <button type="button" class="new-button-1" title="Kommunicate" (click)="goToKommunicate()"
-      [disabled]="!kommChatLink"><i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;
-      Kommunicate
-    </button>
-  </span> &nbsp;&nbsp;&nbsp;&nbsp;
-  <span *ngIf="centralizedChatDetails[data.serviceType] ==='chatbuddy'">
+  <span>
     <button type="button" [disabled]="!requestId" (click)="openUserChat(data.clientName, requestId)"
       class="new-button-1" title="chatBuddy" aria-hidden="true">
       <i class="fa fa-comments-o" aria-hidden="true"></i>ChatBuddy({{ data.serviceType }})
