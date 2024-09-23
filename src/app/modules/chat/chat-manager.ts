@@ -26,7 +26,7 @@ export class ChatManager {
     this.chatService.registerMessageReceived((event: ChatEvents, data?: any) => {
       switch (event) {
         case ChatEvents.MESSAGE_RECEIVED:
-          self.handleReceivedMessages();
+          self.handleReceivedMessages(data);
           break;
         case ChatEvents.DEPT_RECEIVED:
           self.fireEventsWithData(ChatEvents.DEPT_RECEIVED, data);
@@ -39,8 +39,8 @@ export class ChatManager {
 
   }
 
-  handleReceivedMessages() {
-    this.fireEvents(ChatEvents.MESSAGE_RECEIVED);
+  handleReceivedMessages(data) {
+    this.fireEvents(ChatEvents.MESSAGE_RECEIVED, data);
   }
 
   public subscribe(eventName: string, fn: (...args: Array<any>) => void) {
@@ -74,10 +74,10 @@ export class ChatManager {
     this.fireEvents(ChatEvents.TOKEN_GENERATED);
   }
 
-  fireEvents(eventType: ChatEvents, serviceType?: string) {
+  fireEvents(eventType: ChatEvents, data?: string) {
     if (this.subscriptions[eventType]) {
       this.subscriptions[eventType].forEach((fn) => {
-        fn.apply(null, [{ serviceType: serviceType }]);
+        fn.apply(null, [{ data: data }]);
       });
     }
   }
@@ -95,6 +95,8 @@ export class ChatManager {
   }
 
   openConversation(conversationId: string, timeStamp?: number, onComplete?: (hasMoreMessages: boolean) => void) {
+    let chats = this.localStorageService.getItem('conversationList', true);
+    let selectedChat = chats.filter(chat=> chat.request_id === conversationId)[0];
     this.chatService.fetchMessages(conversationId, timeStamp, undefined, onComplete);
   }
 

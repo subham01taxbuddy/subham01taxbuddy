@@ -388,24 +388,49 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   };
 
   handleReceivedMessages = (data?: any) => {
-    const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
-    const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
+    if(data.data) {
+      let receivedMessage = JSON.parse(data.data);
+      if (receivedMessage.recipient === this.requestId) {
+        //the message shall be displayed
+        const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
+        const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
 
-    const messagesString = sessionStorage.getItem('fetchedMessages');
-    if (messagesString) {
-      this.fetchedMessages = JSON.parse(messagesString);
-      console.log('fetchMessages', this.fetchedMessages);
-      this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
-      const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
-    }
-    this.isAtBottom = isAtBottom;
-    this.messageCountTo0();
-    this.updateBotIconVisibility();
-    if (!this.showArrow) {
-      this.scrollToBottom();
-    }
-    this.cd.detectChanges();
+        const messagesString = sessionStorage.getItem('fetchedMessages');
+        if (messagesString) {
+          this.fetchedMessages = JSON.parse(messagesString);
+          console.log('fetchMessages', this.fetchedMessages);
+          this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
+          const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
+        }
+        this.isAtBottom = isAtBottom;
+        this.messageCountTo0();
+        this.updateBotIconVisibility();
+        if (!this.showArrow) {
+          this.scrollToBottom();
+        }
+        this.cd.detectChanges();
+      } else {
+        //this is not for me
+      }
+    } else {
+      const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
+      const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
 
+      const messagesString = sessionStorage.getItem('fetchedMessages');
+      if (messagesString) {
+        this.fetchedMessages = JSON.parse(messagesString);
+        console.log('fetchMessages', this.fetchedMessages);
+        this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
+        const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
+      }
+      this.isAtBottom = isAtBottom;
+      this.messageCountTo0();
+      this.updateBotIconVisibility();
+      if (!this.showArrow) {
+        this.scrollToBottom();
+      }
+      this.cd.detectChanges();
+    }
   };
 
   updateBotIconVisibility(): void {
