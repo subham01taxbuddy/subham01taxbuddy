@@ -29,7 +29,6 @@ export class IdleService {
   }
 
   onInteraction() {
-    //console.log('checking interaction');
     let current = new Date().getTime();
     let last = sessionStorage.getItem('lastInteraction');
     if (!last) {
@@ -37,7 +36,6 @@ export class IdleService {
     }
     sessionStorage.setItem('lastInteraction', current.toString());
     if (current - parseInt(last) > this.idleAfterSeconds * 1000) {
-      //console.log('this was idle****');
       this.isIdle = true;
       this.idle$.next(true);
     }

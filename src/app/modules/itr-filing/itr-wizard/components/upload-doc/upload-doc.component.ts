@@ -104,7 +104,6 @@ export class UploadDocComponent implements OnInit {
 
       //open file in gdrive
       this.gdriveService.loadGoogleLib(document.fileName, this.docUrl);
-      // this.gdriveService.getUserConsent();
     }, error => {
       this.loading = false;
     })
@@ -112,9 +111,9 @@ export class UploadDocComponent implements OnInit {
 
   deleteFile(fileName) {
     let adminId = this.utilsService.getLoggedInUserID();
-    var path = '/itr/cloud/files?actionBy=' + adminId;
+    let path = '/itr/cloud/files?actionBy=' + adminId;
     let filePath = `${fileName}`;
-    var reqBody = [filePath];
+    let reqBody = [filePath];
     console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
     this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
         console.log('Doc delete response: ', response);

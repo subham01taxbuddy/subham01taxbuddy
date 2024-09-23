@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import {Component, OnInit, Output, EventEmitter, ElementRef} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -183,12 +183,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   onContinue() {
     let profBusinessFormIncome = (this.profIncomeForm.controls['profIncomeFormArray'] as UntypedFormArray).getRawValue();
-    // let receiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.receipts), 0);
-
-    // if (receiptsTotal > 5000000) {
-    //   this.utilsService.showSnackBar('Please make sure that the receipts total in Professional details is within the specified limit');
-    //   return;
-    // }
     let bankReceiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.bankReceipts), 0);
     let cashReceiptsTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.cashReceipts), 0);
     let anyOtherModeTotal = profBusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.anyOtherMode), 0);
@@ -199,8 +193,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         if (total > 7500000) {
           this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
-        } else {
-
         }
       } else {
         if (total != 5000000) {
@@ -264,30 +256,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         });
 
         if (!isAdded) {
-          // presBusinessIncome.push({
-          //   id: null,
-          //   businessType: 'PROFESSIONAL',
-          //   natureOfBusiness: element.natureOfBusiness,
-          //   label: null,
-          //   tradeName: element.tradeName,
-          //   description: element.description,
-          //   salaryInterestAmount: null,
-          //   taxableIncome: null,
-          //   exemptIncome: null,
-          //   incomes: [
-          //     {
-          //       id: null,
-          //       incomeType: 'PROFESSIONAL',
-          //       receipts: element.receipts,
-          //       presumptiveIncome: element.presumptiveIncome,
-          //       periodOfHolding: null,
-          //       minimumPresumptiveIncome: element.minimumPresumptiveIncome,
-          //       registrationNo: null,
-          //       ownership: null,
-          //       tonnageCapacity: null,
-          //     },
-          //   ],
-          // });
           presBusinessIncome.push({
             id: null,
             businessType: 'PROFESSIONAL',
@@ -424,7 +392,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   clearForm() {
     this.selectedFormGroup.reset();
-    // this.calculatePresumptive();
     this.calculatePresumptiveIncome('cash', true);
     this.calculatePresumptiveIncome('bank', true);
     this.calculatePresumptiveIncome('anyOther', true);
@@ -443,8 +410,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         if (total > 7500000) {
           this.utilsService.showSnackBar('The overall turnover limit u/s 44ADA exceeds.');
           return;
-        } else {
-
         }
       } else {
         if (total != 5000000) {
@@ -467,13 +432,13 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.gridOptions.api?.setRowData(this.profIncomeFormArray.controls);
     this.activeIndex = -1;
     this.clearForm();
-    // this.percentage = 0;
     this.cashPercentage = 0;
     this.bankPercentage = 0;
     this.bankPerWidth = 0;
     this.cashPerWidth = 0;
     this.anyOtherPerWidth = 0;
     this.anyOtherPerWidth = 0;
+    // this.onContinue();
     this.utilsService.showSnackBar("Record saved successfully.");
   }
 
@@ -484,13 +449,11 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.calculatePresumptiveIncome('cash', true);
     this.calculatePresumptiveIncome('bank', true);
     this.calculatePresumptiveIncome('anyOther', true);
-    // this.calculatePresumptive();
     this.activeIndex = i;
     document.getElementById("professional_id").scrollIntoView();
   }
 
   columnDef() {
-    let self = this;
     return [
       {
         field: '',
@@ -759,8 +722,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   calculatePresumptiveIncome(incomeType, setValue?) {
     let total = parseFloat(this.selectedFormGroup.controls['bankReceipts'].value) + parseFloat(this.selectedFormGroup.controls['cashReceipts'].value) + parseFloat(this.selectedFormGroup.controls['anyOtherMode'].value);
     if (total > 20000000) {
-      let cashReceipts = parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)
-      cashReceipts = total / 100 * 5;
+      let cashReceipts = total / 100 * 5;
       if (cashReceipts > parseFloat(this.selectedFormGroup.controls['cashReceipts'].value)) {
         this.selectedFormGroup.controls['bankReceipts'].setValidators([Validators.max(7500000)]);
         this.selectedFormGroup.controls['bankReceipts'].updateValueAndValidity();

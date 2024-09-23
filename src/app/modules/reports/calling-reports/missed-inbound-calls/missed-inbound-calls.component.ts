@@ -8,7 +8,6 @@ import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -112,7 +111,6 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
     } else{
       this.dataOnLoad = false;
     }
-    // this.showMissedInboundCall();
   }
 
   ownerId: number;
@@ -211,7 +209,7 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
 
   createRowData(missedInboundCallInfo) {
     console.log('missedInboundCallInfo -> ', missedInboundCallInfo);
-    var missedInboundCallArray = [];
+    let missedInboundCallArray = [];
     for (let i = 0; i < missedInboundCallInfo.length; i++) {
       let smeReportInfo = Object.assign({}, missedInboundCallArray[i], {
         clientName: missedInboundCallInfo[i].clientName,
@@ -307,7 +305,6 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
         field: 'parentName',
         sortable: true,
         width: 180,
-        // pinned:'right',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -356,7 +353,6 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
       return;
     }
     this.loading = true;
-    let customerNumber = params.clientNumber;
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
@@ -366,12 +362,11 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success == false) {
-        this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
       if (result.success) {
         this._toastMessageService.alert("success", result.message)
+      }else{
+        this.loading = false;
+        this.utilsService.showSnackBar('Error while making call, Please try again.');
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');
@@ -400,14 +395,7 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
       this.missedInboundCallGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     }
-    // this.showMissedInboundCall();
   }
-
-  // pageChanged(event) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   this.showMissedInboundCall();
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);

@@ -12,13 +12,13 @@ import { AppConstants } from "../../modules/shared/constants";
 })
 export class NeedHelpComponent implements OnInit {
   helpForm!: UntypedFormGroup;
-  isError: Boolean = false;
-  apiSuccess: Boolean = false;
-  btnDisabled: Boolean = false;
+  isError: boolean = false;
+  apiSuccess: boolean = false;
+  btnDisabled: boolean = false;
   hasSubmit = true;
   errorMessage = '';
   fileName = '';
-  loading: Boolean = false;
+  loading: boolean = false;
   ticket_number = '';
   userData: any;
   selectedFileName: string;
@@ -36,6 +36,7 @@ export class NeedHelpComponent implements OnInit {
       filename: new UntypedFormControl(''),
       mobileNo: new UntypedFormControl(this.userData.email, Validators.required)
     });
+
   }
   getURL() {
     return window.location.href;
@@ -59,34 +60,46 @@ export class NeedHelpComponent implements OnInit {
         request["fileName"] = this.fileName;
         // optional, include if there is any attachment
       }
-      this.userMsService.postMethodAWSURL(param, request).subscribe(res => {
-        this.ticket_number = res.data.ticket_number;
-        console.log('success:', this.ticket_number);
-
-        this.btnDisabled = false;
-        this.apiSuccess = true;
-      }, (error) => {
-        this.btnDisabled = false;
+      this.userMsService.postMethodAWSURL(param, request).subscribe({
+        next: (res: any) => {
+          this.ticket_number = res.data.ticket_number;
+          console.log('success:', this.ticket_number);
+          this.btnDisabled = false;
+          this.apiSuccess = true;
+        },
+        error: (error: any) => {
+          console.error('Error during form submission:', error);
+          this.btnDisabled = false;
+          this.isError = true;
+        }
       });
 
     }
   }
 
   onFileSelected(event: Event) {
-
     this.btnDisabled = true;
     const target = event.target as HTMLInputElement;
     if (target.files.length > 0) {
       this.selectedFileName = target.files[0].name;
-      this.userMsService.uploadFile(target.files.item(0)).subscribe(res => {
-        console.log('file upload res:', res);
-        this.fileName = res && res.data && res.data.fileName ? res.data.fileName : '';
-        this.btnDisabled = false;
-      }, (error) => {
-        this.btnDisabled = false;
+      const file = target.files.item(0);
+
+      this.userMsService.uploadFile(file).subscribe({
+        next: (res: any) => {
+          console.log('file upload res:', res);
+          this.fileName = res?.data?.fileName || '';
+          this.btnDisabled = false;
+        },
+        error: (error: any) => {
+          console.error('Error during file upload:', error);
+          this.btnDisabled = false;
+        },
+        complete: () => {
+          console.log('File upload completed');
+          this.btnDisabled = false;
+        }
       });
     }
-
   }
 
 }

@@ -9,7 +9,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AppConstants } from "../../../shared/constants";
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { ActivatedRoute } from "@angular/router";
@@ -36,7 +36,7 @@ export const MY_FORMATS = {
 
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
@@ -54,13 +54,11 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  minDate = moment.min(moment(), moment('2023-04-01')).toDate();
-  minStartDate = moment.min(moment(), moment('2023-04-01')).toDate();
+  minDate = moment.min(moment(), moment('2024-04-01')).toDate();
+  minStartDate = moment.min(moment(), moment('2024-04-01')).toDate();
   maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
-
-  // maxDate: any = new Date();
   allFilerList: any;
   toDateMin = this.minDate;
   roles: any;
@@ -114,10 +112,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     { value: 'invoiceDate', name: 'Invoice Date' },
     { value: 'paymentDate', name: 'Paid Date' },
     { value: 'invoiceNo', name: ' Invoice number' },
-    // { value: 'billTo', name: 'Name' },
-    // { value: 'invoiceDate', name: 'Invoice Date' },
-    // { value: 'paymentDate', name: 'Paid Date' },
-    // { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
   searchAsPrinciple: boolean = false;
@@ -232,7 +226,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         let mobileNo = params['mobile'];
         let invNo = params['invoiceNo'];
         if (this.userId) {
-          // this.invoiceFormGroup.controls['userId'].setValue(this.userId);
         } else if (mobileNo) {
           this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
         } else if (invNo) {
@@ -285,8 +278,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -295,7 +286,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilService.getStoredMasterStatusList();
   }
 
@@ -499,7 +489,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.invoiceData = response.data.content;
         this.totalInvoice = response?.data?.totalElements;
-        // this.invoicesCreateColumnDef(this.smeList);
         this.gridApi?.setRowData(this.createRowData(response?.data?.content));
         this.invoiceListGridOptions.api?.setRowData(this.createRowData(response?.data?.content))
         this.config.totalItems = response?.data?.totalElements;
@@ -529,7 +518,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices)
-    var invoices = [];
+    let invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
       let updateInvoice = Object.assign({}, userInvoices[i],
         {
@@ -611,7 +600,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         let searchByValue = Object.values(this.searchBy);
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
-      // location.href = environment.url + param;
       return this.reportService.invoiceDownload(param).toPromise().then((response: any) => {
         this.loading = false;
         const blob = new Blob([response], { type: 'application/octet-stream' });

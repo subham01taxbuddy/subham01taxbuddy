@@ -1,72 +1,61 @@
-<!-- <div class="row"> -->
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
 <div class="cardRect mrgArd">
   <div class="card__title">Customer Declaration</div>
   <form [formGroup]="declarationsForm">
     <div class="row">
-    <div class="col-sm-12">  
-      <strong>I</strong>,&nbsp;
-      <mat-form-field class="spcInp spcBtm">
-        <input id="name" matInput formControlName="name" placeholder="" class="input-field" maxlength="50">
-        <mat-error *ngIf="declarationsForm.controls['name'].hasError('pattern')">Only
-          alphabets
-        </mat-error>
-        <mat-error *ngIf="declarationsForm.controls['name'].hasError('required')">Enter
-          Name
-        </mat-error>
-      </mat-form-field>
-      Son/daughter of&nbsp;&nbsp;
-      <mat-form-field class="spcInp spcBtm">
-        <input maxlength="50" matInput formControlName="childOf" placeholder="" class="input-field"
-               (blur)="initCap(declarationsForm.controls['childOf'])">
-        <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('pattern')">Enter
-          valid name
-        </mat-error>
-        <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('required')">Parent
-          name required
-        </mat-error>
-      </mat-form-field>&nbsp;&nbsp; solemnly declare that to the best of my
-      knowledge and belief, the information given in the return is correct and complete and in
-      accordance with the provisions
-      of the Income-tax Act 1961, I further declare that I am making return
-      in my capacity as
-      <strong>{{declarationsForm.controls['capacity'].value}}</strong> and I am also competent
-      to make this return and verify it. I am holding permanent account number
-      &nbsp;&nbsp;
-      <mat-form-field class="spcInp spcTp">
-        <input matInput type="text" upperCase formControlName="panNumber" placeholder="" class="input-field">
-        <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('pattern')">Enter
-          valid PAN (XXXPXNNNNX).
-        </mat-error>
-        <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('required')">Enter
-          PAN Number
-        </mat-error>
-      </mat-form-field>
-    
-      <mat-form-field class="spcInp1 spcTp">
-        <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
-               required>
-        <mat-error *ngIf="declarationsForm.controls['place'].hasError('pattern')">Please enter only
-          characters.
-        </mat-error>
-        <mat-error *ngIf="declarationsForm.controls['place'].hasError('required')">Please enter place.
-        </mat-error>
-      </mat-form-field>
+      <div class="col-sm-12">
+        <strong>I</strong>,&nbsp;
+        <mat-form-field class="spcInp spcBtm">
+          <input id="name" matInput formControlName="name" placeholder="" class="input-field" maxlength="50">
+          <mat-error *ngIf="declarationsForm.controls['name'].hasError('pattern')">Only
+            alphabets
+          </mat-error>
+          <mat-error *ngIf="declarationsForm.controls['name'].hasError('required')">Enter
+            Name
+          </mat-error>
+        </mat-form-field>
+        Son/daughter of&nbsp;&nbsp;
+        <mat-form-field class="spcInp spcBtm">
+          <input maxlength="50" matInput formControlName="childOf" placeholder="" class="input-field"
+            (blur)="initCap(declarationsForm.controls['childOf'])">
+          <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('pattern')">Enter
+            valid name
+          </mat-error>
+          <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('required')">Parent
+            name required
+          </mat-error>
+        </mat-form-field>&nbsp;&nbsp; solemnly declare that to the best of my
+        knowledge and belief, the information given in the return is correct and complete and in
+        accordance with the provisions
+        of the Income-tax Act 1961, I further declare that I am making return
+        in my capacity as
+        <strong>{{declarationsForm.controls['capacity'].value}}</strong> and I am also competent
+        to make this return and verify it. I am holding permanent account number
+        &nbsp;&nbsp;
+        <mat-form-field class="spcInp spcTp">
+          <input matInput type="text" upperCase formControlName="panNumber" placeholder="" class="input-field">
+          <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('pattern')">Enter
+            valid PAN (XXXPXNNNNX).
+          </mat-error>
+          <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('required')">Enter
+            PAN Number
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="spcInp1 spcTp">
+          <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
+            required>
+          <mat-error *ngIf="declarationsForm.controls['place'].hasError('pattern')">Please enter only
+            characters.
+          </mat-error>
+          <mat-error *ngIf="declarationsForm.controls['place'].hasError('required')">Please enter place.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12 spsTp bdrTp">
+        <button class="btnSav" (click)="saveAndContinue()">Save
+        </button>
+      </div>
     </div>
-    <div class="col-sm-12 spsTp bdrTp">
-      <button class="btnSav" (click)="saveAndContinue()">Save
-      </button>
-    </div>
-    <!--  <div class="card_footer">
-              <div *ngIf="this.warningsArray.length === 0">
-                <a href="javascript:;" class="fL" (click)="goToWizard()"><i class="fa fa-long-arrow-left"
-                    aria-hidden="true"></i>
-                  Previous</a>
-                <a href="javascript:;" class="fR links" (click)="nextRoute()">Next<i class="fa fa-long-arrow-right"
-                    aria-hidden="true"></i></a>
-              </div>
-            </div> -->
-   </div>
   </form>
 </div>
-<!-- </div> -->

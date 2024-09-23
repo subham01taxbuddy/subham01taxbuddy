@@ -6,8 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AppConstants } from '../../shared/constants';
-import * as moment from 'moment';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -97,7 +95,7 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.promoCodeForm?.controls['usedCount'].updateValueAndValidity();
       this.promoCodeForm?.controls['deactivationReason'].disable();
       this.promoCodeForm?.controls['deactivationReason'].updateValueAndValidity();
-      var currentDate = new Date();
+      let currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
       this.minEndDate = currentDate;
     }
@@ -133,23 +131,6 @@ export class AddEditPromoCodeComponent implements OnInit {
       this.promoCodeForm.controls['discountPercent'].updateValueAndValidity();
       this.promoCodeForm.controls['maxDiscountAmount'].updateValueAndValidity();
     }
-    //  else if (typeVal.value === 'FIXED') {
-    //   this.promoCodeForm.controls['discountAmount'].setValue('');
-    //   this.promoCodeForm.controls['minOrderAmount'].setValue('');
-    //   this.promoCodeForm.controls['discountAmount'].setValidators(null);
-    //   this.promoCodeForm.controls['minOrderAmount'].setValidators(null);
-    //   this.promoCodeForm.controls['discountAmount'].updateValueAndValidity();
-    //   this.promoCodeForm.controls['minOrderAmount'].updateValueAndValidity();
-
-    //   this.promoCodeForm.controls['discountPercent'].setValue('');
-    //   this.promoCodeForm.controls['maxDiscountAmount'].setValue('');
-    //   this.promoCodeForm.controls['discountPercent'].setValidators(null);
-    //   this.promoCodeForm.controls['maxDiscountAmount'].setValidators(null);
-    //   this.promoCodeForm.controls['discountPercent'].updateValueAndValidity();
-    //   this.promoCodeForm.controls['maxDiscountAmount'].updateValueAndValidity();
-
-    //   this.getAllPlans();
-    // }
   }
 
   // createFixedPricingForm(obj: {

@@ -8,7 +8,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-listed-unlisted-dialog',
   templateUrl: './listed-unlisted-dialog.component.html',
-  styleUrls: ['./listed-unlisted-dialog.component.scss']
 })
 export class ListedUnlistedDialogComponent implements OnInit {
   assetDetailsForm!: UntypedFormGroup;

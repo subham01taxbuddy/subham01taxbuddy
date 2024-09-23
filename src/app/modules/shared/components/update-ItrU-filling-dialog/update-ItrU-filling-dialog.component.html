@@ -72,7 +72,6 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</div>
 
   </div>
   <div class="footer__buttons clearfix" style="margin-top: 25px;">
-    <!-- <button class="tbd-btn" [disabled]="eFillingDate.status !== 'VALID'" (click)="updateItrUDetails()">Update</button> -->
     <app-custom-button [disabled]="eFillingDate.status !== 'VALID'" class="tbd-btn" [actions]="[updateItrUDetails]">
       Update
     </app-custom-button>

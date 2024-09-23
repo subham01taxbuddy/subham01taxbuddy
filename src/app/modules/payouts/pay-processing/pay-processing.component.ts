@@ -268,14 +268,11 @@ export class PayProcessingComponent implements OnInit {
   getTds(){
     //https://cihbintebntput6bydyqnksj2a0zykgg.lambda-url.ap-south-1.on.aws/
     this.showMessage = 'TDS Computation Started - Please Do Not Close the Screen or Move out'
-    // this.utilsService.showSnackBar('TDS Computation Started - Please Do Not Close the Screen or Move out');
     this.loading = true;
     let param = '';
     this.itrMsService.getTdsDetails(param).subscribe((response: any) => {
       if (response.success) {
-        // this.loading = false;
         console.log('response', response);
-        // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
         this.showMessage ='Adjustment Started Please Do Not Close the Screen or Move out'
         this.addAdjustment();
       } else {
@@ -298,9 +295,7 @@ export class PayProcessingComponent implements OnInit {
     this.showMessage ='Adjustment Started Please Do Not Close the Screen or Move out'
     this.itrMsService.addAdjustment(param).subscribe((response: any) => {
       if (response.success) {
-        // this.loading = false;
         console.log('response', response);
-        // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
         this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
         this.download();
       } else {
@@ -353,10 +348,8 @@ export class PayProcessingComponent implements OnInit {
         window.open(this.downloadURL, '_blank');
         this.isUploadTrue=true;
         this.hideDownload =true;
-        // this.isUploadAllowed();
       } else {
         this.loading = false;
-        // this.isUploadTrue = false;
         this.showMessage =''
         this.hideDownload =false;
         this.utilsService.showSnackBar(response.message);

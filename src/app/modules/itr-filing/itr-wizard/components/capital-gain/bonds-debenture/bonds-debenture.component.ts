@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Bonds, ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -10,7 +10,7 @@ import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
 import { GridOptions } from "ag-grid-community";
 import { ActivatedRoute } from "@angular/router";
-import {RequestManager} from "../../../../../shared/services/request-manager";
+import { RequestManager } from "../../../../../shared/services/request-manager";
 
 @Component({
   selector: 'app-bonds-debenture',
@@ -41,6 +41,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   PREV_ITR_JSON: any;
 
   activeIndex: number;
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
+
   constructor(
       private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
@@ -100,7 +103,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.requestManagerSubscription.unsubscribe();
   }
 
-  type:string;
+  type: string;
   requestCompleted(result: any, self: BondsDebentureComponent) {
     console.log(result);
     this.loading = false;
@@ -111,23 +114,23 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
         if (self.type === 'asset') {
           self.selectedFormGroup.controls['indexCostOfAcquisition']?.setValue(
-              res.data.costOfAcquisitionOrImprovement
+            res.data.costOfAcquisitionOrImprovement
           );
         } else {
           self.selectedFormGroup.controls['indexCostOfImprovement']?.setValue(
-              res.data.costOfAcquisitionOrImprovement
+            res.data.costOfAcquisitionOrImprovement
           );
         }
 
         this.calculateTotalCG(self.selectedFormGroup);
         break;
       }
-      case 'calculateTotalCG':{
+      case 'calculateTotalCG': {
         console.log('cg calculated');
         this.loading = false;
         if (res.assetDetails[0].capitalGain) {
           this.selectedFormGroup.controls['capitalGain'].setValue(
-              res.assetDetails[0].capitalGain
+            res.assetDetails[0].capitalGain
           );
         } else {
           this.selectedFormGroup.controls['capitalGain'].setValue(0);
@@ -135,7 +138,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         this.updateDeductionUI();
         this.calculateDeductionGain();
         this.selectedFormGroup.markAsPristine();
-        if(self.saveClicked){
+        if (self.saveClicked) {
           console.log('saving form');
           self.saveManualEntry();
           self.saveClicked = false;
@@ -200,6 +203,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
               this.updateValidations(this.deductionForm);
+              this.initializeFormFlags(this.deductionForm);
             });
             this.deduction = true;
           }
@@ -217,7 +221,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.activeIndex = -1;
 
     this.getImprovementYears();
-    // this.onChanges();
     this.updateDeductionUI();
   }
 
@@ -335,7 +338,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   saveClicked = false;
   onSaveClick() {
-    // event.preventDefault();
     this.saveClicked = true;
     this.calculateIndexCost(this.selectedFormGroup, 'asset');
   }
@@ -348,8 +350,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
     let result = this.selectedFormGroup.getRawValue();
 
-    // result.costOfImprovement = result.indexCostOfImprovement;
-
     if (this.activeIndex === -1) {
       let srn = (this.bondsForm.controls['bondsArray'] as UntypedFormArray).length;
       let form = this.createForm(srn);
@@ -361,7 +361,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
     // setTimeout(() => {
-      this.clearForm();
+    this.clearForm();
     // }, 100);
     this.updateDeductionUI();
     this.utilsService.showSnackBar("Record saved successfully.");
@@ -559,9 +559,18 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             params.data.controls['improvementCost'].value;
         },
         valueFormatter: function (params) {
-          const costOfImprovement = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ?
-              (params.data.controls['indexCostOfImprovement'].value ? params.data.controls['indexCostOfImprovement'].value : 0) :
-            params.data.controls['improvementCost'].value;
+          let costOfImprovement;
+
+          if (self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG') {
+            if (params.data.controls['indexCostOfImprovement'].value) {
+              costOfImprovement = params.data.controls['indexCostOfImprovement'].value;
+            }
+            else {
+              costOfImprovement = 0;
+            }
+          } else {
+            costOfImprovement = params.data.controls['improvementCost'].value;
+          }
           return `₹ ${costOfImprovement}`;
         }
       },
@@ -776,11 +785,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       let bondImprovement = [];
       const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
-
-      // bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex]?.assetDetails;
-      // if(!bondsList){
-      //   bondsList = [];
-      // }
       bondsArray.controls.forEach((element) => {
           let costOfImprovement = (element as UntypedFormGroup).controls[
           'improvementCost'
@@ -850,11 +854,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           this.utilsService.smoothScrollToTop();
         }
       );
-    } else{
+    } else {
       this.loading = false;
       $('input.ng-invalid').first().focus();
       this.utilsService.showSnackBar(
-          'Please verify the form and try again.'
+        'Please verify the form and try again.'
       );
     }
   }
@@ -866,7 +870,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       if (res.success) {
         this.improvementYears = res.data;
-        // console.log(res);
       }
     });
   }
@@ -877,9 +880,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     let purchaseDate = (bonds as UntypedFormGroup).controls['purchaseDate'].value;
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
-
-    // console.log(yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)));
-    // console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
     if (purchaseMonth > 2) {
       if (yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0) {
         yearsList = yearsList.splice(
@@ -901,8 +901,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
-      //this.calculateCapitalGain(formGroupName, '', index);
-      // this.calculateIndexCost(bonds);
     }
   }
   calculateIndexCost(asset, type?) {
@@ -914,8 +912,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       this.calculateTotalCG(asset);
       return;
     }
-    let gainType = asset.controls['gainType'].value;
-
     let selectedYear = moment(asset.controls['sellDate'].value);
     let sellFinancialYear =
       selectedYear.get('month') > 2
@@ -957,7 +953,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.requestManager.addRequest('calculateIndexCost', this.itrMsService.postMethod(param, req));
   }
 
-  depositDueDate = moment.min(moment(),moment('2024-07-31')).toDate();
+  depositDueDate = moment.min(moment(), moment('2024-07-31')).toDate();
 
   initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
@@ -972,7 +968,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       investmentInCGAccount: [
         obj ? obj.investmentInCGAccount : null,
       ],
-      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null,[Validators.max(100000000)]],
+      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null, [Validators.max(100000000)]],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
       accountNumber: [obj?.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
@@ -980,8 +976,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     });
   }
 
-  updateValidations(formGroup){
-    if(formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+  updateValidations(formGroup) {
+    if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
       formGroup.controls['costOfNewAssets'].setValidators([Validators.required]);
@@ -993,7 +989,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       formGroup.controls['costOfNewAssets'].updateValueAndValidity();
     }
 
-    if(formGroup.controls['investmentInCGAccount'].value){
+    if (formGroup.controls['investmentInCGAccount'].value) {
       formGroup.controls['accountNumber'].setValidators([Validators.required]);
       formGroup.controls['accountNumber'].updateValueAndValidity();
       formGroup.controls['ifscCode'].setValidators([Validators.required]);
@@ -1011,8 +1007,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
   calculateDeductionGain() {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
-        this.deductionForm.controls['costOfNewAssets'].valid &&
-        this.deductionForm.controls['investmentInCGAccount'].valid;
+      this.deductionForm.controls['costOfNewAssets'].valid &&
+      this.deductionForm.controls['investmentInCGAccount'].valid;
     if (isFormValid) {
       this.loading = true;
       let capitalGain = 0;
@@ -1086,11 +1082,77 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
-    } else if(this.deduction && this.deductionForm.invalid){
+    } else if (this.deduction && this.deductionForm.invalid) {
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef)
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
+    }else if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+        return;
+      }
     }
     this.save('bonds');
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean): void {
+    if (isChecked) {
+      this.setFieldValidators('purchaseDate', [Validators.required]);
+      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators('purchaseDate');
+      this.clearFieldValidators('costOfNewAssets');
+    }
+    this.calculateDeductionGain();
+  }
+  onToggleCGAS(isChecked: boolean): void{
+    if (isChecked) {
+      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators('dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('accountNumber');
+      this.clearFieldValidators('ifscCode');
+      this.clearFieldValidators('dateOfDeposit');
+    }
+    this.calculateDeductionGain();
+  }
+
+  setFieldValidators(controlName: string, validators: any[]): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(controlName: string): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
+    }
   }
 }

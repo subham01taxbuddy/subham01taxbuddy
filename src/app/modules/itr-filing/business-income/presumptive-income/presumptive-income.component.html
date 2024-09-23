@@ -2,26 +2,57 @@
 <div class="page-wrapper">
   <main>
     <div class="spc-blw ">
-      <mat-accordion class="headers-align">
+      <!-- <mat-accordion class="headers-align">
         <app-presumptive-business-income #PresumptiveBusinessIncomeComponentRef
           (presBusinessSaved)="onPresBusinessSaved($event)"></app-presumptive-business-income>
         <app-presumptive-professional-income #PresumptiveProfessinalIncomeComponentRef
           (presProfessionalSaved)="onPresProfessionalSaved($event)"></app-presumptive-professional-income>
-      </mat-accordion>
+      </mat-accordion> -->
+      <div class="frameC">
+        <div class="div">
+          <div class="text-wrapper">Presumptive Income</div>
+          <div class="mingcute-down-fill"></div>
+        </div>
+        <div class="space ">
+          <div class="flex justify-around p-[30px]">
+            <button class="tbd-btn-10"  [class.selected]="selectedForm === 'businessIncome'"  (click)="selectedForm = 'businessIncome'">
+              Business Income 44AD
+            </button>
+
+            <button class="tbd-btn-10"  [class.selected]="selectedForm === 'professionalIncome'"  (click)="selectedForm = 'professionalIncome'">
+              Professional Income 44ADA
+            </button>
+          </div>
+
+          <div class="marginReduce">
+            <div style="width: 100%;" [hidden]="selectedForm !== 'businessIncome'">
+              <app-presumptive-business-income
+                #PresumptiveBusinessIncomeComponentRef
+                (presBusinessSaved)="onPresBusinessSaved($event)"
+              ></app-presumptive-business-income>
+            </div>
+
+            <div style="width: 100%;" [hidden]="selectedForm !== 'professionalIncome'">
+              <app-presumptive-professional-income
+                #PresumptiveProfessionalIncomeComponentRef
+                (presProfessionalSaved)="onPresProfessionalSaved($event)"
+              ></app-presumptive-professional-income>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="flex justify-between p-[30px] back-foot">
-<!--        <div class="">-->
-          <button class="lgtBtn" (click)="goBack()">
-            <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-            <span class="font-semibold">&nbsp;Back to Source Page</span>
-          </button>
-          <div class="note" style="margin-left: 100px;">
-            <b>Note:</b> Remember to click "Save all" after adding 44AD and 44ADA to ensure successful saving of changes.
-          </div>
-          <button class="saveBtnIn" (click)="saveAll()">
-            <span class="font-semibold">Save All</span>
-          </button>
-<!--        </div>-->
+        <button class="lgtBtn" (click)="goBack()">
+          <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+          <span class="font-semibold">&nbsp;Back to Source Page</span>
+        </button>
+        <div class="note" style="margin-left: 100px;">
+          <b>Note:</b> Remember to click "Save all" after adding 44AD and 44ADA to ensure successful saving of changes.
+        </div>
+        <button class="saveBtnIn" (click)="saveAll()">
+          <span class="font-semibold">Save All</span>
+        </button>
       </div>
     </div>
   </main>

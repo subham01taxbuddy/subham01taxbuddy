@@ -15,20 +15,20 @@ export class DigitsOnlyDirective {
 
     @HostListener('paste', ['$event'])
     onPaste(event: ClipboardEvent) {
-        event.preventDefault();
-        // const pastedInput: string = event.clipboardData
-        //     .getData('text/plain')
-        //     .replace(/\D|(\.\d+)/g, ''); // get a digit-only string
-        // document.execCommand('insertText', false, pastedInput);
-        let inputValue = event.clipboardData.getData('text/plain');
-        const cleanedValue = inputValue.split('.')[0];
-        if (cleanedValue !== inputValue) {
-            inputValue = cleanedValue;
-            document.execCommand('insertText', false, inputValue);
-        } else {
-            if(inputValue.match(/^[0-9.]+$/)){
-                document.execCommand('insertText', false, inputValue);
-            }
-        }
-    }
+      event.preventDefault();
+      let pastedData = event.clipboardData?.getData('text/plain') || '';
+      const cleanedValue = this.cleanInput(pastedData);
+      if (cleanedValue) {
+          this.document.execCommand('insertText', false, cleanedValue);
+      }
+  }
+
+  private cleanInput(input: string): string {
+      const cleaned = input.replace(/[^0-9.]/g, '');
+      const parts = cleaned.split('.');
+      if (parts.length > 2) {
+          return parts[0] + '.' + parts[1];
+      }
+      return cleaned;
+  }
 }

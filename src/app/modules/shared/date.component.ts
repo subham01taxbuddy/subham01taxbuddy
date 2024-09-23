@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { ICellEditorParams } from 'ag-grid-community';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -26,7 +26,7 @@ export const MY_FORMATS = {
         <mat-datepicker panelClass="ag-custom-component-popup" #picker (selectedChanged)="onSelectChange($event)"></mat-datepicker>
     `,
     styles: [
-   
+
     ],
     providers: [
         { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
@@ -40,9 +40,6 @@ export class CustomDateComponent implements AfterViewInit {
     params!: ICellEditorParams;
     public value!: string;
     @ViewChild('picker', { read: MatDatepicker }) picker!: MatDatepicker<Date>;
-
-    constructor() {
-    }
 
     ngAfterViewInit() {
         this.picker.open();

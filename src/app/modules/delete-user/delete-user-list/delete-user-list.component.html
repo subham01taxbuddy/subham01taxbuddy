@@ -29,7 +29,6 @@
                   autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
-                <!-- <mat-error *ngIf="fromDateValue.hasError('required')">Select From date</mat-error> -->
               </mat-form-field>
             </div>
 
@@ -40,9 +39,6 @@
                   [matDatepicker]="picker2" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
-                <!-- <mat-error *ngIf="toDateValue.hasError('required')">Select To date</mat-error>
-                <mat-error *ngIf="toDateValue.hasError('min')">To date always greater than from
-                  date</mat-error> -->
               </mat-form-field>
             </div>
 
@@ -54,12 +50,9 @@
               </span>
             </div>
             <div class="col-sm-6 spsTp text-end">
-              <!-- <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
-                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
-              </button> -->
-              <app-custom-button class="srch-btn" [actions]="[getUserSearchList]" [actionParams]="[[0]]">
-                <i class="fa fa-search" aria-hidden="true"></i> Search
-              </app-custom-button>
+              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
+                <i class="fa fa-search" aria-hidden="true"></i>&nbsp; Search
+              </button>
               <button class="clrLnk movLf" [disabled]="loading" (click)="clearValue()">
                 Clear form
               </button>

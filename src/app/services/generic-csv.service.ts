@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { JsonToCsvService } from '../modules/shared/services/json-to-csv.service';
 import { ToastMessageService } from './toast-message.service';
 import { UtilsService } from './utils.service';
+import { AppConstants } from '../modules/shared/constants';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +24,21 @@ export class GenericCsvService {
     private jsonToCsvService: JsonToCsvService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
+    private dbService: NgxIndexedDBService
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
-    this.allResignedActiveSmeList = JSON.parse(sessionStorage.getItem('ALL_RESIGNED_ACTIVE_SME_LIST'));
+    // this.allResignedActiveSmeList = JSON.parse(sessionStorage.getItem('ALL_RESIGNED_ACTIVE_SME_LIST'));
     this.allPlanDetails = JSON.parse(sessionStorage.getItem('ALL_PLAN_LIST'));
   }
 
-  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
+  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any, taxpayable?) {
+    if (name === 'Filed-ITR') {
+      this.dbService.getAll('taxbuddy').subscribe((result: any) => {
+        console.log('indexDB get data results: ', result);
+        this.allResignedActiveSmeList = JSON.parse(result[0][AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST]);
+      });
+    }
     let sortJson = encodeURI(JSON.stringify(sortBy));
     let paramUrl = param;
     if (page == 0) {
@@ -55,6 +64,9 @@ export class GenericCsvService {
     console.log('this.data', this.data)
     console.log('this.data.length', this.data.length)
     if (this.data.length) {
+      if (name === 'ITR-Assigned Users') {
+        this.mapItrAssignedDetails(taxpayable);
+      }
       if (name === 'Filed-ITR') {
         this.mapFiledItrDetails();
       }
@@ -72,6 +84,7 @@ export class GenericCsvService {
       this._toastMessageService.alert('error', "There is no records found");
       return
     }
+
   }
 
   mapCallingReportDetails() {
@@ -91,6 +104,14 @@ export class GenericCsvService {
         element['whatsAppConversationId'] = `=HYPERLINK("${link}")`;
       }
     });
+  }
+
+  mapItrAssignedDetails(taxPayable) {
+    if (!taxPayable) {
+      this.data.forEach((element) => {
+        element['taxPayable'] = '(' + element['taxPayable'] + ')';
+      })
+    }
   }
 
   mapFiledItrDetails() {
@@ -168,7 +189,6 @@ export class GenericCsvService {
       this.httpClient.get(baseUrl + param, { headers: this.headers }).toPromise()
         .then((result: any) => {
           if (result.success) {
-            // if (result?.data?.content.length) {
             if (param.includes('status-wise-report')) {
               if (result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData && result?.data?.content[0].total) {
                 this.data = [...result.data.content[0].statusWiseData];
@@ -192,12 +212,12 @@ export class GenericCsvService {
                 console.log('no of pages to be downloaded', count);
                 resolve(result.data.totalPages);
               }
+              if (!result?.data) {
+                resolve(0);
+              }
             }
-            // } else {
-            //   resolve(0);
-            // }
           }
-          if(param.includes('promocodes')){
+          if (param.includes('promocodes')) {
             if (result?.content.length > 0) {
               this.data = [...this.data, ...result.content]
               resolve(result.totalPages);

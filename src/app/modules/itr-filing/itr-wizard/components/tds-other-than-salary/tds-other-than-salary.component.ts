@@ -1,10 +1,10 @@
-import {Component, OnInit, Input, SimpleChanges, Output, EventEmitter, Inject} from '@angular/core';
-import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {delay} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { delay } from "rxjs";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 declare let $: any;
 @Component({
   selector: 'app-tds-other-than-salary',
@@ -12,8 +12,8 @@ declare let $: any;
   styleUrls: ['./tds-other-than-salary.component.scss']
 })
 export class TdsOtherThanSalaryComponent implements OnInit {
-  @Input() addData: Number;
-  @Input() showHeadOfIncome: String;
+  @Input() addData: number;
+  @Input() showHeadOfIncome: string;
   @Output() onSave = new EventEmitter();
 
   @Input() editIndex: any;
@@ -60,24 +60,23 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       currentPage: 1,
     };
     this.salaryForm = this.initForm();
-    if(this.data && this.data.showHeadOfIncome){
+    if (this.data && this.data.showHeadOfIncome) {
       this.showHeadOfIncome = this.data.showHeadOfIncome;
     }
 
     if (
-        this.showHeadOfIncome === 'TDTS' &&
-        this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
-        this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
+      this.showHeadOfIncome === 'TDTS' &&
+      this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
+      this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
     ) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach((item) => {
         this.addMoreSalary(item, false);
       });
       this.changed();
-      // this.addSalary();
     } else if (
-        this.showHeadOfIncome === 'TDTSP' &&
-        this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB &&
-        this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0
+      this.showHeadOfIncome === 'TDTSP' &&
+      this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB &&
+      this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0
     ) {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
         this.addMoreSalary(item);
@@ -103,9 +102,9 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     // const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     // if (salaryArray.valid) {
     // setTimeout(() => {
-      // if (this.addData) {
-      this.addMoreSalary(null, true);
-      // }
+    // if (this.addData) {
+    this.addMoreSalary(null, true);
+    // }
     // }, 1000);
     // } else {
     //   salaryArray.controls.forEach(element => {
@@ -124,7 +123,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   createForm(item?): UntypedFormGroup {
-    if(this.data.assetIndex !== null && item){
+    if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
     if (this.showHeadOfIncome === 'TDTS') {
@@ -151,23 +150,23 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   activeIndex = 0;
-  markActive(index){
-    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+  markActive(index) {
+    if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
       this.utilsService.showSnackBar(
-          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
       );
       return;
     }
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
     (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 
   changed() {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     if (this.showHeadOfIncome === 'TDTS') {
       this.headOfIncomeDropdownTDS2.forEach((type) => {
         type.disabled = false;
@@ -193,7 +192,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     ((this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).enable();
   }
 
-  goBack(){
+  goBack() {
     this.onSave.emit({
       type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
       saved: false
@@ -204,42 +203,28 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
-    if(!this.COPY_ITR_JSON.taxPaid){
+    if (!this.COPY_ITR_JSON.taxPaid) {
       this.COPY_ITR_JSON.taxPaid = {
         onSalary: [], otherThanSalary16A: [], otherThanSalary26QB: [], otherThanTDSTCS: [], paidRefund: [], tcs: []
       }
     }
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
-        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as UntypedFormArray).getRawValue();
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
 
-        let result = {
-          type: 'tdsOtherThanSalary16A',
-          cgObject: this.salaryForm.value,
-          rowIndex: this.data.rowIndex,
-        };
-        // this.dialogRef.close(result);
-
         this.onSave.emit({
-          type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
+          type: 'tdsOtherThanSalary16A',
           saved: true
         });
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       } else if (this.showHeadOfIncome === 'TDTSP') {
-        this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();
+        this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB = (this.salaryForm.controls['salaryArray'] as UntypedFormArray).getRawValue();
         sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.COPY_ITR_JSON));
 
-        let result = {
-          type: 'tdsOtherThanSalaryPanBased',
-          cgObject: this.salaryForm.value,
-          rowIndex: this.data.rowIndex,
-        };
-        // this.dialogRef.close(result);
-
         this.onSave.emit({
-          type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
+          type: 'tdsOtherThanSalaryPanBased',
           saved: false
         });
         this.loading = false;
@@ -254,16 +239,16 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <FormArray>this.salaryForm.get('salaryArray');
+    return <UntypedFormArray>this.salaryForm.get('salaryArray');
   }
 
 
   addMoreSalary(item?, refresh?) {
-    if(refresh){
+    if (refresh) {
       if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
         if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
           this.utilsService.showSnackBar(
-              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
           return;
         }
@@ -271,15 +256,14 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     }
     const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
-    // salaryArray.insert(0, this.createForm(item));
     delay(0);
-    if(refresh) {
+    if (refresh) {
       this.changed();
     }
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     salaryArray.removeAt(index);
     this.changed();
   }

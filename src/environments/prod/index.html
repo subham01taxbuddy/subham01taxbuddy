@@ -35,6 +35,32 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Added this script for accordion ends -->
 
+  <!-- Hotjar Tracking Code for --> <script>(function(h,o,t,j,a,r){ h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:4982909,hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1; r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r);})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');</script>
+  <!-- hotjar User attributes-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) || [];
+      if (loginSmeDetails.length > 0) {
+        var userId = loginSmeDetails[0].userId || null;
+        var userName = loginSmeDetails[0].name || null;
+        var userMobile = loginSmeDetails[0].mobileNumber || null;
+        var userRole = loginSmeDetails[0].roles || null;
+        var userEmail = loginSmeDetails[0].email || null;
+        var parentName = loginSmeDetails[0].parentName || null;
+
+        if (userId) {
+          window.hj('identify', userId, {
+            'Name': userName,
+            'Mobile Number': userMobile,
+            'Email': userEmail,
+            'Role': userRole,
+            'Parent Name': parentName
+          });
+        }
+      }
+    });
+  </script>
+
 </head>
 
 <body>

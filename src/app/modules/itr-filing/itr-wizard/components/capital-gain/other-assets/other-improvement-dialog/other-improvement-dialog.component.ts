@@ -2,33 +2,24 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import {
   Component,
   Inject,
-  OnChanges,
   OnInit,
-  SimpleChanges,
+  SimpleChanges, Input
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormControl, UntypedFormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppConstants } from 'src/app/modules/shared/constants';
-import { UntypedFormControl, FormArray } from '@angular/forms';
-import { Input } from '@angular/core';
-import {
-  Improvement,
-  NewCapitalGain,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-other-improvement-dialog',
   templateUrl: './other-improvement-dialog.component.html',
-  styleUrls: ['./other-improvement-dialog.component.scss'],
 })
 export class OtherImprovementDialogComponent implements OnInit {
   financialyears = [];
   improvementYears = [];
   improvementForm!: UntypedFormGroup;
-  improvements: FormArray;
+  improvements: UntypedFormArray;
   isImprovement = new UntypedFormControl();
 
-  @Input() isAddOtherAssetsImprovement: Number;
+  @Input() isAddOtherAssetsImprovement: number;
   config: any;
 
   constructor(
@@ -44,13 +35,8 @@ export class OtherImprovementDialogComponent implements OnInit {
     console.log('On Inti');
     this.improvementForm = this.fb.group({
       isImprovement: ['', [Validators.required]],
-      // srn: ['', [Validators.required]],
       improvements: this.fb.array([]),
     });
-    // if (this.data.mode === 'EDIT') {
-    //   this.improvementForm.patchValue(this.data.improvement);
-    //   this.assetSelected();
-    // }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -88,7 +74,6 @@ export class OtherImprovementDialogComponent implements OnInit {
       if (res.success) console.log('FY : ', res);
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
-      // sessionStorage.setItem('improvementYears', res.data)
     });
   }
 
@@ -103,8 +88,6 @@ export class OtherImprovementDialogComponent implements OnInit {
         purchaseOrImprovementFinancialYear:
           this.improvementForm.controls['financialYearOfImprovement'].value,
         assetType: 'GOLD',
-        // "buyDate": this.immovableForm.controls['purchaseDate'].value,
-        // "sellDate": this.immovableForm.controls['sellDate'].value
       };
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
@@ -120,31 +103,11 @@ export class OtherImprovementDialogComponent implements OnInit {
 
   haveImprovement(item?) {
     console.log('improvement===', this.isImprovement.value);
-    const improvements = <FormArray>this.improvementForm.get('improvements');
+    const improvements = <UntypedFormArray>this.improvementForm.get('improvements');
     if (improvements.valid || improvements === null) {
       improvements.push(this.createImprovementForm());
-    } else {
-      console.log('isImprovement==', this.isImprovement);
-      // TODO
-      // if (coOwner.length > 0 && (this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].name.value) || this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].panNumber.value) ||
-      // this.utilsService.isNonEmpty(coOwner.controls[0]['controls'].percentage.value))) {
-      // this.confirmationDialog('CONFIRM_COOWNER_DELETE');
-      // } else {
-      // this.isImprovement.setValue(false);
-      // this.improvementForm.controls['isImprovement'] = this.fb.array([]);
-      // }
     }
   }
-
-  // addMoreImprovement(item?) {
-  //   const improvements = this.improvementForm.get('improvements') as FormArray;
-
-  //   if (improvements === null || improvements.valid) {
-  //     improvements.push(this.createImprovementForm());
-  //   } else {
-  //     console.log('improvements');
-  //   }
-  // }
 
   createImprovementForm(
     obj: {
@@ -169,6 +132,6 @@ export class OtherImprovementDialogComponent implements OnInit {
   }
 
   get getOtherAssetsImprovement() {
-    return <FormArray>this.improvementForm.get('improvements');
+    return <UntypedFormArray>this.improvementForm.get('improvements');
   }
 }

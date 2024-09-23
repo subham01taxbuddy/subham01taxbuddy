@@ -25,6 +25,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
 import { ChatService } from 'src/app/modules/chat/chat.service';
+import { lastValueFrom } from 'rxjs';
 export const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -229,11 +230,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   createRowData(scheduleCalls) {
     console.log('scheduleCalls -> ', scheduleCalls);
-    var scheduleCallsArray = [];
+    let scheduleCallsArray = [];
     for (let i = 0; i < scheduleCalls.length; i++) {
       let scheduleCallsInfo = Object.assign({}, scheduleCalls[i], {
         userId: scheduleCalls[i]['userId'],
-        requestId: scheduleCalls[i]['requestId'],
         userName: scheduleCalls[i]['userName'],
         userMobile: scheduleCalls[i]['userMobile'],
         filerNumber: scheduleCalls[i]['filerNumber'],
@@ -268,7 +268,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   createColumnDef(view, subPaidScheduleCallList?): ColDef[] {
-    const that = this;
     return [
       {
         headerName: 'User Id',
@@ -683,42 +682,46 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   reAssignCall(data) {
-    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.search();
-        return;
-      } else {
-        let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
-          width: '60%',
-          height: 'auto',
-          data: {
-            allData: data,
-          },
-        });
-        disposable.afterClosed().subscribe((result) => {
-          this.search()
-          console.log('The dialog was closed');
-        });
-      }
-    }, error => {
-      this.loading = false;
-      if (error.error && error.error.error) {
-        this.toastMsgService.alert("error", error.error.error);
-        this.search();
-      } else {
-        this.toastMsgService.alert("error", "An unexpected error occurred.");
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
+            width: '60%',
+            height: 'auto',
+            data: {
+              allData: data,
+            },
+          });
+          disposable.afterClosed().subscribe({
+            next: (result) => {
+              this.search();
+              console.log('The dialog was closed');
+            }
+          });
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert("error", error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert("error", "An unexpected error occurred.");
+        }
       }
     });
-
   }
 
   openWhatsappChat(client) {
     this.loading = true;
     let param = `/kommunicate/WhatsApp-chat-link?userId=${client.userId}`;
-    this.userMsService.getMethod(param).subscribe(
-      (response: any) => {
+    this.userMsService.getMethod(param).subscribe({
+      next: (response: any) => {
         console.log('open chat link res: ', response);
         this.loading = false;
         if (response.success) {
@@ -730,52 +733,57 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           );
         }
       },
-      (error) => {
+      error: (error) => {
         this.toastMsgService.alert(
           'error',
           'Error during fetching chat, try after some time.'
         );
         this.loading = false;
-      }
-    );
+      },
+    });
   }
 
   showNotes(client) {
-    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.search();
-        return;
-      } else {
-        let disposable = this.dialog.open(UserNotesComponent, {
-          width: '75vw',
-          height: 'auto',
-          data: {
-            userId: client.userId,
-            clientName: client.userName,
-            clientMobileNumber: client.userMobile
-          },
-        });
-        disposable.afterClosed().subscribe((result) => {
-          console.log('The dialog was closed');
-        });
-      }
-    }, error => {
-      this.loading = false;
-      if (error.error && error.error.error) {
-        this.toastMsgService.alert("error", error.error.error);
-        this.search();
-      } else {
-        this.toastMsgService.alert("error", "An unexpected error occurred.");
-      }
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          let disposable = this.dialog.open(UserNotesComponent, {
+            width: '75vw',
+            height: 'auto',
+            data: {
+              userId: client.userId,
+              clientName: client.userName,
+              clientMobileNumber: client.userMobile,
+            },
+          });
+          disposable.afterClosed().subscribe({
+            next: (result) => {
+              console.log('The dialog was closed');
+            },
+          });
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.toastMsgService.alert('error', error.error.error);
+          this.search();
+        } else {
+          this.toastMsgService.alert('error', 'An unexpected error occurred.');
+        }
+      },
     });
   }
 
   async startCalling(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    this.utilsService.getUserCurrentStatus(user.userId).subscribe(
-      async (res: any) => {
+    this.utilsService.getUserCurrentStatus(user.userId).subscribe({
+      next: async (res: any) => {
         console.log(res);
         if (res.error) {
           this.utilsService.showSnackBar(res.error);
@@ -794,41 +802,40 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
             userId: user.userId,
           };
 
-          // const param = `/prod/call-support/call`;
           const param = `tts/outbound-call`;
-          this.reviewService.postMethod(param, reqBody).subscribe(
-            (result: any) => {
+          this.reviewService.postMethod(param, reqBody).subscribe({
+            next: (result: any) => {
               this.loading = false;
-              if (result.success == false) {
+              if (result.success) {
+                this.toastMsgService.alert('success', result.message);
+              } else {
                 this.loading = false;
                 this.utilsService.showSnackBar(
                   'Error while making call, Please try again.'
                 );
               }
-              if (result.success == true) {
-                this.toastMsgService.alert('success', result.message);
-              }
             },
-            (error) => {
+            error: () => {
               this.utilsService.showSnackBar(
                 'Error while making call, Please try again.'
               );
               this.loading = false;
-            }
-          );
+            },
+          });
         }
       },
-      (error) => {
+      error: (error) => {
         this.loading = false;
         if (error.error && error.error.error) {
-          this.toastMsgService.alert("error", error.error.error);
+          this.toastMsgService.alert('error', error.error.error);
           this.search();
         } else {
-          this.toastMsgService.alert("error", "An unexpected error occurred.");
+          this.toastMsgService.alert('error', 'An unexpected error occurred.');
         }
-      }
-    );
+      },
+    });
   }
+
 
 
   openChat(client) {
@@ -864,70 +871,74 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   callStatusChange(callInfo, statusId, statusName) {
-    this.utilsService.getUserCurrentStatus(callInfo.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.search();
-        return;
-      } else {
-        console.log('callInfo: ', callInfo);
-        this.loading = true;
-        let reqBody = {
-          scheduleCallTime: callInfo.scheduleCallTime,
-          userId: callInfo.userId,
-          statusId: statusId,
-          statusName: statusName,
-        };
-        let param = `/schedule-call-details`;
+    this.utilsService.getUserCurrentStatus(callInfo.userId).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.search();
+          return;
+        } else {
+          console.log('callInfo: ', callInfo);
+          this.loading = true;
+          let reqBody = {
+            scheduleCallTime: callInfo.scheduleCallTime,
+            userId: callInfo.userId,
+            statusId: statusId,
+            statusName: statusName,
+          };
+          let param = `/schedule-call-details`;
 
-        this.userMsService.putMethod(param, reqBody).subscribe(
-          (response: any) => {
-            console.log('schedule-call Done response: ', response);
-            this.loading = false;
-            this.toastMsgService.alert(
-              'success',
-              'Call status update successfully.'
-            );
-            if (statusId === 19) {
-            } else if (statusId === 18) {
-              this.markAsScheduleCallDone(callInfo);
-            }
-            setTimeout(() => {
-              this.search();
-            }, 300);
-          },
-          (error) => {
-            this.toastMsgService.alert(
-              'error',
-              'Error during schedule-call status change.'
-            );
-            this.loading = false;
-          }
-        );
-      }
-    },
-      (error) => {
+          this.userMsService.putMethod(param, reqBody).subscribe({
+            next: (response: any) => {
+              console.log('schedule-call Done response: ', response);
+              this.loading = false;
+              this.toastMsgService.alert(
+                'success',
+                'Call status update successfully.'
+              );
+              if (statusId === 19) {
+              } else if (statusId === 18) {
+                this.markAsScheduleCallDone(callInfo);
+              }
+              setTimeout(() => {
+                this.search();
+              }, 300);
+            },
+            error: (error) => {
+              this.toastMsgService.alert(
+                'error',
+                'Error during schedule-call status change.'
+              );
+              this.loading = false;
+            },
+          });
+        }
+      },
+      error: (error) => {
         this.loading = false;
         if (error.error && error.error.error) {
-          this.toastMsgService.alert("error", error.error.error);
+          this.toastMsgService.alert('error', error.error.error);
           this.search();
         } else {
-          this.toastMsgService.alert("error", "An unexpected error occurred.");
+          this.toastMsgService.alert('error', 'An unexpected error occurred.');
         }
-      }
-    );
-
+      },
+    });
   }
+
 
   markAsScheduleCallDone(callInfo) {
     // https://uat-api.taxbuddy.com/user/schedule-call-done?subscriptionId=12852
     let param1 = '/schedule-call-done?subscriptionId=' + callInfo.subscriptionId;
     this.loading = true;
-    this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
-      this.loading = false;
-    }, err => {
-      this.loading = false;
+    this.userMsService.patchMethod(param1, '').subscribe({
+      next: (result: any) => {
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+      }
     });
   }
 
@@ -939,11 +950,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      this.search('', '', event);
     }
   }
 
@@ -997,7 +1004,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
         this.agentId = this.utilsService.getLoggedInUserID();
       }
-      // this?.serviceDropDown?.resetService();
       this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     } else {
@@ -1070,72 +1076,63 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       leaderFilter = `&leaderUserId=${this.leaderId}`
     }
 
-    var param = `/bo/schedule-call-details?${data}${leaderFilter}`;
+    let param = `/bo/schedule-call-details?${data}${leaderFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
-    }
-    if (this.coOwnerToggle.value == true && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
     }
     if (this.subPaidScheduleCallList.value) {
       param = param + '&details=true'
     }
 
-    return this.reportService.getMethod(param).toPromise().then((result: any) => {
+    return lastValueFrom(this.reportService.getMethod(param))
+    .then((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
-      if (result.success == false) {
-        this.toastMsgService.alert(
-          'error', result.message)
-        this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
-
-      if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
+      if (
+        result.success &&
+        result?.data?.content instanceof Array &&
+        result?.data?.content?.length > 0
+      ) {
         this.scheduleCallsData = result.data.content;
         this.scheduleCallGridOptions.api?.setRowData(
-          this.createRowData(result.data.content));
+          this.createRowData(result.data.content)
+        );
         this.config.totalItems = result.data.totalElements;
         this.config.pageCount = result.data.totalPages;
-        this.cacheManager.initializeCache(this.createRowData(this.scheduleCallsData));
+        this.cacheManager.initializeCache(
+          this.createRowData(this.scheduleCallsData)
+        );
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.scheduleCallsData));
+        this.cacheManager.cachePageContent(
+          currentPageNumber,
+          this.createRowData(this.scheduleCallsData)
+        );
         this.config.currentPage = currentPageNumber;
-
       } else {
         this.loading = false;
         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        if (result.message) { this.toastMsgService.alert('error', result.message); }
-        else { this.toastMsgService.alert('error', 'No Data Found'); }
+        if (result.message) {
+          this.toastMsgService.alert('error', result.message);
+        } else {
+          this.toastMsgService.alert('error', 'No Data Found');
+        }
       }
       this.loading = false;
-    }).catch(() => {
-      this.loading = false;
     })
+    .catch(() => {
+      this.loading = false;
+    });
   }
 
   async downloadReport() {
     this.loading = true;
 
     this.showCsvMessage = true;
-    let loggedInId = this.utilsService.getLoggedInUserID();
     let param = `/dashboard/schedule-call-details/${this.agentId}?`;
 
-    if (this.coOwnerToggle.value) {
-      param = param + 'searchAsCoOwner=true&';
-    }
-    if (this.coOwnerToggle.value && loggedInId !== this.agentId) {
-      param = `/dashboard/schedule-call-details/${this.agentId}?`;
-    }
     if (this.searchParam.email) {
       param = param + 'email=' + this.searchParam.email.toLocaleLowerCase() + '&';
     }

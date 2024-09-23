@@ -20,10 +20,6 @@
           </mat-form-field>
         </div>
         <div class="col-sm-8 btn12">
-          <!-- <div>
-            <button class="btnUpdate margin" (click)="searchPan()">
-              Search PAN </button>
-          </div> -->
           <div>
             <app-custom-button class="btnUpdate margin" [actions]="[searchPan]">
               <i class="fa fa-search" aria-hidden="true"></i> Search PAN
@@ -50,28 +46,6 @@
         </div>
       </div>
       <div class="col-sm-8 mt-3">
-        <!-- <table class="center-table mt-3">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Mobile Number</th>
-              <th>Name</th>
-              <th>PAN Number</th>
-              <th>Email</th>
-              <th>Leader Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ panData.userId }}</td>
-              <td>{{ panData.mobileNumber }}</td>
-              <td>{{ panData.name }}</td>
-              <td>{{ panData.panNumber }}</td>
-              <td>{{ panData.email }}</td>
-              <td>{{ panData.leaderName }}</td>
-            </tr>
-          </tbody>
-        </table> -->
         <div class="vertical-table center-table">
           <div class="row" *ngFor="let keyValuePair of panData | keyvalue">
             <div class="col-sm-4">{{ keyValuePair.key }}</div>

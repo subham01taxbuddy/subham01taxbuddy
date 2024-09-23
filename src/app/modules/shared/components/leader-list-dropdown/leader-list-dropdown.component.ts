@@ -54,7 +54,6 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
       console.log('logged in sme user id ',this.loggedInSme[0].userId)
 
       this.getLeaders();
-      // this.getOwners();
   }
 
   setLeader(leader: any){
@@ -80,10 +79,6 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
           : this.options.slice();
           if (!this.utilsService.isNonEmpty(value)) {
             this.setLeader({});
-            // if (this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
-            //   this.leaderDetails.userId = this.loggedInSme[0]?.userId;
-            //   this.getOwners();
-            // }
           }
         return result;
       })
@@ -111,30 +106,12 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   getLeaderNameId(option) {
     this.setLeader(option);
     console.log(option);
-    // this.getOwners();
   }
 
   getOwnerNameId(option) {
     this.setOwner(option);
     console.log(option);
   }
-
-  // getLeaders() {
-  //   // https://uat-api.taxbuddy.com/user/sme-details-new/3000?leader=true
-  //   const loggedInSmeUserId = this.loggedInSme[0].userId;
-  //   let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
-  //   this.reportService.getMethod(param).subscribe((result: any) => {
-  //     console.log('leader list result -> ', result);
-  //     this.leaderList = result.data;
-  //     console.log('leaderlist', this.leaderList);
-  //     this.leaderNames = this.leaderList.map((item) => {
-  //       return { name: item.name, userId: item.userId };
-  //     });
-  //     this.options = this.leaderNames;
-  //     console.log(' leaderNames -> ', this.leaderNames);
-  //     this.setFiletedOptions1();
-  //   });
-  // }
 
   getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
@@ -166,18 +143,13 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
     //'http://uat-api.taxbuddy.com/report/sme-details-new/9362?ownersByLeader=true'
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
-    // if (this.leaderDetails?.userId) {
-    //   param = `/sme-details-new/${this.leaderDetails?.userId}?ownersByLeader=true`;
-    // } else {
       param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    // }
-
     this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.ownerList = result.data;
       console.log('filerList', this.ownerList);
-      this.options1 = this.ownerList;//this.filerNames;
+      this.options1 = this.ownerList;
       this.setFiletedOptions2();
       console.log(' filerNames -> ', this.options1);
     });

@@ -15,13 +15,14 @@ import { environment } from 'src/environments/environment';
 import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
+
 import { ChatManager } from './modules/chat/chat-manager';
 import { ChatService } from './modules/chat/chat.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
 
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit {
     private userMsService: UserMsService,
     private chatManager: ChatManager,
     private chatService: ChatService,
+    private dbService: NgxIndexedDBService,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -83,11 +85,9 @@ export class AppComponent implements OnInit {
 
     if (this.swUpdate.isEnabled) {
       console.log('SOFTWARE_UPDATE_AVAIlABLE_Enable')
-      // localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
       this.swUpdate.available.subscribe(() => {
         console.log('SOFTWARE_UPDATE_AVAIlABLE')
         localStorage.setItem('SOFTWARE_UPDATE_AVAIlABLE', 'true');
-        // this.reloadWindow();
       })
     }
 
@@ -105,8 +105,6 @@ export class AppComponent implements OnInit {
                   sessionStorage.setItem('webToken', value);
                 }).catch(error => {
                   console.log("error", error.code);
-                  if (error.code === 'messaging/permission-blocked') {
-                  }
                 })
               } else {
                 alert("Click the icon to the left of address bar and enable notifications.")
@@ -121,7 +119,6 @@ export class AppComponent implements OnInit {
       this.message$ = new Observable(sub => onMessage(messaging, it => sub.next(it))).pipe(
         tap(it => console.log('FCM', it)),
       );
-    } else {
     }
     idleService.idle$.subscribe(s => {
       if (this.router.url !== '/login') {
@@ -218,6 +215,9 @@ export class AppComponent implements OnInit {
         this.chatService.unsubscribeRxjsWebsocket();
         this.chatManager.closeChat();
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 
@@ -236,14 +236,15 @@ export class AppComponent implements OnInit {
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
-
-    this.userMsService.postMethod(param, '').subscribe((response: any) => {
-      this.loading = false;
-
-    }, (error) => {
-      this.loading = false;
-      console.log('error in sme Logout API', error)
-    })
+    this.userMsService.postMethod(param, '').subscribe({
+      next: (response: any) => {
+        this.loading = false;
+      },
+      error: (error: any) => {
+        this.loading = false;
+        console.log('Error in SME Logout API', error);
+      }
+    });
   }
 
   reloadWindow() {

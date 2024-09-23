@@ -1,4 +1,4 @@
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe, Location} from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
@@ -7,11 +7,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ConfirmModel } from '../kommunicate-dialog/kommunicate-dialog.component';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { environment } from 'src/environments/environment';
-import { Location } from '@angular/common';
 
 export const MY_FORMATS = {
   parse: {
@@ -52,8 +48,8 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
   }
   personalInfo: any;
 
-  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService, 
-    private itrService: ItrMsService, public datePipe: DatePipe, 
+  constructor(private fb: UntypedFormBuilder, private utilsService: UtilsService,
+    private itrService: ItrMsService, public datePipe: DatePipe,
     private utiService: UtilsService, public dialogRef: MatDialogRef<AddClientDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, public location: Location,) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -63,7 +59,6 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
     console.log(this.data);
 
     if (this.data == undefined || this.data == null) {
-      // this.router.navigate(['/pages/user-management/users']);
       this.location.back();
     }
     this.addClientForm = this.fb.group({
@@ -121,9 +116,6 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
               if (res.errors instanceof Array && res.errors.length > 0)
                 this.utilsService.showSnackBar(res.errors[0].desc);
               this.otpSend = false;
-              // if(res.errors[0].desc.includes('is already a client')){
-              //   this.otpSend = true;
-              // }
               this.addClientForm.controls['otp'].setValidators(null);
               this.dialogRef.close();
             }
@@ -167,13 +159,7 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
             }
             if (res.messages instanceof Array && res.messages.length > 0)
               this.utilsService.showSnackBar(res.messages[0].desc);
-            // this.changePage();
             this.dialogRef.close();
-            // Show success message depends upon following paramaters
-            //             errors: []
-            // httpStatus: "ACCEPTED"
-            // messages: []
-            // successFlag: true
           }
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
@@ -207,12 +193,9 @@ export class AddClientDialogComponent implements OnInit, OnDestroy {
     formData.append("file", document);
     let annualYear = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
     console.log('annualYear: ', annualYear);
-    //let cloudFileMetaData = '{"formCode":"' + this.ITR_JSON.itrType + ',"ay":' + this.ITR_JSON.assessmentYear + ',"filingTypeCd":"O","userId ":' + this.ITR_JSON.userId + ',"filingTeamMemberId":' + this.ITR_JSON.filingTeamMemberId + '"}';
     formData.append("formCode", this.ITR_JSON.itrType);
     formData.append("ay", annualYear);
     formData.append("filingTypeCd", this.ITR_JSON.isRevised === "N" ? "O" : "R");
-    // formData.append("userId",this.ITR_JSON.userId.toString());
-    // formData.append("filingTeamMemberId", this.ITR_JSON.filingTeamMemberId.toString());
     let param = '/eri/direct-upload-validate-json';
     this.itrService.postMethodForEri(param, formData).subscribe((res: any) => {
       this.loading = false;

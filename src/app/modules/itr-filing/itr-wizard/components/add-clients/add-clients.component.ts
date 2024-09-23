@@ -1,24 +1,19 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import {
   Component,
   EventEmitter,
-  Inject,
   OnDestroy,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { environment } from 'src/environments/environment';
-import { Location } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
-import * as moment from 'moment/moment';
 
 @Component({
   selector: 'app-add-clients',
@@ -129,10 +124,6 @@ export class AddClientsComponent implements OnInit, OnDestroy {
 
   getUserDataByPan(pan) {
     this.utilsService.getPanDetails(pan.value, this.ITR_JSON.userId).subscribe((result: any) => {
-      // let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-      // this.addClientForm.controls['dateOfBirth'].setValue(
-      //   moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
-      // );
     });
   }
 
@@ -188,9 +179,6 @@ export class AddClientsComponent implements OnInit, OnDestroy {
               if (res.errors instanceof Array && res.errors.length > 0)
                 this.utiService.showSnackBar(res.errors[0].desc);
               this.otpSend = false;
-              // if(res.errors[0].desc.includes('is already a client')){
-              //   this.otpSend = true;
-              // }
               this.addClientForm.controls['otp'].setValidators(null);
             }
           }
@@ -273,15 +261,12 @@ export class AddClientsComponent implements OnInit, OnDestroy {
     formData.append('file', document);
     let annualYear = this.ITR_JSON.assessmentYear.toString().slice(0, 4);
     console.log('annualYear: ', annualYear);
-    //let cloudFileMetaData = '{"formCode":"' + this.ITR_JSON.itrType + ',"ay":' + this.ITR_JSON.assessmentYear + ',"filingTypeCd":"O","userId ":' + this.ITR_JSON.userId + ',"filingTeamMemberId":' + this.ITR_JSON.filingTeamMemberId + '"}';
     formData.append('formCode', this.ITR_JSON.itrType);
     formData.append('ay', annualYear);
     formData.append(
       'filingTypeCd',
       this.ITR_JSON.isRevised === 'N' ? 'O' : 'R'
     );
-    // formData.append("userId",this.ITR_JSON.userId.toString());
-    // formData.append("filingTeamMemberId", this.ITR_JSON.filingTeamMemberId.toString());
     let param = '/eri/direct-upload-validate-json';
     this.itrService.postMethodForEri(param, formData).subscribe(
       (res: any) => {

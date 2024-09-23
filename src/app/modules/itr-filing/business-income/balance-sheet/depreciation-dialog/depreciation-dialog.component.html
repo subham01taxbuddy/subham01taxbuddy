@@ -29,8 +29,6 @@
             </div>
         </div>
         <div class="form-field">
-            <!-- <input type="text" class="input-field" id="exampleInputEmail1" aria-describedby="emailHelp"
-            placeholder="₹ Enter Amount"> -->
         </div>
         <div class="button_style">
             <button type="submit" (click)="deleteDepreciationArray()">
@@ -80,7 +78,7 @@
                         <div><span class="span">Gross Block </span></div>
                         <mat-form-field appearance="outline">
                             <input matInput class="input-field" placeholder="₹ Enter Amount" formControlName="bookValue"
-                                maxlength="14" (blur)="saveDepreciationDetails(depreciation)"
+                                maxlength="14" (blur)="saveDepreciationDetails(depreciation)" digitsOnly
                                 (change)="calculateDepreciationTotal()">
                             <mat-error
                                 *ngIf="depreciation.get('bookValue').hasError('required')  && (depreciation.get('bookValue').dirty || depreciation.get('bookValue').touched)">Please

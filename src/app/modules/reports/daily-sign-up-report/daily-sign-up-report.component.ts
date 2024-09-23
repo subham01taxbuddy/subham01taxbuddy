@@ -185,7 +185,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
 
   createRowData(signUpData) {
     console.log('sign Up RepoInfo -> ', signUpData);
-    var signUpRepoInfoArray = [];
+    let signUpRepoInfoArray = [];
     for (let i = 0; i < signUpData.length; i++) {
       let agentReportInfo = Object.assign({}, signUpRepoInfoArray[i], {
         leaderName: signUpData[i].leaderName,

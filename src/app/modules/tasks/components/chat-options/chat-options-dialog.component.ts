@@ -87,6 +87,7 @@ export class ChatOptionsDialogComponent implements OnInit {
           this.kommChatConversationId = response.data?.conversationId;
           this.waChatLink = response.data?.whatsAppChatLink
         } else {
+          this.loading = false;
         }
       },
       (error) => {

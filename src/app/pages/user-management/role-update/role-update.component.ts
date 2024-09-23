@@ -41,30 +41,39 @@ export class RoleUpdateComponent {
 
 
 
-  updateUserRole() {
+  updateUserRole(): void {
     console.log("user Role: ", this.userRole, this.userRole.value);
+
     if (this.userRole.value !== null) {
       this.loading = true;
-      let param = '/users';
-      let reqBody = {
+      const param = '/users';
+      const reqBody = {
         "userId": parseInt(this.data.userId),
         "role": this.userRole.value
-      }
-      this.userMsService.putMethod(param, reqBody).subscribe((res: any) => {
-        this.loading = false;
-        console.log("Add user roles response: ", res);
-        if (this.utilsService.isNonEmpty(res['error'])) {
-          this._toastMessageService.alert("error", res['error']);
-          return;
+      };
+
+      this.userMsService.putMethod(param, reqBody).subscribe({
+        next: (res: any) => {
+          this.loading = false;
+          console.log("Add user roles response: ", res);
+          if (this.utilsService.isNonEmpty(res['error'])) {
+            this._toastMessageService.alert("error", res['error']);
+          } else {
+            this._toastMessageService.alert("success", this.data.clientName + " User role updated successfully.");
+          }
+        },
+        error: (error) => {
+          console.log("There is an error: ", error);
+          this._toastMessageService.alert("error", this.data.clientName + " User role not updated, try after some time.");
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
         }
-        this._toastMessageService.alert("success", this.data.clientName + " User role updated successfully.");
-      }, error => {
-        console.log("there is error : ", error);
-        this._toastMessageService.alert("error", this.data.clientName + "User role not update, try after some time.");
-        this.loading = false;
       });
     }
   }
+
 
 
 }

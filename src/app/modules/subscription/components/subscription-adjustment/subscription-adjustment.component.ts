@@ -91,7 +91,6 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    let loggedInId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
   }
 
@@ -137,7 +136,6 @@ export class SubscriptionAdjustmentComponent implements OnInit {
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
       setTimeout(() => {
@@ -149,7 +147,6 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   }
 
   async getMasterStatusList() {
-    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
@@ -178,7 +175,7 @@ export class SubscriptionAdjustmentComponent implements OnInit {
     this.searchParam.assessmentYear = this.assessmentYear.value.assessmentYear;
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    var param = `/bo/subscription-adjustment?${data}${userFilter}`;
+    let param = `/bo/subscription-adjustment?${data}${userFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;

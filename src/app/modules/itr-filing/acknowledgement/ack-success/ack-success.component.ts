@@ -12,8 +12,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class AckSuccessComponent implements OnInit, OnDestroy {
   ITR_JSON: ITR_JSON;
-  emailString: String = '';
-  userName: String = '';
+  emailString: string = '';
+  userName: string = '';
   DIRECT_UPLOAD_RES: any;
   loggedInUserRoles: any;
   constructor(public utilsService: UtilsService, private router: Router,

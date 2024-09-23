@@ -26,7 +26,7 @@ export const MY_FORMATS = {
 };
 export interface User {
   name: string;
-  userId: Number;
+  userId: number;
 }
 
 @Component({
@@ -479,11 +479,6 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('new leader list result -> ', result);
       this.leaderList = result.data;
-      // this.leaderNames = this.leaderList.map((item) => {
-      //   return { name: item.name, userId: item.userId };
-      // });
-      // this.leaderOptions = this.leaderNames
-      // this.setFilteredLeaders();
     }, error => {
       this.utilsService.showSnackBar('Error in API of get leader list');
     })

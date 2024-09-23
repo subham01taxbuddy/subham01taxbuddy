@@ -224,7 +224,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
 
   createRowData(userInvoices) {
     console.log('userInvoices: ', userInvoices);
-    var invoices = [];
+    let invoices = [];
     for (let i = 0; i < userInvoices.length; i++) {
       let updateInvoice = Object.assign({}, userInvoices[i], {
         userId: userInvoices[i].userId,
@@ -537,7 +537,6 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
   }
 
   downloadInvoice(data) {
-    // location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
     let signedUrl = environment.url + `/itr/invoice/download?invoiceNo=${data.invoiceNo}`;
     this.loading = true;
     this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(

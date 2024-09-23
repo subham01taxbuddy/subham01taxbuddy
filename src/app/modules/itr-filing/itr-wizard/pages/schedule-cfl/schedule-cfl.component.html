@@ -43,7 +43,7 @@
                                         </td>
                                         <td>
                                             <mat-form-field appearance="outline">
-                                                <input matInput placeholder="DD/MM/YYYY" readonly
+                                                <input appDateInput matInput placeholder="DD/MM/YYYY"
                                                        name="dateofFilling[i]" [max]="today"
                                                        [matDatepicker]="dateofFilling" autocomplete="off"
                                                        formControlName="dateofFilling">
@@ -94,10 +94,10 @@
                                     </tbody>
                                     <hr>
                                     <tbody>
-                                    <tr>                                       
+                                    <tr>
                                         <td colspan="3" class="total-losses">
                                             Total of earlier year losses
-                                        </td>                                        
+                                        </td>
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" readonly name="totalHPLoss"
@@ -146,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-               
+
 
 
                 <div class="out-box">
@@ -157,7 +157,7 @@
                         <div class="btn__primary" (click)="save()">Save & View Summary</div>
                     </div>
                 </div>
-         
+
         </div>
     </div>
 </form>

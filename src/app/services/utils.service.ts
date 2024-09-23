@@ -1,6 +1,6 @@
 import {ElementRef, Injectable} from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import {catchError, concatMap, Observable, Subject} from 'rxjs';
+import { concatMap, lastValueFrom, Observable, Subject} from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,6 @@ import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Employer, ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
-import { ItrActionsComponent } from '../modules/shared/components/itr-actions/itr-actions.component';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
@@ -428,7 +427,7 @@ export class UtilsService {
   }
 
   showErrorMsg(errorCode) {
-    var errorMessage = '';
+    let errorMessage = '';
     if (errorCode === 400) {
       errorMessage = 'Bad request, invalid input request.';
     } else if (errorCode === 401) {
@@ -449,7 +448,6 @@ export class UtilsService {
     let startFy = financialYear.slice(0, 5);
     let endFy = financialYear.slice(7, 9);
     return startFy + endFy;
-    // return '2020-21';
   }
 
   async getStoredFyList() {
@@ -477,14 +475,13 @@ export class UtilsService {
 
   async getFyList() {
     const param = `${ApiEndpoints.itrMs.filingDates}`;
-    return await this.itrMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.itrMsService.getMethod(param));
   }
 
   async getStoredSmeList() {
     const smeList = JSON.parse(
       sessionStorage.getItem(AppConstants.SME_LIST) || null
     );
-    // console.log('fyList', fyList);
     if (
       this.isNonEmpty(smeList) &&
       smeList instanceof Array &&
@@ -517,7 +514,7 @@ export class UtilsService {
   async getSmeList() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme/all-list?active=true&page=0&pageSize=10' \
     const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getStoredAgentList(action?: any) {
@@ -559,7 +556,7 @@ export class UtilsService {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
     const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getStoredMasterStatusList() {
@@ -588,7 +585,7 @@ export class UtilsService {
   }
   async getMasterStatusList() {
     const param = `/${ApiEndpoints.userMs.itrStatusMasterBo}`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
 
   createUrlParams(queryParams: any) {
@@ -669,21 +666,21 @@ export class UtilsService {
     const loggedInUserId = this.getLoggedInUserID();
     //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
     const param = `/bo/sme-details-new/${loggedInUserId}?leader=true`;
-    return await this.reportService.getMethod(param).toPromise();
+    return await lastValueFrom(this.reportService.getMethod(param));
   }
 
   async getUserProfile(userId) {
     const param = `/profile/${userId}`;
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
   async getItr(userId: any, ay: string) {
     const param = `/itr?userId=${userId}&assessmentYear=${ay}`;
-    return await this.itrMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.itrMsService.getMethod(param));
   }
 
   async getAllBankByIfsc() {
     const param = '/bankCodeDetails';
-    return await this.userMsService.getMethod(param).toPromise();
+    return await lastValueFrom(this.userMsService.getMethod(param));
   }
 
   async getBankByIfsc(ifscCode) {
@@ -744,14 +741,42 @@ export class UtilsService {
     return seenDuplicate;
   }
 
+  checkDuplicatePANWithDifferentScheme(data) {
+    // Create a map to store panNumber as key and set of schemeCodes as value
+    const panSchemeMap = new Map();
+
+    for (let donation of data) {
+      const { panNumber, schemeCode } = donation;
+
+      // If panNumber is already present in the map
+      if (panSchemeMap.has(panNumber)) {
+        const schemeCodes = panSchemeMap.get(panNumber);
+
+        // Check if the schemeCode is already associated with the panNumber
+        if (!schemeCodes.has(schemeCode)) {
+          // Duplicate PAN found with different schemeCode
+          return true;
+        }
+      } else {
+        // Add the panNumber and schemeCode to the map
+        panSchemeMap.set(panNumber, new Set([schemeCode]));
+      }
+
+      // Add the current schemeCode to the set of schemeCodes for the panNumber
+      panSchemeMap.get(panNumber).add(schemeCode);
+    }
+
+    // No duplicates found
+    return false;
+  }
+
   async getPincodeData(pinCode) {
     const promise = new Promise<any>((resolve, reject) => {
       let data = null;
       if (pinCode.valid) {
         const param = '/pincode/' + pinCode.value;
-        // return await this.userMsService.getMethod(param).toPromise();
-        this.userMsService.getMethod(param).subscribe(
-          (result: any) => {
+        this.userMsService.getMethod(param).subscribe({
+          next: (result: any) => {
             data = {
               country: 'INDIA',
               countryCode: '91',
@@ -760,12 +785,12 @@ export class UtilsService {
             };
             resolve(data);
           },
-          (error) => {
+          error: (error) => {
             if (error.status === 404) {
               reject(error);
             }
           }
-        );
+        });
       } else {
         console.log('pinCode invalid', pinCode);
       }
@@ -822,8 +847,6 @@ export class UtilsService {
         itrObject.assessmentYear;
       return this.itrMsService.putMethod(param, itrObject);
     } else {
-      // return this.getUserCurrentStatus([itrObject.userId])
-      //     .pipe(concatMap((res) => this.innerFunction(res, itrObject)));
       itrObject.isItrSummaryJsonEdited = false;
       const param = `/itr/itr-type`;
       return this.itrMsService
@@ -999,9 +1022,8 @@ export class UtilsService {
 
   fetchSmeInfo(userId) {
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
-    // this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
-    this.userMsService.getMethodNew(param).subscribe(
-      (res: any) => {
+    this.userMsService.getMethodNew(param).subscribe({
+      next: (res: any) => {
         if (res.success) {
           sessionStorage.setItem(
             AppConstants.LOGGED_IN_SME_INFO,
@@ -1009,10 +1031,10 @@ export class UtilsService {
           );
         }
       },
-      (error) => {
+      error: (error) => {
         console.log('error in fetching sme info', error);
       }
-    );
+    });
   }
 
   getIdToken() {
@@ -1060,7 +1082,6 @@ export class UtilsService {
     let loggedInUserId = environment.admin_id;
     console.log('logged in sme id ', loggedInUserId);
     const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-    // return await this.userMsService.getMethod(param).toPromise();
     this.reportService.getMethod(param).subscribe((res: any) => {
       console.log('filer List Result', res);
       if (res.success && res.data instanceof Array) {
@@ -1071,11 +1092,7 @@ export class UtilsService {
         );
         return filerList;
       }
-      // if (res.success) {
-      //   sessionStorage.setItem(AppConstants.ALL_FILERS_LIST, JSON.stringify(res.data))
-      // }
     });
-    // sessionStorage.setItem("autosave", field.value);
   }
 
   setAddClientJsonData(data: any) {
@@ -1470,13 +1487,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.salary?.push({
             salaryType: key,
             taxableAmount: element,
             exemptAmount: 0,
           });
-          // }
         }
       }
     }
@@ -1489,13 +1504,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.perquisites?.push({
             perquisiteType: key,
             taxableAmount: element,
             exemptAmount: 0
           });
-          // }
         }
       }
     }
@@ -1508,13 +1521,11 @@ export class UtilsService {
         if (bifurcationValues.hasOwnProperty(key)) {
           const element = parseFloat(bifurcationValues[key]);
           console.log(element);
-          // if (element && element !== 0) {
           localEmployer?.profitsInLieuOfSalaryType?.push({
             salaryType: key,
             taxableAmount: element,
             exemptAmount: 0,
           });
-          // }
         }
       }
     }

@@ -1,19 +1,16 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="div-3" *ngFor="let salary of getSalaryArray.controls;
             let i = index">
-  <!--      <div>-->
   <div class="contents-wrapper">
     <div [ngClass]="i === activeIndex ? 'contents' : 'contents-selected'">
-      <div [ngClass]="i === activeIndex ? 'field-text ' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div [ngClass]="i === activeIndex ? 'field-text ' :'field-text-selected'" (click)="markActive(i)">Entry {{i+1}}
+      </div>
       <div class="group" (click)="deleteSalaryArray(i)">
         <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text' :'field-text-selected'"></i>
       </div>
     </div>
   </div>
-  <!--      </div>-->
 </div>
 <div class="contents-wrapper">
   <div class="field-text-wrapper">
@@ -24,126 +21,58 @@
 <form [formGroup]="salaryForm">
 
   <div formArrayName="salaryArray">
-    <div class="display-flex"
-      *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+    <div class="display-flex" *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
       [formGroupName]="activeIndex">
-      <!-- <mat-checkbox
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class="mv"
-      >
-      </mat-checkbox> -->
       <div class="row" *ngIf="activeIndex === i">
         <div class="div-6 ">
           <div class="form-field">
             <mat-label>BSR Code*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="bsrCode"
-                matInput
-                placeholder="BSR Code"
-                name="bsrCode[i]"
-                required
-                class="input-field"
-                maxlength="7"
-                minlength="7"
-                digitsOnly
-              />
+              <input formControlName="bsrCode" matInput placeholder="BSR Code" name="bsrCode[i]" required
+                class="input-field" maxlength="7" minlength="7" digitsOnly />
               <mat-error *ngIf="donation.get('bsrCode').hasError('required')">
-                Enter positive amount without decimal.</mat-error
-              >
+                Enter positive amount without decimal.</mat-error>
               <mat-error *ngIf="donation.get('bsrCode').hasError('minlength')">
-                Please enter 7 digit BSR code.</mat-error
-              >
+                Please enter 7 digit BSR code.</mat-error>
             </mat-form-field>
           </div>
           <div class="form-field">
-          <mat-label>Date of Deposit*</mat-label>
-          <mat-form-field appearance="outline">
-            <input
-              matTooltip="Date of Deposit"
-              matTooltipClass="tab-tooltip"
-              matTooltipPosition="above"
-              matInput
-              [matDatepicker]="picker"
-              class="input-field"
-              placeholder="Date of Deposit"
-              name="dateOfDeposit"
-              formControlName="dateOfDeposit"
-              [min]="minDate"
-              [max]="maxDate"
-              readonly
-              required
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error
-              *ngIf="donation.get('dateOfDeposit').hasError('required')"
-            >
-              Select date of Deposit</mat-error
-            >
-          </mat-form-field>
-          <mat-hint style="font-size: 15px; margin-left: 5px"
-            >DD/MM/YYYY</mat-hint
-          >
-        </div>
+            <mat-label>Date of Deposit*</mat-label>
+            <mat-form-field appearance="outline">
+              <input appDateInput matTooltip="Date of Deposit" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+                [matDatepicker]="picker" class="input-field" placeholder="Date of Deposit" name="dateOfDeposit"
+                formControlName="dateOfDeposit" [min]="minDate" [max]="maxDate"  required />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="donation.get('dateOfDeposit').hasError('required')">
+                Select date of Deposit</mat-error>
+            </mat-form-field>
+            <mat-hint style="font-size: 15px; margin-left: 5px">DD/MM/YYYY</mat-hint>
+          </div>
         </div>
 
         <div class="div-6 ">
           <div class="form-field">
             <mat-label>Serial No of Challan*</mat-label>
             <mat-form-field appearance="outline">
-              <input
-                formControlName="challanNumber"
-                matInput
-                placeholder="Challan Number"
-                name="challanNumber[i]"
-                required
-                class="input-field"
-                maxlength="5"
-                digitsOnly
-              />
-              <mat-error
-                *ngIf="donation.get('challanNumber').hasError('required')"
-              >
-                Enter positive amount without decimal.</mat-error
-              >
+              <input formControlName="challanNumber" matInput placeholder="Challan Number" name="challanNumber[i]"
+                required class="input-field" maxlength="5" digitsOnly />
+              <mat-error *ngIf="donation.get('challanNumber').hasError('required')">
+                Enter positive amount without decimal.</mat-error>
             </mat-form-field>
           </div>
 
           <div class="form-field">
-          <mat-label>Total Tax Paid*</mat-label>
-          <mat-form-field appearance="outline">
-            <input
-              formControlName="totalTax"
-              matInput
-              placeholder="Total Tax Paid"
-              name="totalTax[i]"
-              required
-              class="input-field"
-              maxlength="14"
-              digitsOnly
-            />
-            <mat-error *ngIf="donation.get('totalTax').hasError('required')">
-              Enter positive amount without decimal.</mat-error
-            >
-          </mat-form-field>
-        </div>
+            <mat-label>Total Tax Paid*</mat-label>
+            <mat-form-field appearance="outline">
+              <input formControlName="totalTax" matInput placeholder="Total Tax Paid" name="totalTax[i]" required
+                class="input-field" maxlength="14" digitsOnly />
+              <mat-error *ngIf="donation.get('totalTax').hasError('required')">
+                Enter positive amount without decimal.</mat-error>
+            </mat-form-field>
+          </div>
         </div>
 
-      <!-- <div class="edit-head">
-        <button
-          type="button"
-          class="edit-donation"
-          (click)="editSalaryForm(fieldGlobalIndex(i))"
-        >
-          <mat-icon> edit_square </mat-icon>Edit
-        </button>
-      </div> -->
       </div>
     </div>
     <div class="out-box">
@@ -156,4 +85,3 @@
     </div>
   </div>
 </form>
-

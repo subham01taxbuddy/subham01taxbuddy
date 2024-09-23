@@ -8,7 +8,6 @@ import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-professional-dialog',
   templateUrl: './professional-dialog.component.html',
-  styleUrls: ['./professional-dialog.component.scss'],
 })
 export class ProfessionalDialogComponent implements OnInit {
   natureOfBusinessDropdownAll: any;

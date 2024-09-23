@@ -5,11 +5,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 export const MY_FORMATS = {
@@ -84,7 +82,6 @@ export class ViewCallDetailsComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
-    // this.attachEventListeners();
   }
 
   getCallList(){

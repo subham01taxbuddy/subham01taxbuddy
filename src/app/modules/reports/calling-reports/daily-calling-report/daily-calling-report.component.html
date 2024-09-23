@@ -29,8 +29,7 @@
                         <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
                           <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
                             [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
-                            <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value"
-                              (click)="getRoleValue(drop)">
+                            <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value">
                               {{ drop.name }}
                             </mat-option>
                           </mat-select>

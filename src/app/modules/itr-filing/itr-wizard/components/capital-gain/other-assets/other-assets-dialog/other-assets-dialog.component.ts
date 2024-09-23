@@ -2,13 +2,11 @@ import {
   Component,
   Inject,
   Input,
-  OnChanges,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { inject } from '@angular/core/testing';
 import {
-  FormArray,
+  UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
@@ -18,15 +16,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-other-assets-dialog',
   templateUrl: './other-assets-dialog.component.html',
-  styleUrls: ['./other-assets-dialog.component.scss'],
 })
 export class OtherAssetsDialogComponent implements OnInit {
-  @Input() isAddOtherAssets: Number;
+  @Input() isAddOtherAssets: number;
   assetDetailsForm!: UntypedFormGroup;
   assetType = 'GOLD';
   config: any;
@@ -38,21 +34,18 @@ export class OtherAssetsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<OtherAssetsDialogComponent>,
     private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // let num: any = Math.random().toFixed(2);
-    // let digit = num * 100
     this.assetDetailsForm = this.fb.group({
-      // srn: [this.data.rowIndex],
       otherAssetsArrays: this.fb.array([]),
     });
 
     this.addMoreOtherAssetsForm();
   }
 
-  get getOtherAssetsArray(): FormArray {
-    return this.assetDetailsForm.get('otherAssetsArrays') as FormArray;
+  get getOtherAssetsArray(): UntypedFormArray {
+    return this.assetDetailsForm.get('otherAssetsArrays') as UntypedFormArray;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,7 +57,7 @@ export class OtherAssetsDialogComponent implements OnInit {
   }
 
   isAddMoreOtherAssets() {
-    const otherAssetDetailsArray = <FormArray>(
+    const otherAssetDetailsArray = <UntypedFormArray>(
       this.assetDetailsForm.get('otherAssetsArrays')
     );
     if (otherAssetDetailsArray.valid) {
@@ -80,7 +73,7 @@ export class OtherAssetsDialogComponent implements OnInit {
   }
 
   addMoreOtherAssetsForm(item?) {
-    const otherAssetsArray = <FormArray>(
+    const otherAssetsArray = <UntypedFormArray>(
       this.assetDetailsForm.get('otherAssetsArrays')
     );
     otherAssetsArray.push(this.createOtherAssetsForm(item));

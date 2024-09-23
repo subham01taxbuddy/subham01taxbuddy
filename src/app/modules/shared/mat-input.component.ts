@@ -51,13 +51,11 @@ export class MatInputComponent implements ICellEditorAngularComp, AfterViewInit 
 
     private focusOnInputNextTick(input: ViewContainerRef) {
         window.setTimeout(() => {
-            // input.element.nativeElement.focus();
         }, 0);
     }
 
     getValue() {
         return `${this.receipts}`;
-        // return `${this.firstName} ${this.lastName}`;
     }
 
     isPopup(): boolean {

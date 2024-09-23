@@ -32,9 +32,6 @@ export const appRoutes: Routes = [
   {
     path: 'review', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/modules/review/review.module').then(m => m.ReviewModule)
   },
-  {
-    path: 'bo-partners', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./../app/pages/bo-partners/bo-partners.module').then(m => m.BoPartnersModule)
-  },
   { path: 'dashboard', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'payouts', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/payouts/payouts.module').then(m => m.PayoutsModule) },
   { path: 'promo-code', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/promo-codes/promo-codes.module').then(m => m.PromoCodesModule) },
@@ -44,6 +41,13 @@ export const appRoutes: Routes = [
   {
     path: 'reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)
   },
+  {
+    path: 'recovery', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/recovery/recovery.module').then(m => m.RecoveryModule)
+  },
+  {
+    path: 'alert', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/alert/alert.module').then(m => m.AlertModule)
+  },
+
   {
     path: 'chat', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/chat/chat.module').then(m => m.ChatModule)
   },

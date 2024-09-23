@@ -19,10 +19,31 @@
               <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="row">
-                    <div class="col-sm-12 bckClr">
+                    <div class="col-sm-12">
+                      <section class="example-section checkbox-right" *ngIf="this.roles.includes('ROLE_ADMIN')" >
+                        <div class="checkbox-group ">
+                          <mat-checkbox class="ft-18 mb-4" [formControl]="showAllFilerList"
+                            (change)="onCheckBoxChange()">Click to show all filer list (including resigned SME)</mat-checkbox>
+                        </div>
+                      </section>
+                    </div>
+                    <div class="col-sm-12 bckClr" [ngClass]="{'remove-margin': !this.roles.includes('ROLE_ADMIN')}" *ngIf="!showAllFilerList.value">
                       <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
                         (sendPrincipleIndividual)="fromPrinciple($event)"
                         (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+                    </div>
+                    <div class="col-sm-5 bckClr" *ngIf="showAllFilerList.value">
+                      <mat-label> Search By Filer Name(All Filer List) </mat-label>
+                      <mat-form-field appearance="outline" class="small-inp no-height">
+                        <input type="text" matInput [formControl]="searchFiler" [matAutocomplete]="auto1"/>
+                        <mat-autocomplete  #auto1="matAutocomplete">
+                          <mat-option *ngFor="let option1 of filteredFiler | async" [value]="option1.name"
+                            (click)="getFilerNameId(option1);">
+                            {{ option1.name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <mat-icon class="search-icon" matSuffix>search</mat-icon>
+                      </mat-form-field>
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
@@ -102,9 +123,6 @@
                       </div>
                     </div>
                     <div class="button-container">
-                      <!-- <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search"
-                          aria-hidden="true"></i> Search
-                      </button> -->
                       <app-custom-button class="srch-btn-1" [disabled]="loading" [actions]="[advanceSearch]" [actionParams]="[[advanceSearchKey.value]]">
                         <i class="fa fa-search" aria-hidden="true"></i> Search
                       </app-custom-button>
@@ -134,11 +152,16 @@
     <div class="tableSpc mt-3">
       <div>
         <div class="align-items-center row">
-          <div class="col-sm-9 ">
+          <div [ngClass]="{'col-sm-7': isCreateAllowed, 'col-sm-9': !isCreateAllowed}">
             <span class="table-info-text">Payout Details based on search:</span>
           </div>
-          <div class="col-sm-3" *ngIf="isEditAllowed">
-            <!-- <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>-->
+          <div class="col-sm-2" *ngIf="isCreateAllowed && this.roles.includes('ROLE_ADMIN') ">
+            <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[createPayouts]">
+              Create Payouts
+            </app-custom-button>
+            <span class="txblw">Click to create payout against searched invoice</span>
+          </div>
+          <div class="col-sm-3 mvright" *ngIf="isEditAllowed">
             <app-custom-button class="tbd-btn spRt aprv" [disabled]="loading" [actions]="[approveSelected]">
               Approve
             </app-custom-button>

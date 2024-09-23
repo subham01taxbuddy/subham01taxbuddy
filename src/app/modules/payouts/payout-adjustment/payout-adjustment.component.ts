@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
@@ -11,14 +11,14 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
   templateUrl: './payout-adjustment.component.html',
   styleUrls: ['./payout-adjustment.component.scss'],
 })
-export class PayoutAdjustmentComponent implements OnInit {
+export class PayoutAdjustmentComponent {
   loading = false;
   adjustmentDetails: any;
   amtPending = new UntypedFormControl('');
   reason = new UntypedFormControl('');
   dialogRef: any;
   name: any;
-  showAdd = false;
+  showAdd:boolean = false;
   downloadURL: any;
   showMessage = '';
   searchAsPrinciple: boolean = false;
@@ -29,8 +29,6 @@ export class PayoutAdjustmentComponent implements OnInit {
     public utilsService: UtilsService,
     private dialog: MatDialog
   ) { }
-
-  ngOnInit() { }
 
   search = (): Promise<any> => {
     //https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/?userId=10488'
@@ -98,7 +96,7 @@ export class PayoutAdjustmentComponent implements OnInit {
 
 
   addAdjustment(templateRef) {
-    if (this.filerId && this.showAdd == true) {
+    if (this.filerId && this.showAdd) {
       this.dialogRef = this.dialog.open(templateRef, {
         width: 'auto',
         data: {
@@ -130,7 +128,7 @@ export class PayoutAdjustmentComponent implements OnInit {
     const request = {
       userId: userId,
       amtPending: amount,
-      reason: reason,
+      reason: reason || this.reason.value,
     };
 
     let param = '';

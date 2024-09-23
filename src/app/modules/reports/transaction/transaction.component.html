@@ -1,0 +1,24 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="file-upload-container">
+  <div class="row">
+    <div class="col-sm-12 ">
+      <span class="new-note1 note">
+        Note : Please choose a CSV file format to upload.
+      </span>
+    </div>
+  </div>
+  <div class="file-input-wrapper">
+    <input type="file" (change)="onFileSelected($event)" #fileInput accept=".csv">
+    <button mat-raised-button color="primary" (click)="fileInput.click()">
+      Choose File
+    </button>
+    <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+  </div>
+  
+  <button class="btn-up" mat-raised-button color="accent" (click)="uploadFile()" [disabled]="!selectedFile || loading">
+    Upload and Get Updated File by Email
+  </button>
+  
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</div> 

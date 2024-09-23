@@ -22,7 +22,7 @@
                   IT portal’s Credentials
                 </span>
               </button>
-              <button *ngIf="isDownloadAisPrefill" class="lgtBtnTp" type="button" (click)="downloadAisPrefill()" style="margin-left: 6%">
+              <button *ngIf="isDownloadAisPrefill && false" class="lgtBtnTp" type="button" (click)="downloadAisPrefill()" style="margin-left: 6%">
                 <span class="font-semibold"> Download Prefill & AIS </span>
               </button>
               <button [ngClass]="{'lgtBtnTp-new': isDownloadAisPrefill, 'lgtBtnTp1': !isDownloadAisPrefill}" type="button" (click)="addClientOverBot()">

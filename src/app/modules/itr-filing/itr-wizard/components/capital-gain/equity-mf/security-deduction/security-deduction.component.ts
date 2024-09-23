@@ -7,7 +7,6 @@ import { ListedUnlistedDialogComponent } from '../listed-unlisted-dialog/listed-
 @Component({
   selector: 'app-security-deduction',
   templateUrl: './security-deduction.component.html',
-  styleUrls: ['./security-deduction.component.scss']
 })
 export class SecurityDeductionComponent implements OnInit {
   deductionForm: UntypedFormGroup;

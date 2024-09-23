@@ -1,0 +1,70 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on
+  and do not move away from the page...</span>
+
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]=true>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter - Payout Adjustment Report:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="filter-box">
+                <div class="col-sm-4">
+                  <mat-label>Select Status</mat-label>
+                  <mat-form-field appearance="outline" class="custom-bg-new small-inp no-height">
+                    <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
+                      <mat-option *ngFor="let drop of statusList" [value]="drop.value">
+                        {{ drop.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-8">
+                  <div class="button-container">
+                    <app-custom-button class="srch-btn-1" [actions]="[showReports]">
+                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                    </app-custom-button>
+                    <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                      <i class="fa fa-download" aria-hidden="true"></i> Download File
+                    </button>
+                    <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </div>
+  </div>
+</div>
+
+<div class="tableSpc mt-3">
+  <div>
+    <div class="row">
+      <div class="col-sm-9 row">
+        <div class="table-info-text">
+          Payout Adjustment Reports Details:
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let item of payoutAdjustmentReport | paginate : config"></div>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="payoutAddReportGridOptions">
+    </ag-grid-angular>
+
+    <div *ngIf="config.totalItems > 1">
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>

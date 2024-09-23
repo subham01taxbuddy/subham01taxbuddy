@@ -14,9 +14,6 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
 import { ReviseReturnDialogComponent } from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
 import {
-  UpdateManualFilingDialogComponent
-} from "../../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component";
-import {
   UpdateNoJsonFilingDialogComponent
 } from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
@@ -37,7 +34,6 @@ export class MoreOptionsDialogComponent implements OnInit {
   myItrsGridOptions: GridOptions;
   initialData = {};
   statusList = [];
-  // isDisable = true;
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
   navigateToInvoice: boolean
@@ -72,7 +68,6 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.getStatus();
     this.partnerType = this.utilsService.getPartnerType();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('data from assigned users', this.data);
@@ -211,25 +206,19 @@ export class MoreOptionsDialogComponent implements OnInit {
         },
       });
     }
-    // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }
   goToCloud() {
     console.log('data to send to doc', this.data);
-    // const url=`https://uat-api.taxbuddy.com/itr-filing/docs/user-docs/${this.data.userId}`
-    // window.open(url,'_blank');
     const url = this.router
       .createUrlTree(['itr-filing/docs/user-docs/'], {
         queryParams: {
           userId: this.data.userId,
           serviceType: this.data.serviceType,
-          // mobileNumber: this.data.mobileNumber
         },
       })
       .toString();
     window.open(url, '_blank');
-    // this.router.navigate(['itr-filing/docs/user-docs/' + this.data.userId]);
-    // this.dialogRef.close();
   }
 
   goToProfile() {

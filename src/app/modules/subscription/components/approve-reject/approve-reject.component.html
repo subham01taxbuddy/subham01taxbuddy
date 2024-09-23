@@ -9,14 +9,11 @@
 <div class="card__row">
     <div class="card__col-xs-4 card__col-sm-4">&nbsp; </div>
     <div class="card__col-xs-2 card__col-sm-2">
-        <!-- <button mat-raised-button color="primary" (click)="updateSubscription('APPROVED')">{{data.approve}}</button> -->
-        <app-custom-button class="tbd-btn" [disabled]="loading" [actions]="[updateSubscription]" [actionParams]="[['APPROVED']]">
+         <app-custom-button class="tbd-btn" [disabled]="loading" [actions]="[updateSubscription]" [actionParams]="[['APPROVED']]">
           {{data.approve}}
         </app-custom-button>
       </div>
     <div class="card__col-xs-2 card__col-sm-2">
-        <!-- <button class="mt-1" mat-raised-button color="warn"
-            (click)="updateSubscription('REJECTED')">{{data.reject}}</button> -->
         <app-custom-button class="tbd-btn" [disabled]="loading" [actions]="[updateSubscription]" [actionParams]="[['REJECTED']]">
           {{data.reject}}
         </app-custom-button>

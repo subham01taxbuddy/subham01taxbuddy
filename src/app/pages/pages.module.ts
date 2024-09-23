@@ -4,8 +4,7 @@ import { RouterModule } from '@angular/router';
 import { NgxLoadingModule } from 'ngx-loading';
 
 // Pipes
-import { SelectFilterPipe } from '../pipes/filter.pipe';
-import { SelectObjFilterPipe } from '../pipes/filter.pipe';
+import { SelectFilterPipe ,SelectObjFilterPipe} from '../pipes/filter.pipe';
 import { SelectObjectFilterPipe } from '../pipes/object-filter.pipe';
 import { BacktipsDatePipe } from '../pipes/backtips-date.pipe';
 

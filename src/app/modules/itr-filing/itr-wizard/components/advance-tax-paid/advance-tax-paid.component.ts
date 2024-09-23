@@ -7,7 +7,7 @@ import {
   EventEmitter,
   Inject,
 } from '@angular/core';
-import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -19,7 +19,7 @@ declare let $: any;
   styleUrls: ['./advance-tax-paid.component.scss'],
 })
 export class AdvanceTaxPaidComponent implements OnInit {
-  @Input() isAddAdvance: Number;
+  @Input() isAddAdvance: number;
   @Output() onSave = new EventEmitter();
   @Input() editIndex: any;
   salaryForm: UntypedFormGroup;
@@ -36,7 +36,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
     public utilsService: UtilsService,
     public dialogRef: MatDialogRef<AdvanceTaxPaidComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -50,8 +50,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
     if (
-        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
     ) {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
         this.addMoreSalary(item);
@@ -64,12 +64,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
       this.addMoreSalary();
     }
 
-    // this.salaryForm.disable();
-
-    //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
     const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
-    // const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
     const nextYearEndDate = new Date(); // Current date
 
     this.minDate = thisYearStartDate;
@@ -85,7 +81,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   addSalary() {
-    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
     if (salaryArray.valid) {
       this.addMoreSalary();
     } else {
@@ -94,9 +90,8 @@ export class AdvanceTaxPaidComponent implements OnInit {
           element.markAsDirty();
           element.markAllAsTouched();
           this.utilsService.showSnackBar(
-              'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
           );
-          return;
         }
       });
     }
@@ -109,7 +104,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   createForm(item?): UntypedFormGroup {
-    if(this.data.assetIndex !== null && item){
+    if (this.data.assetIndex !== null && item) {
       item.srNo = this.data.assetIndex;
     }
     return this.fb.group({
@@ -155,13 +150,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
-      let result = {
-        cgObject: this.salaryForm.value,
-        rowIndex: this.data.rowIndex,
-        type:'selfAssessment'
-      };
-      // this.dialogRef.close(result);
-      // (this.salaryForm.controls['salaryArray'] as UntypedFormGroup).disable();
+
       this.onSave.emit({
         type: 'selfAssessment',
         saved: true
@@ -179,14 +168,14 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <FormArray>this.salaryForm.get('salaryArray');
+    return <UntypedFormArray>this.salaryForm.get('salaryArray');
   }
 
   addMoreSalary(item?) {
-    if(this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
-      if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+    if (this.activeIndex >= 0 && (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex]) {
+      if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
         this.utilsService.showSnackBar(
-            'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
         );
         return;
       }
@@ -197,27 +186,27 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = this.salaryForm.get('salaryArray') as FormArray;
+    const salaryArray = this.salaryForm.get('salaryArray') as UntypedFormArray;
     salaryArray.removeAt(index);
   }
 
-  goBack(){
+  goBack() {
     this.onSave.emit({
       type: 'selfAssessment',
       saved: false
     })
   }
   activeIndex = 0;
-  markActive(index){
-    if((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid){
+  markActive(index) {
+    if ((this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].invalid) {
       this.utilsService.showSnackBar(
-          'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
+        'To Switch/Add a new page Please fill in all the mandatory fields in the current page.'
       );
       return;
     }
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 

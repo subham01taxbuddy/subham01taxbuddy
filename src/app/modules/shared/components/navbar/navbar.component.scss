@@ -125,17 +125,17 @@
 }
 
 .note1 {
-    background-color: #fafafa;
-    padding: 5px 0px 5px 10px;
-    width: 290px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-style: italic;
-    border: 1px solid #efefef;
-    color: #b60000;
-    min-width: 180px;
-    margin-top: 5px;
-    margin-left: 0px !important;
+  background-color: #fafafa;
+  padding: 5px 0px 5px 10px;
+  width: 290px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: italic;
+  border: 1px solid #efefef;
+  color: #b60000;
+  min-width: 180px;
+  margin-top: 5px;
+  margin-left: 0px !important;
 }
 
 .dropdown-content {
@@ -165,3 +165,116 @@
   margin-top: 5px;
   font-size: 14px;
 }
+
+.notification-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.notification-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  left: 75px;
+  color: black;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  border: 6px;
+  border-color: red;
+}
+
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 400px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.notification-header {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  color: red;
+}
+
+.notification-header h3 {
+  margin: 0;
+}
+
+.notification-list {
+  max-height: 300px;
+  overflow-y: auto;
+  color: #000000;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item h4 {
+  margin: 0 0 5px;
+}
+
+.notification-item p {
+  margin: 0 0 5px;
+}
+
+.notification-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.no-notifications {
+  padding: 10px;
+  text-align: center;
+  color: #777;
+}
+
+.notification-icon {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin-left: auto;
+
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+}
+.push-notification-dialog {
+  max-width: 400px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+

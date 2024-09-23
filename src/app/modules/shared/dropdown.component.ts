@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,  AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {  ICellEditorParams } from 'ag-grid-community';
 import { AgEditorComponent, } from 'ag-grid-angular';
 
@@ -18,7 +18,7 @@ import { AgEditorComponent, } from 'ag-grid-angular';
                          width: 190px;
                          height: 48px;
                      }
-         
+
                      .container:focus {
                          outline: none;
                      }
@@ -42,9 +42,9 @@ export class AgGridMaterialSelectEditorComponent implements  AgEditorComponent {
     public value!: string;
     @ViewChild('select') select: any;
 
-   
 
- 
+
+
 
     isPopup(): boolean {
         return true;

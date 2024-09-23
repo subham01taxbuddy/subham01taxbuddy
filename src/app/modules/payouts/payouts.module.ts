@@ -10,13 +10,15 @@ import {PagesModule} from "../../pages/pages.module";
 import {SharedModule} from "../shared/shared.module";
 import { PayProcessingComponent } from './pay-processing/pay-processing.component';
 import { PayoutAdjustmentComponent } from './payout-adjustment/payout-adjustment.component';
+import { PayoutAdjustmentReportComponent } from './payout-adjustment-report/payout-adjustment-report.component';
 
 
 @NgModule({
   declarations: [
     PayoutsComponent,
     PayProcessingComponent,
-    PayoutAdjustmentComponent
+    PayoutAdjustmentComponent,
+    PayoutAdjustmentReportComponent
   ],
   imports: [
     CommonModule,

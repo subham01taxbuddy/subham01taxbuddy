@@ -220,7 +220,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   calDifference() {
     let difference = 0;
-    difference = Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds);
+    difference = Math.round(Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds));
     this.assetLiabilitiesForm.controls['difference'].setValue(difference);
   }
 
@@ -230,11 +230,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
+    this.assetLiabilitiesForm.controls['fixedAssets'].setValue(Math.round(this.totalNetBlock));
     let valid: boolean = false;
     if (this.assetLiabilitiesForm.valid) {
       valid = true;
     } else {
-      valid = false;
       this.utilsService.showSnackBar(
         'Please make sure all the details of balance sheet are entered correctly'
       );
@@ -243,25 +243,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       this.utilsService.showSnackBar('Please enter the all fixed asset details');
       return;
     }
-
-    // if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
-    //   if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
-    //     valid = true;
-    //   } else {
-    //     valid = false;
-    //   }
-    // } else {
-    //   if (
-    //     this.assetLiabilitiesForm.controls['cashInHand'].valid &&
-    //     this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
-    //     this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
-    //     this.assetLiabilitiesForm.controls['inventories'].valid
-    //   ) {
-    //     valid = true;
-    //   } else {
-    //     valid = false;
-    //   }
-    // }
 
     if (valid) {
       this.loading = true;
@@ -307,7 +288,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       if (!this.utilsService.isNonEmpty(this.assetLiabilitiesForm.controls['GSTRNumber'].value)) {
         this.assetLiabilitiesForm.controls['GSTRNumber'].setValue(null);
       }
-      this.assetLiabilitiesForm.controls['fixedAssets'].setValue(this.totalNetBlock);
+      this.assetLiabilitiesForm.controls['fixedAssets'].setValue(Math.round(this.totalNetBlock));
       this.Copy_ITR_JSON.business.financialParticulars =
         this.assetLiabilitiesForm.value;
       this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;

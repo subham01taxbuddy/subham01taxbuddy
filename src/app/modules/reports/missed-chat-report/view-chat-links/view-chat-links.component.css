@@ -14,12 +14,11 @@
   min-height: inherit;
   max-height: inherit;
 }
-.mat-mdc-dialog-container{
-  max-height: auto !important;
-  min-height: auto !important;
-}
+
 .mat-mdc-dialog-container{
   height: auto !important;
+  max-height: auto !important;
+  min-height: auto !important;
 }
 .mdc-dialog{
   height: auto !important;

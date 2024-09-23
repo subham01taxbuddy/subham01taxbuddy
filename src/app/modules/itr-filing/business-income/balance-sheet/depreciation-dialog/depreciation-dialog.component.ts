@@ -175,19 +175,19 @@ export class DepreciationDialogComponent implements OnInit {
     if (depreciationArray.controls.length) {
       depreciationArray.controls.forEach((element, index) => {
         if ((element as UntypedFormGroup).controls['bookValue'].value) {
-          totalGrossBlock += Number((element as UntypedFormGroup).controls['bookValue'].value);
+          totalGrossBlock += Math.round(Number((element as UntypedFormGroup).controls['bookValue'].value));
           this.depreciationForm.controls['totalGrossBlock'].setValue(totalGrossBlock);
         } else {
           this.depreciationForm.controls['totalGrossBlock'].setValue(0);
         }
         if ((element as UntypedFormGroup).controls['depreciationAmount'].value) {
-          totalDepreciationAmount += Number((element as UntypedFormGroup).controls['depreciationAmount'].value);
+          totalDepreciationAmount += Math.round(Number((element as UntypedFormGroup).controls['depreciationAmount'].value));
           this.depreciationForm.controls['totalDepreciationAmount'].setValue(totalDepreciationAmount);
         } else {
           this.depreciationForm.controls['totalDepreciationAmount'].setValue(0);
         }
         if ((element as UntypedFormGroup).controls['fixedAssetClosingAmount'].value) {
-          totalNetBlock += Number((element as UntypedFormGroup).controls['fixedAssetClosingAmount'].value);
+          totalNetBlock += Math.round(Number((element as UntypedFormGroup).controls['fixedAssetClosingAmount'].value));
           this.depreciationForm.controls['totalNetBlock'].setValue(totalNetBlock);
         } else {
           this.depreciationForm.controls['totalNetBlock'].setValue(0);

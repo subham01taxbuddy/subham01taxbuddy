@@ -318,12 +318,18 @@ export class ProfileDialogComponent implements OnInit {
   getCityData(pinCode) {
     if (pinCode.valid) {
       const param = '/pincode/' + pinCode.value;
-      this.userService.getMethod(param).subscribe((result: any) => {
-        this.addressForm.controls['country'].setValue('INDIA');   //91
-        this.addressForm.controls['city'].setValue(result.taluka);
-        this.addressForm.controls['state'].setValue(result.stateCode);  //stateCode
-      }, error => {
-        if (error.status === 404) {
+      this.userService.getMethod(param).subscribe({
+        next: (result: any) => {
+          this.addressForm.controls['country'].setValue('INDIA');   //91
+          this.addressForm.controls['city'].setValue(result.taluka);
+          this.addressForm.controls['state'].setValue(result.stateCode);  //stateCode
+        },
+        error: (error) => {
+          if (error.status === 404) {
+            this._toastMessageService.alert('error', 'City not found');
+          } else {
+            this._toastMessageService.alert('error', 'An unexpected error occurred');
+          }
         }
       });
     }
@@ -333,13 +339,16 @@ export class ProfileDialogComponent implements OnInit {
     console.log("ifscCode: ", ifscCode)
     if (ifscCode.valid) {
       let param = '/' + ifscCode.value;
-      this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
-        console.log("Bank details by IFSC:", res)
-        let bankName = res.BANK ? res.BANK : "";
-        this.bankForm.controls['name'].setValue(bankName)
-      }, err => {
-        this._toastMessageService.alert("error", "invalid ifsc code entered");
-        this.bankForm.controls['name'].setValue("");
+      this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe({
+        next: (res: any) => {
+          console.log("Bank details by IFSC:", res);
+          const bankName = res.BANK ? res.BANK : "";
+          this.bankForm.controls['name'].setValue(bankName);
+        },
+        error: (err) => {
+          this._toastMessageService.alert("error", "Invalid IFSC code entered");
+          this.bankForm.controls['name'].setValue("");
+        }
       });
     }
 

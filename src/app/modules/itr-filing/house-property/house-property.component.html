@@ -41,9 +41,6 @@
                         What is the category of ownership?<span class="redAst">*</span>
                       </div>
                       <div class="hdTxR">
-                        <!--                    <input type="radio" class="spcR1"><label class="spcR"> Self Occupied</label>-->
-                        <!--                                      <input type="radio" class="spcR1" checked><label class="spcR">Let Out</label>-->
-                        <!--                    <input type="radio" class="spcR1"><label>Deemed Let Out</label>-->
                         <mat-radio-group aria-label="Select an option" placeholder="Select Property Type"
                           name="propertyType" formControlName="propertyType"
                           (change)="changePropType(housePropertyForm.controls['propertyType'].value)" required>
@@ -312,10 +309,13 @@
                         <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body">
                             <div class="div-5">
-                              <div class="div-6" *ngIf="housePropertyForm.controls['propertyType'].value === 'SOP' && currentIndex === firstSOPIndex">
-                                <input type="checkbox" class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                       color="primary" [ngModelOptions]="{ standalone: true }" (change)="toggleAddress()"
-                                       [(ngModel)]="usePersonalAddress" /><span class="span">Use same address as profile</span>
+                              <div class="div-6"
+                                *ngIf="housePropertyForm.controls['propertyType'].value === 'SOP' && currentIndex === firstSOPIndex">
+                                <input type="checkbox"
+                                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                  color="primary" [ngModelOptions]="{ standalone: true }" (change)="toggleAddress()"
+                                  [(ngModel)]="usePersonalAddress" /><span class="span">Use same address as
+                                  profile</span>
                               </div>
                               <div class="div-6">
                                 <div class="field">
@@ -387,7 +387,8 @@
                                   <div class="field-label">
                                     <span class="span">Country </span> <span class="text-wrapper-2">*</span>
                                     <mat-form-field appearance="outline">
-                                      <mat-select name="country" class="form-control inpplac" formControlName="country" style="line-height: 21px">
+                                      <mat-select name="country" class="form-control inpplac" formControlName="country"
+                                        style="line-height: 21px">
                                         <mat-option value="91"> India </mat-option>
                                       </mat-select>
                                       <mat-error *ngIf="housePropertyForm.controls['country'].hasError('required')">
@@ -416,7 +417,8 @@
                                 Is the Property Jointly Owned?<span class="redAst">*</span>
                               </div>
                               <div class="hdTxR">
-                                <mat-radio-group name="isCoOwners" (change)="haveCoOwners()" formControlName="isCoOwners">
+                                <mat-radio-group name="isCoOwners" (change)="haveCoOwners()"
+                                  formControlName="isCoOwners">
                                   <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
                                   </mat-radio-button>&nbsp;&nbsp;&nbsp;
                                   <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
@@ -500,12 +502,13 @@
                                 <div class="hp4-4">
                                   <div class="Bx4">
                                     <div class="Bx4L">
-                                      <button type="button" *ngIf="housePropertyForm.controls['isCoOwners'].value" (click)="removeCoOwner(active)"> <i
-                                          class="fa fa-trash-o delbt"></i>
+                                      <button type="button" *ngIf="housePropertyForm.controls['isCoOwners'].value"
+                                        (click)="removeCoOwner(active)"> <i class="fa fa-trash-o delbt"></i>
                                       </button>
                                     </div>
                                     <div class="Bx4R">
-                                      <button type="button" class="addAno" *ngIf="housePropertyForm.controls['isCoOwners'].value"
+                                      <button type="button" class="addAno"
+                                        *ngIf="housePropertyForm.controls['isCoOwners'].value"
                                         (click)="addMoreCoOwner()"> + Add Another </button>
                                     </div>
                                   </div>
@@ -530,10 +533,6 @@
                             <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
                               [formGroupName]="i">
 
-                              <!--                          <div class="custom-control custom-checkbox tenant-checkbox">-->
-                              <!--                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
-                              <!--                                    type="checkbox" (click)="activeTenant = [i]"/>-->
-                              <!--                          </div>-->
                               <div class="hp4-2">
                                 <div class="field">
                                   <div class="field-label">
@@ -541,8 +540,7 @@
                                   </div>
 
                                   <mat-form-field class="input-field-width" appearance="outline">
-                                    <input matInput name="ten[ii]" formControlName="name" required
-                                           type="text" trim />
+                                    <input matInput name="ten[ii]" formControlName="name" required type="text" trim />
                                     <mat-error *ngIf="ten.get('name').hasError('required')">
                                       Enter tenant name.
                                     </mat-error>
@@ -564,7 +562,7 @@
                                       [class.invalid]="isduplicatePAN(i, 'tenant')" upperCase
                                       [matTooltip]="isduplicatePAN(i, 'tenant') ? 'Duplicate PAN Number' : ''"
                                       matTooltipPosition="above" matTooltipClass="error-tooltip"
-                                           [disabled]="ten.get('tdsClaimed').value === true"/>
+                                      [disabled]="ten.get('tdsClaimed').value === true" />
                                     <mat-error *ngIf="ten.get('panNumber').hasError('pattern')">
                                       Enter valid PAN.
                                     </mat-error>
@@ -577,13 +575,12 @@
                                   <div class="field-label">
                                     <span class="span">Whether TDS Credit is claimed </span>
                                   </div>
-<!--                                  <mat-form-field>-->
                                   <div class="custom-control custom-checkbox tenant-checkbox">
-                                    <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                            type="checkbox" name="ten[i]" formControlName="tdsClaimed"
-                                    (change)="updateTenantForm(ten)"/>
+                                    <input
+                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                      type="checkbox" name="ten[i]" formControlName="tdsClaimed"
+                                      (change)="updateTenantForm(ten)" />
                                   </div>
-<!--                                  </mat-form-field>-->
                                 </div>
                               </div>
 
@@ -599,7 +596,7 @@
                                       matTooltipClass="tab-tooltip" matTooltipPosition="above"
                                       formControlName="tanNumber" maxlength="10" type="text" trim upperCase
                                       matTooltipPosition="above" matTooltipClass="error-tooltip"
-                                    [disabled]="ten.get('tdsClaimed').value !== true"/>
+                                      [disabled]="ten.get('tdsClaimed').value !== true" />
                                     <mat-error *ngIf="ten.get('tanNumber').hasError('pattern')">
                                       Enter valid TAN.
                                     </mat-error>

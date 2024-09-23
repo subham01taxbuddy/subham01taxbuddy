@@ -20,13 +20,14 @@ export class PresumptiveIncomeComponent
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
+  @ViewChild('PresumptiveProfessionalIncomeComponentRef', { static: false })
+  PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   @ViewChild('PresumptiveBusinessIncomeComponentRef', { static: false })
   PresumptiveBusinessIncomeComponent!: PresumptiveBusinessIncomeComponent;
-  @ViewChild('PresumptiveProfessinalIncomeComponentRef', { static: false })
-  PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
   presProfessionalSaved: boolean;
   presBusinessSaved: boolean;
   PREV_ITR_JSON: any;
+  selectedForm: string = 'businessIncome';
 
   constructor(private utilsService: UtilsService) {
     super();
@@ -34,7 +35,7 @@ export class PresumptiveIncomeComponent
   }
 
   ngOnInit(): void {
-    console.log();
+    console.log('Component initialized');
   }
   setStep(index: number) {
     this.step = index;
@@ -93,18 +94,6 @@ export class PresumptiveIncomeComponent
         'Presumptive Income details were saved successfully'
       );
       this.saveAndNext.emit(false);
-    } else {
-      if (!this.presProfessionalSaved) {
-        // this.utilsService.showSnackBar(
-        //   'There was some error while saving professional presumptive income details, please check if all the details are correct'
-        // );
-      }
-
-      if (!this.presBusinessSaved) {
-        // this.utilsService.showSnackBar(
-        //   'There was some error while saving business presumptive income details, please check if all the details are correct'
-        // );
-      }
     }
   }
 
@@ -118,20 +107,27 @@ export class PresumptiveIncomeComponent
 
   onPresBusinessSaved(event) {
     this.presBusinessSaved = event;
-
     if (this.presBusinessSaved) {
       this.save();
-    } else {
-      // this.utilsService.showSnackBar(
-      //   'There was some error while saving business presumptive income details, please check if all the details are correct'
-      // );
     }
   }
 
   saveAll() {
-    this.PresumptiveProfessionalIncomeComponent.onContinue();
+    if (this.PresumptiveProfessionalIncomeComponent) {
+      this.PresumptiveProfessionalIncomeComponent.onContinue();
+    } else {
+      console.error('PresumptiveProfessionalIncomeComponent is undefined');
+    }
   }
 
+  ngAfterViewInit() {
+    if (this.PresumptiveBusinessIncomeComponent) {
+      console.log('PresumptiveBusinessIncomeComponent initialized');
+    }
+    if (this.PresumptiveProfessionalIncomeComponent) {
+      console.log('PresumptiveProfessionalIncomeComponent initialized');
+    }
+  }
   unsubscribe() {
     if (this.subscription) {
       this.subscription.unsubscribe();

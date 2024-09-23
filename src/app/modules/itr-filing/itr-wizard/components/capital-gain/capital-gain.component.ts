@@ -1,11 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MatDialog } from '@angular/material/dialog'
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { Router } from "@angular/router";
-import {Subscription} from "rxjs";
-import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
+import { Subscription } from "rxjs";
+import { WizardNavigation } from "../../../../itr-shared/WizardNavigation";
 
 
 @Component({
@@ -99,14 +99,6 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
     this.step = index;
   }
 
-  addMore(type) {
-    // if (type === 'bonds') {
-    //   this.isAddBonds = Math.random();
-    // } else if (type === 'zeroCouponBonds') {
-    //   this.isAddZeroCouponBonds = Math.random();
-    // }
-  }
-
   closed(type) {
     if (type === 'land') {
       this.isEditLand = false;
@@ -125,11 +117,11 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
 
   showSubTypes = false;
   gotoSection(topic) {
-    if(topic.type !== 'bonds') {
+    if (topic.type !== 'bonds') {
       this.showList = false;
       this.showSubTypes = false;
       let basePath = '/itr-filing/itr/capital-gain/';
-      this.router.navigate([basePath + topic.path], {queryParams: {bondType: topic.type}});
+      this.router.navigate([basePath + topic.path], { queryParams: { bondType: topic.type } });
       this.nextBreadcrumb.emit(topic.label);
     } else {
       this.showSubTypes = true;
@@ -140,7 +132,7 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
     this.showList = false;
     this.showSubTypes = false;
     let basePath = '/itr-filing/itr/capital-gain/';
-    this.router.navigate([basePath + topic.path], {queryParams: {bondType: topic.type}});
+    this.router.navigate([basePath + topic.path], { queryParams: { bondType: topic.type } });
     this.nextBreadcrumb.emit(topic.label);
   }
 
@@ -161,27 +153,23 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(true);
   }
 
-  saveAll() {
-
-  }
-
   subscription: Subscription
 
-  subscribeToEmitter(componentRef){
+  subscribeToEmitter(componentRef) {
     //this may not be needed for us
     // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
-    const child : WizardNavigation = componentRef;
-    child.saveAndNext.subscribe( () => {
+    const child: WizardNavigation = componentRef;
+    child.saveAndNext.subscribe(() => {
       this.showList = true;
       this.initList();
       this.nextBreadcrumb.emit(null);
     });
   }
 
-  unsubscribe(){
-    if (this.subscription){
+  unsubscribe() {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }

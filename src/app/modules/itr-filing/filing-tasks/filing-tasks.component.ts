@@ -4,12 +4,11 @@ import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import * as moment from 'moment'
-import {AppConstants} from "../../shared/constants";
+import { AppConstants } from "../../shared/constants";
 
 @Component({
   selector: 'app-filing-tasks',
   templateUrl: './filing-tasks.component.html',
-  styleUrls: ['./filing-tasks.component.css']
 })
 export class FilingTasksComponent implements OnInit {
 
@@ -106,12 +105,6 @@ export class FilingTasksComponent implements OnInit {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         valueFormatter: (data) => data.value ? moment(data.value).format('DD MMM YYYY') : null,
-        // filter: "agTextColumnFilter",
-        // width: 200,
-        // filterParams: {
-        //   defaultOption: "startsWith",
-        //   debounceMs: 0
-        // }
       },
       {
         headerName: "ITR Type",
@@ -147,96 +140,7 @@ export class FilingTasksComponent implements OnInit {
         cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
         pinned: 'right',
       },
-
-      //   {
-      //     headerName: 'Status',
-      //     width: 80,
-      //     sortable: true,
-      //     pinned: 'right',
-      //     cellRenderer: function (params:any) {
-      //       return `<button type="button" class="action_icon add_button" title="Unblock user ITR" style="border: none;
-      //         background: transparent; font-size: 16px; cursor:pointer;">
-      //         <i class="fa fa-edit" aria-hidden="true" data-action-type="changeStatus"></i>
-      //        </button>`;
-      //     },
-      //     cellStyle: {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //       color: 'blueviolet'
-
-      //     },
-      //   },
-      //   {
-      //     headerName: 'Ack Status',
-      //     width: 80,
-      //     sortable: true,
-      //     pinned: 'right',
-      //     cellRenderer: function (params:any) {
-      //       return `<button type="button" class="action_icon add_button" title="Change Acknowlegement status" style="border: none;
-      //         background: transparent; font-size: 16px; cursor:pointer;">
-      //         <i class="fa fa-user" aria-hidden="true" data-action-type="ackStatus"></i>
-      //        </button>`;
-      //     },
-      //     cellStyle: {
-      //       textAlign: 'center', display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //       color: 'blueviolet'
-
-      //     },
-      //   }
-
     ];
   }
-
-  public onRowClicked(params) {
-    console.log(params)
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        // case 'changeStatus': {
-        //   this.changeStatus(params.data);
-        //   break;
-
-        // }
-        // case 'ackStatus': {
-        //   this.getAcknowledgeDetail(params.data);
-        //   break;
-        // }
-      }
-    }
-  }
-
-  //   changeStatus(itrData) {
-  //     console.log('change itr data: ', itrData);
-  //     this.loading = true;
-  //     let param = '/enableItrFilling/' + itrData.userId + '/' + itrData.itrId + '/' + itrData.assessmentYear;
-  //     this.itrMsService.getMethod(param).subscribe((res: any) => {
-  //       this.loading = false;
-  //       console.log('res: ', res);
-  //       this._toastMessageService.alert("success", "User unblocked successfully.");
-  //       this.getFilingTasks();
-  //     },
-  //       error => {
-  //         this.loading = false;
-  //         this._toastMessageService.alert("error", "Error while unblocking, please try again");
-  //       })
-  //   }
-
-  //   getAcknowledgeDetail(data){
-  //     console.log('Data for acknowlegement status', data);
-  //     this.loading = true;
-  //     const param = `/api/itr-Ack-details?panNumber=${data.panNumber}&assessmentYear=2020-2021`;
-  //       this.itrMsService.getMethod(param).subscribe((res: any) => {
-  //         this.utilsService.showSnackBar(res.status)
-  //         this.loading = false;
-  //         setTimeout(()=>{
-  //           this.getFilingTasks();
-  //         }, 5000)
-  //       }, error => {
-  //         this.loading = false;
-  //       })
-  //   }
 
 }

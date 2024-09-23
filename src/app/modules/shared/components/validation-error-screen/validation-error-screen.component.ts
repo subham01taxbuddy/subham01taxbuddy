@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Schedules } from '../../interfaces/schedules';
 import { ITR_JSON } from '../../interfaces/itr-input.interface';
@@ -6,7 +6,7 @@ import { UpdateManualFilingDialogComponent } from '../update-manual-filing-dialo
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
-import {ErrorMsgsSchedule, ItrValidationObject, ItrValidations} from "../../interfaces/itr-validation.interface";
+import {ErrorMsgsSchedule} from "../../interfaces/itr-validation.interface";
 
 @Component({
   selector: 'app-validation-error-screen',
@@ -33,13 +33,12 @@ export class ValidationErrorScreenComponent extends WizardNavigation implements 
       const state = window.history.state;
       this.errors = state.validationErrors;
       this.apiErrors = state.apiErrors;
-      // this.itrType = this.errors[0]?.itrType;
     });
     console.log(this.errors, 'errors to be displayed');
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
 
-  redirectToErrorPage(schedule: String) {
+  redirectToErrorPage(schedule: string) {
     console.log(schedule, 'schedule received');
     const navigationPath = this.schedules?.getNavigationPath(schedule);
     const queryParams = this.schedules?.getQueryParams(schedule);
@@ -50,7 +49,6 @@ export class ValidationErrorScreenComponent extends WizardNavigation implements 
     console.log(JSON.stringify(state) + ' state');
 
     this.router.navigate(['/itr-filing/' + navigationPath], {queryParams: queryParams, state: state});
-    
     this.nextBreadcrumb.emit(this.schedules?.getTitle(schedule));
   }
 
@@ -101,7 +99,8 @@ export class ValidationErrorScreenComponent extends WizardNavigation implements 
       } else {
         return ErrorMsgsSchedule[errorCode].message;
       }
-    } if(errorCode === 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY'){
+    }
+    if(errorCode === 'NPS_EMPLOYER_CONTRI_MORE_THAN_SALARY'){
       if (employerType === 'CENTRAL_GOVT' || employerType === 'GOVERNMENT') {
         return 'Deduction u/s 80CCD(2) is allowed up to 14% of Basic+DA';
       } else if (employerType === 'PRIVATE' || employerType === 'OTHER') {

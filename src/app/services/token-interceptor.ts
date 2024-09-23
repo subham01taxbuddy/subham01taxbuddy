@@ -9,6 +9,7 @@ import { NavbarService } from "./navbar.service";
 import { UserMsService } from "./user-ms.service";
 import { VendorService } from './vendor.service';
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -18,6 +19,7 @@ export class TokenInterceptor implements HttpInterceptor {
     public utilsService: UtilsService,
     private userMsService: UserMsService,
     private vendorService : VendorService,
+    private dbService: NgxIndexedDBService
   ) { }
 
   private tokenExpired(token: string) {
@@ -130,7 +132,6 @@ export class TokenInterceptor implements HttpInterceptor {
         },
       });
     }
-    // console.log('Im in intercept====', request);
     return next.handle(request).pipe(
         catchError((error, caught) => {
           // intercept the respons error and displace it to the console
@@ -151,8 +152,6 @@ export class TokenInterceptor implements HttpInterceptor {
             return of(err.message);
           })
           .catch((error) => console.log('sign out err:', error));
-      } else {
-        // return of(err.message);
       }
     }
     throw err;
@@ -162,6 +161,9 @@ export class TokenInterceptor implements HttpInterceptor {
     Auth.signOut()
       .then(data => {
         sessionStorage.clear();
+        this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
+          console.log('success? ', successDeleted);
+        });
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
 
@@ -178,10 +180,13 @@ export class TokenInterceptor implements HttpInterceptor {
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
-
-    this.userMsService.postMethod(param, '').subscribe((response: any) => {
-    }, (error) => {
-      console.log('error in sme Logout API', error)
-    })
+    this.userMsService.postMethod(param, '').subscribe({
+      next: (response: any) => {
+        console.log('SME Logout successful:', response);
+      },
+      error: (error) => {
+        console.error('Error in SME Logout API:', error);
+      }
+    });
   }
 }

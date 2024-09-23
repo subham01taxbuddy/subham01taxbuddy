@@ -1,5 +1,6 @@
 @import "../../../../../../ux/scss/style.scss";
 @import '../../../../../../ux/scss/layout.scss';
+
 .header_content {
     display: flex;
     align-items: flex-start;
@@ -45,10 +46,11 @@
     position: relative;
 }
 
-.btn-rt{
-    position:absolute;
-    right:20px;
+.btn-rt {
+    position: absolute;
+    right: 20px;
 }
+
 .space {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
@@ -63,7 +65,7 @@
     width: auto;
     align-items: flex-start;
     position: relative;
-    margin:25px 25px 0px 25px!important;
+    margin: 25px 25px 0px 25px !important;
 }
 
 .div-5 {
@@ -79,6 +81,7 @@
     background-color: #ffffff;
     border-radius: 0px 0px 4px 4px;
 }
+
 .div-6 {
     display: flex;
     align-items: flex-start;
@@ -98,41 +101,7 @@
 }
 
 .gray_container {
-    margin: 25px 0px 12px 0px!important;
-}
-
-.header_content {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-around;
-    gap: 8px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-    padding: 8px 24px;
-    flex-grow: 1;
-    background-color: #e7e7e7;
-    border-radius: 4px 4px 0px 0px;
-}
-
-.wrap-content {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-    background-color: #ffffff;
-    border-radius: 0px 0px 8px 8px;
-
-    img {
-        position: relative;
-        width: 24px;
-        height: 24px;
-    }
+    margin: 25px 0px 12px 0px !important;
 }
 
 .crossTop {
@@ -142,24 +111,20 @@
     top: 0px;
 }
 
-.bdrBlw{
-    border-bottom:1px solid #cccccc;
-    padding-bottom:10px;
+.bdrBlw {
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 10px;
 }
 
-.bdrAbv{
-    border-top:1px solid #cccccc;
-    padding-top:10px;
+.bdrAbv {
+    border-top: 1px solid #cccccc;
+    padding-top: 10px;
 }
 
-.gray_container {
-    margin: 25px 0px 12px 0px!important;
-}
-
-.spcTpBtm{
+.spcTpBtm {
     font-size: 75%;
     margin-top: 15px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
 
@@ -169,107 +134,50 @@
     margin-top: 15px;
 }
 
-.wrapper {
-    display: flex;
-    align-items: flex-start;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-    flex-direction: column;
-    padding: 24px;
-    position: relative;
+.btnStyl {
+    border: 1px solid #1B67BA;
+    border-radius: 6px;
+    padding: 8px;
+    float: right;
+    color: #1B67BA;
 }
 
-.btnStyl{
-    border:1px solid #1B67BA;
-    border-radius:6px;
-    padding:8px;
-    float:right;
-    color:#1B67BA;
-}
-
-.rghtBack{
-    float:right;
-}
-
-
-
-.space {
-    background-color: #ffffff;
-    border-radius: 0px 0px 8px 8px;
-    padding: 20px;
-    border: 1px solid #E2E4E5;
-    border-top: 0;
-}
-
-.frameC {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    align-items: flex-start;
-    position: relative;
-    margin:25px 25px 0px 25px;
-}
-
-.div-5 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 32px;
-    padding: 24px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-    background-color: #ffffff;
-    border-radius: 0px 0px 4px 4px;
-}
-.div-6 {
-    display: flex;
-    align-items: flex-start;
-    gap: 32px;
-    position: relative;
-    align-self: stretch;
-    width: 100%;
-    flex: 0 0 auto;
-}
-
-.frame-wrapper-3 {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: 12px;
-    position: relative;
-    flex: 0 0 auto;
+.rghtBack {
+    float: right;
 }
 
 .bdrArnd {
-    border: 1px solid #00AECA!important;
-    padding: 20px 30px 10px 25px!important;
+    border: 1px solid #00AECA !important;
+    padding: 20px 30px 10px 25px !important;
 }
 
 .mat-mdc-radio-button {
-    margin-right: 15px!important;
+    margin-right: 15px !important;
 }
 
 .hide {
+
     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
     /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
     .mat-select-trigger {
+
         /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
         .mat-select-arrow-wrapper {
             display: none;
         }
     }
 }
+
 .edit-head .edit-donation {
     background: #E5F2F6;
     border: 0.5px solid #D9D9D9;
     border-radius: 3px;
-    display: block!important;
+    display: block !important;
     padding: 10px;
 }
+
 .btm {
-    margin-bottom:150px!important;
+    margin-bottom: 150px !important;
     float: left;
 }
 
@@ -278,13 +186,13 @@
     text-align: right;
 }
 
-.delete-icon{
+.delete-icon {
     margin-top: 20px;
 }
 
 .drop {
-    cursor:pointer!important;
-    background-color:#fbfbff!important;
+    cursor: pointer !important;
+    background-color: #fbfbff !important;
 }
 
 .isDeduction {
@@ -335,39 +243,45 @@
 .cancel:hover {
     font-weight: 400;
     border-width: 1px;
-    border:1px solid #cccccc;
+    border: 1px solid #cccccc;
     background-color: #fafafa;
 }
 
 .deduction-form {
     padding-top: 50px;
 }
+
 .long-style {
-  display: flex;
-  padding: 4px 18px;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 40px;
-  background: rgba(145, 197, 97, 0.12);
-  color: #91C561;
-  
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
+    display: flex;
+    padding: 4px 18px;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 40px;
+    background: rgba(145, 197, 97, 0.12);
+    color: #91C561;
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
 
 .short-style {
-  display: flex;
-  padding: 4px 18px;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 40px;
-  background: rgba(214, 162, 67, 0.12);
-  color: #D6A243;
-  
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
+    display: flex;
+    padding: 4px 18px;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 40px;
+    background: rgba(214, 162, 67, 0.12);
+    color: #D6A243;
+
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.nBorder{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
 }

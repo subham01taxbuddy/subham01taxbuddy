@@ -99,30 +99,40 @@ export class UserListComponent {
     console.log('object from search param ', this.searchBy);
   }
 
-  getUserSearchList(key: any, searchValue: any) {
+  getUserSearchList(key: any, searchValue: any): Promise<boolean> {
     this.loading = true;
+
     return new Promise((resolve, reject) => {
       this.user_data = [];
-      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe(res => {
-        console.log("Search result:", res)
-        if (Array.isArray(res.records)) {
-          this.user_data = res.records;
-          console.log('user_data -> ', this.user_data);
-          this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
-          this.userInfo = this.user_data;
-          this.config.totalItems = this.user_data.length;
+
+      NavbarService.getInstance(this.http).getUserSearchList(key, searchValue).subscribe({
+        next: (res: any) => {
+          console.log("Search result:", res);
+          if (Array.isArray(res.records)) {
+            this.user_data = res.records;
+            console.log('user_data -> ', this.user_data);
+            this.usersGridOptions.api?.setRowData(this.createRowData(this.user_data));
+            this.userInfo = this.user_data;
+            this.config.totalItems = this.user_data.length;
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        error: (err) => {
+          this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
+          this.loading = false;
+          this.user_data = [];
+          this.userInfo = [];
+          resolve(false);
+        },
+        complete: () => {
+          this.loading = false;
         }
-        this.loading = false;
-        return resolve(true)
-      }, err => {
-        this._toastMessageService.alert("error", this.utilsService.showErrorMsg(err.error.status));
-        this.loading = false;
-        this.user_data = [];
-        this.userInfo = [];
-        return resolve(false)
       });
     });
   }
+
 
 
   pageChanged(event: any) {
@@ -131,20 +141,23 @@ export class UserListComponent {
 
   getUserData(pageNo: any) {
     this.loading = true;
-    let param = '/profile?page=' + pageNo + '&pageSize=15'
-    this.userService.getMethod(param).subscribe((result: any) => {
-      console.log('result -> ', result);
-      this.loading = false;
-      this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
-      this.userInfo = result['content'];
-      this.config.totalItems = result.totalElements;
-    },
-      error => {
+    const param = `/profile?page=${pageNo}&pageSize=15`;
+    this.userService.getMethod(param).subscribe({
+      next: (result: any) => {
+        console.log('result -> ', result);
         this.loading = false;
-        this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
-        console.log('Error during getting Leads data. -> ', error)
-      })
+        this.usersGridOptions.api?.setRowData(this.createRowData(result['content']));
+        this.userInfo = result['content'];
+        this.config.totalItems = result.totalElements;
+      },
+      error: (error) => {
+        this.loading = false;
+        this._toastMessageService.alert("error", "Fail to get leads data, try after some time.");
+        console.log('Error during getting Leads data. -> ', error);
+      }
+    });
   }
+
 
   usersCreateColumnDef() {
     return [
@@ -352,7 +365,7 @@ export class UserListComponent {
   }
 
   createRowData(userData: any) {
-    var userArray = [];
+    let userArray = [];
     for (let i = 0; i < userData.length; i++) {
       let userInfo: any = Object.assign({}, userArray[i], {
         userId: userData[i].userId,
@@ -404,35 +417,44 @@ export class UserListComponent {
       userId: userId
     }
     this.loading = true;
-    this.userService.postMethod(param, request).subscribe((res: any) => {
-      console.log('Link To Finbingo Response: ', res);
-      this.loading = false;
-      if (res.success) {
-        if (res.data.isFnbVirtualUser) {
-          this.utilsService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
-        } else if (res.data.isFnbUser) {
-          this.utilsService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+    this.userService.postMethod(param, request).subscribe({
+      next: (res: any) => {
+        console.log('Link To Finbingo Response: ', res);
+        this.loading = false;
+        if (res.success) {
+          if (res.data.isFnbVirtualUser) {
+            this.utilsService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
+          } else if (res.data.isFnbUser) {
+            this.utilsService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+          } else {
+            this.utilsService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+          }
         } else {
-          this.utilsService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+          this.utilsService.showSnackBar(res.message);
         }
-      } else {
-        this.utilsService.showSnackBar(res.message)
+      },
+      error: (error) => {
+        console.log('Error linking to Finbingo: ', error);
+        this.loading = false;
+        this.utilsService.showSnackBar('An error occurred while linking to Finbingo. Please try again.');
       }
-    }, error => {
-      this.loading = false;
-    })
+    });
   }
+
 
   updateReviewStatus(data: any) {
     const param = `/update-itr-userProfile?userId=${data.userId}&isReviewGiven=true`;
-    this.itrMsService.putMethod(param, {}).subscribe(result => {
-      console.log(result);
-      this.utilsService.showSnackBar('Marked as review given');
-    }, error => {
-      this.utilsService.showSnackBar('Please try again, failed to mark as review given');
-    })
+    this.itrMsService.putMethod(param, {}).subscribe({
+      next: (result) => {
+        console.log(result);
+        this.utilsService.showSnackBar('Marked as review given');
+      },
+      error: (error) => {
+        console.log('Error updating review status:', error);
+        this.utilsService.showSnackBar('Please try again, failed to mark as review given');
+      }
+    });
   }
-
 
   showNotes(client) {
     let disposable = this.dialog.open(UserNotesComponent, {
@@ -452,6 +474,7 @@ export class UserListComponent {
   }
 
   moreOptions(client) {
+    client.hideReassign = true;
     let disposable = this.dialog.open(MoreOptionsDialogComponent, {
       width: '50%',
       height: 'auto',

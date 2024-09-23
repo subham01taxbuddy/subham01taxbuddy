@@ -81,7 +81,6 @@ export class BulkReAssignDialogComponent implements OnInit {
     if (isOwner) {
       this.ownerId2 = event ? event.userId : null;
       if (this.ownerId1 != this.ownerId2) {
-        // this.serviceType.setValue('ALL');
         this.isServiceType = false;
         this.isReassignmentOutsideTeam = true;
       } else {
@@ -118,7 +117,7 @@ export class BulkReAssignDialogComponent implements OnInit {
       this.userMsService.getMethod(param).subscribe((res: any) => {
         this.loading = false;
         console.log(res);
-        if (res.success == true) {
+        if (res.success) {
           this.utilsService.showSnackBar(' re assigned successfully.');
           this.dialogRef.close({ event: 'close', data: 'success' });
         }

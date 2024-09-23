@@ -12,7 +12,6 @@ import { UpdateCapacityComponent } from 'src/app/modules/shared/components/updat
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { NavbarService } from 'src/app/services/navbar.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -31,8 +30,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   config: any;
   loggedInSme: any;
   roles: any;
-  coOwnerToggle = new UntypedFormControl('');
-  coOwnerCheck = false;
   searchParam: any = {
     statusId: null,
     page: 0,
@@ -132,7 +129,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.agentId = this.utilsService.getLoggedInUserID()
     this.roles = this.loggedInSme[0]?.roles
     console.log('roles', this.roles)
-    // this.getSmeList();
     this.getCount();
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.getSmeList();
@@ -189,55 +185,20 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     console.log('Selected Language:', event.value);
   }
 
-  getRoleValue(role) {
-
-  }
-
-  getPlanFilterValue(planValue) {
-
-  }
-
   advanceSearch() {
     this.getSmeList();
     this.getCount();
   }
 
-  // advanceSearch(key: any) {
-  //   if (this.leaderId || this.ownerId) {
-  //     this.getSmeList();
-  //     this.getCount();
-  //     return;
-  //   }
-  //   if (!(Object.keys(this.searchBy).length === 0)  || !(Object.keys(this.sortBy).length === 0)) {
-  //     if (this.agentId === this.loggedInSme[0]?.userId) {
-  //       this.getSmeList();
-  //     } else {
-  //       this.showError = true;
-  //       this._toastMessageService.alert('error', 'Please select attribute and also enter search value.');
-  //       return;
-  //     }
-
-  //   } else {
-  //     this.showError = false;
-  //     this.getSmeList();
-  //     this.getCount()
-  //   }
-  // }
-
   getSmeSearchList(key: any, searchValue: any) {
     //https://uat-api.taxbuddy.com/report/sme-details-new/7521?page=0&pageSize=30&assigned=true
     this.loading = true;
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
 
     if (this.searchParam.emailId) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
     if (searchValue) {
       searchValue = searchValue.toLocaleLowerCase();
-    }
-
-    if (this.coOwnerToggle.value == false) {
-      this.agentId = loggedInSmeUserId;
     }
 
     this.searchParam.page = 0;
@@ -249,9 +210,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
-    }
-    if (this.coOwnerToggle.value) {
-      param = param + '&searchAsCoOwner=true';
     }
 
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
@@ -268,7 +226,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         this._toastMessageService.alert('error', 'No Lead Data Found .');
         this.smeListGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
-        // this.getSmeList();
       }
     }, (error) => {
       this.loading = false;
@@ -372,9 +329,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
+
     return this.reportService.getMethod(param).toPromise().then((result: any) => {
       this.key = null;
       this.searchVal = null;
@@ -597,41 +552,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
   }
 
-  // async downloadReport() {
-  //   this.loading = true;
-  //   this.showCsvMessage = true;
-  //   const loggedInSmeUserId = this.loggedInSme[0].userId
-
-  //   if (this.coOwnerToggle.value == false) {
-  //     this.agentId = loggedInSmeUserId;
-  //   }
-
-  //   let userFilter = ''
-  //   if (this.leaderId) {
-  //     userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
-  //   }
-  //   if (this.ownerId) {
-  //     userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
-  //   }
-
-  //   let param = ''
-  //   if (this.key && this.searchVal) {
-  //     param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
-  //   } else {
-  //     param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
-  //   }
-
-  //   if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
-  //     param = param + '&searchAsCoOwner=true';
-  //   }
-  //   else {
-  //     param;
-  //   }
-  //   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
-  //   this.loading = false;
-  //   this.showCsvMessage = false;
-  // }
-
   sortByObject(object) {
     this.sortBy = object;
   }
@@ -661,11 +581,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
   smeCreateColumnDef(allFilerList, itrPlanList) {
     let columnDefs: ColDef[] = [
-      // return [
       {
         field: 'selection',
         headerName: '',
-        // headerCheckboxSelection: true,
         checkboxSelection: true,
         width: 50,
         pinned: 'left',
@@ -963,7 +881,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'ITR Capabilities',
-        // field: 'skillSetPlanIdList',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -1027,7 +944,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
-    var smeArray = [];
     return data;
   }
 
@@ -1061,11 +977,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      // if (result) {
-      // if (result) {
       this.advanceSearch();
-      // }
-      // }
     });
   }
 
@@ -1094,32 +1006,17 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      if (result.success == false) {
+      if (result.success) {
+        this._toastMessageService.alert("success", result.message)
+      }else{
         this.loading = false;
         this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
-      if (result.success == true) {
-        this._toastMessageService.alert("success", result.message)
       }
     }, error => {
       this.utilsService.showSnackBar('Error while making call, Please try again.');
       this.loading = false;
     })
   }
-
-  // pageChanged(event: any) {
-  //   let pageChange =event
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.getSmeList(true);
-  //     this.getCount();
-  //   }else{
-  //     this.getSmeList('',pageChange);
-  //     this.getCount();
-  //   }
-  //   ;
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
@@ -1129,28 +1026,10 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.getSmeList(true);
-        this.getCount();
-      } else {
-        this.getSmeList('', event);
-        this.getCount();
-      }
+      this.getSmeList('', event);
+      this.getCount();
     }
   }
-
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.getSmeList(true);
-    this.getCount('', '', '', true);
-  }
-
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
 
@@ -1161,7 +1040,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.selectRole.setValue(null);
     this.selectedLangControl.setValue(null);
     this.selectedITRCapabilityControl.setValue(null);
-    const loggedInSmeUserId = this.loggedInSme[0].userId
     this.searchParam.page = 0;
     this.searchParam.pageSize = 15;
     this.key = null;

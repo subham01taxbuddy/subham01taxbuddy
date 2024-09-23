@@ -48,6 +48,7 @@
     "ngx-doc-viewer": "2.1.2",
     "ngx-extended-pdf-viewer": "^19.6.1",
     "ngx-image-zoom": "~1.0.1",
+    "ngx-indexed-db": "^16.0.0",
     "ngx-infinite-scroll": "^16.0.0",
     "ngx-loading": "^16.0.0",
     "ngx-material-timepicker": "^13.1.1",

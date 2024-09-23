@@ -6,7 +6,8 @@
     tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
   <div class="row spsTp bdrTp">
     <div class="clo-sm-12">
-      <span style="font-weight: bold; font-size: 16px;">Leader Name : {{data.data[0].leaderName}} </span>
+      <span style="font-weight: bold; font-size: 16px;">Leader Name :
+        {{data.data[0].leaderName }} </span>
     </div>
 
     <div class="col-sm-9 spsTp">
@@ -15,8 +16,6 @@
         (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
     </div>
     <div class="col-sm-3">
-      <!-- <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForFiler()"
-        [disabled]="loading">Re-Assignment</button> -->
       <app-custom-button class="tbd-btn save-btn spsTp2" [actions]="[reAssignmentForFiler]">
         Re-Assignment
       </app-custom-button>

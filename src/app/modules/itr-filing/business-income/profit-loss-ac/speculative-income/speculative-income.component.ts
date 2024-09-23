@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -79,7 +79,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.calculateNetIncome();
   }
 
-  updateData(){
+  updateData() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
@@ -112,19 +112,14 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   calculateNetIncome() {
     let turnover = this.selectedFormGroup.controls['turnOver'].value;
-    let netIncome = this.selectedFormGroup.controls['netIncome'].value;
     let turnoverValue = parseFloat(this.selectedFormGroup?.controls['turnOver']?.value ?
       this.selectedFormGroup?.controls['turnOver']?.value : null);
     let grossProfitValue = parseFloat(this.selectedFormGroup?.controls['grossProfit']?.value
       ? this.selectedFormGroup?.controls['grossProfit']?.value : 0);
     let expenditureValue = parseFloat(this.selectedFormGroup?.controls['expenditure']?.value
       ? this.selectedFormGroup?.controls['expenditure']?.value : 0);
-    let netIncomeValue = parseFloat(this.selectedFormGroup?.controls['netIncome']?.value
-      ? this.selectedFormGroup?.controls['netIncome']?.value : 0
-    );
     this.selectedFormGroup.controls['netIncome'].setValue(grossProfitValue - expenditureValue);
     this.selectedFormGroup.controls['netIncome'].updateValueAndValidity();
-    netIncomeValue = this.selectedFormGroup.controls['netIncome'].value;
     if (turnover && turnover.value == 0) {
       this.selectedFormGroup.controls['grossProfit'].setValidators([Validators.required, Validators.max(turnover.value)]);
       this.selectedFormGroup.controls['turnOver'].setValidators([Validators.required]);
@@ -132,7 +127,6 @@ export class SpeculativeIncomeComponent implements OnInit {
       this.selectedFormGroup.controls['grossProfit'].setValue(0);
       this.selectedFormGroup.controls['netIncome'].setValue(0);
       this.selectedFormGroup.controls['netIncome'].updateValueAndValidity();
-      netIncomeValue = netIncome?.value;
     }
     if (this.selectedFormGroup) {
       if (this.selectedFormGroup.controls['expenditure'].value && (!this.selectedFormGroup.controls['turnOver'].value || !this.selectedFormGroup.controls['grossProfit'].value)) {
@@ -189,9 +183,9 @@ export class SpeculativeIncomeComponent implements OnInit {
 
       specBusiness[0].incomes = [];
 
-      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+      if (this.specIncomeForm?.controls['specIncomesArray'].value.length > 0) {
         (
-            this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
+          this.specIncomeForm?.controls['specIncomesArray'] as UntypedFormArray
         )?.controls?.forEach((form: UntypedFormGroup) => {
           specBusiness[0]?.incomes?.push(form?.value);
         });
@@ -214,10 +208,10 @@ export class SpeculativeIncomeComponent implements OnInit {
         (item) => item?.businessType === 'SPECULATIVEINCOME'
       );
 
-      if(this.specIncomeForm?.controls['specIncomesArray'].value.length > 0 ) {
+      if (this.specIncomeForm?.controls['specIncomesArray'].value.length > 0) {
         if (index || index === 0) {
           this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
-              specBusiness[0];
+            specBusiness[0];
         } else {
           this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
         }
@@ -296,7 +290,6 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   columnDef() {
-    let self = this;
     return [
       {
         field: '',
