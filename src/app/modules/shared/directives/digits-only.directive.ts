@@ -25,6 +25,9 @@ export class DigitsOnlyDirective {
 
   private cleanInput(input: string): string {
       const cleaned = input.replace(/[^0-9.]/g, '');
+      if (cleaned === '0.0') {
+        return '0';
+      }
       const parts = cleaned.split('.');
       if (parts.length > 2) {
           return parts[0] + '.' + parts[1];
