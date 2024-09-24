@@ -25,6 +25,7 @@
             <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="2"
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
+                <ng-container *ngIf="!isConversationListEmpty; else noConversations">
                 <div class="user-box" *ngFor="let conversation of conversationList"
                     (click)="openUserChat(conversation)">
                     <div class="row" style="width: 100%;">
@@ -50,6 +51,12 @@
                     </div>
 
                 </div>
+                </ng-container>
+                <ng-template #noConversations>
+                    <div class="no-conversations-message">
+                        Currently no chats assigned to you
+                    </div>
+                  </ng-template>
                 <div class="loader" *ngIf="isLoading">
                     <span><i class="fa fa-spinner fa-spin"></i> Loading more conversations...</span>
                 </div>

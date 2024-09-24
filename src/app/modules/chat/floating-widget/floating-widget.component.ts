@@ -62,6 +62,9 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     isLoadingInitialData: boolean = true;
     isDepartmentListLoaded: boolean = false;
     isConversationListLoaded: boolean = false;
+    public isConversationListEmpty: boolean = false;
+
+
     showFullScreen() {
         const chatUrl = 'chat/chat-full-screen';
         window.open(chatUrl, '_blank');
@@ -113,6 +116,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.isUserChatVisible = false;
         this.showWidget = true;
     }
+
 
     closeFullScreen() {
         this.fullChatScreen = false;
@@ -259,6 +263,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     }
 
     fetchList(departmentId: any) {
+        this.isConversationListEmpty = false;
         this.selectedDepartmentId = departmentId;
         this.page = 0;
         if (departmentId) {
@@ -334,8 +339,11 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                     };
                 });
             }
-            // this.conversationList = [...this.conversationList]
-        }
+             this.isConversationListEmpty = this.conversationList.length === 0;
+         }else{
+            this.conversationList = [];
+            this.isConversationListEmpty = true;
+         }
     }
 
 

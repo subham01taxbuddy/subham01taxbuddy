@@ -64,6 +64,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     newMessageSubscription: Subscription;
     isLoading: boolean = false;
     conversationDeletedSubscription: Subscription;
+    public isConversationListEmpty: boolean = false;
 
 
     openUserChat(conversation: any) {
@@ -219,6 +220,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     }
 
     fetchList(departmentId: any) {
+        this.isConversationListEmpty = false;
         this.selectedDepartmentId = departmentId;
         this.page = 0;
         if (departmentId) {
@@ -294,8 +296,11 @@ export class ChatUIComponent implements OnInit,OnDestroy {
                     };
                 });
             }
-            // this.conversationList = [...this.conversationList]
-        }
+            this.isConversationListEmpty = this.conversationList.length === 0;       
+         }else{
+            this.conversationList = [];
+            this.isConversationListEmpty = true;
+         }
     }
 
     handleDeptList = (data: any) => {
