@@ -453,7 +453,7 @@ export class SharesAndEquityComponent
       this.clearFieldValidators('purchaseDate');
       this.clearFieldValidators('costOfNewAssets');
     }
-    this.calculateDeductionGain();
+    this.calculateDeductionGain('fromToggle');
   }
 
   onToggleCGAS(isChecked: boolean): void {
@@ -468,7 +468,7 @@ export class SharesAndEquityComponent
       this.clearFieldValidators('ifscCode');
       this.clearFieldValidators('dateOfDeposit');
     }
-    this.calculateDeductionGain();
+    this.calculateDeductionGain('fromToggle');
   }
 
   // ==================== ADD FUNCTIONS====================
@@ -888,7 +888,7 @@ export class SharesAndEquityComponent
 
   }
 
-  calculateDeductionGain() {
+  calculateDeductionGain(fromToggle?) {
     let isFormValid = this.deduction ? this.deductionForm.controls['purchaseDate'].valid &&
       this.deductionForm.controls['costOfNewAssets'].valid &&
       this.deductionForm.controls['investmentInCGAccount'].valid : true;
@@ -955,7 +955,9 @@ export class SharesAndEquityComponent
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
+      if(!fromToggle){
+        this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordDeduction", this.elementRef);
+      }
     }
   }
 

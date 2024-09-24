@@ -589,6 +589,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
       dateOfDeposit: [obj?.dateOfDeposit || null],
+      showNewAsset: [false],   // Add showNewAsset control here
+      showCGAS: [false],
     });
   }
 
@@ -1264,52 +1266,57 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  initializeFormFlags(formGroup: any,index?): void {
+  initializeFormFlags(formGroup: any, index?): void {
     if (formGroup) {
-      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
-        this.showNewAsset.setValue(true);
-        this.onToggleNewAsset(true ,index);
-      }else{
-        this.showNewAsset.setValue(false);
-        this.onToggleNewAsset(false,index);
+      const deductions = this.getDeductionsArray;
+
+      const deductionAtIndex = deductions.at(index);
+
+      if (deductionAtIndex.get('costOfNewAssets').value || deductionAtIndex.get('purchaseDate').value) {
+        deductionAtIndex.get('showNewAsset').setValue(true);
+        this.onToggleNewAsset(true, index);
+      } else {
+        deductionAtIndex.get('showNewAsset').setValue(false);
+        this.onToggleNewAsset(false, index);
       }
-      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
-        this.showCGAS.setValue(true);
-        this.onToggleCGAS(true,index);
-      }else{
-        this.showCGAS.setValue(false);
-        this.onToggleCGAS(false,index);
+
+      if (deductionAtIndex.get('investmentInCGAccount').value || deductionAtIndex.get('dateOfDeposit').value) {
+        deductionAtIndex.get('showCGAS').setValue(true);
+        this.onToggleCGAS(true, index);
+      } else {
+        deductionAtIndex.get('showCGAS').setValue(false);
+        this.onToggleCGAS(false, index);
       }
     }
   }
 
   onToggleNewAsset(isChecked: boolean, index?): void {
     if (isChecked) {
-      this.setFieldValidators(index,'purchaseDate', [Validators.required]);
-      this.setFieldValidators(index,'costOfNewAssets', [Validators.required]);
+      this.setFieldValidators(index, 'purchaseDate', [Validators.required]);
+      this.setFieldValidators(index, 'costOfNewAssets', [Validators.required]);
     } else {
-      this.clearFieldValidators(index,'purchaseDate');
-      this.clearFieldValidators(index,'costOfNewAssets');
+      this.clearFieldValidators(index, 'purchaseDate');
+      this.clearFieldValidators(index, 'costOfNewAssets');
     }
     this.calculateDeduction();
   }
 
-  onToggleCGAS(isChecked: boolean,index?): void{
+  onToggleCGAS(isChecked: boolean, index?): void {
     if (isChecked) {
-      this.setFieldValidators(index,'investmentInCGAccount', [Validators.required]);
-      this.setFieldValidators(index,'accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
-      this.setFieldValidators(index,'ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
-      this.setFieldValidators(index,'dateOfDeposit', [Validators.required]);
+      this.setFieldValidators(index, 'investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators(index, 'accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators(index, 'ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators(index, 'dateOfDeposit', [Validators.required]);
     } else {
-      this.clearFieldValidators(index,'investmentInCGAccount');
-      this.clearFieldValidators(index,'accountNumber');
-      this.clearFieldValidators(index,'ifscCode');
-      this.clearFieldValidators(index,'dateOfDeposit');
+      this.clearFieldValidators(index, 'investmentInCGAccount');
+      this.clearFieldValidators(index, 'accountNumber');
+      this.clearFieldValidators(index, 'ifscCode');
+      this.clearFieldValidators(index, 'dateOfDeposit');
     }
     this.calculateDeduction();
   }
 
-  setFieldValidators(index,controlName: string, validators: any[]): void {
+  setFieldValidators(index, controlName: string, validators: any[]): void {
     const deductions = this.getDeductionsArray;
     const control = deductions.at(index).get(controlName);
     if (control) {
@@ -1318,7 +1325,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  clearFieldValidators(index,controlName: string): void {
+  clearFieldValidators(index, controlName: string): void {
     const deductions = this.getDeductionsArray;
     const control = deductions.at(index).get(controlName);
     if (control) {
@@ -1327,6 +1334,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       control.updateValueAndValidity();
     }
   }
+
 
   investmentsCreateRowData() {
     if (this.deductions)
