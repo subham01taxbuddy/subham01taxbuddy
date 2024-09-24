@@ -93,7 +93,7 @@
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput appTwoDigitDecimaNumber formControlName="sellOrBuyQuantity"
                                   placeholder="Sell/Buy Quantity" name="sellOrBuyQuantity" maxlength="14"
-                                  (change)="calculateTotalCG(selectedFormGroup, false)" digitsOnly
+                                  (change)="calculateTotalCG(selectedFormGroup, false)"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   (blur)="getPurchaseValue(); getSaleValue()" />
 
@@ -106,7 +106,7 @@
                               <mat-label>Sale Price</mat-label>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput appTwoDigitDecimaNumber formControlName="sellValuePerUnit"
-                                  placeholder="Sale Price" name="sellValuePerUnit" maxlength="14" digitsOnly
+                                  placeholder="Sale Price" name="sellValuePerUnit" maxlength="14"
                                   (change)="calculateTotalCG(selectedFormGroup, false)" (blur)="getSaleValue()"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                 <mat-error *ngIf="
@@ -119,7 +119,7 @@
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input matInput appTwoDigitDecimaNumber formControlName="purchaseValuePerUnit"
                                   placeholder="Buy Price" name="purchaseValuePerUnit" maxlength="14"
-                                  (blur)="getPurchaseValue()" digitsOnly
+                                  (blur)="getPurchaseValue()"
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                                 <mat-error *ngIf="
                                             selectedFormGroup

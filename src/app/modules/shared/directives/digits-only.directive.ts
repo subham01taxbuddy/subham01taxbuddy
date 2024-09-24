@@ -31,6 +31,8 @@ export class DigitsOnlyDirective {
       const parts = cleaned.split('.');
       if (parts.length > 2) {
           return parts[0] + '.' + parts[1];
+      }else if(parts.length === 2){
+        return parts[0];
       }
       return cleaned;
   }
