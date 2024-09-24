@@ -565,6 +565,12 @@ export class ChatService {
           if (this.log) {
             console.log("subscribing to:", this.chat21UserID, "topic", this.topicInbox);
           }
+          if(!this.topicInbox){
+            this.chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
+            this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
+            this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
+            this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
+          }
           if (!this.chatSubscription) {
             this.chatSubscription = this.chatClient.subscribe(this.topicInbox, (err) => {
               if (err) {
