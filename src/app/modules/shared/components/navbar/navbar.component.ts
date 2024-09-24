@@ -190,7 +190,6 @@ export class NavbarComponent implements DoCheck, OnInit,OnDestroy{
         this.dialogRef = null;
         if (result?.request_id) {
           this.userDetails = result
-          localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.userDetails));
           this.chatService.unsubscribeRxjsWebsocket();
           this.chatService.fetchMessages(this.userDetails.request_id);
           this.chatService.initRxjsWebsocket(this.userDetails.request_id);

@@ -24,7 +24,7 @@
                 <ng-container *ngIf="!isConversationListEmpty; else noConversations">
 
                     <div class="user-box" *ngFor="let conversation of conversationList"
-                        (click)="openUserChat(conversation)"
+                        (click)="openUserChat(conversation.request_id)"
                         [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
                         <div class="row">
                             <div class="col-2">

@@ -42,7 +42,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
         this.handleConversationList();
         this.cd = cd
-
+        this.handleDeptList(this.chatManager.getDepartmentList());
     }
 
 
@@ -66,15 +66,15 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
 
 
     showFullScreen() {
-        const chatUrl = 'chat/chat-full-screen';
+        const chatUrl = this.selectedUser ? `chat/chat-full-screen?conversationId=${this.selectedUser.request_id}`
+            :`chat/chat-full-screen`;
         window.open(chatUrl, '_blank');
         this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;
-        this.chatManager.getDepartmentList();
+        this.handleDeptList(this.chatManager.getDepartmentList());
         this.chatManager.conversationList(this.page);
         // document.body.classList.add('no-scroll');
-        this.localStorage.removeItem('SELECTED_CHAT');
     }
 
     openUserChat(user: any) {
@@ -92,7 +92,6 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
             user.departmentName = selectedDepartment.name;
         }
 
-        localStorage.setItem("SELECTED_CHAT", JSON.stringify(user));
         // this.chatService.unsubscribeRxjsWebsocket();
         // this.chatService.initRxjsWebsocket(this.selectedUser.request_id);
 
@@ -186,7 +185,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.isLoadingInitialData = true;
         this.isDepartmentListLoaded = false;
         this.isConversationListLoaded = false;
-        this.chatManager.getDepartmentList();
+        this.handleDeptList(this.chatManager.getDepartmentList());
         this.chatService.onConversationUpdatedCallbacks.set('floating-widget', (event: string, data?: any) => {
             if (event === ChatEvents.DEPT_RECEIVED) {
               this.isDepartmentListLoaded = true;
@@ -352,7 +351,9 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         // this.selectedDepartmentId = data[0]._id;
         // this.chatManager.conversationList(this.page, this.selectedDepartmentId);
         this.departmentNames = data.map((dept: any) => ({ name: dept.name, id: dept._id }));
-        this.cd.detectChanges();
+        this.isDepartmentListLoaded = true;
+        this.checkInitialDataLoaded();
+        // this.cd.detectChanges();
     }
 
 

@@ -100,14 +100,16 @@ export class ChatService {
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
+  registerMessageReceived(requestId:string, messageReceivedCallback) {
+    this.onConversationUpdatedCallbacks.set(requestId, messageReceivedCallback);
+    this.onMessageAddedCallbacks.set(requestId, messageReceivedCallback);
+    this.onMessageUpdatedCallbacks.set(requestId, messageReceivedCallback);
+  }
 
-  tempMessageReceivedCallback = null;
-
-  registerMessageReceived(messageReceivedCallback) {
-    this.tempMessageReceivedCallback = messageReceivedCallback;
-    this.onConversationUpdatedCallbacks.set(0, messageReceivedCallback);
-    this.onMessageAddedCallbacks.set(0, messageReceivedCallback);
-    this.onMessageUpdatedCallbacks.set(0, messageReceivedCallback);
+  unregisterMessageReceived(requestId:string) {
+    this.onConversationUpdatedCallbacks.delete(requestId);
+    this.onMessageAddedCallbacks.delete(requestId);
+    this.onMessageUpdatedCallbacks.delete(requestId);
   }
 
   initDeptDetails(serviceType?: string) {
@@ -130,6 +132,7 @@ export class ChatService {
   }
 
   getDeptDetails(): any[] {
+    console.log('getDeptDetails', this.deptListData);
     return this.deptListData;
   }
 
@@ -529,7 +532,6 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client connected. this.connected:" + this.connected);
         }
-        this.registerMessageReceived(this.tempMessageReceivedCallback);
 
         if (!this.connected) {
           if (this.log) {
@@ -643,7 +645,6 @@ export class ChatService {
                       if (this.lastMessageId != messageJson.message_id) {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
-                        // let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
                         // if (messageJson.recipient === selectedUser?.request_id) {
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             this.addMessageToDB(JSON.parse(message.toString()));
@@ -1003,7 +1004,7 @@ export class ChatService {
   }
 
   filterCannedMessages() {
-    //TODO:pass the request id as parameter
+    //TODO: pass the request id as parameter
     this.cannedMessageList = this.localStorageService.getItem("CANNED_MESSAGE_LIST", true);
     let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
     let cannedMessageArray = [];

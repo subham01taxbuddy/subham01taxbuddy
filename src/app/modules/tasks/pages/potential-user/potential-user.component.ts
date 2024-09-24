@@ -786,7 +786,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if(result?.requestId){
         this.chatBuddyDetails = result;
-        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
         this.chatService.unsubscribeRxjsWebsocket();
         this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
      }

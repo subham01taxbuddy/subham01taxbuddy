@@ -1718,7 +1718,6 @@ export class ItrAssignedUsersComponent implements OnInit {
       }
       else if(result?.request_id){
         this.chatBuddyDetails = result;
-        localStorage.setItem("SELECTED_CHAT", JSON.stringify(this.chatBuddyDetails));
         this.chatService.unsubscribeRxjsWebsocket();
         this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
      }

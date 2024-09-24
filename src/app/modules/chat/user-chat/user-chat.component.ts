@@ -221,7 +221,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    const chatUrl = 'chat/chat-full-screen';
+    const chatUrl = `chat/chat-full-screen?conversationId=${this.requestId}`;
     window.open(chatUrl, '_blank');
     this.page = 0;
     this.fullChatScreen = false;
@@ -351,9 +351,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
 
       if (deletedConversation?.archived && deletedConversation?.archived === true) {
-        const currentChat = this.localStorageService.getItem('SELECTED_CHAT', true);
 
-        if (currentChat && currentChat?.request_id === deletedConversation?.conversWith) {
+        if (this.requestId === deletedConversation?.conversWith) {
           this.handleDeletedConversation();
           this.cd.detectChanges();
         }
@@ -365,7 +364,6 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   handleDeletedConversation() {
     this.isInputDisabled = true;
     this.messageSent = '';
-    this.localStorage.removeItem('SELECTED_CHAT');
     this.cd.detectChanges();
   }
 
@@ -552,6 +550,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   closeChat() {
+    this.chatManager.closeConversation(this.requestId);
     this.closeChatClicked.emit();
   }
 
@@ -594,6 +593,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   onSelectCannedMessage(cannedMessage) {
+    //TODO: remove SELECTED_CHAT dependency
     let inputMessage = cannedMessage.text;
     let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
     let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);

@@ -8,8 +8,6 @@ import { LocalStorageService } from "../../services/storage.service";
 })
 export class ChatManager {
 
-  departmentNames: string[] = [];
-
   private subscriptions: {
     [key: string]: Array<(...args: Array<any>) => void>;
   } = {};
@@ -21,9 +19,9 @@ export class ChatManager {
     });
   }
 
-  registerCallbacks() {
+  registerCallbacks(requestId:string) {
     let self = this;
-    this.chatService.registerMessageReceived((event: ChatEvents, data?: any) => {
+    this.chatService.registerMessageReceived(requestId, (event: ChatEvents, data?: any) => {
       switch (event) {
         case ChatEvents.MESSAGE_RECEIVED:
           self.handleReceivedMessages(data);
@@ -44,7 +42,6 @@ export class ChatManager {
   }
 
   public subscribe(eventName: string, fn: (...args: Array<any>) => void) {
-    this.registerCallbacks();
     if (this.subscriptions[eventName]) {
       this.subscriptions[eventName].push(fn);
     } else {
@@ -58,19 +55,17 @@ export class ChatManager {
     }
   }
 
-  getDepartmentList() {
+  initDepartmentList() {
     this.chatService.initDeptDetails();
   }
-
-  getDepartmentNames() {
-    return this.departmentNames;
+  getDepartmentList() {
+    return this.chatService.getDeptDetails();
   }
 
   async initChat(initializeSocket: boolean, serviceType?: string) {
     await this.chatService.initTokens(initializeSocket, serviceType);
-    this.registerCallbacks();
-    this.chatService.initDeptDetails(serviceType);
 
+    this.initDepartmentList();
     this.fireEvents(ChatEvents.TOKEN_GENERATED);
   }
 
@@ -95,11 +90,15 @@ export class ChatManager {
   }
 
   openConversation(conversationId: string, timeStamp?: number, onComplete?: (hasMoreMessages: boolean) => void) {
+    this.registerCallbacks(conversationId);
     let chats = this.localStorageService.getItem('conversationList', true);
     let selectedChat = chats.filter(chat=> chat.request_id === conversationId)[0];
     this.chatService.fetchMessages(conversationId, timeStamp, undefined, onComplete);
   }
 
+  closeConversation(requestId:string){
+    this.chatService.unregisterMessageReceived(requestId);
+  }
 
   closeChat() {
     this.chatService.closeWebSocket();
