@@ -69,7 +69,7 @@
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input appDateInput matInput [max]="maxPurchaseDate" [min]="minPurchaseDate"
-                                  formControlName="purchaseDate" name="asset[i]" readonly [matDatepicker]="purchaseDate"
+                                  formControlName="purchaseDate" name="asset[i]"  [matDatepicker]="purchaseDate"
                                   placeholder="Date of Acquisition" (blur)="calculateIndexCost(i);
                       calculateCapitalGain(this.immovableForm, '', i)"
                                   (dateChange)="calMinImproveDate(asset.get('purchaseDate').value,this.immovableForm,i)"
@@ -366,7 +366,7 @@
                           </div>
                           <div class="lndBldg-R">
                             <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (dateChange)="calculateDeduction(i, 'singleCg')" matInput formControlName="purchaseDate"
+                              <input appDateInput (dateChange)="calculateDeduction(i, 'singleCg')" matInput formControlName="purchaseDate"
                                 name="deductions[i]" class="input-field" [matDatepicker]="purchaseDate"
                                 [matDatepickerFilter]="disableFutureDates" />
                               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
@@ -447,7 +447,7 @@
                             </div>
                             <div class="lndBldg-R">
                             <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input matInput formControlName="dateOfDeposit" name="dateOfDeposit[i]" class="input-field"
+                              <input appDateInput matInput formControlName="dateOfDeposit" name="dateOfDeposit[i]" class="input-field"
                                 [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                               <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                               <mat-datepicker #dateOfDeposit></mat-datepicker>

@@ -148,8 +148,8 @@
                       so that the claim of deduction can be considered by the department" matTooltipClass="tab-tooltip"
                     #date="matTooltip" (click)="date.toggle()" matTooltipPosition="above">info</mat-icon></div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
-                    formControlName="form10IADate" name="form10IADate" readonly [matDatepicker]="form10IADate"
+                  <input appDateInput matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
+                    formControlName="form10IADate" name="form10IADate"  [matDatepicker]="form10IADate"
                     placeholder="" />
                   <mat-datepicker-toggle matSuffix [for]="form10IADate"></mat-datepicker-toggle>
                   <mat-datepicker #form10IADate></mat-datepicker> <mat-error
@@ -209,8 +209,8 @@
                       so that the claim of deduction can be considered by the department" matTooltipClass="tab-tooltip"
                     #date80dd="matTooltip" (click)="date80dd.toggle()" matTooltipPosition="above">info</mat-icon></div>
                 <mat-form-field appearance="outline" class="no-height small-inp">
-                  <input matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
-                    formControlName="form10IADate80dd" name="form10IADate80dd" readonly
+                  <input appDateInput matInput [min]="minDate" [max]="maxDate" matTooltipPosition="above"
+                    formControlName="form10IADate80dd" name="form10IADate80dd"
                     [matDatepicker]="form10IADate80dd" placeholder="" />
                   <mat-datepicker-toggle matSuffix [for]="form10IADate80dd"></mat-datepicker-toggle>
                   <mat-datepicker #form10IADate80dd></mat-datepicker> <mat-error

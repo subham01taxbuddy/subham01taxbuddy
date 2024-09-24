@@ -615,7 +615,7 @@
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
+                                <input appDateInput matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
                                   class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                                 <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                                 <mat-datepicker #dateOfDeposit></mat-datepicker>
