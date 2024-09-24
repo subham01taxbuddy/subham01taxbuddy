@@ -78,7 +78,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
-                                  name="grossProfit" class="input-field" type="number" trim wholeNumber
+                                  name="grossProfit" class="input-field" type="number" trim digitsOnly
                                   (change)="calculateNetIncome()" />
                               </mat-form-field>
                               <mat-error
