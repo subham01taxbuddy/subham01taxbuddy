@@ -32,15 +32,17 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
 
     private cd: ChangeDetectorRef;
 
-
+    instanceId:string;
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone
     ) {
+        this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
+        this.chatService.registerConversationUpdates(this.instanceId, this.handleConversationList)
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
-        this.handleConversationList();
+        // this.handleConversationList();
         this.cd = cd
         this.handleDeptList(this.chatManager.getDepartmentList());
     }
@@ -108,6 +110,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.showWidget = false;
         this.isUserChatVisible = false;
         this.widgetClosed.emit();
+        this.chatService.unregisterConversationUpdates(this.instanceId);
     }
 
     closeUserChat() {

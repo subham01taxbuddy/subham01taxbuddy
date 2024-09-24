@@ -393,7 +393,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
         const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
 
-        const messagesString = sessionStorage.getItem('fetchedMessages');
+        const messagesString = sessionStorage.getItem(this.requestId);
         if (messagesString) {
           this.fetchedMessages = JSON.parse(messagesString);
           console.log('fetchMessages', this.fetchedMessages);
@@ -414,7 +414,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       const chatMessagesContainer = this.elementRef.nativeElement.querySelector('.chat-messages');
       const isAtBottom = chatMessagesContainer.scrollTop === chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight;
 
-      const messagesString = sessionStorage.getItem('fetchedMessages');
+      const messagesString = sessionStorage.getItem(this.requestId);
       if (messagesString) {
         this.fetchedMessages = JSON.parse(messagesString);
         console.log('fetchMessages', this.fetchedMessages);
@@ -432,7 +432,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   };
 
   updateBotIconVisibility(): void {
-    const messagesString = sessionStorage.getItem('fetchedMessages');
+    const messagesString = sessionStorage.getItem(this.requestId);
     if (messagesString) {
       const messages = JSON.parse(messagesString);
       if (messages.length > 0) {

@@ -37,13 +37,16 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     private cd: ChangeDetectorRef;
     centralizedChatDetails: any;
     showBackButton:boolean = true;
+    instanceId:string;
 
 
     constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
         private localStorage: LocalStorageService, private chatService: ChatService,cd:
                     ChangeDetectorRef,private ngZone: NgZone,
                 private activatedRoute: ActivatedRoute) {
+        this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
+        this.chatService.registerConversationUpdates(this.instanceId, this.handleConversationList());
         this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
         this.chatManager.subscribe(ChatEvents.CONVERSATION_UPDATED, this.handleConversationList);
         this.chatManager.subscribe(ChatEvents.DEPT_RECEIVED, this.handleDeptList);
@@ -340,6 +343,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.chatService.unregisterConversationUpdates(this.instanceId);
          if (this.newMessageSubscription) {
             this.newMessageSubscription.unsubscribe();
         }

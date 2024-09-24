@@ -100,14 +100,27 @@ export class ChatService {
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
+  registerConversationUpdates(instanceId, messageReceivedCallback){
+    this.onConversationUpdatedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onConversationDeletedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onArchivedConversationAddedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onArchivedConversationDeletedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onGroupUpdatedCallbacks.set(instanceId, messageReceivedCallback);
+  }
+
+  unregisterConversationUpdates(instanceId){
+    this.onConversationUpdatedCallbacks.delete(instanceId);
+    this.onConversationDeletedCallbacks.delete(instanceId);
+    this.onArchivedConversationAddedCallbacks.delete(instanceId);
+    this.onArchivedConversationDeletedCallbacks.delete(instanceId);
+    this.onGroupUpdatedCallbacks.delete(instanceId);
+  }
   registerMessageReceived(requestId:string, messageReceivedCallback) {
-    this.onConversationUpdatedCallbacks.set(requestId, messageReceivedCallback);
     this.onMessageAddedCallbacks.set(requestId, messageReceivedCallback);
     this.onMessageUpdatedCallbacks.set(requestId, messageReceivedCallback);
   }
 
   unregisterMessageReceived(requestId:string) {
-    this.onConversationUpdatedCallbacks.delete(requestId);
     this.onMessageAddedCallbacks.delete(requestId);
     this.onMessageUpdatedCallbacks.delete(requestId);
   }
@@ -300,14 +313,14 @@ export class ChatService {
         console.log('fetch messages', chat21Result);
         if (chat21Result.success) {
             if (!timeStamp) {
-                this.clearMessagesDB();
+                this.clearMessagesDB(requestId);
             }
-            this.updateMessagesDB(chat21Result.result, timeStamp);
+            this.updateMessagesDB(requestId, chat21Result.result, timeStamp);
 
             // Check if there are more messages
             const hasMoreMessages = chat21Result.result.length > 0;
 
-            this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
+            this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                 callback(ChatEvents.MESSAGE_RECEIVED);
             });
 
@@ -406,11 +419,11 @@ export class ChatService {
 
 
 
-  clearMessagesDB() {
-    this.sessionStorageService.removeItem('fetchedMessages');
+  clearMessagesDB(requestId) {
+    this.sessionStorageService.removeItem(requestId);
   }
 
-  updateMessagesDB(messages: any, timeStamp?: any) {
+  updateMessagesDB(requestId, messages: any, timeStamp?: any) {
     let transformedMessages = messages.map(message => ({
       content: message.text,
       sender: message.attributes?.action?.feedback ? "system" : message.sender,
@@ -424,7 +437,7 @@ export class ChatService {
     }));
 
     if (timeStamp) {
-      const msgString = this.sessionStorageService.getItem('fetchedMessages');
+      const msgString = this.sessionStorageService.getItem(requestId);
       const oldMessageList = JSON.parse(msgString) || [];
 
       const existingMessageIds = oldMessageList.map(message => message.message_id);
@@ -435,12 +448,12 @@ export class ChatService {
 
 
    
-    this.sessionStorageService.setItem('fetchedMessages', transformedMessages, true)
+    this.sessionStorageService.setItem(requestId, transformedMessages, true)
     return transformedMessages;
   }
 
-  addMessageToDB(message: any) {
-    let messagesString = this.sessionStorageService.getItem('fetchedMessages');
+  addMessageToDB(requestId, message: any) {
+    let messagesString = this.sessionStorageService.getItem(requestId);
     let messages = messagesString ? JSON.parse(messagesString) : [];
 
     let m = {
@@ -471,7 +484,7 @@ export class ChatService {
 
     messages.sort((a, b) => a.timestamp - b.timestamp);
 
-    this.sessionStorageService.setItem('fetchedMessages', messages, true);
+    this.sessionStorageService.setItem(requestId, messages, true);
 
     return messages;
   }
@@ -630,7 +643,9 @@ export class ChatService {
                   if (topic.includes("/messages/") && topic.endsWith(this._CLIENT_ADDED)) {
                     if (this.onMessageAddedCallbacks) {
                       const messageJson = JSON.parse(message.toString());
-                      let fetchedMessages = this.sessionStorageService.getItem('fetchedMessages');
+                      let topicParts = topic.split("/");
+                      let requestId = topicParts[topicParts.indexOf("messages") + 1];
+                      let fetchedMessages = this.sessionStorageService.getItem(requestId);
                       fetchedMessages = JSON.parse(fetchedMessages);
                       if (fetchedMessages) {
                         fetchedMessages?.forEach(item => {
@@ -638,7 +653,7 @@ export class ChatService {
                             item.action = messageJson?.attributes?.action
                           }
                         });
-                        this.sessionStorageService.setItem('fetchedMessages', fetchedMessages, true);
+                        this.sessionStorageService.setItem(requestId, fetchedMessages, true);
                       }
 
 
@@ -646,8 +661,10 @@ export class ChatService {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
                         // if (messageJson.recipient === selectedUser?.request_id) {
+                          let topicParts = topic.split("/");
+                          let requestId = topicParts[topicParts.indexOf("messages") + 1];
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                            this.addMessageToDB(JSON.parse(message.toString()));
+                            this.addMessageToDB(requestId, JSON.parse(message.toString()));
                             callback(ChatEvents.MESSAGE_RECEIVED, message.toString());
                           });
                         // }
