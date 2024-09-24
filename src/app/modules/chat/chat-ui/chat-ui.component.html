@@ -21,29 +21,38 @@
             <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true"
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
-                <div class="user-box" *ngFor="let conversation of conversationList" (click)="openUserChat(conversation)"
-                    [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="avatar">
-                                <div class="initial">{{conversation.image ? conversation.image:''}}</div>
-                            </div>
-                        </div>
-                        <div class="col-8">
-                            <div class="user-name">{{ conversation.userFullName }}</div>
-                            <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
-                                conversation.text }}</div>
-                            <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
-                                        view the details...</strong></em></div>
+                <ng-container *ngIf="!isConversationListEmpty; else noConversations">
 
-                        </div>
-                        <div class="col-2">
-                            <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                    <div class="user-box" *ngFor="let conversation of conversationList"
+                        (click)="openUserChat(conversation)"
+                        [ngClass]="{'selected-chat': selectedConversation?.request_id === conversation.request_id}">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="avatar">
+                                    <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="user-name">{{ conversation.userFullName }}</div>
+                                <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
+                                    conversation.text }}</div>
+                                <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
+                                            view the details...</strong></em></div>
+
+                            </div>
+                            <div class="col-2">
+                                <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                            </div>
+
                         </div>
 
                     </div>
-
-                </div>
+                </ng-container>
+                <ng-template #noConversations>
+                    <div class="no-conversations-message">
+                        Currently no chats assigned to you
+                    </div>
+                </ng-template>
                 <div class="loader" *ngIf="isLoading">
                     <span><i class="fa fa-spinner fa-spin"></i> Loading more conversations...</span>
                 </div>

@@ -287,3 +287,14 @@ input[type="text"] {
         stroke-dashoffset: -124;
     }
 }
+
+.no-conversations-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 16px;
+    color: #888;
+    font-style: italic;
+  }
+  
