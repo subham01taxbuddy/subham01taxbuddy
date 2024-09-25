@@ -589,8 +589,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       accountNumber: [obj.accountNumber || null, [Validators.minLength(3), Validators.maxLength(20), Validators.pattern(AppConstants.numericRegex)]],
       ifscCode: [obj?.ifscCode || null, [Validators.pattern(AppConstants.IFSCRegex)]],
       dateOfDeposit: [obj?.dateOfDeposit || null],
-      showNewAsset: [false],   // Add showNewAsset control here
-      showCGAS: [false],
+      showNewAsset: [obj.costOfNewAssets || obj.purchaseDate ? true : false ],
+      showCGAS: [obj.investmentInCGAccount || obj.dateOfDeposit ? true : false ],
     });
   }
 
@@ -1101,7 +1101,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     ) {
       this.saveBusy = true;
       if (this.isDeductions.value) {
-        if (!this.showCGAS.value && !this.showNewAsset.value) {
+        let deductions = formGroupName.controls['deductions']
+        let cgs = deductions.controls[0]
+        if (!cgs.controls['showCGAS'].value && !cgs.controls['showNewAsset'].value) {
           this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
           return;
         }
@@ -1271,7 +1273,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       const deductions = this.getDeductionsArray;
 
       const deductionAtIndex = deductions.at(index);
-
+debugger
       if (deductionAtIndex.get('costOfNewAssets').value || deductionAtIndex.get('purchaseDate').value) {
         deductionAtIndex.get('showNewAsset').setValue(true);
         this.onToggleNewAsset(true, index);
