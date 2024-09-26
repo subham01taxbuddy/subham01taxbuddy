@@ -14,11 +14,10 @@
   border-radius: 4px 4px 0px 0px;
 }
 
-.inl{
-  flex-direction: row!important;
+.inl {
+  flex-direction: row !important;
   margin-top: 35px;
 }
-
 
 .wrap-content {
   align-items: flex-start;
@@ -39,8 +38,8 @@
   }
 }
 
-.input-field-width{
-  padding-left:10px!important;
+.input-field-width {
+  padding-left: 10px !important;
 }
 
 .wrapper {
@@ -58,7 +57,7 @@
   background-color: #ffffff;
   border-radius: 0px 0px 8px 8px;
   padding: 20px;
-  border: 1px solid #E2E4E5;
+  border: 1px solid #e2e4e5;
   border-top: 0;
 }
 
@@ -95,20 +94,19 @@
   padding-bottom: 10px;
 }
 
-.mat-mdc-select-panel{
-  margin-top: 50px!important;
+.mat-mdc-select-panel {
+  margin-top: 50px !important;
 }
 
-.add-btn{
+.add-btn {
   top: 15px;
   position: relative;
   right: 142px;
 }
 
 .cdk-overlay-pane {
-  margin-top: 45px!important;
+  margin-top: 45px !important;
 }
-
 
 .del {
   margin-top: 22px;
@@ -127,14 +125,14 @@
   flex: 0 0 auto;
 }
 
-.mvrl{
+.mvrl {
   margin-left: 100px;
   margin-top: -10px;
 }
 
-.note{
+.note {
   color: #b60000;
   font-style: italic;
   font-size: 14px;
-  line-height:1.5;
+  line-height: 1.5;
 }
