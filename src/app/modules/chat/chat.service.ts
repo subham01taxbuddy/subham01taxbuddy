@@ -116,11 +116,20 @@ export class ChatService {
     this.onGroupUpdatedCallbacks.delete(instanceId);
   }
   registerMessageReceived(requestId:string, messageReceivedCallback) {
-    this.onMessageAddedCallbacks.set(requestId, messageReceivedCallback);
-    this.onMessageUpdatedCallbacks.set(requestId, messageReceivedCallback);
+    if(this.onMessageAddedCallbacks.has(requestId)) {
+      this.onMessageAddedCallbacks.get(requestId).push(messageReceivedCallback);
+      this.onMessageUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
+    } else {
+      this.onMessageAddedCallbacks.set(requestId, [messageReceivedCallback]);
+      this.onMessageUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
+    }
   }
 
-  unregisterMessageReceived(requestId:string) {
+  unregisterMessageReceived(requestId:string, messageReceivedCallback) {
+    if(this.onMessageAddedCallbacks.has(requestId)){
+      this.onMessageAddedCallbacks.get(requestId).pop(messageReceivedCallback);
+      this.onMessageUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
+    }
     this.onMessageAddedCallbacks.delete(requestId);
     this.onMessageUpdatedCallbacks.delete(requestId);
   }
@@ -321,7 +330,9 @@ export class ChatService {
             const hasMoreMessages = chat21Result.result.length > 0;
 
             this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                callback(ChatEvents.MESSAGE_RECEIVED);
+                callback.forEach(func=> {
+                  func(ChatEvents.MESSAGE_RECEIVED);
+                });
             });
 
             // Call the callback to remove the loader and indicate if there are more messages
@@ -671,7 +682,9 @@ export class ChatService {
                           let requestId = topicParts[topicParts.indexOf("messages") + 1];
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             this.addMessageToDB(requestId, JSON.parse(message.toString()));
-                            callback(ChatEvents.MESSAGE_RECEIVED, message.toString());
+                            callback.forEach(func=> {
+                              func(ChatEvents.MESSAGE_RECEIVED, message.toString());
+                            })
                           });
                         // }
                       }
@@ -767,14 +780,14 @@ export class ChatService {
           console.log("Chat client close event");
         }
         // reset all subscriptions
-        this.onConversationAddedCallbacks = new Map();
-        this.onConversationUpdatedCallbacks = new Map();
-        this.onConversationDeletedCallbacks = new Map();
-        this.onArchivedConversationAddedCallbacks = new Map();
-        this.onArchivedConversationDeletedCallbacks = new Map();
-        this.onMessageAddedCallbacks = new Map();
-        this.onMessageUpdatedCallbacks = new Map();
-        this.onGroupUpdatedCallbacks = new Map();
+        // this.onConversationAddedCallbacks = new Map();
+        // this.onConversationUpdatedCallbacks = new Map();
+        // this.onConversationDeletedCallbacks = new Map();
+        // this.onArchivedConversationAddedCallbacks = new Map();
+        // this.onArchivedConversationDeletedCallbacks = new Map();
+        // this.onMessageAddedCallbacks = new Map();
+        // this.onMessageUpdatedCallbacks = new Map();
+        // this.onGroupUpdatedCallbacks = new Map();
         this.callbackHandlers = new Map();
         // this.on_message_handler = null
         this.topicInbox = null;
