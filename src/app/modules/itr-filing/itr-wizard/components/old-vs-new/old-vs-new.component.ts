@@ -456,7 +456,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     const optionForCurrentAY =
       this.regimeSelectionForm.get('optionForCurrentAY');
 
-    if (this.showCurrentAYOptions) {
+    if (this.showCurrentAYOptions && currAssmntYr.value === 'OLD') {
       if (this.itrType === '3' || this.itrType === '4') {
         // acknowledgementNumber
         optionForCurrentAY
