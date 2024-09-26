@@ -1,276 +1,573 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div class="page-wrapper">
   <main>
-
     <div class="frameC">
-      <h1 class="heading__title"> {{ title }}</h1>
+      <h1 class="heading__title">{{ title }}</h1>
       <div class="space">
-
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
-
-            <app-file-parser *ngIf="bondType === 'listed' && cgAllowed" (newDataAvailable)="getFileParserData()"></app-file-parser>
+            <app-file-parser
+              *ngIf="bondType === 'listed' && cgAllowed"
+              (newDataAvailable)="getFileParserData()"
+            ></app-file-parser>
 
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading1">
-                <button id="accordBtn" type="button" class="accordion-button" data-bs-toggle="collapse"
-                  data-bs-target="#collapse">Manual Update</button>
-
+                <button
+                  id="accordBtn"
+                  type="button"
+                  class="accordion-button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse"
+                >
+                  Manual Update
+                </button>
               </h2>
-              <div id="collapse" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div
+                id="collapse"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#myAccordion"
+              >
                 <form [formGroup]="selectedFormGroup" #formDirective="ngForm">
                   <div class="accordion__item-body">
-
                     <div>
-
                       <div>
                         <div>
                           <div class="note new-note align-center">
-                            <b>Note:</b> In Case of Short Term dates won’t go in the JSON
+                            <b>Note:</b> In Case of Short Term dates won’t go in
+                            the JSON
                           </div>
                           <div class="div-6">
                             <div class="form-field">
                               <div><span class="span">Scrip Name</span></div>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput formControlName="nameOfTheUnits" placeholder="Scrip Name"
-                                  name="nameOfTheUnits" (change)="calculateTotalCG(selectedFormGroup, false)" />
-                                <mat-hint class="spcTpBtm">If Scrip Name is not available, we will take
-                                  INNOTAVAILAB</mat-hint>
-                                <mat-error *ngIf="selectedFormGroup?.get('nameOfTheUnits').hasError('pattern')">
-                                  Enter valid amount.</mat-error>
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  formControlName="nameOfTheUnits"
+                                  placeholder="Scrip Name"
+                                  name="nameOfTheUnits"
+                                  (change)="
+                                    calculateTotalCG(selectedFormGroup, false)
+                                  "
+                                />
+                                <mat-hint class="spcTpBtm"
+                                  >If Scrip Name is not available, we will take
+                                  INNOTAVAILAB</mat-hint
+                                >
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('nameOfTheUnits')
+                                      .hasError('pattern')
+                                  "
+                                >
+                                  Enter valid amount.</mat-error
+                                >
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Sale Date </span> <span class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Sale Date </span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input appDateInput matInput [min]="minDate" [max]="maxDate" formControlName="sellDate"
-                                  name="sellDate" [matDatepicker]="sellDate" placeholder="DD/MM/YYYY"
-                                  (dateChange)="calculateGainTypeOrIndexCost(selectedFormGroup);
-                          calculateTotalCG(selectedFormGroup, false);
-                          calMaxPurchaseDate(selectedFormGroup?.get('sellDate').value)" />
-                                <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  [min]="minDate"
+                                  [max]="maxDate"
+                                  formControlName="sellDate"
+                                  name="sellDate"
+                                  readonly
+                                  [matDatepicker]="sellDate"
+                                  placeholder="DD/MM/YYYY"
+                                  (dateChange)="
+                                    calculateGainTypeOrIndexCost(
+                                      selectedFormGroup
+                                    );
+                                    calculateTotalCG(selectedFormGroup, false);
+                                    calMaxPurchaseDate(
+                                      selectedFormGroup?.get('sellDate').value
+                                    )
+                                  "
+                                />
+                                <mat-datepicker-toggle
+                                  matSuffix
+                                  [for]="sellDate"
+                                ></mat-datepicker-toggle>
                                 <mat-datepicker #sellDate> </mat-datepicker>
-                                <mat-error *ngIf="selectedFormGroup?.get('sellDate').hasError('required')">
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('sellDate')
+                                      .hasError('required')
+                                  "
+                                >
                                   Enter valid Date.
                                 </mat-error>
-                                <mat-error *ngIf="selectedFormGroup?.get('sellDate').hasError('dateOrder')">
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('sellDate')
+                                      .hasError('dateOrder')
+                                  "
+                                >
                                   Sale date must be after purchase date.
                                 </mat-error>
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Buy Date </span> <span class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Buy Date </span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input appDateInput matInput [max]="selectedFormGroup?.get('sellDate').value"
-                                  formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
-                                  placeholder="DD/MM/YYYY"  (dateChange)="calculateGainTypeOrIndexCost(selectedFormGroup);
-                          calculateTotalCG(selectedFormGroup, false);
-                          getImprovementYears()" />
-                                <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  [max]="
+                                    selectedFormGroup?.get('sellDate').value
+                                  "
+                                  formControlName="purchaseDate"
+                                  name="purchaseDate"
+                                  [matDatepicker]="purchaseDate"
+                                  placeholder="DD/MM/YYYY"
+                                  readonly
+                                  (dateChange)="
+                                    calculateGainTypeOrIndexCost(
+                                      selectedFormGroup
+                                    );
+                                    calculateTotalCG(selectedFormGroup, false);
+                                    getImprovementYears()
+                                  "
+                                />
+                                <mat-datepicker-toggle
+                                  matSuffix
+                                  [for]="purchaseDate"
+                                ></mat-datepicker-toggle>
                                 <mat-datepicker #purchaseDate></mat-datepicker>
-                                <mat-error *ngIf="selectedFormGroup?.get('purchaseDate').hasError('dateOrder')">
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('purchaseDate')
+                                      .hasError('dateOrder')
+                                  "
+                                >
                                   Purchase date must be before the sale date.
                                 </mat-error>
                               </mat-form-field>
                             </div>
                             <div class="form-field">
                               <div><span class="span">Type of gain </span></div>
-                              <input type="text" class="form-control inpplac disable" formControlName="gainType"
-                                aria-describedby="emailHelp" readonly>
+                              <input
+                                type="text"
+                                class="form-control inpplac disable"
+                                formControlName="gainType"
+                                aria-describedby="emailHelp"
+                                readonly
+                              />
                               <div class="note new-note">
-                                <b>Note:</b> Date is mandatory in order to determine holding period & the quarter in
-                                which CG will be recognized
+                                <b>Note:</b> Date is mandatory in order to
+                                determine holding period & the quarter in which
+                                CG will be recognized
                               </div>
                             </div>
                           </div>
 
-                          <div class="div-6 mt-4"
-                            *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
+                          <div
+                            class="div-6 mt-4"
+                            *ngIf="
+                              checkBuyDateBefore31stJan(selectedFormGroup) &&
+                              this.bondType === 'listed'
+                            "
+                          >
                             <div class="form-field">
                               <mat-label>Buy/Sell Quantity</mat-label>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="sellOrBuyQuantity"
-                                  placeholder="Sell/Buy Quantity" name="sellOrBuyQuantity" maxlength="14"
-                                  (change)="calculateTotalCG(selectedFormGroup, false)"
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  appTwoDigitDecimaNumber
+                                  formControlName="sellOrBuyQuantity"
+                                  placeholder="Sell/Buy Quantity"
+                                  name="sellOrBuyQuantity"
+                                  maxlength="14"
+                                  (change)="
+                                    calculateTotalCG(selectedFormGroup, false)
+                                  "
+                                  digitsOnly
                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                  (blur)="getPurchaseValue(); getSaleValue()" />
+                                  (blur)="getPurchaseValue(); getSaleValue()"
+                                />
 
-                                <mat-error *ngIf="
-                                            selectedFormGroup?.get('sellOrBuyQuantity').hasError('pattern')
-                                          ">Enter valid amount.</mat-error>
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('sellOrBuyQuantity')
+                                      .hasError('pattern')
+                                  "
+                                  >Enter valid amount.</mat-error
+                                >
                               </mat-form-field>
                             </div>
                             <div class="form-field">
                               <mat-label>Sale Price</mat-label>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="sellValuePerUnit"
-                                  placeholder="Sale Price" name="sellValuePerUnit" maxlength="14"
-                                  (change)="calculateTotalCG(selectedFormGroup, false)" (blur)="getSaleValue()"
-                                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                <mat-error *ngIf="
-                                            selectedFormGroup?.get('sellValuePerUnit').hasError('pattern')
-                                          ">Enter valid amount.</mat-error>
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  appTwoDigitDecimaNumber
+                                  formControlName="sellValuePerUnit"
+                                  placeholder="Sale Price"
+                                  name="sellValuePerUnit"
+                                  maxlength="14"
+                                  digitsOnly
+                                  (change)="
+                                    calculateTotalCG(selectedFormGroup, false)
+                                  "
+                                  (blur)="getSaleValue()"
+                                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                />
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      ?.get('sellValuePerUnit')
+                                      .hasError('pattern')
+                                  "
+                                  >Enter valid amount.</mat-error
+                                >
                               </mat-form-field>
                             </div>
                             <div class="form-field">
                               <mat-label>Buy Price</mat-label>
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput appTwoDigitDecimaNumber formControlName="purchaseValuePerUnit"
-                                  placeholder="Buy Price" name="purchaseValuePerUnit" maxlength="14"
+                              <mat-form-field
+                                appearance="outline"
+                                class="small-inp no-height"
+                              >
+                                <input
+                                  matInput
+                                  appTwoDigitDecimaNumber
+                                  formControlName="purchaseValuePerUnit"
+                                  placeholder="Buy Price"
+                                  name="purchaseValuePerUnit"
+                                  maxlength="14"
                                   (blur)="getPurchaseValue()"
-                                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                <mat-error *ngIf="
-                                            selectedFormGroup
-                                              .get('purchaseValuePerUnit')
-                                              .hasError('pattern')
-                                          ">Enter valid amount.</mat-error>
+                                  digitsOnly
+                                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                />
+                                <mat-error
+                                  *ngIf="
+                                    selectedFormGroup
+                                      .get('purchaseValuePerUnit')
+                                      .hasError('pattern')
+                                  "
+                                  >Enter valid amount.</mat-error
+                                >
                               </mat-form-field>
                             </div>
                           </div>
                           <div class="gray_container mt-2">
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="normal_text">Sale Value</span> <span class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="normal_text">Sale Value</span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="sellValue" placeholder="Sale Value" name="sellValue"
-                                    maxlength="14" required [readonly]="
-                                              checkBuyDateBefore31stJan(selectedFormGroup) &&
-                                              this.bondType === 'listed'
-                                            " (blur)="
-                                              calculateGainTypeOrIndexCost(
-                                                selectedFormGroup
-                                              );
-                                              calculateTotalCG(selectedFormGroup, false)
-                                            " type="number" step="1" digitsOnly
+                                <mat-form-field
+                                  appearance="outline"
+                                  class="small-inp no-height"
+                                >
+                                  <input
+                                    matInput
+                                    formControlName="sellValue"
+                                    placeholder="Sale Value"
+                                    name="sellValue"
+                                    maxlength="14"
+                                    required
+                                    [readonly]="
+                                      checkBuyDateBefore31stJan(
+                                        selectedFormGroup
+                                      ) && this.bondType === 'listed'
+                                    "
+                                    (blur)="
+                                      calculateGainTypeOrIndexCost(
+                                        selectedFormGroup
+                                      );
+                                      calculateTotalCG(selectedFormGroup, false)
+                                    "
+                                    type="number"
+                                    step="1"
+                                    digitsOnly
                                     onkeydown="if(event.key==='.'){event.preventDefault();}"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="
-                                              bondType !== 'listed' &&
-                                              selectedFormGroup?.get('sellValue').hasError('pattern')
-                                            ">Enter valid amount.</mat-error>
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                  />
+                                  <mat-error
+                                    *ngIf="
+                                      bondType !== 'listed' &&
+                                      selectedFormGroup
+                                        ?.get('sellValue')
+                                        .hasError('pattern')
+                                    "
+                                    >Enter valid amount.</mat-error
+                                  >
                                 </mat-form-field>
                               </div>
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="normal_text">Buy Value</span> <span class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="normal_text">Buy Value</span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="purchaseCost" placeholder="Buy Value"
-                                    name="purchaseCost" maxlength="14" [readonly]="
-                                              checkBuyDateBefore31stJan(selectedFormGroup) &&
-                                              this.bondType === 'listed'
-                                            " (blur)="
-                                              calculateGainTypeOrIndexCost(
-                                                selectedFormGroup
-                                              )
-                                            " type="number" step="1" digitsOnly
+                                <mat-form-field
+                                  appearance="outline"
+                                  class="small-inp no-height"
+                                >
+                                  <input
+                                    matInput
+                                    formControlName="purchaseCost"
+                                    placeholder="Buy Value"
+                                    name="purchaseCost"
+                                    maxlength="14"
+                                    [readonly]="
+                                      checkBuyDateBefore31stJan(
+                                        selectedFormGroup
+                                      ) && this.bondType === 'listed'
+                                    "
+                                    (blur)="
+                                      calculateGainTypeOrIndexCost(
+                                        selectedFormGroup
+                                      )
+                                    "
+                                    type="number"
+                                    step="1"
+                                    digitsOnly
                                     onkeydown="if(event.key==='.'){event.preventDefault();}"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="
-                                              selectedFormGroup?.get('purchaseCost').hasError('pattern')
-                                            ">Enter valid amount.</mat-error>
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                  />
+                                  <mat-error
+                                    *ngIf="
+                                      selectedFormGroup
+                                        ?.get('purchaseCost')
+                                        .hasError('pattern')
+                                    "
+                                    >Enter valid amount.</mat-error
+                                  >
                                 </mat-form-field>
                                 <div class="note new-note align-center">
-                                  <b>Note:</b> Click on tab button after entering buy value to get the gain amount
+                                  <b>Note:</b> Click on tab button after
+                                  entering buy value to get the gain amount
                                 </div>
                               </div>
                             </div>
-                            <div class="div-6 mb-20"
-                              *ngIf="bondType !== 'listed' && selectedFormGroup?.controls['gainType'].value === 'LONG'">
+                            <div
+                              class="div-6 mb-20"
+                              *ngIf="
+                                bondType !== 'listed' &&
+                                selectedFormGroup?.controls['gainType']
+                                  .value === 'LONG'
+                              "
+                            >
                               <div class="form-field">
-                                <div><span class="normal_text">Indexed cost of acquisition</span></div>
+                                <div>
+                                  <span class="normal_text"
+                                    >Indexed cost of acquisition</span
+                                  >
+                                </div>
                               </div>
                               <div class="form-field">
                                 <div class="note">
-                                  <b>Note:</b> Kindly tab to get the indexed cost
+                                  <b>Note:</b> Kindly tab to get the indexed
+                                  cost
                                 </div>
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="indexCostOfAcquisition"
-                                    placeholder="Indexed Cost Of Acquisition" name="indexCostOfAcquisition" digitsOnly
-                                    maxlength="14" readonly (change)="calculateTotalCG(selectedFormGroup, false)"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="
-                                          selectedFormGroup?.get('purchaseCost').hasError('pattern')
-                                        ">Enter valid amount.</mat-error>
+                                <mat-form-field
+                                  appearance="outline"
+                                  class="small-inp no-height"
+                                >
+                                  <input
+                                    matInput
+                                    formControlName="indexCostOfAcquisition"
+                                    placeholder="Indexed Cost Of Acquisition"
+                                    name="indexCostOfAcquisition"
+                                    digitsOnly
+                                    maxlength="14"
+                                    readonly
+                                    (change)="
+                                      calculateTotalCG(selectedFormGroup, false)
+                                    "
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                  />
+                                  <mat-error
+                                    *ngIf="
+                                      selectedFormGroup
+                                        ?.get('purchaseCost')
+                                        .hasError('pattern')
+                                    "
+                                    >Enter valid amount.</mat-error
+                                  >
                                 </mat-form-field>
                               </div>
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="normal_text">Expenses</span> <span class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="normal_text">Expenses</span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
                               </div>
                               <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="sellExpense" placeholder="Expenses"
-                                    name="sellExpense" maxlength="14" digitsOnly
-                                    (change)="calculateTotalCG(selectedFormGroup, true)"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                  <mat-error *ngIf="selectedFormGroup?.get('sellExpense').hasError('pattern')">Enter
-                                    valid amount.</mat-error>
+                                <mat-form-field
+                                  appearance="outline"
+                                  class="small-inp no-height"
+                                >
+                                  <input
+                                    matInput
+                                    formControlName="sellExpense"
+                                    placeholder="Expenses"
+                                    name="sellExpense"
+                                    maxlength="14"
+                                    digitsOnly
+                                    (change)="
+                                      calculateTotalCG(selectedFormGroup, true)
+                                    "
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                  />
+                                  <mat-error
+                                    *ngIf="
+                                      selectedFormGroup
+                                        ?.get('sellExpense')
+                                        .hasError('pattern')
+                                    "
+                                    >Enter valid amount.</mat-error
+                                  >
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
-
+                            <div
+                              *ngIf="
+                                checkBuyDateBefore31stJan(selectedFormGroup) &&
+                                this.bondType === 'listed'
+                              "
+                            >
                               <div class="div-6 mb-20">
                                 <div class="form-field">
-                                  <div><span class="normal_text">ISIN Code</span></div>
+                                  <div>
+                                    <span class="normal_text">ISIN Code</span>
+                                  </div>
                                 </div>
                                 <div class="form-field">
-                                  <mat-form-field appearance="outline" class="small-inp no-height">
-                                    <input matInput formControlName="isinCode" placeholder="ISIN Code" name="isinCode"
+                                  <mat-form-field
+                                    appearance="outline"
+                                    class="small-inp no-height"
+                                  >
+                                    <input
+                                      matInput
+                                      formControlName="isinCode"
+                                      placeholder="ISIN Code"
+                                      name="isinCode"
                                       (blur)="calculateFMV(selectedFormGroup)"
-                                      (change)="calculateFMV(selectedFormGroup)" />
-                                    <mat-hint style="font-size: 75%">If ISIN Code is not available, we will take
-                                      INNOTAVAILAB</mat-hint>
+                                      (change)="calculateFMV(selectedFormGroup)"
+                                    />
+                                    <mat-hint style="font-size: 75%"
+                                      >If ISIN Code is not available, we will
+                                      take INNOTAVAILAB</mat-hint
+                                    >
                                   </mat-form-field>
                                 </div>
                               </div>
 
                               <div class="div-6 mb-20">
                                 <div class="form-field">
-                                  <div><span class="normal_text">FMV Per Unit as on 31st Jan 2018</span></div>
+                                  <div>
+                                    <span class="normal_text"
+                                      >FMV Per Unit as on 31st Jan 2018</span
+                                    >
+                                  </div>
                                 </div>
                                 <div class="form-field">
-                                  <mat-form-field appearance="outline" class="small-inp no-height">
-                                    <input matInput formControlName="fmvAsOn31Jan2018" placeholder="FMV"
-                                      name="fmvAsOn31Jan2018" (change)="calculateTotalCG(selectedFormGroup, false)" />
+                                  <mat-form-field
+                                    appearance="outline"
+                                    class="small-inp no-height"
+                                  >
+                                    <input
+                                      matInput
+                                      formControlName="fmvAsOn31Jan2018"
+                                      placeholder="FMV"
+                                      name="fmvAsOn31Jan2018"
+                                      (change)="
+                                        calculateTotalCG(
+                                          selectedFormGroup,
+                                          false
+                                        )
+                                      "
+                                    />
                                   </mat-form-field>
                                 </div>
                               </div>
                               <div class="div-6 mb-20">
                                 <div class="form-field">
-                                  <div><span class="normal_text">Cost of acquisition </span></div>
+                                  <div>
+                                    <span class="normal_text"
+                                      >Cost of acquisition
+                                    </span>
+                                  </div>
                                 </div>
                                 <div class="form-field">
-                                  <mat-form-field appearance="outline" class="small-inp no-height">
-                                    <input matInput formControlName="grandFatheredValue"
-                                      placeholder="GrandFathered Value " name="grandFatheredValue" maxlength="14"
+                                  <mat-form-field
+                                    appearance="outline"
+                                    class="small-inp no-height"
+                                  >
+                                    <input
+                                      matInput
+                                      formControlName="grandFatheredValue"
+                                      placeholder="GrandFathered Value "
+                                      name="grandFatheredValue"
+                                      maxlength="14"
                                       matTooltip="Cost of acquisition(as per grandfathering)"
-                                      matTooltipClass="tab-tooltip" matTooltipPosition="above" readonly
-                                      (change)="calculateTotalCG(selectedFormGroup, false)"
-                                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
-                                    <mat-hint style="font-size: 75%">As per grandfathering</mat-hint>
-                                    <mat-error *ngIf="
-                                          selectedFormGroup
-                                            .get('grandFatheredValue')
-                                            .hasError('pattern')
-                                        ">Enter valid amount.</mat-error>
+                                      matTooltipClass="tab-tooltip"
+                                      matTooltipPosition="above"
+                                      readonly
+                                      (change)="
+                                        calculateTotalCG(
+                                          selectedFormGroup,
+                                          false
+                                        )
+                                      "
+                                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    />
+                                    <mat-hint style="font-size: 75%"
+                                      >As per grandfathering</mat-hint
+                                    >
+                                    <mat-error
+                                      *ngIf="
+                                        selectedFormGroup
+                                          .get('grandFatheredValue')
+                                          .hasError('pattern')
+                                      "
+                                      >Enter valid amount.</mat-error
+                                    >
                                   </mat-form-field>
                                 </div>
                               </div>
-
                             </div>
-
                           </div>
                         </div>
                       </div>
@@ -278,41 +575,76 @@
                     <div class="accordion-item">
                       <h2 class="accordion-title">
                         Gain Amount
-                        <button type="button" class="accordion-btn" data-bs-toggle="collapse"
-                          data-bs-target="#collapseTwo">
-                          ₹ {{ selectedFormGroup?.controls["capitalGain"].value }}
+                        <button
+                          type="button"
+                          class="accordion-btn"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapseTwo"
+                        >
+                          ₹
+                          {{ selectedFormGroup?.controls["capitalGain"].value }}
                         </button>
                       </h2>
                     </div>
 
                     <div class="White_box" *ngIf="this.bondType !== 'listed'">
                       <div class="row mb-10">
-                        <div class="col-10 ">
-                          <p><span class="span">Add details of cost of improvements?*<span
-                                class="text-wrapper-2">*</span></span></p>
+                        <div class="col-10">
+                          <p>
+                            <span class="span"
+                              >Add details of cost of improvements?*<span
+                                class="text-wrapper-2"
+                                >*</span
+                              ></span
+                            >
+                          </p>
                         </div>
                         <div class="col-2">
                           <mat-radio-group [formControl]="isImprovement">
-                            <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
-                            </mat-radio-button>&nbsp;&nbsp;&nbsp;
-                            <mat-radio-button [value]="false" labelPosition="before">No
+                            <mat-radio-button
+                              [value]="true"
+                              style="margin-left: 0px"
+                              labelPosition="before"
+                              >Yes </mat-radio-button
+                            >&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button
+                              [value]="false"
+                              labelPosition="before"
+                              >No
                             </mat-radio-button>
                           </mat-radio-group>
                         </div>
                       </div>
                       <!-- cost-of-improvement  -->
                       <div formGroupName="improvementsArray">
-
                         <div *ngIf="isImprovement.value">
                           <div class="row">
                             <div class="form-field">
-                              <div><span class="normal_text">Year Of Improvement</span></div>
+                              <div>
+                                <span class="normal_text"
+                                  >Year Of Improvement</span
+                                >
+                              </div>
                               <div class="form-field px-2">
-                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                  <mat-select placeholder="Year of Improvement" name="financialYearOfImprovement"
+                                <mat-form-field
+                                  class="input-field-width small-inp no-height"
+                                  appearance="outline"
+                                >
+                                  <mat-select
+                                    placeholder="Year of Improvement"
+                                    name="financialYearOfImprovement"
                                     formControlName="financialYearOfImprovement"
-                                    (blur)="calculateGainTypeOrIndexCost(selectedFormGroup)" required>
-                                    <mat-option [value]="year" *ngFor="let year of improvementYears">
+                                    (blur)="
+                                      calculateGainTypeOrIndexCost(
+                                        selectedFormGroup
+                                      )
+                                    "
+                                    required
+                                  >
+                                    <mat-option
+                                      [value]="year"
+                                      *ngFor="let year of improvementYears"
+                                    >
                                       {{ year }}
                                     </mat-option>
                                   </mat-select>
@@ -320,14 +652,31 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <div><span class="normal_text">Cost of Improvement</span></div>
+                              <div>
+                                <span class="normal_text"
+                                  >Cost of Improvement</span
+                                >
+                              </div>
                               <div class="form-field px-2">
-                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                  <input matInput digitsOnly formControlName="costOfImprovement"
-                                    placeholder="Cost Of Improvement" name="costOfImprovement"
-                                    (blur)="calculateGainTypeOrIndexCost(selectedFormGroup)" class="input-field"
+                                <mat-form-field
+                                  class="input-field-width small-inp no-height"
+                                  appearance="outline"
+                                >
+                                  <input
+                                    matInput
+                                    digitsOnly
+                                    formControlName="costOfImprovement"
+                                    placeholder="Cost Of Improvement"
+                                    name="costOfImprovement"
+                                    (blur)="
+                                      calculateGainTypeOrIndexCost(
+                                        selectedFormGroup
+                                      )
+                                    "
+                                    class="input-field"
                                     maxlength="14"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                  />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -336,14 +685,27 @@
                               <div class="note mvrl">
                                 <b>Note:</b> Kindly tab to get the indexed cost
                               </div>
-                              <div><span class="normal_text">Cost of Improvement with Indexation</span></div>
+                              <div>
+                                <span class="normal_text"
+                                  >Cost of Improvement with Indexation</span
+                                >
+                              </div>
                               <div class="form-field px-2">
-                                <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                  <input matInput digitsOnly formControlName="indexCostOfImprovement"
-                                    placeholder="Cost Of Improvement with Indexation" name="indexCostOfImprovement"
-                                    class="input-field" maxlength="14"
+                                <mat-form-field
+                                  class="input-field-width small-inp no-height"
+                                  appearance="outline"
+                                >
+                                  <input
+                                    matInput
+                                    digitsOnly
+                                    formControlName="indexCostOfImprovement"
+                                    placeholder="Cost Of Improvement with Indexation"
+                                    name="indexCostOfImprovement"
+                                    class="input-field"
+                                    maxlength="14"
                                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    readonly />
+                                    readonly
+                                  />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -354,19 +716,28 @@
 
                     <div class="out-box">
                       <div class="box-left">
-                        <button class="btn btn__white" (click)="clearForm()">cancel</button>
+                        <button class="btn btn__white" (click)="clearForm()">
+                          cancel
+                        </button>
                       </div>
                       <div class="box-right">
                         <!-- <button class="btn btn__primary" (click)="onSaveClick($event)" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
                                  selectedFormGroup?.controls['capitalGain'].value === undefined">Save Details</button> -->
-                        <app-custom-button class="btn btn__primary" [disabled]="selectedFormGroup?.controls['capitalGain'].value === null ||
-                                 selectedFormGroup?.controls['capitalGain'].value === undefined" [actions]="[onSaveClick]" [actionParams]="[[true]]">
-                           Save Details
+                        <app-custom-button
+                          class="btn btn__primary"
+                          [disabled]="
+                            selectedFormGroup?.controls['capitalGain'].value ===
+                              null ||
+                            selectedFormGroup?.controls['capitalGain'].value ===
+                              undefined
+                          "
+                          [actions]="[onSaveClick]"
+                          [actionParams]="[[true]]"
+                        >
+                          Save Details
                         </app-custom-button>
                       </div>
                     </div>
-
-
                   </div>
                 </form>
               </div>
@@ -374,54 +745,95 @@
 
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading3">
-                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">
-                  {{title}}</button>
-
+                <button
+                  type="button"
+                  class="accordion-button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse3"
+                >
+                  {{ title }}
+                </button>
               </h2>
-              <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div
+                id="collapse3"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#myAccordion"
+              >
                 <div class="accordion__item-body">
                   <mat-tab-group mat-align-tabs="start">
-                    <mat-tab label="All Securities" *ngIf="bondType === 'unlisted'">
-                      <div class="table-responsive" style="overflow-x: scroll;">
+                    <mat-tab
+                      label="All Securities"
+                      *ngIf="bondType === 'unlisted'"
+                    >
+                      <div class="table-responsive" style="overflow-x: scroll">
                         <div>
                           <div class="col-sm-12">
-                            <ag-grid-angular class=" newAG ag-theme-balham topSps " [gridOptions]="equityGridOptions"
-                              (rowClicked)="editSecuritiesForm($event)">
+                            <ag-grid-angular
+                              class="newAG ag-theme-balham topSps"
+                              [gridOptions]="equityGridOptions"
+                              (rowClicked)="editSecuritiesForm($event)"
+                            >
                             </ag-grid-angular>
                           </div>
                           <div class="row col-sm-12">
                             <div class="col-sm-6">
-                              <button type="submit" class="delete-btn" [disabled]="!equitySelected()"
-                                (click)="deleteArray()">
-                                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                              <button
+                                type="submit"
+                                class="delete-btn"
+                                [disabled]="!equitySelected()"
+                                (click)="deleteArray()"
+                              >
+                                <i class="fa fa-trash" aria-hidden="true"
+                                  >&nbsp;</i
+                                >Delete
                               </button>
                             </div>
                             <div class="col-sm-6" *ngIf="bondType === 'listed'">
-                              <button type="submit" class="cancel rghtBack" (click)="showCompactView()">
-                                {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
+                              <button
+                                type="submit"
+                                class="cancel rghtBack"
+                                (click)="showCompactView()"
+                              >
+                                {{
+                                  this.bondType === "listed"
+                                    ? "Back to Brokers"
+                                    : "Back"
+                                }}
                               </button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </mat-tab>
-                    <mat-tab label="By Broker" *ngIf="bondType ==='listed'">
+                    <mat-tab label="By Broker" *ngIf="bondType === 'listed'">
                       <div *ngIf="compactView">
                         <div class="card__row">
                           <div class="broker-row">
                             <div class="col-sm-1"></div>
-                            <div class="col-sm-3 broker-view-title">Broker Name</div>
+                            <div class="col-sm-3 broker-view-title">
+                              Broker Name
+                            </div>
                             <div class="col-sm-3 broker-view-title">LTCG</div>
                             <div class="col-sm-3 broker-view-title">STCG</div>
                           </div>
                         </div>
-                        <div class="card__row" *ngFor="let securities of brokerList; let i = index">
+                        <div
+                          class="card__row"
+                          *ngFor="let securities of brokerList; let i = index"
+                        >
                           <div class="broker-row">
                             <div class="col-sm-1">
-                              <mat-checkbox color="primary" (change)="changeSelection(i)" [ngModel]="brokerSelected[i]"
-                                class="ml30"></mat-checkbox>
+                              <mat-checkbox
+                                color="primary"
+                                (change)="changeSelection(i)"
+                                [ngModel]="brokerSelected[i]"
+                                class="ml30"
+                              ></mat-checkbox>
                             </div>
-                            <div class="row col-sm-12" (click)="showBroker(securities.brokerName)">
+                            <div
+                              class="row col-sm-12"
+                              (click)="showBroker(securities.brokerName)"
+                            >
                               <div class="col-sm-3 broker-view-value">
                                 {{ securities.brokerName }}
                               </div>
@@ -432,41 +844,65 @@
                                 ₹{{ securities.STCG?.toFixed(2) }}
                               </div>
                               <div class="col-sm-2 broker-view-btn">
-                                <button type="button" style="
-                              border: none;
-                              background: transparent;
-                              font-size: 12px;
-                              cursor: pointer;
-                            ">
-                                  <i class="fas fa-chevron-right broker-view-icon"></i>
+                                <button
+                                  type="button"
+                                  style="
+                                    border: none;
+                                    background: transparent;
+                                    font-size: 12px;
+                                    cursor: pointer;
+                                  "
+                                >
+                                  <i
+                                    class="fas fa-chevron-right broker-view-icon"
+                                  ></i>
                                 </button>
                               </div>
                             </div>
-
                           </div>
                         </div>
 
-                        <button class="delete-btn delete-icon" (click)="$event.stopPropagation(); deleteBroker()"
-                          [disabled]="!isBrokerSelected()">
+                        <button
+                          class="delete-btn delete-icon"
+                          (click)="$event.stopPropagation(); deleteBroker()"
+                          [disabled]="!isBrokerSelected()"
+                        >
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                         </button>
                       </div>
                       <div *ngIf="!compactView">
                         <div class="col-sm-12">
-                          <ag-grid-angular class="newAG ag-theme-balham topSps  " [gridOptions]="equityGridOptions"
-                            (rowClicked)="editSecuritiesForm($event)">
+                          <ag-grid-angular
+                            class="newAG ag-theme-balham topSps"
+                            [gridOptions]="equityGridOptions"
+                            (rowClicked)="editSecuritiesForm($event)"
+                          >
                           </ag-grid-angular>
                         </div>
                         <div class="row col-sm-12">
                           <div class="col-sm-6">
-                            <button type="submit" class="delete-btn" [disabled]="!equitySelected()"
-                              (click)="deleteArray()">
-                              <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                            <button
+                              type="submit"
+                              class="delete-btn"
+                              [disabled]="!equitySelected()"
+                              (click)="deleteArray()"
+                            >
+                              <i class="fa fa-trash" aria-hidden="true"
+                                >&nbsp;</i
+                              >Delete
                             </button>
                           </div>
                           <div class="col-sm-6">
-                            <button type="submit" class="cancel rghtBack" (click)="showCompactView()">
-                              {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
+                            <button
+                              type="submit"
+                              class="cancel rghtBack"
+                              (click)="showCompactView()"
+                            >
+                              {{
+                                this.bondType === "listed"
+                                  ? "Back to Brokers"
+                                  : "Back"
+                              }}
                             </button>
                           </div>
                         </div>
@@ -479,24 +915,51 @@
 
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading2">
-                <button id="accordDeduction" type="button" class="accordion-button" data-bs-toggle="collapse"
-                  data-bs-target="#collapse2">Add
-                  Deduction Details u/s 54F?</button>
-
+                <button
+                  id="accordDeduction"
+                  type="button"
+                  class="accordion-button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse2"
+                >
+                  Add Deduction Details u/s 54F?
+                </button>
               </h2>
-              <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div
+                id="collapse2"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#myAccordion"
+              >
                 <div class="accordion__item-body">
                   <div class="White_box">
                     <div class="row mb-10">
-                      <div class="col-10 ">
-                        <p><span class="span">Add Deduction Details u/s 54F?<span class="text-wrapper-2">*</span></span>
+                      <div class="col-10">
+                        <p>
+                          <span class="span"
+                            >Add Deduction Details u/s 54F?<span
+                              class="text-wrapper-2"
+                              >*</span
+                            ></span
+                          >
                         </p>
                       </div>
                       <div class="col-2">
-                        <mat-radio-group [(ngModel)]="deduction" [disabled]="isDisable" class="mvRth"
-                          (change)="deductionChanged($event)">
-                          <mat-radio-button [value]="true" labelPosition="before">Yes</mat-radio-button>
-                          <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
+                        <mat-radio-group
+                          [(ngModel)]="deduction"
+                          [disabled]="isDisable"
+                          class="mvRth"
+                          (change)="deductionChanged($event)"
+                        >
+                          <mat-radio-button
+                            [value]="true"
+                            labelPosition="before"
+                            >Yes</mat-radio-button
+                          >
+                          <mat-radio-button
+                            [value]="false"
+                            labelPosition="before"
+                            >No</mat-radio-button
+                          >
                         </mat-radio-group>
                       </div>
                     </div>
@@ -505,140 +968,288 @@
                   <div class="gray_container" *ngIf="this.deduction">
                     <form [formGroup]="deductionForm">
                       <div class="row cardClr">
-                        <div class="row">
-                          <div class="col-12">
-                            <mat-checkbox [formControl]="showNewAsset" (change)="onToggleNewAsset($event.checked)">New Asset Purchase</mat-checkbox>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span">Type of Deduction*</span>
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                (change)="calculateDeductionGain()"
+                                matInput
+                                readonly
+                                placeholder=""
+                                formControlName="underSection"
+                                name="underSection"
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'underSection'
+                                  ].hasError('required')
+                                "
+                                >Please enter type of deduction
+                              </mat-error>
+                            </mat-form-field>
                           </div>
                         </div>
-                        <div  class="nBorder" *ngIf="showNewAsset.value">
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Type of Deduction*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input (change)="calculateDeductionGain()" matInput readonly placeholder=""
-                                  formControlName="underSection" name="underSection" />
-                                <mat-error *ngIf="deductionForm.controls['underSection'].hasError(
-                              'required')">Please enter type of deduction
-                                </mat-error>
-                              </mat-form-field>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span"
+                                >Purchase Date of New Asset*</span
+                              >
                             </div>
                           </div>
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Purchase Date of New Asset*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input appDateInput (dateChange)="updateValidations(deductionForm);calculateDeductionGain()" matInput
-                                   placeholder="Purchase date of new asset" formControlName="purchaseDate"
-                                  name="purchaseDate" [max]="maximumDate" [matDatepicker]="purchaseDate" />
-                                <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                                <mat-datepicker #purchaseDate></mat-datepicker>
-                                <mat-error *ngIf="deductionForm.controls['purchaseDate'].hasError(
-                                      'required')">Please select date</mat-error>
-                              </mat-form-field>
-                            </div>
-                          </div>
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Cost of New Asset*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput digitsOnly placeholder="cost of new asset"
-                                  (change)="updateValidations(deductionForm);calculateDeductionGain()"
-                                  formControlName="costOfNewAssets" maxlength="14" />
-                                <mat-error *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
-                                      'required')">Please enter cost of new assets
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                (dateChange)="
+                                  updateValidations(deductionForm);
+                                  calculateDeductionGain()
+                                "
+                                matInput
+                                readonly
+                                placeholder="Purchase date of new asset"
+                                formControlName="purchaseDate"
+                                name="purchaseDate"
+                                [max]="maximumDate"
+                                [matDatepicker]="purchaseDate"
+                              />
+                              <mat-datepicker-toggle
+                                matSuffix
+                                [for]="purchaseDate"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker #purchaseDate></mat-datepicker>
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'purchaseDate'
+                                  ].hasError('required')
+                                "
+                                >Please select date</mat-error
+                              >
+                            </mat-form-field>
                           </div>
                         </div>
-                        <div class="row mt-3">
-                          <div class="col-12 ">
-                            <mat-checkbox [formControl]="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span">Cost of New Asset*</span>
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                matInput
+                                digitsOnly
+                                placeholder="cost of new asset"
+                                (change)="
+                                  updateValidations(deductionForm);
+                                  calculateDeductionGain()
+                                "
+                                formControlName="costOfNewAssets"
+                                maxlength="14"
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'costOfNewAssets'
+                                  ].hasError('required')
+                                "
+                                >Please enter cost of new assets
+                              </mat-error>
+                            </mat-form-field>
                           </div>
                         </div>
-                        <div class="nBorder" *ngIf="showCGAS.value">
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">CGAS Amount Deposited Before Due Date*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput digitsOnly placeholder="Amount deposited on CGAS before due date"
-                                  formControlName="investmentInCGAccount" maxlength="14"
-                                  matTooltip="Amount deposited on CGAS before due date"
-                                  (change)="updateValidations(deductionForm);calculateDeductionGain()"
-                                  matTooltipClass="tab-tooltip" matTooltipPosition="above" />
-                                <mat-error
-                                  *ngIf="deductionForm.controls['investmentInCGAccount'].hasError('required')">Please
-                                  enter amount</mat-error>
-                              </mat-form-field>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span"
+                                >CGAS Amount Deposited Before Due Date*</span
+                              >
                             </div>
                           </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                matInput
+                                digitsOnly
+                                placeholder="Amount deposited on CGAS before due date"
+                                formControlName="investmentInCGAccount"
+                                maxlength="14"
+                                matTooltip="Amount deposited on CGAS before due date"
+                                (change)="
+                                  updateValidations(deductionForm);
+                                  calculateDeductionGain()
+                                "
+                                matTooltipClass="tab-tooltip"
+                                matTooltipPosition="above"
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'investmentInCGAccount'
+                                  ].hasError('required')
+                                "
+                                >Please enter amount</mat-error
+                              >
+                            </mat-form-field>
+                          </div>
+                        </div>
 
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Account Number*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input trim matInput digitsOnly placeholder="Account Number"
-                                  formControlName="accountNumber" maxlength="20" minlength="3" digitsOnly />
-                                <mat-error *ngIf="deductionForm.controls['accountNumber'].hasError('pattern') ||
-                                  deductionForm.controls['accountNumber'].hasError('minlength')">
-                                  Account number should be between 3-20 digit
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div><span class="span">Account Number*</span></div>
                           </div>
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">IFSC Code*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input trim upperCase matInput class="input-field" placeholder="IFSC Code"
-                                  formControlName="ifscCode" maxlength="11" />
-                                <mat-error *ngIf="deductionForm.controls['ifscCode'].hasError('pattern')">Enter valid
-                                  IFSC Code.</mat-error>
-                              </mat-form-field>
-                            </div>
-                          </div>
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="span">Date Of Deposit*</span></div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input appDateInput matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
-                                  class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
-                                <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
-                                <mat-datepicker #dateOfDeposit></mat-datepicker>
-                                <mat-error *ngIf="deductionForm.controls['dateOfDeposit'].hasError('pattern')">
-                                  Enter valid date.
-                                </mat-error>
-                              </mat-form-field>
-                            </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                trim
+                                matInput
+                                digitsOnly
+                                placeholder="Account Number"
+                                formControlName="accountNumber"
+                                maxlength="20"
+                                minlength="3"
+                                digitsOnly
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'accountNumber'
+                                  ].hasError('pattern') ||
+                                  deductionForm.controls[
+                                    'accountNumber'
+                                  ].hasError('minlength')
+                                "
+                              >
+                                Account number should be between 3-20 digit
+                              </mat-error>
+                            </mat-form-field>
                           </div>
                         </div>
-                        <div class="div-6 mt-3 mb-20">
+                        <div class="div-6 mb-20">
                           <div class="form-field">
-                            <div><span class="span">Amount of Deduction Claimed*</span></div>
+                            <div><span class="span">IFSC Code*</span></div>
                           </div>
                           <div class="form-field">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (change)="calculateDeductionGain()" matInput [readonly]="true"
-                                placeholder="Amount of deduction claimed" formControlName="totalDeductionClaimed"
-                                maxlength="14" />
-                              <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
-                    'required')">Please enter amount</mat-error>
-                              <mat-error *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError('max')">
-                                Amount against 54F shall be restricted to 10 Crore.
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                trim
+                                upperCase
+                                matInput
+                                class="input-field"
+                                placeholder="IFSC Code"
+                                formControlName="ifscCode"
+                                maxlength="11"
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls['ifscCode'].hasError(
+                                    'pattern'
+                                  )
+                                "
+                                >Enter valid IFSC Code.</mat-error
+                              >
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span">Date Of Deposit*</span>
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                matInput
+                                formControlName="dateOfDeposit"
+                                placeholder="Date of Deposit"
+                                class="input-field"
+                                [matDatepicker]="dateOfDeposit"
+                                [max]="depositDueDate"
+                              />
+                              <mat-datepicker-toggle
+                                matSuffix
+                                [for]="dateOfDeposit"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker #dateOfDeposit></mat-datepicker>
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'dateOfDeposit'
+                                  ].hasError('pattern')
+                                "
+                              >
+                                Enter valid date.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="div-6 mb-20">
+                          <div class="form-field">
+                            <div>
+                              <span class="span"
+                                >Amount of Deduction Claimed*</span
+                              >
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                            >
+                              <input
+                                (change)="calculateDeductionGain()"
+                                matInput
+                                [readonly]="true"
+                                placeholder="Amount of deduction claimed"
+                                formControlName="totalDeductionClaimed"
+                                maxlength="14"
+                              />
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'totalDeductionClaimed'
+                                  ].hasError('required')
+                                "
+                                >Please enter amount</mat-error
+                              >
+                              <mat-error
+                                *ngIf="
+                                  deductionForm.controls[
+                                    'totalDeductionClaimed'
+                                  ].hasError('max')
+                                "
+                              >
+                                Amount against 54F shall be restricted to 10
+                                Crore.
                               </mat-error>
                             </mat-form-field>
                           </div>
@@ -651,33 +1262,37 @@
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
-
-
-
 
         <div class="out-box">
           <div class="box-left">
             <button class="btn btn__white" (click)="goBack()">Back</button>
           </div>
           <div class="box-right">
-            <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+            <button class="btn btn__primary" (click)="saveAll()">
+              Save & View Summary
+            </button>
           </div>
         </div>
-
       </div>
     </div>
-
-
   </main>
-  <app-side-summary-panel *ngIf="bondType === 'listed'" type="listedEquityShares"></app-side-summary-panel>
-  <app-side-summary-panel *ngIf="bondType === 'unlisted'" type="unlistedEquityShares"></app-side-summary-panel>
+  <app-side-summary-panel
+    *ngIf="bondType === 'listed'"
+    type="listedEquityShares"
+  ></app-side-summary-panel>
+  <app-side-summary-panel
+    *ngIf="bondType === 'unlisted'"
+    type="unlistedEquityShares"
+  ></app-side-summary-panel>
 
-  <app-previous-summary-panel type="listedEquityShares"
-    *ngIf="bondType === 'listed' && PREV_ITR_JSON"></app-previous-summary-panel>
-  <app-previous-summary-panel type="unlistedEquityShares"
-    *ngIf="bondType === 'unlisted' && PREV_ITR_JSON"></app-previous-summary-panel>
+  <app-previous-summary-panel
+    type="listedEquityShares"
+    *ngIf="bondType === 'listed' && PREV_ITR_JSON"
+  ></app-previous-summary-panel>
+  <app-previous-summary-panel
+    type="unlistedEquityShares"
+    *ngIf="bondType === 'unlisted' && PREV_ITR_JSON"
+  ></app-previous-summary-panel>
 </div>
