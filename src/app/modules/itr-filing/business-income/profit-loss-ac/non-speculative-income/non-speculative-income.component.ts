@@ -67,6 +67,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   activeIndex: number;
   gridOptions: GridOptions;
   selectedFormGroup: UntypedFormGroup;
+  selectedForm: string = 'trading';
 
   constructor(
     public matDialog: MatDialog,

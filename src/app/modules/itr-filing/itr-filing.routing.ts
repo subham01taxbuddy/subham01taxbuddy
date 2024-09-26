@@ -36,6 +36,8 @@ import { ExemptIncomeComponent } from "./exempt-income/exempt-income.component";
 import { LabFormComponent } from "./itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component";
 import { BondsDebentureComponent } from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
 import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
+import { SpeculativeIncomeComponent } from './business-income/profit-loss-ac/speculative-income/speculative-income.component';
+import { SpeculativeMainComponent } from './business-income/speculative-main/speculative-main.component';
 
 const routes: Routes = [
   {
@@ -71,6 +73,7 @@ const routes: Routes = [
           { path: 'presumptive', component: PresumptiveIncomeComponent },
           { path: 'balance-sheet', component: BalanceSheetComponent },
           { path: 'pnlaccounts', component: ProfitLossAcComponent },
+          { path: 'speculative', component: SpeculativeMainComponent },
         ],
       },
       {
