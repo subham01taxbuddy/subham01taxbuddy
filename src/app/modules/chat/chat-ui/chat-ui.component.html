@@ -62,7 +62,7 @@
 
 
     </div>
-    <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
+    <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.userFullName[0]"
         [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id" [isAssignedToBotVisible]="true"
         class="floating expanded"></app-user-chat>
 

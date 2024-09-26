@@ -145,8 +145,11 @@ export class ChatService {
         this.deptID = result.data[0]._id;
         this.deptList = result.data;
         this.deptListData = result.data;
+        this.localStorageService.setItem("DEPT_LIST", JSON.stringify(result.data));
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(ChatEvents.DEPT_RECEIVED, this.deptList);
+          if(typeof callback === 'function') {
+            callback(ChatEvents.DEPT_RECEIVED, this.deptList);
+          }
         });
       }
     });
@@ -154,6 +157,7 @@ export class ChatService {
   }
 
   getDeptDetails(): any[] {
+    this.deptListData = this.localStorageService.getItem("DEPT_LIST", true);
     console.log('getDeptDetails', this.deptListData);
     return this.deptListData;
   }
@@ -277,7 +281,9 @@ export class ChatService {
           this.conversationList(page, conversationResult.result)
           if (!removeCallback) {
             this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-              callback(ChatEvents.CONVERSATION_UPDATED);
+              if(typeof callback === 'function'){
+                callback(ChatEvents.CONVERSATION_UPDATED);
+              }
             });
           }
           resolve();
