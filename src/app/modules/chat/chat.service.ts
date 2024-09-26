@@ -788,7 +788,7 @@ export class ChatService {
         // this.onMessageAddedCallbacks = new Map();
         // this.onMessageUpdatedCallbacks = new Map();
         // this.onGroupUpdatedCallbacks = new Map();
-        this.callbackHandlers = new Map();
+        // this.callbackHandlers = new Map();
         // this.on_message_handler = null
         this.topicInbox = null;
         this.chatSubscription = null;
@@ -996,13 +996,15 @@ export class ChatService {
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
-        this.chatClient.end(true, () => {
-          this.shouldReconnect = false;
-          this.connected = false;
-          this.reconnectionPeriod = 0;
-        })
       });
     }
+    this.chatClient.end(true, () => {
+      this.shouldReconnect = false;
+      this.connected = false;
+      this.reconnectionPeriod = 0;
+      this.chatSubscription?.unsubscribe();
+    })
+
   }
 
   getCentralizedChatApiDetails() {

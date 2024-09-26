@@ -140,10 +140,6 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
             }
         });
 
-        this.chatService.messageObservable.subscribe(data => {
-            this.handleNewNotification(data);
-        });
-
     }
 
     ngOnInit(): void {
