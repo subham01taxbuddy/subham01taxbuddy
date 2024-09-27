@@ -528,6 +528,11 @@ export class ChatService {
 
   chatSubscription = null;
 
+  isMobileNumber(sender?){
+   const mobilePattern = /^\+?\d{10,15}$/;
+   return mobilePattern.test(sender);
+  }
+
   websocketConnection(chat21Token, requestId) {
     this.shouldReconnect = true;
     this.reconnectionPeriod = 1000;
@@ -603,7 +608,7 @@ export class ChatService {
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
  
-                  if (messageJson?.sender && !messageJson.sender?.startsWith('bot_') && messageJson.sender != 'system' && messageJson.sender != 'metadata' && messageJson.sender != this.chat21UserID  && !this.roles?.includes('ROLE_ADMIN')) {
+                  if (messageJson?.sender && !this.roles?.includes('ROLE_ADMIN') && this.isMobileNumber(messageJson?.sender)) {
                     this.messageObservable.next(messageJson);
                   }
                   console.log("topic sk :" + topic + "\nmessage payload:" + message);
