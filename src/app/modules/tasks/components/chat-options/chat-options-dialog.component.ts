@@ -57,6 +57,9 @@ export class ChatOptionsDialogComponent implements OnInit {
     setTimeout(() => {
       if (this.userChatComponent) {
         this.userChatComponent.scrollToBottom();
+      } else {
+        //show in full screen
+        this.showFullScreen();
       }
     }, 1000);
     const data = {
@@ -96,6 +99,13 @@ export class ChatOptionsDialogComponent implements OnInit {
     );
     console.log(this.kommChatLink);
     console.log(this.waChatLink);
+  }
+
+  showFullScreen() {
+    const chatUrl = `chat/chat-full-screen?conversationId=${this.requestId}`;
+    window.open(chatUrl, '_blank');
+    // document.body.classList.add('no-scroll');
+
   }
 
   goToKommunicate() {

@@ -79,10 +79,17 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         this.selectedUser = chats.filter(chat=> chat.request_id === conversationId)[0];
         this.selectedConversation = conversationId;
         this.isUserChatVisible = true;
-        const selectedDepartment = this.departmentNames.find(dept => dept.id === this.selectedUser.departmentId);
-        if (selectedDepartment) {
-            this.selectedUser.departmentName = selectedDepartment.name;
-            this.selectedUser.departmentName = selectedDepartment.name;
+        if(this.selectedUser) {
+            const selectedDepartment = this.departmentNames.find(dept => dept.id === this.selectedUser.departmentId);
+            if (selectedDepartment) {
+                this.selectedUser.departmentName = selectedDepartment.name;
+                this.selectedUser.departmentName = selectedDepartment.name;
+            }
+        } else {
+            this.selectedUser = {
+                userFullName : 'Anonymous',
+                request_id: conversationId
+            };
         }
         // this.closeUserChat();
         // this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);

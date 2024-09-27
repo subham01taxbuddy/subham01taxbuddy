@@ -514,7 +514,7 @@ export class ChatService {
   }
 
   chatClient = null;
-  log = true;
+  log = false;
   connected = false;
   onConversationAddedCallbacks = new Map();
   onConversationUpdatedCallbacks = new Map();
