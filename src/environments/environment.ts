@@ -19,7 +19,7 @@ export const environment = {
 	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
 	kmAppId: "5d1fff0257a39f9bb9699a129da55963",
 	// kmAppId: "3c45762181ce71ac72f5e8ffd90da16a8",
-	idleTimeMins: 30,
+	idleTimeMins: 3,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
 	check_upload: 'https://rskq6saw7ymmdgm3cloc4dcenm0ywqix.lambda-url.ap-south-1.on.aws/',

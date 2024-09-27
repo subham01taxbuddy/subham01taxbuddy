@@ -140,10 +140,6 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
             }
         });
 
-        this.chatService.messageObservable.subscribe(data => {
-            this.handleNewNotification(data);
-        });
-
     }
 
     ngOnInit(): void {
@@ -348,6 +344,7 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
                 this.smeLogout();
                 this.loading = false;
                 sessionStorage.clear();
+                localStorage.clear();
                 this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
                     console.log('success? ', successDeleted);
                 });
@@ -356,6 +353,7 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
                 //all alert related variable to be reset
                 this.alerts = [];
                 this.dialog.closeAll();
+                this.chatSubscription.unsubscribe();
                 this.subscription.unsubscribe();
                 this.alertSubscription.unsubscribe();
                 this.alertService.stopService();

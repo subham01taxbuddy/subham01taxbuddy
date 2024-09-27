@@ -116,11 +116,20 @@ export class ChatService {
     this.onGroupUpdatedCallbacks.delete(instanceId);
   }
   registerMessageReceived(requestId:string, messageReceivedCallback) {
-    this.onMessageAddedCallbacks.set(requestId, messageReceivedCallback);
-    this.onMessageUpdatedCallbacks.set(requestId, messageReceivedCallback);
+    if(this.onMessageAddedCallbacks.has(requestId)) {
+      this.onMessageAddedCallbacks.get(requestId).push(messageReceivedCallback);
+      this.onMessageUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
+    } else {
+      this.onMessageAddedCallbacks.set(requestId, [messageReceivedCallback]);
+      this.onMessageUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
+    }
   }
 
-  unregisterMessageReceived(requestId:string) {
+  unregisterMessageReceived(requestId:string, messageReceivedCallback) {
+    if(this.onMessageAddedCallbacks.has(requestId)){
+      this.onMessageAddedCallbacks.get(requestId).pop(messageReceivedCallback);
+      this.onMessageUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
+    }
     this.onMessageAddedCallbacks.delete(requestId);
     this.onMessageUpdatedCallbacks.delete(requestId);
   }
@@ -136,8 +145,11 @@ export class ChatService {
         this.deptID = result.data[0]._id;
         this.deptList = result.data;
         this.deptListData = result.data;
+        this.localStorageService.setItem("DEPT_LIST", JSON.stringify(result.data));
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          callback(ChatEvents.DEPT_RECEIVED, this.deptList);
+          if(typeof callback === 'function') {
+            callback(ChatEvents.DEPT_RECEIVED, this.deptList);
+          }
         });
       }
     });
@@ -145,6 +157,7 @@ export class ChatService {
   }
 
   getDeptDetails(): any[] {
+    this.deptListData = this.localStorageService.getItem("DEPT_LIST", true);
     console.log('getDeptDetails', this.deptListData);
     return this.deptListData;
   }
@@ -268,7 +281,9 @@ export class ChatService {
           this.conversationList(page, conversationResult.result)
           if (!removeCallback) {
             this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-              callback(ChatEvents.CONVERSATION_UPDATED);
+              if(typeof callback === 'function'){
+                callback(ChatEvents.CONVERSATION_UPDATED);
+              }
             });
           }
           resolve();
@@ -321,7 +336,9 @@ export class ChatService {
             const hasMoreMessages = chat21Result.result.length > 0;
 
             this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                callback(ChatEvents.MESSAGE_RECEIVED);
+                callback.forEach(func=> {
+                  func(ChatEvents.MESSAGE_RECEIVED);
+                });
             });
 
             // Call the callback to remove the loader and indicate if there are more messages
@@ -676,7 +693,9 @@ export class ChatService {
                           let requestId = topicParts[topicParts.indexOf("messages") + 1];
                           this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
                             this.addMessageToDB(requestId, JSON.parse(message.toString()));
-                            callback(ChatEvents.MESSAGE_RECEIVED, message.toString());
+                            callback.forEach(func=> {
+                              func(ChatEvents.MESSAGE_RECEIVED, message.toString());
+                            })
                           });
                         // }
                       }
@@ -772,15 +791,15 @@ export class ChatService {
           console.log("Chat client close event");
         }
         // reset all subscriptions
-        this.onConversationAddedCallbacks = new Map();
-        this.onConversationUpdatedCallbacks = new Map();
-        this.onConversationDeletedCallbacks = new Map();
-        this.onArchivedConversationAddedCallbacks = new Map();
-        this.onArchivedConversationDeletedCallbacks = new Map();
-        this.onMessageAddedCallbacks = new Map();
-        this.onMessageUpdatedCallbacks = new Map();
-        this.onGroupUpdatedCallbacks = new Map();
-        this.callbackHandlers = new Map();
+        // this.onConversationAddedCallbacks = new Map();
+        // this.onConversationUpdatedCallbacks = new Map();
+        // this.onConversationDeletedCallbacks = new Map();
+        // this.onArchivedConversationAddedCallbacks = new Map();
+        // this.onArchivedConversationDeletedCallbacks = new Map();
+        // this.onMessageAddedCallbacks = new Map();
+        // this.onMessageUpdatedCallbacks = new Map();
+        // this.onGroupUpdatedCallbacks = new Map();
+        // this.callbackHandlers = new Map();
         // this.on_message_handler = null
         this.topicInbox = null;
         this.chatSubscription = null;
@@ -988,13 +1007,15 @@ export class ChatService {
     if (this.topicInbox) {
       this.chatClient.unsubscribe(this.topicInbox, (err) => {
         if (this.log) { console.log("unsubscribed from", this.topicInbox); }
-        this.chatClient.end(true, () => {
-          this.shouldReconnect = false;
-          this.connected = false;
-          this.reconnectionPeriod = 0;
-        })
       });
     }
+    this.chatClient.end(true, () => {
+      this.shouldReconnect = false;
+      this.connected = false;
+      this.reconnectionPeriod = 0;
+      this.chatSubscription?.unsubscribe();
+    })
+
   }
 
   getCentralizedChatApiDetails() {

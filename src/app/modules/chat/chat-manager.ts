@@ -109,7 +109,7 @@ export class ChatManager {
   }
 
   closeConversation(requestId:string){
-    this.chatService.unregisterMessageReceived(requestId);
+    this.chatService.unregisterMessageReceived(requestId, this.handleReceivedMessages);
   }
 
   closeChat() {

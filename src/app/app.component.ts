@@ -215,6 +215,7 @@ export class AppComponent implements OnInit {
         this.chatService.unsubscribeRxjsWebsocket();
         this.chatManager.closeChat();
         sessionStorage.clear();
+        localStorage.clear();
         this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
           console.log('success? ', successDeleted);
         });
