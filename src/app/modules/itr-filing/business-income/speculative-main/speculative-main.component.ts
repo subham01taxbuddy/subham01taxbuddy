@@ -15,13 +15,16 @@ export class SpeculativeMainComponent extends WizardNavigation implements OnInit
   SpeculativeIncomeComponent!: SpeculativeIncomeComponent;
   loading = false;
   PREV_ITR_JSON: any;
+  cgAllowed = false;
 
  constructor(private utilsService: UtilsService) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    let cgPermission = sessionStorage.getItem('CG_MODULE');
+    this.cgAllowed = cgPermission === 'YES';
   }
 
   saveAll() {
@@ -63,6 +66,9 @@ export class SpeculativeMainComponent extends WizardNavigation implements OnInit
     });
   }
 
+  getFileParserData() {
+    this.SpeculativeIncomeComponent.updateData();
+  }
 
   unsubscribe() {
     if (this.subscription) {

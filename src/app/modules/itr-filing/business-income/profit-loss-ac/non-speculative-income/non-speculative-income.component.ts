@@ -188,6 +188,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
   }
 
+  selectForm(formType: string) {
+    this.selectedForm = formType;
+  }
+
   updateData() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
