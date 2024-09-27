@@ -22,6 +22,7 @@ import { MoreInformationComponent } from './pages/more-information/more-informat
 import { SummaryConversionService } from "../../../services/summary-conversion.service";
 import { ChangeStatusComponent } from '../../shared/components/change-status/change-status.component';
 import {ReportService} from "../../../services/report-service";
+import { ChatManager } from '../../chat/chat-manager';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -45,6 +46,8 @@ export class ItrWizardComponent implements OnInit {
   navigationData: any;
   customerName = '';
   validationErrors = [];
+  fullChatScreen: boolean = false;
+  page: any = 0;
 
   constructor(
     private reviewService: ReviewService,
@@ -58,6 +61,7 @@ export class ItrWizardComponent implements OnInit {
     private summaryConversionService: SummaryConversionService,
     private reportService: ReportService,
     private dialog: MatDialog,
+    private chatManager: ChatManager
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -495,7 +499,19 @@ export class ItrWizardComponent implements OnInit {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+   
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('result is ',result)
+     if (result && result.request_id) {
+      const chatUrl = `chat/chat-full-screen?conversationId=${result.request_id}`;
+      window.open(chatUrl, '_blank');
+    }
+      this.page = 0;
+      this.fullChatScreen = false;
+      this.chatManager.getDepartmentList();
+      this.chatManager.conversationList(this.page);
+     });
   }
 
   onUploadedJson(uploadedJson: any) {
