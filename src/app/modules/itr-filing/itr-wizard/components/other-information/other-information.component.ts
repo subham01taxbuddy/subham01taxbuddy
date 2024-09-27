@@ -642,11 +642,20 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-   addSharesDetails(title, mode, i) {
+  addSharesDetails(title, mode, i) {
     let formArray = this.sharesForm.controls['sharesArray'] as UntypedFormArray;
-    formArray.insert(0, this.createSharesForm());
-    this.utilsService.showSnackBar('Added New unlisted Company Please Add unlisted shares details ')
-  }
+    const newForm = this.createSharesForm();
+    formArray.push(newForm);
+    if (formArray.length > 1) {
+        const formArrayCopy = [...formArray.value];
+        const lastForm = formArrayCopy.pop();
+        formArray.clear();
+        formArray.insert(0, this.fb.group(lastForm));
+        formArrayCopy.forEach((formValue) => formArray.push(this.fb.group(formValue)));
+    }
+
+    this.utilsService.showSnackBar('Added New unlisted Company. Please add unlisted shares details.');
+}
 
   addDirectorDetails(title, mode, i) {
     let formArray = this.directorForm.controls['directorsArray'] as UntypedFormArray;
