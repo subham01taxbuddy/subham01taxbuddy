@@ -603,16 +603,16 @@ export class ChatService {
               }
               this.chatClient.on("message", (topic, message) => {
                 if (this.log) {
-                  const messageJson = JSON.parse(message.toString())
-                  console.log('message received', messageJson);
+                  console.log("topic sk :" + topic + "\nmessage payload:" + message);
+
+                }
+                const messageJson = JSON.parse(message.toString())
                   this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
                   this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
  
                   if (messageJson?.sender && !this.roles?.includes('ROLE_ADMIN') && this.isMobileNumber(messageJson?.sender)) {
                     this.messageObservable.next(messageJson);
                   }
-                  console.log("topic sk :" + topic + "\nmessage payload:" + message);
-                }
                 const _topic = this.parseTopic(topic);
                 if (!_topic) {
                   if (this.log) {
