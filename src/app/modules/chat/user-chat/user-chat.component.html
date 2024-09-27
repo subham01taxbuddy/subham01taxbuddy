@@ -74,11 +74,11 @@
 
             <div class="message-container">
               <div class="message-and-timestamp">
-                <span
+                <div
                   *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId && displaySystemMessage(message)"
                   [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId,'centered-message': message.sender === 'system'}"
                   class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content) | highlight: searchInput"
-                  style="white-space: pre-wrap;"></span>
+                  style="white-space: pre-wrap;"></div>
 
                 <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
                   class="message text-type-user-messages" [innerHtml]="message.content | highlight: searchInput">

@@ -502,15 +502,6 @@ export class ItrWizardComponent implements OnInit {
    
 
     disposable.afterClosed().subscribe((result) => {
-      console.log('result is ',result)
-     if (result && result.request_id) {
-      const chatUrl = `chat/chat-full-screen?conversationId=${result.request_id}`;
-      window.open(chatUrl, '_blank');
-    }
-      this.page = 0;
-      this.fullChatScreen = false;
-      this.chatManager.getDepartmentList();
-      this.chatManager.conversationList(this.page);
      });
   }
 
