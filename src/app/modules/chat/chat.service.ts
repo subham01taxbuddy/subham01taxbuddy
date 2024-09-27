@@ -100,7 +100,7 @@ export class ChatService {
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
   }
 
-  registerConversationUpdates(instanceId, messageReceivedCallback){
+  registerConversationUpdates(instanceId, messageReceivedCallback) {
     this.onConversationUpdatedCallbacks.set(instanceId, messageReceivedCallback);
     this.onConversationDeletedCallbacks.set(instanceId, messageReceivedCallback);
     this.onArchivedConversationAddedCallbacks.set(instanceId, messageReceivedCallback);
@@ -108,15 +108,15 @@ export class ChatService {
     this.onGroupUpdatedCallbacks.set(instanceId, messageReceivedCallback);
   }
 
-  unregisterConversationUpdates(instanceId){
+  unregisterConversationUpdates(instanceId) {
     this.onConversationUpdatedCallbacks.delete(instanceId);
     this.onConversationDeletedCallbacks.delete(instanceId);
     this.onArchivedConversationAddedCallbacks.delete(instanceId);
     this.onArchivedConversationDeletedCallbacks.delete(instanceId);
     this.onGroupUpdatedCallbacks.delete(instanceId);
   }
-  registerMessageReceived(requestId:string, messageReceivedCallback) {
-    if(this.onMessageAddedCallbacks.has(requestId)) {
+  registerMessageReceived(requestId: string, messageReceivedCallback) {
+    if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).push(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
     } else {
@@ -125,8 +125,8 @@ export class ChatService {
     }
   }
 
-  unregisterMessageReceived(requestId:string, messageReceivedCallback) {
-    if(this.onMessageAddedCallbacks.has(requestId)){
+  unregisterMessageReceived(requestId: string, messageReceivedCallback) {
+    if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).pop(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
     }
@@ -147,7 +147,7 @@ export class ChatService {
         this.deptListData = result.data;
         this.localStorageService.setItem("DEPT_LIST", JSON.stringify(result.data));
         this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-          if(typeof callback === 'function') {
+          if (typeof callback === 'function') {
             callback(ChatEvents.DEPT_RECEIVED, this.deptList);
           }
         });
@@ -281,7 +281,7 @@ export class ChatService {
           this.conversationList(page, conversationResult.result)
           if (!removeCallback) {
             this.onConversationUpdatedCallbacks.forEach((callback, handler, map) => {
-              if(typeof callback === 'function'){
+              if (typeof callback === 'function') {
                 callback(ChatEvents.CONVERSATION_UPDATED);
               }
             });
@@ -316,46 +316,55 @@ export class ChatService {
     let url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?`;
 
     if (pageSize) {
-        url = url + 'pageSize=' + pageSize;
+      url = url + 'pageSize=' + pageSize;
     } else {
-        url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=20`;
+      url = `${this.CHAT_API_URL}/${chat21UserId}/conversations/${requestId}/messages?pageSize=20`;
     }
     if (timeStamp) {
-        url = url + '&timeStamp=' + timeStamp;
+      url = url + '&timeStamp=' + timeStamp;
     }
-    
+
     this.httpClient.get(url, this.setHeaders("chat21")).subscribe((chat21Result: any) => {
-        console.log('fetch messages', chat21Result);
-        if (chat21Result.success) {
-            if (!timeStamp) {
-                this.clearMessagesDB(requestId);
-            }
-            this.updateMessagesDB(requestId, chat21Result.result, timeStamp);
-
-            // Check if there are more messages
-            const hasMoreMessages = chat21Result.result.length > 0;
-
-            this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                callback.forEach(func=> {
-                  func(ChatEvents.MESSAGE_RECEIVED);
-                });
-            });
-
-            // Call the callback to remove the loader and indicate if there are more messages
-            if (onComplete) onComplete(hasMoreMessages);
-        } else {
-            // Call the callback to remove the loader if there was an error
-            if (onComplete) onComplete(false);
+      console.log('fetch messages', chat21Result);
+      if (chat21Result.success) {
+        if (!timeStamp) {
+          this.clearMessagesDB(requestId);
         }
-    }, () => {
-        // Handle error and remove loader
+        this.updateMessagesDB(requestId, chat21Result.result, timeStamp);
+
+        // Check if there are more messages
+        const hasMoreMessages = chat21Result.result.length > 0;
+
+        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+          callback.forEach(func => {
+            func(ChatEvents.MESSAGE_RECEIVED);
+          });
+        });
+
+        // Call the callback to remove the loader and indicate if there are more messages
+        if (onComplete) onComplete(hasMoreMessages);
+      } else {
+        // Call the callback to remove the loader if there was an error
         if (onComplete) onComplete(false);
+      }
+    }, () => {
+      // Handle error and remove loader
+      if (onComplete) onComplete(false);
     });
 
     let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
     this.websocketConnection(TOKEN, requestId);
-}
+  }
 
+  getUserDetails(requestId: any) {
+    let chat21UserId = this.localStorageService.getItem('CHAT21_USER_ID');
+    let chat21Token = this.localStorageService.getItem('CHAT21_TOKEN');
+    const url = `${environment.TILEDESK_URL}/chatapi/api/tilechat/${chat21UserId}/conversations/${requestId}`;
+    const headers = new HttpHeaders({
+      'Authorization': `${chat21Token}`
+    });
+    return this.httpClient.get(url, { headers });
+  }
 
 
   conversationList(page, data: any) {
@@ -461,10 +470,10 @@ export class ChatService {
       transformedMessages = transformedMessages.filter(message => !existingMessageIds.includes(message.message_id));
 
       transformedMessages = [...oldMessageList, ...transformedMessages];
-  }
+    }
 
 
-   
+
     this.sessionStorageService.setItem(requestId, transformedMessages, true)
     return transformedMessages;
   }
@@ -528,9 +537,9 @@ export class ChatService {
 
   chatSubscription = null;
 
-  isMobileNumber(sender?){
-   const mobilePattern = /^\+?\d{10,15}$/;
-   return mobilePattern.test(sender);
+  isMobileNumber(sender?) {
+    const mobilePattern = /^\+?\d{10,15}$/;
+    return mobilePattern.test(sender);
   }
 
   websocketConnection(chat21Token, requestId) {
@@ -587,7 +596,7 @@ export class ChatService {
           if (this.log) {
             console.log("subscribing to:", this.chat21UserID, "topic", this.topicInbox);
           }
-          if(!this.topicInbox){
+          if (!this.topicInbox) {
             this.chat21UserID = this.localStorageService.getItem('CHAT21_USER_ID');
             this.presenceTopic = "apps/tilechat/users/" + this.chat21UserID + "/presence/" + this.clientId;
             this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
@@ -607,12 +616,12 @@ export class ChatService {
 
                 }
                 const messageJson = JSON.parse(message.toString())
-                  this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
-                  this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
- 
-                  if (messageJson?.sender && !this.roles?.includes('ROLE_ADMIN') && this.isMobileNumber(messageJson?.sender)) {
-                    this.messageObservable.next(messageJson);
-                  }
+                this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
+                this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
+
+                if (messageJson?.sender && !this.roles?.includes('ROLE_ADMIN') && this.isMobileNumber(messageJson?.sender)) {
+                  this.messageObservable.next(messageJson);
+                }
                 const _topic = this.parseTopic(topic);
                 if (!_topic) {
                   if (this.log) {
@@ -689,14 +698,14 @@ export class ChatService {
                         this.lastMessageId = messageJson.message_id;
                         this.newMessageReceived.next(message_json);
                         // if (messageJson.recipient === selectedUser?.request_id) {
-                          let topicParts = topic.split("/");
-                          let requestId = topicParts[topicParts.indexOf("messages") + 1];
-                          this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
-                            this.addMessageToDB(requestId, JSON.parse(message.toString()));
-                            callback.forEach(func=> {
-                              func(ChatEvents.MESSAGE_RECEIVED, message.toString());
-                            })
-                          });
+                        let topicParts = topic.split("/");
+                        let requestId = topicParts[topicParts.indexOf("messages") + 1];
+                        this.onMessageAddedCallbacks.forEach((callback, handler, map) => {
+                          this.addMessageToDB(requestId, JSON.parse(message.toString()));
+                          callback.forEach(func => {
+                            func(ChatEvents.MESSAGE_RECEIVED, message.toString());
+                          })
+                        });
                         // }
                       }
                     }
@@ -933,12 +942,12 @@ export class ChatService {
     }
 
     let messageAttributes;
-    if(!isFromPushNotification){
+    if (!isFromPushNotification) {
       //send message from chat window
       let chats = this.localStorageService.getItem('conversationList', true);
-      let selectedChat = chats.filter(chat=> chat.request_id === recipient)[0];
+      let selectedChat = chats.filter(chat => chat.request_id === recipient)[0];
       messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
-          selectedChat.departmentName, selectedChat.userFullName);
+        selectedChat.departmentName, selectedChat.userFullName);
     } else {
       messageAttributes = this.getMessageAttributes(payloads, notification, isFromPushNotification);
     }
@@ -965,7 +974,7 @@ export class ChatService {
   botMessage(requestId) {
     const chatToken = this.localStorageService.getItem("CHAT21_TOKEN");
     let chats = this.localStorageService.getItem('conversationList', true);
-    let selectedChat = chats.filter(chat=> chat.request_id === requestId)[0];
+    let selectedChat = chats.filter(chat => chat.request_id === requestId)[0];
     const departmentId = selectedChat?.departmentId;
     const departmentName = selectedChat?.departmentName;
     const userFullName = selectedChat?.userFullName;

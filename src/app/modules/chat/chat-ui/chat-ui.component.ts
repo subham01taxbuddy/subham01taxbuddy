@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy, ElementRef,NgZone } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy, ElementRef, NgZone } from '@angular/core';
 import { widgetVisibility } from '../floating-widget/animation';
 import { LocalStorageService } from 'src/app/services/storage.service';
 import { ChatManager } from '../chat-manager';
@@ -6,11 +6,12 @@ import { ChatEvents } from '../chat-events';
 import { UserChatComponent } from '../user-chat/user-chat.component';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Auth from '@aws-amplify/auth';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy,ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ConstantPool } from '@angular/compiler';
 
 interface Department {
     name: string,
@@ -26,7 +27,7 @@ interface Department {
 })
 
 
-export class ChatUIComponent implements OnInit,OnDestroy {
+export class ChatUIComponent implements OnInit, OnDestroy {
     selector: string = ".main-panel-chats";
     @Output() back: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(UserChatComponent) userChatComp: UserChatComponent;
@@ -36,14 +37,14 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     private cd: ChangeDetectorRef;
     centralizedChatDetails: any;
-    showBackButton:boolean = true;
-    instanceId:string;
+    showBackButton: boolean = true;
+    instanceId: string;
 
 
-    constructor(private chatManager: ChatManager,private router: Router,private http: HttpClient,
-        private localStorage: LocalStorageService, private chatService: ChatService,cd:
-                    ChangeDetectorRef,private ngZone: NgZone,
-                private activatedRoute: ActivatedRoute) {
+    constructor(private chatManager: ChatManager, private router: Router, private http: HttpClient,
+        private localStorage: LocalStorageService, private chatService: ChatService, cd:
+            ChangeDetectorRef, private ngZone: NgZone,
+        private activatedRoute: ActivatedRoute) {
         this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatService.registerConversationUpdates(this.instanceId, this.handleConversationList());
@@ -76,20 +77,27 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     openUserChat(conversationId: any) {
         let chats = this.localStorage.getItem('conversationList', true);
-        this.selectedUser = chats.filter(chat=> chat.request_id === conversationId)[0];
+        this.selectedUser = chats.filter(chat => chat.request_id === conversationId)[0];
         this.selectedConversation = conversationId;
         this.isUserChatVisible = true;
-        if(this.selectedUser) {
+        if (this.selectedUser) {
             const selectedDepartment = this.departmentNames.find(dept => dept.id === this.selectedUser.departmentId);
             if (selectedDepartment) {
                 this.selectedUser.departmentName = selectedDepartment.name;
                 this.selectedUser.departmentName = selectedDepartment.name;
             }
         } else {
-            this.selectedUser = {
-                userFullName : 'Anonymous',
-                request_id: conversationId
-            };
+            this.chatService.getUserDetails(conversationId).subscribe((response) => {
+                console.log('response is', response);
+                const userFullName = (response as any)?.result[0]?.attributes?.userFullname;
+                const requestId = (response as any)?.result[0]?.conversWith;
+                this.selectedUser = {
+                    userFullName: userFullName,
+                    request_id: requestId
+                };
+                console.log('selected user of else is', this.selectedUser);
+            })
+
         }
         // this.closeUserChat();
         // this.chatService.initRxjsWebsocket(this.selectedUser.conversWith);
@@ -103,7 +111,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
             this.userChatComp.isInputDisabled = false;
-         }
+        }
 
 
     }
@@ -115,7 +123,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     }
 
     goBack() {
-       // this.chatService.unsubscribeRxjsWebsocket();
+        // this.chatService.unsubscribeRxjsWebsocket();
         this.page = 0;
         this.isBlankScreenVisible = false;
         document.body.classList.remove('no-scroll');
@@ -172,7 +180,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
     ngOnInit(): void {
         this.handleDeptList(this.chatManager.getDepartmentList());
         this.handleConversationList();
-      this.checkUrlForFullScreen()
+        this.checkUrlForFullScreen()
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
@@ -184,7 +192,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
             this.chatManager.closeChat();
             this.cd.detectChanges();
-         });
+        });
 
         this.activatedRoute.queryParams.subscribe((params) => {
             if (params['conversationId']) {
@@ -196,40 +204,40 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         });
 
         window.addEventListener('storage', (event) => {
-          if (event.key === 'loggedOut' && event.newValue === 'true') {
-              this.handleLogOut();
-          }
-      });
+            if (event.key === 'loggedOut' && event.newValue === 'true') {
+                this.handleLogOut();
+            }
+        });
     }
 
-    handleLogOut(){
-      Auth.signOut()
-      .then(data => {
-        this.chatService.unsubscribeRxjsWebsocket();
-        this.chatManager.closeChat();
-        sessionStorage.clear();
-        NavbarService.getInstance().clearAllSessionData();
-        this.router.navigate(['/login']);
+    handleLogOut() {
+        Auth.signOut()
+            .then(data => {
+                this.chatService.unsubscribeRxjsWebsocket();
+                this.chatManager.closeChat();
+                sessionStorage.clear();
+                NavbarService.getInstance().clearAllSessionData();
+                this.router.navigate(['/login']);
 
-        NavbarService.getInstance(this.http).logout();
+                NavbarService.getInstance(this.http).logout();
 
-      })
-      .catch(err => {
-        console.log(err);
-        this.router.navigate(['/login']);
-      });
+            })
+            .catch(err => {
+                console.log(err);
+                this.router.navigate(['/login']);
+            });
     }
 
     checkUrlForFullScreen() {
-      if (this.router.url.includes('chat/chat-full-screen')) {
-        this.showBackButton = false;
-        document.body.classList.add('no-scroll');
-      }
+        if (this.router.url.includes('chat/chat-full-screen')) {
+            this.showBackButton = false;
+            document.body.classList.add('no-scroll');
+        }
     }
 
     handleReceivedMessages = (data: any) => {
         console.log('received message', data);
-        if(data.data) {
+        if (data.data) {
             let receivedMessage = JSON.parse(data.data);
             if (receivedMessage.recipient === this.selectedUser.request_id) {
                 //the message shall be displayed
@@ -246,28 +254,28 @@ export class ChatUIComponent implements OnInit,OnDestroy {
         this.page = 0;
         if (departmentId) {
             this.chatManager.conversationList(this.page, departmentId).then(() => {
-                 
-                    this.handleConversationList();
-                    this.isLoading = false;
-                    this.cd.detectChanges();
 
-                    this.ngZone.runOutsideAngular(() => {
-                        setTimeout(() => {
-                            this.scrollToTopList();
-                            this.cd.detectChanges();
-                        });
+                this.handleConversationList();
+                this.isLoading = false;
+                this.cd.detectChanges();
+
+                this.ngZone.runOutsideAngular(() => {
+                    setTimeout(() => {
+                        this.scrollToTopList();
+                        this.cd.detectChanges();
                     });
-                 
+                });
+
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
             });
         } else {
             this.chatManager.conversationList(this.page).then(() => {
-                 
-                    this.handleConversationList();
-                    this.isLoading = false;
-                    this.cd.detectChanges();
+
+                this.handleConversationList();
+                this.isLoading = false;
+                this.cd.detectChanges();
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
@@ -317,11 +325,11 @@ export class ChatUIComponent implements OnInit,OnDestroy {
                     };
                 });
             }
-            this.isConversationListEmpty = this.conversationList.length === 0;       
-         }else{
+            this.isConversationListEmpty = this.conversationList.length === 0;
+        } else {
             this.conversationList = [];
             this.isConversationListEmpty = true;
-         }
+        }
     }
 
     handleDeptList = (data: any) => {
@@ -338,10 +346,10 @@ export class ChatUIComponent implements OnInit,OnDestroy {
             console.log('Scrolled down');
             this.page = this.page + 1;
             this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
-                
-                    this.handleConversationList();
-                    this.isLoading = false;
-                    this.cd.detectChanges();
+
+                this.handleConversationList();
+                this.isLoading = false;
+                this.cd.detectChanges();
             }).catch((error) => {
                 console.error('Error fetching conversations:', error);
                 this.isLoading = false;
@@ -351,7 +359,7 @@ export class ChatUIComponent implements OnInit,OnDestroy {
 
     ngOnDestroy(): void {
         this.chatService.unregisterConversationUpdates(this.instanceId);
-         if (this.newMessageSubscription) {
+        if (this.newMessageSubscription) {
             this.newMessageSubscription.unsubscribe();
         }
         if (this.conversationDeletedSubscription) {
