@@ -11,7 +11,7 @@ import Auth from '@aws-amplify/auth';
 import { NavbarService } from 'src/app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ConstantPool } from '@angular/compiler';
+import { Location } from '@angular/common';
 
 interface Department {
     name: string,
@@ -44,7 +44,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
     constructor(private chatManager: ChatManager, private router: Router, private http: HttpClient,
         private localStorage: LocalStorageService, private chatService: ChatService, cd:
             ChangeDetectorRef, private ngZone: NgZone,
-        private activatedRoute: ActivatedRoute) {
+        private activatedRoute: ActivatedRoute, private location: Location) {
         this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatService.registerConversationUpdates(this.instanceId, this.handleConversationList());
@@ -80,6 +80,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
         this.selectedUser = chats.filter(chat => chat.request_id === conversationId)[0];
         this.selectedConversation = conversationId;
         this.isUserChatVisible = true;
+        this.location.go(`/chat-full-screen?conversationId=${conversationId}`)
         if (this.selectedUser) {
             const selectedDepartment = this.departmentNames.find(dept => dept.id === this.selectedUser.departmentId);
             if (selectedDepartment) {
