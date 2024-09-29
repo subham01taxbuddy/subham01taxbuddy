@@ -931,7 +931,7 @@ export class ChatService {
     return attributes;
   };
 
-  sendMessage(message: string, recipient: string, payloads?: any, notification?: any, isFromPushNotification: boolean = false) {
+  async sendMessage(message: string, recipient: string, payloads?: any, notification?: any, isFromPushNotification: boolean = false) {
     // console.log("sendMessage sattributes:", attributes);
     let dest_topic;
     if (recipient) {
@@ -946,8 +946,19 @@ export class ChatService {
       //send message from chat window
       let chats = this.localStorageService.getItem('conversationList', true);
       let selectedChat = chats.filter(chat => chat.request_id === recipient)[0];
-      messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
-        selectedChat.departmentName, selectedChat.userFullName);
+      if (selectedChat) {
+        messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
+            selectedChat.departmentName, selectedChat.userFullName);
+      } else {
+        await this.getUserDetails(recipient).subscribe((response) => {
+          console.log('response is', response);
+          const userFullName = (response as any)?.result[0]?.attributes?.userFullname;
+          const departmentId = (response as any)?.result[0]?.attributes?.departmentId;
+          const departmentName = this.getDeptDetails().filter(dept => dept.departmentId === departmentId)[0].departmentName;
+          messageAttributes = this.getChatMessageAttributes(payloads, departmentId,
+              departmentName, userFullName);
+        });
+      }
     } else {
       messageAttributes = this.getMessageAttributes(payloads, notification, isFromPushNotification);
     }

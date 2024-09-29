@@ -200,8 +200,12 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
             this.checkInitialDataLoaded();
           }).catch((error) => {
             console.error('Error loading conversations:', error);
-            this.isConversationListLoaded = true;
-            this.checkInitialDataLoaded();
+            this.isConversationListLoaded = false;
+            setTimeout(()=>{
+                this.chatManager.conversationList(this.page);
+                this.checkInitialDataLoaded();
+            }, 100);
+
           });
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
