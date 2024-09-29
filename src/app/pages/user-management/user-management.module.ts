@@ -17,10 +17,11 @@ import { TasksModule } from "src/app/modules/tasks/tasks.module";
 import {PagesModule} from "../pages.module";
 import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-update.component";
 import { PanExceptionComponent } from "./pan-exception/pan-exception.component";
+import { TaxCalculationComponent } from './tax-calculation/tax-calculation.component';
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
-        RoleUpdateComponent, BulkStatusUpdateComponent,PanExceptionComponent],
+        RoleUpdateComponent, BulkStatusUpdateComponent,PanExceptionComponent, TaxCalculationComponent],
     imports: [
         CommonModule,
         FormsModule,
