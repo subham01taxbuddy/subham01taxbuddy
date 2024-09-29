@@ -58,10 +58,10 @@ export class ChatOptionsDialogComponent implements OnInit {
       if (this.userChatComponent) {
         this.userChatComponent.scrollToBottom();
       }
-      // } else {
-      //   //show in full screen
-      //   this.showFullScreen();
-      // }
+      if(this.data.newTab) {
+        //show in full screen
+        this.showFullScreen();
+      }
     }, 1000);
     const data = {
       userFullName: this.username,
