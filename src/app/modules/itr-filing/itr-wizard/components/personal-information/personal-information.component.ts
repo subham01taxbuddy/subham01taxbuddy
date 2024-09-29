@@ -2470,59 +2470,41 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  getCityData() {
-    if (
-      (this.customerProfileForm.controls['address'] as UntypedFormGroup)
-        .controls['pinCode'].valid
-    ) {
-      this.changeCountry('91');
-      const param =
-        '/pincode/' +
-        (this.customerProfileForm.controls['address'] as UntypedFormGroup)
-          .controls['pinCode'].value;
-      this.userMsService.getMethod(param).subscribe(
-        (result: any) => {
-          (
-            this.customerProfileForm.controls['address'] as UntypedFormGroup
-          ).controls['country'].setValue('91');
-          (
-            this.customerProfileForm.controls['address'] as UntypedFormGroup
-          ).controls['city'].setValue(result.taluka);
-          (
-            this.customerProfileForm.controls['address'] as UntypedFormGroup
-          ).controls['state'].setValue(result.stateCode);
-          console.log('Picode Details:', result);
-        },
-        (error) => {
-          if (error.status === 404) {
-            (
-              this.customerProfileForm.controls['address'] as UntypedFormGroup
-            ).controls['city'].setValue(null);
-          }
-        }
-      );
-    }
-  }
-
-  // changeCountry(country) {
-  //   if (country !== '91') {
-  //     this.stateDropdown = [
-  //       {
-  //         id: '5b4599c9c15a76370a3424e9',
-  //         stateId: '1',
-  //         countryCode: '355',
-  //         stateName: 'Foreign',
-  //         stateCode: '99',
-  //         status: true,
+  // getCityData() {
+  //   if (
+  //     (this.customerProfileForm.controls['address'] as UntypedFormGroup)
+  //       .controls['pinCode'].valid
+  //   ) {
+  //     // this.changeCountry('91');
+  //     const param =
+  //       '/pincode/' +
+  //       (this.customerProfileForm.controls['address'] as UntypedFormGroup)
+  //         .controls['pinCode'].value;
+  //     this.userMsService.getMethod(param).subscribe(
+  //       (result: any) => {
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['country'].setValue('91');
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['city'].setValue(result.taluka);
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['state'].setValue(result.stateCode);
+  //         console.log('Picode Details:', result);
   //       },
-  //     ];
-  //     (
-  //       this.customerProfileForm.controls['address'] as UntypedFormGroup
-  //     ).controls['state'].setValue('99');
-  //   } else {
-  //     this.stateDropdown = this.stateDropdownMaster;
+  //       (error) => {
+  //         if (error.status === 404) {
+  //           (
+  //             this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //           ).controls['city'].setValue(null);
+  //         }
+  //       }
+  //     );
   //   }
   // }
+
+  
 
   // changeCountry(country: string) {
   //   const addressGroup = this.customerProfileForm.get(
@@ -2545,21 +2527,20 @@ export class PersonalInformationComponent implements OnInit {
 
   changeCountry(country: string) {
     console.log('country ', country);
-
-    const addressFormGroup = this.customerProfileForm.controls[
-      'address'
-    ] as UntypedFormGroup;
+  
+    const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
     const zipCodeControl = addressFormGroup.controls['pinCode'];
-
+  
     if (!zipCodeControl) {
       console.error('ZIP code control is not found!');
       return;
     }
-
+  
     console.log('zipcodeControl', zipCodeControl);
+  
     // Clear existing validators
     zipCodeControl.clearValidators();
-
+  
     // Set validators based on country selection
     if (country === '91') {
       // Indian PIN code validation (6-digit number)
@@ -2573,19 +2554,68 @@ export class PersonalInformationComponent implements OnInit {
         Validators.required,
         Validators.pattern('^[a-zA-Z0-9]{3,10}$'), // 3-10 alphanumeric characters
       ]);
+      this.stateDropdown = [{ stateCode: '99', stateName: 'Foreign' }];
+      addressFormGroup.controls['state'].setValue('99');
     }
-
+  
     // Preserve the current ZIP code value and revalidate
     const currentZipCodeValue = zipCodeControl.value;
-
+  
     // Update the form control to re-validate
     zipCodeControl.updateValueAndValidity();
-
+  
     // If the current value is valid according to the new rules, keep it
     zipCodeControl.setValue(currentZipCodeValue);
-
+  
     // Mark ZIP code control as touched to show validation error immediately
     zipCodeControl.markAllAsTouched();
+  
+    // If the selected country is India ('91') and the ZIP code is valid, get city data
+    if (country === '91' && zipCodeControl.valid) {
+      this.getCityData();
+    }
+  }
+  
+  getCityData() {
+    const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
+    const pinCodeControl = addressFormGroup.controls['pinCode'];
+  
+    if (pinCodeControl.valid) {
+      const param = '/pincode/' + pinCodeControl.value;
+      this.userMsService.getMethod(param).subscribe(
+        (result: any) => {
+          addressFormGroup.controls['country'].setValue('91');
+          addressFormGroup.controls['city'].setValue(result.taluka);
+          addressFormGroup.controls['state'].setValue(result.stateCode);
+          console.log('Pincode Details:', result);
+        },
+        (error) => {
+          if (error.status === 404) {
+            addressFormGroup.controls['city'].setValue(null);
+          }
+        }
+      );
+    }
+  }
+  
+  foreginchange(country) {
+    if (country !== '91') {
+      this.stateDropdown = [
+        {
+          id: '5b4599c9c15a76370a3424e9',
+          stateId: '1',
+          countryCode: '355',
+          stateName: 'Foreign',
+          stateCode: '99',
+          status: true,
+        },
+      ];
+      (
+        this.customerProfileForm.controls['address'] as UntypedFormGroup
+      ).controls['state'].setValue('99');
+    } else {
+      this.stateDropdown = this.stateDropdownMaster;
+    }
   }
 
   setCustomerProfileValues() {
@@ -2610,7 +2640,8 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.patchValue(this.ITR_JSON);
 
     this.changeCountry(this.ITR_JSON.address.country);
-
+    this.changeCountry(this.ITR_JSON.address.state); 
+ 
     if (
       this.ITR_JSON.bankDetails instanceof Array &&
       this.ITR_JSON.bankDetails.length > 0

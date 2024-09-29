@@ -77,7 +77,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   config: any;
   active: any;
   PREV_ITR_JSON: any;
-  zipCodeLabel: string = 'PIN Code';
+  zipCodeLabel = "PIN Code"
 
   labData: NewCapitalGain[] = [];
   constructor(
@@ -231,6 +231,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
+
   addNewProperty() {
     this.amountRegex = AppConstants.amountWithoutDecimal;
     this.cgArrayElement = this.Copy_ITR_JSON.capitalGain?.filter(
@@ -251,7 +252,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       };
       this.currentCgIndex = 0;
     }
-
+  
+    
     this.immovableForm = this.createImmovableForm();
     const buyersDetails = <UntypedFormArray>(
       this.immovableForm.get('buyersDetails')
@@ -434,35 +436,52 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       this.saveCG();
     }
   }
+changeCountry(country: string): void {
+  console.log('Selected country:', country);
 
-  changeCountry(selectedCountryCode: string): void {
-    console.log(selectedCountryCode);
-    // Check if the selected country is India (countryCode '91')
-    if (selectedCountryCode === '91') {
-      this.zipCodeLabel = 'PIN Code'; // For India
-      this.immovableForm.get('stateName')?.setValue(''); // Clear stateName for India
-    } else {
-      this.zipCodeLabel = 'ZIP Code'; // For other countries
-      this.immovableForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+  // Get the address form group
+  const addressFormGroup = this.immovableForm.controls['buyersDetails'] as UntypedFormArray;
+
+  // Iterate through each buyer's details form group
+  addressFormGroup.controls.forEach((element: UntypedFormGroup) => {
+    const pinCodeControl = element.controls['pin']; // Accessing the pin control
+    const stateControl = element.controls['state']; // Accessing the state control
+
+    if (!pinCodeControl) {
+      console.error('PIN code control is not found!');
+      return;
     }
 
-    // Update validators for the pinCode based on country
-    const pinCodeControl = this.immovableForm.get('pin');
-    if (selectedCountryCode === '91') {
-      // Validators for Indian PIN codes (numeric and exactly 6 digits)
-      pinCodeControl?.setValidators([
+    // Clear existing validators
+    pinCodeControl.clearValidators();
+
+    // Set validators based on country selection
+    if (country === '91') {
+      // Indian PIN code validation (6-digit numeric)
+      pinCodeControl.setValidators([
         Validators.required,
-        Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+        Validators.pattern('^[1-9]{1}[0-9]{5}$'), // 6-digit numeric PIN code
       ]);
+      stateControl.setValue('India'); // Set state to India
     } else {
-      // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
-      pinCodeControl?.setValidators([
+      // Foreign ZIP code validation (alphanumeric pattern)
+      pinCodeControl.setValidators([
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+        Validators.pattern('^[a-zA-Z0-9]{3,10}$'), // 3-10 alphanumeric characters
       ]);
+      stateControl.setValue('Foreign'); // Set state to Foreign
     }
-    pinCodeControl?.updateValueAndValidity();
-  }
+
+    // Preserve the current ZIP code value and revalidate
+    const currentZipCodeValue = pinCodeControl.value;
+
+    // Update the form control to re-validate
+    pinCodeControl.updateValueAndValidity();
+  });
+}
+
+  
+
 
   addMissingKeys(cgObject: NewCapitalGain) {
     let assetDetails = {
@@ -808,9 +827,6 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         obj?.pin || '',
         [
           Validators.required,
-          Validators.pattern(AppConstants.PINCode),
-          Validators.maxLength(6),
-          Validators.minLength(6),
         ],
       ],
       city: [obj?.city || '', [Validators.required]],

@@ -318,7 +318,7 @@ export class HousePropertyComponent implements OnInit {
   getCityData() {
     let pinCode = this.housePropertyForm?.controls['pinCode'];
     if (pinCode.valid) {
-      this.changeCountry('91');
+      // this.changeCountry('91');
       const param = '/pincode/' + pinCode?.value;
       this.userMsService.getMethod(param).subscribe(
         (result: any) => {

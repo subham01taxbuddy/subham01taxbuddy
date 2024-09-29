@@ -34,9 +34,7 @@
                   placeholder="Select country"
                   name="country"
                   formControlName="country"
-                  (selectionChange)="
-                    changeCountry(addressForm.controls['country'].value)
-                  "
+                  (selectionChange)="changeCountry($event.value)"
                   required
                 >
                   <mat-option
@@ -49,7 +47,7 @@
               </mat-form-field>
             </div>
           </div>
-
+          
           <div class="form-field">
             <div>
               <span class="span">
@@ -76,8 +74,7 @@
                 "
                 formControlName="pinCode"
                 class="input-field"
-                maxlength="6"
-                minlength="6"
+                maxlength="8"
                 trim
                 required
                 (blur)="getCityData()"
