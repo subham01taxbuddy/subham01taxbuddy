@@ -33,7 +33,6 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     const row = this.NonSpeculativeIncomeComponent.profitLossForm.getRawValue();
     let incomes = row.incomes.filter(item => item.type);
     if((this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 ||
-        this.SpeculativeIncomeComponent.specIncomeFormArray.length > 0 ||
       incomes.length > 0) && (this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.length === 0 || !this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.valid)) {
       this.utilsService.showSnackBar("Nature of Business details are required");
       this.utilsService.smoothScrollToTop();
@@ -41,8 +40,8 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     }
 
     let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
-    let specSaved = this.SpeculativeIncomeComponent.onContinue();
-    if (specSaved && nonSpecSaved) {
+    // let specSaved = this.SpeculativeIncomeComponent.onContinue();
+    if (nonSpecSaved) {
       this.loading = true;
       let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
@@ -80,7 +79,7 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   getFileParserData() {
-    this.SpeculativeIncomeComponent.updateData();
+    // this.SpeculativeIncomeComponent.updateData();
     this.NonSpeculativeIncomeComponent.updateData();
   }
 

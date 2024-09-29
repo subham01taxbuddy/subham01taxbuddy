@@ -8,11 +8,11 @@
       </div>
       <div class="space p-0">
         <div class="flex justify-around p-[30px]">
-          <button class="tbd-btn-10"  [class.selected]="selectedForm === 'trading'"  (click)="selectedForm = 'trading'">
+          <button class="tbd-btn-10"  [ngClass]="{'selected': selectedForm === 'trading'}" (click)="selectForm('trading')">
             Trading A/c
           </button>
 
-          <button class="tbd-btn-10"  [class.selected]="selectedForm === 'profitLoss'"  (click)="selectedForm = 'profitLoss'">
+          <button class="tbd-btn-10"  [ngClass]="{'selected': selectedForm === 'profitLoss'}"  (click)="selectForm('profitLoss')">
             Profit and Loss A/C
           </button>
         </div>
@@ -22,7 +22,7 @@
               <div class="accordion" id="myAccordion">
 
                 <div class="marginReduce">
-                  <div style="width: 100%;" [hidden]="selectedForm !== 'trading'">
+                  <div style="width: 100%;" *ngIf="selectedForm === 'trading'">
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="heading3">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -253,7 +253,7 @@
                     </div>
                   </div>
 
-                  <div style="width: 100%;" [hidden]="selectedForm !== 'profitLoss'">
+                  <div style="width: 100%;" *ngIf="selectedForm === 'profitLoss'">
                     <div class="accordion-item mt-3">
                       <h2 class="accordion-header" id="heading4">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
