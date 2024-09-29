@@ -1,0 +1,644 @@
+<div class="main-layout">
+  <div class="accordian-div">
+    <div class="sub-title-container">
+      <span class="sub-title-text">Advance Tax Calculation</span>
+    </div>
+    <div style="background-color: #ffffff; padding: 10px">
+      <!-- User Information -->
+      <div class="sub-div">
+        <div class="user-info">
+          <span style="color: black">User Information</span>
+        </div>
+
+        <form [formGroup]="taxCalculationForm" (ngSubmit)="onSubmit()">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>Name of Assessee</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Name of Assessee"
+                  formControlName="assesseeName"
+                  matInput
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>PAN Number</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="PAN"
+                  formControlName="panNumber"
+                  autocomplete="off"
+                  type="text"
+                  maxlength="10"
+                  minlength="10"
+                  upperCase
+                  matInput
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>Assessment Year</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Assessment Year"
+                  formControlName="assessmentYear"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>Date Of Birth</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  formControlName="dateOfBirth"
+                  placeholder="Date of Birth"
+                  [matDatepicker]="picker"
+                  autocomplete="off"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error> Select Date of Birth</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="user-info">
+            <span style="color: black">Sources Of Income</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>Gross Salary</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Gross Salary"
+                  formControlName="grossSalary"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label
+                >Income From Other sources (Except Special Rate)</mat-label
+              >
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Income From Other sources "
+                  formControlName="incomeFromOtherSources"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label
+                >Deduction / Exemption allowed as per Old Regime</mat-label
+              >
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Exemption allowed as per Old Regime"
+                  formControlName="exemptionAllowedOldregime"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label
+                >Deduction / Exemption allowed as per New Regime</mat-label
+              >
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Exemption allowed as per New Regime"
+                  formControlName="exemptionAllowedNewregime"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Income Capital -->
+          <div>
+            <p style="font-weight: 600; font-size: 15px; text-align: center">
+              Income From Capital Gain
+            </p>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label>LTCG (112A) at 12.5%</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="LTCG (112A) at 12.5%"
+                    formControlName="ltcg112A"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label>LTCG (112 & other) at 12.5%</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="LTCG (112 & other) at 12.5%"
+                    formControlName="ltcg112Other"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label>STCG (111A) at 20% </mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="STCG (111A) at 20% "
+                    formControlName="stcg111A"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label>STCG (other) applicable rate</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="STCG (other) applicable rate"
+                    formControlName="stcgAppRate"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <!-- Income From Business  -->
+          <div>
+            <p style="font-weight: 600; font-size: 15px; text-align: center">
+              Income From Business (After all deductions)
+            </p>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label>Non Speculative</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Non Speculative"
+                    formControlName="nonSpeculative"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label>Speculative</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Speculative"
+                    formControlName="speculative"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <!-- Income From House Property -->
+          <div>
+            <p style="font-weight: 600; font-size: 15px; text-align: center">
+              Income From House Property
+            </p>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label> A) Let Out</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder=" A) Let Out"
+                    formControlName="aLetOut"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label>Rental Income</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Rental Income"
+                    formControlName="rentalIncome"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label
+                  >Deduction (except standard deductions at 30%)</mat-label
+                >
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Deduction (except standard deductions at 30%)"
+                    formControlName="deductionAt30"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label>Home Loan Interest</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Home Loan Interest"
+                    formControlName="homeLoanInterest"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label>B) Self Occupied (Home loan interest)</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="B) Self Occupied (Home loan interest)"
+                    formControlName="selfOccupaid"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="user-info">
+            <span style="color: black">Deductions under VI-A</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>80C/80CCC/80CCD(1) </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="80C/80CCC/80CCD(1) "
+                  formControlName="eightyCDD1"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>Self and Family </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Self and Family "
+                  formControlName="selfAndFamily"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>80C/80CCC/80CCD(1) </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="80C/80CCC/80CCD(1) "
+                  formControlName="80C/80CCC/80CCD(1) "
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>Self and Family </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder=" - Self and Family "
+                  formControlName="selfAndFamily "
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div> -->
+          <!-- <div class="col-sm-12 switch-toggle">
+            <mat-slide-toggle
+              formControlName="toggleOption"
+              color="primary"
+              (change)="onToggleChange($event.checked)"
+            >
+              {{ toggleLabel }}
+            </mat-slide-toggle>
+          </div> -->
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>80CCD(1B)</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="80CCD(1B)"
+                  formControlName="eighty1B"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>80CCD (2)</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="80CCD (2)"
+                  formControlName="eightyCCD2"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label
+                >Any Other (please enter deductible amount only)
+              </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Any Other"
+                  formControlName="anyOther"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <p style="color: red; margin-left: 30px">
+            * Any other deductions will be considered only in Old Regime
+          </p>
+          <div class="user-info">
+            <span style="color: black">Brought Forward Losses</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>House Property</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="House Property "
+                  formControlName="houseProperty"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>Business (Non-Speculative)</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Business (Non-Speculative) "
+                  formControlName="businessNonSpeculative"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>Business (Speculative)</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Business (Speculative)"
+                  formControlName="BusinessSpeculative"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>LTCG 112A</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="LTCG 112A"
+                  formControlName="LTCG112A"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>STCG 111A</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="STCG 111A"
+                  formControlName="STCG111A"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>LTCG other than 112A</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="LTCG other than 112A"
+                  formControlName="LTCGother112A"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>STCG other than 111A</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="STCG other than 111A"
+                  formControlName="STCGotherthan111A"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="user-info">
+            <span style="color: black">Taxes Paid</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 30px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label>TDS/TCS</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="TDS/TCS"
+                  formControlName="TDS"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>Advance Tax if any</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Advance Tax if any"
+                  formControlName="AdvanceTaxIfAny"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div style="text-align: center; padding: 20px">
+            <button type="submit" mat-raised-button color="primary">
+              Calculate
+            </button>
+          </div> -->
+
+          <!-- Submit Button -->
+          <div style="text-align: center">
+            <button
+              type="submit"
+              style="
+                width: 10%;
+                background-color: #00afcb;
+                color: #ffffff;
+                border-radius: 5px;
+                padding: 15px 20px;
+              "
+            >
+              Submit Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
