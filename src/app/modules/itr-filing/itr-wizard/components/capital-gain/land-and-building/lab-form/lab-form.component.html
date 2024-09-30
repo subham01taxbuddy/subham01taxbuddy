@@ -1303,7 +1303,7 @@
 
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">{{ zipCodeLabel }}</span>
+                                <span class="span">{{  zipCodeLabel}}</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field
@@ -1315,9 +1315,10 @@
                                   trim
                                   matInput
                                   formControlName="pin"
-                                  placeholder="{{ zipCodeLabel }}"
+                                  placeholder="{{   zipCodeLabel }}"
                                   name="pin"
                                   class="input-field"
+                                  maxlength="8"
                                   required
                                 />
                                 <mat-error

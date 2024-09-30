@@ -351,6 +351,13 @@
                                       placeholder="Select country"
                                       name="country[activeIndex]"
                                       formControlName="country"
+                                      (blur)="
+                                        updateDataByPincode(
+                                          immovableAssetArray.controls[
+                                            activeIndex
+                                          ]
+                                        )
+                                      "
                                       required
                                     >
                                       <mat-option

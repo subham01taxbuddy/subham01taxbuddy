@@ -192,7 +192,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
-  countryDropdown = AppConstants.countriesDropdown;
+  countriesDropdown = AppConstants.countriesDropdown;
 
 
   // errors keys
@@ -254,7 +254,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     }
   }
-
+  pinLabel: string = 'Pincode';
+  pincodePattern = '^[0-9]{6}$'; 
+  zipcodePattern = '^[a-zA-Z0-9]{8}$'; 
   ngOnInit() {
     // this.getDocuments();
     console.log(
@@ -266,6 +268,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.deductionsFormGroup = this.createDeductionsFormGroup();
     this.allowanceFormGroup = this.createAllowanceFormGroup();
 
+    this.onCountryChange({ value: '91' });
+  
     //this.maxPT = 5000;
     this.maxEA = 5000;
     if (
@@ -460,6 +464,23 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       sec89: [false],
       allowances: allowanceArray,
     });
+  }
+
+  onCountryChange(event: any): void {
+    const selectedCountryCode = event.value;
+
+    if (selectedCountryCode === '91') {
+      this.pinLabel = 'Pincode';
+      // Set validation for 6-digit Pincode (India)
+      this.employerDetailsFormGroup.get('pinCode')?.setValidators([Validators.required, Validators.pattern(this.pincodePattern)]);
+    } else {
+      this.pinLabel = 'Zipcode';
+      // Set validation for 8-character alphanumeric Zipcode (Other countries)
+      this.employerDetailsFormGroup.get('pinCode')?.setValidators([Validators.required, Validators.pattern(this.zipcodePattern)]);
+    }
+
+    // Update the validity of the form control after changing validators
+    this.employerDetailsFormGroup.get('pinCode')?.updateValueAndValidity();
   }
 
   validateExemptIncomes(event: any) {
