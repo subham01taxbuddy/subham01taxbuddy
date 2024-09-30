@@ -593,14 +593,19 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   onSelectCannedMessage(cannedMessage) {
+    this.chatService.getUserDetails(this.requestId).subscribe((response) => {
+      console.log('response is', response);
+      const userFullName = (response as any)?.result[0]?.attributes?.userFullname;
+      let inputMessage = cannedMessage.text;
+      let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
+      inputMessage = inputMessage.replaceAll('$agent_name', chat21Result.fullname);
+      inputMessage = inputMessage.replaceAll('$recipient_name', userFullName);
+      this.messageSent = inputMessage;
+      this.cannedMessageList = [];
+      this.cd.detectChanges();
+     
+  })
     //TODO: remove SELECTED_CHAT dependency
-    let inputMessage = cannedMessage.text;
-    let selectedUser = this.localStorageService.getItem('SELECTED_CHAT', true);
-    let chat21Result = this.localStorageService.getItem("CHAT21_RESULT", true);
-    inputMessage = inputMessage.replaceAll('$agent_name', chat21Result.fullname);
-    inputMessage = inputMessage.replaceAll('$recipient_name', selectedUser.userFullName);
-    this.messageSent = inputMessage;
-    this.cannedMessageList = [];
   }
 
   ngOnDestroy() {
