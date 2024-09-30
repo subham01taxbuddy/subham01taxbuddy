@@ -85,37 +85,62 @@
           <div class="user-info">
             <span style="color: black">Sources Of Income</span>
           </div>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 30px 30px;
-              padding-bottom: 0;
-            "
-          >
-            <div class="col-sm-5">
-              <mat-label>Gross Salary</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  placeholder="Gross Salary"
-                  formControlName="grossSalary"
-                  matInput
-                  type="number"
-                />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-5">
-              <mat-label
-                >Income From Other sources (Except Special Rate)</mat-label
-              >
-              <mat-form-field appearance="outline">
-                <input
-                  placeholder="Income From Other sources "
-                  formControlName="incomeFromOtherSources"
-                  matInput
-                  type="number"
-                />
-              </mat-form-field>
+          <div>
+            <p
+              style="
+                font-weight: 600;
+                font-size: 15px;
+                text-align: center;
+                margin-top: 20px;
+              "
+            >
+              Income From Salary
+            </p>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+                /* padding-bottom: 0; */
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label>Gross Salary</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Gross Salary"
+                    formControlName="grossSalary"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-5">
+                <mat-label
+                  >Deduction / Exemption allowed as per Old Regime</mat-label
+                >
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Exemption allowed as per Old Regime"
+                    formControlName="exemptionAllowedOldregime"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
+              <!-- <div class="col-sm-5">
+                <mat-label
+                  >Income From Other sources (Except Special Rate)</mat-label
+                >
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Income From Other sources "
+                    formControlName="incomeFromOtherSources"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div> -->
             </div>
           </div>
           <div
@@ -125,7 +150,7 @@
               padding: 0px 30px;
             "
           >
-            <div class="col-sm-5">
+            <!-- <div class="col-sm-5">
               <mat-label
                 >Deduction / Exemption allowed as per Old Regime</mat-label
               >
@@ -137,7 +162,7 @@
                   type="number"
                 />
               </mat-form-field>
-            </div>
+            </div> -->
             <div class="col-sm-5">
               <mat-label
                 >Deduction / Exemption allowed as per New Regime</mat-label
@@ -150,6 +175,33 @@
                   type="number"
                 />
               </mat-form-field>
+            </div>
+          </div>
+          <div>
+            <p style="font-weight: 600; font-size: 15px; text-align: center">
+              Income From Other sources
+            </p>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+                /* padding-bottom: 0; */
+              "
+            >
+              <div class="col-sm-5">
+                <mat-label
+                  >Income From Other sources (Except Special Rate)</mat-label
+                >
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Income From Other sources "
+                    formControlName="incomeFromOtherSources"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div>
             </div>
           </div>
           <!-- Income Capital -->
@@ -259,6 +311,9 @@
             <p style="font-weight: 600; font-size: 15px; text-align: center">
               Income From House Property
             </p>
+            <p style="font-weight: 600; font-size: 15px; margin-left: 40px">
+              A) Let Out
+            </p>
             <div
               style="
                 display: flex;
@@ -266,7 +321,7 @@
                 padding: 0px 30px;
               "
             >
-              <div class="col-sm-5">
+              <!-- <div class="col-sm-5">
                 <mat-label> A) Let Out</mat-label>
                 <mat-form-field appearance="outline">
                   <input
@@ -276,7 +331,8 @@
                     type="number"
                   />
                 </mat-form-field>
-              </div>
+              </div> -->
+
               <div class="col-sm-5">
                 <mat-label>Rental Income</mat-label>
                 <mat-form-field appearance="outline">
@@ -288,14 +344,6 @@
                   />
                 </mat-form-field>
               </div>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                padding: 0px 30px;
-              "
-            >
               <div class="col-sm-5">
                 <mat-label
                   >Deduction (except standard deductions at 30%)</mat-label
@@ -309,6 +357,27 @@
                   />
                 </mat-form-field>
               </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 30px;
+              "
+            >
+              <!-- <div class="col-sm-5">
+                <mat-label
+                  >Deduction (except standard deductions at 30%)</mat-label
+                >
+                <mat-form-field appearance="outline">
+                  <input
+                    placeholder="Deduction (except standard deductions at 30%)"
+                    formControlName="deductionAt30"
+                    matInput
+                    type="number"
+                  />
+                </mat-form-field>
+              </div> -->
               <div class="col-sm-5">
                 <mat-label>Home Loan Interest</mat-label>
                 <mat-form-field appearance="outline">
@@ -321,6 +390,9 @@
                 </mat-form-field>
               </div>
             </div>
+            <p style="font-weight: 600; font-size: 15px; margin-left: 40px">
+              B) Self Occupied
+            </p>
             <div
               style="
                 display: flex;
@@ -329,7 +401,7 @@
               "
             >
               <div class="col-sm-5">
-                <mat-label>B) Self Occupied (Home loan interest)</mat-label>
+                <mat-label>Home loan interest</mat-label>
                 <mat-form-field appearance="outline">
                   <input
                     placeholder="B) Self Occupied (Home loan interest)"

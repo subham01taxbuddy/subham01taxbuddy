@@ -837,8 +837,10 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToTaxCalculation() {
-    // Navigate to the tax calculation page within the user-management route
-    this.router.navigate(['/pages/user-management/tax-calculation']);
+    // Navigate to the tax calculation page with userId as a query parameter
+    this.router.navigate(['/pages/user-management/tax-calculation'], {
+      queryParams: { userId: this.data.userId }, // Pass the userId here
+    });
 
     // Optionally close a dialog if you're in one
     this.dialogRef.close();
