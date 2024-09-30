@@ -32,7 +32,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
 
     private cd: ChangeDetectorRef;
 
-    instanceId:string;
+    instanceId: string;
 
     constructor(private chatManager: ChatManager,
         private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone
@@ -69,7 +69,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
 
     showFullScreen() {
         const chatUrl = this.selectedUser ? `chat/chat-full-screen?conversationId=${this.selectedUser.request_id}`
-            :`chat/chat-full-screen`;
+            : `chat/chat-full-screen`;
         window.open(chatUrl, '_blank');
         this.fullChatScreen = false;
         this.page = 0;
@@ -191,22 +191,22 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.handleDeptList(this.chatManager.getDepartmentList());
         this.chatService.onConversationUpdatedCallbacks.set('floating-widget', (event: string, data?: any) => {
             if (event === ChatEvents.DEPT_RECEIVED) {
-              this.isDepartmentListLoaded = true;
-              this.checkInitialDataLoaded();
+                this.isDepartmentListLoaded = true;
+                this.checkInitialDataLoaded();
             }
-          });
-          this.chatManager.conversationList(this.page).then(() => {
+        });
+        this.chatManager.conversationList(this.page).then(() => {
             this.isConversationListLoaded = true;
             this.checkInitialDataLoaded();
-          }).catch((error) => {
+        }).catch((error) => {
             console.error('Error loading conversations:', error);
             this.isConversationListLoaded = false;
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.chatManager.conversationList(this.page);
                 this.checkInitialDataLoaded();
             }, 100);
 
-          });
+        });
         this.newMessageSubscription = this.chatService.newMessageReceived$.subscribe((newMessage) => {
             if (this.displaySystemMessage(newMessage)) {
                 this.chatService.updateConversationList(newMessage, this.conversationList, this.selectedDepartmentId);
@@ -215,21 +215,29 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         });
 
         this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+            this.page = 0;
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
             this.chatManager.closeChat();
+            this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
+                this.handleConversationList();
+                this.cd.detectChanges();
+            }).catch((error) => {
+                console.error('Error fetching conversations after deletion:', error);
+            });
             this.cd.detectChanges();
+            console.log('conversation deleted callback occur in floating-widget');
         });
 
     }
 
     private checkInitialDataLoaded(): void {
         if (this.isDepartmentListLoaded && this.isConversationListLoaded) {
-          this.ngZone.run(() => {
-            this.isLoadingInitialData = false;
-            this.cd.detectChanges();
-          });
+            this.ngZone.run(() => {
+                this.isLoadingInitialData = false;
+                this.cd.detectChanges();
+            });
         }
-      }
+    }
 
     ngAfterViewInit(): void {
         this.scrollToTopList();
@@ -345,11 +353,11 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                     };
                 });
             }
-             this.isConversationListEmpty = this.conversationList.length === 0;
-         }else{
+            this.isConversationListEmpty = this.conversationList.length === 0;
+        } else {
             this.conversationList = [];
             this.isConversationListEmpty = true;
-         }
+        }
     }
 
 

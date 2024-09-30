@@ -190,7 +190,14 @@ export class ChatUIComponent implements OnInit, OnDestroy {
         });
 
         this.conversationDeletedSubscription = this.chatService.conversationDeleted$.subscribe((deletedConversation) => {
+            this.page = 0;
             this.chatService.removeConversationFromList(deletedConversation.conversWith, this.conversationList);
+            this.chatManager.conversationList(this.page, this.selectedDepartmentId).then(() => {
+                this.handleConversationList();
+                this.cd.detectChanges();
+            }).catch((error) => {
+                console.error('Error fetching conversations after deletion:', error);
+            });
             this.chatManager.closeChat();
             this.cd.detectChanges();
         });
