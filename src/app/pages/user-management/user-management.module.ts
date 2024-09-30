@@ -18,10 +18,11 @@ import {PagesModule} from "../pages.module";
 import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-update.component";
 import { PanExceptionComponent } from "./pan-exception/pan-exception.component";
 import { TaxCalculationComponent } from './tax-calculation/tax-calculation.component';
+import { TaxCalculationDetailsComponent } from './tax-calculation-details/tax-calculation-details.component';
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
-        RoleUpdateComponent, BulkStatusUpdateComponent,PanExceptionComponent, TaxCalculationComponent],
+        RoleUpdateComponent, BulkStatusUpdateComponent,PanExceptionComponent, TaxCalculationComponent, TaxCalculationDetailsComponent],
     imports: [
         CommonModule,
         FormsModule,

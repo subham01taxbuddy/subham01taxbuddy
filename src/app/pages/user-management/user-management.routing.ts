@@ -7,6 +7,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { BulkStatusUpdateComponent } from './bulk-status-update/bulk-status-update.component';
 import { PanExceptionComponent } from './pan-exception/pan-exception.component';
 import { TaxCalculationComponent } from './tax-calculation/tax-calculation.component';
+import { TaxCalculationDetailsComponent } from './tax-calculation-details/tax-calculation-details.component';
 
 const routes: Routes = [
   {
@@ -20,9 +21,8 @@ const routes: Routes = [
       { path: 'pan-exception', component: PanExceptionComponent },
       { path: 'tax-calculation', component: TaxCalculationComponent },
       {
-        path: '',
-        redirectTo: '/pages/user-management/users',
-        pathMatch: 'full',
+        path: 'tax-calculation-details',
+        component: TaxCalculationDetailsComponent,
       },
     ],
   },
