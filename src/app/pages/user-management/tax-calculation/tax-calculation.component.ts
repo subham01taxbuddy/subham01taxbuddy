@@ -102,6 +102,8 @@ export class TaxCalculationComponent implements OnInit {
     });
   }
 
+  // added userID
+
   onToggleChange(checked: boolean): void {
     this.toggleLabel = checked ? 'ON' : 'OFF';
   }
