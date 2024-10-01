@@ -878,6 +878,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         ownerUserId: userData[i].ownerUserId,
         filerUserId: userData[i].filerUserId,
         leaderUserId: userData[i].leaderUserId,
+        whatsAppRequestId: userData[i].whatsAppRequestId
       })
       userArray.push(userInfo);
     }
@@ -1240,6 +1241,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         clientName: client.name,
         serviceType: client.serviceType,
         requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       }
     })
 

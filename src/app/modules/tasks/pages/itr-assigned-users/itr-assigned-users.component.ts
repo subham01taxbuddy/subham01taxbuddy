@@ -1328,6 +1328,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         aisProvided: userData[i].aisProvided,
         everified: userData[i].everified,
         taxPayable: userData[i].taxPayable,
+        whatsAppRequestId: userData[i].whatsAppRequestId,
+        requestId: userData[i].requestId
       })
       userArray.push(userInfo);
     }
@@ -1706,7 +1708,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         userId: client.userId,
         clientName: client.name,
         serviceType: client.serviceType,
-        requestId: client.requestId
+        requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       }
     })
 
