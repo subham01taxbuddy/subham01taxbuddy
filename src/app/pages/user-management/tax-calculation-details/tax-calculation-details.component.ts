@@ -2,22 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaxDataService } from '../../../../app/tax-data.service';
 import { UserTaxDataService } from '../../../services/user-tax-data.service';
+import { HttpClient } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
-// Define an interface for the expected tax data structure
 interface TaxData {
   name: string;
   pan: string;
   assessmentYear: string;
   dob: string;
-  oldRegime: {
-    salaryIncome?: number;
-    housePropertyIncome?: number;
-    capitalGain?: number;
-    businessIncome?: number;
-    otherSourceIncome?: number;
-  };
-  newRegime: any; // You can further define this structure as needed
+  oldRegime: any;
+  newRegime: any;
   beneficialRegime?: string;
+  advanceTaxQuarter1?: any;
+  advanceTaxQuarter2?: any;
+  advanceTaxQuarter3?: any;
+  advanceTaxQuarter4?: any;
+  totalTaxLiabilty?: number;
 }
 
 @Component({
@@ -33,26 +33,20 @@ export class TaxCalculationDetailsComponent implements OnInit {
   oldRegime: any = {};
   newRegime: any = {};
   beneficialRegime: string | undefined;
-  totalIncome: number = 0; // Total income to compute
+  totalIncome: number = 0;
 
   constructor(
     private router: Router,
     private taxDataService: TaxDataService,
-    private userTaxDataService: UserTaxDataService
+    private userTaxDataService: UserTaxDataService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
     const data = this.taxDataService.getTaxData();
     const UserData = this.userTaxDataService.getUserTaxData();
-    // const taxData = this.taxDataService.getUserTaxDetails();
-    // Access the data passed from the previous component
-    const navigation = this.router.getCurrentNavigation();
-    // const data = navigation?.extras.state?.['taxData'] as TaxData; // Use bracket notation and type assertion
 
     console.log('UserData:', UserData);
-    // console.log('Tax Data : ', taxData);
-
-    // Log the data to the console
     console.log('Tax Data received:', data);
 
     if (data) {
@@ -65,12 +59,10 @@ export class TaxCalculationDetailsComponent implements OnInit {
       this.newRegime = data.newRegime;
       this.beneficialRegime = data.beneficialRegime;
 
-      // Calculate total income based on provided data
       this.calculateTotalIncome();
     }
   }
 
-  // Method to calculate total income based on available data
   private calculateTotalIncome(): void {
     this.totalIncome =
       (this.oldRegime.salaryIncome || 0) +
@@ -78,5 +70,68 @@ export class TaxCalculationDetailsComponent implements OnInit {
       (this.oldRegime.capitalGain || 0) +
       (this.oldRegime.businessIncome || 0) +
       (this.oldRegime.otherSourceIncome || 0);
+  }
+
+  downloadPDF(): void {
+    const userData = this.userTaxDataService.getUserTaxData();
+    const taxData = this.taxDataService.getTaxData();
+
+    const payload = {
+      name: userData.name,
+      pan: userData.pan,
+      assessmentYear: userData.assessmentYear,
+      dob: userData.dob,
+      advanceTaxQuarter1: {
+        rate: taxData.advanceTaxQuarter1.rate,
+        installmentAmount: taxData.advanceTaxQuarter1.installmentAmount,
+        installment: taxData.advanceTaxQuarter1.installment,
+        cumulativeTaxLiability:
+          taxData.advanceTaxQuarter1.cumulativeTaxLiability,
+      },
+      oldRegime: taxData.oldRegime,
+      totalTaxLiabilty: taxData.totalTaxLiabilty,
+      beneficialRegime: taxData.beneficialRegime,
+      newRegime: taxData.newRegime,
+      advanceTaxQuarter2: {
+        rate: taxData.advanceTaxQuarter2.rate,
+        installmentAmount: taxData.advanceTaxQuarter2.installmentAmount,
+        installment: taxData.advanceTaxQuarter2.installment,
+        cumulativeTaxLiability:
+          taxData.advanceTaxQuarter2.cumulativeTaxLiability,
+      },
+      advanceTaxQuarter3: {
+        rate: taxData.advanceTaxQuarter3.rate,
+        installmentAmount: taxData.advanceTaxQuarter3.installmentAmount,
+        installment: taxData.advanceTaxQuarter3.installment,
+        cumulativeTaxLiability:
+          taxData.advanceTaxQuarter3.cumulativeTaxLiability,
+      },
+      advanceTaxQuarter4: {
+        rate: taxData.advanceTaxQuarter4.rate,
+        installmentAmount: taxData.advanceTaxQuarter4.installmentAmount,
+        installment: taxData.advanceTaxQuarter4.installment,
+        cumulativeTaxLiability:
+          taxData.advanceTaxQuarter4.cumulativeTaxLiability,
+      },
+    };
+
+    this.http
+      .post(
+        'https://uat-api.taxbuddy.com/itr/api/download/old-vs-new/pdf',
+        payload,
+        {
+          responseType: 'blob',
+        }
+      )
+      .subscribe(
+        (response) => {
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const fileName = 'tax_report.pdf';
+          saveAs(blob, fileName);
+        },
+        (error) => {
+          console.error('Error downloading PDF:', error);
+        }
+      );
   }
 }
