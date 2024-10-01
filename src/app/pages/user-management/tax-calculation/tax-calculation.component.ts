@@ -134,16 +134,34 @@ export class TaxCalculationComponent implements OnInit {
   // Handle form submission
   onSubmit(): void {
     console.log(this.taxCalculationForm.get('assessmentYear')?.value);
-    if (this.taxCalculationForm.valid) {
+
+    // Define an array of fields to check
+    const fieldsToCheck = [
+      'grossSalary',
+      'incomeFromOtherSources',
+      'exemptionAllowedOldregime',
+      'exemptionAllowedNewregime',
+      'ltcg112A',
+      'ltcg112Other',
+      'stcg111A',
+      'stcgAppRate',
+      'nonSpeculative',
+      'speculative',
+    ];
+
+    // Check if any of the specified fields are either empty or 0
+    const hasValidValues = fieldsToCheck.some((field) => {
+      const value = this.taxCalculationForm.get(field)?.value;
+      return value !== '' && value !== 0;
+    });
+
+    if (this.taxCalculationForm.valid && hasValidValues) {
       const formData = {
         userId: this.userId,
         name: this.taxCalculationForm.get('assesseeName')?.value || '',
-        // assessmentYear:
-        //   this.taxCalculationForm.get('assessmentYear')?.value || '',
         assessmentYear: '2024-2025',
         pan: this.taxCalculationForm.get('panNumber')?.value || '',
         dob: this.taxCalculationForm.get('dateOfBirth')?.value || '',
-        // dob: '1997-01-10',
         grossSalary: this.taxCalculationForm.get('grossSalary')?.value || 0,
         otherSourceIncome:
           this.taxCalculationForm.get('incomeFromOtherSources')?.value || 0,
@@ -198,8 +216,6 @@ export class TaxCalculationComponent implements OnInit {
             if (response.success) {
               this.taxDataService.setTaxData(response.data);
               this.userTaxDataService.setUserTaxData(formData);
-              // this.taxDataService.setUserTaxDetails(formData);
-
               // Handle successful response and store data
               this.handleApiResponse(response.data); // Pass the data to a method to handle it
 
@@ -221,7 +237,7 @@ export class TaxCalculationComponent implements OnInit {
           }
         );
     } else {
-      console.log('Form is invalid');
+      console.log('Form is invalid or required fields are empty');
     }
   }
 
