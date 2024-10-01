@@ -383,6 +383,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         lastFiledItrId: userData[i].lastFiledItrId,
         source: userData[i].source,
         statusName: userData[i].statusName,
+        requestId: userData[i].requestId,
+        whatsAppRequestId: userData[i].whatsAppRequestId
 
       })
       userArray.push(userInfo);
@@ -779,7 +781,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       }
     })
 

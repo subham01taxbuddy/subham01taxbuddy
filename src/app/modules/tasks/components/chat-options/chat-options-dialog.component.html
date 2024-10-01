@@ -7,7 +7,7 @@
 </button>
 <div class="card__row" style="display: flex;">
   <span>
-    <button type="button" class="new-button-1" title="Whatsapp" (click)="goToWhatsapp()" [disabled]="!waChatLink"> <i
+    <button type="button" class="new-button-1" title="Whatsapp" (click)="openUserChat(data.clientName,data.whatsAppRequestId)" [disabled]="!data.whatsAppRequestId"> <i
         class="fa fa-whatsapp" aria-hidden="true"></i>&nbsp;
       Whatsapp
     </button>
