@@ -26,7 +26,6 @@
                   placeholder="Name of Assessee"
                   formControlName="assesseeName"
                   matInput
-                  readonly
                 />
               </mat-form-field>
             </div>
@@ -56,7 +55,11 @@
             <div class="col-sm-5">
               <mat-label>Assessment Year</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput formControlName="assessmentYear" />
+                <input
+                  matInput
+                  formControlName="assessmentYear"
+                  placeholder="2024-2025"
+                />
               </mat-form-field>
             </div>
             <div class="col-sm-5">

@@ -80,11 +80,15 @@ export class TaxCalculationComponent implements OnInit {
       userId: [null], // This will be populated from queryParams
     });
     // Set the value and disable the form control separately
-    this.taxCalculationForm.controls['assessmentYear'].setValue('2024-2025');
-    this.taxCalculationForm.controls['assessmentYear'].disable();
+    // this.taxCalculationForm.controls['assessmentYear'].setValue('2024-2025');
+    // this.taxCalculationForm.controls['assessmentYear'].disable();
   }
 
   ngOnInit(): void {
+    // Set the assessment year when the component loads
+    this.taxCalculationForm.controls['assessmentYear'].setValue('2024-2025');
+    this.taxCalculationForm.controls['assessmentYear'].disable();
+
     // Retrieve userId from query parameters
     this.activatedRoute.queryParams.subscribe((params) => {
       this.userId = params['userId'];
@@ -223,10 +227,10 @@ export class TaxCalculationComponent implements OnInit {
 
               // Navigate to the TaxCalculationDetailsComponent
               this.router.navigate(
-                ['/pages/user-management/tax-calculation-details'],
-                {
-                  state: { taxData: formData },
-                }
+                ['/pages/user-management/tax-calculation-details']
+                // {
+                //   state: { taxData: formData },
+                // }
               );
             } else {
               console.error('API Error: ', response.message);
