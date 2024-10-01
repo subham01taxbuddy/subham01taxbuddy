@@ -16,7 +16,6 @@ import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/
 import { ReviewService } from '../../review/services/review.service';
 import { UserNotesComponent } from '../../shared/components/user-notes/user-notes.component';
 import { MatDialog } from '@angular/material/dialog';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
@@ -77,7 +76,6 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
     private cacheManager: CacheManager,
     private reviewService: ReviewService,
     private dialog: MatDialog,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
     private router: Router,
     @Inject(LOCALE_ID) private locale: string
@@ -673,7 +671,6 @@ export class PrefillUploadedSummaryNotSentComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
     });

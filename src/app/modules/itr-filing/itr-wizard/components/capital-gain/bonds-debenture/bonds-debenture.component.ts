@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { NgForm, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -41,8 +41,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   PREV_ITR_JSON: any;
 
   activeIndex: number;
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
+
   constructor(
-    private fb: UntypedFormBuilder,
+      private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
@@ -200,6 +203,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
               this.updateValidations(this.deductionForm);
+              this.initializeFormFlags(this.deductionForm);
             });
             this.deduction = true;
           }
@@ -234,7 +238,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     const securitiesArray = <UntypedFormArray>this.bondsForm.controls['bondsArray'];
     return (
       securitiesArray.controls.filter(
-        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
+            (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -366,7 +370,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   editBondsForm(event) {
     let i = event.rowIndex;
     this.selectedFormGroup.patchValue(
-      ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
+        ((this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).getRawValue());
     this.activeIndex = i;
     this.utilsService.smoothScrollToTop();
   }
@@ -383,7 +387,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   deleteBondsArray() {
     let bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls = bondsArray.controls.filter(
-      (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
+        (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
     if (bondsArray.length == 0) {
       this.deductionForm.reset();
@@ -744,12 +748,12 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
       ltcg +=
-        (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
-          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
+          (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
+              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
       stcg +=
-        (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
-          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
+          (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
+              ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
     });
     this.totalCg.ltcg = ltcg;
@@ -782,13 +786,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       const bondsArray = <UntypedFormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
       bondsArray.controls.forEach((element) => {
-        let costOfImprovement = (element as UntypedFormGroup).controls[
+          let costOfImprovement = (element as UntypedFormGroup).controls[
           'improvementCost'
         ].value;
-        let indexedValue = (element as UntypedFormGroup).controls['indexCostOfImprovement'].value;
+          let indexedValue = (element as UntypedFormGroup).controls['indexCostOfImprovement'].value;
         bondImprovement.push({
-          srn: (element as UntypedFormGroup).controls['srn'].value,
-          dateOfImprovement: (element as UntypedFormGroup).controls[
+            srn: (element as UntypedFormGroup).controls['srn'].value,
+            dateOfImprovement: (element as UntypedFormGroup).controls[
             'dateOfImprovement'
           ].value,
           indexCostOfImprovement: indexedValue,
@@ -796,14 +800,14 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         });
         if (this.assetType === 'INDEXED_BONDS') {
           if (indexedValue > 0) {
-            (element as UntypedFormGroup).controls['costOfImprovement'].setValue(indexedValue);
+              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(indexedValue);
           } else {
-            (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
+              (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
           }
         } else {
           (element as UntypedFormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
         }
-        bondsList.push((element as UntypedFormGroup).getRawValue());
+          bondsList.push((element as UntypedFormGroup).getRawValue());
       });
 
       const bondData = {
@@ -1014,13 +1018,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       bondsArray.controls.forEach((element) => {
         if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-            (element as UntypedFormGroup).controls['capitalGain'].value
+              (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-            (element as UntypedFormGroup).controls['valueInConsideration'].value
+              (element as UntypedFormGroup).controls['valueInConsideration'].value
           );
           expenses += parseInt(
-            (element as UntypedFormGroup).controls['sellExpense'].value
+              (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });
@@ -1082,7 +1086,73 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef)
       this.utilsService.showSnackBar('Please fill all mandatory details.');
       return;
+    }else if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+        return;
+      }
     }
     this.save('bonds');
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean): void {
+    if (isChecked) {
+      this.setFieldValidators('purchaseDate', [Validators.required]);
+      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators('purchaseDate');
+      this.clearFieldValidators('costOfNewAssets');
+    }
+    this.calculateDeductionGain();
+  }
+  onToggleCGAS(isChecked: boolean): void{
+    if (isChecked) {
+      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators('dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('accountNumber');
+      this.clearFieldValidators('ifscCode');
+      this.clearFieldValidators('dateOfDeposit');
+    }
+    this.calculateDeductionGain();
+  }
+
+  setFieldValidators(controlName: string, validators: any[]): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(controlName: string): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
+    }
   }
 }

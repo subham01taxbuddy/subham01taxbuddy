@@ -4,7 +4,7 @@ import { ITR_JSON, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 
 @Component({
@@ -16,7 +16,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   loading = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  specIncomeFormArray: UntypedFormArray;
+  specIncomeFormArray: FormArray;
   specIncomeForm: UntypedFormGroup;
   gridOptions: GridOptions;
   selectedFormGroup: UntypedFormGroup;
@@ -58,7 +58,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
-    this.specIncomeFormArray = new UntypedFormArray([]);
+    this.specIncomeFormArray = new FormArray([]);
     let srn = this.specIncomeFormArray.controls.length > 0 ? this.specIncomeFormArray.controls.length : 0;
     this.selectedFormGroup = this.createSpecIncomeForm(srn);
     this.activeIndex = -1;
@@ -95,7 +95,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   get getIncomeArray() {
-    return (this.specIncomeForm.get('specIncomesArray') as UntypedFormArray).controls;
+    return (this.specIncomeForm.get('specIncomesArray') as FormArray).controls;
   }
 
   createSpecIncomeForm(index?, income?: ProfitLossIncomes) {
@@ -150,7 +150,7 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   addSpecIncomeForm() {
     let form = this.createSpecIncomeForm(0, null);
-    (this.specIncomeForm.controls['specIncomesArray'] as UntypedFormArray).insert(0, form);
+    (this.specIncomeForm.controls['specIncomesArray'] as FormArray).insert(0, form);
   }
 
   onContinue() {
@@ -236,7 +236,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   specSelected() {
-    const specIncomesArray = <UntypedFormArray>(this.specIncomeForm.get('specIncomesArray'));
+    const specIncomesArray = <FormArray>(this.specIncomeForm.get('specIncomesArray'));
     return (
       specIncomesArray.controls.filter(
         (element) => (element as UntypedFormGroup).controls['hasEdit'].value === true
@@ -245,7 +245,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    let array = <UntypedFormArray>this.specIncomeForm.get('specIncomesArray');
+    let array = <FormArray>this.specIncomeForm.get('specIncomesArray');
     array.controls = array.controls.filter(
       (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
@@ -267,10 +267,10 @@ export class SpeculativeIncomeComponent implements OnInit {
 
     let result = this.selectedFormGroup.getRawValue();
     if (this.activeIndex === -1) {
-      let srn = (this.specIncomeForm.controls['specIncomesArray'] as UntypedFormArray).length;
+      let srn = (this.specIncomeForm.controls['specIncomesArray'] as FormArray).length;
       let form = this.createSpecIncomeForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.specIncomeForm.controls['specIncomesArray'] as UntypedFormArray).push(form);
+      (this.specIncomeForm.controls['specIncomesArray'] as FormArray).push(form);
     } else {
       (this.specIncomeForm.controls['specIncomesArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }

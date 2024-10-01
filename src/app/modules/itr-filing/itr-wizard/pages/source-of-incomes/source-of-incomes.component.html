@@ -9,18 +9,18 @@
       <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
         <div class="sources-back">
           <!-- sources-of-income options  -->
-          <mat-chip-listbox class="sources-chip" multiple (change)="sourcesUpdated($event)">
-            <mat-chip-option disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
-              [selected]="source.selected">
+<!--          <mat-chip-listbox class="sources-chip" multiple (change)="sourcesUpdated($event)">-->
+<!--            <mat-chip-option disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"-->
+<!--              selected="source.selected">-->
 
-              {{ source.name }}
+<!--              {{ source.name }}-->
 
-              <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="mr-2 fa fa-user-circle-o"
-                aria-hidden="true" data-action-type="updateStatus"></i>
-              <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o"
-                aria-hidden="true" data-action-type="updateStatus"></i>
-            </mat-chip-option>
-          </mat-chip-listbox>
+<!--              <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="mr-2 fa fa-user-circle-o"-->
+<!--                aria-hidden="true" data-action-type="updateStatus"></i>-->
+<!--              <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o"-->
+<!--                aria-hidden="true" data-action-type="updateStatus"></i>-->
+<!--            </mat-chip-option>-->
+<!--          </mat-chip-listbox>-->
         </div>
       </div>
       <div>

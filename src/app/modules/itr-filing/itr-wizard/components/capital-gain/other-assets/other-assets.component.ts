@@ -8,7 +8,7 @@ import {
   NewCapitalGain,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormArray, UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../../services/itr-json-helper-service';
 import * as moment from "moment/moment";
@@ -33,6 +33,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   isDisable: boolean;
   maximumDate = new Date();
   PREV_ITR_JSON: any;
+  showNewAsset  = new UntypedFormControl(false);
+  showCGAS = new UntypedFormControl(false);
 
   constructor(
     public matDialog: MatDialog,
@@ -179,6 +181,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   }
 
   updateValidations(formGroup) {
+    this.initializeFormFlags(formGroup);
     if (formGroup.controls['costOfNewAsset'].value) {
       formGroup.controls['purchaseDate'].setValidators([Validators.required]);
       formGroup.controls['purchaseDate'].updateValueAndValidity();
@@ -287,6 +290,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         'Amount against 54F shall be restricted to 10 Crore.'
       );
       return;
+    }
+    if (this.deduction === true){
+      if(!this.showCGAS.value && !this.showNewAsset.value){
+        this.utilsService.showSnackBar('Please fill details of any one of New Asset Purchase Or Deposited into CGAS A/C.');
+        return;
+      }
     }
     const deductionsArray = (
       (this.deductionForm.controls['deductions'] as UntypedFormArray)
@@ -735,6 +744,67 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           break;
         }
       }
+    }
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  onToggleNewAsset(isChecked: boolean): void {
+    if (isChecked) {
+      this.setFieldValidators('purchaseDate', [Validators.required]);
+      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+    } else {
+      this.clearFieldValidators('purchaseDate');
+      this.clearFieldValidators('costOfNewAssets');
+    }
+    this.calculateDeduction();
+  }
+  onToggleCGAS(isChecked: boolean): void{
+    if (isChecked) {
+      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
+      this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
+      this.setFieldValidators('dateOfDeposit', [Validators.required]);
+    } else {
+      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('accountNumber');
+      this.clearFieldValidators('ifscCode');
+      this.clearFieldValidators('dateOfDeposit');
+    }
+    this.calculateDeduction();
+  }
+
+  setFieldValidators(controlName: string, validators: any[]): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.setValidators(validators);
+      control.updateValueAndValidity();
+    }
+  }
+
+  clearFieldValidators(controlName: string): void {
+    const control = this.deductionForm.get(controlName);
+    if (control) {
+      control.clearValidators();
+      control.reset();
+      control.updateValueAndValidity();
     }
   }
 }

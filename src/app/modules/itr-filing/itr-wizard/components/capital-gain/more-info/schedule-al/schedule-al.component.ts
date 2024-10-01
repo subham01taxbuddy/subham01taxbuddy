@@ -9,7 +9,7 @@ import {
   OnChanges,
   SimpleChanges
 } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, FormArray, UntypedFormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import {
@@ -236,7 +236,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
 
   addMore() {
     this.mode = 'EDIT';
-    const immovableAssetArray = <UntypedFormArray>(
+    const immovableAssetArray = <FormArray>(
       this.immovableAssetForm.get('immovableAssetArray')
     );
     if (immovableAssetArray.valid || immovableAssetArray === null || immovableAssetArray?.length == 0) {
@@ -290,11 +290,11 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   }
 
   get immovableAssetArray() {
-    return <UntypedFormArray>this.immovableAssetForm?.get('immovableAssetArray');
+    return <FormArray>this.immovableAssetForm?.get('immovableAssetArray');
   }
 
   addMoreAssetsData(item?) {
-    const immovableAssetArray = <UntypedFormArray>(
+    const immovableAssetArray = <FormArray>(
       this.immovableAssetForm?.get('immovableAssetArray')
     );
 
@@ -320,7 +320,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       console.log(this.immovableAssetForm, 'Immovable asset form');
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      const immovableAssetArray = <UntypedFormArray>(
+      const immovableAssetArray = <FormArray>(
         this.immovableAssetForm.get('immovableAssetArray')
       );
 
@@ -537,7 +537,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   }
 
   deleteIndex(index) {
-    const immovableAssetArray = <UntypedFormArray>(
+    const immovableAssetArray = <FormArray>(
       this.immovableAssetForm?.get('immovableAssetArray')
     );
     immovableAssetArray.removeAt(index);
@@ -556,7 +556,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         if (index !== -1) {
           this.immovableAssets.splice(index, 1);
           this.immovableAssetGridApi?.setRowData(this.immovableAssets);
-          const immovableAssetArray = <UntypedFormArray>(
+          const immovableAssetArray = <FormArray>(
             this.immovableAssetForm?.get('immovableAssetArray')
           );
           immovableAssetArray.removeAt(index);

@@ -15,6 +15,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 
@@ -32,6 +33,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   usersGridOptions: GridOptions;
   config: any;
   roles: any;
+  chatBuddyDetails: any;
   statuslist: any = [
     { statusName: 'ITR Filed', statusId: '18' },
     { statusName: 'Interested', statusId: '16' },
@@ -75,6 +77,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
+    private chatService: ChatService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.usersGridOptions = <GridOptions>{
@@ -781,6 +784,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.requestId){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+     }
     });
   }
 
@@ -995,5 +1003,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 }

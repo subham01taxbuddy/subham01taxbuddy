@@ -279,7 +279,7 @@
           <div class="form-field">
             <div><span class="span">Date Of Birth</span> <span class="text-wrapper-2">*</span></div>
             <mat-form-field appearance="outline">
-              <input matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
+              <input appDateInput matTooltip="Date of birth as per PAN" matTooltipClass="tab-tooltip" matTooltipPosition="above"
                 matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" class="input-field"
                 placeholder="Date of birth" name="dateOfBirth" [formControl]="
             customerProfileForm.controls['dateOfBirth'] | formControlType

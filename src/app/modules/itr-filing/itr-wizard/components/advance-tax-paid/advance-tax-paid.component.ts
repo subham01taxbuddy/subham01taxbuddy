@@ -119,9 +119,9 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
   editSalaryForm(i) {
     // (
-    //   (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
+    //   (this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[
     //     i
-    //   ] as FormGroup
+    //   ] as UntypedFormGroup
     // ).enable();
   }
 

@@ -86,4 +86,10 @@ export const environment = {
 		appId: "1:294419985055:web:333066a5ba29aad79d28aa",
 		measurementId: "G-K3L7DS9C92"
 	},
+	WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/mqws/ws',
+	CHAT_API_URL: 'https://dev-tiledesk.taxbuddy.com/chatapi/api/tilechat',
+	TILEDESK_URL: 'https://dev-tiledesk.taxbuddy.com',
+	USER_STATUS_WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/ws',
+	PROJECT_NAME: 'Taxbuddy Dev',
+	TILEDESK_PROJECT_ID: "65e56b0b7c8dbc0013851dcb"
 };

@@ -4,6 +4,7 @@ import {
   UntypedFormBuilder,
   Validators,
   UntypedFormArray, AbstractControl,
+  FormArray,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -528,11 +529,11 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getCoOwnersArray() {
-    return <UntypedFormArray>this.housePropertyForm.get('coOwners');
+    return <FormArray>this.housePropertyForm.get('coOwners');
   }
 
   addMoreCoOwner() {
-    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
@@ -544,7 +545,7 @@ export class HousePropertyComponent implements OnInit {
 
   removeCoOwner(index) {
     console.log('Remove Index', index);
-    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     coOwner.removeAt(index);
     if (coOwner.length === 0)
       this.housePropertyForm.controls['isCoOwners'].setValue(false);
@@ -553,7 +554,7 @@ export class HousePropertyComponent implements OnInit {
 
 
   calPercentage() {
-    const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     let sum = 0;
     coOwner.controls.forEach((controlName) => {
       sum = Number(sum) + Number(controlName.value.percentage);
@@ -581,7 +582,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isduplicatePAN(i, formArrayName) {
-    const formArray = <UntypedFormArray>this.housePropertyForm.get(formArrayName);
+    const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
       (item) =>
         item['controls'].panNumber.value ===
@@ -711,7 +712,7 @@ export class HousePropertyComponent implements OnInit {
       this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
         ? this.currentIndex : this.firstSOPIndex;
     } else {
-      const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+      const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
         itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
@@ -772,11 +773,11 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getTenantArray() {
-    return <UntypedFormArray>this.housePropertyForm.get('tenant');
+    return <FormArray>this.housePropertyForm.get('tenant');
   }
 
   addMoreTenants() {
-    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+    const tenant = <FormArray>this.housePropertyForm.get('tenant');
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
@@ -788,7 +789,7 @@ export class HousePropertyComponent implements OnInit {
 
   removeTenant(index) {
     console.log('Remove Index', index);
-    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+    const tenant = <FormArray>this.housePropertyForm.get('tenant');
     tenant.removeAt(index);
     // Condition is added because at least one tenant details is mandatory
     if (tenant.length === 0) {
@@ -797,7 +798,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   tenantPanValidation() {
-    const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+    const tenant = <FormArray>this.housePropertyForm.get('tenant');
     // This method is written in utils service for common usablity.
     let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
       'panNumber',
@@ -844,7 +845,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   get getLoansArray() {
-    return <UntypedFormArray>this.housePropertyForm.get('loans');
+    return <FormArray>this.housePropertyForm.get('loans');
   }
 
   chekIsSOPAdded() {
@@ -932,12 +933,12 @@ export class HousePropertyComponent implements OnInit {
         ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
-        const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+        const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
         this.annualValue = null;
         this.thirtyPctOfAnnualValue = null;
       } else {
-        const nilTenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
+        const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
         // Condition is added because at least one tenant details is mandatory
         if (nilTenant.length === 0) {
           nilTenant.push(this.createTenantForm());
@@ -1435,7 +1436,7 @@ export class HousePropertyComponent implements OnInit {
         standardDeduction.setValue(0);
       }
 
-      const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
+      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
       let totalCoOwnerPercent = 0;
       if (coOwner.value instanceof Array) {
         coOwner.value.forEach((item) => {

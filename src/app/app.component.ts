@@ -1,5 +1,5 @@
 
-import { Component, HostListener, Optional } from '@angular/core';
+import { Component, HostListener, OnInit, Optional } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { MatDialog, MatDialogState } from "@angular/material/dialog";
@@ -15,14 +15,16 @@ import { environment } from 'src/environments/environment';
 import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
-import { KommunicateSsoService } from './services/kommunicate-sso.service';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+
+import { ChatManager } from './modules/chat/chat-manager';
+import { ChatService } from './modules/chat/chat.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   title = 'app works!';
 
@@ -39,10 +41,11 @@ export class AppComponent {
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
     private idleService: IdleService,
-    private kommunicateSsoService: KommunicateSsoService,
     private http: HttpClient,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
+    private chatManager: ChatManager,
+    private chatService: ChatService,
     private dbService: NgxIndexedDBService,
     @Optional() messaging: Messaging
   ) {
@@ -135,6 +138,14 @@ export class AppComponent {
     }
   }
 
+  ngOnInit(): void {
+    console.log('app comp initialize')
+    const chat21TokenAvailable = localStorage.getItem('CHAT21_TOKEN');
+    if(this.loginSmeDetails && chat21TokenAvailable){
+    this.chatManager.initChat(true);
+    }
+  }
+
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -182,6 +193,9 @@ export class AppComponent {
       disableClose: true,
       panelClass: 'reloadWindowPopup'
     });
+
+    this.chatManager.closeChat();
+
     this.dialogRef.afterClosed().subscribe(result => {
       console.log('logging out', this.router.url);
       this.logout();
@@ -191,14 +205,17 @@ export class AppComponent {
       console.log('logging out');
       this.logout();
       this.smeLogout();
-    })
+     })
   }
 
   logout() {
+    localStorage.setItem('loggedOut', 'true');
     Auth.signOut()
       .then(data => {
-        this.kommunicateSsoService.logoutKommunicateChat();
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatManager.closeChat();
         sessionStorage.clear();
+        localStorage.clear();
         this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
           console.log('success? ', successDeleted);
         });

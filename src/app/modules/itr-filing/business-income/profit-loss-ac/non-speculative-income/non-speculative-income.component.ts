@@ -384,7 +384,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     let totalExpenses = 0;
     // let specIncome = (
     //   this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-    // ).controls[index] as FormGroup;
+    // ).controls[index] as UntypedFormGroup;
     this.selectedFormGroup.controls['totalCredit'].setValue(
       Number(this.selectedFormGroup.controls['turnOver'].value) +
       Number(this.selectedFormGroup.controls['finishedGoodsClosingStock'].value)

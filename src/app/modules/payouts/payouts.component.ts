@@ -22,10 +22,10 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
-import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { map, Observable, startWith } from 'rxjs';
 import { User } from '../subscription/components/performa-invoice/performa-invoice.component';
+import { ChatService } from '../chat/chat.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -115,6 +115,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   filerOptions: User[] = [];
   allOldNewFilerList: any;
   showAllFilerList = new UntypedFormControl(false);
+  chatBuddyDetails: any;
+
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -128,8 +130,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public datePipe: DatePipe,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private chatService:ChatService,
     @Inject(LOCALE_ID) private locale: string) {
     this.getAllFilerList();
     this.startDate.setValue(this.minDate);
@@ -1180,9 +1182,14 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.request_id){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+
+     }
     });
 
   }
@@ -1350,5 +1357,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.maxStartDate = this.endDate.value;
   }
 
+  closeChat(){
+    this.chatBuddyDetails = null;
+  }
 
 }

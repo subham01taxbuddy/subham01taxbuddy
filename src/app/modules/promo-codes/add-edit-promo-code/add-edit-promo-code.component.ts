@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -136,7 +136,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   // createFixedPricingForm(obj: {
   //   planId?: number, name?: string, basePrice?: number, cgst?: number, igst?: number, sgst?: number,
   //   totalTax?: number, totalAmount?: number, originalPrice?: number
-  // } = {}): FormGroup {
+  // } = {}): UntypedFormGroup {
   //   return this.fb.group({
   //     planId: [obj.planId || ''],
   //     name: [{ value: obj.name || '', disabled: true }],
@@ -182,7 +182,7 @@ export class AddEditPromoCodeComponent implements OnInit {
   // }
 
   get getFixedPricingArray() {
-    return <UntypedFormArray>this.promoCodeForm.get('discountDetails');
+    return <FormArray>this.promoCodeForm.get('discountDetails');
   }
 
   addEdit = (): Promise<void> => {

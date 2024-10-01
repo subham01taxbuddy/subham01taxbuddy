@@ -12,7 +12,7 @@ import { AppConstants } from '../modules/shared/constants';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, } from '@angular/forms';
+import {FormArray, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors} from '@angular/forms';
 
 @Injectable()
 export class UtilsService {

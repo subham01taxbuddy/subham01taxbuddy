@@ -7,7 +7,7 @@ import {
   Output,
   Inject,
 } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -74,7 +74,7 @@ export class TcsComponent implements OnInit {
   }
 
   addSalary() {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     if (salaryArray.valid) {
       this.addMoreSalary();
     } else {
@@ -131,8 +131,8 @@ export class TcsComponent implements OnInit {
       return;
     }
     this.activeIndex = index;
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].markAsTouched();
-    (this.salaryForm.get('salaryArray') as UntypedFormArray).controls[this.activeIndex].updateValueAndValidity();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
     this.config.currentPage = this.activeIndex;
   }
 
@@ -144,7 +144,7 @@ export class TcsComponent implements OnInit {
   }
 
   editSalaryForm(i) {
-    // ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
+    // ((this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[i] as UntypedFormGroup).enable();
   }
 
   save() {
@@ -177,7 +177,7 @@ export class TcsComponent implements OnInit {
   }
 
   get getSalaryArray() {
-    return <UntypedFormArray>this.salaryForm.get('salaryArray');
+    return <FormArray>this.salaryForm.get('salaryArray');
   }
 
   addMoreSalary(item?) {
@@ -195,7 +195,7 @@ export class TcsComponent implements OnInit {
   }
 
   deleteSalaryArray(index) {
-    const salaryArray = <UntypedFormArray>this.salaryForm.get('salaryArray');
+    const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.removeAt(index);
   }
 

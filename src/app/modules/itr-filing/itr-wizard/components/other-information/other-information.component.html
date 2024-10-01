@@ -262,7 +262,7 @@
                       <div><span class="span">Date of Purchase</span> <span class="text-wrapper-2">*</span>
                       </div>
                       <mat-form-field appearance="outline">
-                        <input matInput readonly formControlName="purchaseDate" name="purchaseDate"
+                        <input appDateInput matInput  formControlName="purchaseDate" name="purchaseDate"
                           [matDatepicker]="purchaseDate" [min]="minDate" [max]="maxDate" placeholder="Date of purchase"
                           [required]="share.get('acquiredShares').value" />
                         <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>

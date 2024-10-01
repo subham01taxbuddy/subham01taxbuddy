@@ -12866,3 +12866,16 @@ body[dir=rtl] .checkbox[checked=true] {
 .customToggle .mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
   background: #d81b60 !important;
 }
+
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+.reloadWindowPopup{
+  z-index: 10000000 !important;
+}
+
+.cdk-overlay-container {
+z-index: 10000000 !important;
+}

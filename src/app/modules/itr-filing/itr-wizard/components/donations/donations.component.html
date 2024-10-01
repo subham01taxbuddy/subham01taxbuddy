@@ -64,8 +64,8 @@
                         <div><span class="span">Date of Donation </span> <span class="text-wrapper-2">*</span>
                         </div>
                         <mat-form-field appearance="outline" class="no-height small-inp">
-                          <input matInput [min]="minDate" [max]="maxDate" formControlName="dateOfDonation"
-                            name="dateOfDonation[i]" readonly [matDatepicker]="dateOfDonation"
+                          <input appDateInput matInput [min]="minDate" [max]="maxDate" formControlName="dateOfDonation"
+                            name="dateOfDonation[i]"  [matDatepicker]="dateOfDonation"
                             placeholder="Date of Donation" required />
                           <mat-datepicker-toggle matSuffix [for]="dateOfDonation"></mat-datepicker-toggle>
                           <mat-datepicker #dateOfDonation></mat-datepicker> <mat-error *ngIf="donation.get('dateOfDonation').hasError('pattern') &&

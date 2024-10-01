@@ -39,9 +39,9 @@
           <div class="form-field">
             <mat-label>Date of Deposit*</mat-label>
             <mat-form-field appearance="outline">
-              <input matTooltip="Date of Deposit" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+              <input appDateInput matTooltip="Date of Deposit" matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
                 [matDatepicker]="picker" class="input-field" placeholder="Date of Deposit" name="dateOfDeposit"
-                formControlName="dateOfDeposit" [min]="minDate" [max]="maxDate" readonly required />
+                formControlName="dateOfDeposit" [min]="minDate" [max]="maxDate"  required />
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error *ngIf="donation.get('dateOfDeposit').hasError('required')">
