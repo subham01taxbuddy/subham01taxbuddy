@@ -843,10 +843,10 @@ export class MoreOptionsDialogComponent implements OnInit {
     const apiUrl = `https://uat-api.taxbuddy.com/itr/calculate/advance-tax/${userId}`;
 
     // Call the API to get advance tax data
-    this.http.get(apiUrl).subscribe(
+    this.http.get(apiUrl, { observe: 'response' }).subscribe(
       (response: any) => {
-        if (response.success) {
-          const taxData = response.data;
+        if (response.status === 200) {
+          const taxData = response.body.data; // Assuming data is inside `body`
 
           // Navigate to the tax calculation page and pass the tax data as query params
           this.router.navigate(['/pages/user-management/tax-calculation'], {
@@ -892,12 +892,33 @@ export class MoreOptionsDialogComponent implements OnInit {
 
           // Close the dialog
           this.dialogRef.close();
-        } else {
-          console.error('API call failed', response.error);
+        } else if (response.status === 404) {
+          // If status code is 404, redirect without sending data
+          this.router.navigate(['/pages/user-management/tax-calculation'], {
+            queryParams: {
+              userId: userId, // Still passing userId, if necessary
+            },
+          });
+
+          // Close the dialog
+          this.dialogRef.close();
         }
       },
       (error) => {
-        console.error('API call failed', error);
+        // If there was an error with the API call, you can check the status
+        if (error.status === 404) {
+          // Redirect even on API error if status is 404
+          this.router.navigate(['/pages/user-management/tax-calculation'], {
+            queryParams: {
+              userId: userId, // Still passing userId, if necessary
+            },
+          });
+
+          // Close the dialog
+          this.dialogRef.close();
+        } else {
+          console.error('API call failed', error);
+        }
       }
     );
   }

@@ -46,7 +46,8 @@ export class TaxCalculationComponent implements OnInit {
           Validators.maxLength(10),
         ],
       ],
-      assessmentYear: ['2025-2026'], // You can also make this dynamic
+      // assessmentYear: [''], // You can also make this dynamic
+      assessmentYear: [{ value: '2024-2025', disabled: true }],
       dateOfBirth: ['', Validators.required],
       grossSalary: ['', Validators.required],
       incomeFromOtherSources: [''],
@@ -78,6 +79,9 @@ export class TaxCalculationComponent implements OnInit {
       anyOther: [''],
       userId: [null], // This will be populated from queryParams
     });
+    // Set the value and disable the form control separately
+    this.taxCalculationForm.controls['assessmentYear'].setValue('2024-2025');
+    this.taxCalculationForm.controls['assessmentYear'].disable();
   }
 
   ngOnInit(): void {
@@ -115,6 +119,10 @@ export class TaxCalculationComponent implements OnInit {
         STCG111A: params['pylStcgOtherThan111A'],
         TDS: params['tdsTcs'],
       });
+      console.log(
+        'Assessment Year from query params:',
+        params['assessmentYear']
+      );
     });
   }
 
@@ -125,14 +133,17 @@ export class TaxCalculationComponent implements OnInit {
 
   // Handle form submission
   onSubmit(): void {
+    console.log(this.taxCalculationForm.get('assessmentYear')?.value);
     if (this.taxCalculationForm.valid) {
       const formData = {
         userId: this.userId,
         name: this.taxCalculationForm.get('assesseeName')?.value || '',
-        assessmentYear:
-          this.taxCalculationForm.get('assessmentYear')?.value || '',
+        // assessmentYear:
+        //   this.taxCalculationForm.get('assessmentYear')?.value || '',
+        assessmentYear: '2024-2025',
         pan: this.taxCalculationForm.get('panNumber')?.value || '',
         dob: this.taxCalculationForm.get('dateOfBirth')?.value || '',
+        // dob: '1997-01-10',
         grossSalary: this.taxCalculationForm.get('grossSalary')?.value || 0,
         otherSourceIncome:
           this.taxCalculationForm.get('incomeFromOtherSources')?.value || 0,
