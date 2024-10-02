@@ -989,7 +989,7 @@ export class ChatService {
     const departmentId = selectedChat?.departmentId;
     const departmentName = selectedChat?.departmentName;
     const userFullName = selectedChat?.userFullName;
-    const url = `${environment.TILEDESK_URL}/api/65e56b0b7c8dbc0013851dcb/requests/${requestId}/messages/`
+    const url = `${environment.TILEDESK_URL}/api/${this.PROJECT_ID}/requests/${requestId}/messages/`
     let requestBody = {
       "type": "text",
       "text": "CONTINUE_BOT",
