@@ -2,39 +2,13 @@
 <div class="page-wrapper">
   <main>
     <div class="frameC">
-      <div class="space">
-        <div class="wrapper">
+      <div class="space p-0">
+        <div class="wrapper p-0">
           <div class="div-4">
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="heading3">
-                    <button class="accordion-button" data-bs-target="#collapse13" data-bs-toggle="collapse"
-                      type="button">
-                      Speculative Income</button>
-                  </h2>
-                  <div class="accordion-collapse collapse show" id="collapse13">
-                    <div class="accordion__item-body">
-                      <div class="table-responsive" style="overflow-x: scroll;">
-                        <div>
-                          <div class="col-sm-12">
-                            <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
-                              class="newAG ag-theme-balham topSps">
-                            </ag-grid-angular>
-                          </div>
-                          <div class="row col-sm-12" id="speculative_id">
-                            <div class="col-sm-6">
-                              <button (click)="deleteArray()" [disabled]="!specSelected()" class="delete-btn"
-                                type="submit">
-                                <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="accordion-item mt-3">
+                <div>
+                  <div class="accordion-item ">
                     <h2 class="accordion-header" id="heading4">
                       <button id="accordBtn" type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapse14">Add / Edit Speculative Income Details</button>
@@ -78,7 +52,7 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline" class="small-inp no-height">
                                 <input formControlName="grossProfit" placeholder="₹ Enter Amount" matInput
-                                  name="grossProfit" class="input-field" type="number" trim wholeNumber
+                                  name="grossProfit" class="input-field" type="number" trim digitsOnly
                                   (change)="calculateNetIncome()" />
                               </mat-form-field>
                               <mat-error
@@ -131,6 +105,35 @@
                       </div>
                     </div>
                   </div>
+                  <div class="accordion-item mt-3">
+                    <h2 class="accordion-header" id="heading3">
+                      <button class="accordion-button" data-bs-target="#collapse13" data-bs-toggle="collapse"
+                        type="button">
+                        Speculative Income</button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" id="collapse13">
+                      <div class="accordion__item-body">
+                        <div class="table-responsive" style="overflow-x: scroll;">
+                          <div>
+                            <div class="col-sm-12">
+                              <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                                class="newAG ag-theme-balham topSps">
+                              </ag-grid-angular>
+                            </div>
+                            <div class="row col-sm-12" id="speculative_id">
+                              <div class="col-sm-6">
+                                <button (click)="deleteArray()" [disabled]="!specSelected()" class="delete-btn"
+                                  type="submit">
+                                  <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

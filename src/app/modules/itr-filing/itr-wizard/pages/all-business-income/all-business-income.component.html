@@ -13,7 +13,7 @@
     <mat-expansion-panel hideToggle *ngIf="isFnO">
       <mat-expansion-panel-header (click)="addIncomeDetails('pnlaccounts')">
         <mat-panel-title>
-          Speculative/Non Speculative income
+          Trading and P&L A/C
         </mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
         <div class="card__row edit clearfix isShow">
@@ -23,6 +23,15 @@
         </div>
       </mat-expansion-panel-header>
       <app-profit-loss-ac></app-profit-loss-ac>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header (click)="addIncomeDetails('speculative')">
+        <mat-panel-title>
+          Speculative Income
+        </mat-panel-title>
+        <mat-icon> arrow_forward_ios </mat-icon>
+      </mat-expansion-panel-header>
     </mat-expansion-panel>
 
     <mat-expansion-panel hideToggle>

@@ -170,7 +170,7 @@
                                     <span class="span">Account Opening Date</span><span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput placeholder="DD/MM/YYYY" [matDatepicker]="dateofFilling"
+                                    <input appDateInput matInput placeholder="DD/MM/YYYY" [matDatepicker]="dateofFilling"
                                       autocomplete="off" formControlName="accountOpeningDate" [max]="maxPurchaseDate"
                                       required />
                                     <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
@@ -420,7 +420,7 @@
                                     <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput placeholder="DD/MM/YYYY" name="accountOpeningDate[j]"
+                                    <input appDateInput matInput placeholder="DD/MM/YYYY" name="accountOpeningDate[j]"
                                       [matDatepicker]="dateofFilling" autocomplete="off"
                                       formControlName="accountOpeningDate" [max]="maxPurchaseDate" required />
                                     <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
@@ -636,7 +636,7 @@
                                   class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="dateOfInterest[i]"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="dateOfInterest[i]"
                                   [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateOfInterest"
                                   [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
@@ -836,7 +836,7 @@
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="dateOfContract[i]"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="dateOfContract[i]"
                                   [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateOfContract"
                                   [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
@@ -1027,7 +1027,7 @@
                                 <span class="span">Date since held</span><span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
                                   autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
@@ -1252,7 +1252,7 @@
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
                                   autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
@@ -1477,7 +1477,7 @@
                                 <span class="span">Date of Acquisition</span><span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
                                   autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
@@ -2044,7 +2044,7 @@
                                 <span class="span">Date since position held </span><span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                <input appDateInput matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
                                   autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>

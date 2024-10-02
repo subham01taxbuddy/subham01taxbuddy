@@ -55,7 +55,7 @@
                         <!-- date of transfer -->
                         <td>
                           <mat-form-field appearance="outline">
-                            <input
+                            <input appDateInput
                                     [max]="maxDate"
                                     matInput
                                     placeholder="DD/MM/YYYY"
@@ -75,7 +75,7 @@
                         <!-- date of acquisition-->
                         <td>
                           <mat-form-field appearance="outline">
-                            <input
+                            <input appDateInput
                                     [max]="vda.get('dateOfTransfer').value"
                                     matInput
                                     placeholder="DD/MM/YYYY"

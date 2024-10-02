@@ -3,420 +3,436 @@
   <main>
     <div class="frameC">
       <div class="div">
-        <div class="text-wrapper">Speculative/Non Speculative income</div>
+        <div class="text-wrapper">Trading and P&L A/C</div>
         <div class="mingcute-down-fill"></div>
       </div>
-      <div class="space">
-        <div class="wrapper">
+      <div class="space p-0">
+        <div class="flex justify-around p-[30px]">
+          <button class="tbd-btn-10"  [ngClass]="{'selected': selectedForm === 'trading'}" (click)="selectForm('trading')">
+            Trading A/c
+          </button>
+
+          <button class="tbd-btn-10"  [ngClass]="{'selected': selectedForm === 'profitLoss'}"  (click)="selectForm('profitLoss')">
+            Profit and Loss A/C
+          </button>
+        </div>
+        <div class="wrapper p-0">
           <div class="div-4">
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="heading3">
-                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse2">Nature of Business (Other than 44AD, 44ADA,44AE)</button>
 
-                  </h2>
+                <div class="marginReduce">
+                  <div style="width: 100%;" *ngIf="selectedForm === 'trading'">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="heading3">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse2">Nature of Business (Other than 44AD, 44ADA,44AE)</button>
 
-                  <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                    <div class="accordion__item-body">
-                      <form [formGroup]="natOfBusinessDtlForm" style="position: relative;">
-                        <div class="" formArrayName="natOfBusinessDtlsArray">
-                          <div class="row"
-                            *ngFor="let income of getnatOfBusinessDtlsArray.controls | paginate : config;let i = index"
-                            [formGroupName]="fieldGlobalIndex(i)">
-                            <div class="col-10">
-                              <div class=" gray_box">
-                                <div class="div-6 ">
-                                  <div class="form-field">
-                                    <app-business-input-autocomplete [businessType]="'ALL'"
-                                      [selectedInput]="natOfBusinessDtlsArray.controls[i].get('natureOfBusiness').value"
-                                      (businessSelected)="businessClicked($event, i)">
-                                    </app-business-input-autocomplete>
+                      </h2>
+
+                      <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                        <div class="accordion__item-body">
+                          <form [formGroup]="natOfBusinessDtlForm" style="position: relative;">
+                            <div class="" formArrayName="natOfBusinessDtlsArray">
+                              <div class="row"
+                                *ngFor="let income of getnatOfBusinessDtlsArray.controls | paginate : config;let i = index"
+                                [formGroupName]="fieldGlobalIndex(i)">
+                                <div class="col-10">
+                                  <div class=" gray_box">
+                                    <div class="div-6 ">
+                                      <div class="form-field">
+                                        <app-business-input-autocomplete [businessType]="'ALL'"
+                                          [selectedInput]="natOfBusinessDtlsArray.controls[i].get('natureOfBusiness').value"
+                                          (businessSelected)="businessClicked($event, i)">
+                                        </app-business-input-autocomplete>
+                                      </div>
+                                      <div class="form-field">
+                                        <div><span class="normal_text">Trade Name </span> </div>
+                                        <mat-form-field appearance="outline" class="small-inp no-height">
+                                          <input formControlName="tradeName" matInput name="tradeName[i]"
+                                            class="input-field" />
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="form-field">
+                                        <div><span class="normal_text">Business Description</span></div>
+                                        <mat-form-field appearance="outline" class="small-inp no-height">
+                                          <input formControlName="businessDescription" matInput
+                                            name="businessDescription[i]" class="input-field" />
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Trade Name </span> </div>
-                                    <mat-form-field appearance="outline" class="small-inp no-height">
-                                      <input formControlName="tradeName" matInput name="tradeName[i]"
-                                        class="input-field" />
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Business Description</span></div>
-                                    <mat-form-field appearance="outline" class="small-inp no-height">
-                                      <input formControlName="businessDescription" matInput
-                                        name="businessDescription[i]" class="input-field" />
-                                    </mat-form-field>
+                                </div>
+                                <div class="col-2 mt-5">
+                                  <div class="ml-20 mt-4 deleteBtn">
+                                    <i class="fa fa-trash-o delbt mr-20" (click)="deleteArray(i)"></i>
+
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div class="col-2 mt-5">
-                              <div class="ml-20 mt-4 deleteBtn">
-                                <i class="fa fa-trash-o delbt mr-20" (click)="deleteArray(i)"></i>
 
+                            </div>
+                            <div [ngClass]="getnatOfBusinessDtlsArray.controls.length?'addBtn':'byDefaultAddBtn'">
+                              <button type="button" [disabled]="natOfBusinessDtlForm.invalid"
+                                class="ml-3 btn btn__add btn__default" (click)="addNatOfBusinessForm()">
+                                Add Another</button>
+                            </div>
+                          </form>
+                          <div class="row spsTp bdrTp" style="align-items: center">
+                            <div class="col-sm-6 txt-center">
+                              <div *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config">
                               </div>
+                              <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                             </div>
                           </div>
 
-                        </div>
-                        <div [ngClass]="getnatOfBusinessDtlsArray.controls.length?'addBtn':'byDefaultAddBtn'">
-                          <button type="button" [disabled]="natOfBusinessDtlForm.invalid"
-                            class="ml-3 btn btn__add btn__default" (click)="addNatOfBusinessForm()">
-                            Add Another</button>
-                        </div>
-                      </form>
-                      <div class="row spsTp bdrTp" style="align-items: center">
-                        <div class="col-sm-6 txt-center">
-                          <div *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config">
-                          </div>
-                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                         </div>
                       </div>
-
                     </div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <!-- start grid table -->
-                  <h2 class="accordion-header" id="heading3">
-                    <button class="accordion-button" data-bs-target="#collapse3" data-bs-toggle="collapse"
-                      type="button">
-                      Non Speculative Income</button>
-                  </h2>
-                  <div class="accordion-collapse collapse show" id="collapse3">
-                    <div class="accordion__item-body">
-                      <div class="table-responsive" style="overflow-x: scroll;">
-                        <div>
-                          <div class="col-sm-12">
-                            <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
-                              class="newAG ag-theme-balham topSps">
-                            </ag-grid-angular>
-                          </div>
-                          <div class="row col-sm-12" id="nonSpeculative_id">
-                            <div class="col-sm-6">
-                              <button (click)="deleteNonSpecArray()" [disabled]="!nonspecSelected()" class=" delete-btn"
-                                type="submit">
-                                <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+
+                    <div class="accordion-item mt-3">
+                      <h2 class="accordion-header" id="heading4">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse4">Add/ Edit Non Speculative Income Details</button>
+                      </h2>
+                      <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                        <div class="accordion__item-body">
+                          <form [formGroup]="selectedFormGroup">
+                            <div class="gray_container">
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Broker Name</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="brokerName" matInput [disabled]="true" name="brokerName"
+                                      readonly />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Turnover</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput
+                                      [disabled]="true" name="turnOver" required class="input-field"
+                                      (blur)="calculateIncome()" digitsOnly />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Closing stocks of finished
+                                      goods</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount"
+                                      digitsOnly matInput name="finishedGoodsClosingStock" class="input-field" required
+                                      type="number" trim (blur)="calculateIncome()" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Total Credits to trading
+                                      account</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input readonly formControlName="totalCredit" name="totalCredit" matInput digitsOnly
+                                      class="input-field" required type="number" trim />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Opening stock of finished
+                                      goods</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount"
+                                      digitsOnly matInput name="finishedGoodsOpeningStock" class="input-field" required
+                                      type="number" trim (blur)="calculateIncome()" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Purchases</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="purchase" placeholder="₹ Enter Amount" matInput
+                                      name="purchase" class="input-field" required type="number" trim digitsOnly
+                                      (blur)="calculateIncome()" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Trading expense</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input formControlName="expenditure" placeholder="₹ Enter Amount" matInput
+                                      name="tradingExpense" class="input-field" required type="number" trim digitsOnly
+                                      (blur)="calculateIncome()" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+
+                              <div class="div-6 mb-20 mt-3">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Gross profit from trading account</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input readonly formControlName="netIncome" name="netIncome" matInput digitsOnly
+                                      class="input-field" required type="number" trim />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                          <div class="out-box">
+                            <div class="box-left">
+                              <button (click)="clearForm()" class="btn btn__white">Cancel</button>
+                            </div>
+                            <div class="box-right">
+                              <button (click)="saveManualEntry()" class="btn btn__primary"
+                                [disabled]="!selectedFormGroup.valid">Save
+                                Details
                               </button>
                             </div>
                           </div>
                         </div>
                       </div>
+
                     </div>
-                  </div>
-                  <!-- //end table -->
-                  <div class="accordion-item mt-3">
-                    <h2 class="accordion-header" id="heading4">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse4">Add/ Edit Non Speculative Income Details</button>
-                    </h2>
-                    <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="accordion__item-body">
-                        <form [formGroup]="selectedFormGroup">
-                          <div class="gray_container">
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Broker Name</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="brokerName" matInput [disabled]="true" name="brokerName"
-                                    readonly />
-                                </mat-form-field>
-                              </div>
-                            </div>
 
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Turnover</span>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="heading3">
+                        <button class="accordion-button" data-bs-target="#collapse3" data-bs-toggle="collapse"
+                          type="button">
+                          Non Speculative Income</button>
+                      </h2>
+                      <div class="accordion-collapse collapse show" id="collapse3">
+                        <div class="accordion__item-body">
+                          <div class="table-responsive" style="overflow-x: scroll;">
+                            <div>
+                              <div class="col-sm-12">
+                                <ag-grid-angular (rowClicked)="editForm($event)" [gridOptions]="gridOptions"
+                                  class="newAG ag-theme-balham topSps">
+                                </ag-grid-angular>
+                              </div>
+                              <div class="row col-sm-12" id="nonSpeculative_id">
+                                <div class="col-sm-6">
+                                  <button (click)="deleteNonSpecArray()" [disabled]="!nonspecSelected()" class=" delete-btn"
+                                    type="submit">
+                                    <i aria-hidden="true" class="fa fa-trash">&nbsp;</i>Delete
+                                  </button>
                                 </div>
                               </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput
-                                    [disabled]="true" name="turnOver" required class="input-field"
-                                    (blur)="calculateIncome()" digitsOnly />
-                                </mat-form-field>
-                              </div>
                             </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Closing stocks of finished
-                                    goods</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsClosingStock" placeholder="₹ Enter Amount"
-                                    digitsOnly matInput name="finishedGoodsClosingStock" class="input-field" required
-                                    type="number" trim (blur)="calculateIncome()" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Total Credits to trading
-                                    account</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly formControlName="totalCredit" name="totalCredit" matInput digitsOnly
-                                    class="input-field" required type="number" trim />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Opening stock of finished
-                                    goods</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="finishedGoodsOpeningStock" placeholder="₹ Enter Amount"
-                                    digitsOnly matInput name="finishedGoodsOpeningStock" class="input-field" required
-                                    type="number" trim (blur)="calculateIncome()" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Purchases</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="purchase" placeholder="₹ Enter Amount" matInput
-                                    name="purchase" class="input-field" required type="number" trim digitsOnly
-                                    (blur)="calculateIncome()" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Trading expense</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input formControlName="expenditure" placeholder="₹ Enter Amount" matInput
-                                    name="tradingExpense" class="input-field" required type="number" trim digitsOnly
-                                    (blur)="calculateIncome()" />
-                                </mat-form-field>
-                              </div>
-                            </div>
-
-                            <div class="div-6 mb-20 mt-3">
-                              <div class="form-field">
-                                <div><span class="normal_text">Gross profit from trading account</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly formControlName="netIncome" name="netIncome" matInput digitsOnly
-                                    class="input-field" required type="number" trim />
-                                </mat-form-field>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                        <div class="out-box">
-                          <div class="box-left">
-                            <button (click)="clearForm()" class="btn btn__white">Cancel</button>
-                          </div>
-                          <div class="box-right">
-                            <button (click)="saveManualEntry()" class="btn btn__primary"
-                              [disabled]="!selectedFormGroup.valid">Save
-                              Details
-                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
-
                   </div>
 
-                  <div class="accordion-item mt-3">
-                    <h2 class="accordion-header" id="heading4">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse5">Profit & Loss Account</button>
-                    </h2>
-                    <div id="collapse5" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="accordion__item-body">
-                        <div class="gray_container">
-                          <form [formGroup]="profitLossForm">
-                            <!-- start other income -->
+                  <div style="width: 100%;" *ngIf="selectedForm === 'profitLoss'">
+                    <div class="accordion-item mt-3">
+                      <h2 class="accordion-header" id="heading4">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse5">Profit & Loss Account</button>
+                      </h2>
+                      <div id="collapse5" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                        <div class="accordion__item-body">
+                          <div class="gray_container">
+                            <form [formGroup]="profitLossForm">
+                              <!-- start other income -->
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Total Other Income</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input readonly type="text" matInput class="input-field" value="{{totalOtherIncomes}}"
+                                      id="exampleInputEmail1" aria-describedby="emailHelp">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field mt-3">
+                                  <div><span class="normal_text">Other income</span>
+                                  </div>
+                                </div>
+                                <div class="form-field buttons">
+                                  <div class="flex">
+                                    <div class="ml-20">
+                                      <button type="submit" (click)="deleteIncomeForm()" [disabled]="!incomeSelected()">
+                                        <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                      </button>
+                                      <button class="ml-3 btn btn__add btn__default"
+                                        (click)="addIncomeForm(this.newIncomes)">
+                                        Add
+                                        Another</button>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                              <div class="row gray_box" formArrayName="incomes">
+                                <div class="col-12 mb-2" *ngFor="let income of incomes?.controls; let i = index"
+                                  [formGroupName]="i">
+                                  <div class="div-6">
+                                    <div class="col-sm-1">
+                                      <mat-checkbox name="hasIncome[i]" formControlName="hasIncome" class="chkSpc">
+                                      </mat-checkbox>
+                                    </div>
+                                    <div class="form-field">
+                                      <div><span class="normal_text">Income Type </span>
+                                      </div>
+                                      <div class="form-control-wrapper">
+                                        <mat-form-field appearance="outline" class="small-inp no-height">
+                                          <mat-select placeholder="Income Type" formControlName="type" name="type"
+                                            (selectionChange)="changeIncomes()">
+                                            <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
+                                              [disabled]="(type.key !== 'ANY_OTHER')?type.disabled:false">
+                                              {{ type.value }}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                    <div class="form-field">
+                                      <div><span class="normal_text">Amount</span>
+                                      </div>
+                                      <mat-form-field appearance="outline" class="small-inp no-height">
+                                        <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
+                                          (change)="calculateNetProfit()" placeholder="Income Amount"
+                                          formControlName="amount" maxlength="14" />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="form-field" *ngIf="income.get('type').value === 'ANY_OTHER'">
+                                    <div><span class="normal_text">Description</span>
+                                    </div>
+                                    <mat-form-field class="input-field-width" appearance="outline"
+                                      class="small-inp no-height">
+                                      <input matInput class="input-field" placeholder="description"
+                                        formControlName="description" [required]="
+                                          income.get('type').value === 'ANY_OTHER'" />
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- end other income -->
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="normal_text">Total Other Expenses</span>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline" class="small-inp no-height">
+                                    <input readonly type="text" matInput class="input-field"
+                                      value="{{totalOtherExpenses}}" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field mt-3">
+                                  <div><span class="normal_text">Other expenses</span>
+                                  </div>
+                                </div>
+                                <div class="form-field buttons">
+                                  <div class="flex">
+                                    <div class="ml-20">
+                                      <button type="submit" (click)="deleteExpenseForm()" [disabled]="!expenseSelected()">
+                                        <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                      </button>
+                                      <button class="ml-3 btn btn__add btn__default"
+                                        (click)="addExpenseForm(this.newExpenses)">
+                                        Add
+                                        Another</button>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                              <div class="row gray_box" formArrayName="expenses">
+                                <div class="col-12 mb-2" *ngFor="let expense of expenses?.controls; let i = index"
+                                  [formGroupName]="i">
+                                  <div class="div-6">
+                                    <div class="col-sm-1">
+                                      <mat-checkbox name="hasExpense[i]" formControlName="hasExpense" class="chkSpc">
+                                      </mat-checkbox>
+                                    </div>
+                                    <div class="form-field">
+                                      <div><span class="normal_text">Expense Type </span>
+                                      </div>
+                                      <div class="form-control-wrapper">
+                                        <mat-form-field appearance="outline" class="small-inp no-height">
+                                          <mat-select placeholder="expense Type" formControlName="expenseType"
+                                            name="expenseType" (selectionChange)="changed()">
+                                            <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
+                                              [disabled]="(type.key !=='OTHER_EXPENSES')? type.disabled:false">
+                                              {{ type.value }}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                    <div class="form-field">
+                                      <div><span class="normal_text">Amount</span>
+                                      </div>
+                                      <mat-form-field appearance="outline" class="small-inp no-height">
+                                        <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
+                                          (change)="calculateNetProfit()" placeholder="Expense Amount"
+                                          formControlName="expenseAmount" maxlength="14" />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="form-field" *ngIf="expense.get('expenseType').value === 'OTHER_EXPENSES'">
+                                    <div><span class="normal_text">Description</span>
+                                    </div>
+                                    <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
+                                      <input matInput class="input-field" placeholder="description"
+                                        formControlName="description" [required]="
+                                          expense.get('expenseType').value === 'OTHER_EXPENSES'
+                                        " />
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </form>
                             <div class="div-6 mb-20">
                               <div class="form-field">
-                                <div><span class="normal_text">Total Other Income</span>
+                                <div><span class="normal_text">Net Profit</span>
                                 </div>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly type="text" matInput class="input-field" value="{{totalOtherIncomes}}"
+                                  <input readonly type="text" matInput class="input-field" value="{{totalNetProfit}}"
                                     id="exampleInputEmail1" aria-describedby="emailHelp">
                                 </mat-form-field>
                               </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field mt-3">
-                                <div><span class="normal_text">Other income</span>
-                                </div>
-                              </div>
-                              <div class="form-field buttons">
-                                <div class="flex">
-                                  <div class="ml-20">
-                                    <button type="submit" (click)="deleteIncomeForm()" [disabled]="!incomeSelected()">
-                                      <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                    </button>
-                                    <button class="ml-3 btn btn__add btn__default"
-                                      (click)="addIncomeForm(this.newIncomes)">
-                                      Add
-                                      Another</button>
-                                  </div>
-                                </div>
-
-                              </div>
-                            </div>
-                            <div class="row gray_box" formArrayName="incomes">
-                              <div class="col-12 mb-2" *ngFor="let income of incomes?.controls; let i = index"
-                                [formGroupName]="i">
-                                <div class="div-6">
-                                  <div class="col-sm-1">
-                                    <mat-checkbox name="hasIncome[i]" formControlName="hasIncome" class="chkSpc">
-                                    </mat-checkbox>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Income Type </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                      <mat-form-field appearance="outline" class="small-inp no-height">
-                                        <mat-select placeholder="Income Type" formControlName="type" name="type"
-                                          (selectionChange)="changeIncomes()">
-                                          <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
-                                            [disabled]="(type.key != 'ANY_OTHER')?type.disabled:false">
-                                            {{ type.value }}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Amount</span>
-                                    </div>
-                                    <mat-form-field appearance="outline" class="small-inp no-height">
-                                      <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
-                                        (change)="calculateNetProfit()" placeholder="Income Amount"
-                                        formControlName="amount" maxlength="14" />
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                                <div class="form-field" *ngIf="income.get('type').value === 'ANY_OTHER'">
-                                  <div><span class="normal_text">Description</span>
-                                  </div>
-                                  <mat-form-field class="input-field-width" appearance="outline"
-                                    class="small-inp no-height">
-                                    <input matInput class="input-field" placeholder="description"
-                                      formControlName="description" [required]="
-                                        income.get('type').value === 'ANY_OTHER'" />
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- end other income -->
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Total Other Expenses</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input readonly type="text" matInput class="input-field"
-                                    value="{{totalOtherExpenses}}" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field mt-3">
-                                <div><span class="normal_text">Other expenses</span>
-                                </div>
-                              </div>
-                              <div class="form-field buttons">
-                                <div class="flex">
-                                  <div class="ml-20">
-                                    <button type="submit" (click)="deleteExpenseForm()" [disabled]="!expenseSelected()">
-                                      <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                    </button>
-                                    <button class="ml-3 btn btn__add btn__default"
-                                      (click)="addExpenseForm(this.newExpenses)">
-                                      Add
-                                      Another</button>
-                                  </div>
-                                </div>
-
-                              </div>
-                            </div>
-                            <div class="row gray_box" formArrayName="expenses">
-                              <div class="col-12 mb-2" *ngFor="let expense of expenses?.controls; let i = index"
-                                [formGroupName]="i">
-                                <div class="div-6">
-                                  <div class="col-sm-1">
-                                    <mat-checkbox name="hasExpense[i]" formControlName="hasExpense" class="chkSpc">
-                                    </mat-checkbox>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Expense Type </span>
-                                    </div>
-                                    <div class="form-control-wrapper">
-                                      <mat-form-field appearance="outline" class="small-inp no-height">
-                                        <mat-select placeholder="expense Type" formControlName="expenseType"
-                                          name="expenseType" (selectionChange)="changed()">
-                                          <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
-                                            [disabled]="(type.key !='OTHER_EXPENSES')? type.disabled:false">
-                                            {{ type.value }}
-                                          </mat-option>
-                                        </mat-select>
-                                      </mat-form-field>
-                                    </div>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="normal_text">Amount</span>
-                                    </div>
-                                    <mat-form-field appearance="outline" class="small-inp no-height">
-                                      <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
-                                        (change)="calculateNetProfit()" placeholder="Expense Amount"
-                                        formControlName="expenseAmount" maxlength="14" />
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                                <div class="form-field" *ngIf="expense.get('expenseType').value === 'OTHER_EXPENSES'">
-                                  <div><span class="normal_text">Description</span>
-                                  </div>
-                                  <mat-form-field class="input-field-width small-inp no-height" appearance="outline">
-                                    <input matInput class="input-field" placeholder="description"
-                                      formControlName="description" [required]="
-                                        expense.get('expenseType').value === 'OTHER_EXPENSES'
-                                      " />
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                            </div>
-
-
-                          </form>
-                          <div class="div-6 mb-20">
-                            <div class="form-field">
-                              <div><span class="normal_text">Net Profit</span>
-                              </div>
-                            </div>
-                            <div class="form-field">
-                              <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input readonly type="text" matInput class="input-field" value="{{totalNetProfit}}"
-                                  id="exampleInputEmail1" aria-describedby="emailHelp">
-                              </mat-form-field>
                             </div>
                           </div>
                         </div>

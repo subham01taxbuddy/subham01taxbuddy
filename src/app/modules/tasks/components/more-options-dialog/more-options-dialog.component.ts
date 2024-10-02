@@ -12,13 +12,12 @@ import { GridOptions } from 'ag-grid-community';
 import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
-import { ReviseReturnDialogComponent } from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
-import {
-  UpdateNoJsonFilingDialogComponent
-} from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
+import { ReviseReturnDialogComponent } from '../../../itr-filing/revise-return-dialog/revise-return-dialog.component';
+import { UpdateNoJsonFilingDialogComponent } from '../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component';
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { HttpClient } from '@angular/common/http'; // Add this import
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -36,7 +35,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   statusList = [];
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
-  navigateToInvoice: boolean
+  navigateToInvoice: boolean;
   partnerType: any;
   filerId: number;
   agentId: number;
@@ -54,13 +53,14 @@ export class MoreOptionsDialogComponent implements OnInit {
     public utilsService: UtilsService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
+    private http: HttpClient // Add this line
   ) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createRowData([]),
       columnDefs: this.columnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: (params) => { },
+      onGridReady: (params) => {},
       sortable: true,
       filter: true,
       floatingFilter: true,
@@ -78,17 +78,22 @@ export class MoreOptionsDialogComponent implements OnInit {
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
     //https://dev-api.taxbuddy.com/report/subscription-dashboard-new/3000?userId=8369&serviceType=TPA'
-    let param = '/subscription-dashboard-new/' + loggedInSmeUserId + '?userId=' + this.data?.userId + '&serviceType=' + this.data.serviceType;
+    let param =
+      '/subscription-dashboard-new/' +
+      loggedInSmeUserId +
+      '?userId=' +
+      this.data?.userId +
+      '&serviceType=' +
+      this.data.serviceType;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.showInvoiceButton = true;
-        if (response?.data[0]?.invoiceDetail[0]?.paymentStatus === "Paid") {
+        if (response?.data[0]?.invoiceDetail[0]?.paymentStatus === 'Paid') {
           this.navigateToInvoice = true;
         } else {
           this.navigateToInvoice = false;
         }
-
       } else {
         this.showInvoiceButton = false;
       }
@@ -129,26 +134,33 @@ export class MoreOptionsDialogComponent implements OnInit {
             this.dialogRef.close({ event: 'close', data: 'success' });
             return reject(res.error);
           } else {
-            const param = `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
-            this.userMsService.deleteMethod(param).toPromise().then(
-              (res: any) => {
-                if (res.success) {
-                  this.utilsService.showSnackBar(`User deleted successfully!`);
-                  this.dialogRef.close(true);
-                  resolve(res);
-                } else {
-                  this.utilsService.showSnackBar(res.message);
-                  reject(res.message);
+            const param =
+              `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+            this.userMsService
+              .deleteMethod(param)
+              .toPromise()
+              .then(
+                (res: any) => {
+                  if (res.success) {
+                    this.utilsService.showSnackBar(
+                      `User deleted successfully!`
+                    );
+                    this.dialogRef.close(true);
+                    resolve(res);
+                  } else {
+                    this.utilsService.showSnackBar(res.message);
+                    reject(res.message);
+                  }
+                },
+                (error) => {
+                  this.utilsService.showSnackBar(error.message);
+                  this.dialogRef.close({ event: 'close', data: 'success' });
+                  reject(error);
                 }
-              },
-              (error) => {
-                this.utilsService.showSnackBar(error.message);
-                this.dialogRef.close({ event: 'close', data: 'success' });
+              )
+              .catch((error) => {
                 reject(error);
-              }
-            ).catch((error) => {
-              reject(error);
-            });
+              });
           }
         },
         (error) => {
@@ -156,14 +168,13 @@ export class MoreOptionsDialogComponent implements OnInit {
             this.utilsService.showSnackBar(error.error.error);
             this.dialogRef.close({ event: 'close', data: 'success' });
           } else {
-            this.utilsService.showSnackBar("An unexpected error occurred.");
+            this.utilsService.showSnackBar('An unexpected error occurred.');
           }
           reject(error);
         }
       );
     });
   };
-
 
   goToInvoice() {
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
@@ -222,7 +233,13 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToProfile() {
-    this.router.navigate([`pages/user-management/profile/` + this.data.userId], { queryParams: { 'serviceType': this.data.serviceType, }, queryParamsHandling: 'merge' });
+    this.router.navigate(
+      [`pages/user-management/profile/` + this.data.userId],
+      {
+        queryParams: { serviceType: this.data.serviceType },
+        queryParamsHandling: 'merge',
+      }
+    );
     this.dialogRef.close();
   }
 
@@ -254,101 +271,115 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   optService() {
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        if (this.utilsService.isNonEmpty(this.selectedService)) {
-          this.loading = true;
-          const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
-          this.userMsService.getMethod(param).subscribe(
-            (res: any) => {
-              this.optedServices();
-              if (res.success) {
-                this.utilsService.showSnackBar(
-                  'Successfully opted the service type ' + this.selectedService
-                );
-
-              } else {
-                this.utilsService.showSnackBar(res.message);
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          return;
+        } else {
+          if (this.utilsService.isNonEmpty(this.selectedService)) {
+            this.loading = true;
+            const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
+            this.userMsService.getMethod(param).subscribe(
+              (res: any) => {
+                this.optedServices();
+                if (res.success) {
+                  this.utilsService.showSnackBar(
+                    'Successfully opted the service type ' +
+                      this.selectedService
+                  );
+                } else {
+                  this.utilsService.showSnackBar(res.message);
+                }
+              },
+              () => {
+                this.loading = false;
+                this.dialogRef.close({ event: 'close', data: 'success' });
               }
-            },
-            () => {
-              this.loading = false;
-              this.dialogRef.close({ event: 'close', data: 'success' });
-            }
-          );
+            );
+          }
+        }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
       }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
-    });
-
-
+    );
   }
 
   giveInsurance() {
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        this.loading = true;
-        const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
-        this.itrMsService.postMethod(param, {}).subscribe(
-          (res: any) => {
-            console.log(res);
-            this.loading = false;
-            if (!res.success) {
-              this.utilsService.showSnackBar(res.message);
-              return;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          return;
+        } else {
+          this.loading = true;
+          const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
+          this.itrMsService.postMethod(param, {}).subscribe(
+            (res: any) => {
+              console.log(res);
+              this.loading = false;
+              if (!res.success) {
+                this.utilsService.showSnackBar(res.message);
+                return;
+              }
+              this.utilsService.showSnackBar('Insurance given successfully');
+            },
+            () => {
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Failed to give insurance, please try again'
+              );
             }
-            this.utilsService.showSnackBar('Insurance given successfully');
-          },
-          () => {
-            this.loading = false;
-            this.utilsService.showSnackBar(
-              'Failed to give insurance, please try again'
-            );
-          }
-        );
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar('An unexpected error occurred.');
+        }
       }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
-    });
+    );
   }
 
   checkSubscription(action: string) {
     this.loading = true;
-    if('ITR' === this.data.serviceType){
-      const notAllowedStatuses = [18,15,16,32,45,33];
-      if(notAllowedStatuses.includes(this.data.statusId)){
+    if ('ITR' === this.data.serviceType) {
+      const notAllowedStatuses = [18, 15, 16, 32, 45, 33];
+      if (notAllowedStatuses.includes(this.data.statusId)) {
         this.loading = false;
-        this.utilsService.showSnackBar('Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow');
+        this.utilsService.showSnackBar(
+          'Your status should be either Doc Incomplete or Doc Uploaded to update No JSON flow'
+        );
         return;
       }
     }
 
-    if(('ITR' === this.data.serviceType && this.data.statusId !== 8 && this.data.statusId !== 47) || ('ITRU' === this.data.serviceType && ![8,42,43,44].includes(this.data.statusId))){
+    if (
+      ('ITR' === this.data.serviceType &&
+        this.data.statusId !== 8 &&
+        this.data.statusId !== 47) ||
+      ('ITRU' === this.data.serviceType &&
+        ![8, 42, 43, 44].includes(this.data.statusId))
+    ) {
       this.loading = false;
-      this.utilsService.showSnackBar('You can only update the ITR file record when your status is "ITR confirmation received"');
+      this.utilsService.showSnackBar(
+        'You can only update the ITR file record when your status is "ITR confirmation received"'
+      );
       return;
     }
 
@@ -358,13 +389,19 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.leaderId = loggedInSmeUserId;
     }
 
-    if (this.loggedInUserRoles.includes('ROLE_FILER') && this.partnerType === 'PRINCIPAL') {
+    if (
+      this.loggedInUserRoles.includes('ROLE_FILER') &&
+      this.partnerType === 'PRINCIPAL'
+    ) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = true;
-    } else if (this.loggedInUserRoles.includes('ROLE_FILER') && this.partnerType === 'INDIVIDUAL') {
+    } else if (
+      this.loggedInUserRoles.includes('ROLE_FILER') &&
+      this.partnerType === 'INDIVIDUAL'
+    ) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = false;
-    }else if(this.loggedInUserRoles.includes('ROLE_FILER')){
+    } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       this.filerId = loggedInSmeUserId;
     }
 
@@ -380,56 +417,71 @@ export class MoreOptionsDialogComponent implements OnInit {
     }
 
     let serviceFilter = action === 'itr-u-update' ? '&serviceType=ITRU' : '';
-    let param = `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` + this.data?.mobileNumber + serviceFilter +  userFilter;
+    let param =
+      `/bo/subscription-dashboard-new?page=0&pageSize=10&mobileNumber=` +
+      this.data?.mobileNumber +
+      serviceFilter +
+      userFilter;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.data.content instanceof Array && response.data.content.length > 0) {
+      if (
+        response.data.content instanceof Array &&
+        response.data.content.length > 0
+      ) {
         console.log(response);
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === this.data.serviceType)) {
+          if (
+            smeSelectedPlan &&
+            smeSelectedPlan.servicesType === this.data.serviceType
+          ) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === this.data.serviceType)) {
+          } else if (
+            userSelectedPlan &&
+            userSelectedPlan.servicesType === this.data.serviceType
+          ) {
             itrSubscriptionFound = true;
             return;
           }
         });
         if (itrSubscriptionFound) {
-          if('ITR' === this.data.serviceType)
+          if ('ITR' === this.data.serviceType)
             this.checkFilerAssignment(action);
-          else if('ITRU' === this.data.serviceType){
+          else if ('ITRU' === this.data.serviceType) {
             const query = {
-            "and": {
-                "is": {
-                    "userId": this.data.userId,
-                    "isITRU": true,
-                    "eFillingCompleted": true
+              and: {
+                is: {
+                  userId: this.data.userId,
+                  isITRU: true,
+                  eFillingCompleted: true,
                 },
-                "in": {
-                    "assessmentYear":["2022-2023", "2023-2024"]
-                }
-            },
-            "includes": ["eFillingCompleted","assessmentYear"],
-            "collectionName": "itr",
-            "queryType": "FIND_ALL"
-          };
+                in: {
+                  assessmentYear: ['2022-2023', '2023-2024'],
+                },
+              },
+              includes: ['eFillingCompleted', 'assessmentYear'],
+              collectionName: 'itr',
+              queryType: 'FIND_ALL',
+            };
 
-          this.reportService.query(query).subscribe(
-            (res: any) => {
-              if(res?.data?.length === 2)
+            this.reportService.query(query).subscribe((res: any) => {
+              if (res?.data?.length === 2)
                 this.utilsService.showSnackBar('All ITR-U are filed.');
-              else
-                this.checkFilerAssignment(action);
+              else this.checkFilerAssignment(action);
             });
           }
         } else {
-          this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
+          this.utilsService.showSnackBar(
+            'Please make sure the subscription is created for user.'
+          );
         }
       } else {
-        this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
+        this.utilsService.showSnackBar(
+          'Please make sure the subscription is created for user.'
+        );
       }
     });
   }
@@ -439,69 +491,80 @@ export class MoreOptionsDialogComponent implements OnInit {
     let hasFilerAssignment = false;
     let serviceType = '';
     if (this.data.serviceType === 'ITRU') {
-      serviceType = `&serviceType=ITRU`
+      serviceType = `&serviceType=ITRU`;
     }
-    let param = `/check-filer-assignment?userId=${this.data.userId}${serviceType}`
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-          hasFilerAssignment = true;
-          if (hasFilerAssignment) {
-            switch (action) {
-              case 'add-client':
-                this.addClient();
-                break;
-              case 'update-filing':
-                this.updateFilingNoJson();
-                break;
-              case 'itr-u-update':
-                this.itruUpdate();
-                break;
+    let param = `/check-filer-assignment?userId=${this.data.userId}${serviceType}`;
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
+            hasFilerAssignment = true;
+            if (hasFilerAssignment) {
+              switch (action) {
+                case 'add-client':
+                  this.addClient();
+                  break;
+                case 'update-filing':
+                  this.updateFilingNoJson();
+                  break;
+                case 'itr-u-update':
+                  this.itruUpdate();
+                  break;
+              }
             }
+          } else {
+            this.utilsService.showSnackBar(
+              'Please make sure that filer assignment should be done before ITR filing.'
+            );
           }
         } else {
-          this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+          this.utilsService.showSnackBar(
+            'Please make sure that filer assignment should be done before ITR filing.'
+          );
         }
-      } else {
-        this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Please make sure that filer assignment should be done before ITR filing.'
+        );
       }
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
-    })
-
+    );
   }
 
   itruUpdate() {
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
-          width: '60%',
-          height: 'auto',
-          data: this.data,
-        });
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          return;
+        } else {
+          let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
+            width: '60%',
+            height: 'auto',
+            data: this.data,
+          });
 
-        disposable.afterClosed().subscribe((result) => {
-          if (result) {
-            this.dialogRef.close({ event: 'close', data: 'success' });
-          }
-        });
+          disposable.afterClosed().subscribe((result) => {
+            if (result) {
+              this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          });
+        }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar('An unexpected error occurred.');
+        }
       }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
-    });
+    );
   }
 
   addClient() {
@@ -519,9 +582,9 @@ export class MoreOptionsDialogComponent implements OnInit {
     let disposable = this.dialog.open(ReviseReturnDialogComponent, {
       width: '50%',
       height: 'auto',
-      data: data
-    })
-    disposable.afterClosed().subscribe(result => {
+      data: data,
+    });
+    disposable.afterClosed().subscribe((result) => {
       if (result === 'reviseReturn') {
         this.navigateAddClientFlow();
       }
@@ -541,9 +604,8 @@ export class MoreOptionsDialogComponent implements OnInit {
           this.createRowData(res.data.statusList)
         );
         console.log(this.initialData);
-
       },
-      () => { }
+      () => {}
     );
   }
 
@@ -566,7 +628,7 @@ export class MoreOptionsDialogComponent implements OnInit {
               ownerName: this.data.ownerName,
               filerName: this.data.filerName,
               filerUserId: this.data.filerUserId,
-              userInfo: this.data
+              userInfo: this.data,
             },
           });
           disposable.afterClosed().subscribe((result) => {
@@ -576,16 +638,17 @@ export class MoreOptionsDialogComponent implements OnInit {
             }
           });
         }
-      },(error) => {
-        this.loading=false;
+      },
+      (error) => {
+        this.loading = false;
         if (error.error && error.error.error) {
           this.utilsService.showSnackBar(error.error.error);
           this.dialogRef.close({ event: 'close', data: 'success' });
         } else {
-          this.utilsService.showSnackBar("An unexpected error occurred.");
+          this.utilsService.showSnackBar('An unexpected error occurred.');
         }
-        }
-      );
+      }
+    );
   }
 
   createRowData(data) {
@@ -651,7 +714,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         mobileNumber: this.data.mobileNumber,
         itrId: this.data.itrId,
         itrObjectStatus: this.data.itrObjectStatus,
-        openItrId: this.data.openItrId
+        openItrId: this.data.openItrId,
       };
 
       // Store stateData in session storage
@@ -681,23 +744,23 @@ export class MoreOptionsDialogComponent implements OnInit {
     // this.itrMsService.getMethod(param).subscribe(
     //   (res: any) => {
     //     if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if (this.data.statusId == 8 || this.data.statusId == 47) {
-            let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
-              width: '50%',
-              height: 'auto',
-              data: this.data,
-            });
+    if (this.data.statusId == 8 || this.data.statusId == 47) {
+      let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: this.data,
+      });
 
-            disposable.afterClosed().subscribe((result) => {
-              if (result) {
-                this.dialog.closeAll();
-              }
-            });
-          } else {
-            this.utilsService.showSnackBar(
-              'Please complete e-verification before starting with revised return'
-            );
-          }
+      disposable.afterClosed().subscribe((result) => {
+        if (result) {
+          this.dialog.closeAll();
+        }
+      });
+    } else {
+      this.utilsService.showSnackBar(
+        'Please complete e-verification before starting with revised return'
+      );
+    }
 
     //     } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
     //       this.utilsService.showSnackBar(
@@ -716,49 +779,147 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   linkToFinbingo() {
-    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
-      console.log(res);
-      if (res.error) {
-        this.utilsService.showSnackBar(res.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-        return;
-      } else {
-        const userId = this.data.userId;
-    const param = `/partner/create-user`;
-    const request = {
-      userId: userId
-    }
-    this.loading = true;
-    this.userMsService.postMethod(param, request).subscribe((res: any) => {
-      console.log('Link To Finbingo Response: ', res);
-      this.loading = false;
-      if (res.success) {
-        if (res.data.isFnbVirtualUser) {
-          this.utilsService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
-        } else if (res.data.isFnbUser) {
-          this.utilsService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+          return;
         } else {
-          this.utilsService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+          const userId = this.data.userId;
+          const param = `/partner/create-user`;
+          const request = {
+            userId: userId,
+          };
+          this.loading = true;
+          this.userMsService.postMethod(param, request).subscribe(
+            (res: any) => {
+              console.log('Link To Finbingo Response: ', res);
+              this.loading = false;
+              if (res.success) {
+                if (res.data.isFnbVirtualUser) {
+                  this.utilsService.showSnackBar(
+                    'User is already linked with FinBingo partner, please check under virtual users.'
+                  );
+                } else if (res.data.isFnbUser) {
+                  this.utilsService.showSnackBar(
+                    'This user is already FinBingo user, please check under FinBingo users.'
+                  );
+                } else {
+                  this.utilsService.showSnackBar(
+                    'User successfully linked with FinBingo partner, please check under virtual users.'
+                  );
+                }
+                this.dialogRef.close({ event: 'close', data: 'success' });
+              } else {
+                this.utilsService.showSnackBar(res.message);
+              }
+            },
+            (error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'There is some problem while linking user to Finbingo'
+              );
+              this.dialogRef.close({ event: 'close', data: 'success' });
+            }
+          );
         }
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar(res.message)
+      },
+      (error) => {
+        this.loading = false;
+        if (error.error && error.error.error) {
+          this.utilsService.showSnackBar(error.error.error);
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else {
+          this.utilsService.showSnackBar('An unexpected error occurred.');
+        }
       }
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('There is some problem while linking user to Finbingo')
-      this.dialogRef.close({ event: 'close', data: 'success' });
-    })
-      }
-    },error => {
-      this.loading=false;
-      if (error.error && error.error.error) {
-        this.utilsService.showSnackBar(error.error.error);
-        this.dialogRef.close({ event: 'close', data: 'success' });
-      } else {
-        this.utilsService.showSnackBar("An unexpected error occurred.");
-      }
-    });
+    );
+  }
 
+  goToTaxCalculation() {
+    const userId = this.data.userId; // Get userId
+    const apiUrl = `https://uat-api.taxbuddy.com/itr/calculate/advance-tax/${userId}`;
+
+    // Call the API to get advance tax data
+    this.http.get(apiUrl, { observe: 'response' }).subscribe(
+      (response: any) => {
+        if (response.status === 200) {
+          const taxData = response.body.data; // Assuming data is inside `body`
+
+          // Navigate to the tax calculation page and pass the tax data as query params
+          this.router.navigate(['/pages/user-management/tax-calculation'], {
+            queryParams: {
+              userId: taxData.userId,
+              name: taxData.name,
+              pan: taxData.pan,
+              assessmentYear: taxData.assessmentYear,
+              dob: taxData.dob,
+              grossSalary: taxData.grossSalary,
+              oldRegimeSalaryExemption: taxData.oldRegimeSalaryExemption,
+              newRegimeSalaryExemption: taxData.newRegimeSalaryExemption,
+              businessIncome: taxData.businessIncome,
+              speculativeBusinessIncome: taxData.speculativeBusinessIncome,
+              rentalIncome: taxData.rentalIncome,
+              deduction: taxData.deduction,
+              homeLoanInterest: taxData.homeLoanInterest,
+              sopHomeLoanInterest: taxData.sopHomeLoanInterest,
+              otherSourceIncome: taxData.otherSourceIncome,
+              ltcg112A: taxData.ltcg112A,
+              ltcg112Other: taxData.ltcg112Other,
+              stcg111A: taxData.stcg111A,
+              stcgAppRate: taxData.stcgAppRate,
+              us80c: taxData.us80c,
+              us80dSelf: taxData.us80dSelf,
+              us80dParent: taxData.us80dParent,
+              us80ccd1b: taxData.us80ccd1b,
+              us80ccd2: taxData.us80ccd2,
+              us80ttattb: taxData.us80ttattb,
+              us80g80ggc80gga: taxData.us80g80ggc80gga,
+              anyOther: taxData.anyOther,
+              pylHp: taxData.pylHp,
+              pylNonSpeculativeIncome: taxData.pylNonSpeculativeIncome,
+              pylSpeculativeIncome: taxData.pylSpeculativeIncome,
+              pylLtcgl12A: taxData.pylLtcgl12A,
+              pylStcg111A: taxData.pylStcg111A,
+              pylLtcgOtherThan112A: taxData.pylLtcgOtherThan112A,
+              pylStcgOtherThan111A: taxData.pylStcgOtherThan111A,
+              tdsTcs: taxData.tdsTcs,
+              advanceTaxPaid: taxData.advanceTaxPaid,
+            },
+          });
+
+          // Close the dialog
+          this.dialogRef.close();
+        } else if (response.status === 404) {
+          // If status code is 404, redirect without sending data
+          this.router.navigate(['/pages/user-management/tax-calculation'], {
+            queryParams: {
+              userId: userId, // Still passing userId, if necessary
+            },
+          });
+
+          // Close the dialog
+          this.dialogRef.close();
+        }
+      },
+      (error) => {
+        // If there was an error with the API call, you can check the status
+        if (error.status === 404) {
+          // Redirect even on API error if status is 404
+          this.router.navigate(['/pages/user-management/tax-calculation'], {
+            queryParams: {
+              userId: userId, // Still passing userId, if necessary
+            },
+          });
+
+          // Close the dialog
+          this.dialogRef.close();
+        } else {
+          console.error('API call failed', error);
+        }
+      }
+    );
   }
 }

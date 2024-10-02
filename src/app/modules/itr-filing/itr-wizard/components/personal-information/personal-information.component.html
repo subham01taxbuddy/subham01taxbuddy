@@ -1,53 +1,101 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
 <form [formGroup]="customerProfileForm">
   <div class="accordion-item">
     <h2 class="accordion-header" id="heading2">
-      <button id="perDetailsId" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-        aria-expanded="false" aria-controls="collapse2" data-bs-target="#collapse2">Personal Details</button>
-
+      <button
+        id="perDetailsId"
+        type="button"
+        class="accordion-button collapsed"
+        data-bs-toggle="collapse"
+        aria-expanded="false"
+        aria-controls="collapse2"
+        data-bs-target="#collapse2"
+      >
+        Personal Details
+      </button>
     </h2>
-    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="collapse2">
+    <div
+      id="collapse2"
+      class="accordion-collapse collapse"
+      aria-labelledby="collapse2"
+    >
       <div class="accordion__item-body divider_border" formGroupName="address">
         <h3>Address Details</h3>
         <div class="div-6">
           <div class="form-field">
-            <div>
-              <span class="span">Pincode</span>
-            </div>
-            <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
-                class="input-field" maxlength="6" minlength="6" trim digitsOnly required (blur)="getCityData()" />
-              <mat-error *ngIf="
-              addressForm.controls['pinCode'].hasError('required') ||
-              addressForm.controls['pinCode'].hasError('pattern') ||
-              addressForm.controls['pinCode'].hasError('minLength') ||
-              addressForm.controls['pinCode'].hasError('maxLength')
-            ">
-                Enter 6 digit PIN code.</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="form-field">
             <div><span class="span">Select Country </span></div>
             <div class="form-control-wrapper">
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Select country" name="country" formControlName="country" (selectionChange)="
-              changeCountry(addressForm.controls['country'].value)
-            " required>
-                  <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                <mat-select
+                  placeholder="Select country"
+                  name="country"
+                  formControlName="country"
+                  (selectionChange)="changeCountry($event.value)"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let country of countryDropdown"
+                    [value]="country.countryCode"
+                  >
                     {{ country.countryName | titlecase }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
+          
+          <div class="form-field">
+            <div>
+              <span class="span">
+                {{
+                  addressForm.controls["country"].value === "91"
+                    ? "Pincode"
+                    : "Zipcode"
+                }}</span
+              >
+            </div>
+            <mat-form-field appearance="outline">
+              <input
+                type="text"
+                matInput
+                [placeholder]="
+                  addressForm.controls['country'].value === '91'
+                    ? 'Pincode'
+                    : 'Zipcode'
+                "
+                [name]="
+                  addressForm.controls['country'].value === '91'
+                    ? 'pincode'
+                    : 'zipcode'
+                "
+                formControlName="pinCode"
+                class="input-field"
+                maxlength="8"
+                trim
+                required
+                (blur)="getCityData()"
+              />
+            </mat-form-field>
+          </div>
 
           <div class="form-field">
             <div><span class="span">Select State </span></div>
             <div class="form-control-wrapper">
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Select state" name="state" formControlName="state" required>
-                  <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                <mat-select
+                  placeholder="Select state"
+                  name="state"
+                  formControlName="state"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let state of stateDropdown"
+                    [value]="state.stateCode"
+                  >
                     {{ state.stateName | titlecase }}
                   </mat-option>
                 </mat-select>
@@ -57,62 +105,130 @@
           <div class="form-field">
             <div><span class="span">City</span></div>
             <mat-form-field appearance="outline">
-              <input type="text" trim matInput placeholder="City/Taluka/District" name="city" formControlName="city"
-                class="input-field" maxlength="50" required />
-              <mat-error *ngIf="addressForm.controls['city'].hasError('pattern')">
-                Enter character only.</mat-error>
-              <mat-error *ngIf="addressForm.controls['city'].hasError('required')">
-                Enter city name.</mat-error>
+              <input
+                type="text"
+                trim
+                matInput
+                placeholder="City/Taluka/District"
+                name="city"
+                formControlName="city"
+                class="input-field"
+                maxlength="50"
+                required
+              />
+              <mat-error
+                *ngIf="addressForm.controls['city'].hasError('pattern')"
+              >
+                Enter character only.</mat-error
+              >
+              <mat-error
+                *ngIf="addressForm.controls['city'].hasError('required')"
+              >
+                Enter city name.</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
         <div class="div-6">
           <div class="form-field">
-            <div><span class="span">Flat/Door/Block No.</span> <span class="text-wrapper-2">*</span></div>
+            <div>
+              <span class="span">Flat/Door/Block No.</span>
+              <span class="text-wrapper-2">*</span>
+            </div>
             <mat-form-field appearance="outline">
-              <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo" formControlName="flatNo"
-                class="input-field" maxlength="50" required />
-              <mat-error *ngIf="addressForm.controls['flatNo'].hasError('required')">
-                Enter flat/door/block no.</mat-error>
+              <input
+                type="text"
+                trim
+                matInput
+                placeholder="Flat/Door/Block No."
+                name="flatNo"
+                formControlName="flatNo"
+                class="input-field"
+                maxlength="50"
+                required
+              />
+              <mat-error
+                *ngIf="addressForm.controls['flatNo'].hasError('required')"
+              >
+                Enter flat/door/block no.</mat-error
+              >
             </mat-form-field>
           </div>
           <div class="form-field">
             <div><span class="span">Premises name</span></div>
             <mat-form-field appearance="outline">
-              <input type="text" trim matInput placeholder="Premises name" name="premisesName"
-                formControlName="premisesName" class="input-field" maxlength="50" />
+              <input
+                type="text"
+                trim
+                matInput
+                placeholder="Premises name"
+                name="premisesName"
+                formControlName="premisesName"
+                class="input-field"
+                maxlength="50"
+              />
             </mat-form-field>
           </div>
           <div class="form-field">
-            <div><span class="span">Area/Locality </span> <span class="text-wrapper-2">*</span></div>
+            <div>
+              <span class="span">Area/Locality </span>
+              <span class="text-wrapper-2">*</span>
+            </div>
             <mat-form-field appearance="outline">
-              <input type="text" trim matInput placeholder="Area/ Locality Characters Only" [pattern]="charRegex"
-                name="area" formControlName="area" class="input-field" maxlength="50" required />
-              <mat-error *ngIf="addressForm.controls['area'].hasError('required')">
-                Enter area/ Locality</mat-error>
-              <mat-error *ngIf="addressForm.controls['area'].hasError('pattern')">
-                Enter character only</mat-error>
+              <input
+                type="text"
+                trim
+                matInput
+                placeholder="Area/ Locality Characters Only"
+                [pattern]="charRegex"
+                name="area"
+                formControlName="area"
+                class="input-field"
+                maxlength="50"
+                required
+              />
+              <mat-error
+                *ngIf="addressForm.controls['area'].hasError('required')"
+              >
+                Enter area/ Locality</mat-error
+              >
+              <mat-error
+                *ngIf="addressForm.controls['area'].hasError('pattern')"
+              >
+                Enter character only</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
-
       </div>
 
-
-
-      <div class="accordion__item-body divider_border" formGroupName="seventhProviso139">
+      <div
+        class="accordion__item-body divider_border"
+        formGroupName="seventhProviso139"
+      >
         <h3>Filing Section</h3>
         <div class="White_box">
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span"> Are you filing return of income under Seventh proviso to section 139(1) but
-                  otherwise not required to
-                  furnish return of income?</span></p>
+            <div class="col-10">
+              <p>
+                <span class="span">
+                  Are you filing return of income under Seventh proviso to
+                  section 139(1) but otherwise not required to furnish return of
+                  income?</span
+                >
+              </p>
             </div>
             <div class="col-2">
-              <mat-radio-group name="seventhProvisio139[i]" formControlName="seventhProvisio139"
-                (change)="seventhProvisio139()">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
+              <mat-radio-group
+                name="seventhProvisio139[i]"
+                formControlName="seventhProvisio139"
+                (change)="seventhProvisio139()"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 7px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
                 <mat-radio-button [value]="'N'" labelPosition="after">
@@ -123,83 +239,33 @@
           </div>
         </div>
 
-        <div *ngIf="seventhProviso139.controls['seventhProvisio139']?.value === 'Y'">
+        <div
+          *ngIf="
+            seventhProviso139.controls['seventhProvisio139']?.value === 'Y'
+          "
+        >
           <div class="White_box">
             <div class="row mb-10">
-              <div class="col-10 ">
-                <p><span class="span"> Has incurred expenditure of an amount or aggregate of the amounts exceeding
-                    2
-                    lakh rupees for himself or
-                    any other person for travel to a foreign country</span></p>
-              </div>
-              <div class="col-2">
-                <mat-radio-group name="strIncrExpAggAmt2LkTrvFrgnCntryFlg[i]"
-                  formControlName="strIncrExpAggAmt2LkTrvFrgnCntryFlg" (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()">
-                  <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
-                    Yes
-                  </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="after">
-                    No
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
-            <div *ngIf="
-              seventhProviso139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg']
-                ?.value === 'Y'
-            ">
-              <div class="input-field-container" style="width: 75%; margin-top: 5px">
-                <mat-form-field appearance="outline" class="custom">
-                  <input matInput placeholder="Amount" name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
-                    formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg" (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()" />
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-
-          <div class="White_box">
-            <div class="row mb-10">
-              <div class="col-10 ">
-                <p><span class="span"> Has incurred expenditure of an amount or aggregate of the amounts exceeding
-                    1
-                    lakh rupees towards
-                    consumption of electricity</span></p>
-              </div>
-              <div class="col-2">
-                <mat-radio-group name="strIncrExpAggAmt1LkElctrctyPrYrFlg[i]"
-                  formControlName="strIncrExpAggAmt1LkElctrctyPrYrFlg" (change)="strIncrExpAggAmt1LkElctrctyPrYrFlg()">
-                  <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
-                    Yes
-                  </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="after">
-                    No
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
-            </div>
-            <div *ngIf="
-              seventhProviso139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg']
-                ?.value === 'Y'
-            ">
-              <div class="input-field-container" style="width: 75%; margin-top: 5px">
-                <mat-form-field appearance="outline" class="custom">
-                  <input matInput placeholder="Amount" name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
-                    formControlName="incrExpAggAmt1LkElctrctyPrYrFlg" (change)="strIncrExpAggAmt1LkElctrctyPrYrFlg()" />
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-
-          <div class="White_box">
-            <div class="row mb-10">
-              <div class="col-10 ">
-                <p><span class="span"> Fulfils such other conditions as may be prescribed under Rule 12AB</span>
+              <div class="col-10">
+                <p>
+                  <span class="span">
+                    Has incurred expenditure of an amount or aggregate of the
+                    amounts exceeding 2 lakh rupees for himself or any other
+                    person for travel to a foreign country</span
+                  >
                 </p>
               </div>
               <div class="col-2">
-                <mat-radio-group name="clauseiv7provisio139i[i]" formControlName="clauseiv7provisio139i"
-                  (change)="clauseiv7provisio139i()">
-                  <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
+                <mat-radio-group
+                  name="strIncrExpAggAmt2LkTrvFrgnCntryFlg[i]"
+                  formControlName="strIncrExpAggAmt2LkTrvFrgnCntryFlg"
+                  (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()"
+                >
+                  <mat-radio-button
+                    [value]="'Y'"
+                    style="margin-left: 0px; margin-right: 7px"
+                    labelPosition="after"
+                  >
                     Yes
                   </mat-radio-button>
                   <mat-radio-button [value]="'N'" labelPosition="after">
@@ -208,51 +274,190 @@
                 </mat-radio-group>
               </div>
             </div>
-            <div class="surround" *ngIf="
-            seventhProviso139.controls['clauseiv7provisio139i']?.value === 'Y'
-          ">
+            <div
+              *ngIf="
+                seventhProviso139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg']
+                  ?.value === 'Y'
+              "
+            >
+              <div
+                class="input-field-container"
+                style="width: 75%; margin-top: 5px"
+              >
+                <mat-form-field appearance="outline" class="custom">
+                  <input
+                    matInput
+                    placeholder="Amount"
+                    name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
+                    formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
+                    (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="White_box">
+            <div class="row mb-10">
+              <div class="col-10">
+                <p>
+                  <span class="span">
+                    Has incurred expenditure of an amount or aggregate of the
+                    amounts exceeding 1 lakh rupees towards consumption of
+                    electricity</span
+                  >
+                </p>
+              </div>
+              <div class="col-2">
+                <mat-radio-group
+                  name="strIncrExpAggAmt1LkElctrctyPrYrFlg[i]"
+                  formControlName="strIncrExpAggAmt1LkElctrctyPrYrFlg"
+                  (change)="strIncrExpAggAmt1LkElctrctyPrYrFlg()"
+                >
+                  <mat-radio-button
+                    [value]="'Y'"
+                    style="margin-left: 0px; margin-right: 7px"
+                    labelPosition="after"
+                  >
+                    Yes
+                  </mat-radio-button>
+                  <mat-radio-button [value]="'N'" labelPosition="after">
+                    No
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                seventhProviso139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg']
+                  ?.value === 'Y'
+              "
+            >
+              <div
+                class="input-field-container"
+                style="width: 75%; margin-top: 5px"
+              >
+                <mat-form-field appearance="outline" class="custom">
+                  <input
+                    matInput
+                    placeholder="Amount"
+                    name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
+                    formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+                    (change)="strIncrExpAggAmt1LkElctrctyPrYrFlg()"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="White_box">
+            <div class="row mb-10">
+              <div class="col-10">
+                <p>
+                  <span class="span">
+                    Fulfils such other conditions as may be prescribed under
+                    Rule 12AB</span
+                  >
+                </p>
+              </div>
+              <div class="col-2">
+                <mat-radio-group
+                  name="clauseiv7provisio139i[i]"
+                  formControlName="clauseiv7provisio139i"
+                  (change)="clauseiv7provisio139i()"
+                >
+                  <mat-radio-button
+                    [value]="'Y'"
+                    style="margin-left: 0px; margin-right: 7px"
+                    labelPosition="after"
+                  >
+                    Yes
+                  </mat-radio-button>
+                  <mat-radio-button [value]="'N'" labelPosition="after">
+                    No
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div
+              class="surround"
+              *ngIf="
+                seventhProviso139.controls['clauseiv7provisio139i']?.value ===
+                'Y'
+              "
+            >
               <div formArrayName="clauseiv7provisio139iDtls">
                 <div class="flex justify-content-end">
-                  <button mat-icon-button color="warn" class="add-btn" (click)="addClauseIv('addEmpty')">
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add More
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    class="add-btn"
+                    (click)="addClauseIv('addEmpty')"
+                  >
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add
+                    More
                   </button>
                 </div>
-                <div *ngFor="
-                let bank of getClauseiv7provisio139iDtls?.controls;
-                let i = index
-              " [formGroupName]="fieldGlobalIndex(i)">
-                  <div class="flex" style="
-                  margin: 15px 0px 15px 25px;
-                  flex-direction: row;
-                  align-items: center;
-                  justify-content: flex-start;
-                  gap: 10px;
-                ">
+                <div
+                  *ngFor="
+                    let bank of getClauseiv7provisio139iDtls?.controls;
+                    let i = index
+                  "
+                  [formGroupName]="fieldGlobalIndex(i)"
+                >
+                  <div
+                    class="flex"
+                    style="
+                      margin: 15px 0px 15px 25px;
+                      flex-direction: row;
+                      align-items: center;
+                      justify-content: flex-start;
+                      gap: 10px;
+                    "
+                  >
                     <div class="custom-control custom-checkbox">
-                      <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                        type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                        (click)="toggleSelectedIndex(i)" />
+                      <input
+                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                        type="checkbox"
+                        (click)="$event.stopPropagation()"
+                        [checked]="selectedIndexes.includes(i)"
+                        (click)="toggleSelectedIndex(i)"
+                      />
                     </div>
 
                     <div style="width: 75%">
                       <mat-form-field appearance="outline">
                         <mat-label>Nature*</mat-label>
-                        <mat-select placeholder="Nature" name="nature[i]" formControlName="nature"
-                          (selectionChange)="onSelectionChange(i)">
-                          <mat-option class="spcBlwOver" *ngFor="
-                          let clauseiv7provisio139iDtls of clauseiv7provisio139iDtlsList
-                        " [value]="clauseiv7provisio139iDtls.value"
-                            matTooltip="{{ clauseiv7provisio139iDtls.nature }}">
+                        <mat-select
+                          placeholder="Nature"
+                          name="nature[i]"
+                          formControlName="nature"
+                          (selectionChange)="onSelectionChange(i)"
+                        >
+                          <mat-option
+                            class="spcBlwOver"
+                            *ngFor="
+                              let clauseiv7provisio139iDtls of clauseiv7provisio139iDtlsList
+                            "
+                            [value]="clauseiv7provisio139iDtls.value"
+                            matTooltip="{{ clauseiv7provisio139iDtls.nature }}"
+                          >
                             {{ clauseiv7provisio139iDtls.nature }}
-                          </mat-option></mat-select>
+                          </mat-option></mat-select
+                        >
                       </mat-form-field>
                     </div>
 
                     <div>
                       <mat-form-field appearance="outline">
                         <mat-label>Amount*</mat-label>
-                        <input matInput placeholder="Amount" name="amount[i]" formControlName="amount"
-                          (change)="onSelectionChange(i)" />
+                        <input
+                          matInput
+                          placeholder="Amount"
+                          name="amount[i]"
+                          formControlName="amount"
+                          (change)="onSelectionChange(i)"
+                        />
                       </mat-form-field>
                     </div>
                   </div>
@@ -260,8 +465,13 @@
                 <!-- delete button  -->
                 <div class="row">
                   <div class="col-sm-6" style="margin: 15px">
-                    <button type="submit" class="delete-btn" (click)="deleteClauseIvArray()">
-                      <i class="fa fa-trash" aria-hidden="true">&nbsp;</i> Delete
+                    <button
+                      type="submit"
+                      class="delete-btn"
+                      (click)="deleteClauseIvArray()"
+                    >
+                      <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -271,16 +481,27 @@
 
           <div class="White_box">
             <div class="row mb-10">
-              <div class="col-10 ">
-                <p><span class="span">Has deposited an amount or aggregate of the amounts exceeding one crore
-                    rupees
-                    in one or more current
-                    accounts maintained with a banking company or a co-operative bank</span></p>
+              <div class="col-10">
+                <p>
+                  <span class="span"
+                    >Has deposited an amount or aggregate of the amounts
+                    exceeding one crore rupees in one or more current accounts
+                    maintained with a banking company or a co-operative
+                    bank</span
+                  >
+                </p>
               </div>
               <div class="col-2">
-                <mat-radio-group name="strDepAmtAggAmtExcd1CrPrYrFlg[i]" formControlName="strDepAmtAggAmtExcd1CrPrYrFlg"
-                  (change)="strDepAmtAggAmtExcd1CrPrYrFlg()">
-                  <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
+                <mat-radio-group
+                  name="strDepAmtAggAmtExcd1CrPrYrFlg[i]"
+                  formControlName="strDepAmtAggAmtExcd1CrPrYrFlg"
+                  (change)="strDepAmtAggAmtExcd1CrPrYrFlg()"
+                >
+                  <mat-radio-button
+                    [value]="'Y'"
+                    style="margin-left: 0px; margin-right: 7px"
+                    labelPosition="after"
+                  >
                     Yes
                   </mat-radio-button>
                   <mat-radio-button [value]="'N'" labelPosition="after">
@@ -289,38 +510,62 @@
                 </mat-radio-group>
               </div>
             </div>
-            <div *ngIf="
-              seventhProviso139.controls['strDepAmtAggAmtExcd1CrPrYrFlg']
-                ?.value === 'Y'
-            ">
-              <div class="input-field-container" style="width: 75%; margin-top: 5px">
+            <div
+              *ngIf="
+                seventhProviso139.controls['strDepAmtAggAmtExcd1CrPrYrFlg']
+                  ?.value === 'Y'
+              "
+            >
+              <div
+                class="input-field-container"
+                style="width: 75%; margin-top: 5px"
+              >
                 <mat-form-field appearance="outline" class="custom">
-                  <input matInput placeholder="Amount" name="depAmtAggAmtExcd1CrPrYrFlg[i]"
-                    formControlName="depAmtAggAmtExcd1CrPrYrFlg" (change)="strDepAmtAggAmtExcd1CrPrYrFlg()" />
+                  <input
+                    matInput
+                    placeholder="Amount"
+                    name="depAmtAggAmtExcd1CrPrYrFlg[i]"
+                    formControlName="depAmtAggAmtExcd1CrPrYrFlg"
+                    (change)="strDepAmtAggAmtExcd1CrPrYrFlg()"
+                  />
                 </mat-form-field>
 
-                <mat-error *ngIf="
-                  seventhProviso139.controls[
-                    'depAmtAggAmtExcd1CrPrYrFlg'
-                  ].hasError('min')
-                ">Amount should be more than 1 crore</mat-error>
+                <mat-error
+                  *ngIf="
+                    seventhProviso139.controls[
+                      'depAmtAggAmtExcd1CrPrYrFlg'
+                    ].hasError('min')
+                  "
+                  >Amount should be more than 1 crore</mat-error
+                >
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
-      <div class="accordion__item-body ">
+      <div class="accordion__item-body">
         <h3>Accounting Information</h3>
         <div class="White_box">
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Are you liable to maintain accounts as per section 44AA?</span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Are you liable to maintain accounts as per section
+                  44AA?</span
+                >
+              </p>
             </div>
             <div class="col-2">
-              <mat-radio-group name="liableSection44AAflag[i]" formControlName="liableSection44AAflag">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
+              <mat-radio-group
+                name="liableSection44AAflag[i]"
+                formControlName="liableSection44AAflag"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 7px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
                 <mat-radio-button [value]="'N'" labelPosition="after">
@@ -328,22 +573,31 @@
                 </mat-radio-button>
               </mat-radio-group>
             </div>
-            <div class="note mvrl">
-              <b>Note:</b> Not Applicable for ITR 1/2
-            </div>
+            <div class="note mvrl"><b>Note:</b> Not Applicable for ITR 1/2</div>
           </div>
         </div>
 
         <div class="White_box">
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Whether assessee is declaring income only under section
-                  44AE/44B/44BB/44AD/44ADA/44BBA?</span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Whether assessee is declaring income only under section
+                  44AE/44B/44BB/44AD/44ADA/44BBA?</span
+                >
+              </p>
             </div>
             <div class="col-2">
-              <mat-radio-group name="incomeDeclaredUsFlag[i]" formControlName="incomeDeclaredUsFlag"
-                (change)="onChangeIncomeDeclaredUsFlag()">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after">
+              <mat-radio-group
+                name="incomeDeclaredUsFlag[i]"
+                formControlName="incomeDeclaredUsFlag"
+                (change)="onChangeIncomeDeclaredUsFlag()"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 7px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
                 <mat-radio-button [value]="'N'" labelPosition="after">
@@ -354,103 +608,184 @@
           </div>
         </div>
 
-        <div *ngIf="customerProfileForm.controls['incomeDeclaredUsFlag']
-          ?.value === 'N'" class="White_box">
+        <div
+          *ngIf="
+            customerProfileForm.controls['incomeDeclaredUsFlag']?.value === 'N'
+          "
+          class="White_box"
+        >
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Whether during the year Total sales/turnover/gross receipts of business is between
-                  Rs. 1 crore and Rs. 10 crores?</span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Whether during the year Total sales/turnover/gross receipts
+                  of business is between Rs. 1 crore and Rs. 10 crores?</span
+                >
+              </p>
             </div>
           </div>
           <div class="row mb-10">
             <div class="col-10">
-              <mat-radio-group name="totalSalesExceedOneCr[i]" formControlName="totalSalesExceedOneCr"
-                (change)="onChangeTotalSalesExceedOneCr()">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 15px" labelPosition="after">
+              <mat-radio-group
+                name="totalSalesExceedOneCr[i]"
+                formControlName="totalSalesExceedOneCr"
+                (change)="onChangeTotalSalesExceedOneCr()"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 15px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
-                <mat-radio-button [value]="'N'" style="margin-left: 0px; margin-right: 15px" labelPosition="after">
+                <mat-radio-button
+                  [value]="'N'"
+                  style="margin-left: 0px; margin-right: 15px"
+                  labelPosition="after"
+                >
                   No, turnover does not exceed 1 crore
                 </mat-radio-button>
                 <mat-radio-button [value]="'M'" labelPosition="after">
                   No, turnover exceeds 10 crores
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error class="text-sm"
-                *ngIf="customerProfileForm.controls['totalSalesExceedOneCr'].hasError('required')">
-                Please select Whether during the year Total sales/turnover/gross receipts of business exceeds Rs. 1
-                crore but does not exceeds Rs. 10 Crore?
+              <mat-error
+                class="text-sm"
+                *ngIf="
+                  customerProfileForm.controls[
+                    'totalSalesExceedOneCr'
+                  ].hasError('required')
+                "
+              >
+                Please select Whether during the year Total sales/turnover/gross
+                receipts of business exceeds Rs. 1 crore but does not exceeds
+                Rs. 10 Crore?
               </mat-error>
             </div>
           </div>
         </div>
 
-        <div *ngIf="customerProfileForm.controls['totalSalesExceedOneCr']
-          ?.value === 'Y'" class="White_box">
+        <div
+          *ngIf="
+            customerProfileForm.controls['totalSalesExceedOneCr']?.value === 'Y'
+          "
+          class="White_box"
+        >
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Whether aggregate of all amounts received including amount
-                  received for sales, turnover or gross receipts or on capital account
-                  like capital contributions, loans etc. during the previous year, in
-                  cash & non-a/c payee cheque/DD, does not exceed five per cent of said amount?
-                </span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Whether aggregate of all amounts received including amount
+                  received for sales, turnover or gross receipts or on capital
+                  account like capital contributions, loans etc. during the
+                  previous year, in cash & non-a/c payee cheque/DD, does not
+                  exceed five per cent of said amount?
+                </span>
+              </p>
             </div>
           </div>
           <div class="row mb-10">
-            <div class="col-10 ">
-              <mat-radio-group name="aggregateOfAllAmountsReceivedFlag[i]"
-                formControlName="aggregateOfAllAmountsReceivedFlag">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 15px" labelPosition="after">
+            <div class="col-10">
+              <mat-radio-group
+                name="aggregateOfAllAmountsReceivedFlag[i]"
+                formControlName="aggregateOfAllAmountsReceivedFlag"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 15px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
                 <mat-radio-button [value]="'N'" labelPosition="after">
                   No
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error class="text-sm"
-                *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('auditAplicableNotAllowed')">
+              <mat-error
+                class="text-sm"
+                *ngIf="
+                  customerProfileForm.controls[
+                    'aggregateOfAllAmountsReceivedFlag'
+                  ].hasError('auditAplicableNotAllowed')
+                "
+              >
                 Audit is applicable - Income in Cash exceeds 5% of Turnover
               </mat-error>
-              <mat-error class="text-sm"
-                *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('required')">
-                Please select, whether aggregate of all amounts received including amount received for sales, turnover
-                or gross receipts during the previous year, in cash & non-a/c payee cheque/DD, does not exceed five per
-                cent of said amount.
+              <mat-error
+                class="text-sm"
+                *ngIf="
+                  customerProfileForm.controls[
+                    'aggregateOfAllAmountsReceivedFlag'
+                  ].hasError('required')
+                "
+              >
+                Please select, whether aggregate of all amounts received
+                including amount received for sales, turnover or gross receipts
+                during the previous year, in cash & non-a/c payee cheque/DD,
+                does not exceed five per cent of said amount.
               </mat-error>
             </div>
           </div>
         </div>
 
-        <div *ngIf="customerProfileForm.controls['totalSalesExceedOneCr']
-          ?.value === 'Y'" class="White_box">
+        <div
+          *ngIf="
+            customerProfileForm.controls['totalSalesExceedOneCr']?.value === 'Y'
+          "
+          class="White_box"
+        >
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Whether aggregate of all payments made including amount incurred for
-                  expenditure or on capital account such as asset acquisition, repayment of
-                  loans etc., in cash & non-a/c payee cheque/DD, during the previous year does not exceed five per cent
-                  of the said payment?
-                </span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Whether aggregate of all payments made including amount
+                  incurred for expenditure or on capital account such as asset
+                  acquisition, repayment of loans etc., in cash & non-a/c payee
+                  cheque/DD, during the previous year does not exceed five per
+                  cent of the said payment?
+                </span>
+              </p>
             </div>
           </div>
           <div class="row mb-10">
-            <div class="col-10 ">
-              <mat-radio-group name="aggregateOfAllPaymentsMadeFlag[i]"
-                formControlName="aggregateOfAllPaymentsMadeFlag">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 15px" labelPosition="after">
+            <div class="col-10">
+              <mat-radio-group
+                name="aggregateOfAllPaymentsMadeFlag[i]"
+                formControlName="aggregateOfAllPaymentsMadeFlag"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 15px"
+                  labelPosition="after"
+                >
                   Yes
                 </mat-radio-button>
                 <mat-radio-button [value]="'N'" labelPosition="after">
                   No
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error class="text-sm"
-                *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('auditAplicableNotAllowed')">
+              <mat-error
+                class="text-sm"
+                *ngIf="
+                  customerProfileForm.controls[
+                    'aggregateOfAllPaymentsMadeFlag'
+                  ].hasError('auditAplicableNotAllowed')
+                "
+              >
                 Audit is applicable - Expense in Cash exceeds 5% of Turnover
               </mat-error>
-              <mat-error class="text-sm"
-                *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('required')">
-                Please select, whether aggregate of all payments made including amount incurred for expenditure, in cash
-                & non-a/c payee cheque/DD, during the previous year does not exceed five per cent of the said payment ?
+              <mat-error
+                class="text-sm"
+                *ngIf="
+                  customerProfileForm.controls[
+                    'aggregateOfAllPaymentsMadeFlag'
+                  ].hasError('required')
+                "
+              >
+                Please select, whether aggregate of all payments made including
+                amount incurred for expenditure, in cash & non-a/c payee
+                cheque/DD, during the previous year does not exceed five per
+                cent of the said payment ?
               </mat-error>
             </div>
           </div>
@@ -458,117 +793,231 @@
 
         <div class="White_box">
           <div class="row mb-10">
-            <div class="col-10 ">
-              <p><span class="span">Are you liable for audit under section 44AB?
-                </span></p>
+            <div class="col-10">
+              <p>
+                <span class="span"
+                  >Are you liable for audit under section 44AB?
+                </span>
+              </p>
             </div>
             <div class="col-2">
-              <mat-radio-group name="liableSection44ABFlag[i]" formControlName="liableSection44ABFlag">
-                <mat-radio-button [value]="'Y'" style="margin-left: 0px; margin-right: 7px" labelPosition="after"
-                  [disabled]="true">
+              <mat-radio-group
+                name="liableSection44ABFlag[i]"
+                formControlName="liableSection44ABFlag"
+              >
+                <mat-radio-button
+                  [value]="'Y'"
+                  style="margin-left: 0px; margin-right: 7px"
+                  labelPosition="after"
+                  [disabled]="true"
+                >
                   Yes
                 </mat-radio-button>
-                <mat-radio-button [value]="'N'" labelPosition="after" [checked]="true">
+                <mat-radio-button
+                  [value]="'N'"
+                  labelPosition="after"
+                  [checked]="true"
+                >
                   No
                 </mat-radio-button>
               </mat-radio-group>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <div class="accordion-item">
     <h2 class="accordion-header" id="heading2">
-      <button id="bankButtonId" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-        aria-expanded="false" aria-controls="collapseB" data-bs-target="#collapseB">Bank Details</button>
-
+      <button
+        id="bankButtonId"
+        type="button"
+        class="accordion-button collapsed"
+        data-bs-toggle="collapse"
+        aria-expanded="false"
+        aria-controls="collapseB"
+        data-bs-target="#collapseB"
+      >
+        Bank Details
+      </button>
     </h2>
-    <div id="collapseB" class="accordion-collapse collapse" aria-labelledby="collapseB">
+    <div
+      id="collapseB"
+      class="accordion-collapse collapse"
+      aria-labelledby="collapseB"
+    >
       <div class="accordion__item-body" formArrayName="bankDetails">
         <div class="div-11 mb-20">
           <h3>Bank Details</h3>
           <div class="frame-wrapper-3">
-            <button mat-icon-button class="btn table-add-remove-button text-left"
-              (click)="deleteSelectedBanks(this.customerProfileForm)">
+            <button
+              mat-icon-button
+              class="btn table-add-remove-button text-left"
+              (click)="deleteSelectedBanks(this.customerProfileForm)"
+            >
               <i class="fa fa-trash" aria-hidden="true"></i> Delete
             </button>
-            <button class="btn btn__default btn__add" (click)="addMoreBanks(this.customerProfileForm)"> Add
-              Bank</button>
+            <button
+              class="btn btn__default btn__add"
+              (click)="addMoreBanks(this.customerProfileForm)"
+            >
+              Add Bank
+            </button>
           </div>
         </div>
-        <div *ngFor="let bank of getBankDetailsArray.controls; let i = index" [formGroupName]="i">
-          <div class="div-6" style="gap:10px">
-            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
+        <div
+          *ngFor="let bank of getBankDetailsArray.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="div-6" style="gap: 10px">
+            <mat-checkbox
+              color="primary"
+              name="hasEdit[i]"
+              formControlName="hasEdit"
+            >
             </mat-checkbox>
             <div class="form-field col-2">
               <div><span class="span">IFSC CODE*</span></div>
-              <mat-form-field class="input-field-width" style="width: 90% !important">
-                <input type="text" trim upperCase matInput formControlName="ifsCode" placeholder="" name="ifsCode[i]"
-                  class="input-field" maxlength="11" required (blur)="getBankListByIfsc(bank.get('ifsCode'), i)" />
+              <mat-form-field
+                class="input-field-width"
+                style="width: 90% !important"
+              >
+                <input
+                  type="text"
+                  trim
+                  upperCase
+                  matInput
+                  formControlName="ifsCode"
+                  placeholder=""
+                  name="ifsCode[i]"
+                  class="input-field"
+                  maxlength="11"
+                  required
+                  (blur)="getBankListByIfsc(bank.get('ifsCode'), i)"
+                />
                 <mat-error *ngIf="bank.get('ifsCode').hasError('pattern')">
                   Enter valid IFSC Code.
                 </mat-error>
                 <mat-error
-                  *ngIf="bank.get('ifsCode').hasError('required') && (bank.get('ifsCode').dirty || bank.get('ifsCode').touched)">
+                  *ngIf="
+                    bank.get('ifsCode').hasError('required') &&
+                    (bank.get('ifsCode').dirty || bank.get('ifsCode').touched)
+                  "
+                >
                   Please enter IFSC Code
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-3">
               <div><span class="span">NAME OF BANK*</span></div>
-              <mat-form-field class="input-field-width" style="width: 90% !important">
-                <input type="text" trim matInput formControlName="name" placeholder="" name="name[i]"
-                  class="input-field" maxlength="125" required />
+              <mat-form-field
+                class="input-field-width"
+                style="width: 90% !important"
+              >
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  formControlName="name"
+                  placeholder=""
+                  name="name[i]"
+                  class="input-field"
+                  maxlength="125"
+                  required
+                />
                 <mat-error *ngIf="bank.get('name').hasError('pattern')">
                   Enter character only.
                 </mat-error>
                 <mat-error
-                  *ngIf="bank.get('name').hasError('required') && (bank.get('name').dirty || bank.get('name').touched)">
+                  *ngIf="
+                    bank.get('name').hasError('required') &&
+                    (bank.get('name').dirty || bank.get('name').touched)
+                  "
+                >
                   Please enter name of the Bank
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-3">
               <div><span class="span">ACCOUNT NUMBER*</span></div>
-              <mat-form-field class="input-field-width" style="width: 90% !important">
-                <input type="text" trim matInput formControlName="accountNumber" placeholder="" name="accountNumber[i]"
-                  class="input-field" maxlength="20" minlength="3" digitsOnly required />
-                <mat-error *ngIf="bank.get('accountNumber').hasError('pattern') ||
-                      bank.get('accountNumber').hasError('minlength')">
+              <mat-form-field
+                class="input-field-width"
+                style="width: 90% !important"
+              >
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  formControlName="accountNumber"
+                  placeholder=""
+                  name="accountNumber[i]"
+                  class="input-field"
+                  maxlength="20"
+                  minlength="3"
+                  digitsOnly
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    bank.get('accountNumber').hasError('pattern') ||
+                    bank.get('accountNumber').hasError('minlength')
+                  "
+                >
                   Account number should be between 3-20 digit
                 </mat-error>
                 <mat-error
-                  *ngIf="bank.get('accountNumber').hasError('required') && (bank.get('accountNumber').dirty || bank.get('accountNumber').touched)">
+                  *ngIf="
+                    bank.get('accountNumber').hasError('required') &&
+                    (bank.get('accountNumber').dirty ||
+                      bank.get('accountNumber').touched)
+                  "
+                >
                   Please enter name of the Bank
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field col-2">
               <div><span class="span">ACCOUNT TYPE*</span></div>
-              <mat-form-field class="input-field-width" style="width: 90% !important">
-                <mat-select placeholder="" name="accountType" formControlName="accountType" required>
-                  <mat-option *ngFor="let account of accountTypeDropdown" [value]="account.value">
+              <mat-form-field
+                class="input-field-width"
+                style="width: 90% !important"
+              >
+                <mat-select
+                  placeholder=""
+                  name="accountType"
+                  formControlName="accountType"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let account of accountTypeDropdown"
+                    [value]="account.value"
+                  >
                     {{ account.label }}
                   </mat-option>
                 </mat-select>
                 <mat-error
-                  *ngIf="bank.get('accountType').hasError('required') && (bank.get('accountType').dirty || bank.get('accountType').touched)">
+                  *ngIf="
+                    bank.get('accountType').hasError('required') &&
+                    (bank.get('accountType').dirty ||
+                      bank.get('accountType').touched)
+                  "
+                >
                   Select the account type
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="form-field" *ngIf="false">
-              <button mat-icon-button class="table-add-remove-button text-left"
-                (click)="deleteBank(i, this.customerProfileForm)">
+              <button
+                mat-icon-button
+                class="table-add-remove-button text-left"
+                (click)="deleteBank(i, this.customerProfileForm)"
+              >
                 <i class="fa fa-trash" aria-hidden="true"></i> Delete
               </button>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>

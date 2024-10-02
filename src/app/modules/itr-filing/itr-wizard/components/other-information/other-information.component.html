@@ -524,7 +524,7 @@
                 <div><span class="span">Aadhaar number of the spouse:</span>
                 </div>
                 <mat-form-field appearance="outline">
-                  <input type="text" trim matInput placeholder="Aadhaar number of the spouse"
+                  <input digitsOnly type="text" trim matInput placeholder="Aadhaar number of the spouse"
                     name="AadhaarNumberOfTheSpouse" class="input-field" formControlName="aadhaarOfSpouse"
                     maxlength="12" />
                 </mat-form-field>
@@ -642,7 +642,7 @@
                   <div><span class="span">Receipts received under the head : </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input wholeNumber trim class="input-field" matInput placeholder="Receipts received under the head"
+                    <input  digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head"
                       name="incomeReceived" formControlName="incomeReceived" maxlength="10"
                       (input)="validationBusiness()" required />
                     <mat-error *ngIf="
@@ -656,7 +656,7 @@
                   <div><span class="span">Amount apportioned in the hands of Spouse: </span> <span
                       class="text-wrapper-2">*</span></div>
                   <mat-form-field appearance="outline">
-                    <input (input)="validationBusiness()" wholeNumber trim class="input-field" matInput
+                    <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput
                       placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse"
                       formControlName="apportionedAmountOfSpouse" maxlength="10" required />
                     <mat-error *ngIf="

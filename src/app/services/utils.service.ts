@@ -1,18 +1,26 @@
-import {ElementRef, Injectable} from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
-import { concatMap, lastValueFrom, Observable, Subject} from 'rxjs';
+import { concatMap, lastValueFrom, Observable, Subject } from 'rxjs';
 import { ItrMsService } from './itr-ms.service';
 import { UserMsService } from './user-ms.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Employer, ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
+import {
+  Employer,
+  ITR_JSON,
+} from '../modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from '../modules/shared/constants';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
-import {FormArray, UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors} from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidationErrors,
+} from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -32,7 +40,7 @@ export class UtilsService {
     private userMsService: UserMsService,
     private storageService: StorageService,
     private reportService: ReportService
-  ) { }
+  ) {}
 
   isNonEmpty(param: any): boolean {
     if (param !== null && param !== undefined && param !== '') return true;
@@ -74,9 +82,9 @@ export class UtilsService {
     return result;
   }
 
-  getFYFromAY(assessmentYear: string){
+  getFYFromAY(assessmentYear: string) {
     const years = assessmentYear.split('-');
-    return (Number(years[0])-1) +'-'+(Number(years[1])-1);
+    return Number(years[0]) - 1 + '-' + (Number(years[1]) - 1);
   }
 
   //scroll to specific div
@@ -319,7 +327,7 @@ export class UtilsService {
       prefillData: itrJson ? itrJson.prefillData : null,
       prefillDataSource: itrJson ? itrJson.prefillDataSource : null,
       aisDataSource: itrJson ? itrJson.aisDataSource : null,
-      aisSource:itrJson ? itrJson.aisSource : null,
+      aisSource: itrJson ? itrJson.aisSource : null,
       everOptedNewRegime: {
         acknowledgementNumber: '',
         assessmentYear: '',
@@ -395,7 +403,7 @@ export class UtilsService {
       winningsUS115BB: null,
       winningsUS115BBJ: null,
       scheduleESOP: null,
-      manualUpdateReason: null
+      manualUpdateReason: null,
     };
 
     return ITR_JSON;
@@ -600,13 +608,13 @@ export class UtilsService {
       userId: userId,
       action: action,
     };
-    this.userMsService.postMethod(param, request).subscribe((res) => { });
+    this.userMsService.postMethod(param, request).subscribe((res) => {});
   }
 
   manageFilerLoginSession(userId: any) {
     //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
     let token = sessionStorage.getItem('webToken');
-    let query = ''
+    let query = '';
     if (token) {
       query = `&firebaseWebToken=${token}`;
     }
@@ -789,7 +797,7 @@ export class UtilsService {
             if (error.status === 404) {
               reject(error);
             }
-          }
+          },
         });
       } else {
         console.log('pinCode invalid', pinCode);
@@ -812,27 +820,27 @@ export class UtilsService {
   }
 
   innerFunction(res: any, itrObject: ITR_JSON) {
-      if(res.error) {
-        this.showSnackBar(res.error);
-      } else {
-        itrObject.isItrSummaryJsonEdited = false;
-        const param = `/itr/itr-type`;
-        return this.itrMsService
-            .postMethod(param, itrObject)
-            .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
-      }
+    if (res.error) {
+      this.showSnackBar(res.error);
+    } else {
+      itrObject.isItrSummaryJsonEdited = false;
+      const param = `/itr/itr-type`;
+      return this.itrMsService
+        .postMethod(param, itrObject)
+        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+    }
   }
 
   saveManualUpdateReason(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
-      const param =
-          '/itr/' +
-          itrObject.userId +
-          '/' +
-          itrObject.itrId +
-          '/' +
-          itrObject.assessmentYear;
-      return this.itrMsService.putMethod(param, itrObject);
+    const param =
+      '/itr/' +
+      itrObject.userId +
+      '/' +
+      itrObject.itrId +
+      '/' +
+      itrObject.assessmentYear;
+    return this.itrMsService.putMethod(param, itrObject);
   }
   saveItrObject(itrObject: ITR_JSON): Observable<any> {
     //https://api.taxbuddy.com/itr/itr-type?itrId={itrId}
@@ -850,8 +858,8 @@ export class UtilsService {
       itrObject.isItrSummaryJsonEdited = false;
       const param = `/itr/itr-type`;
       return this.itrMsService
-          .postMethod(param, itrObject)
-          .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
+        .postMethod(param, itrObject)
+        .pipe(concatMap((result) => this.updateItrObject(result, itrObject)));
     }
   }
 
@@ -912,23 +920,22 @@ export class UtilsService {
     if (role.includes('ROLE_LEADER')) {
       userFilter = '&leaderUserId=' + loggedInSmeId;
     }
-    if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
+    if (role.includes('ROLE_FILER') && partnerType === 'PRINCIPAL') {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
-    } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
+    } else if (role.includes('ROLE_FILER') && partnerType === 'INDIVIDUAL') {
       userFilter += `&filerUserId=${loggedInSmeId}`;
-    }else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
+    } else if (role.includes('ROLE_FILER') && partnerType === 'CHILD') {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
     if (ITR && mobile) {
-      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`;
     } else if (ITR && email) {
-      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}`
+      param = `/bo/user-list-new?page=0&pageSize=20&emailId=${email}${userFilter}`;
     } else if (!ITR && mobile) {
-      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`;
     } else if (!ITR && email) {
-      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&emailId=${email}${userFilter}`
-
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&emailId=${email}${userFilter}`;
     }
     return this.userMsService.getMethodNew(param);
   }
@@ -936,7 +943,7 @@ export class UtilsService {
   getActiveUsers(mobile?, email?) {
     //api to check weather user is active
     // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
-    let param
+    let param;
     let role = this.getUserRoles();
     let loggedInSmeId = this.getLoggedInUserID();
     let partnerType = this.getPartnerType();
@@ -945,19 +952,18 @@ export class UtilsService {
     if (role.includes('ROLE_LEADER')) {
       userFilter = '&leaderUserId=' + loggedInSmeId;
     }
-    if (role.includes('ROLE_FILER') && partnerType === "PRINCIPAL") {
+    if (role.includes('ROLE_FILER') && partnerType === 'PRINCIPAL') {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeId}`;
-    } else if (role.includes('ROLE_FILER') && partnerType === "INDIVIDUAL") {
+    } else if (role.includes('ROLE_FILER') && partnerType === 'INDIVIDUAL') {
       userFilter += `&filerUserId=${loggedInSmeId}`;
-    } else if (role.includes('ROLE_FILER') && partnerType === "CHILD") {
+    } else if (role.includes('ROLE_FILER') && partnerType === 'CHILD') {
       userFilter += `&filerUserId=${loggedInSmeId}`;
     }
 
-
     if (mobile) {
-      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}&active=false`;
     } else if (email) {
-      param = `/bo/user-list-new?page=0&pageSize=20${userFilter}&active=false&emailId=${email}`
+      param = `/bo/user-list-new?page=0&pageSize=20${userFilter}&active=false&emailId=${email}`;
     }
     return this.userMsService.getMethodNew(param);
   }
@@ -965,7 +971,7 @@ export class UtilsService {
   getUserCurrentStatus(userIdList: any) {
     //API to get current status of the user -
     //'https://uat-api.taxbuddy.com/user/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=17803'
-    const param = `/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=${userIdList}`
+    const param = `/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=${userIdList}`;
     return this.userMsService.getMethod(param);
   }
 
@@ -1033,7 +1039,7 @@ export class UtilsService {
       },
       error: (error) => {
         console.log('error in fetching sme info', error);
-      }
+      },
     });
   }
 
@@ -1045,13 +1051,14 @@ export class UtilsService {
   getUserRoles() {
     let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
     console.log('sme', sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    if(this.isNonEmpty(smeInfo)) {
+    if (this.isNonEmpty(smeInfo)) {
       const loggedInSmeInfo = JSON.parse(
-          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+        sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
       );
       if (
-          this.isNonEmpty(loggedInSmeInfo) &&
-          loggedInSmeInfo[0]?.roles && loggedInSmeInfo[0].roles.length > 0
+        this.isNonEmpty(loggedInSmeInfo) &&
+        loggedInSmeInfo[0]?.roles &&
+        loggedInSmeInfo[0].roles.length > 0
       ) {
         return loggedInSmeInfo[0].roles;
       }
@@ -1062,13 +1069,13 @@ export class UtilsService {
 
   getPartnerType() {
     let smeInfo = sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO);
-    if(this.isNonEmpty(smeInfo)) {
+    if (this.isNonEmpty(smeInfo)) {
       const loggedInSmeInfo = JSON.parse(
-          sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+        sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
       );
       if (
-          this.isNonEmpty(loggedInSmeInfo) &&
-          this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+        this.isNonEmpty(loggedInSmeInfo) &&
+        this.isNonEmpty(loggedInSmeInfo[0].partnerType)
       ) {
         return loggedInSmeInfo[0].partnerType;
       }
@@ -1122,7 +1129,11 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: UntypedFormGroup, accordionBtnId, el: ElementRef) {
+  highlightInvalidFormFields(
+    formGroup: UntypedFormGroup,
+    accordionBtnId,
+    el: ElementRef
+  ) {
     Object.keys(formGroup.controls).forEach((key) => {
       if (formGroup.get(key) instanceof UntypedFormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
@@ -1131,32 +1142,42 @@ export class UtilsService {
           Object.keys(controlErrors).forEach((keyError) => {
             console.log(
               'Key control: ' +
-              key +
-              ', keyError: ' +
-              keyError +
-              ', err value: ',
+                key +
+                ', keyError: ' +
+                keyError +
+                ', err value: ',
               controlErrors[keyError]
             );
             console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
-            const nameInput = el.nativeElement.querySelector(`[formControlName="${key}"]`);
+            const nameInput = el.nativeElement.querySelector(
+              `[formControlName="${key}"]`
+            );
             if (nameInput) {
               nameInput.focus();
             }
             const accordionButton = document.getElementById(accordionBtnId);
             if (accordionButton) {
-              if (accordionButton.getAttribute("aria-expanded") === "false")
+              if (accordionButton.getAttribute('aria-expanded') === 'false')
                 accordionButton.click();
             }
             return;
           });
         }
       } else if (formGroup.get(key) instanceof UntypedFormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as UntypedFormGroup, accordionBtnId, el);
+        this.highlightInvalidFormFields(
+          formGroup.get(key) as UntypedFormGroup,
+          accordionBtnId,
+          el
+        );
       } else if (formGroup.get(key) instanceof UntypedFormArray) {
         let formArray = formGroup.get(key) as UntypedFormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as UntypedFormGroup, accordionBtnId, el);
+          this.highlightInvalidFormFields(
+            element as UntypedFormGroup,
+            accordionBtnId,
+            el
+          );
         });
       }
     });
@@ -1428,10 +1449,10 @@ export class UtilsService {
     let bifurcation = {
       SEC17_1: { total: 0, value: {} },
       SEC17_2: { total: 0, value: {} },
-      SEC17_3: { total: 0, value: {} }
+      SEC17_3: { total: 0, value: {} },
     };
     let total = 0;
-    localEmployer.salary.forEach(income => {
+    localEmployer.salary.forEach((income) => {
       if (income.salaryType !== 'SEC17_1') {
         bifurcation.SEC17_1.value[income.salaryType] = income.taxableAmount;
         total += income.taxableAmount;
@@ -1439,7 +1460,7 @@ export class UtilsService {
     });
     bifurcation.SEC17_1.total = total;
     total = 0;
-    localEmployer.perquisites.forEach(income => {
+    localEmployer.perquisites.forEach((income) => {
       if (income.perquisiteType !== 'SEC17_2') {
         bifurcation.SEC17_2.value[income.perquisiteType] = income.taxableAmount;
         total += income.taxableAmount;
@@ -1447,7 +1468,7 @@ export class UtilsService {
     });
     bifurcation.SEC17_2.total = total;
     total = 0;
-    localEmployer.profitsInLieuOfSalaryType.forEach(income => {
+    localEmployer.profitsInLieuOfSalaryType.forEach((income) => {
       if (income.salaryType !== 'SEC17_3') {
         bifurcation.SEC17_3.value[income.salaryType] = income.taxableAmount;
         total += income.taxableAmount;
@@ -1461,22 +1482,32 @@ export class UtilsService {
   resetBifurcation(localEmployer: Employer, section) {
     let total = 0;
     if (section === 'SEC17_1') {
-      localEmployer.salary = localEmployer.salary.filter(income => income.salaryType === 'SEC17_1');
+      localEmployer.salary = localEmployer.salary.filter(
+        (income) => income.salaryType === 'SEC17_1'
+      );
     }
 
     if (section === 'SEC17_2') {
-      localEmployer.perquisites = localEmployer.perquisites.filter(income => income.perquisiteType === 'SEC17_2');
+      localEmployer.perquisites = localEmployer.perquisites.filter(
+        (income) => income.perquisiteType === 'SEC17_2'
+      );
     }
 
     if (section === 'SEC17_3') {
-      localEmployer.profitsInLieuOfSalaryType = localEmployer.profitsInLieuOfSalaryType.filter(
-        income => income.salaryType === 'SEC17_3');
+      localEmployer.profitsInLieuOfSalaryType =
+        localEmployer.profitsInLieuOfSalaryType.filter(
+          (income) => income.salaryType === 'SEC17_3'
+        );
     }
 
     return localEmployer;
   }
 
-  updateEmployerBifurcation(localEmployer: Employer, section, bifurcationResult: any) {
+  updateEmployerBifurcation(
+    localEmployer: Employer,
+    section,
+    bifurcationResult: any
+  ) {
     const salaryValues = this.getSalaryValues()?.salary;
     if (section === 'SEC17_1') {
       const bifurcationValues = bifurcationResult?.SEC17_1?.value
@@ -1507,7 +1538,7 @@ export class UtilsService {
           localEmployer?.perquisites?.push({
             perquisiteType: key,
             taxableAmount: element,
-            exemptAmount: 0
+            exemptAmount: 0,
           });
         }
       }

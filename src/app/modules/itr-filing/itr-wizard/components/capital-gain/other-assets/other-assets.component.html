@@ -121,7 +121,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="purchaseDate" name="purchaseDate"
+                                  <input appDateInput matInput formControlName="purchaseDate" name="purchaseDate"
                                     [matDatepicker]="purchaseDate" placeholder="Buy Date / Date of Acquisition"
                                     [max]="maximumDate"
                                     (dateChange)="updateValidations(deduction);calculateDeduction()" />
@@ -203,7 +203,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline" class="small-inp no-height">
-                                  <input matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
+                                  <input appDateInput matInput formControlName="dateOfDeposit" placeholder="Date of Deposit"
                                     class="input-field" [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                                   <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
                                   <mat-datepicker #dateOfDeposit></mat-datepicker>

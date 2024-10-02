@@ -1,24 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { SpeculativeIncomeComponent } from '../profit-loss-ac/speculative-income/speculative-income.component';
+import { UtilsService } from 'src/app/services/utils.service';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { Subscription } from 'rxjs';
-import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
-import { NonSpeculativeIncomeComponent } from './non-speculative-income/non-speculative-income.component';
-import { SpeculativeIncomeComponent } from './speculative-income/speculative-income.component';
-import { AppConstants } from "../../../shared/constants";
-import { UtilsService } from "../../../../services/utils.service";
+
 @Component({
-  selector: 'app-profit-loss-ac',
-  templateUrl: './profit-loss-ac.component.html',
-  styleUrls: ['./profit-loss-ac.component.scss'],
+  selector: 'app-speculative-main',
+  templateUrl: './speculative-main.component.html',
+  styleUrls: ['./speculative-main.component.css']
 })
-export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
+export class SpeculativeMainComponent extends WizardNavigation implements OnInit {
   @ViewChild('SpeculativeIncomeComponentRef', { static: false })
   SpeculativeIncomeComponent!: SpeculativeIncomeComponent;
-  @ViewChild('NonSpeculativeIncomeComponentRef', { static: false })
-  NonSpeculativeIncomeComponent!: NonSpeculativeIncomeComponent;
   loading = false;
   PREV_ITR_JSON: any;
   cgAllowed = false;
-  constructor(private utilsService: UtilsService) {
+
+ constructor(private utilsService: UtilsService) {
     super();
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
@@ -29,19 +28,8 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    //validate nature of business is filled in if income details are available
-    const row = this.NonSpeculativeIncomeComponent.profitLossForm.getRawValue();
-    let incomes = row.incomes.filter(item => item.type);
-    if((this.NonSpeculativeIncomeComponent.nonspecIncomeFormArray.getRawValue().length > 0 ||
-      incomes.length > 0) && (this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.length === 0 || !this.NonSpeculativeIncomeComponent.natOfBusinessDtlsArray.valid)) {
-      this.utilsService.showSnackBar("Nature of Business details are required");
-      this.utilsService.smoothScrollToTop();
-      return;
-    }
-
-    let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
-    // let specSaved = this.SpeculativeIncomeComponent.onContinue();
-    if (nonSpecSaved) {
+    let specSaved = this.SpeculativeIncomeComponent.onContinue();
+    if (specSaved) {
       this.loading = true;
       let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
@@ -79,8 +67,7 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   getFileParserData() {
-    // this.SpeculativeIncomeComponent.updateData();
-    this.NonSpeculativeIncomeComponent.updateData();
+    this.SpeculativeIncomeComponent.updateData();
   }
 
   unsubscribe() {

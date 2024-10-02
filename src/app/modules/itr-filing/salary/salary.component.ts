@@ -192,6 +192,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
+  countryDropdown = AppConstants.countriesDropdown;
+
 
   // errors keys
   compensationOnVrsError: boolean = false;
@@ -874,7 +876,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     const formValues = this.utilsService.getSalaryValues();
     if (formValues) {
       const isAtLeastOneSalaryGreaterThanZero = Object?.values(
-        formValues?.salary).some((element: any) => element.taxableAmount > 0) || formValues?.secOneTotal > 0;
+        formValues?.salary).some((element: any) => element.taxableAmount > 0);
 
       if (isAtLeastOneSalaryGreaterThanZero) {
         {

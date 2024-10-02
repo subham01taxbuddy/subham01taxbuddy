@@ -87,6 +87,10 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
         this.nextBreadcrumb.emit('Balance Sheet');
         break;
       }
+      case 'speculative' : {
+        this.nextBreadcrumb.emit('Speculative Income');
+        break;
+      }
     }
 
   }
