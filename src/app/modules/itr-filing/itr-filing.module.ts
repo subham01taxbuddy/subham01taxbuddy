@@ -99,6 +99,7 @@ import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule
 import {NorDetailsDialogComponent} from "./components/nor-details-dialog/nor-details-dialog.component";
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/update-income-sources/update-income-sources.component';
+import { SpeculativeMainComponent } from './business-income/speculative-main/speculative-main.component';
 
 @NgModule({
     imports: [
@@ -213,7 +214,8 @@ import { UpdateIncomeSourcesComponent } from './itr-wizard/pages/taxes-paid/upda
         ExemptIncomeComponent,
         ScheduleEsopComponent,
         NorDetailsDialogComponent,
-        UpdateIncomeSourcesComponent
+        UpdateIncomeSourcesComponent,
+        SpeculativeMainComponent,
     ],
     exports: [CustomerProfileComponent]
 })

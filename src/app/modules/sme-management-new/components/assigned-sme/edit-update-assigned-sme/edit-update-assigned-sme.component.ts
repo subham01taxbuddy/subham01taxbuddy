@@ -861,7 +861,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
     if (this.smeObj?.roles.includes('ROLE_LEADER') && this.loggedInSmeRoles.includes('ROLE_ADMIN')) {
       if (this.assignmentToggle.value === true) {
-        if (this.assignmentFormGroup.valid) {
           this.smeObj['serviceEligibility_ITR'] = {
             "assignmentStart": true,
             "roundRobinLeaderCount": this.assignmentFormGroup.controls['itrCount'].value,
@@ -890,10 +889,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
             "botName": this.smeObj?.serviceEligibility_GST?.botName || null,
             "roundRobinCount": this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
           }
-        } else {
-          this.utilsService.showSnackBar('Fill the required count value');
-          return;
-        }
       } else {
         this.smeObj['serviceEligibility_ITR'] = {
           "assignmentStart": false,

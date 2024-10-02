@@ -67,6 +67,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   activeIndex: number;
   gridOptions: GridOptions;
   selectedFormGroup: UntypedFormGroup;
+  selectedForm: string = 'trading';
 
   constructor(
     public matDialog: MatDialog,
@@ -185,6 +186,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.natOfBusinessDtlForm = this.fb.group({
       natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
     });
+  }
+
+  selectForm(formType: string) {
+    this.selectedForm = formType;
   }
 
   updateData() {

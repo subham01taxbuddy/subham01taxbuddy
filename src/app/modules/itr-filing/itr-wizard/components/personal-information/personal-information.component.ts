@@ -4,7 +4,8 @@ import {
   Output,
   EventEmitter,
   Input,
-  SimpleChanges, ElementRef,
+  SimpleChanges,
+  ElementRef,
 } from '@angular/core';
 import {
   Validators,
@@ -30,6 +31,7 @@ import {
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import * as moment from 'moment/moment';
+import { log } from 'console';
 
 declare let $: any;
 export const MY_FORMATS = {
@@ -62,7 +64,6 @@ export class PersonalInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditPersonal = false;
   @Output() personalInfoSaved = new EventEmitter<boolean>();
-
   customerProfileForm: UntypedFormGroup;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -2187,7 +2188,8 @@ export class PersonalInformationComponent implements OnInit {
     private titlecasePipe: TitleCasePipe,
     private itrMsService: ItrMsService,
     private router: Router,
-    private userMsService: UserMsService, private elementRef: ElementRef
+    private userMsService: UserMsService,
+    private elementRef: ElementRef
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
   }
@@ -2284,15 +2286,7 @@ export class PersonalInformationComponent implements OnInit {
             Validators.pattern(AppConstants.charSpecialRegex),
           ]),
         ],
-        pinCode: [
-          '',
-          Validators.compose([
-            Validators.minLength(6),
-            Validators.maxLength(6),
-            Validators.required,
-            Validators.pattern(AppConstants.PINCode),
-          ]),
-        ],
+        pinCode: [''],
       }),
       seventhProviso139: this.fb.group({
         seventhProvisio139: 'N',
@@ -2349,11 +2343,25 @@ export class PersonalInformationComponent implements OnInit {
         ]),
       ],
       countryName: ['91', Validators.required],
-      name: [obj.name || '', Validators.compose([Validators.required, Validators.pattern(AppConstants.charRegex),]),],
-      accountNumber: [obj.accountNumber || '', Validators.compose([Validators.minLength(3), Validators.maxLength(20), Validators.required, Validators.pattern(AppConstants.numericRegex),]),],
+      name: [
+        obj.name || '',
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(AppConstants.charRegex),
+        ]),
+      ],
+      accountNumber: [
+        obj.accountNumber || '',
+        Validators.compose([
+          Validators.minLength(3),
+          Validators.maxLength(20),
+          Validators.required,
+          Validators.pattern(AppConstants.numericRegex),
+        ]),
+      ],
       hasRefund: [obj.hasRefund || false],
       hasEdit: [obj.hasEdit || false],
-      accountType: [obj.accountType || '', Validators.required]
+      accountType: [obj.accountType || '', Validators.required],
     });
   }
 
@@ -2380,7 +2388,9 @@ export class PersonalInformationComponent implements OnInit {
 
   deleteSelectedBanks(formGroupName) {
     const banks = <UntypedFormArray>formGroupName.get('bankDetails');
-    banks.controls = banks.controls.filter((element: UntypedFormGroup) => !element.controls['hasEdit'].value);
+    banks.controls = banks.controls.filter(
+      (element: UntypedFormGroup) => !element.controls['hasEdit'].value
+    );
     banks.updateValueAndValidity();
   }
 
@@ -2390,7 +2400,7 @@ export class PersonalInformationComponent implements OnInit {
       (result) => {
         this.bankList = result;
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -2460,42 +2470,135 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
+  // getCityData() {
+  //   if (
+  //     (this.customerProfileForm.controls['address'] as UntypedFormGroup)
+  //       .controls['pinCode'].valid
+  //   ) {
+  //     // this.changeCountry('91');
+  //     const param =
+  //       '/pincode/' +
+  //       (this.customerProfileForm.controls['address'] as UntypedFormGroup)
+  //         .controls['pinCode'].value;
+  //     this.userMsService.getMethod(param).subscribe(
+  //       (result: any) => {
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['country'].setValue('91');
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['city'].setValue(result.taluka);
+  //         (
+  //           this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //         ).controls['state'].setValue(result.stateCode);
+  //         console.log('Picode Details:', result);
+  //       },
+  //       (error) => {
+  //         if (error.status === 404) {
+  //           (
+  //             this.customerProfileForm.controls['address'] as UntypedFormGroup
+  //           ).controls['city'].setValue(null);
+  //         }
+  //       }
+  //     );
+  //   }
+  // }
+
+  
+
+  // changeCountry(country: string) {
+  //   const addressGroup = this.customerProfileForm.get(
+  //     'address'
+  //   ) as UntypedFormGroup;
+
+  //   if (country !== '91') {
+  //     // Update stateDropdown for foreign
+  //     this.stateDropdown = [
+  //       {
+  //         id: '5b4599c9c15a76370a3424e9',
+  //         stateId: '1',
+  //         countryCode: '355',
+  //         stateName: 'Foreign',
+  //         stateCode: '99',
+  //         status: true,
+  //       },
+  //     ];
+  //     addressGroup.controls['state'].setValue('99');
+
+  changeCountry(country: string) {
+    console.log('country ', country);
+  
+    const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
+    const zipCodeControl = addressFormGroup.controls['pinCode'];
+  
+    if (!zipCodeControl) {
+      console.error('ZIP code control is not found!');
+      return;
+    }
+  
+    console.log('zipcodeControl', zipCodeControl);
+  
+    // Clear existing validators
+    zipCodeControl.clearValidators();
+  
+    // Set validators based on country selection
+    if (country === '91') {
+      // Indian PIN code validation (6-digit number)
+      zipCodeControl.setValidators([
+        Validators.required,
+        Validators.pattern('^[1-9]{1}[0-9]{5}$'), // 6-digit numeric PIN code
+      ]);
+    } else {
+      // Foreign ZIP code validation (alphanumeric pattern)
+      zipCodeControl.setValidators([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9]{3,10}$'), // 3-10 alphanumeric characters
+      ]);
+      this.stateDropdown = [{ stateCode: '99', stateName: 'Foreign' }];
+      addressFormGroup.controls['state'].setValue('99');
+    }
+  
+    // Preserve the current ZIP code value and revalidate
+    const currentZipCodeValue = zipCodeControl.value;
+  
+    // Update the form control to re-validate
+    zipCodeControl.updateValueAndValidity();
+  
+    // If the current value is valid according to the new rules, keep it
+    zipCodeControl.setValue(currentZipCodeValue);
+  
+    // Mark ZIP code control as touched to show validation error immediately
+    zipCodeControl.markAllAsTouched();
+  
+    // If the selected country is India ('91') and the ZIP code is valid, get city data
+    if (country === '91' && zipCodeControl.valid) {
+      this.getCityData();
+    }
+  }
+  
   getCityData() {
-    if (
-      (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-        'pinCode'
-      ].valid
-    ) {
-      this.changeCountry('91');
-      const param =
-        '/pincode/' +
-        (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-          'pinCode'
-        ].value;
+    const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
+    const pinCodeControl = addressFormGroup.controls['pinCode'];
+  
+    if (pinCodeControl.valid) {
+      const param = '/pincode/' + pinCodeControl.value;
       this.userMsService.getMethod(param).subscribe(
         (result: any) => {
-          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-            'country'
-          ].setValue('91');
-          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-            'city'
-          ].setValue(result.taluka);
-          (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-            'state'
-          ].setValue(result.stateCode);
-          console.log('Picode Details:', result);
+          addressFormGroup.controls['country'].setValue('91');
+          addressFormGroup.controls['city'].setValue(result.taluka);
+          addressFormGroup.controls['state'].setValue(result.stateCode);
+          console.log('Pincode Details:', result);
         },
         (error) => {
           if (error.status === 404) {
-            (
-              this.customerProfileForm.controls['address'] as UntypedFormGroup
-            ).controls['city'].setValue(null);
+            addressFormGroup.controls['city'].setValue(null);
           }
         }
       );
     }
   }
-  changeCountry(country) {
+  
+  foreginchange(country) {
     if (country !== '91') {
       this.stateDropdown = [
         {
@@ -2507,9 +2610,9 @@ export class PersonalInformationComponent implements OnInit {
           status: true,
         },
       ];
-      (this.customerProfileForm.controls['address'] as UntypedFormGroup).controls[
-        'state'
-      ].setValue('99');
+      (
+        this.customerProfileForm.controls['address'] as UntypedFormGroup
+      ).controls['state'].setValue('99');
     } else {
       this.stateDropdown = this.stateDropdownMaster;
     }
@@ -2520,7 +2623,7 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.address = {
         area: '',
         city: '',
-        country: '91',
+        country: '',
         flatNo: '',
         pinCode: '',
         premisesName: '',
@@ -2535,6 +2638,10 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.bankDetails = [];
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
+
+    this.changeCountry(this.ITR_JSON.address.country);
+    this.changeCountry(this.ITR_JSON.address.state); 
+ 
     if (
       this.ITR_JSON.bankDetails instanceof Array &&
       this.ITR_JSON.bankDetails.length > 0
@@ -2578,35 +2685,60 @@ export class PersonalInformationComponent implements OnInit {
     }
 
     this.customerProfileForm.controls['incomeDeclaredUsFlag'].setValue(
-      this.ITR_JSON.incomeDeclaredUsFlag);
+      this.ITR_JSON.incomeDeclaredUsFlag
+    );
 
     if (this.ITR_JSON.incomeDeclaredUsFlag === 'N') {
-      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+      this.customerProfileForm
+        .get('totalSalesExceedOneCr')
+        .setValidators([Validators.required]);
 
       this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(
-        this.ITR_JSON.totalSalesExceedOneCr ? this.ITR_JSON.totalSalesExceedOneCr : 'N');
+        this.ITR_JSON.totalSalesExceedOneCr
+          ? this.ITR_JSON.totalSalesExceedOneCr
+          : 'N'
+      );
 
-      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+      this.customerProfileForm
+        .get('totalSalesExceedOneCr')
+        .updateValueAndValidity();
 
       if (this.ITR_JSON.totalSalesExceedOneCr === 'Y') {
-        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+        this.customerProfileForm
+          .get('aggregateOfAllAmountsReceivedFlag')
+          .setValidators([
+            Validators.required,
+            auditAplicableNotAllowedValidator(),
+          ]);
 
-        this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(
-          this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
+        this.customerProfileForm.controls[
+          'aggregateOfAllAmountsReceivedFlag'
+        ].setValue(this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
 
-        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
+        this.customerProfileForm
+          .get('aggregateOfAllAmountsReceivedFlag')
+          .updateValueAndValidity();
 
-        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+        this.customerProfileForm
+          .get('aggregateOfAllPaymentsMadeFlag')
+          .setValidators([
+            Validators.required,
+            auditAplicableNotAllowedValidator(),
+          ]);
 
-        this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(
-          this.ITR_JSON.aggregateOfAllPaymentsMadeFlag);
+        this.customerProfileForm.controls[
+          'aggregateOfAllPaymentsMadeFlag'
+        ].setValue(this.ITR_JSON.aggregateOfAllPaymentsMadeFlag);
 
-        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
+        this.customerProfileForm
+          .get('aggregateOfAllPaymentsMadeFlag')
+          .updateValueAndValidity();
       }
     }
 
     this.customerProfileForm.controls['liableSection44ABFlag'].setValue(
-      this.ITR_JSON.liableSection44ABFlag);
+      this.ITR_JSON.liableSection44ABFlag
+    );
 
     this.seventhProvisio139();
   }
@@ -2641,7 +2773,13 @@ export class PersonalInformationComponent implements OnInit {
     );
 
     if (!this.ITR_JSON.declaration) {
-      this.ITR_JSON.declaration = { capacity: "", childOf: "", name: "", panNumber: "", place: "" };
+      this.ITR_JSON.declaration = {
+        capacity: '',
+        childOf: '',
+        name: '',
+        panNumber: '',
+        place: '',
+      };
     }
     this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
 
@@ -2649,15 +2787,25 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailsId', this.elementRef);
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'bankAccountsId', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(
+        this.customerProfileForm,
+        'perDetailsId',
+        this.elementRef
+      );
+      this.utilsService.highlightInvalidFormFields(
+        this.customerProfileForm,
+        'bankAccountsId',
+        this.elementRef
+      );
       this.openAcc();
       this.personalInfoSaved.emit(false);
       this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       return;
     }
 
-    const formArrayValid = this.getBankDetailsArray.controls.every(control => control.valid);
+    const formArrayValid = this.getBankDetailsArray.controls.every(
+      (control) => control.valid
+    );
     const formArrayHasValues = this.getBankDetailsArray.controls.length > 0;
 
     if (!formArrayValid || !formArrayHasValues) {
@@ -2718,7 +2866,11 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(
+        this.customerProfileForm,
+        'perDetailId',
+        this.elementRef
+      );
       this.personalInfoSaved.emit(false);
       this.utilsService.showSnackBar('Please fill in all mandatory fields.');
       this.openAcc();
@@ -2728,10 +2880,9 @@ export class PersonalInformationComponent implements OnInit {
   openAcc() {
     const accordionButton = document.getElementById('bankButtonId');
     if (accordionButton) {
-      if (accordionButton.getAttribute("aria-expanded") === "false") {
+      if (accordionButton.getAttribute('aria-expanded') === 'false') {
         accordionButton.click();
       }
-
     }
   }
 
@@ -2750,8 +2901,8 @@ export class PersonalInformationComponent implements OnInit {
       } else {
         this.utilsService.showSnackBar(
           'Bank account is not valid with this ' +
-          this.ITR_JSON.bankDetails[i].accountNumber +
-          ' no.'
+            this.ITR_JSON.bankDetails[i].accountNumber +
+            ' no.'
         );
         this.loading = false;
         return false;
@@ -2869,7 +3020,9 @@ export class PersonalInformationComponent implements OnInit {
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILING SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   get seventhProviso139() {
-    return this.customerProfileForm.controls['seventhProviso139'] as UntypedFormGroup;
+    return this.customerProfileForm.controls[
+      'seventhProviso139'
+    ] as UntypedFormGroup;
   }
 
   get getClauseiv7provisio139iDtls() {
@@ -3157,42 +3310,75 @@ export class PersonalInformationComponent implements OnInit {
 
   onChangeIncomeDeclaredUsFlag() {
     this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(null);
-    this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
-    this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
+    this.customerProfileForm.controls[
+      'aggregateOfAllAmountsReceivedFlag'
+    ].setValue(null);
+    this.customerProfileForm.controls[
+      'aggregateOfAllPaymentsMadeFlag'
+    ].setValue(null);
 
-    if (this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N') {
-      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+    if (
+      this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N'
+    ) {
+      this.customerProfileForm
+        .get('totalSalesExceedOneCr')
+        .setValidators([Validators.required]);
       this.customerProfileForm.get('totalSalesExceedOneCr').setValue('N');
-      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+      this.customerProfileForm
+        .get('totalSalesExceedOneCr')
+        .updateValueAndValidity();
     } else
       this.customerProfileForm.get('totalSalesExceedOneCr').clearValidators();
 
-    this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+    this.customerProfileForm
+      .get('totalSalesExceedOneCr')
+      .updateValueAndValidity();
   }
 
   onChangeTotalSalesExceedOneCr() {
-    if (this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y') {
-      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
-      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+    if (
+      this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y'
+    ) {
+      this.customerProfileForm
+        .get('aggregateOfAllAmountsReceivedFlag')
+        .setValidators([
+          Validators.required,
+          auditAplicableNotAllowedValidator(),
+        ]);
+      this.customerProfileForm
+        .get('aggregateOfAllPaymentsMadeFlag')
+        .setValidators([
+          Validators.required,
+          auditAplicableNotAllowedValidator(),
+        ]);
     } else {
-      this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
-      this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
-      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').clearValidators();
-      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').clearValidators();
+      this.customerProfileForm.controls[
+        'aggregateOfAllAmountsReceivedFlag'
+      ].setValue(null);
+      this.customerProfileForm.controls[
+        'aggregateOfAllPaymentsMadeFlag'
+      ].setValue(null);
+      this.customerProfileForm
+        .get('aggregateOfAllAmountsReceivedFlag')
+        .clearValidators();
+      this.customerProfileForm
+        .get('aggregateOfAllPaymentsMadeFlag')
+        .clearValidators();
     }
 
-    this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
-    this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
+    this.customerProfileForm
+      .get('aggregateOfAllAmountsReceivedFlag')
+      .updateValueAndValidity();
+    this.customerProfileForm
+      .get('aggregateOfAllPaymentsMadeFlag')
+      .updateValueAndValidity();
   }
-
 }
 
 function auditAplicableNotAllowedValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value: string = control.value as string;
-    if (value && value === 'N')
-      return { auditAplicableNotAllowed: true };
-    else
-      return null;
+    if (value && value === 'N') return { auditAplicableNotAllowed: true };
+    else return null;
   };
 }

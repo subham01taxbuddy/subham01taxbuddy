@@ -5,8 +5,8 @@
       <app-file-parser *ngIf="cgAllowed" (newDataAvailable)="getFileParserData()"></app-file-parser>
     </div>
     <mat-accordion class="headers-align spcArnd2">
-      <app-non-speculative-income #NonSpeculativeIncomeComponentRef></app-non-speculative-income>
-      <!-- <app-speculative-income #SpeculativeIncomeComponentRef></app-speculative-income> -->
+      <!-- <app-non-speculative-income #NonSpeculativeIncomeComponentRef></app-non-speculative-income> -->
+      <app-speculative-income #SpeculativeIncomeComponentRef></app-speculative-income>
     </mat-accordion>
     <div class="flex justify-between p-[30px] back-foot">
       <button class="lgtBtn" (click)="goBack()">

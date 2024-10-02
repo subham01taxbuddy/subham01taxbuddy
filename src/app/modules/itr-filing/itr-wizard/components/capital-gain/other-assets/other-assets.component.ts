@@ -150,6 +150,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     ) {
       // adding a form on startup
       this.addDeductionForm(dednDetails);
+      this.initializeForm(dednDetails)
       this.deduction = true;
     } else {
       this.addDeductionForm();
@@ -747,16 +748,37 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  initializeFormFlags(formGroup: any): void {
-    if (formGroup) {
-      if (formGroup.controls['costOfNewAssets'].value || formGroup.controls['purchaseDate'].value){
+  initializeForm(values: any): void {
+    debugger
+    if(values){
+      if(values?.costOfNewAssets || values?.purchaseDate){
         this.showNewAsset.setValue(true);
         this.onToggleNewAsset(true);
       }else{
         this.showNewAsset.setValue(false);
         this.onToggleNewAsset(false);
       }
-      if (formGroup.controls['investmentInCGAccount'].value || formGroup.controls['dateOfDeposit'].value){
+
+      if (values?.investmentInCGAccount || values?.dateOfDeposit){
+        this.showCGAS.setValue(true);
+        this.onToggleCGAS(true);
+      }else{
+        this.showCGAS.setValue(false);
+        this.onToggleCGAS(false);
+      }
+    }
+  }
+
+  initializeFormFlags(formGroup: any): void {
+    if (formGroup) {
+      if (formGroup.controls['costOfNewAsset'].value || formGroup.controls['purchaseDate'].value){
+        this.showNewAsset.setValue(true);
+        this.onToggleNewAsset(true);
+      }else{
+        this.showNewAsset.setValue(false);
+        this.onToggleNewAsset(false);
+      }
+      if (formGroup.controls['CGASAmount'].value || formGroup.controls['dateOfDeposit'].value){
         this.showCGAS.setValue(true);
         this.onToggleCGAS(true);
       }else{
@@ -769,21 +791,21 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   onToggleNewAsset(isChecked: boolean): void {
     if (isChecked) {
       this.setFieldValidators('purchaseDate', [Validators.required]);
-      this.setFieldValidators('costOfNewAssets', [Validators.required]);
+      this.setFieldValidators('costOfNewAsset', [Validators.required]);
     } else {
       this.clearFieldValidators('purchaseDate');
-      this.clearFieldValidators('costOfNewAssets');
+      this.clearFieldValidators('costOfNewAsset');
     }
     this.calculateDeduction();
   }
   onToggleCGAS(isChecked: boolean): void{
     if (isChecked) {
-      this.setFieldValidators('investmentInCGAccount', [Validators.required]);
+      this.setFieldValidators('CGASAmount', [Validators.required]);
       this.setFieldValidators('accountNumber', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]);
       this.setFieldValidators('ifscCode', [Validators.required, Validators.pattern(AppConstants.IFSCRegex)]);
       this.setFieldValidators('dateOfDeposit', [Validators.required]);
     } else {
-      this.clearFieldValidators('investmentInCGAccount');
+      this.clearFieldValidators('CGASAmount');
       this.clearFieldValidators('accountNumber');
       this.clearFieldValidators('ifscCode');
       this.clearFieldValidators('dateOfDeposit');

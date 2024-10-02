@@ -1005,7 +1005,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       formGroup.controls['dateOfDeposit'].updateValueAndValidity();
     }
   }
-  calculateDeductionGain() {
+  calculateDeductionGain(fromToggle?) {
     let isFormValid = this.deductionForm.controls['purchaseDate'].valid &&
       this.deductionForm.controls['costOfNewAssets'].valid &&
       this.deductionForm.controls['investmentInCGAccount'].valid;
@@ -1068,7 +1068,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         }
       );
     } else {
-      this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
+      if(!fromToggle){
+        this.utilsService.highlightInvalidFormFields(this.deductionForm, "accordBtn2", this.elementRef);
+      }
     }
   }
 
@@ -1122,7 +1124,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       this.clearFieldValidators('purchaseDate');
       this.clearFieldValidators('costOfNewAssets');
     }
-    this.calculateDeductionGain();
+    this.calculateDeductionGain('fromToggle');
   }
   onToggleCGAS(isChecked: boolean): void{
     if (isChecked) {
@@ -1136,7 +1138,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       this.clearFieldValidators('ifscCode');
       this.clearFieldValidators('dateOfDeposit');
     }
-    this.calculateDeductionGain();
+    this.calculateDeductionGain('fromToggle');
   }
 
   setFieldValidators(controlName: string, validators: any[]): void {

@@ -153,7 +153,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <mat-form-field appearance="outline">
-                                                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                                                <input appDateInput matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
                                                     class="input-field" placeholder="Choose a date" name="dateOfSale[i]"
                                                     [formControl]="
                                         scheduleESOPEventDetail.get('dateOfSale') | formControlType" />
@@ -234,7 +234,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-8">
                                         <mat-form-field appearance="outline">
-                                            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1"
+                                            <input appDateInput matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker1"
                                                 class="input-field" placeholder="Choose a date" name="dateOfCeasing"
                                                 [formControl]="selectedFormGroup.get('dateOfCeasing') | formControlType"
                                                 [disabled]="disableDateOfCeasing()" />

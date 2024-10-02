@@ -63,17 +63,54 @@ export class TwoDigitDecimaNumberDirective {
   }
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    console.log(this.el.nativeElement.value);
-    // Allow Backspace, tab, end, and home keys
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
     }
-    let current: string = this.el.nativeElement.value;
-    const position = this.el.nativeElement.selectionStart;
-    const next: string = [current.slice(0, position), event.key == 'Decimal' ? '.' : event.key, current.slice(position)].join('');
-    if (next && !String(next).match(this.regex)) {
-      event.preventDefault();
+  }
+
+  // Validate after each input
+  @HostListener('input', ['$event'])
+  onInput(event: Event) {
+    let currentValue: string = this.el.nativeElement.value;
+
+    // Check if the current value matches the regex (up to two decimal places)
+    if (currentValue && !currentValue.match(this.regex)) {
+      // If invalid, remove invalid characters and restore the valid part of the value
+      this.el.nativeElement.value = this.cleanInput(currentValue);
     }
+  }
+
+  @HostListener('paste', ['$event'])
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+
+    let pastedData = event.clipboardData?.getData('text/plain') || '';
+    const cleanedValue = this.cleanInput(pastedData);
+
+    if (cleanedValue) {
+      this.insertTextAtCursor(cleanedValue);
+    }
+  }
+
+  private cleanInput(input: string): string {
+    const cleaned = input.replace(/[^0-9.]/g, ''); // Allow only digits and a decimal point
+    const parts = cleaned.split('.');
+
+    // Ensure only one decimal and two digits after it
+    return parts.length > 1 ? parts[0] + '.' + parts[1].substring(0, 2) : cleaned;
+  }
+
+  private insertTextAtCursor(value: string) {
+    const inputElement = this.el.nativeElement;
+    const start = inputElement.selectionStart;
+    const end = inputElement.selectionEnd;
+    const currentValue = inputElement.value;
+
+    inputElement.value = currentValue.slice(0, start) + value + currentValue.slice(end);
+    inputElement.setSelectionRange(start + value.length, start + value.length);
+
+    // Trigger input event to update the field value
+    inputElement.dispatchEvent(new Event('input'));
   }
 }
 

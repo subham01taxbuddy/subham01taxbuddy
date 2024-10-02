@@ -1,89 +1,192 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <div class="tablejrn">
   <div class="row back">
     <div class="col-sm-11">
-      <div class="more">More options for: <span style="color: rgb(106, 123, 237);">{{ data.name }}</span></div>
+      <div class="more">
+        More options for:
+        <span style="color: rgb(106, 123, 237)">{{ data.name }}</span>
+      </div>
     </div>
     <div class="col-sm-1">
-      <button mat-dialog-close tabindex="-1" class="tbd-btn-close close" (click)="closeDialog()">
+      <button
+        mat-dialog-close
+        tabindex="-1"
+        class="tbd-btn-close close"
+        (click)="closeDialog()"
+      >
         <i class="fa fa-times" aria-hidden="true"></i>
       </button>
     </div>
   </div>
 
-
-  <span *ngIf="((data.serviceType === 'ITR')
-              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' && data.hideReassign != true">
-    <button type="button" class="more-new-button" title="Re Assignment" (click)="reAssignUser()">
-      <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>&nbsp;&nbsp;Re Assign
+  <span
+    *ngIf="
+      (data.serviceType === 'ITR' || data.serviceType !== 'ITR') &&
+      partnerType !== 'CHILD' &&
+      data.hideReassign != true
+    "
+  >
+    <button
+      type="button"
+      class="more-new-button"
+      title="Re Assignment"
+      (click)="reAssignUser()"
+    >
+      <i
+        class="fa fa-refresh"
+        aria-hidden="true"
+        data-action-type="re-assign"
+      ></i
+      >&nbsp;&nbsp;Re Assign
     </button>
   </span>
   <span>
-    <button type="button" *ngIf="showInvoiceButton" class="more-new-button" title="Go to Invoices"
-      (click)="goToInvoice()">
+    <button
+      type="button"
+      *ngIf="showInvoiceButton"
+      class="more-new-button"
+      title="Go to Invoices"
+      (click)="goToInvoice()"
+    >
       <i class="fa fa-files-o" aria-hidden="true"></i>&nbsp;&nbsp;Invoice
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="Go to Subscriptions" (click)="goToSubscription()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="Go to Subscriptions"
+      (click)="goToSubscription()"
+    >
       <i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;&nbsp;Subscription
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="View Document cloud" (click)="goToCloud()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="View Document cloud"
+      (click)="goToCloud()"
+    >
       <i class="fa fa-cloud" aria-hidden="true"></i>&nbsp;&nbsp;Cloud
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="Update user profile" (click)="goToProfile()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="Update user profile"
+      (click)="goToProfile()"
+    >
       <i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;Profile
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="Re Assignment" (click)="optedServices()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="Re Assignment"
+      (click)="optedServices()"
+    >
       <i class="fa fa-server" aria-hidden="true"></i>&nbsp;&nbsp;Oth Service
     </button>
   </span>
-  <span *ngIf="this.data.serviceType === 'ITR' && this.data.itrObjectStatus === 'ITR_FILED' ">
-    <button *ngIf="false" type="button" class="more-new-button" title="Insurance" (click)="giveInsurance()">
+  <span
+    *ngIf="
+      this.data.serviceType === 'ITR' &&
+      this.data.itrObjectStatus === 'ITR_FILED'
+    "
+  >
+    <button
+      *ngIf="false"
+      type="button"
+      class="more-new-button"
+      title="Insurance"
+      (click)="giveInsurance()"
+    >
       <i class="fa fa-ambulance" aria-hidden="true"></i>&nbsp;&nbsp;Insurance
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="User Journey" (click)="getUserJourney()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="User Journey"
+      (click)="getUserJourney()"
+    >
       <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>&nbsp;&nbsp;Journey
     </button>
   </span>
   <span>
-    <app-custom-button *ngIf="isApplicable(['ROLE_ADMIN'])" class="delete-user more-new-button"
-      [actions]="[deleteUser]">
-      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>&nbsp;&nbsp;Delete User
+    <app-custom-button
+      *ngIf="isApplicable(['ROLE_ADMIN'])"
+      class="delete-user more-new-button"
+      [actions]="[deleteUser]"
+    >
+      <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i
+      >&nbsp;&nbsp;Delete User
     </app-custom-button>
   </span>
   <!-- might be below 'No JSON filing' changes required in april -->
   <span *ngIf="data.serviceType === 'ITR' && isApplicable(['ROLE_ADMIN'])">
-    <button type="button" class="more-new-button" title="Update Filing w/out JSON"
-      (click)="checkSubscription('update-filing')">
+    <button
+      type="button"
+      class="more-new-button"
+      title="Update Filing w/out JSON"
+      (click)="checkSubscription('update-filing')"
+    >
       No JSON Filing
     </button>
   </span>
-  <span *ngIf="(data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER','ROLE_FILER'])">
-    <button type="button" title="update ITR-U filling" class="more-new-button"
-      (click)="checkSubscription('itr-u-update')">
+  <span
+    *ngIf="
+      data.serviceType === 'ITRU' &&
+      isApplicable(['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_FILER'])
+    "
+  >
+    <button
+      type="button"
+      title="update ITR-U filling"
+      class="more-new-button"
+      (click)="checkSubscription('itr-u-update')"
+    >
       <i class="fas fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;ITR-U Update
     </button>
   </span>
   <span>
-    <button type="button" class="more-new-button" title="Link To Finbingo" (click)="linkToFinbingo()">
+    <button
+      type="button"
+      class="more-new-button"
+      title="Link To Finbingo"
+      (click)="linkToFinbingo()"
+    >
       <i class="fa fa-link" aria-hidden="true"></i>&nbsp;&nbsp;Link To Finbingo
+    </button>
+  </span>
+
+  <span>
+    <button
+      type="button"
+      class="more-new-button"
+      title="Link To Tax Calculation"
+      (click)="goToTaxCalculation()"
+    >
+      <i class="fa fa-link" aria-hidden="true"></i>&nbsp;&nbsp;Advance Tax
+      Calculation
     </button>
   </span>
 
   &nbsp;&nbsp;
 
   <div class="card__row" *ngIf="showDetails === 'OPT_SERVICE'">
-    <table aria-label="Other Details Service" style=" width: 100%;"
-      *ngIf="optedServicesData && optedServicesData.length > 0">
+    <table
+      aria-label="Other Details Service"
+      style="width: 100%"
+      *ngIf="optedServicesData && optedServicesData.length > 0"
+    >
       <tr>
         <th>Service Type</th>
         <th>Agent Name</th>
@@ -91,20 +194,24 @@
       </tr>
       <tbody>
         <tr *ngFor="let service of optedServicesData">
-          <td>{{service.serviceType}}</td>
-          <td>{{service.filerName}}</td>
-          <td>{{service.filerMobile}}</td>
+          <td>{{ service.serviceType }}</td>
+          <td>{{ service.filerName }}</td>
+          <td>{{ service.filerMobile }}</td>
         </tr>
       </tbody>
     </table>
-    <br>
+    <br />
     <div>Note: Please select the service and opt user for another service</div>
     <div class="card__col-xs-12 card__col-sm-8">
-      <mat-form-field appearance="outline" style="margin-top: 10px;">
+      <mat-form-field appearance="outline" style="margin-top: 10px">
         <mat-label>Select Service</mat-label>
         <mat-select placeholder="Select Agent Id" [(ngModel)]="selectedService">
-          <mat-option *ngFor="let service of services" [value]="service" [disabled]="isDisabled(service)">
-            {{service}}
+          <mat-option
+            *ngFor="let service of services"
+            [value]="service"
+            [disabled]="isDisabled(service)"
+          >
+            {{ service }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -116,28 +223,32 @@
     </div>
   </div>
   <div class="card__row" *ngIf="showDetails === 'JOURNEY'">
-    <table aria-label="Journey Details" style=" width: 100%;">
+    <table aria-label="Journey Details" style="width: 100%">
       <tr>
         <th>Service Type</th>
         <th>Status Name</th>
         <th>Assessment Year</th>
         <th>Created Date</th>
-        <th>status Updated By Name </th>
+        <th>status Updated By Name</th>
         <th>Role</th>
-
       </tr>
       <tr *ngFor="let service of statusList">
-        <td>{{service.serviceType}}</td>
-        <td>{{service.statusName}}</td>
-        <td>{{service.assessmentYear}}</td>
-        <td>{{service.createdDate | date:'dd MMM yyyy'}}</td>
-        <td>{{service.statusUpdatedByName?service.statusUpdatedByName:'-'}}</td>
-        <td>{{service.statusUpdatedByRole?service.statusUpdatedByRole:'-'}}</td>
+        <td>{{ service.serviceType }}</td>
+        <td>{{ service.statusName }}</td>
+        <td>{{ service.assessmentYear }}</td>
+        <td>{{ service.createdDate | date : "dd MMM yyyy" }}</td>
+        <td>
+          {{ service.statusUpdatedByName ? service.statusUpdatedByName : "-" }}
+        </td>
+        <td>
+          {{ service.statusUpdatedByRole ? service.statusUpdatedByRole : "-" }}
+        </td>
       </tr>
     </table>
-    <br>
+    <br />
     <pre *ngIf="initialData">
-    {{initialData | json}}
-</pre>
+    {{ initialData | json }}
+</pre
+    >
   </div>
 </div>

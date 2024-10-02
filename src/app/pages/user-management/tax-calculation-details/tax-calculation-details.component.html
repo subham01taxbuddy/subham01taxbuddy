@@ -1,0 +1,285 @@
+<div class="tax-details">
+  <!-- <h2>Tax Calculation Details</h2> -->
+  <div
+    style="
+      background-color: #1976d2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      color: white;
+    "
+  >
+    <h3>Name of Assessee: {{ assesseeName }}</h3>
+    <h4>PAN: {{ panNumber }}</h4>
+  </div>
+  <div
+    style="
+      background-color: #1976d2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      padding-top: 0;
+      color: white;
+    "
+  >
+    <h4>Assessment Year: {{ assessmentYear }}</h4>
+    <h4>DOB: {{ dateOfBirth | date : "dd-MM-yyyy" }}</h4>
+  </div>
+
+  <div style="display: flex; justify-content: end; gap: 10px; margin-top: 20px">
+    <div style="text-align: center">
+      <button
+        (click)="downloadPDF()"
+        style="
+          background-color: #00afcb;
+          color: #ffffff;
+          border-radius: 5px;
+          padding: 15px 20px;
+        "
+      >
+        Download PDF
+      </button>
+    </div>
+    <div style="text-align: center">
+      <button
+        style="
+          background-color: #00afcb;
+          color: #ffffff;
+          border-radius: 5px;
+          padding: 15px 20px;
+        "
+      >
+        Send PDF
+      </button>
+    </div>
+  </div>
+
+  <h3 style="text-align: center; padding: 20px">Old Vs New Comparison</h3>
+
+  <div
+    style="display: flex; justify-content: center; background-color: #fcfcfc"
+  >
+    <table style="width: 60%">
+      <thead style="background-color: #ddebff">
+        <tr>
+          <th style="padding: 10px">Sr No.</th>
+          <th style="padding: 10px">Income</th>
+          <th style="padding: 10px">Old Regime</th>
+          <th style="padding: 10px">New Regime</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 5px">1</td>
+          <td style="padding: 5px">Income From Salary</td>
+          <td style="padding: 5px">{{ oldRegime.salaryIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.salaryIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">2</td>
+          <td style="padding: 5px">Income From House Property</td>
+          <td style="padding: 5px">{{ oldRegime.housePropertyIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.housePropertyIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">3</td>
+          <td style="padding: 5px">Income From Capital Gain</td>
+          <td style="padding: 5px">{{ oldRegime.capitalGain || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.capitalGain || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">4</td>
+          <td style="padding: 5px">Income From Business</td>
+          <td style="padding: 5px">{{ oldRegime.businessIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.businessIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">5</td>
+          <td style="padding: 5px">Income From Other Sources</td>
+          <td style="padding: 5px">{{ oldRegime.otherSourceIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.otherSourceIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">6</td>
+          <td style="padding: 5px">Total Income from All Sources</td>
+          <td style="padding: 5px">{{ totalIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.totalIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">7</td>
+          <td style="padding: 5px">Deduction under VI-A</td>
+          <td style="padding: 5px">{{ oldRegime.deductionUnderVIA || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.deductionUnderVIA || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">8</td>
+          <td style="padding: 5px">Taxable Income</td>
+          <td style="padding: 5px">{{ oldRegime.taxableIncome || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.taxableIncome || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">9</td>
+          <td style="padding: 5px">Tax on (Taxable Income)</td>
+          <td style="padding: 5px">{{ oldRegime.tax || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.tax || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">10</td>
+          <td style="padding: 5px">Rebate u/s 87A</td>
+          <td style="padding: 5px">{{ oldRegime.rebateUs87A || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.rebateUs87A || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">11</td>
+          <td style="padding: 5px">Tax After Rebate</td>
+          <td style="padding: 5px">{{ oldRegime.taxAfterRebate || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.taxAfterRebate || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">12</td>
+          <td style="padding: 5px">Surcharge</td>
+          <td style="padding: 5px">{{ oldRegime.surcharge || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.surcharge || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">13</td>
+          <td style="padding: 5px">HEC</td>
+          <td style="padding: 5px">{{ oldRegime.hec || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.hec || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">14</td>
+          <td style="padding: 5px">Total Tax</td>
+          <td style="padding: 5px">{{ oldRegime.totalTax || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.totalTax || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">15</td>
+          <td style="padding: 5px">Taxes Paid</td>
+          <td style="padding: 5px">{{ oldRegime.taxesPaid || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.taxesPaid || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">16</td>
+          <td style="padding: 5px">Tax Liability</td>
+          <td style="padding: 5px">{{ oldRegime.taxLiability || 0 }}</td>
+          <td style="padding: 5px">{{ newRegime.taxLiability || 0 }}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px">17</td>
+          <td style="padding: 5px">Beneficial Regime</td>
+          <td style="padding: 5px" colspan="2">
+            {{ beneficialRegime }}
+            <!-- Regime Name (Old or New whichever is lower will be beneficial) -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="margin-top: 20px; text-align: center">Total Tax Liability</h3>
+
+  <p style="text-align: center; padding: 10px">
+    Period 01/04 to 15/06 of selected financial year
+  </p>
+
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      background-color: #fcfcfc;
+      margin-top: 20px;
+    "
+  >
+    <table style="width: 60%">
+      <thead>
+        <tr>
+          <!-- <th>Period</th> -->
+          <th>Normal (A)</th>
+          <th>Tax Liability Cumulative (B)</th>
+          <th>Installment (C)</th>
+          <th>Installment Amount (D) = (B)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>15%</td>
+          <td>xx</td>
+          <td>1st</td>
+          <td>xx</td>
+          <!-- <td>{{ data.installmentAmount }}</td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="text-align: center; padding: 10px">
+    Period 16/06 to 15/09 of selected financial year
+  </p>
+
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      background-color: #fcfcfc;
+      margin-top: 20px;
+    "
+  >
+    <table style="width: 60%">
+      <thead>
+        <tr>
+          <!-- <th>Period</th> -->
+          <th>Normal (A)</th>
+          <th>Tax Liability Cumulative (B)</th>
+          <th>Installment (C)</th>
+          <th>Installment Amount (D) = (B)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>15%</td>
+          <td>xx</td>
+          <td>1st</td>
+          <td>xx</td>
+          <!-- <td>{{ data.installmentAmount }}</td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="text-align: center; padding: 10px">
+    Period 16/09 to 15/12 of selected financial year
+  </p>
+
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      background-color: #fcfcfc;
+      margin-top: 20px;
+    "
+  >
+    <table style="width: 60%">
+      <thead>
+        <tr>
+          <!-- <th>Period</th> -->
+          <th>Normal (A)</th>
+          <th>Tax Liability Cumulative (B)</th>
+          <th>Installment (C)</th>
+          <th>Installment Amount (D) = (B)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>15%</td>
+          <td>xx</td>
+          <td>1st</td>
+          <td>xx</td>
+          <!-- <td>{{ data.installmentAmount }}</td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

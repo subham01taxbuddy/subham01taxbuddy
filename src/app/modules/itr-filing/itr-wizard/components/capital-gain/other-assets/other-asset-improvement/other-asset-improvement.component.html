@@ -10,7 +10,7 @@
             <div><span class="span">Sale Date </span> <span class="text-wrapper-2">*</span>
             </div>
             <mat-form-field appearance="outline" class="small-inp no-height">
-              <input matInput formControlName="sellDate" name="sellDate" [matDatepicker]="sellDate"
+              <input appDateInput matInput formControlName="sellDate" name="sellDate" [matDatepicker]="sellDate"
                 placeholder="Sale Date/Date of Transfer" (dateChange)="
             calculateGainType();
             calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
@@ -24,7 +24,7 @@
             <div><span class="span">Buy Date </span> <span class="text-wrapper-2">*</span>
             </div>
             <mat-form-field appearance="outline" class="small-inp no-height">
-              <input matInput formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
+              <input appDateInput matInput formControlName="purchaseDate" name="purchaseDate" [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition" (dateChange)="getImprovementYears(); calculateGainType()"
                 [max]="maxPurchaseDate" />
               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
