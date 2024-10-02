@@ -19,7 +19,6 @@ import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-upda
 import { PanExceptionComponent } from "./pan-exception/pan-exception.component";
 import { TaxCalculationComponent } from './tax-calculation/tax-calculation.component';
 import { TaxCalculationDetailsComponent } from './tax-calculation-details/tax-calculation-details.component';
-import { TasksModule } from "src/app/modules/tasks/tasks.module";
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
