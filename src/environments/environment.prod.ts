@@ -86,7 +86,7 @@ export const environment = {
 		appId: "1:294419985055:web:333066a5ba29aad79d28aa",
 		measurementId: "G-K3L7DS9C92"
 	},
-	WEBSOCKET_URL: 'wss://tiledesk.taxbuddy.com/mqws/ws',
+	WEBSOCKET_URL: 'wss://heavy-azure-whale.rmq3.cloudamqp.com/ws/mqtt',
 	CHAT_API_URL: 'https://tiledesk.taxbuddy.com/chatapi/api/tilechat',
 	TILEDESK_URL: 'https://tiledesk.taxbuddy.com',
 	USER_STATUS_WEBSOCKET_URL: 'wss://tiledesk.taxbuddy.com/ws',
