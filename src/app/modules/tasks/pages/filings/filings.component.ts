@@ -562,6 +562,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         isLate: data[i].isLate,
         paymentStatus: data[i].paymentStatus,
         manualUpdateReason: data[i].manualUpdateReason,
+        requestId: data[i].requestId,
+        whatsAppRequestId: data[i].whatsAppRequestId
       });
     }
     return newData;
@@ -1243,6 +1245,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
         serviceType: 'ITR',
+        requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       },
     });
 
