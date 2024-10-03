@@ -1,3 +1,61 @@
 .tax-details {
   padding: 20px;
 }
+
+.table {
+  width: 70%;
+  background-color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.table-main-row {
+  padding: 10px;
+  border: 1px solid black;
+  text-align: center;
+  background-color: #ddebff;
+}
+
+.table-data {
+  padding: 5px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.row-div {
+  display: flex;
+  justify-content: center;
+}
+
+.table-para {
+  text-align: center;
+  padding: 10px;
+  margin: 0;
+  background-color: #ddebff;
+  width: 70%;
+}
+
+.btn-div {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  //   margin-top: 20px;
+}
+
+.year {
+  background-color: #ddebff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  //   padding-top: 0;
+  //   color: white;
+  width: 70%;
+  font-size: 28px;
+}
+
+.button-class {
+  background-color: #00afcb;
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 15px 20px;
+}
