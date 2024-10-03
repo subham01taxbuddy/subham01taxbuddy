@@ -31,6 +31,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     {
       value: 'INCOME_US_56_2_XIII',
       label: 'Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)',
+    },{
+      value: 'INCOME_US_194I',
+      label: 'Rental income from machinery, plants, buildings, etc., Gross section (us/194I)',
     },
     {
       value: 'ANY_OTHER',
@@ -747,6 +750,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           // item.incomeType === 'ROYALTY_US_80QQB' ||
           item.incomeType === 'INCOME_US_56_2_XII' ||
           item.incomeType === 'INCOME_US_56_2_XIII' ||
+          item.incomeType === 'INCOME_US_194I' ||
           item.incomeType === 'ANY_OTHER'
       );
       let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as UntypedFormArray;
