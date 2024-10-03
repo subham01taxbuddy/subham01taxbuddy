@@ -19,7 +19,6 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 import { ChatManager } from './modules/chat/chat-manager';
 import { ChatService } from './modules/chat/chat.service';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
