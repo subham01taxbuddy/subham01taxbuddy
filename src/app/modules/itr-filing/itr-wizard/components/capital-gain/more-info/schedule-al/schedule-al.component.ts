@@ -207,7 +207,7 @@ export class ScheduleALComponent
       state: [item ? item.state : '', Validators.required],
       country: [item ? item.country : '91', Validators.required],
       city: [item ? item.city : '', Validators.required],
-      pinCode: [''],
+      pinCode: [item?item.pinCode:'',Validators.required],
     });
   }
 
@@ -226,54 +226,102 @@ export class ScheduleALComponent
     });
   }
 
-  // async updateDataByPincode(immovableAssets) {
-  //   let pincode = immovableAssets.controls['pinCode'];
+ 
+
+  // async updateDataByPincodeCode(immovableAssets) {
+  //   console.log(immovableAssets);
+  //   let pincode = immovableAssets.controls['pinCode'].value;
+       
+  //   // Call the pincode service to get city, state, and country
   //   await this.utilsService.getPincodeData(pincode).then((result) => {
   //     immovableAssets.controls['city'].setValue(result.city);
   //     immovableAssets.controls['country'].setValue(result.countryCode);
-  //     immovableAssets.controls['state'].setValue(result.stateCode);
+  
+  //     // If the country is India (91), set the actual state, otherwise set Foreign (99)
+  //     if (result.countryCode === '91') {
+  //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
+  //     } else {
+        
+  //       this.immovableAssetForm.controls['state'].setValue('Foreign');
+        
+  //       // immovableAssets.controls['state'].stateCode.setValue('99'); // Set state to 'Foreign' (99) for other countries
+  //     }
+  //   }).catch((error) => {
+  //     console.error('Error fetching pincode data', error);
   //   });
   // }
 
-  async updateDataByPincode(immovableAssets) {
-    let pincodeControl = immovableAssets.controls['pinCode'];
-    let countryControl = immovableAssets.controls['country'];
+   updateDataByPincode(immovableAssets) {
+    console.log("country code :",immovableAssets);
+    let pincode = immovableAssets.controls['pinCode'];
+     this.utilsService.getPincodeData(pincode).then((result) => {
+      immovableAssets.controls['city'].setValue(result.city);
+      immovableAssets.controls['country'].setValue(result.countryCode);
+    console.log("country code 1:",immovableAssets);
 
-    // Call pincode service to get city, state, and country
-    await this.utilsService
-      .getPincodeData(pincodeControl.value)
-      .then((result) => {
-        immovableAssets.controls['city'].setValue(result.city);
-        immovableAssets.controls['country'].setValue(result.countryCode);
-        immovableAssets.controls['state'].setValue(result.stateCode);
-      });
-
-    // Update pinCode or zipCode label and validation based on selected country
-    countryControl.valueChanges.subscribe((countryCode) => {
-      if (countryCode === '91') {
-        // India
-        // Update label and validators for Indian PIN code
-        this.updatePinCodeLabelAndValidators(
-          immovableAssets,
-          'PIN Code',
-          '^[1-9][0-9]{5}$',
-          6,
-          6
-        );
+      if (result.countryCode === '91') {
+        immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
       } else {
-        // Update label and validators for ZIP code (alphanumeric, 4 to 8 characters)
-        this.updatePinCodeLabelAndValidators(
-          immovableAssets,
-          'ZIP Code',
-          '^[a-zA-Z0-9]{4,8}$',
-          4,
-          8
-        );
-    immovableAssets.controls['pinCode'].updateValueAndValidity();
-
+        immovableAssets.controls['state'].setValue('99');
+        // this.immovableAssets.controls['state'].setValue('Foreign');
+        
+          // immovableAssets.controls['state'].stateCode.setValue('99');
       }
+
+      immovableAssets.controls['pincode'].updateValueAndValidity();
+      immovableAssets.controls['state'].updateValueAndValidity();
+      immovableAssets.updateValueAndValidity();
+      
     });
+    
   }
+
+
+
+  // async updateDataByPincode(immovableAssets) {
+  //   let pincodeControl = immovableAssets.controls['pinCode'];
+  //   let countryControl = immovableAssets.controls['country'];
+  
+  //   // Call pincode service to get city, state, and country
+  //   await this.utilsService.getPincodeData(pincodeControl.value).then((result) => {
+  //     immovableAssets.controls['city'].setValue(result.city);
+  //     immovableAssets.controls['country'].setValue(result.countryCode);
+  
+  //     // Check if the country is India (91) or set state to 'Foreign' (99)
+  //     if (result.countryCode === '91') {
+  //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
+  //     } else {
+  //       immovableAssets.controls['state'].setValue('99'); // Set state to 'Foreign' for other countries
+  //     }
+  //   });
+  
+  //   // Update pinCode or zipCode label and validation based on selected country
+  //   countryControl.valueChanges.subscribe((countryCode) => {
+  //     if (countryCode === '91') {
+  //       // India: Update label and validators for Indian PIN code
+  //       this.updatePinCodeLabelAndValidators(
+  //         immovableAssets,
+  //         'PIN Code',
+  //         '^[1-9][0-9]{5}$',
+  //         6,
+  //         6
+  //       );
+  //     } else {
+  //       // Other countries: Update label and validators for alphanumeric ZIP code
+  //       immovableAssets.controls['state'].setValue('99'); // Set state to 'Foreign (99)'
+  //       this.updatePinCodeLabelAndValidators(
+  //         immovableAssets,
+  //         'ZIP Code',
+  //         '^[a-zA-Z0-9]{4,8}$',
+  //         4,
+  //         8
+  //       );
+  //     }
+  //     // Ensure the validation is updated in real-time
+  //     immovableAssets.controls['pinCode'].updateValueAndValidity();
+  //   });
+  // }
+  
 
   updatePinCodeLabelAndValidators(
     immovableAssets,
@@ -283,8 +331,6 @@ export class ScheduleALComponent
     maxLength: number
   ) {
     immovableAssets.controls['pinCode'].setValidators([
-      Validators.minLength(minLength),
-      Validators.maxLength(maxLength),
       Validators.required,
     ]);
     // Assuming you have a way to update the label in the UI
