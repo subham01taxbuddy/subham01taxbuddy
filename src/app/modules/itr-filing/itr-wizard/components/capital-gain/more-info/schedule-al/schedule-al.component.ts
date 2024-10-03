@@ -207,7 +207,7 @@ export class ScheduleALComponent
       state: [item ? item.state : '', Validators.required],
       country: [item ? item.country : '91', Validators.required],
       city: [item ? item.city : '', Validators.required],
-      pinCode: [''],
+      pinCode: [item?item.pinCode:'',Validators.required],
     });
   }
 
@@ -262,14 +262,21 @@ export class ScheduleALComponent
       if (result.countryCode === '91') {
         immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
       } else {
-        immovableAssets.controls['state'].setValue('Foreign');
-
+        immovableAssets.controls['state'].setValue('99');
+        // this.immovableAssets.controls['state'].setValue('Foreign');
+        
+          // immovableAssets.controls['state'].stateCode.setValue('99');
       }
-      immovableAssets.updateValueAndValidity();
 
+      immovableAssets.controls['pincode'].updateValueAndValidity();
+      immovableAssets.controls['state'].updateValueAndValidity();
+      immovableAssets.updateValueAndValidity();
+      
     });
     
   }
+
+
 
   // async updateDataByPincode(immovableAssets) {
   //   let pincodeControl = immovableAssets.controls['pinCode'];

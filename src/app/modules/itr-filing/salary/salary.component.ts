@@ -229,6 +229,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         employerName: '',
         address: '',
         city: '',
+        country:'',
         pinCode: '',
         state: '',
         employerPAN: '',
@@ -359,6 +360,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         city: '',
         pinCode: '',
         state: '',
+        country:'',
         employerPAN: '',
         employerTAN: '',
         taxableIncome: null,
@@ -480,7 +482,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     }
 
     // Update the validity of the form control after changing validators
-    this.employerDetailsFormGroup.get('pinCode')?.updateValueAndValidity();
+    this.employerDetailsFormGroup.get('pinCode').updateValueAndValidity();
+    this.employerDetailsFormGroup.updateValueAndValidity();
+    
   }
 
   validateExemptIncomes(event: any) {
@@ -607,6 +611,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ]),
         ],
         state: ['', Validators.compose([Validators.required])],
+        country: ['', Validators.compose([Validators.required])],
+
         pinCode: [
           '',
           Validators.compose([
@@ -630,6 +636,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ''
         ],
         state: [''],
+        country: [''],
+
         pinCode: [
           '',
           Validators.compose([
@@ -1075,6 +1083,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =
@@ -1375,8 +1385,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.employerDetailsFormGroup?.controls['address']?.value;
       this.localEmployer.employerName =
         this.employerDetailsFormGroup?.controls['employerName']?.value;
-      this.localEmployer.state =
-        this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+        this.employerDetailsFormGroup?.controls['country']?.value;
       this.localEmployer.pinCode =
         this.employerDetailsFormGroup?.controls['pinCode']?.value;
       this.localEmployer.city =
@@ -2156,6 +2166,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =
