@@ -533,6 +533,31 @@
             "
           >
             <div class="col-sm-5">
+              <mat-label>80TTA/TTB</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="80TTA/TTB"
+                  formControlName="us80ttattb"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-sm-5">
+              <mat-label>80G/80GGC/80GGA</mat-label>
+              <mat-form-field appearance="outline">
+                <input placeholder="80G/80GGC/80GGA" matInput type="number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
+            <div class="col-sm-5">
               <mat-label
                 >Any Other (please enter deductible amount only)
               </mat-label>
@@ -595,7 +620,7 @@
               <mat-form-field appearance="outline">
                 <input
                   placeholder="Business (Speculative)"
-                  formControlName="BusinessSpeculative"
+                  formControlName="businessSpeculative"
                   matInput
                   type="number"
                 />
