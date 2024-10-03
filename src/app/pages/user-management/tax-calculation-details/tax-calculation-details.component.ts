@@ -4,6 +4,7 @@ import { TaxDataService } from '../../../../app/tax-data.service';
 import { UserTaxDataService } from '../../../services/user-tax-data.service';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { Location } from '@angular/common';
 
 interface TaxData {
   name: string;
@@ -34,13 +35,24 @@ export class TaxCalculationDetailsComponent implements OnInit {
   newRegime: any = {};
   beneficialRegime: string | undefined;
   totalIncome: number = 0;
+  advanceTaxQuarter1: any = {};
+  advanceTaxQuarter2: any = {};
+  advanceTaxQuarter3: any = {};
+  advanceTaxQuarter4: any = {};
+  totalTaxLiabilty: string | undefined;
 
   constructor(
     private router: Router,
     private taxDataService: TaxDataService,
     private userTaxDataService: UserTaxDataService,
-    private http: HttpClient
+    private http: HttpClient,
+    private location: Location
   ) {}
+
+  // Function to go back to the previous page
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit(): void {
     const data = this.taxDataService.getTaxData();
@@ -58,6 +70,12 @@ export class TaxCalculationDetailsComponent implements OnInit {
       this.oldRegime = data.oldRegime;
       this.newRegime = data.newRegime;
       this.beneficialRegime = data.beneficialRegime;
+      this.totalTaxLiabilty = data.totalTaxLiabilty;
+
+      this.advanceTaxQuarter1 = data.advanceTaxQuarter1;
+      this.advanceTaxQuarter2 = data.advanceTaxQuarter2;
+      this.advanceTaxQuarter3 = data.advanceTaxQuarter3;
+      this.advanceTaxQuarter4 = data.advanceTaxQuarter4;
 
       this.calculateTotalIncome();
     }
