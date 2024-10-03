@@ -1255,7 +1255,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.isChatOpen = true;
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
-      else if(result?.requestId){
+      else if(result?.request_id){
         this.chatBuddyDetails = result;
         this.chatService.unsubscribeRxjsWebsocket();
         this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
