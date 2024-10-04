@@ -688,6 +688,7 @@ export interface Employer {
   employerName: string;
   address: string;
   city: string;
+  country?:string;
   pinCode: string;
   state: string;
   employerPAN: string;
