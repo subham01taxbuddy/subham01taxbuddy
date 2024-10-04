@@ -947,8 +947,10 @@ export class ChatService {
       let chats = this.localStorageService.getItem('conversationList', true);
       let selectedChat = chats.filter(chat => chat.request_id === recipient)[0];
       if (selectedChat) {
+        const deptDetails = this.localStorageService.getItem('DEPT_LIST',true);
+        const matchingDeptName = deptDetails.find(dept => dept?._id === selectedChat.departmentId);
         messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
-            selectedChat.departmentName, selectedChat.userFullName);
+            matchingDeptName?.name, selectedChat.userFullName);
       } else {
         await this.getUserDetails(recipient).subscribe((response) => {
           console.log('response is', response);

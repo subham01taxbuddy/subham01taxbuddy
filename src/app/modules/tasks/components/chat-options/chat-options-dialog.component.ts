@@ -33,6 +33,7 @@ export class ChatOptionsDialogComponent implements OnInit {
   userChatOpen: boolean = false;
   username: string;
   requestId: string;
+  whatsAppRequestId: string;
 
   constructor(
     public dialogRef: MatDialogRef<ChatOptionsDialogComponent>,
@@ -87,6 +88,7 @@ export class ChatOptionsDialogComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.requestId = response.data.requestId
+          this.whatsAppRequestId = response.data.whatsAppRequestId
           this.kommChatLink = response.data?.chatLink;
           this.kommChatConversationId = response.data?.conversationId;
           this.waChatLink = response.data?.whatsAppChatLink
