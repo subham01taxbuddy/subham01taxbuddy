@@ -318,164 +318,169 @@
                 <div class="mnBx-5 col-sm-12" formArrayName="deductions" *ngIf="isDeductions.value">
                   <div class="row col-sm-12" *ngFor="let deduction of getDeductionsArray.controls;let i = index"
                        (click)="active = i" [formGroupName]="fieldGlobalIndex(i)">
+                    <div class="Box5-L col-sm-9" >
 
-                    <div class="row col-sm-12">
-                      <div class="Box5-L col-sm-6">
-                        <mat-form-field class="input-field-width small-inp no-height">
-                          <mat-label>Investment Under Section</mat-label>
-                          <mat-select name="underSection" formControlName="underSection"
-                            (selectionChange)="changeInvestmentSection('HTML', i)" (blur)="calculateDeduction(i, 'singleCg')">
-                            <mat-option value="54" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
-                              54
-                            </mat-option>
-                            <mat-option value="54B"> 54B </mat-option>
-                            <mat-option value="54EC" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
-                              54EC
-                            </mat-option>
-                            <mat-option value="54F" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
-                              54F
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-sm-3 btn-delete">
-                        <button type="button" (click)="deleteDeduction(i)" *ngIf="isDeductions.value">
-                          <i class="fa fa-trash-o delbt"></i>
-                        </button>
-                      </div>
-
-                      <div class="col-sm-3" *ngIf="i === getDeductionsArray.controls.length - 1">
-                        <button type="button" class="addAno" [disabled]="totalCg <= 0" (click)="addInvestment(this.immovableForm)"
-                          *ngIf="isDeductions.value">
-                          + Add Another
-                        </button>
-                      </div>
-
-                    </div>
-                    <div class="col-12">
-                      <div class="row">
-                        <div class="col-12">
-                          <mat-checkbox formControlName="showNewAsset" (change)="onToggleNewAsset($event.checked ,i)">New Asset Purchase</mat-checkbox>
+                      <div class="Box5-1">
+                        <div class="field">
+                          <div class="field-label">
+                            <mat-checkbox style="margin-right: 5px" name="deduction[i]"
+                              formControlName="selected"></mat-checkbox>
+                            <span class="span">Investment Under Section </span> <span class="redAst">*</span>
+                          </div>
+                          <mat-form-field class="input-field-width small-inp no-height">
+                            <mat-select name="underSection" formControlName="underSection"
+                              (selectionChange)="changeInvestmentSection('HTML', i)"
+                              (blur)="calculateDeduction(i, 'singleCg')">
+                              <mat-option value="54"
+                                *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
+                                54
+                              </mat-option>
+                              <mat-option value="54B"> 54B </mat-option>
+                              <mat-option value="54EC"
+                                *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
+                                54EC
+                              </mat-option>
+                              <mat-option value="54F"
+                                *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
+                                54F
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
                         </div>
                       </div>
-                      <div  class="nBorder" *ngIf="deduction.get('showNewAsset').value">
-                        <div class="lndBldg-box">
-                          <div class="lndBldg-L">
-                            <div><span class="span">Date Of purchase</span> <span class="redAst">*</span>
-                            </div>
-                          </div>
-                          <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (dateChange)="calculateDeduction(i, 'singleCg')" matInput formControlName="purchaseDate"
-                                name="deductions[i]" class="input-field" [matDatepicker]="purchaseDate"
-                                [matDatepickerFilter]="disableFutureDates" />
-                              <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                              <mat-datepicker #purchaseDate></mat-datepicker>
-                              <mat-error *ngIf="deduction.get('purchaseDate').hasError('pattern')">
-                                Enter valid date.
-                              </mat-error>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                        <div class="lndBldg-box">
-                          <div class="lndBldg-L">
-                              <div><span class="span">Cost Of New Asset </span> <span class="redAst">*</span>
+
+                          <div class="Box5-2">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Date Of purchase</span> <span class="redAst">*</span>
                               </div>
-                          </div>
-                          <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number" digitsOnly
-                                class="input-field" (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row mt-3" *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
-                        <div class="col-12 ">
-                          <mat-checkbox formControlName="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
-                        </div>
-                      </div>
-                      <div class="nBorder" *ngIf="deduction.get('showCGAS').value">
-
-                        <div class="lndBldg-box" *ngIf="deduction.get('underSection').value !== '54EC' && deduction.get('underSection').value !== '54EE'">
-                            <div class="lndBldg-L">
-                              <span class="span">CGAS Amount Deposited Before Due Date</span> <span class="redAst">*</span>
+                              <mat-form-field appearance="outline" class="small-inp no-height">
+                                <input (dateChange)="calculateDeduction(i, 'singleCg')" matInput
+                                  formControlName="purchaseDate" name="deductions[i]" class="input-field"
+                                  [matDatepicker]="purchaseDate" [matDatepickerFilter]="disableFutureDates" />
+                                <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                                <mat-datepicker #purchaseDate></mat-datepicker>
+                                <mat-error *ngIf="
+                                deduction.get('purchaseDate').hasError('pattern')
+                              ">
+                                  Enter valid date.
+                                </mat-error>
+                              </mat-form-field>
                             </div>
-                            <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" matInput class="input-field"
-                                name="deductions[i]" formControlName="investmentInCGAccount" maxlength="14" type="number" digitsOnly />
-                              <mat-error *ngIf="deduction.get('investmentInCGAccount').hasError('pattern')">
-                                Enter valid amount.
-                              </mat-error>
-                            </mat-form-field>
                           </div>
-                        </div>
-                        <div class="lndBldg-box" *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
-                            <div class="lndBldg-L">
-                              <span class="span">Account Number</span> <span class="redAst">*</span>
-                            </div>
-                            <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input trim matInput class="input-field" name="accountNumber[i]" formControlName="accountNumber" maxlength="20"
-                                minlength="3" digitsOnly />
-                              <mat-error *ngIf="deduction.get('accountNumber').hasError('pattern') ||
-                                                                          deduction.get('accountNumber').hasError('minlength')">
-                                Account number should be between 3-20 digit
-                              </mat-error>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                        <div class="lndBldg-box" *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
-                            <div class="lndBldg-L">
-                              <span class="span">IFSC Code</span> <span class="redAst">*</span>
-                            </div>
-                            <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input trim upperCase matInput class="input-field" name="ifscCode[i]" formControlName="ifscCode"
-                                maxlength="11" />
-                              <mat-error *ngIf="deduction.get('ifscCode').hasError('pattern')">
-                                Enter valid IFSC Code.
-                              </mat-error>
-                            </mat-form-field>
-                          </div>
-                        </div>
-                        <div class="lndBldg-box" *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
-                            <div class="lndBldg-L">
-                              <span class="span">Date Of Deposit</span> <span class="redAst">*</span>
-                            </div>
-                            <div class="lndBldg-R">
-                            <mat-form-field appearance="outline" class="small-inp no-height">
-                              <input matInput formControlName="dateOfDeposit" name="dateOfDeposit[i]" class="input-field"
-                                [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
-                              <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
-                              <mat-datepicker #dateOfDeposit></mat-datepicker>
-                              <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">
-                                Enter valid date.
-                              </mat-error>
-                            </mat-form-field>
-                          </div>
-                        </div>
 
-
-                      </div>
-
-                      <div class="lndBldg-box mt-3">
-                          <div class="lndBldg-L">
-                            <span class="span">Deduction Claimed</span> <span class="redAst">*</span>
+                          <div class="Box5-3">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Cost Of New Asset </span> <span class="redAst">*</span>
+                              </div>
+                              <mat-form-field appearance="outline" class="small-inp no-height">
+                                <input matInput formControlName="costOfNewAssets" name="deductions[i]" type="number" digitsOnly
+                                  class="input-field" (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" />
+                              </mat-form-field>
+                            </div>
                           </div>
-                          <div  class="lndBldg-R">
+
+                          <div class="Box5-4" *ngIf="
+                            deduction.get('underSection').value !== '54EC' &&
+                            deduction.get('underSection').value !== '54EE'">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">CGAS Account</span> <span class="redAst">*</span>
+                              </div>
+                              <mat-form-field appearance="outline" class="small-inp no-height">
+                                <input (blur)="updateValidations(deduction);calculateDeduction(i, 'singleCg')" matInput class="input-field"
+                                  name="deductions[i]" formControlName="investmentInCGAccount" maxlength="14" type="number"
+                                       digitsOnly
+                                />
+                                <mat-error *ngIf="deduction.get('investmentInCGAccount').hasError('pattern')">
+                                  Enter valid amount.
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+
+                      <div class="Box5-4"
+                           *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">Account Number</span> <span class="redAst">*</span>
+                          </div>
                           <mat-form-field appearance="outline" class="small-inp no-height">
-                            <input matInput formControlName="totalDeductionClaimed" name="deductions[i]" class="input-field" maxlength="6"
-                              type="number" readonly required />
-                            <mat-error *ngIf="deduction.get('totalDeductionClaimed').hasError('max')">
-                              Amount against 54 and 54F shall be restricted to 10 Crore.
+                            <input trim matInput class="input-field" name="accountNumber[i]"
+                                   formControlName="accountNumber" maxlength="20" minlength="3" digitsOnly />
+                            <mat-error *ngIf="deduction.get('accountNumber').hasError('pattern') ||
+                                deduction.get('accountNumber').hasError('minlength')">
+                              Account number should be between 3-20 digit
                             </mat-error>
                           </mat-form-field>
                         </div>
                       </div>
+                      <div class="Box5-4"
+                           *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">IFSC Code</span> <span class="redAst">*</span>
+                          </div>
+                          <mat-form-field appearance="outline" class="small-inp no-height">
+                            <input trim upperCase matInput class="input-field" name="ifscCode[i]"
+                                   formControlName="ifscCode" maxlength="11" />
+                            <mat-error *ngIf="deduction.get('ifscCode').hasError('pattern')">
+                              Enter valid IFSC Code.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="Box5-2"
+                           *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">Date Of Deposit</span> <span class="redAst">*</span>
+                          </div>
+                          <mat-form-field appearance="outline" class="small-inp no-height">
+                            <input matInput formControlName="dateOfDeposit" name="dateOfDeposit[i]" class="input-field"
+                                   [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
+                            <mat-datepicker-toggle matSuffix [for]="dateOfDeposit"></mat-datepicker-toggle>
+                            <mat-datepicker #dateOfDeposit></mat-datepicker>
+                            <mat-error *ngIf="deduction.get('dateOfDeposit').hasError('pattern')">
+                              Enter valid date.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                          <div class="Box5-5">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Deduction Claimed</span> <span class="redAst">*</span>
+                              </div>
+                              <mat-form-field appearance="outline" class="small-inp no-height">
+                                <input matInput formControlName="totalDeductionClaimed" name="deductions[i]"
+                                  class="input-field" maxlength="6" type="number" readonly required />
+                                <mat-error *ngIf="deduction.get('totalDeductionClaimed').hasError('max')">
+                                  Amount against 54 and 54F shall be restricted to 10 Crore.
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+
+
+
                     </div>
+
+                    <div class="Box5-R col-sm-3">
+                    <div class="Bx4">
+                      <div class="Bx4L">
+                        <button type="button" (click)="deleteDeduction(i)"
+                          *ngIf="isDeductions.value"> <i class="fa fa-trash-o delbt"></i> </button>
+                      </div>
+                      <div class="Bx4R" *ngIf="i === getDeductionsArray.controls.length-1">
+                        <button type="button" class="addAno" [disabled]="totalCg <= 0"
+                          (click)="addInvestment(this.immovableForm)" *ngIf="isDeductions.value"> + Add Another
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                   </div>
 
                 </div>

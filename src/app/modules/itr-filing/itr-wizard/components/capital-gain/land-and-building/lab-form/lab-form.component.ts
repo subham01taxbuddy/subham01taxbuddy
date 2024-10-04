@@ -64,8 +64,6 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   loading = false;
   improvementYears = [];
   stateDropdown = AppConstants.stateDropdown;
-countryDropdown = AppConstants.countriesDropdown;
-
   selectedIndexes: number[] = [];
 
   config: any;
@@ -607,7 +605,6 @@ countryDropdown = AppConstants.countriesDropdown;
       first.share = '';
       first.name = '';
       first.amount = '';
-first.city = '';
       buyersDetails.push(this.createBuyersDetailsForm(first));
     } else {
       this.utilsService.highlightInvalidFormFields(buyersDetails.controls[buyersDetails.controls.length - 1] as UntypedFormGroup,
@@ -771,9 +768,6 @@ first.city = '';
     const buyersDetails = (
       this.immovableForm.controls['buyersDetails'] as UntypedFormArray
     ).controls[index] as UntypedFormGroup;
-
-const countryCode = buyersDetails.get('country')?.value;
-if(countryCode === '91'){
     await this.utilsService
       .getPincodeData(buyersDetails.controls['pin'])
       .then((result) => {
@@ -782,10 +776,6 @@ if(countryCode === '91'){
         buyersDetails.controls['city'].setValue(result.city);
         buyersDetails.controls['state'].setValue(result.stateCode);
       });
-}else{
-  buyersDetails.controls['city'].updateValueAndValidity();
-}
-
   }
 
   updateSaleValue(index) {
@@ -1450,177 +1440,109 @@ debugger
     }
   }
 
-// changeAddress(event, inputField) {
-// const value = inputField === 'state' ? event?.value : event?.target?.value;
+  changeAddress(event, inputField) {
+    const value = inputField === 'state' ? event?.value : event?.target?.value;
 
-// const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
-// buyersDetails?.controls?.forEach((element, i) => {
-// (element as UntypedFormGroup)?.controls[inputField]?.setValue(value);
-// if (inputField === 'pin') {
-// this.updateDataByPincode(i);
-// }
-// });
-// }
+    const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+    buyersDetails?.controls?.forEach((element, i) => {
+      (element as UntypedFormGroup)?.controls[inputField]?.setValue(value);
+      if (inputField === 'pin') {
+        this.updateDataByPincode(i);
+      }
+    });
+  }
 
-changeAddress(event, inputField) {
-  const value = inputField === 'state' ? event?.value : event?.target?.value;
-
-  const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
-  buyersDetails?.controls?.forEach((element, i) => {
-    const formGroup = element as UntypedFormGroup;
-
-    // Set the value for the current input field (state or pin)
-    formGroup.controls[inputField]?.setValue(value);
-
-    // Get the country code for the current buyer
-    const countryCode = formGroup.get('country')?.value;
-
-    // If inputField is 'pin' and countryCode is '91', call updateDataByPincode
-    if (inputField === 'pin' && countryCode === '91') {
-      this.updateDataByPincode(i);
+  // calculate functions
+  calculateIndexCost(index) {
+    if (!index) {
+      index = 0;
     }
-    else{
-      buyersDetails.controls['city'].updateValueAndValidity();
+    let assetDetails = (
+      this.immovableForm.controls['assetDetails'] as UntypedFormArray
+    ).controls[index] as UntypedFormGroup;
+    let selectedYear = moment(assetDetails.controls['sellDate'].value);
+    let sellFinancialYear =
+      selectedYear.get('month') > 2
+        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+    let req = {
+      cost: assetDetails.controls['purchaseCost'].value,
+      // "purchaseOrImprovementFinancialYear": "2002-2003",
+      assetType: 'PLOT_OF_LAND',
+      buyDate: moment(assetDetails.controls['purchaseDate'].value).format(
+        'YYYY-MM-DD'
+      ),
+      sellDate: moment(assetDetails.controls['sellDate'].value).format(
+        'YYYY-MM-DD'
+      ),
+      sellFinancialYear: sellFinancialYear,
+    };
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
+      if (res.data.capitalGainType) {
+        if (res.data.capitalGainType === 'LONG') {
+          assetDetails.controls['indexCostOfAcquisition'].setValue(
+            res.data.costOfAcquisitionOrImprovement
+          );
+        } else {
+          assetDetails.controls['indexCostOfAcquisition'].setValue(
+            assetDetails.controls['purchaseCost'].value
+          );
+        }
+        assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
+        if (
+          this.cgArrayElement.assetDetails &&
+          this.cgArrayElement.assetDetails.length > 0
+        ) {
+          console.log('in if', res.data.capitalGainType);
+          Object.assign(
+            this.cgArrayElement.assetDetails[this.currentCgIndex],
+            assetDetails.getRawValue()
+          );
+          console.log(
+            'updated assetDetails',
+            this.cgArrayElement.assetDetails[this.currentCgIndex]
+          );
+        } else {
+          console.log('in else');
+          this.cgArrayElement.assetDetails.push(assetDetails.getRawValue());
+          this.cgArrayElement.assetDetails[this.currentCgIndex].gainType =
+            res.data.capitalGainType;
+          console.log('gain type in else', this.cgArrayElement.assetDetails);
+        }
+        console.log('gain type', this.cgArrayElement.assetDetails);
+        this.calculateCapitalGain(this.immovableForm, '', index);
+      }
+    });
+  }
+
+  calculateCapitalGainOnceCalled: boolean = false;
+  calculateCapitalGain(formGroupName, val, index) {
+    console.log(formGroupName, formGroupName.getRawValue(), index);
+    if (!index) {
+      index = 0;
     }
-  });
-}
 
-changeCity(event, inputField) {
-  const value = event.target.value; // Get the city value from the input
-
-  const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
-  buyersDetails?.controls?.forEach((element, i) => {
-    const formGroup = element as UntypedFormGroup;
-
-    // Get the country code for the current buyer
-    const countryCode = formGroup.get('country')?.value;
-
-    // If the country is not '91', update the city with the entered value
-    if (countryCode !== '91') {
-      buyersDetails.controls['city'].setValue(inputField); // Update the city field
-    }
-  });
-}
-
-
-
-
-changecountry(event, inputField) {
-  const value = inputField === 'country' ? event?.value : event.target.value;
-  const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
-
-  buyersDetails?.controls?.forEach((element, i) => {
-    const formGroup = element as UntypedFormGroup;
-
-    // Set the selected country value
-    formGroup.controls[inputField].setValue(value);
-
-    // Check if the selected country is not '91'
-    if ( value !== '91') {
-      // Set state code to '99' for foreign countries
-      formGroup.controls['state'].setValue('99');
-      formGroup.updateValueAndValidity();
-    } else if (inputField === 'country' && value === '91') {
-      // Optionally, you can clear the state if the country is set back to India
-      formGroup.controls['state'].setValue('91'); // Uncomment this line if you want to clear the state field
-      formGroup.controls['pin'].setValue('');
-    }
-  });
-}
-
-
-
-// calculate functions
-calculateIndexCost(index) {
-if (!index) {
-index = 0;
-}
-let assetDetails = (
-this.immovableForm.controls['assetDetails'] as UntypedFormArray
-).controls[index] as UntypedFormGroup;
-let selectedYear = moment(assetDetails.controls['sellDate'].value);
-let sellFinancialYear =
-selectedYear.get('month') > 2
-? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-: selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-let req = {
-cost: assetDetails.controls['purchaseCost'].value,
-// "purchaseOrImprovementFinancialYear": "2002-2003",
-assetType: 'PLOT_OF_LAND',
-buyDate: moment(assetDetails.controls['purchaseDate'].value).format(
-'YYYY-MM-DD'
-),
-sellDate: moment(assetDetails.controls['sellDate'].value).format(
-'YYYY-MM-DD'
-),
-sellFinancialYear: sellFinancialYear,
-};
-const param = `/calculate/indexed-cost`;
-this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-console.log('INDEX COST : ', res);
-if (res.data.capitalGainType) {
-if (res.data.capitalGainType === 'LONG') {
-assetDetails.controls['indexCostOfAcquisition'].setValue(
-res.data.costOfAcquisitionOrImprovement
-);
-} else {
-assetDetails.controls['indexCostOfAcquisition'].setValue(
-assetDetails.controls['purchaseCost'].value
-);
-}
-assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
-if (
-this.cgArrayElement.assetDetails &&
-this.cgArrayElement.assetDetails.length > 0
-) {
-console.log('in if', res.data.capitalGainType);
-Object.assign(
-this.cgArrayElement.assetDetails[this.currentCgIndex],
-assetDetails.getRawValue()
-);
-console.log(
-'updated assetDetails',
-this.cgArrayElement.assetDetails[this.currentCgIndex]
-);
-} else {
-console.log('in else');
-this.cgArrayElement.assetDetails.push(assetDetails.getRawValue());
-this.cgArrayElement.assetDetails[this.currentCgIndex].gainType =
-res.data.capitalGainType;
-console.log('gain type in else', this.cgArrayElement.assetDetails);
-}
-console.log('gain type', this.cgArrayElement.assetDetails);
-this.calculateCapitalGain(this.immovableForm, '', index);
-}
-});
-}
-
-calculateCapitalGainOnceCalled: boolean = false;
-calculateCapitalGain(formGroupName, val, index) {
-console.log(formGroupName, formGroupName.getRawValue(), index);
-if (!index) {
-index = 0;
-}
-
-if (
-formGroupName.controls['assetDetails'].controls[0].controls['sellValue']
-.valid &&
-formGroupName.controls['assetDetails'].controls[0].controls[
-'stampDutyValue'
-].valid
-)
-this.calculateFVOC(
-parseFloat(
-formGroupName.controls['assetDetails'].controls[0].controls[
-'stampDutyValue'
-].value
-),
-parseFloat(
-formGroupName.controls['assetDetails'].controls[0].controls[
-'sellValue'
-].value
-)
-);
+    if (
+      formGroupName.controls['assetDetails'].controls[0].controls['sellValue']
+        .valid &&
+      formGroupName.controls['assetDetails'].controls[0].controls[
+        'stampDutyValue'
+      ].valid
+    )
+      this.calculateFVOC(
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'stampDutyValue'
+          ].value
+        ),
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'sellValue'
+          ].value
+        )
+      );
 
     if (
       formGroupName.controls['assetDetails'].controls[0].controls['sellDate']
@@ -1726,7 +1648,7 @@ formGroupName.controls['assetDetails'].controls[0].controls[
     }
   }
 
-  calculateDeduction(index?, singleCg?) {
+  calculateDeduction(index, singleCg?) {
     if (this.deductionValidation(false)) {
       return;
     }

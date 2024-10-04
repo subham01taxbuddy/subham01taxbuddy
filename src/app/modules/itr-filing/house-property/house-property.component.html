@@ -1,11 +1,10 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
 <div class="page-wrapper" *ngIf="hpView === 'FORM'">
+
   <!-- main area -->
   <main>
+
     <div class="frameC">
       <div class="div">
         <div class="text-wrapper">House Property</div>
@@ -15,38 +14,19 @@
         <div class="div-2">
           <div class="div-3">
             <div class="contents-wrapper">
-              <div
-                [ngClass]="
-                  i === currentIndex ? 'contents' : 'contents-selected'
-                "
-                *ngFor="
-                  let house of Copy_ITR_JSON.houseProperties;
-                  let i = index
-                "
-              >
-                <div
-                  [ngClass]="
-                    i === currentIndex ? 'field-text' : 'field-text-selected'
-                  "
-                  (click)="markActive(i)"
-                >
-                  House Property {{ i + 1 }}
-                </div>
+              <div [ngClass]="i === currentIndex ? 'contents' : 'contents-selected'"
+                *ngFor="let house of Copy_ITR_JSON.houseProperties; let i = index">
+                <div [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">House
+                  Property {{ i+1 }}</div>
                 <div class="group" (click)="deleteHousingIncome(i)">
-                  <i
-                    class="fa fa-trash-o delbt"
-                    [ngClass]="
-                      i === currentIndex ? 'field-text' : 'field-text-selected'
-                    "
-                  ></i>
+                  <i class="fa fa-trash-o delbt"
+                    [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'"></i>
                 </div>
               </div>
             </div>
             <div class="contents-wrapper">
               <div class="field-text-wrapper">
-                <div class="field-text-2" (click)="markActive(-1)">
-                  + Add Another
-                </div>
+                <div class="field-text-2" (click)="markActive(-1)">+ Add Another</div>
               </div>
             </div>
           </div>
@@ -55,30 +35,17 @@
               <form [formGroup]="housePropertyForm">
                 <div class="div-4">
                   <div class="frame-wrapper-2A">
+
                     <div class="hdTxMnTp">
                       <div class="hdTxL">
-                        What is the category of ownership?<span class="redAst"
-                          >*</span
-                        >
+                        What is the category of ownership?<span class="redAst">*</span>
                       </div>
                       <div class="hdTxR">
-                        <mat-radio-group
-                          aria-label="Select an option"
-                          placeholder="Select Property Type"
-                          name="propertyType"
-                          formControlName="propertyType"
-                          (change)="
-                            changePropType(
-                              housePropertyForm.controls['propertyType'].value
-                            )
-                          "
-                          required
-                        >
-                          <mat-radio-button
-                            class="fntWgt"
-                            *ngFor="let propertyType of propertyTypeDropdown"
-                            [value]="propertyType.value"
-                            >{{ propertyType.label | titlecase }}
+                        <mat-radio-group aria-label="Select an option" placeholder="Select Property Type"
+                          name="propertyType" formControlName="propertyType"
+                          (change)="changePropType(housePropertyForm.controls['propertyType'].value)" required>
+                          <mat-radio-button class="fntWgt" *ngFor="let propertyType of propertyTypeDropdown"
+                            [value]="propertyType.value">{{ propertyType.label | titlecase }}
                           </mat-radio-button>
                         </mat-radio-group>
                       </div>
@@ -87,140 +54,73 @@
                     <div class="accordion" id="myAccordion">
                       <div class="accordion-item">
                         <h2 class="accordion-header accoHdclr" id="headingOne">
-                          <button
-                            id="accordBtn1"
-                            type="button"
-                            class="accordion-button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne"
-                          >
-                            {{ getPropertyTypeLabel() }}
-                          </button>
+                          <button id="accordBtn1" type="button" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne">
+                            {{ getPropertyTypeLabel()}} </button>
                         </h2>
-                        <div
-                          id="collapseOne"
-                          class="accordion-collapse collapse show"
-                          data-bs-parent="#myAccordion"
-                        >
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body">
+
                             <div class="surBx1">
-                              <div
-                                *ngIf="
-                                  housePropertyForm.controls['propertyType']
-                                    .value === 'LOP' ||
-                                  housePropertyForm.controls['propertyType']
-                                    .value === 'DLOP'
-                                "
-                              >
+
+                              <div *ngIf="housePropertyForm.controls['propertyType'].value ==='LOP' ||
+                               housePropertyForm.controls['propertyType'].value === 'DLOP'">
                                 <div class="hp2main">
-                                  <div class="hplft">
-                                    {{
-                                      housePropertyForm.controls["propertyType"]
-                                        .value === "LOP"
-                                        ? "Gross rent received / receivable / letable value"
-                                        : housePropertyForm.controls[
-                                            "propertyType"
-                                          ].value === "DLOP"
-                                        ? "Expected Rent Receivable"
-                                        : ""
-                                    }}
-                                    *
+                                  <div class="hplft">{{
+                                    housePropertyForm.controls["propertyType"]
+                                    .value === "LOP"
+                                    ? "Gross rent received / receivable / letable value"
+                                    : housePropertyForm.controls["propertyType"]
+                                    .value === "DLOP"
+                                    ? "Expected Rent Receivable"
+                                    : ""
+                                    }} *
                                   </div>
                                   <div class="hprgt">
                                     <mat-form-field appearance="outline">
-                                      <input
-                                        formControlName="annualRentReceived"
-                                        matInput
-                                        placeholder="{{
-                                          housePropertyForm.controls[
-                                            'propertyType'
-                                          ].value === 'LOP'
-                                            ? 'Gross rent received / receivable / letable value'
-                                            : housePropertyForm.controls[
-                                                'propertyType'
-                                              ].value === 'DLOP'
-                                            ? 'Expected Rent Receivable'
-                                            : ''
-                                        }}"
-                                        matTooltipClass="tab-tooltip"
-                                        matTooltip="{{
-                                          housePropertyForm.controls[
-                                            'propertyType'
-                                          ].value === 'LOP'
-                                            ? 'Gross rent received / receivable / letable value'
-                                            : housePropertyForm.controls[
-                                                'propertyType'
-                                              ].value === 'DLOP'
-                                            ? 'Expected Rent Receivable'
-                                            : ''
-                                        }}"
-                                        name="rentAmount"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        (blur)="calAnnualValue()"
-                                      />
+                                      <input formControlName="annualRentReceived" matInput placeholder="{{
+                                  housePropertyForm.controls['propertyType']
+                                    .value === 'LOP'
+                                    ? 'Gross rent received / receivable / letable value'
+                                    : housePropertyForm.controls['propertyType']
+                                        .value === 'DLOP'
+                                    ? 'Expected Rent Receivable'
+                                    : ''
+                              }}" matTooltipClass="tab-tooltip" matTooltip="{{
+                                  housePropertyForm.controls['propertyType']
+                                    .value === 'LOP'
+                                    ? 'Gross rent received / receivable / letable value'
+                                    : housePropertyForm.controls['propertyType']
+                                        .value === 'DLOP'
+                                    ? 'Expected Rent Receivable'
+                                    : ''
+                                }}" name="rentAmount" class="form-control" maxlength="11" digitsOnly
+                                        (blur)="calAnnualValue()" />
                                       <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'annualRentReceived'
-                                          ].hasError('pattern')
-                                        "
-                                      >
+                                        *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('pattern')">
                                         Enter positive amount without decimal.
                                       </mat-error>
                                       <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'annualRentReceived'
-                                          ].hasError('min')
-                                        "
-                                      >
+                                        *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('min')">
                                         Amount can not be 0.
                                       </mat-error>
                                       <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'annualRentReceived'
-                                          ].hasError('required')
-                                        "
-                                      >
+                                        *ngIf="housePropertyForm.controls['annualRentReceived'].hasError('required')">
                                         Gross Rent is required in LOP & DLOP
                                       </mat-error>
                                     </mat-form-field>
                                   </div>
                                 </div>
 
-                                <div
-                                  class="hp2main"
-                                  *ngIf="
-                                    housePropertyForm.controls['isCoOwners']
-                                      .value
-                                  "
-                                >
-                                  <div class="hplft">
-                                    Your share on rent received
-                                  </div>
+                                <div class="hp2main" *ngIf="housePropertyForm.controls['isCoOwners'].value">
+                                  <div class="hplft">Your share on rent received</div>
                                   <div class="hprgt">
                                     <mat-form-field appearance="outline">
-                                      <input
-                                        formControlName="rentPercentage"
-                                        matInput
-                                        currencyMask
-                                        placeholder="Your share of rent received"
-                                        name="rentPercentage"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        (blur)="calAnnualValue()"
-                                      />
+                                      <input formControlName="rentPercentage" matInput currencyMask
+                                        placeholder="Your share of rent received" name="rentPercentage"
+                                        class="form-control" maxlength="11" digitsOnly (blur)="calAnnualValue()" />
                                       <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'rentPercentage'
-                                          ].hasError('pattern')
-                                        "
-                                      >
+                                        *ngIf="housePropertyForm.controls['rentPercentage'].hasError('pattern')">
                                         Enter positive amount without decimal.
                                       </mat-error>
                                     </mat-form-field>
@@ -228,29 +128,13 @@
                                 </div>
 
                                 <div class="hp2main">
-                                  <div class="hplft">
-                                    Amount of Property Tax *
-                                  </div>
+                                  <div class="hplft">Amount of Property Tax *</div>
                                   <div class="hprgt">
                                     <mat-form-field appearance="outline">
-                                      <input
-                                        formControlName="propertyTax"
-                                        matInput
-                                        currencyMask
-                                        placeholder="Property tax paid"
-                                        name="propertyTax"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        (blur)="calAnnualValue()"
-                                      />
-                                      <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'propertyTax'
-                                          ].hasError('pattern')
-                                        "
-                                      >
+                                      <input formControlName="propertyTax" matInput currencyMask
+                                        placeholder="Property tax paid" name="propertyTax" class="form-control"
+                                        maxlength="11" digitsOnly (blur)="calAnnualValue()" />
+                                      <mat-error *ngIf="housePropertyForm.controls['propertyTax'].hasError('pattern')">
                                         Enter positive amount without decimal.
                                       </mat-error>
                                     </mat-form-field>
@@ -260,43 +144,18 @@
                                 <div class="hp2main">
                                   <div class="hplft">Annual value *</div>
                                   <div class="hprgt">
-                                    <mat-form-field
-                                      appearance="outline"
-                                      style="margin-bottom: 20px"
-                                    >
-                                      <input
-                                        formControlName="nav"
-                                        matInput
-                                        currencyMask
-                                        placeholder="Net Annual Value (NAV)"
-                                        name="nav"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        readonly
-                                      />
+                                    <mat-form-field appearance="outline" style="margin-bottom: 20px;">
+                                      <input formControlName="nav" matInput currencyMask
+                                        placeholder="Net Annual Value (NAV)" name="nav" class="form-control"
+                                        maxlength="11" digitsOnly readonly />
                                     </mat-form-field>
-                                    <mat-form-field
-                                      appearance="outline"
-                                      *ngIf="false"
-                                    >
-                                      <input
-                                        matInput
-                                        placeholder="Annual Value"
-                                        [(ngModel)]="annualValue"
-                                        [ngModelOptions]="{ standalone: true }"
-                                        matTooltipClass="tab-tooltip"
+                                    <mat-form-field appearance="outline" *ngIf="false">
+                                      <input matInput placeholder="Annual Value" [(ngModel)]="annualValue"
+                                        [ngModelOptions]="{ standalone: true }" matTooltipClass="tab-tooltip"
                                         matTooltip="Gross rent received - Tax paid on local authorities"
-                                        name="annualValue"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        disabled
-                                      />
-                                      <mat-hint
-                                        >Gross rent received - Tax paid on local
-                                        authorities</mat-hint
-                                      >
+                                        name="annualValue" class="form-control" maxlength="11" digitsOnly disabled />
+                                      <mat-hint>Gross rent received - Tax paid on local
+                                        authorities</mat-hint>
                                     </mat-form-field>
                                   </div>
                                 </div>
@@ -304,17 +163,9 @@
                                   <div class="hplft">30% Of Annual Value *</div>
                                   <div class="hprgt">
                                     <mat-form-field appearance="outline">
-                                      <input
-                                        matInput
-                                        placeholder="30% of Annual value"
-                                        [(ngModel)]="thirtyPctOfAnnualValue"
-                                        [ngModelOptions]="{ standalone: true }"
-                                        name="thirtyPctOfAV"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        disabled
-                                      />
+                                      <input matInput placeholder="30% of Annual value"
+                                        [(ngModel)]="thirtyPctOfAnnualValue" [ngModelOptions]="{ standalone: true }"
+                                        name="thirtyPctOfAV" class="form-control" maxlength="11" digitsOnly disabled />
                                       <mat-hint>30% of Annual value</mat-hint>
                                     </mat-form-field>
                                   </div>
@@ -324,116 +175,57 @@
                                   <div class="hplft">Standard deduction</div>
                                   <div class="hprgt">
                                     <mat-form-field appearance="outline">
-                                      <input
-                                        formControlName="standardDeduction"
-                                        matInput
-                                        currencyMask
-                                        placeholder="Standard deduction"
-                                        name="standardDeduction"
-                                        class="form-control"
-                                        maxlength="11"
-                                        digitsOnly
-                                        readonly
-                                      />
+                                      <input formControlName="standardDeduction" matInput currencyMask
+                                        placeholder="Standard deduction" name="standardDeduction" class="form-control"
+                                        maxlength="11" digitsOnly readonly />
                                     </mat-form-field>
                                   </div>
                                 </div>
                               </div>
 
                               <div class="hp2main">
-                                <div class="hplft">
-                                  Interest paid on housing loan * <br /><span
-                                    class="subTx"
-                                    >(If amount is more than 2Lakh, additional
-                                    deduction is available u/s 80EE/80EEA)</span
-                                  >
-                                </div>
+                                <div class="hplft">Interest paid on housing loan * <br><span class="subTx">(If amount is
+                                    more than 2Lakh, additional deduction is available u/s 80EE/80EEA)</span></div>
                                 <div class="hprgt">
-                                  <div
-                                    *ngIf="enableOnOverAllValue()"
-                                    style="padding-top: 20px"
-                                  >
+                                  <div *ngIf="enableOnOverAllValue()" style="padding-top: 20px">
                                     <mat-radio-group
-                                      [formControl]="
-                                        housePropertyForm.get(
-                                          'isEligibleFor80EE'
-                                        ) | formControlType
-                                      "
-                                      (change)="EeEaValueChanges()"
-                                    >
+                                      [formControl]="housePropertyForm.get('isEligibleFor80EE') | formControlType"
+                                      (change)="EeEaValueChanges()">
                                       <div class="customradiobtn bdr_btm">
-                                        <mat-radio-button
-                                          style="margin: 0"
-                                          [value]="''"
-                                          class="right-mrgn"
-                                          >None
+                                        <mat-radio-button style="margin: 0" [value]="''" class="right-mrgn">None
                                         </mat-radio-button>
                                       </div>
                                       <br />
                                       <div class="customradiobtn bdr_btm">
-                                        <mat-radio-button
-                                          style="margin: 0"
-                                          [value]="'80EE'"
-                                          class="right-mrgn"
-                                          [disabled]="
-                                            EEStatus || jsonAmt80ee > 50000
-                                          "
-                                          >Interest on loan taken for
-                                          residential house property (80EE)
+                                        <mat-radio-button style="margin: 0" [value]="'80EE'" class="right-mrgn"
+                                          [disabled]="EEStatus || jsonAmt80ee > 50000">Interest on loan taken for
+                                          residential house
+                                          property (80EE)
                                         </mat-radio-button>
                                       </div>
                                       <br />
                                       <div class="customradiobtn">
-                                        <mat-radio-button
-                                          style="margin: 0"
-                                          [value]="'80EEA'"
-                                          class="right-mrgn"
-                                          [disabled]="
-                                            EAStatus || jsonAmt80eea > 150000
-                                          "
-                                          >Deduction in respect of interest on
-                                          loan taken for certain house property
+                                        <mat-radio-button style="margin: 0" [value]="'80EEA'" class="right-mrgn"
+                                          [disabled]="EAStatus  || jsonAmt80eea > 150000">Deduction in respect of
+                                          interest on loan taken
+                                          for certain house property
                                           (80EEA)
                                         </mat-radio-button>
                                       </div>
                                     </mat-radio-group>
                                   </div>
-                                  <mat-form-field
-                                    appearance="outline"
-                                    style="margin-bottom: 20px"
-                                  >
-                                    <input
-                                      formControlName="interestAmount"
-                                      matInput
-                                      currencyMask
-                                      placeholder="Interest paid during the year"
-                                      name="interestAmount"
-                                      class="form-control"
-                                      maxlength="11"
-                                      digitsOnly
-                                      (blur)="calAnnualValue()"
-                                      (input)="calculateInterestOrDeduction()"
-                                    />
-                                    <mat-hint
-                                      >Interest paid during the year</mat-hint
-                                    >
+                                  <mat-form-field appearance="outline" style="margin-bottom: 20px;">
+                                    <input formControlName="interestAmount" matInput currencyMask
+                                      placeholder="Interest paid during the year" name="interestAmount"
+                                      class="form-control" maxlength="11" digitsOnly (blur)="calAnnualValue()"
+                                      (input)="calculateInterestOrDeduction()" />
+                                    <mat-hint>Interest paid during the year</mat-hint>
                                   </mat-form-field>
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      formControlName="interest24bAmount"
-                                      matInput
-                                      currencyMask
-                                      placeholder="Interest calculated for the year"
-                                      name="interest24bAmount"
-                                      class="form-control"
-                                      maxlength="11"
-                                      readonly
-                                      digitsOnly
-                                    />
-                                    <mat-hint
-                                      >Interest calculated for the
-                                      year</mat-hint
-                                    >
+                                    <input formControlName="interest24bAmount" matInput currencyMask
+                                      placeholder="Interest calculated for the year" name="interest24bAmount"
+                                      class="form-control" maxlength="11" readonly digitsOnly />
+                                    <mat-hint>Interest calculated for the year</mat-hint>
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -442,15 +234,9 @@
                                 <div class="hplft">Eligible 80EE Amount</div>
                                 <div class="hprgt">
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      matInput
-                                      placeholder="Eligible 80EE Amount"
-                                      formControlName="eligible80EEAmount"
-                                      name="eligible80EEAmount"
-                                      class="form-control"
-                                      digitsOnly
-                                      readonly
-                                    />
+                                    <input matInput placeholder="Eligible 80EE Amount"
+                                      formControlName="eligible80EEAmount" name="eligible80EEAmount"
+                                      class="form-control" digitsOnly readonly />
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -459,170 +245,89 @@
                                 <div class="hplft">Eligible 80EEA Amount</div>
                                 <div class="hprgt">
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      matInput
-                                      placeholder="Eligible 80EEA Amount"
-                                      formControlName="eligible80EEAAmount"
-                                      name="eligible80EEAAmount"
-                                      class="form-control"
-                                      digitsOnly
-                                      readonly
-                                    />
+                                    <input matInput placeholder="Eligible 80EEA Amount"
+                                      formControlName="eligible80EEAAmount" name="eligible80EEAAmount"
+                                      class="form-control" digitsOnly readonly />
                                   </mat-form-field>
                                 </div>
                               </div>
 
                               <div class="hp2main">
-                                <div class="hplft">
-                                  Arreas/Unrealised Rent received during year is
-                                  less than 30% *
-                                </div>
+                                <div class="hplft">Arreas/Unrealised Rent received during year is less than 30% *</div>
                                 <div class="hprgt">
-                                  <mat-form-field
-                                    appearance="outline"
-                                    style="margin-bottom: 20px"
-                                  >
-                                    <input
-                                      matInput
-                                      placeholder="total arrears amount"
-                                      formControlName="totalArrearsUnrealizedRentReceived"
-                                      name="totalArrearsAmount"
-                                      class="form-control"
-                                      maxlength="11"
-                                      digitsOnly
-                                      (blur)="calculateArrears30()"
-                                    />
+                                  <mat-form-field appearance="outline" style="margin-bottom: 20px;">
+                                    <input matInput placeholder="total arrears amount"
+                                      formControlName="totalArrearsUnrealizedRentReceived" name="totalArrearsAmount"
+                                      class="form-control" maxlength="11" digitsOnly (blur)="calculateArrears30()" />
                                     <mat-hint>Arrears Amount</mat-hint>
                                   </mat-form-field>
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      matInput
-                                      placeholder="Arrears Amount after 30% deduction"
-                                      formControlName="arrearsUnrealizedRentReceived"
-                                      name="thirtyPctOfTAA"
-                                      class="form-control"
-                                      maxlength="11"
-                                      digitsOnly
-                                    />
-                                    <mat-hint
-                                      >30% of Total Arrears Amount</mat-hint
-                                    >
+                                    <input matInput placeholder="Arrears Amount after 30% deduction"
+                                      formControlName="arrearsUnrealizedRentReceived" name="thirtyPctOfTAA"
+                                      class="form-control" maxlength="11" digitsOnly />
+                                    <mat-hint>30% of Total Arrears Amount</mat-hint>
                                   </mat-form-field>
                                 </div>
                               </div>
                               <div class="hp2main hglt" *ngIf="false">
-                                <div class="hplft">
-                                  Net Taxable Income from this House Property
-                                </div>
+                                <div class="hplft">Net Taxable Income from this House Property</div>
                                 <div class="hprgt">
-                                  <input
-                                    type="text"
-                                    placeholder="₹56,000"
-                                    class="form-control hgltfrm"
-                                  />
+                                  <input type="text" placeholder="₹56,000" class="form-control hgltfrm">
                                 </div>
                               </div>
                             </div>
 
                             <div class="surBx1">
+
                               <div class="hp2main">
-                                <div class="hplft">
-                                  Principal on housing loan *
-                                </div>
+                                <div class="hplft">Principal on housing loan * </div>
                                 <div class="hprgt">
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      matTooltip="Principal amount repaid during the year"
-                                      matTooltipClass="tab-tooltip"
-                                      matTooltipPosition="above"
-                                      formControlName="principalAmount"
-                                      class="form-control"
-                                      matInput
+                                    <input matTooltip="Principal amount repaid during the year"
+                                      matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                      formControlName="principalAmount" class="form-control" matInput
                                       placeholder="Principal amount repaid during the year"
-                                      name="Total principle amount"
-                                      maxlength="14"
-                                      digitsOnly
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm
-                                          .get('principalAmount')
-                                          .hasError('pattern')
-                                      "
-                                    >
+                                      name="Total principle amount" maxlength="14" digitsOnly />
+                                    <mat-error *ngIf="housePropertyForm.get('principalAmount').hasError('pattern')">
                                       Enter positive number without decimal.
                                     </mat-error>
                                   </mat-form-field>
                                 </div>
                               </div>
+
                             </div>
+
                           </div>
                         </div>
                       </div>
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="heading2">
-                          <button
-                            id="accordBtn2"
-                            type="button"
-                            class="accordion-button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapse2"
-                          >
-                            Property Address
-                          </button>
+                          <button id="accordBtn2" type="button" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse2">Property Address</button>
+
                         </h2>
-                        <div
-                          id="collapse2"
-                          class="accordion-collapse collapse show"
-                          data-bs-parent="#myAccordion"
-                        >
+                        <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body">
                             <div class="div-5">
-                              <div
-                                class="div-6"
-                                *ngIf="
-                                  housePropertyForm.controls['propertyType']
-                                    .value === 'SOP' &&
-                                  currentIndex === firstSOPIndex
-                                "
-                              >
-                                <input
-                                  type="checkbox"
+                              <div class="div-6"
+                                *ngIf="housePropertyForm.controls['propertyType'].value === 'SOP' && currentIndex === firstSOPIndex">
+                                <input type="checkbox"
                                   class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                  color="primary"
-                                  [ngModelOptions]="{ standalone: true }"
-                                  (change)="toggleAddress()"
-                                  [(ngModel)]="usePersonalAddress"
-                                /><span class="span"
-                                  >Use same address as profile</span
-                                >
+                                  color="primary" [ngModelOptions]="{ standalone: true }" (change)="toggleAddress()"
+                                  [(ngModel)]="usePersonalAddress" /><span class="span">Use same address as
+                                  profile</span>
                               </div>
-
                               <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Address line 1 </span>
-                                    <span class="text-wrapper-2">*</span>
+                                    <span class="span">Address line 1 </span> <span class="text-wrapper-2">*</span>
                                   </div>
 
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder="Address of Property"
-                                      name="address"
-                                      class="form-control inpplac"
-                                      formControlName="address"
-                                      style="line-height: 21px"
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm.controls[
-                                          'address'
-                                        ].hasError('required')
-                                      "
-                                    >
+                                    <input type="text" trim matInput placeholder="Address of Property" name="address"
+                                      class="form-control inpplac" formControlName="address"
+                                      style="line-height: 21px" />
+                                    <mat-error *ngIf="housePropertyForm.controls['address'].hasError('required')">
                                       Enter address of property
                                     </mat-error>
                                   </mat-form-field>
@@ -632,152 +337,66 @@
                               <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">{{ zipCodeLabel }}</span>
-                                    <span class="text-wrapper-2">*</span>
+                                    <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder="{{ zipCodeLabel }}"
-                                      name="pinCode"
-                                      maxlength="8"
-                                      class="form-control inpplac"
-                                      formControlName="pinCode"
-                                      (blur)="getCityData()"
-                                      style="line-height: 21px"
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm.controls[
-                                          'pinCode'
-                                        ].hasError('required')
-                                      "
-                                    >
-                                      Enter {{ zipCodeLabel }}
+                                    <input type="text" trim matInput placeholder="Pin Code" name="pinCode"
+                                      class="form-control inpplac" formControlName="pinCode" (blur)="getCityData()"
+                                      style="line-height: 21px" />
+                                    <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('required')">
+                                      Enter pincode
                                     </mat-error>
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm.controls[
-                                          'pinCode'
-                                        ].hasError('pattern')
-                                      "
-                                    >
+                                    <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('pattern')">
                                       Enter valid pin
                                     </mat-error>
                                   </mat-form-field>
                                 </div>
-
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">City </span>
-                                    <span class="text-wrapper-2">*</span>
+                                    <span class="span">City </span> <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder="Town/City"
-                                      name="city"
-                                      class="form-control inpplac"
-                                      formControlName="city"
-                                      style="line-height: 21px"
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm.controls[
-                                          'city'
-                                        ].hasError('required')
-                                      "
-                                    >
+                                    <input type="text" trim matInput placeholder="Town/City" name="city"
+                                      class="form-control inpplac" formControlName="city" style="line-height: 21px" />
+                                    <mat-error *ngIf="housePropertyForm.controls['city'].hasError('required')">
                                       Enter town/city
                                     </mat-error>
-                                    <mat-error
-                                      *ngIf="
-                                        housePropertyForm.controls[
-                                          'city'
-                                        ].hasError('pattern')
-                                      "
-                                    >
-                                      Enter character only.</mat-error
-                                    >
+                                    <mat-error *ngIf="housePropertyForm.controls['city'].hasError('pattern')">
+                                      Enter character only.</mat-error>
                                   </mat-form-field>
                                 </div>
                               </div>
-
                               <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">State </span>
-                                    <span class="text-wrapper-2">*</span>
+                                    <span class="span">State </span> <span class="text-wrapper-2">*</span>
                                     <mat-form-field appearance="outline">
-                                      <mat-select
-                                        placeholder="Select state"
-                                        name="state"
-                                        formControlName="state"
-                                        style="line-height: 21px"
-                                        class="form-control inpplac"
-                                      >
-                                        <mat-option
-                                          *ngFor="let state of stateDropdown"
-                                          [value]="state.stateCode"
-                                        >
+                                      <mat-select placeholder="Select state" name="state" formControlName="state"
+                                        style="line-height: 21px" class="form-control inpplac">
+                                        <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                           {{ state.stateName | titlecase }}
                                         </mat-option>
                                       </mat-select>
-                                      <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'state'
-                                          ].hasError('required')
-                                        "
-                                      >
+                                      <mat-error *ngIf="housePropertyForm.controls['state'].hasError('required')">
                                         Select the state
                                       </mat-error>
                                     </mat-form-field>
                                   </div>
                                 </div>
-
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Country</span>
-                                    <span class="text-wrapper-2">*</span>
+                                    <span class="span">Country </span> <span class="text-wrapper-2">*</span>
                                     <mat-form-field appearance="outline">
-                                      <mat-select
-                                        name="country"
-                                        placeholder="Select country"
-                                        class="form-control inpplac"
-                                        formControlName="country"
-                                        style="line-height: 21px"
-                                        (selectionChange)="
-                                          changeCountry($event.value)
-                                        "
-                                        (selectionChange)="
-                                          changeCountryClear($event.value)
-                                        "
-                                      >
-                                        <mat-option
-                                          *ngFor="
-                                            let country of countryDropdown
-                                          "
-                                          [value]="country.countryCode"
-                                        >
-                                          {{ country.countryName | titlecase }}
-                                        </mat-option>
+                                      <mat-select name="country" class="form-control inpplac" formControlName="country"
+                                        style="line-height: 21px">
+                                        <mat-option value="91"> India </mat-option>
                                       </mat-select>
-                                      <mat-error
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'country'
-                                          ].hasError('required')
-                                        "
-                                      >
-                                        Select the country
+                                      <mat-error *ngIf="housePropertyForm.controls['country'].hasError('required')">
+                                        select the country
                                       </mat-error>
                                     </mat-form-field>
                                   </div>
+
                                 </div>
                               </div>
                             </div>
@@ -786,46 +405,23 @@
                       </div>
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="heading3">
-                          <button
-                            id="accordBtn3"
-                            type="button"
-                            class="accordion-button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapse3"
-                          >
-                            Co-ownership Details
-                          </button>
+                          <button id="accordBtn3" type="button" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse3">Co-ownership Details</button>
+
                         </h2>
-                        <div
-                          id="collapse3"
-                          class="accordion-collapse collapse show"
-                          data-bs-parent="#myAccordion"
-                        >
+                        <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body">
+
                             <div class="hdTxMnBt">
                               <div class="hdTxL">
-                                Is the Property Jointly Owned?<span
-                                  class="redAst"
-                                  >*</span
-                                >
+                                Is the Property Jointly Owned?<span class="redAst">*</span>
                               </div>
                               <div class="hdTxR">
-                                <mat-radio-group
-                                  name="isCoOwners"
-                                  (change)="haveCoOwners()"
-                                  formControlName="isCoOwners"
-                                >
-                                  <mat-radio-button
-                                    [value]="true"
-                                    style="margin-left: 0px"
-                                    labelPosition="before"
-                                    >Yes </mat-radio-button
-                                  >&nbsp;&nbsp;&nbsp;
-                                  <mat-radio-button
-                                    [value]="false"
-                                    labelPosition="before"
-                                    >No</mat-radio-button
-                                  >
+                                <mat-radio-group name="isCoOwners" (change)="haveCoOwners()"
+                                  formControlName="isCoOwners">
+                                  <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
+                                  </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                                  <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
                                 </mat-radio-group>
                               </div>
                             </div>
@@ -836,65 +432,27 @@
                               </div>
                               <div class="hdTxR">
                                 <div class="flex share-view">
-                                  <input
-                                    class="number-view"
-                                    [value]="getUserSharePercent()"
-                                    readonly
-                                    disabled
-                                  />
-                                  <input
-                                    class="percent-view"
-                                    value="%"
-                                    readonly
-                                    disabled
-                                  />
+                                  <input class="number-view" [value]="getUserSharePercent()" readonly disabled />
+                                  <input class="percent-view" value="%" readonly disabled />
                                 </div>
                               </div>
+
                             </div>
 
-                            <div
-                              formArrayName="coOwners"
-                              *ngIf="
-                                housePropertyForm.controls['isCoOwners'].value
-                              "
-                            >
-                              <div
-                                class="hp4main1"
-                                *ngFor="
-                                  let coOwn of getCoOwnersArray.controls;
-                                  let i = index
-                                "
-                                [formGroupName]="i"
-                              >
+                            <div formArrayName="coOwners" *ngIf="housePropertyForm.controls['isCoOwners'].value">
+                              <div class="hp4main1" *ngFor="let coOwn of getCoOwnersArray.controls; let i = index"
+                                [formGroupName]="i">
+
                                 <div class="hp4-2">
                                   <div class="field">
                                     <div class="field-label">
-                                      <span class="span"
-                                        >Name of co-owner
-                                      </span>
-                                      <span class="redAst">*</span>
+                                      <span class="span">Name of co-owner </span> <span class="redAst">*</span>
                                     </div>
 
-                                    <mat-form-field
-                                      class="input-field-width"
-                                      appearance="outline"
-                                    >
-                                      <input
-                                        matInput
-                                        class="form-control gry"
-                                        name="coOwn[i]"
-                                        formControlName="name"
-                                        pattern="[a-zA-Z ]*"
-                                        required
-                                        maxlength="40"
-                                        type="text"
-                                        trim
-                                      />
-                                      <mat-error
-                                        *ngIf="
-                                          coOwn.get('name').hasError('pattern')
-                                        "
-                                      >
+                                    <mat-form-field class="input-field-width" appearance="outline">
+                                      <input matInput class="form-control gry" name="coOwn[i]" formControlName="name"
+                                        pattern="[a-zA-Z ]*" required maxlength="40" type="text" trim />
+                                      <mat-error *ngIf="coOwn.get('name').hasError('pattern')">
                                         Enter valid name.
                                       </mat-error>
                                     </mat-form-field>
@@ -904,44 +462,18 @@
                                 <div class="hp4-3">
                                   <div class="field">
                                     <div class="field-label">
-                                      <span class="span">Co-owner’s PAN </span
-                                      ><span class="redAst">*</span>
+                                      <span class="span">Co-owner’s PAN </span><span class="redAst">*</span>
                                     </div>
 
-                                    <mat-form-field
-                                      appearance="outline"
-                                      class="input-field-width"
-                                    >
-                                      <input
-                                        matInput
-                                        class="form-control gry"
-                                        name="coOwn[i]"
+                                    <mat-form-field appearance="outline" class="input-field-width">
+                                      <input matInput class="form-control gry" name="coOwn[i]"
                                         matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                                        matTooltipClass="tab-tooltip"
-                                        matTooltipPosition="above"
-                                        formControlName="panNumber"
-                                        maxlength="10"
-                                        type="text"
-                                        trim
-                                        [class.invalid]="
-                                          isduplicatePAN(i, 'coOwners')
-                                        "
-                                        upperCase
-                                        [matTooltip]="
-                                          isduplicatePAN(i, 'coOwners')
-                                            ? 'Duplicate PAN Number'
-                                            : ''
-                                        "
-                                        matTooltipPosition="above"
-                                        matTooltipClass="error-tooltip"
-                                      />
-                                      <mat-error
-                                        *ngIf="
-                                          coOwn
-                                            .get('panNumber')
-                                            .hasError('pattern')
-                                        "
-                                      >
+                                        matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                        formControlName="panNumber" maxlength="10" type="text" trim
+                                        [class.invalid]="isduplicatePAN(i, 'coOwners')" upperCase
+                                        [matTooltip]="isduplicatePAN(i, 'coOwners') ? 'Duplicate PAN Number' : ''"
+                                        matTooltipPosition="above" matTooltipClass="error-tooltip" />
+                                      <mat-error *ngIf="coOwn.get('panNumber').hasError('pattern')">
                                         Enter valid PAN.
                                       </mat-error>
                                     </mat-form-field>
@@ -951,32 +483,16 @@
                                 <div class="hp4-3">
                                   <div class="field">
                                     <div class="field-label">
-                                      <span class="span">Their % Share </span>
-                                      <span class="redAst">*</span>
+                                      <span class="span">Their % Share </span> <span class="redAst">*</span>
                                     </div>
-                                    <mat-form-field
-                                      appearance="outline"
-                                      class="input-field-width"
-                                      style="width: 100% !important"
-                                    >
-                                      <input
-                                        matInput
-                                        class="form-control gry"
-                                        name="coOwn[i]"
-                                        formControlName="percentage"
-                                        maxlength="2"
-                                        digitsOnly
+                                    <mat-form-field appearance="outline" class="input-field-width"
+                                      style="width: 100% !important">
+                                      <input matInput class="form-control gry" name="coOwn[i]"
+                                        formControlName="percentage" maxlength="2" digitsOnly
                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         onkeypress="event.charCode >= 48 && event.charCode <= 57"
-                                        (blur)="calPercentage()"
-                                      />
-                                      <mat-error
-                                        *ngIf="
-                                          coOwn
-                                            .get('percentage')
-                                            .hasError('pattern')
-                                        "
-                                      >
+                                        (blur)="calPercentage()" />
+                                      <mat-error *ngIf="coOwn.get('percentage').hasError('pattern')">
                                         Enter positive number without decimal.
                                       </mat-error>
                                     </mat-form-field>
@@ -986,95 +502,46 @@
                                 <div class="hp4-4">
                                   <div class="Bx4">
                                     <div class="Bx4L">
-                                      <button
-                                        type="button"
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'isCoOwners'
-                                          ].value
-                                        "
-                                        (click)="removeCoOwner(active)"
-                                      >
-                                        <i class="fa fa-trash-o delbt"></i>
+                                      <button type="button" *ngIf="housePropertyForm.controls['isCoOwners'].value"
+                                        (click)="removeCoOwner(active)"> <i class="fa fa-trash-o delbt"></i>
                                       </button>
                                     </div>
                                     <div class="Bx4R">
-                                      <button
-                                        type="button"
-                                        class="addAno"
-                                        *ngIf="
-                                          housePropertyForm.controls[
-                                            'isCoOwners'
-                                          ].value
-                                        "
-                                        (click)="addMoreCoOwner()"
-                                      >
-                                        + Add Another
-                                      </button>
+                                      <button type="button" class="addAno"
+                                        *ngIf="housePropertyForm.controls['isCoOwners'].value"
+                                        (click)="addMoreCoOwner()"> + Add Another </button>
                                     </div>
                                   </div>
                                 </div>
+
+
                               </div>
                             </div>
+
                           </div>
                         </div>
                       </div>
-                      <div
-                        class="accordion-item"
-                        *ngIf="
-                          housePropertyForm.controls['propertyType'].value ===
-                          'LOP'
-                        "
-                      >
+                      <div class="accordion-item" *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP'">
                         <h2 class="accordion-header" id="heading4">
-                          <button
-                            id="accordBtn4"
-                            type="button"
-                            class="accordion-button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapse4"
-                          >
-                            Tenant Details
-                          </button>
+                          <button id="accordBtn4" type="button" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse4">Tenant Details</button>
+
                         </h2>
-                        <div
-                          id="collapse4"
-                          class="accordion-collapse collapse show"
-                          data-bs-parent="#myAccordion"
-                        >
+                        <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                           <div class="card-body" formArrayName="tenant">
-                            <div
-                              class="hp4main1"
-                              *ngFor="
-                                let ten of getTenantArray.controls;
-                                let i = index
-                              "
-                              [formGroupName]="i"
-                            >
+
+                            <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
+                              [formGroupName]="i">
+
                               <div class="hp4-2">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Name of Tenant </span>
-                                    <span class="redAst">*</span>
+                                    <span class="span">Name of Tenant </span> <span class="redAst">*</span>
                                   </div>
 
-                                  <mat-form-field
-                                    class="input-field-width"
-                                    appearance="outline"
-                                  >
-                                    <input
-                                      matInput
-                                      name="ten[ii]"
-                                      formControlName="name"
-                                      required
-                                      type="text"
-                                      trim
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        ten.get('name').hasError('required')
-                                      "
-                                    >
+                                  <mat-form-field class="input-field-width" appearance="outline">
+                                    <input matInput name="ten[ii]" formControlName="name" required type="text" trim />
+                                    <mat-error *ngIf="ten.get('name').hasError('required')">
                                       Enter tenant name.
                                     </mat-error>
                                   </mat-form-field>
@@ -1087,40 +554,16 @@
                                     <span class="span">Tenant’s PAN </span>
                                   </div>
 
-                                  <mat-form-field
-                                    appearance="outline"
-                                    class="input-field-width"
-                                  >
-                                    <input
-                                      matInput
-                                      name="ten[i]"
+                                  <mat-form-field appearance="outline" class="input-field-width">
+                                    <input matInput name="ten[i]"
                                       matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                                      matTooltipClass="tab-tooltip"
-                                      matTooltipPosition="above"
-                                      formControlName="panNumber"
-                                      maxlength="10"
-                                      type="text"
-                                      trim
-                                      [class.invalid]="
-                                        isduplicatePAN(i, 'tenant')
-                                      "
-                                      upperCase
-                                      [matTooltip]="
-                                        isduplicatePAN(i, 'tenant')
-                                          ? 'Duplicate PAN Number'
-                                          : ''
-                                      "
-                                      matTooltipPosition="above"
-                                      matTooltipClass="error-tooltip"
-                                      [disabled]="
-                                        ten.get('tdsClaimed').value === true
-                                      "
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        ten.get('panNumber').hasError('pattern')
-                                      "
-                                    >
+                                      matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                      formControlName="panNumber" maxlength="10" type="text" trim
+                                      [class.invalid]="isduplicatePAN(i, 'tenant')" upperCase
+                                      [matTooltip]="isduplicatePAN(i, 'tenant') ? 'Duplicate PAN Number' : ''"
+                                      matTooltipPosition="above" matTooltipClass="error-tooltip"
+                                      [disabled]="ten.get('tdsClaimed').value === true" />
+                                    <mat-error *ngIf="ten.get('panNumber').hasError('pattern')">
                                       Enter valid PAN.
                                     </mat-error>
                                   </mat-form-field>
@@ -1130,20 +573,13 @@
                               <div class="hp4-3">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span"
-                                      >Whether TDS Credit is claimed
-                                    </span>
+                                    <span class="span">Whether TDS Credit is claimed </span>
                                   </div>
-                                  <div
-                                    class="custom-control custom-checkbox tenant-checkbox"
-                                  >
+                                  <div class="custom-control custom-checkbox tenant-checkbox">
                                     <input
                                       class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      name="ten[i]"
-                                      formControlName="tdsClaimed"
-                                      (change)="updateTenantForm(ten)"
-                                    />
+                                      type="checkbox" name="ten[i]" formControlName="tdsClaimed"
+                                      (change)="updateTenantForm(ten)" />
                                   </div>
                                 </div>
                               </div>
@@ -1154,60 +590,37 @@
                                     <span class="span">PAN/TAN of Tenant </span>
                                   </div>
 
-                                  <mat-form-field
-                                    appearance="outline"
-                                    class="input-field-width"
-                                  >
-                                    <input
-                                      matInput
-                                      name="ten[i]"
+                                  <mat-form-field appearance="outline" class="input-field-width">
+                                    <input matInput name="ten[i]"
                                       matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
-                                      matTooltipClass="tab-tooltip"
-                                      matTooltipPosition="above"
-                                      formControlName="tanNumber"
-                                      maxlength="10"
-                                      type="text"
-                                      trim
-                                      upperCase
-                                      matTooltipPosition="above"
-                                      matTooltipClass="error-tooltip"
-                                      [disabled]="
-                                        ten.get('tdsClaimed').value !== true
-                                      "
-                                    />
-                                    <mat-error
-                                      *ngIf="
-                                        ten.get('tanNumber').hasError('pattern')
-                                      "
-                                    >
+                                      matTooltipClass="tab-tooltip" matTooltipPosition="above"
+                                      formControlName="tanNumber" maxlength="10" type="text" trim upperCase
+                                      matTooltipPosition="above" matTooltipClass="error-tooltip"
+                                      [disabled]="ten.get('tdsClaimed').value !== true" />
+                                    <mat-error *ngIf="ten.get('tanNumber').hasError('pattern')">
                                       Enter valid TAN.
                                     </mat-error>
                                   </mat-form-field>
                                 </div>
                               </div>
 
+
                               <div class="hp4-4">
                                 <div class="Bx4">
                                   <div class="Bx4L">
-                                    <button
-                                      type="button"
-                                      (click)="removeTenant(i)"
-                                    >
-                                      <i class="fa fa-trash-o delbt"></i>
+                                    <button type="button" (click)="removeTenant(i)"> <i class="fa fa-trash-o delbt"></i>
                                     </button>
                                   </div>
                                   <div class="Bx4R">
-                                    <button
-                                      type="button"
-                                      class="addAno"
-                                      (click)="addMoreTenants()"
-                                    >
-                                      + Add Another
+                                    <button type="button" class="addAno" (click)="addMoreTenants()"> + Add Another
                                     </button>
                                   </div>
                                 </div>
                               </div>
+
+
                             </div>
+
                           </div>
                         </div>
                       </div>
@@ -1220,11 +633,10 @@
                   <div class="lft-btn" (click)="goBack()">Back</div>
                 </div>
                 <div class="box-right">
-                  <div class="rght-btn" (click)="saveHpDetails(true)">
-                    Save & View Summary
-                  </div>
+                  <div class="rght-btn" (click)="saveHpDetails(true)">Save & View Summary</div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -1232,24 +644,18 @@
     </div>
   </main>
 
+
+
   <!-- right side summary -->
   <app-side-summary-panel type="houseProperty"></app-side-summary-panel>
-  <app-previous-summary-panel
-    type="houseProperty"
-    *ngIf="PREV_ITR_JSON"
-  ></app-previous-summary-panel>
+  <app-previous-summary-panel type="houseProperty" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
   <!-- right side summary ends-->
 </div>
 <!-- main area ends -->
 
 <div class="mrgArd btmSpc" *ngIf="hpView === 'TABLE'">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel
-      [expanded]="step === 0"
-      (opened)="setStep(0)"
-      hideToggle
-      class="hide-close"
-    >
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle class="hide-close">
       <mat-expansion-panel-header class="hp">
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
@@ -1267,38 +673,25 @@
             </button>
           </div>
 
-          <div
-            class=""
-            style="padding: 25px"
-            *ngFor="let house of ITR_JSON.houseProperties; let i = index"
-            hideToggle
-          >
-            <div
-              class="flex justify-between"
-              (click)="editHouseProperty(i)"
-              style="cursor: pointer"
-            >
+          <div class="" style="padding: 25px" *ngFor="let house of ITR_JSON.houseProperties; let i = index" hideToggle>
+            <div class="flex justify-between" (click)="editHouseProperty(i)" style="cursor: pointer">
               <!-- checkbox  -->
               <div class="">
                 <div class="custom-control custom-checkbox">
-                  <input
-                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                    type="checkbox"
-                    (click)="$event.stopPropagation()"
-                    [checked]="selectedIndexes.includes(i)"
-                    (click)="toggleSelectedIndex(i)"
-                  />
+                  <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                    type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                    (click)="toggleSelectedIndex(i)" />
                 </div>
                 <!-- title  -->
                 <div class="card__title">
                   {{
-                    house.propertyType === "SOP"
-                      ? "Self occupied"
-                      : house.propertyType === "LOP"
-                      ? "Let out"
-                      : house.propertyType === "DLOP"
-                      ? "Vacant"
-                      : ""
+                  house.propertyType === "SOP"
+                  ? "Self occupied"
+                  : house.propertyType === "LOP"
+                  ? "Let out"
+                  : house.propertyType === "DLOP"
+                  ? "Vacant"
+                  : ""
                   }}
                 </div>
               </div>
@@ -1315,11 +708,7 @@
             </div>
           </div>
           <div>
-            <button
-              class="btn"
-              style="cursor: pointer"
-              (click)="deleteHpDetails()"
-            >
+            <button class="btn" style="cursor: pointer" (click)="deleteHpDetails()">
               Delete
             </button>
           </div>
@@ -1329,4 +718,5 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+
 </div>
