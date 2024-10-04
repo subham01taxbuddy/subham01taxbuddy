@@ -192,7 +192,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
-  countriesDropdown = AppConstants.countriesDropdown;
+  countryDropdown = AppConstants.countriesDropdown;
 
 
   // errors keys
