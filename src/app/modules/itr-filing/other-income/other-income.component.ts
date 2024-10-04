@@ -1,4 +1,4 @@
-import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
+import { FormGroup, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -253,7 +253,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter3: [null],
         quarter4: [null],
         quarter5: [null],
-      }),
+        quarter6:[null],
+      }, { validators: this.deductionValidator }),
       familyPension: new UntypedFormControl(null),
       famPenDeduction: [],
       totalFamPenDeduction: [],
@@ -509,6 +510,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         income: dividendIncomes.controls['quarter5'].value,
         date: '2023-03-20T18:30:00.000Z',
         quarter: 5,
+      },
+      {
+        income: dividendIncomes.controls['quarter6'].value,
+        date: '2023-03-20T18:30:00.000Z',
+        quarter: 6,
       },
     ];
 
@@ -866,6 +872,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
             );
             break;
           }
+          case 6: {
+            dividendIncomes.controls['quarter6'].setValue(
+              this.ITR_JSON.dividendIncomes[i].income
+            );
+            break;
+          }
         }
       }
     }
@@ -1037,6 +1049,24 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         : 0
     );
     return q1 + q2 + q3 + q4 + q5;
+  }
+
+  deductionValidator(formGroup: FormGroup) {
+    const q1 = Number(formGroup.controls['quarter1'].value || 0);
+    const q2 = Number(formGroup.controls['quarter2'].value || 0);
+    const q3 = Number(formGroup.controls['quarter3'].value || 0);
+    const q4 = Number(formGroup.controls['quarter4'].value || 0);
+    const q5 = Number(formGroup.controls['quarter5'].value || 0);
+    const totalDividendIncome = q1 + q2 + q3 + q4 + q5;
+
+    const quarter6 = Number(formGroup.controls['quarter6'].value || 0);
+
+    const maxDeductionAllowed = totalDividendIncome * 0.2;
+
+    if (quarter6 > maxDeductionAllowed) {
+      return { deductionExceedsLimit: true };
+    }
+    return null;
   }
 
   calFamPension() {

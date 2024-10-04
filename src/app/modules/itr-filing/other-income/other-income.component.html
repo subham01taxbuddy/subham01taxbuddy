@@ -112,6 +112,22 @@
                           </mat-form-field>
                         </div>
                       </div>
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div><span class="span">Deduction u/s 57(i)</span></div>
+                        </div>
+                        <div class="form-field">
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput name="quarter6" formControlName="quarter6" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                          <div *ngIf="otherIncomeFormGroup.get('dividendIncomes')?.errors?.['deductionExceedsLimit']">
+                            <span class="error-text" style="color: red;">
+                              Deduction cannot exceed 20% of the total Dividend Income.
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-field"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
