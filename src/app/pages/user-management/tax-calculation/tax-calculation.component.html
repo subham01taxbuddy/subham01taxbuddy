@@ -540,13 +540,19 @@
                   formControlName="us80ttattb"
                   matInput
                   type="number"
+                  [disabled]="taxCalculationForm.get('us80ttattb')?.disabled"
                 />
               </mat-form-field>
             </div>
             <div class="col-sm-5">
               <mat-label>80G/80GGC/80GGA</mat-label>
               <mat-form-field appearance="outline">
-                <input placeholder="80G/80GGC/80GGA" matInput type="number" />
+                <input
+                  placeholder="80G/80GGC/80GGA"
+                  matInput
+                  type="number"
+                  formControlName="us80g80ggc80gga"
+                />
               </mat-form-field>
             </div>
           </div>
