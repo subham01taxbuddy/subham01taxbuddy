@@ -454,6 +454,51 @@
                 />
               </mat-form-field>
             </div>
+
+            <!-- <div class="col-sm-5">
+              <mat-label>Parents </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Parents "
+                  formControlName="parents"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div> -->
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <!-- <div class="col-sm-5">
+              <mat-label>Parents </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Parents "
+                  formControlName="parents"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div> -->
+            <!-- Senior Citizen Toggle -->
+            <div class="col-sm-5">
+              <mat-label>Are Parents Senior Citizens?</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select
+                  formControlName="parents"
+                  placeholder="Select a Option"
+                >
+                  <mat-option [value]="true">Yes</mat-option>
+                  <mat-option [value]="false">No</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
           <!-- <div
             style="
@@ -533,7 +578,10 @@
             "
           >
             <div class="col-sm-5">
-              <mat-label>80TTA/TTB</mat-label>
+              <mat-label
+                >80TTA/TTB ( 80TTA/TTB must be smaller than Income from Other
+                Sources.)</mat-label
+              >
               <mat-form-field appearance="outline">
                 <input
                   placeholder="80TTA/TTB"
@@ -542,6 +590,15 @@
                   type="number"
                   [disabled]="taxCalculationForm.get('us80ttattb')?.disabled"
                 />
+                <!-- <mat-error
+                  *ngIf="
+                    taxCalculationForm
+                      .get('us80ttattb')
+                      ?.hasError('maxExceeded')
+                  "
+                >
+                  80TTA/TTB cannot exceed Income from Other Sources.
+                </mat-error> -->
               </mat-form-field>
             </div>
             <div class="col-sm-5">

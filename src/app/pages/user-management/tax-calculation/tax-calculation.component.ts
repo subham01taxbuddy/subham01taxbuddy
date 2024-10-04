@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaxDataService } from '../../../../app/tax-data.service';
 import { UserTaxDataService } from '../../../services/user-tax-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tax-calculation',
@@ -15,6 +16,7 @@ export class TaxCalculationComponent implements OnInit {
   taxCalculationForm: FormGroup;
   toggleLabel: string = 'OFF';
   apiUrl = 'https://uat-api.taxbuddy.com/itr/calculate/advance-tax';
+  isLoading = true; // Initialize loading state to true
 
   // Properties to hold response data
   advanceTaxQuarter1: any;
@@ -32,7 +34,8 @@ export class TaxCalculationComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private taxDataService: TaxDataService,
-    private userTaxDataService: UserTaxDataService
+    private userTaxDataService: UserTaxDataService,
+    private snackBar: MatSnackBar
   ) {
     // Initialize the form group
     this.taxCalculationForm = this.fb.group({
@@ -79,11 +82,25 @@ export class TaxCalculationComponent implements OnInit {
       deductionAt30: [''],
       us80g80ggc80gga: [''],
       us80ttattb: [{ value: '', disabled: true }], // Initially disabled
+      // parents: ['', Validators.required],
+      parents: [false],
     });
   }
 
   ngOnInit(): void {
     this.listenToFormChanges();
+
+    const panNumber = this.taxCalculationForm.get('panNumber')?.value || 0;
+    const assesseeName =
+      this.taxCalculationForm.get('assesseeName')?.value || 0;
+
+    console.log({ assesseeName, panNumber });
+
+    console.log({
+      assesseeName: this.taxCalculationForm.get('assesseeName')?.value,
+      panNumber: this.taxCalculationForm.get('panNumber')?.value,
+      userId: this.taxCalculationForm.get('userId')?.value,
+    });
 
     // Get userId from queryParams
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -92,21 +109,13 @@ export class TaxCalculationComponent implements OnInit {
 
       if (this.userId) {
         this.fetchTaxData(this.userId);
+        // this.fetchUserProfile(this.userId);
       }
     });
   }
 
   private listenToFormChanges(): void {
-    const controlsToWatch = [
-      'grossSalary',
-      'exemptionAllowedOldregime',
-      'exemptionAllowedNewregime',
-      'rentalIncome',
-      'deductionAt30',
-      'incomeFromOtherSources',
-      'nonSpeculative',
-      'speculative',
-    ];
+    const controlsToWatch = ['incomeFromOtherSources', 'us80ttattb'];
 
     // Subscribe to changes of the watched controls
     controlsToWatch.forEach((control) => {
@@ -117,35 +126,23 @@ export class TaxCalculationComponent implements OnInit {
   }
 
   private toggleUs80ttattb(): void {
-    const grossSalary = this.taxCalculationForm.get('grossSalary')?.value || 0;
-    const oldRegimeExemption =
-      this.taxCalculationForm.get('exemptionAllowedOldregime')?.value || 0;
-    const newRegimeExemption =
-      this.taxCalculationForm.get('exemptionAllowedNewregime')?.value || 0;
-    const rentalIncome =
-      this.taxCalculationForm.get('rentalIncome')?.value || 0;
-    const deductionAt30 =
-      this.taxCalculationForm.get('deductionAt30')?.value || 0;
     const incomeFromOtherSources =
       this.taxCalculationForm.get('incomeFromOtherSources')?.value || 0;
-    const nonSpeculative =
-      this.taxCalculationForm.get('nonSpeculative')?.value || 0;
-    const speculative = this.taxCalculationForm.get('speculative')?.value || 0;
     const us80ttattb = this.taxCalculationForm.get('us80ttattb')?.value || 0;
 
-    // Check if any of the required fields have values
-    const shouldEnable =
-      grossSalary > 0 ||
-      oldRegimeExemption > 0 ||
-      newRegimeExemption > 0 ||
-      rentalIncome > 0 ||
-      deductionAt30 > 0 ||
-      incomeFromOtherSources > 0 ||
-      nonSpeculative > 0 ||
-      speculative > 0;
-
-    if (shouldEnable) {
+    // Enable us80ttattb only if incomeFromOtherSources > 0
+    if (incomeFromOtherSources > 0) {
       this.taxCalculationForm.get('us80ttattb')?.enable();
+
+      // Ensure us80ttattb is not greater than incomeFromOtherSources
+      if (us80ttattb > incomeFromOtherSources) {
+        // Reset the value and display error message
+        this.taxCalculationForm.get('us80ttattb')?.setErrors({
+          maxExceeded: true,
+        });
+      } else {
+        this.taxCalculationForm.get('us80ttattb')?.setErrors(null);
+      }
     } else {
       this.taxCalculationForm.get('us80ttattb')?.disable();
       this.taxCalculationForm.get('us80ttattb')?.setValue('');
@@ -154,54 +151,96 @@ export class TaxCalculationComponent implements OnInit {
 
   private fetchTaxData(userId: number): void {
     const apiUrl = `${this.apiUrl}/${userId}`;
+    this.isLoading = true; // Start loading
 
     this.http.get(apiUrl).subscribe(
       (response: any) => {
-        const taxData = response.data;
-        this.taxCalculationForm.patchValue({
-          assesseeName: taxData.name,
-          panNumber: taxData.pan,
-          assessmentYear: taxData.assessmentYear,
-          dateOfBirth: taxData.dob,
-          grossSalary: taxData.grossSalary,
-          exemptionAllowedOldregime: taxData.oldRegimeSalaryExemption,
-          exemptionAllowedNewregime: taxData.newRegimeSalaryExemption,
-          rentalIncome: taxData.rentalIncome,
-          homeLoanInterest: taxData.homeLoanInterest,
-          anyOther: taxData.anyOther,
-          incomeFromOtherSources: taxData.otherSourceIncome,
-          nonSpeculative: taxData.pylNonSpeculativeIncome,
-          speculative: taxData.pylSpeculativeIncome,
-          // houseProperty: taxData.pylHp,
-          // businessNonSpeculative: taxData.pylLtcgl12A,
-          // businessSpeculative: taxData.pylStcg111A,
-          LTCG112A: taxData.pylLtcgl12A,
-          LTCGother112A: taxData.pylLtcgOtherThan112A,
-          STCG111A: taxData.pylStcgOtherThan111A,
-          TDS: taxData.tdsTcs,
-          AdvanceTaxIfAny: taxData.advanceTaxPaid,
-          deductionAt30: taxData.deduction,
-          ltcg112A: taxData.ltcg112A,
-          stcg111A: taxData.stcg111A,
-          ltcg112Other: taxData.ltcg112Other,
-          stcgAppRate: taxData.stcgAppRate,
-          // businessNonSpeculative: taxData.pylNonSpeculativeIncome,
-          // businessSpeculative: taxData.pylSpeculativeIncome,
-          selfOccupaid: taxData.sopHomeLoanInterest,
-          eightyCDD1: taxData.us80c,
-          selfAndFamily: taxData.us80dSelf,
-          eighty1B: taxData.us80ccd1b,
-          eightyCCD2: taxData.us80ccd2,
-          us80ttattb: taxData.us80ttattb,
-          us80g80ggc80gga: taxData.us80g80ggc80gga,
-          businessNonSpeculative: taxData.businessIncome,
-          businessSpeculative: taxData.speculativeBusinessIncome,
-          houseProperty: taxData.pylHp,
-          STCGotherthan111A: taxData.pylStcgOtherThan111A,
-        });
+        // Check if the response is successful
+        if (response.success) {
+          const taxData = response.data;
+          this.taxCalculationForm.patchValue({
+            assesseeName: taxData.name,
+            panNumber: taxData.pan,
+            assessmentYear: taxData.assessmentYear,
+            dateOfBirth: taxData.dob,
+            grossSalary: taxData.grossSalary,
+            exemptionAllowedOldregime: taxData.oldRegimeSalaryExemption,
+            exemptionAllowedNewregime: taxData.newRegimeSalaryExemption,
+            rentalIncome: taxData.rentalIncome,
+            homeLoanInterest: taxData.homeLoanInterest,
+            anyOther: taxData.anyOther,
+            incomeFromOtherSources: taxData.otherSourceIncome,
+            nonSpeculative: taxData.pylNonSpeculativeIncome,
+            speculative: taxData.pylSpeculativeIncome,
+            LTCG112A: taxData.pylLtcgl12A,
+            LTCGother112A: taxData.pylLtcgOtherThan112A,
+            STCG111A: taxData.pylStcgOtherThan111A,
+            TDS: taxData.tdsTcs,
+            AdvanceTaxIfAny: taxData.advanceTaxPaid,
+            deductionAt30: taxData.deduction,
+            ltcg112A: taxData.ltcg112A,
+            stcg111A: taxData.stcg111A,
+            ltcg112Other: taxData.ltcg112Other,
+            stcgAppRate: taxData.stcgAppRate,
+            selfOccupaid: taxData.sopHomeLoanInterest,
+            eightyCDD1: taxData.us80c,
+            selfAndFamily: taxData.us80dSelf,
+            eighty1B: taxData.us80ccd1b,
+            eightyCCD2: taxData.us80ccd2,
+            us80ttattb: taxData.us80ttattb,
+            us80g80ggc80gga: taxData.us80g80ggc80gga,
+            businessNonSpeculative: taxData.businessIncome,
+            businessSpeculative: taxData.speculativeBusinessIncome,
+            houseProperty: taxData.pylHp,
+            STCGotherthan111A: taxData.pylStcgOtherThan111A,
+            parents: taxData.us80dParent === 1 ? true : false,
+          });
+          this.isLoading = false; // Loading complete
+        } else {
+          // If the response is not successful, make the fallback API call
+          this.fetchUserProfile(userId);
+        }
       },
       (error) => {
         console.error('Error fetching tax data:', error);
+        // Attempt to fetch user profile as fallback
+        this.fetchUserProfile(userId);
+      }
+    );
+  }
+
+  private fetchUserProfile(userId: number): void {
+    const userProfileUrl = `https://uat-api.taxbuddy.com/user/profile/${userId}`;
+    this.isLoading = true; // Start loading
+
+    this.http.get(userProfileUrl).subscribe(
+      (response: any) => {
+        const profileData = response;
+        // Patch values correctly from profileData
+        console.log({ profileData });
+        this.taxCalculationForm.patchValue({
+          assesseeName: `${profileData.fName} ${profileData.lName || ''}`, // Combining first and last name
+          panNumber: profileData.panNumber, // Ensure this matches the form control name
+          dateOfBirth: profileData.dateOfBirth, // Use correct data fields
+          userId: profileData.userId, // You can also set userId if needed
+          // Optionally patch other fields if required
+        });
+
+        // Log assesseeName and panNumber after fetching user profile
+        console.log(
+          'Assessee Name:',
+          this.taxCalculationForm.get('assesseeName')?.value
+        );
+        console.log(
+          'PAN Number:',
+          this.taxCalculationForm.get('panNumber')?.value
+        );
+
+        this.isLoading = false; // Loading complete
+      },
+      (error) => {
+        console.error('Error fetching user profile:', error);
+        this.isLoading = false; // Loading complete even on error
       }
     );
   }
@@ -227,6 +266,10 @@ export class TaxCalculationComponent implements OnInit {
     const nonSpeculative =
       this.taxCalculationForm.get('nonSpeculative')?.value || 0;
     const speculative = this.taxCalculationForm.get('speculative')?.value || 0;
+    const us80ttattb = this.taxCalculationForm.get('us80ttattb')?.value || 0;
+    const us80dParent = this.taxCalculationForm.get('parents')?.value || 0;
+
+    console.log({ us80dParent });
 
     // Validate input values
     if (
@@ -243,6 +286,11 @@ export class TaxCalculationComponent implements OnInit {
       alert(
         'Rental Income must have a value if you have entered Deduction values.'
       );
+      return;
+    }
+
+    if (us80ttattb > incomeFromOtherSources) {
+      alert(' 80TTA/TTB cannot exceed Income from Other Sources.');
       return;
     }
 
@@ -345,6 +393,7 @@ export class TaxCalculationComponent implements OnInit {
       speculativeBusinessIncome:
         this.taxCalculationForm.get('businessSpeculative')?.value || 0,
       pylHp: this.taxCalculationForm.get('houseProperty')?.value || 0,
+      us80dParent: this.taxCalculationForm.get('parents')?.value ? 1 : 0,
     };
   }
 
