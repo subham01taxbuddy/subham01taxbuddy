@@ -83,7 +83,8 @@ export class TaxCalculationComponent implements OnInit {
       us80g80ggc80gga: [''],
       us80ttattb: [{ value: '', disabled: true }], // Initially disabled
       // parents: ['', Validators.required],
-      parents: [false],
+      parents: [''],
+      hasParentAboveSixty: [false],
     });
   }
 
@@ -193,7 +194,9 @@ export class TaxCalculationComponent implements OnInit {
             businessSpeculative: taxData.speculativeBusinessIncome,
             houseProperty: taxData.pylHp,
             STCGotherthan111A: taxData.pylStcgOtherThan111A,
-            parents: taxData.us80dParent === 1 ? true : false,
+            parents: taxData.us80dParent,
+            hasParentAboveSixty:
+              taxData.hasParentAboveSixty === 1 ? true : false,
           });
           this.isLoading = false; // Loading complete
         } else {
@@ -268,8 +271,13 @@ export class TaxCalculationComponent implements OnInit {
     const speculative = this.taxCalculationForm.get('speculative')?.value || 0;
     const us80ttattb = this.taxCalculationForm.get('us80ttattb')?.value || 0;
     const us80dParent = this.taxCalculationForm.get('parents')?.value || 0;
+    const hasParentAboveSixty = this.taxCalculationForm.get(
+      'hasParentAboveSixty'
+    )?.value
+      ? 1
+      : 0;
 
-    console.log({ us80dParent });
+    console.log({ hasParentAboveSixty });
 
     // Validate input values
     if (
@@ -393,7 +401,11 @@ export class TaxCalculationComponent implements OnInit {
       speculativeBusinessIncome:
         this.taxCalculationForm.get('businessSpeculative')?.value || 0,
       pylHp: this.taxCalculationForm.get('houseProperty')?.value || 0,
-      us80dParent: this.taxCalculationForm.get('parents')?.value ? 1 : 0,
+      us80dParent: this.taxCalculationForm.get('parents')?.value || 0,
+      hasParentAboveSixty: this.taxCalculationForm.get('hasParentAboveSixty')
+        ?.value
+        ? 1
+        : 0,
     };
   }
 
