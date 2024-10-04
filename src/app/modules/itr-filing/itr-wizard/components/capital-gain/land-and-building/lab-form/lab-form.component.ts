@@ -1300,7 +1300,7 @@ debugger
       this.clearFieldValidators(index, 'purchaseDate');
       this.clearFieldValidators(index, 'costOfNewAssets');
     }
-    this.calculateDeduction();
+    this.calculateDeduction(index);
   }
 
   onToggleCGAS(isChecked: boolean, index?): void {
@@ -1315,7 +1315,7 @@ debugger
       this.clearFieldValidators(index, 'ifscCode');
       this.clearFieldValidators(index, 'dateOfDeposit');
     }
-    this.calculateDeduction();
+    this.calculateDeduction(index);
   }
 
   setFieldValidators(index, controlName: string, validators: any[]): void {
@@ -1698,13 +1698,6 @@ debugger
             );
           });
 
-          if (singleCg === 'singleCg') {
-            this.calculateCapitalGain(
-              this.immovableForm,
-              '',
-              this.currentCgIndex
-            );
-          }
         }
       },
       (error) => {
