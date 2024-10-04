@@ -286,6 +286,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  
   changeCountry(selectedCountryCode: string): void {
     console.log(selectedCountryCode);
     // Check if the selected country is India (countryCode '91')
@@ -306,6 +307,7 @@ export class HousePropertyComponent implements OnInit {
         Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
       ]);
     } else {
+      this.housePropertyForm?.controls['state'].setValue('99');
       // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
       pinCodeControl?.setValidators([
         Validators.required,
@@ -314,6 +316,40 @@ export class HousePropertyComponent implements OnInit {
     }
     pinCodeControl?.updateValueAndValidity();
   }
+
+
+  changeCountryClear(selectedCountryCode: string): void {
+    console.log(selectedCountryCode);
+    // Check if the selected country is India (countryCode '91')
+    if (selectedCountryCode === '91') {
+      this.zipCodeLabel = 'PIN Code'; // For India
+      this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+    } else {
+      this.zipCodeLabel = 'ZIP Code'; // For other countries
+      this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+    }
+
+    // Update validators for the pinCode based on country
+    const pinCodeControl = this.housePropertyForm.get('pinCode');
+    if (selectedCountryCode === '91') {
+      // Validators for Indian PIN codes (numeric and exactly 6 digits)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+      ]);
+    } else {
+      this.housePropertyForm?.controls['state'].setValue('99');
+      // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+      ]);
+    }
+    pinCodeControl?.updateValueAndValidity();
+    this.housePropertyForm.get('pinCode').setValue(''); 
+    this.housePropertyForm.controls['city'].setValue('');
+  }
+
 
   getCityData() {
     let pinCode = this.housePropertyForm?.controls['pinCode'];
