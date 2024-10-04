@@ -34,14 +34,14 @@
                                                                         class="redAst">*</span></div>
                                                                 <mat-form-field appearance="outline"
                                                                     class="small-inp no-height">
-                                                                    <input appDateInput
+                                                                    <input
                                                                         (dateChange)="getGainType(selectedFormGroup);
                                                       calculateTotalCG(selectedFormGroup);
                                                       calMaxPurchaseDate(selectedFormGroup.get('sellDate').value,this.bondsForm,activeIndex)"
                                                                         [matDatepicker]="sellDate" [max]="maxDate"
                                                                         [min]="minDate" class="input-field"
                                                                         formControlName="sellDate" matInput
-                                                                        name="sellDate" placeholder="Sale Date"
+                                                                        name="sellDate" placeholder="Sale Date" readonly
                                                                         required />
                                                                     <mat-datepicker-toggle [for]="sellDate"
                                                                         matSuffix></mat-datepicker-toggle>
@@ -58,14 +58,14 @@
                                                                         class="redAst">*</span></div>
                                                                 <mat-form-field appearance="outline"
                                                                     class="small-inp no-height">
-                                                                    <input appDateInput
+                                                                    <input
                                                                         (dateChange)="getGainType(selectedFormGroup); calMinImproveDate(selectedFormGroup.get('purchaseDate').value, selectedFormGroup);"
                                                                         [matDatepicker]="purchaseDate"
                                                                         [max]="selectedFormGroup.get('sellDate').value"
                                                                         class="input-field"
                                                                         formControlName="purchaseDate" matInput
                                                                         name="purchaseDate" placeholder="Buy Date"
-                                                                         required />
+                                                                        readonly required />
                                                                     <mat-datepicker-toggle [for]="purchaseDate"
                                                                         matSuffix></mat-datepicker-toggle>
                                                                     <mat-datepicker #purchaseDate></mat-datepicker>
@@ -391,11 +391,11 @@
                                                       <div class="form-field">
                                                           <mat-form-field appearance="outline"
                                                               class="small-inp no-height">
-                                                              <input appDateInput [matDatepicker]="purchaseDate"
+                                                                <input [matDatepicker]="purchaseDate"
                                                                   [max]="maximumDate" class="input-field"
                                                                   formControlName="purchaseDate" matInput
                                                                   name="purchaseDate" (dateChange)="updateValidations(deductionForm);"
-                                                                  placeholder="Purchase date of new asset"  />
+                                                                    placeholder="Purchase date of new asset" readonly />
                                                               <mat-datepicker-toggle [for]="purchaseDate"
                                                                   matSuffix></mat-datepicker-toggle>
                                                               <mat-datepicker #purchaseDate></mat-datepicker>
@@ -496,7 +496,7 @@
                                                       <div class="form-field">
                                                           <mat-form-field appearance="outline"
                                                               class="small-inp no-height">
-                                                              <input appDateInput matInput formControlName="dateOfDeposit"
+                                                                <input matInput formControlName="dateOfDeposit"
                                                                   placeholder="Date of Deposit" class="input-field"
                                                                   [matDatepicker]="dateOfDeposit" [max]="depositDueDate" />
                                                               <mat-datepicker-toggle matSuffix

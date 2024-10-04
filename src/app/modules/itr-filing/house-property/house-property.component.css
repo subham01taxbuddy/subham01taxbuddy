@@ -6,19 +6,19 @@
   border: 1px solid black;
   border-radius: 4px;
 }
-.rgtBtn {
+.rgtBtn{
   border: 1px solid #ccc;
   top: -70px;
   z-index: 50;
   position: relative;
-  right: -30px !important;
+  right: -30px!important;
 }
 
-.spcTp {
-  margin-top: -65px;
+.spcTp{
+  margin-top:-65px;
 }
 
-.inl {
+.inl{
   margin-top: -21px;
   margin-left: 55px;
 }
@@ -29,34 +29,35 @@
   float: left;
   border: 1px solid #ff0000;
   padding: 10px;
-  color: #ff0000;
-  border-radius: 6px;
+  color:#ff0000;
+  border-radius:6px;
   margin: 12px 0px 0px 12px;
 }
 
-.conTx {
-  font-weight: bold;
-  margin-top: 5px;
+.conTx{
+font-weight:bold;
+margin-top:5px;
 }
 
-.icSp {
-  margin-top: 5px;
+.icSp{
+  margin-top:5px;
 }
 
-.desCon {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #0bb1cc;
-  margin-bottom: 10px;
+.desCon{
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #0bb1cc;
+  margin-bottom:10px;
 }
+
 
 .fntWgt {
-  font-weight: bold;
-  margin-right: 25px;
+  font-weight:bold;
+  margin-right:25px;
 }
 
 .mgnBtm {
-  margin-bottom: 20px;
+  margin-bottom: 20px;  
   background-color: #f7f7fa;
   padding: 5px;
   margin-left: 20px;
@@ -65,16 +66,17 @@
   margin-top: -30px;
 }
 
-.mgnTp {
-  margin-top: -30px;
+
+.mgnTp{
+  margin-top:-30px;
 }
 
-.titlBg {
-  font-size: 17px;
-  font-weight: 600;
+.titlBg{
+  font-size:17px;
+  font-weight:600;
 }
 
-.btmSpc {
+.btmSpc{
   margin-bottom: 150px;
 }
 
@@ -83,7 +85,7 @@ table {
   /* margin: 0 25px 25px 25px; */
 }
 
-.tableSps {
+.tableSps{
   margin: 0px 20px 0px 20px;
 }
 
@@ -96,15 +98,15 @@ table {
   align-self: center;
 }
 
-.table > :not(caption) > * > * {
+.table>:not(caption)>*>* {
   background-color: white !important;
 }
 
-.f-size {
-  font-size: 13px;
+.f-size{
+  font-size:13px;
 }
 
-.share-view {
+.share-view{
   width: 110px;
   text-align: right;
   border-width: thin;
@@ -112,12 +114,12 @@ table {
   border-radius: 3px;
   padding-left: 5px;
 }
-.number-view {
+.number-view{
   width: 75px;
   border-right-width: thin;
   border-right-color: darkgray;
 }
-.percent-view {
+.percent-view{
   padding-left: 5px;
   width: 28px;
   background: #f6f6f6;
