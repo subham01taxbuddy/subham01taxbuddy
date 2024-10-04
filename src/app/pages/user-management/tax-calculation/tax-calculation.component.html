@@ -444,7 +444,7 @@
               </mat-form-field>
             </div>
             <div class="col-sm-5">
-              <mat-label>Self and Family </mat-label>
+              <mat-label>80D - Self and Family </mat-label>
               <mat-form-field appearance="outline">
                 <input
                   placeholder="Self and Family "
@@ -475,8 +475,48 @@
               padding-bottom: 0;
             "
           >
-            <!-- <div class="col-sm-5">
-              <mat-label>Parents </mat-label>
+            <div class="col-sm-5" style="margin-bottom: 10px">
+              <div>
+                <p style="margin: 0">
+                  <span class="span" style="color: #9a9a9a; font-size: 14px"
+                    >Does any of your parents exceeds age of 60?
+                  </span>
+                </p>
+              </div>
+              <div>
+                <mat-radio-group
+                  class="radio_group"
+                  formControlName="hasParentAboveSixty"
+                  style="display: flex"
+                >
+                  <mat-radio-button
+                    type="radio"
+                    class="radio_input"
+                    [value]="true"
+                    style="color: #9a9a9a; font-size: 14px"
+                    >Yes</mat-radio-button
+                  >
+                  <mat-radio-button
+                    type="radio"
+                    class="radio_input"
+                    [value]="false"
+                    style="color: #9a9a9a; font-size: 14px"
+                    >No</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+              padding-bottom: 0;
+            "
+          >
+            <div class="col-sm-5">
+              <mat-label> 80D - Parents </mat-label>
               <mat-form-field appearance="outline">
                 <input
                   placeholder="Parents "
@@ -485,68 +525,7 @@
                   type="number"
                 />
               </mat-form-field>
-            </div> -->
-            <!-- Senior Citizen Toggle -->
-            <div class="col-sm-5">
-              <mat-label>Are Parents Senior Citizens?</mat-label>
-              <mat-form-field appearance="outline">
-                <mat-select
-                  formControlName="parents"
-                  placeholder="Select a Option"
-                >
-                  <mat-option [value]="true">Yes</mat-option>
-                  <mat-option [value]="false">No</mat-option>
-                </mat-select>
-              </mat-form-field>
             </div>
-          </div>
-          <!-- <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 30px 30px;
-              padding-bottom: 0;
-            "
-          >
-            <div class="col-sm-5">
-              <mat-label>80C/80CCC/80CCD(1) </mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  placeholder="80C/80CCC/80CCD(1) "
-                  formControlName="80C/80CCC/80CCD(1) "
-                  matInput
-                  type="number"
-                />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-5">
-              <mat-label>Self and Family </mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  placeholder=" - Self and Family "
-                  formControlName="selfAndFamily "
-                  matInput
-                  type="number"
-                />
-              </mat-form-field>
-            </div>
-          </div> -->
-          <!-- <div class="col-sm-12 switch-toggle">
-            <mat-slide-toggle
-              formControlName="toggleOption"
-              color="primary"
-              (change)="onToggleChange($event.checked)"
-            >
-              {{ toggleLabel }}
-            </mat-slide-toggle>
-          </div> -->
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 0px 30px;
-            "
-          >
             <div class="col-sm-5">
               <mat-label>80CCD(1B)</mat-label>
               <mat-form-field appearance="outline">
@@ -558,6 +537,15 @@
                 />
               </mat-form-field>
             </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
             <div class="col-sm-5">
               <mat-label>80CCD (2)</mat-label>
               <mat-form-field appearance="outline">
@@ -569,14 +557,6 @@
                 />
               </mat-form-field>
             </div>
-          </div>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 0px 30px;
-            "
-          >
             <div class="col-sm-5">
               <mat-label
                 >80TTA/TTB ( 80TTA/TTB must be smaller than Income from Other
@@ -590,17 +570,16 @@
                   type="number"
                   [disabled]="taxCalculationForm.get('us80ttattb')?.disabled"
                 />
-                <!-- <mat-error
-                  *ngIf="
-                    taxCalculationForm
-                      .get('us80ttattb')
-                      ?.hasError('maxExceeded')
-                  "
-                >
-                  80TTA/TTB cannot exceed Income from Other Sources.
-                </mat-error> -->
               </mat-form-field>
             </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0px 30px;
+            "
+          >
             <div class="col-sm-5">
               <mat-label>80G/80GGC/80GGA</mat-label>
               <mat-form-field appearance="outline">
@@ -612,8 +591,21 @@
                 />
               </mat-form-field>
             </div>
+            <div class="col-sm-5">
+              <mat-label
+                >Any Other (please enter deductible amount only)
+              </mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  placeholder="Any Other"
+                  formControlName="anyOther"
+                  matInput
+                  type="number"
+                />
+              </mat-form-field>
+            </div>
           </div>
-          <div
+          <!-- <div
             style="
               display: flex;
               justify-content: space-between;
@@ -633,7 +625,7 @@
                 />
               </mat-form-field>
             </div>
-          </div>
+          </div> -->
           <p style="color: red; margin-left: 30px">
             * Any other deductions will be considered only in Old Regime
           </p>
