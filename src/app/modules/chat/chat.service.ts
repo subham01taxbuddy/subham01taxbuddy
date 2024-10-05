@@ -567,6 +567,7 @@ export class ChatService {
     }
 
     this.chatClient = this.mqtt.connect(this.WEBSOCKET_URL, options);
+    this.chatClient.setMaxListeners(20);
 
     this.chatClient.on("connect",
       () => {
