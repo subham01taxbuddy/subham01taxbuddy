@@ -5,11 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaxDataService } from '../../../../app/tax-data.service';
 import { UserTaxDataService } from '../../../services/user-tax-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { debounceTime } from 'rxjs/operators';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-tax-calculation',
   templateUrl: './tax-calculation.component.html',
   styleUrls: ['./tax-calculation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaxCalculationComponent implements OnInit {
   userId: number | undefined;
@@ -116,14 +119,12 @@ export class TaxCalculationComponent implements OnInit {
   }
 
   private listenToFormChanges(): void {
-    const controlsToWatch = ['incomeFromOtherSources', 'us80ttattb'];
-
-    // Subscribe to changes of the watched controls
-    controlsToWatch.forEach((control) => {
-      this.taxCalculationForm.get(control)?.valueChanges.subscribe(() => {
+    this.taxCalculationForm
+      .get('incomeFromOtherSources')
+      ?.valueChanges.pipe(debounceTime(300)) // Adjust the debounce time as needed
+      .subscribe(() => {
         this.toggleUs80ttattb();
       });
-    });
   }
 
   private toggleUs80ttattb(): void {
@@ -131,22 +132,21 @@ export class TaxCalculationComponent implements OnInit {
       this.taxCalculationForm.get('incomeFromOtherSources')?.value || 0;
     const us80ttattb = this.taxCalculationForm.get('us80ttattb')?.value || 0;
 
-    // Enable us80ttattb only if incomeFromOtherSources > 0
     if (incomeFromOtherSources > 0) {
-      this.taxCalculationForm.get('us80ttattb')?.enable();
+      this.taxCalculationForm.get('us80ttattb')?.enable({ emitEvent: false }); // Avoid triggering value changes
 
-      // Ensure us80ttattb is not greater than incomeFromOtherSources
       if (us80ttattb > incomeFromOtherSources) {
-        // Reset the value and display error message
-        this.taxCalculationForm.get('us80ttattb')?.setErrors({
-          maxExceeded: true,
-        });
+        this.taxCalculationForm
+          .get('us80ttattb')
+          ?.setErrors({ maxExceeded: true });
       } else {
         this.taxCalculationForm.get('us80ttattb')?.setErrors(null);
       }
     } else {
-      this.taxCalculationForm.get('us80ttattb')?.disable();
-      this.taxCalculationForm.get('us80ttattb')?.setValue('');
+      this.taxCalculationForm.get('us80ttattb')?.disable({ emitEvent: false });
+      this.taxCalculationForm
+        .get('us80ttattb')
+        ?.setValue('', { emitEvent: false });
     }
   }
 
