@@ -195,8 +195,7 @@ export class TaxCalculationComponent implements OnInit {
             houseProperty: taxData.pylHp,
             STCGotherthan111A: taxData.pylStcgOtherThan111A,
             parents: taxData.us80dParent,
-            hasParentAboveSixty:
-              taxData.hasParentAboveSixty === 1 ? true : false,
+            hasParentAboveSixty: taxData.hasParentAboveSixty,
           });
           this.isLoading = false; // Loading complete
         } else {
@@ -403,9 +402,7 @@ export class TaxCalculationComponent implements OnInit {
       pylHp: this.taxCalculationForm.get('houseProperty')?.value || 0,
       us80dParent: this.taxCalculationForm.get('parents')?.value || 0,
       hasParentAboveSixty: this.taxCalculationForm.get('hasParentAboveSixty')
-        ?.value
-        ? 1
-        : 0,
+        ?.value,
     };
   }
 
