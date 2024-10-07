@@ -269,14 +269,11 @@ export class TaxCalculationComponent implements OnInit {
       this.taxCalculationForm.get('nonSpeculative')?.value || 0;
     const speculative = this.taxCalculationForm.get('speculative')?.value || 0;
     const us80ttattb = this.taxCalculationForm.get('us80ttattb')?.value || 0;
-    const us80dParent = this.taxCalculationForm.get('parents')?.value || 0;
-    const hasParentAboveSixty = this.taxCalculationForm.get(
-      'hasParentAboveSixty'
-    )?.value
-      ? 1
-      : 0;
-
-    console.log({ hasParentAboveSixty });
+    const ltcg112A = this.taxCalculationForm.get('ltcg112A')?.value || 0;
+    const ltcg112Other =
+      this.taxCalculationForm.get('ltcg112Other')?.value || 0;
+    const stcg111A = this.taxCalculationForm.get('stcg111A')?.value || 0;
+    const stcgAppRate = this.taxCalculationForm.get('stcgAppRate')?.value || 0;
 
     // Validate input values
     if (
@@ -309,7 +306,11 @@ export class TaxCalculationComponent implements OnInit {
       deductionAt30 === 0 &&
       incomeFromOtherSources === 0 &&
       nonSpeculative === 0 &&
-      speculative === 0
+      speculative === 0 &&
+      ltcg112A === 0 &&
+      ltcg112Other === 0 &&
+      stcg111A === 0 &&
+      stcgAppRate === 0
     ) {
       alert('At least one of the Income Source you have to enter.');
       return;
@@ -361,10 +362,10 @@ export class TaxCalculationComponent implements OnInit {
       ltcg112Other: this.taxCalculationForm.get('ltcg112Other')?.value || 0,
       stcg111A: this.taxCalculationForm.get('stcg111A')?.value || 0,
       stcgAppRate: this.taxCalculationForm.get('stcgAppRate')?.value || 0,
-      pylSpeculativeIncome:
-        this.taxCalculationForm.get('speculative')?.value || 0,
-      pylNonSpeculativeIncome:
-        this.taxCalculationForm.get('nonSpeculative')?.value || 0,
+      // pylSpeculativeIncome:
+      //   this.taxCalculationForm.get('speculative')?.value || 0,
+      // pylNonSpeculativeIncome:
+      //   this.taxCalculationForm.get('nonSpeculative')?.value || 0,
       // speculativeBusinessIncome:
       //   this.taxCalculationForm.get('speculative')?.value || 0,
       rentalIncome: this.taxCalculationForm.get('rentalIncome')?.value || 0,
@@ -395,14 +396,31 @@ export class TaxCalculationComponent implements OnInit {
       us80ttattb: this.taxCalculationForm.get('us80ttattb')?.value || 0,
       us80g80ggc80gga:
         this.taxCalculationForm.get('us80g80ggc80gga')?.value || 0,
-      businessIncome:
-        this.taxCalculationForm.get('businessNonSpeculative')?.value || 0,
-      speculativeBusinessIncome:
-        this.taxCalculationForm.get('businessSpeculative')?.value || 0,
+      // businessIncome:
+      //   this.taxCalculationForm.get('businessNonSpeculative')?.value || 0,
+      // speculativeBusinessIncome:
+      //   this.taxCalculationForm.get('businessSpeculative')?.value || 0,
       pylHp: this.taxCalculationForm.get('houseProperty')?.value || 0,
       us80dParent: this.taxCalculationForm.get('parents')?.value || 0,
       hasParentAboveSixty: this.taxCalculationForm.get('hasParentAboveSixty')
         ?.value,
+
+      // businessIncome:
+      // this.taxCalculationForm.get('businessNonSpeculative')?.value || 0,
+      // speculativeBusinessIncome:
+      // this.taxCalculationForm.get('businessSpeculative')?.value || 0,
+      // pylNonSpeculativeIncome:
+      // this.taxCalculationForm.get('nonSpeculative')?.value || 0,
+      // pylSpeculativeIncome:
+      // this.taxCalculationForm.get('speculative')?.value || 0,
+
+      businessIncome: this.taxCalculationForm.get('nonSpeculative')?.value || 0,
+      speculativeBusinessIncome:
+        this.taxCalculationForm.get('speculative')?.value || 0,
+      pylNonSpeculativeIncome:
+        this.taxCalculationForm.get('businessNonSpeculative')?.value || 0,
+      pylSpeculativeIncome:
+        this.taxCalculationForm.get('businessSpeculative')?.value || 0,
     };
   }
 
