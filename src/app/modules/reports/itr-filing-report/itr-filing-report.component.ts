@@ -861,7 +861,7 @@ export class ItrFilingReportComponent implements OnInit, OnDestroy {
     this.maxStartDate = this.endDate.value;
   }
 
-  // disableCheckbox(checkboxToDisable: FormControl, checkboxToEnable: FormControl) {
+  // disableCheckbox(checkboxToDisable: UntypedFormControl, checkboxToEnable: UntypedFormControl) {
   //   if (checkboxToDisable.value) {
   //     checkboxToEnable.disable();
   //   } else {

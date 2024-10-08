@@ -1,0 +1,344 @@
+<div class="floating expanded" [ngClass]="{'active': isFloatingActive,'inactive': !isFloatingActive}">
+  <div class="header expanded" [ngClass]="{'active': isHeaderActive, 'inactive': !isHeaderActive}">
+    <button (click)="goBack()">
+      <i class="fa" [ngClass]="{'fa-chevron-left': showChevronIcon}" aria-hidden="true"></i>
+      <i class="fa fa-times" aria-hidden="true" *ngIf="showCloseIcon" (click)="closeChat()"></i>
+    </button>
+    <button (click)="showFullScreen()">
+      <i class="fa fa-external-link" aria-hidden="true"></i>
+    </button>
+    <div>
+      <span class="file-type-option">{{ serviceType }}</span>
+    </div>
+
+  </div>
+
+  <div>
+    <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
+      <div class="avatar">
+        <div class="initial">{{image ? image:''}}</div>
+      </div>
+      <div class="agent-details">
+        <span class="username">{{ username }}</span>
+        <span class="status-dot"></span>
+        <div class="additional-details">
+          <span [ngClass]="(userCurrentStatus==='online')? 'user-status online' : 'user-status offline'"></span>
+          <span *ngIf="userCurrentStatus==='online'" class="experience ml-2">{{userCurrentStatus | titlecase}}</span>
+          <span *ngIf="userCurrentStatus==='offline'" class="experience ml-2">Last seen at
+            <b>{{userLastSeen}}</b></span>
+        </div>
+      </div>
+      <button *ngIf="isAssignedToBotVisible && showBotIcon" class="botstyle" [ngClass]="{'active': wideBot}"
+        (click)="sendBotMessage()">
+        <img src="assets/images2/bot_icon.png" alt="bot" title="Assign To Bot">
+      </button>
+      <!-- <button *ngIf="isAssignedToBotVisible" class="botstyle">
+      <span class="btn bot">Assign To Bot</span>
+    </button> -->
+    </div>
+    <div class="search" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
+      <input type="text" placeholder="Type here to search message" class="message-input" (keyup.enter)="search()"
+        [(ngModel)]="searchInput" autoResize>
+
+      <button type="button" (click)="search()" [disabled]="!searchInput.trim()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="message-input-container">
+    <div *ngIf="isInputDisabled" class="archived-message">
+      Note: You do not have access to send replies to this conversation
+    </div>
+    <div class="chat-messages main-panel" [ngClass]="{'active': chatMessages,'inactive': !chatMessages}"
+      (scroll)="onScrollToBottom()" #chatWindow>
+      <div infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true" [infiniteScrollUpDistance]="1"
+        [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector" (scrolledUp)="onScrollUp()">
+        <div *ngIf="isLoadingMoreMessages" class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Loading more messages...</p>
+        </div>
+        <ng-container *ngFor="let message of fetchedMessages">
+          <div [ngClass]="{
+              'system-messages': (message.sender === 'system' || message.sender==='metadata') && message.sender !== chat21UserId && displaySystemMessage(message) ,
+              'user-messages': message.sender === chat21UserId,
+              'agent-messages': message.sender !== 'system' && message.sender !== chat21UserId && message.sender !='metadata'
+             }">
+            <div class="senderFullName"
+              *ngIf="message.sender!='system' && message.sender!='metadata' && message.sender != chat21UserId">{{
+              message.senderFullName }}</div>
+            <div class="senderFullName cht21FullName" *ngIf="message.sender === chat21UserId">{{
+              message.senderFullName }}</div>
+
+
+
+            <div class="message-container">
+              <div class="message-and-timestamp">
+                <div
+                  *ngIf="(message.type === 'text' || message.sender==='metadata') && message.content && message.sender !== chat21UserId && displaySystemMessage(message)"
+                  [ngClass]="{'highlighted-message': message.sender !== 'metadata' && message.sender !== 'system' && !isBotSender(message.sender) && message.sender !== chat21UserId,'centered-message': message.sender === 'system'}"
+                  class="messaged html-type" [innerHTML]="getSanitizedHtml(message.content) | highlight: searchInput"
+                  style="white-space: pre-wrap;"></div>
+
+                <span *ngIf="message.type === 'text' && message.sender === chat21UserId"
+                  class="message text-type-user-messages" [innerHtml]="message.content | highlight: searchInput">
+                </span>
+
+                <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
+                  (loadeddata)="addMessageEvents()">
+                  <div *ngIf="parsedContent(message.content).metadata.templateId !='7'"
+                    [innerHTML]="getSanitizedHtml(parsedContent(message.content).message) | highlight: searchInput" class="html-type"></div>
+
+
+                  <ng-container *ngIf="parsedContent(message.content).metadata">
+
+                    <ng-container
+                      *ngIf="parsedContent(message.content).metadata.templateId === '6' && message.action === null">
+                      <ng-template #buttonTemplate>
+                        <button *ngFor="let button of parsedContent(message.content).metadata.payload"
+                          (click)="handleButtonEvent(button.message)" class="btn btn-primary"
+                          [attr.disabled]="isBotSender(message.sender)">{{button.title}}</button>
+                      </ng-template>
+                      <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+                    </ng-container>
+
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '7'">
+                      <div class="container">
+                        <div class="row">
+                          <div class="card h-100"
+                            *ngFor="let element of parsedContent(message.content).metadata.payload.elements">
+                            <a class="fileBorder" [href]="element.action.url" target="_blank">
+                              <img class="card-img-top mt-2"
+                                [src]="parsedContent(message.content).metadata.payload.headerImgSrc" alt="card-image">
+                              <div class="card-body">
+                                <p class="card-text doc-title">{{ element.description }}</p>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '3'">
+                      <div *ngFor="let item of parsedContent(message.content).metadata.payload">
+                        <ng-container *ngIf="message.action !== null && !isBotSender(message.sender); else disabledButton">
+                          <button>
+                            <a *ngIf="item.type === 'link'" [href]="item.url"
+                              [target]="item.openLinkInNewTab? '_blank': '_self'">{{item.name}}</a>
+                          </button>
+                        </ng-container>
+                        <ng-template #disabledButton>
+                          <button disabled>{{item.name}}</button>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '9'">
+                      <div class="container">
+                        <div class="row">
+                          <div class="card h-100"
+                            *ngFor="let element of parsedContent(message.content).metadata.payload">
+                            <a [href]="element.url" target="_blank">
+                              <img class="card-img-top mt-2" [src]="element.url" alt="card-image">
+                            </a>
+                            <div class="card-body">
+                              <p class="card-text doc-title">{{ element.caption }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '10'">
+                      <div class="container">
+                        <div class="row">
+                          <div *ngFor="let card of parsedContent(message.content).metadata.payload"
+                            class="col-md-6 mb-4">
+                            <div class="card h-100">
+                              <img class="card-img-top" [src]="card.header.imgSrc" alt="card-image">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ card.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ card.subtitle }}</h6>
+                                <p class="card-text">{{ card.description}}</p>
+                              </div>
+                              <div class="card-footer">
+                                <div *ngFor="let button of card.buttons" class="mb-2">
+                                  <button class="btn btn-primary btn-block" [disabled]="isBotSender(message.sender)">{{
+                                    button.name }}</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <!-- textarea input(text,hidden,submit,radio,checkbox) -->
+                    <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '12'">
+                      <div class="container mt-5">
+                        <div *ngFor="let item of parsedContent(message.content).metadata.payload">
+                          <form (ngSubmit)="onSubmit(item.data.action.message)" #form="ngForm">
+                            <ng-container *ngIf="item.type === 'text'">
+                              <div class="form-group">
+                                <label>{{ item.data.label }}</label>
+                                <input type="text" class="form-control"
+                                  [attr.disabled]="isBotSender(message.sender)"
+                                  name="{{ item.data.label }}"
+                                  [placeholder]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : item.data.placeholder"
+                                  [pattern]="item.data?.validation?.regex"
+                                  [value]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : (formData3[item.data.label] ?? '')" [ngClass]="{
+                                'is-invalid':
+                                  formData3[item.data.label] &&
+                                  !isInputValid(formData3[item.data.label], item?.data?.validation?.regex)
+                              }" (change)="onInputChange($event, item.data.label, message.message_id); invalid=formData3[item.data.label] &&
+                              !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
+                              formData3[item.data.label].length > 0" [required]="isRequired" />
+                                <div *ngIf="
+                              formData3[item.data.label] &&
+                              !isInputValid(formData3[item.data.label], item.data?.validation?.regex) &&
+                              formData3[item.data.label].length > 0
+                            " class="text-danger mt-1">
+                                  {{ item.data.validation.errorText }}
+                                </div>
+
+
+
+                              </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.type === 'password'">
+                              <div class="form-group">
+                                <label>{{ item.data.label }}</label>
+                                <input type="password" class="form-control"
+                                  [attr.disabled]="isBotSender(message.sender)"
+                                  name="{{ item.data.label }}" [placeholder]="(message?.action !== null) ? (message?.action[item.data.label]) : item.data.placeholder"
+                                  [value]="(message?.action !== null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
+                                  (input)="onInputChange($event, item.data.label,message.message_id)" required>
+                              </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.type === 'hidden'">
+                              <input type="hidden" [attr.disabled]="isBotSender(message.sender)" [name]="item.data.name"
+                                [value]="item.data.value">
+                            </ng-container>
+                            <ng-container *ngIf="item.type === 'submit'">
+                              <button type="submit" class="btn btn-primary"
+                                [attr.disabled]="isBotSender(message.sender)">{{
+                                item.data.name
+                                }}</button>
+                            </ng-container>
+                            <ng-container *ngIf="item.type === 'radio'">
+                              <div><strong>{{ item.data.title }}</strong></div>
+                              <div [ngClass]="{'radio-options-container': item.data.title.length}">
+                                <div *ngFor="let option of item.data.options">
+                                  <label>
+                                    <input type="radio" [attr.disabled]="isBotSender(message.sender)"
+                                      [value]="option.value" name="{{item.data.name}}"
+                                      [checked]="isOptionSelected(item.data.name, option.value,message)"
+                                      (change)="onRadioChange(item.data.name,option.value,message.message_id)">
+                                    {{ option.label }}
+                                  </label>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.type === 'checkbox'">
+                              <div>{{ item.data.title }}</div>
+                              <div *ngFor="let option of item.data.options">
+                                <button mat-raised-button [disabled]="isBotSender(message.sender)" class="lgtBtn"
+                                  (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"> <mat-icon *ngIf="isCheckBoxSelected(item.data.name, option.value, message)">
+                                    check_circle
+                                  </mat-icon>
+                                  {{ option.label }}</button>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="item.type === 'dropdown'">
+                              <div class="form-group">
+                                <label>{{ item.data.title }} </label>
+                                <select class="form-control dropdown-length"
+                                  [attr.disabled]="isBotSender(message.sender)" name="{{ item.data.name }}"
+                                  [value]="(message?.action) ? message?.action[item.data.name]:''"
+                                  (change)="onDropdownChange(item.data.name, $event,message.message_id)">
+                                  <option *ngFor="let option of item.data.options" [value]="option.value"
+                                    [selected]="isSelected(item.data.name, option.value,message)">
+                                    {{ option.label }}
+                                  </option>
+                                </select>
+                                <div *ngIf="form.submitted && !form.controls[item.data.name].valid"
+                                  class="text-danger mt-1">
+                                  {{ item.data.validation.errorText }}
+                                </div>
+                              </div>
+
+                            </ng-container>
+
+
+                          </form>
+
+                        </div>
+                      </div>
+                    </ng-container>
+
+                  </ng-container>
+
+
+
+                </div>
+                <span *ngIf="message.sender === 'system' && message.content.startsWith('Assigned to')" class="timestamp">
+                  {{ formatTimestampForSystem(message.timestamp) }}
+                </span>
+              </div>
+              <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
+                formatTimestamp(message.timestamp) }}</span>
+               
+            </div>
+
+          </div>
+        </ng-container>
+
+
+
+
+
+        <div *ngIf="fileToUpload" class="file-upload-box">
+          <div class="file-details">
+            <div class="file-icon">
+              <img src="../../../../../assets/images2/docsImage.png" alt="file">
+            </div>
+            <div class="file-name">{{ fileToUpload.name }}</div>
+            <button class="btn btn-primary" (click)="sendFile()">Send</button>
+          </div>
+
+          <div class="remove-file" (click)="onRemoveFile()">
+            <span class="fa fa-times"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="new-messages-indicator" (click)="scrollToBottom()" *ngIf="showArrow">
+    <span *ngIf="newMessageCount > 0">{{ newMessageCount }}</span>
+    <span class="fas fa-arrow-down"></span>
+  </div>
+  <div class="cannedMessageBox" *ngIf="cannedMessageList.length>0">
+    <div *ngFor="let cannedMessage of cannedMessageList" class="cannedMessage"
+      (click)="onSelectCannedMessage(cannedMessage)">
+      <div class="title">{{cannedMessage.title}}</div>
+      <div class="text">{{cannedMessage.text}}</div>
+      <hr>
+    </div>
+  </div>
+  <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
+    <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
+    <div #fileInputContainer style="display: none;"></div>
+    <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
+      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize  [disabled]="isInputDisabled"></textarea>
+
+    <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
+      <i class="fa fa-paper-plane" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+<app-chat-ui *ngIf="fullChatScreen" (back)="closeFullScreen()"></app-chat-ui>

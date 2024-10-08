@@ -5,7 +5,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -27,8 +27,8 @@ export class BondsDebentures
   implements OnInit {
   step = 1;
   @Output() onSave = new EventEmitter();
-  bondsForm: FormGroup;
-  deductionForm: FormGroup;
+  bondsForm: UntypedFormGroup;
+  deductionForm: UntypedFormGroup;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
@@ -47,7 +47,7 @@ export class BondsDebentures
   bondType: any;
   title: string;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private toastMsgService: ToastMessageService,
@@ -193,7 +193,7 @@ export class BondsDebentures
     const securitiesArray = <FormArray>this.bondsForm.controls['bondsArray'];
     return (
       securitiesArray.controls.filter(
-        (item: FormGroup) => item.controls['hasEdit'].value === true
+        (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
       ).length > 0
     );
   }
@@ -221,7 +221,7 @@ export class BondsDebentures
       this.addMoreBondsData();
     } else {
       bondsArray.controls.forEach((element) => {
-        if ((element as FormGroup).invalid) {
+        if ((element as UntypedFormGroup).invalid) {
           element.markAsDirty();
           element.markAllAsTouched();
         }
@@ -235,7 +235,7 @@ export class BondsDebentures
     });
   }
 
-  createForm(srn, item?): FormGroup {
+  createForm(srn, item?): UntypedFormGroup {
     return this.fb.group({
       isIndexationBenefitAvailable: [
         item ? item.isIndexationBenefitAvailable : false,
@@ -291,14 +291,14 @@ export class BondsDebentures
 
   editBondsForm(i) {
     (
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+      (this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[
       i
-      ] as FormGroup
+      ] as UntypedFormGroup
     ).enable();
     (
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+      (this.bondsForm.controls['bondsArray'] as UntypedFormGroup).controls[
       i
-      ] as FormGroup
+      ] as UntypedFormGroup
     ).controls['gainType'].disable();
   }
 
@@ -314,7 +314,7 @@ export class BondsDebentures
   deleteBondsArray() {
     let bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls = bondsArray.controls.filter(
-      (element) => !(element as FormGroup).controls['hasEdit'].value
+      (element) => !(element as UntypedFormGroup).controls['hasEdit'].value
     );
     if (bondsArray.length == 0) {
       this.deductionForm.reset();
@@ -447,12 +447,12 @@ export class BondsDebentures
     const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
       ltcg +=
-        (element as FormGroup).controls['gainType'].value === 'LONG'
-          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+        (element as UntypedFormGroup).controls['gainType'].value === 'LONG'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
       stcg +=
-        (element as FormGroup).controls['gainType'].value === 'SHORT'
-          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+        (element as UntypedFormGroup).controls['gainType'].value === 'SHORT'
+          ? parseInt((element as UntypedFormGroup).controls['capitalGain'].value)
           : 0;
     });
     this.totalCg.ltcg = ltcg;
@@ -498,22 +498,22 @@ export class BondsDebentures
       }
       bondsArray.controls.forEach((element) => {
         if (
-          !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
-          && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
+          !(element as UntypedFormGroup).controls['isIndexationBenefitAvailable'].value
+          && !(element as UntypedFormGroup).controls['whetherDebenturesAreListed'].value
         ) {
           bondImprovement.push({
-            srn: (element as FormGroup).controls['srn'].value,
-            dateOfImprovement: (element as FormGroup).controls[
+            srn: (element as UntypedFormGroup).controls['srn'].value,
+            dateOfImprovement: (element as UntypedFormGroup).controls[
               'dateOfImprovement'
             ].value,
-            indexCostOfImprovement: (element as FormGroup).controls[
+            indexCostOfImprovement: (element as UntypedFormGroup).controls[
               'indexCostOfImprovement'
             ].value,
-            costOfImprovement: (element as FormGroup).controls[
+            costOfImprovement: (element as UntypedFormGroup).controls[
               'improvementCost'
             ].value,
           });
-          bondsList.push((element as FormGroup).getRawValue());
+          bondsList.push((element as UntypedFormGroup).getRawValue());
         }
       });
 
@@ -583,14 +583,14 @@ export class BondsDebentures
         }
         bondsArray.controls.forEach((element) => {
           if (
-            (element as FormGroup).controls['isIndexationBenefitAvailable']
+            (element as UntypedFormGroup).controls['isIndexationBenefitAvailable']
               .value === true
           ) {
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[
               goldIndex
             ]?.assetDetails.filter(
-              (e) => e.srn === (element as FormGroup).controls['srn'].value
+              (e) => e.srn === (element as UntypedFormGroup).controls['srn'].value
             );
 
             if (srnCheck && srnCheck?.length > 0) {
@@ -599,28 +599,28 @@ export class BondsDebentures
                 maxGold + 1,
                 debsList?.length
               );
-              (element as FormGroup).controls['srn'].setValue(newSrn);
+              (element as UntypedFormGroup).controls['srn'].setValue(newSrn);
             }
 
-            let costOfImprovement = (element as FormGroup).controls[
+            let costOfImprovement = (element as UntypedFormGroup).controls[
               'improvementCost'
             ].value;
             bondImprovement.push({
-              srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: (element as FormGroup).controls[
+              srn: (element as UntypedFormGroup).controls['srn'].value,
+              dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
               ].value,
-              indexCostOfImprovement: (element as FormGroup).controls[
+              indexCostOfImprovement: (element as UntypedFormGroup).controls[
                 'indexCostOfImprovement'
               ].value,
               costOfImprovement: costOfImprovement,
             });
 
             //Ashwini: This adjustment is done to persist indexed cost of improvement for backend cg calculations
-            (element as FormGroup).controls['improvementCost'].setValue(
-              (element as FormGroup).controls['indexCostOfImprovement'].value);
+            (element as UntypedFormGroup).controls['improvementCost'].setValue(
+              (element as UntypedFormGroup).controls['indexCostOfImprovement'].value);
 
-            debsList.push((element as FormGroup).getRawValue());
+            debsList.push((element as UntypedFormGroup).getRawValue());
           }
         });
 
@@ -712,14 +712,14 @@ export class BondsDebentures
         }
         bondsArray.controls.forEach((element) => {
           if (
-            (element as FormGroup).controls['whetherDebenturesAreListed']
+            (element as UntypedFormGroup).controls['whetherDebenturesAreListed']
               .value === true
           ) {
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[
               zcbIndex
             ]?.assetDetails.filter(
-              (e) => e.srn === (element as FormGroup).controls['srn'].value
+              (e) => e.srn === (element as UntypedFormGroup).controls['srn'].value
             );
 
             if (srnCheck && srnCheck?.length > 0) {
@@ -728,24 +728,24 @@ export class BondsDebentures
                 maxZcb + 1,
                 zcbList?.length
               );
-              (element as FormGroup).controls['srn'].setValue(newSrn);
+              (element as UntypedFormGroup).controls['srn'].setValue(newSrn);
             }
 
-            let costOfImprovement = (element as FormGroup).controls[
+            let costOfImprovement = (element as UntypedFormGroup).controls[
               'improvementCost'
             ].value;
             bondImprovement.push({
-              srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: (element as FormGroup).controls[
+              srn: (element as UntypedFormGroup).controls['srn'].value,
+              dateOfImprovement: (element as UntypedFormGroup).controls[
                 'dateOfImprovement'
               ].value,
-              indexCostOfImprovement: (element as FormGroup).controls[
+              indexCostOfImprovement: (element as UntypedFormGroup).controls[
                 'indexCostOfImprovement'
               ].value,
               costOfImprovement: costOfImprovement,
             });
 
-            zcbList.push((element as FormGroup).getRawValue());
+            zcbList.push((element as UntypedFormGroup).getRawValue());
           }
         });
 
@@ -837,7 +837,7 @@ export class BondsDebentures
   getYearsList(bonds) {
     let yearsList = [];
     yearsList = yearsList.concat(this.improvementYears);
-    let purchaseDate = (bonds as FormGroup).controls['purchaseDate'].value;
+    let purchaseDate = (bonds as UntypedFormGroup).controls['purchaseDate'].value;
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
@@ -926,7 +926,7 @@ export class BondsDebentures
     });
   }
 
-  initDeductionForm(obj?): FormGroup {
+  initDeductionForm(obj?): UntypedFormGroup {
     return this.fb.group({
       hasEdit: [obj ? obj.hasEdit : false],
       srn: [obj ? obj.srn : 0],
@@ -956,15 +956,15 @@ export class BondsDebentures
       let expenses = 0;
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+        if ((element as UntypedFormGroup).controls['gainType'].value === 'LONG') {
           capitalGain += parseInt(
-            (element as FormGroup).controls['capitalGain'].value
+            (element as UntypedFormGroup).controls['capitalGain'].value
           );
           saleValue += parseInt(
-            (element as FormGroup).controls['valueInConsideration'].value
+            (element as UntypedFormGroup).controls['valueInConsideration'].value
           );
           expenses += parseInt(
-            (element as FormGroup).controls['sellExpense'].value
+            (element as UntypedFormGroup).controls['sellExpense'].value
           );
         }
       });

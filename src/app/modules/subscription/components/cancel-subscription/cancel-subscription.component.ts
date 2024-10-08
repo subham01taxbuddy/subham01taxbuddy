@@ -15,6 +15,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import * as moment from 'moment';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 @Component({
   selector: 'app-cancel-subscription',
@@ -73,6 +74,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     serviceType: null,
   };
   itrStatus: any = [];
+  chatBuddyDetails:any;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -82,6 +84,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     private itrService: ItrMsService,
     private cacheManager: CacheManager,
     private reportService: ReportService,
+    private chatService:ChatService,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -609,10 +612,20 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.request_id){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+
+     }
     });
   }
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 }

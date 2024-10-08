@@ -7,16 +7,19 @@
 </button>
 <div class="card__row" style="display: flex;">
   <span>
-    <button type="button" class="new-button-1" title="Whatsapp" (click)="goToWhatsapp()" [disabled]="!waChatLink"> <i
+    <button type="button" class="new-button-1" title="Whatsapp" (click)="openUserChat(data.clientName,whatsAppRequestId)" [disabled]="!whatsAppRequestId"> <i
         class="fa fa-whatsapp" aria-hidden="true"></i>&nbsp;
       Whatsapp
     </button>
   </span> &nbsp;&nbsp;&nbsp;&nbsp;
   <span>
-    <button type="button" class="new-button-1" title="Kommunicate" (click)="goToKommunicate()"
-      [disabled]="!kommChatLink"><i class="fa fa-comments-o" aria-hidden="true"></i>&nbsp;
-      Kommunicate
+    <button type="button" [disabled]="!requestId" (click)="openUserChat(data.clientName, requestId)"
+      class="new-button-1" title="chatBuddy" aria-hidden="true">
+      <i class="fa fa-comments-o" aria-hidden="true"></i>ChatBuddy({{ data.serviceType }})
     </button>
-  </span>
-  &nbsp;&nbsp;
+  </span> 
 </div>
+
+
+<!-- <app-user-chat *ngIf="userChatOpen" [username]="username" [requestId]="requestId" [serviceType]="data.serviceType"
+  [image]="image"></app-user-chat> -->

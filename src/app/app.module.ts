@@ -35,6 +35,7 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
 import { MatButtonModule } from '@angular/material/button';
 import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
 import { AppConstants } from './modules/shared/constants';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 const dbConfig: DBConfig  = {
@@ -72,7 +73,8 @@ const dbConfig: DBConfig  = {
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     SpeedTestModule,
-    NgxIndexedDBModule.forRoot(dbConfig)
+    NgxIndexedDBModule.forRoot(dbConfig),
+    FontAwesomeModule
   ],
   providers: [
     NavbarService,
@@ -93,7 +95,7 @@ const dbConfig: DBConfig  = {
     { provide: SERVICE_WORKER, useFactory: () => typeof navigator !== 'undefined' && navigator.serviceWorker?.register('firebase-messaging-sw.js', { scope: '__' }) || undefined },
   ],
   bootstrap: [AppComponent]
-})
+ })
 export class AppModule { }
 function getRemoteConfigValue() {
   return 60000;

@@ -53,12 +53,14 @@ import { GenericSortingComponent } from './components/generic-sorting/generic-so
 import { GenericUserFilterComponent } from './components/generic-user-filter/generic-user-filter.component';
 import { UpdateCapacityComponent } from './components/update-capacity/update-capacity.component';
 import { MyDialogComponent } from './components/my-dialog/my-dialog.component';
+import { ChatModule } from '../chat/chat.module';
+import { FloatingWidgetComponent } from '../chat/floating-widget/floating-widget.component';
 import { CalculatorModalComponent } from './components/calculator-modal/calculator-modal.component';
 import { CustomButtonComponent } from './components/custom-button/custom-button.component';
 import { IncomeSourceDialogComponent } from './components/income-source-dialog/income-source-dialog.component';
-import {ZipcodeDirective} from "./directives/zipcode.directive";
+import { ZipcodeDirective } from "./directives/zipcode.directive";
 import { AddManualUpdateReasonComponent } from './components/add-manual-update-reason/add-manual-update-reason.component';
-import {WholeNumberPipe} from "./directives/wholeNumber.directive";
+import { WholeNumberPipe } from "./directives/wholeNumber.directive";
 import {DateInputDirective } from './directives/auto-slash-date.directive';
 @NgModule({
     declarations: [
@@ -128,6 +130,7 @@ import {DateInputDirective } from './directives/auto-slash-date.directive';
         NgxDocViewerModule,
         NgxLoadingModule.forRoot({}),
         MatDialogModule,
+    ChatModule
     ],
     exports: [
         CommonModule,
@@ -169,6 +172,8 @@ import {DateInputDirective } from './directives/auto-slash-date.directive';
         CalculatorModalComponent,
         CustomButtonComponent,
         IncomeSourceDialogComponent,
+    AddManualUpdateReasonComponent,
+    ChatModule,
         AddManualUpdateReasonComponent,
         DateInputDirective
     ],

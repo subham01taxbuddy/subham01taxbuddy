@@ -311,7 +311,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
   deleteExemptIncome(index) {
     let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
       'exemptIncomes'
-    ] as UntypedFormArray;
+        ] as UntypedFormArray;
     exemptIncomesFormArray.removeAt(index);
     if (exemptIncomesFormArray.length === 0) {
       this.addExemptIncome();
@@ -377,7 +377,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
   validateExemptIncomes(event: any) {
     let exemptIncomes = this.exemptIncomeFormGroup.controls[
       'exemptIncomes'
-    ] as UntypedFormArray;
+        ] as UntypedFormArray;
     let selectedValues = exemptIncomes.controls.filter(
       (fg: UntypedFormGroup) => fg.controls['incomeType'].value === event.value);
     if (selectedValues?.length > 1) {

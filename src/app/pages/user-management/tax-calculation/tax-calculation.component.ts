@@ -7,6 +7,8 @@ import { UserTaxDataService } from '../../../services/user-tax-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime } from 'rxjs/operators';
 import { ChangeDetectionStrategy } from '@angular/core';
+import {ApiEndpoints} from "../../../modules/shared/api-endpoint";
+import {ItrMsService} from "../../../services/itr-ms.service";
 
 @Component({
   selector: 'app-tax-calculation',
@@ -18,7 +20,7 @@ export class TaxCalculationComponent implements OnInit {
   userId: number | undefined;
   taxCalculationForm: FormGroup;
   toggleLabel: string = 'OFF';
-  apiUrl = 'https://uat-api.taxbuddy.com/itr/calculate/advance-tax';
+  apiUrl = ApiEndpoints.itrMs.itrAdvanceTax;
   isLoading = true; // Initialize loading state to true
 
   // Properties to hold response data
@@ -38,7 +40,8 @@ export class TaxCalculationComponent implements OnInit {
     private router: Router,
     private taxDataService: TaxDataService,
     private userTaxDataService: UserTaxDataService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private itrMsService: ItrMsService
   ) {
     // Initialize the form group
     this.taxCalculationForm = this.fb.group({
@@ -151,10 +154,10 @@ export class TaxCalculationComponent implements OnInit {
   }
 
   private fetchTaxData(userId: number): void {
-    const apiUrl = `${this.apiUrl}/${userId}`;
+    const apiUrl = `${ApiEndpoints.itrMs.itrAdvanceTax}/${userId}`;
     this.isLoading = true; // Start loading
 
-    this.http.get(apiUrl).subscribe(
+    this.itrMsService.getMethod(apiUrl).subscribe(
       (response: any) => {
         // Check if the response is successful
         if (response.success) {
@@ -321,10 +324,8 @@ export class TaxCalculationComponent implements OnInit {
     }
 
     if (this.taxCalculationForm.valid) {
-      this.http
-        .post(this.apiUrl, formData, {
-          headers: { 'Content-Type': 'application/json' },
-        })
+      this.itrMsService
+        .postMethod(this.apiUrl, formData)
         .subscribe(
           (response: any) => {
             if (response.success) {

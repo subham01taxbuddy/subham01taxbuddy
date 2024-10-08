@@ -23,8 +23,9 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ReportService } from 'src/app/services/report-service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
-import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
-import { DomSanitizer } from "@angular/platform-browser";
+import {DomSanitizer} from "@angular/platform-browser";
+import { ChatService } from 'src/app/modules/chat/chat.service';
+
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 @Component({
   selector: 'app-filings',
@@ -44,6 +45,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   searchVal: any;
   searchStatusId: any;
+  chatBuddyDetails: any;
+
   searchParams = {
     mobileNumber: null,
     email: null,
@@ -106,8 +109,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private chatService: ChatService,
     private dbService: NgxIndexedDBService
   ) {
     dbService['currentStore'] = "taxbuddy";
@@ -559,6 +562,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         isLate: data[i].isLate,
         paymentStatus: data[i].paymentStatus,
         manualUpdateReason: data[i].manualUpdateReason,
+        requestId: data[i].requestId,
+        whatsAppRequestId: data[i].whatsAppRequestId
       });
     }
     return newData;
@@ -1240,17 +1245,21 @@ export class FilingsComponent implements OnInit, OnDestroy {
         userId: client.userId,
         clientName: client.fName + ' ' + client.lName,
         serviceType: 'ITR',
+        requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       },
     });
 
     disposable.afterClosed().subscribe((result) => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id);
-        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(
-          result.kommChatLink
-        );
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.request_id){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+     }
     });
   }
   markAsEverified(data) {
@@ -1661,5 +1670,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+   this.chatBuddyDetails = null;
   }
 }

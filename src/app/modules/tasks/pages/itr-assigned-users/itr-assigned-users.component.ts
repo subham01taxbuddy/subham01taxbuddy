@@ -28,8 +28,9 @@ import { ReAssignActionDialogComponent } from '../../components/re-assign-action
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
-import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
 import { DomSanitizer } from "@angular/platform-browser";
+import {ChatManager} from "../../../chat/chat-manager";
+import { ChatService } from 'src/app/modules/chat/chat.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 @Component({
@@ -103,6 +104,8 @@ export class ItrAssignedUsersComponent implements OnInit {
   showReassignButton: boolean = false;
   showCsvMessage: boolean;
 
+  chatBuddyDetails: any;
+
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -117,8 +120,9 @@ export class ItrAssignedUsersComponent implements OnInit {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     private userService: UserMsService,
-    private kommunicateSsoService: KommunicateSsoService,
     private sanitizer: DomSanitizer,
+    private chatManager: ChatManager,
+    private chatService: ChatService,
     private genericCsvService: GenericCsvService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -1324,6 +1328,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         aisProvided: userData[i].aisProvided,
         everified: userData[i].everified,
         taxPayable: userData[i].taxPayable,
+        whatsAppRequestId: userData[i].whatsAppRequestId,
+        requestId: userData[i].requestId
       })
       userArray.push(userInfo);
     }
@@ -1701,16 +1707,24 @@ export class ItrAssignedUsersComponent implements OnInit {
       data: {
         userId: client.userId,
         clientName: client.name,
-        serviceType: client.serviceType
+        serviceType: client.serviceType,
+        requestId: client.requestId,
+        whatsAppRequestId: client.whatsAppRequestId
       }
     })
 
     disposable.afterClosed().subscribe(result => {
       if (result.id) {
         this.isChatOpen = true;
-        this.kommunicateSsoService.openConversation(result.id)
+        this.chatManager.openConversation(result.id)
         this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
       }
+      else if(result?.request_id){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+     }
+
     });
 
   }
@@ -1882,6 +1896,9 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
+  closeChat() {
+    this.chatBuddyDetails = null;
+  }
 
   async downloadReport() {
     let loggedInId = this.utilsService.getLoggedInUserID();
