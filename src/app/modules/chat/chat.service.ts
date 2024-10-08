@@ -6,6 +6,7 @@ import { Subject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
+import { Router } from "@angular/router";
 import { webSocket } from 'rxjs/webSocket';
 @Injectable({
   providedIn: 'root'
@@ -94,7 +95,8 @@ export class ChatService {
     public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private router: Router
   ) {
     this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
@@ -229,6 +231,12 @@ export class ChatService {
 
 
   setHeaders(type: any = "auth") {
+    const authToken = this.utilsService.getIdToken();  // Retrieve the id_token
+
+    if (!authToken) {
+        this.router.navigate(['/login']);
+        return;
+    }
     let httpOptions: any = {};
     if (type == "auth") {
       const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
@@ -382,7 +390,8 @@ export class ChatService {
         type: message.type,
         recipientFullName: message.recipient_fullname,
         sender: message.sender,
-        conversWith: message.conversWith
+        conversWith: message.conversWith,
+        attributes: message?.attributes
       })
     );
     if (page != 0) {

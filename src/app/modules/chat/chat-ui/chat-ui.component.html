@@ -34,8 +34,13 @@
                             </div>
                             <div class="col-8">
                                 <div class="user-name">{{ conversation.userFullName }}</div>
-                                <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
-                                    conversation.text }}</div>
+                                <div class="chat-snippet conversation-text"
+                                    *ngIf="conversation.sender === 'system' && !displaySystemMessage(conversation)">
+                                    <em>System message</em>
+                                </div>
+                                <div class="chat-snippet conversation-text"
+                                    *ngIf="displaySystemMessage(conversation) && conversation.type !== 'html'"
+                                    [innerHTML]="sanitizeText(truncateTextByChars(conversation.text, 30))"></div>
                                 <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
                                             view the details...</strong></em></div>
 

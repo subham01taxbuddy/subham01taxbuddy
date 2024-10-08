@@ -585,12 +585,16 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   filterCannedMessages() {
     if (this.messageSent.startsWith('/')) {
-      this.cannedMessageList = this.originalCannedMessageList.filter(element => element.titleWithSlash.toLowerCase().startsWith(this.messageSent.toLowerCase())
-      )
+       const searchTerm = this.messageSent.slice(1).trim().toLowerCase();
+  
+       this.cannedMessageList = this.originalCannedMessageList.filter(element => 
+        element.titleWithSlash.toLowerCase().includes(searchTerm)
+      );
     } else {
       this.cannedMessageList = [];
     }
   }
+  
 
   onSelectCannedMessage(cannedMessage) {
     this.chatService.getUserDetails(this.requestId).subscribe((response) => {
