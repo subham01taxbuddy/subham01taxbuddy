@@ -320,16 +320,63 @@
                               <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Address line 1 </span> <span class="text-wrapper-2">*</span>
+                                    <span class="span">Country</span>
+                                    <span class="text-wrapper-2">*</span>
                                   </div>
 
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Address of Property" name="address"
-                                      class="form-control inpplac" formControlName="address"
-                                      style="line-height: 21px" />
-                                    <mat-error *ngIf="housePropertyForm.controls['address'].hasError('required')">
-                                      Enter address of property
+                                      <mat-select
+                                        name="country"
+                                        placeholder="Select country"
+                                        formControlName="country"
+                                        (selectionChange)="
+                                          changeCountry($event.value)
+                                        "
+                                        (selectionChange)="
+                                          changeCountryClear($event.value)
+                                        "
+                                      >
+                                        <mat-option
+                                          *ngFor="
+                                            let country of countryDropdown
+                                          "
+                                          [value]="country.countryCode"
+                                        >
+                                          {{ country.countryName | titlecase }}
+                                        </mat-option>
+                                      </mat-select>
+                                      <mat-error
+                                        *ngIf="
+                                          housePropertyForm.controls[
+                                            'country'
+                                          ].hasError('required')
+                                        "
+                                      >
+                                        Select the country
                                     </mat-error>
+                                  </mat-form-field>
+
+                              </div>
+
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">{{ zipCodeLabel }}</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                    type="text"
+                                    trim
+                                    matInput
+                                    placeholder="{{ zipCodeLabel }}"
+                                    name="pinCode"
+                                    [maxlength]="housePropertyForm.controls['country'].value === '91' ? 6 : 8"
+                                    class="form-control inpplac"
+                                    formControlName="pinCode"
+                                    (blur)="housePropertyForm.controls['country'].value === '91' ? getCityData() : null"
+                                    style="line-height: 21px"
+                                  />
+
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -337,66 +384,101 @@
                               <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                                    <span class="span">State </span>
+                                    <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Pin Code" name="pinCode"
-                                      class="form-control inpplac" formControlName="pinCode" (blur)="getCityData()"
-                                      style="line-height: 21px" />
-                                    <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('required')">
-                                      Enter pincode
-                                    </mat-error>
-                                    <mat-error *ngIf="housePropertyForm.controls['pinCode'].hasError('pattern')">
-                                      Enter valid pin
-                                    </mat-error>
-                                  </mat-form-field>
-                                </div>
-                                <div class="field">
-                                  <div class="field-label">
-                                    <span class="span">City </span> <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="Town/City" name="city"
-                                      class="form-control inpplac" formControlName="city" style="line-height: 21px" />
-                                    <mat-error *ngIf="housePropertyForm.controls['city'].hasError('required')">
-                                      Enter town/city
-                                    </mat-error>
-                                    <mat-error *ngIf="housePropertyForm.controls['city'].hasError('pattern')">
-                                      Enter character only.</mat-error>
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                              <div class="div-6">
-                                <div class="field">
-                                  <div class="field-label">
-                                    <span class="span">State </span> <span class="text-wrapper-2">*</span>
-                                    <mat-form-field appearance="outline">
-                                      <mat-select placeholder="Select state" name="state" formControlName="state"
-                                        style="line-height: 21px" class="form-control inpplac">
-                                        <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                                      <mat-select
+                                        placeholder="Select state"
+                                        name="state"
+                                        formControlName="state"
+                                      >
+                                        <mat-option
+                                          *ngFor="let state of stateDropdown"
+                                          [value]="state.stateCode"
+                                        >
                                           {{ state.stateName | titlecase }}
                                         </mat-option>
                                       </mat-select>
-                                      <mat-error *ngIf="housePropertyForm.controls['state'].hasError('required')">
+                                      <mat-error
+                                        *ngIf="
+                                          housePropertyForm.controls[
+                                            'state'
+                                          ].hasError('required')
+                                        "
+                                      >
                                         Select the state
+                                    </mat-error>
+                                  </mat-form-field>
+                                </div>
+
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">City </span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                    <mat-form-field appearance="outline">
+                                    <input
+                                      type="text"
+                                      trim
+                                      matInput
+                                      placeholder="Town/City"
+                                      name="city"
+                                      class="form-control inpplac"
+                                      formControlName="city"
+                                      style="line-height: 21px"
+                                    />
+                                    <mat-error
+                                      *ngIf="
+                                        housePropertyForm.controls[
+                                          'city'
+                                        ].hasError('required')
+                                      "
+                                    >
+                                      Enter town/city
                                       </mat-error>
+                                    <mat-error
+                                      *ngIf="
+                                        housePropertyForm.controls[
+                                          'city'
+                                        ].hasError('pattern')
+                                      "
+                                    >
+                                      Enter character only.</mat-error
+                                    >
                                     </mat-form-field>
                                   </div>
                                 </div>
+
+
+                              <div class="div-6">
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Country </span> <span class="text-wrapper-2">*</span>
-                                    <mat-form-field appearance="outline">
-                                      <mat-select name="country" class="form-control inpplac" formControlName="country"
-                                        style="line-height: 21px">
-                                        <mat-option value="91"> India </mat-option>
-                                      </mat-select>
-                                      <mat-error *ngIf="housePropertyForm.controls['country'].hasError('required')">
-                                        select the country
-                                      </mat-error>
-                                    </mat-form-field>
+                                    <span class="span">Address line 1 </span>
+                                    <span class="text-wrapper-2">*</span>
                                   </div>
 
+                                    <mat-form-field appearance="outline">
+                                    <input
+                                      type="text"
+                                      trim
+                                      matInput
+                                      placeholder="Address of Property"
+                                      name="address"
+                                      class="form-control inpplac"
+                                      formControlName="address"
+                                      style="line-height: 21px"
+                                    />
+                                    <mat-error
+                                      *ngIf="
+                                        housePropertyForm.controls[
+                                          'address'
+                                        ].hasError('required')
+                                      "
+                                    >
+                                      Enter address of property
+                                      </mat-error>
+                                    </mat-form-field>
                                 </div>
                               </div>
                             </div>
@@ -419,8 +501,12 @@
                               <div class="hdTxR">
                                 <mat-radio-group name="isCoOwners" (change)="haveCoOwners()"
                                   formControlName="isCoOwners">
-                                  <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
-                                  </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                                  <mat-radio-button
+                                    [value]="true"
+                                    style="margin-left: 0px"
+                                    labelPosition="before"
+                                    >Yes </mat-radio-button
+                                  >&nbsp;&nbsp;&nbsp;
                                   <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
                                 </mat-radio-group>
                               </div>

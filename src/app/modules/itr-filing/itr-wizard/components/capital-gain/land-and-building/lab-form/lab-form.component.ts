@@ -64,6 +64,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
   loading = false;
   improvementYears = [];
   stateDropdown = AppConstants.stateDropdown;
+  countryDropdown = AppConstants.countriesDropdown;
+
   selectedIndexes: number[] = [];
 
   config: any;
@@ -732,18 +734,10 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         ],
       ],
       address: [obj?.address || '', [Validators.required]],
-      pin: [
-        obj?.pin || '',
-        [
-          Validators.required,
-          Validators.pattern(AppConstants.PINCode),
-          Validators.maxLength(6),
-          Validators.minLength(6),
-        ],
-      ],
+pin: [obj?.pin || '',[Validators.required]],
       city: [obj?.city || '', [Validators.required]],
       state: [obj?.state || '', [Validators.required]],
-      country: [obj?.country || '', [Validators.required]],
+country: [obj?.country || '91', [Validators.required]],
     });
   }
 
@@ -764,19 +758,27 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  async updateDataByPincode(index) {
-    const buyersDetails = (
-      this.immovableForm.controls['buyersDetails'] as UntypedFormArray
-    ).controls[index] as UntypedFormGroup;
+async updateDataByPincode(index: number) {
+  const buyersDetails = (this.immovableForm.controls['buyersDetails'] as UntypedFormArray).controls[index] as UntypedFormGroup;
+
+  const countryCode = buyersDetails.get('country')?.value;
+
+  if (countryCode === '91') {
+    // Call the API to get pincode data
     await this.utilsService
       .getPincodeData(buyersDetails.controls['pin'])
       .then((result) => {
         console.log('pindata', result);
-        buyersDetails.controls['country'].setValue(result.countryCode);
         buyersDetails.controls['city'].setValue(result.city);
         buyersDetails.controls['state'].setValue(result.stateCode);
+      buyersDetails.controls['country'].setValue(result.countryCode);
       });
+  } else {
+    // Manually set city, state, and country for non-India country codes
+    buyersDetails.updateValueAndValidity();
   }
+}
+
 
   updateSaleValue(index) {
     if (typeof index === 'number') {
@@ -1273,7 +1275,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       const deductions = this.getDeductionsArray;
 
       const deductionAtIndex = deductions.at(index);
-debugger
+
       if (deductionAtIndex.get('costOfNewAssets').value || deductionAtIndex.get('purchaseDate').value) {
         deductionAtIndex.get('showNewAsset').setValue(true);
         this.onToggleNewAsset(true, index);
@@ -1440,15 +1442,82 @@ debugger
     }
   }
 
+// changeAddress(event, inputField) {
+// const value = inputField === 'state' ? event?.value : event?.target?.value;
+
+// const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+// buyersDetails?.controls?.forEach((element, i) => {
+// (element as UntypedFormGroup)?.controls[inputField]?.setValue(value);
+// if (inputField === 'pin') {
+// this.updateDataByPincode(i);
+// }
+// });
+// }
+
   changeAddress(event, inputField) {
     const value = inputField === 'state' ? event?.value : event?.target?.value;
 
     const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
     buyersDetails?.controls?.forEach((element, i) => {
-      (element as UntypedFormGroup)?.controls[inputField]?.setValue(value);
-      if (inputField === 'pin') {
+    const formGroup = element as UntypedFormGroup;
+
+    // Set the value for the current input field (state or pin)
+    formGroup.controls[inputField]?.setValue(value);
+
+    // Get the country code for the current buyer
+    const countryCode = formGroup.get('country')?.value;
+
+    // If inputField is 'pin' and countryCode is '91', call updateDataByPincode
+    if (inputField === 'pin' && countryCode === '91') {
         this.updateDataByPincode(i);
       }
+    else{
+      buyersDetails.controls['city'].updateValueAndValidity();
+    }
+  });
+}
+
+// changeCity(event, inputField) {
+//   const value = event.target.value; // Get the city value from the input
+
+//   const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+//   buyersDetails?.controls?.forEach((element, i) => {
+//     const formGroup = element as UntypedFormGroup;
+
+//     // Get the country code for the current buyer
+//     const countryCode = formGroup.get('country')?.value;
+
+//     // If the country is not '91', update the city with the entered value
+//     if (countryCode !== '91') {
+//       buyersDetails.controls['city'].setValue(inputField); // Update the city field
+//     }
+//   });
+// }
+
+
+
+
+changecountry(event, inputField) {
+  const value = inputField === 'country' ? event?.value : event.target.value;
+  const buyersDetails = <UntypedFormArray>this.immovableForm?.get('buyersDetails');
+
+  buyersDetails?.controls?.forEach((element, i) => {
+    const formGroup = element as UntypedFormGroup;
+
+    // Set the selected country value
+    formGroup.controls[inputField].setValue(value);
+
+    // Check if the selected country is not '91'
+    if ( value !== '91') {
+      // Set state code to '99' for foreign countries
+      formGroup.controls['state'].setValue('99');
+      formGroup.controls['pin'].setValue('');
+      formGroup.updateValueAndValidity();
+    } else if (inputField === 'country' && value === '91') {
+      // Optionally, you can clear the state if the country is set back to India
+      formGroup.controls['state'].setValue('91'); // Uncomment this line if you want to clear the state field
+      formGroup.controls['pin'].setValue('');
+    }
     });
   }
 

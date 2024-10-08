@@ -12,29 +12,22 @@
         <h3>Address Details</h3>
         <div class="div-6">
           <div class="form-field">
-            <div>
-              <span class="span">Pincode</span>
-            </div>
-            <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode"
-                class="input-field" maxlength="6" minlength="6" trim digitsOnly required (blur)="getCityData()" />
-              <mat-error *ngIf="
-              addressForm.controls['pinCode'].hasError('required') ||
-              addressForm.controls['pinCode'].hasError('pattern') ||
-              addressForm.controls['pinCode'].hasError('minLength') ||
-              addressForm.controls['pinCode'].hasError('maxLength')
-            ">
-                Enter 6 digit PIN code.</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="form-field">
             <div><span class="span">Select Country </span></div>
             <div class="form-control-wrapper">
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Select country" name="country" formControlName="country" (selectionChange)="
-              changeCountry(addressForm.controls['country'].value)
-            " required>
-                  <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                <mat-select
+                  placeholder="Select country"
+                  name="country"
+                  formControlName="country"
+                  (selectionChange)="changeCountry($event.value)"
+                  (selectionChange)="changeCountryClear($event.value)"
+
+                  required
+                >
+                  <mat-option
+                    *ngFor="let country of countryDropdown"
+                    [value]="country.countryCode"
+                  >
                     {{ country.countryName | titlecase }}
                   </mat-option>
                 </mat-select>
@@ -43,11 +36,47 @@
           </div>
 
           <div class="form-field">
+            <div>
+              <span class="span">
+                {{
+                  addressForm.controls["country"].value === "91"
+                    ? "Pincode"
+                    : "Zipcode"
+                }}</span
+              >
+            </div>
+            <mat-form-field appearance="outline">
+              <input
+              type="text"
+               matInput
+              [placeholder]="addressForm.controls['country'].value === '91' ? 'Pincode' : 'Zipcode'"
+              [name]="addressForm.controls['country'].value === '91' ? 'pincode' : 'zipcode'"
+              formControlName="pinCode"
+              class="input-field"
+              [maxlength]="addressForm.controls['country'].value === '91' ? 6 : 8"
+              trim
+              required
+             (blur)="addressForm.controls['country'].value === '91' ? getCityData() : null"
+/>
+
+
+            </mat-form-field>
+          </div>
+
+          <div class="form-field">
             <div><span class="span">Select State </span></div>
             <div class="form-control-wrapper">
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Select state" name="state" formControlName="state" required>
-                  <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                <mat-select
+                  placeholder="Select state"
+                  name="state"
+                  formControlName="state"
+                  required
+                >
+                  <mat-option
+                    *ngFor="let state of stateDropdown"
+                    [value]="state.stateCode"
+                  >
                     {{ state.stateName | titlecase }}
                   </mat-option>
                 </mat-select>

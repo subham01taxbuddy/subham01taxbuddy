@@ -192,7 +192,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
-  countryDropdown = AppConstants.countriesDropdown;
+  countriesDropdown = AppConstants.countriesDropdown;
 
 
   // errors keys
@@ -229,6 +229,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         employerName: '',
         address: '',
         city: '',
+        country:'',
         pinCode: '',
         state: '',
         employerPAN: '',
@@ -355,6 +356,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         city: '',
         pinCode: '',
         state: '',
+        country:'',
         employerPAN: '',
         employerTAN: '',
         taxableIncome: null,
@@ -461,6 +463,42 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       allowances: allowanceArray,
     });
   }
+
+  onCountryChange(event: any): void {
+    const selectedCountryCode = event.value;
+    const pinCodeControl = this.employerDetailsFormGroup.get('pinCode');
+    const stateCodeControl = this.employerDetailsFormGroup.get('state'); // Assuming you have a stateCode control
+
+    if (selectedCountryCode === '91') {
+      // Set validation for 6-digit Pincode (India)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]{6}$/) // Validation for a 6-digit number
+      ]);
+
+      // Reset state code if country is India
+      stateCodeControl?.setValue('');
+      pinCodeControl?.setValue('');
+
+    } else {
+      // Set validation for 4-8 character alphanumeric Zipcode (Other countries)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9]{4,8}$/)
+        // Validation for alphanumeric ZIP (4-8 chars)
+      ]);
+      pinCodeControl?.setValue('');
+      // Set state code to '99' for foreign countries
+      stateCodeControl?.setValue('99');
+    }
+
+    // Update the validity of the form control after changing validators
+    pinCodeControl?.updateValueAndValidity();
+    this.employerDetailsFormGroup.controls['country'].setValue(selectedCountryCode);
+    this.employerDetailsFormGroup.updateValueAndValidity();
+  }
+
+
 
   validateExemptIncomes(event: any) {
     let exemptIncomes = this.allowanceFormGroup.controls[
@@ -586,13 +624,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ]),
         ],
         state: ['', Validators.compose([Validators.required])],
-        pinCode: [
-          '',
-          Validators.compose([
-            Validators.required,
-            Validators.maxLength(6),
-            Validators.pattern(AppConstants.PINCode),
-          ]),
+        country: ['', Validators.compose([Validators.required])],
+
+        pinCode: ['', Validators.compose([Validators.required]),
         ],
         // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
         employerTAN: [
@@ -609,12 +643,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ''
         ],
         state: [''],
-        pinCode: [
-          '',
-          Validators.compose([
-            Validators.maxLength(6),
-            Validators.pattern(AppConstants.PINCode),
-          ]),
+        country: [''],
+
+        pinCode: ['',Validators.compose([Validators.required]),
         ],
         // employerPAN: ['', Validators.pattern(AppConstants.panNumberRegex)],
         employerTAN: [
@@ -1054,6 +1085,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =
@@ -1354,8 +1387,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.employerDetailsFormGroup?.controls['address']?.value;
       this.localEmployer.employerName =
         this.employerDetailsFormGroup?.controls['employerName']?.value;
-      this.localEmployer.state =
-        this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+        this.employerDetailsFormGroup?.controls['country']?.value;
       this.localEmployer.pinCode =
         this.employerDetailsFormGroup?.controls['pinCode']?.value;
       this.localEmployer.city =
@@ -1658,6 +1691,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup.controls['state'].setValue(
         result.stateCode
       );
+      this.employerDetailsFormGroup.controls['country'].setValue(result.countryCode);
     });
   }
 
@@ -1827,7 +1861,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
 
     /* Employer set values */
     this.employerDetailsFormGroup.patchValue(this.localEmployer);
+    let countrycode = this.employerDetailsFormGroup.controls['country'].value;
+    if(countrycode === '91'){
     this.updateDataByPincode();
+
+    }
 
     // this.getData(this.localEmployer.pinCode);
 
@@ -2135,6 +2173,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
+      this.localEmployer.country =
+      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =

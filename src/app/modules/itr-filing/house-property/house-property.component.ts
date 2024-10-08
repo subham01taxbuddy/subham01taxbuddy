@@ -30,6 +30,7 @@ export class HousePropertyComponent implements OnInit {
   itrDocuments = [];
   deletedFileData: any = [];
   hpView: string = 'FORM';
+  zipCodeLabel: string = 'PIN Code';
   propertyTypeDropdown = [
     {
       value: 'SOP',
@@ -56,6 +57,9 @@ export class HousePropertyComponent implements OnInit {
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
+  countryDropdown = AppConstants.countriesDropdown;
+
+  state;
   thirtyPctOfAnnualValue = 0;
   annualValue = 0;
   step = 0;
@@ -154,8 +158,20 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['state'].setValue(this.ITR_JSON.address.state);
       this.housePropertyForm.controls['country'].setValue(this.ITR_JSON.address.country);
       this.housePropertyForm.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
+
+      // Check for the country code and set the label accordingly
+      const selectedCountryCode = this.ITR_JSON.address.country; // Assuming countryCode is available in ITR_JSON
+
+      if (selectedCountryCode === '91') {
+        this.zipCodeLabel = 'PIN Code'; // For India
+        this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+      } else {
+        this.zipCodeLabel = 'ZIP Code'; // For other countries
+        this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
   }
+  }
+
 
   markActive(index) {
     if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
@@ -194,10 +210,14 @@ export class HousePropertyComponent implements OnInit {
 
   getPropertyTypeLabel() {
     if (this.housePropertyForm.controls['propertyType'].value) {
-      return this.propertyTypeDropdown.filter(prop =>
-        prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
+      return (
+        this.propertyTypeDropdown.filter(
+          (prop) =>
+            prop.value === this.housePropertyForm.controls['propertyType'].value
+        )[0].label + ' Property'
+      );
     } else {
-      return 'Property'
+      return 'Property';
     }
   }
   updateHpTaxaxbleIncome(save?) {
@@ -253,26 +273,75 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  changeCountry(country) {
-    if (country !== '91') {
-      this.stateDropdown = [
-        {
-          id: '5b4599c9c15a76370a3424e9',
-          stateId: '1',
-          countryCode: '355',
-          stateName: 'Foreign',
-          stateCode: '99',
-          status: true,
-        },
-      ];
-      this.housePropertyForm.controls['state'].setValue('99');
+
+  changeCountry(selectedCountryCode: string): void {
+    console.log(selectedCountryCode);
+    // Check if the selected country is India (countryCode '91')
+    if (selectedCountryCode === '91') {
+      this.zipCodeLabel = 'PIN Code'; // For India
+      this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+    } else {
+      this.zipCodeLabel = 'ZIP Code'; // For other countries
+      this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
+
+    // Update validators for the pinCode based on country
+    const pinCodeControl = this.housePropertyForm.get('pinCode');
+    if (selectedCountryCode === '91') {
+      // Validators for Indian PIN codes (numeric and exactly 6 digits)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+      ]);
+    } else {
+      this.housePropertyForm?.controls['state'].setValue('99');
+      // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        // Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+      ]);
+    }
+    pinCodeControl?.updateValueAndValidity();
   }
+
+
+  changeCountryClear(selectedCountryCode: string): void {
+    console.log(selectedCountryCode);
+    // Check if the selected country is India (countryCode '91')
+    if (selectedCountryCode === '91') {
+      this.zipCodeLabel = 'PIN Code'; // For India
+      this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+    } else {
+      this.zipCodeLabel = 'ZIP Code'; // For other countries
+      this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+    }
+
+    // Update validators for the pinCode based on country
+    const pinCodeControl = this.housePropertyForm.get('pinCode');
+    if (selectedCountryCode === '91') {
+      // Validators for Indian PIN codes (numeric and exactly 6 digits)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+      ]);
+    } else {
+      this.housePropertyForm?.controls['state'].setValue('99');
+      // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        // Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+      ]);
+  }
+    pinCodeControl?.updateValueAndValidity();
+    this.housePropertyForm.get('pinCode').setValue('');
+    this.housePropertyForm.controls['city'].setValue('');
+  }
+
 
   getCityData() {
     let pinCode = this.housePropertyForm?.controls['pinCode'];
     if (pinCode.valid) {
-      this.changeCountry('91');
+      // this.changeCountry('91');
       const param = '/pincode/' + pinCode?.value;
       this.userMsService.getMethod(param).subscribe(
         (result: any) => {
@@ -355,8 +424,6 @@ export class HousePropertyComponent implements OnInit {
 
           Validators.compose([
             Validators.required,
-            Validators.maxLength(6),
-            Validators.pattern(AppConstants.PINCode),
           ]),
         ],
 
@@ -491,12 +558,9 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getOwnershipCategory(propertyType: string) {
-    if ("SOP" === propertyType)
-      return "Self Occupied";
-    if ("LOP" === propertyType)
-      return "Let Out";
-    if ("DLOP" === propertyType)
-      return "Deemed Let Out";
+    if ('SOP' === propertyType) return 'Self Occupied';
+    if ('LOP' === propertyType) return 'Let Out';
+    if ('DLOP' === propertyType) return 'Deemed Let Out';
   }
 
   createCoOwnerForm(
@@ -654,7 +718,12 @@ export class HousePropertyComponent implements OnInit {
     this.housePropertyForm = this.createHousePropertyForm();
     let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
-    this.housePropertyForm.controls['country'].setValue('91');
+
+    this.changeCountry(
+      itrJsonHp.country == null || itrJsonHp.country == undefined
+        ? '91'
+        : itrJsonHp.country
+    );
 
     if (itrJsonHp?.loans) {
       this.housePropertyForm.controls['principalAmount'].setValue(
@@ -1402,7 +1471,7 @@ export class HousePropertyComponent implements OnInit {
       || 0) > 200000) {
       return true;
     } else {
-      return false
+      return false;
     }
   }
 

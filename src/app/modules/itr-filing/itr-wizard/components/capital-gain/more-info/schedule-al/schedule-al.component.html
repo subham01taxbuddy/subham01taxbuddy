@@ -17,15 +17,16 @@
 
               </h2>
               <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                <div style="padding: 20px;">
+                <div style="padding: 20px">
                   <div class="Bx4R" *ngIf="mode !== 'EDIT'">
                     <button type="button" class=" btn btn__default btn__add addAno" (click)="addMore()">
                       Add more
                     </button>
                   </div>
                   <div *ngIf="mode === 'VIEW'">
-                    <div *ngFor="let item of immovableAssets | paginate:config">
-                    </div>
+                    <div
+                      *ngFor="let item of immovableAssets | paginate : config"
+                    ></div>
                     <ag-grid-angular style="width: 100%; height: 150%" class="ag-theme-balham topSps"
                       [gridOptions]="immovableAssetGridOptions" [groupDisplayType]="groupDisplayType"
                       [animateRows]="true" (rowClicked)="onAssetsRowClicked($event)"></ag-grid-angular>
@@ -47,7 +48,12 @@
                   </div>
                   <div class="contents-wrapper">
                     <div class="field-text-wrapper">
-                      <div class="field-text-2" (click)="$event.stopPropagation(); addMore();">+ Add Another</div>
+                      <div
+                        class="field-text-2"
+                        (click)="$event.stopPropagation(); addMore()"
+                      >
+                        + Add Another
+                      </div>
                     </div>
                   </div>
                   <form [formGroup]="immovableAssetForm">
@@ -122,35 +128,60 @@
                               </div>
                               <div class="div-6">
                                 <div class="form-field">
-                                  <div><span class="span">PIN Code </span> <span class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Select country </span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" matInput placeholder="PIN code" name="pinCode[activeIndex]"
-                                      formControlName="pinCode" class="input-field" maxlength="6" minlength="6" trim
-                                      digitsOnly (blur)="updateDataByPincode(immovableAssetArray.controls[activeIndex])"
-                                      required />
-                                    <mat-error
-                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('pattern')">
-                                      Enter 6 digit PIN code.
-                                    </mat-error>
-                                    <mat-error
-                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('minLength')">
-                                      Enter 6 digit PIN code.
-                                    </mat-error>
-                                    <mat-error
-                                      *ngIf="immovableAssetArray.controls[activeIndex].get('pinCode').hasError('maxLength')">
-                                      Enter 6 digit PIN code.
-                                    </mat-error>
+                                    <mat-select
+                                      placeholder="Select country"
+                                      name="country[activeIndex]"
+                                      formControlName="country"
+                                      (selectionChange)="
+                               immovableAssetArray.controls[activeIndex].get('country').value === '91'
+                              ? updateDataByPincode(immovableAssetArray.controls[activeIndex])
+                              : updateCity(immovableAssetArray.controls[activeIndex])
+                               "
+                                      required
+                                    >
+                                      <mat-option
+                                        *ngFor="let country of countryDropdown"
+                                        [value]="country.countryCode"
+                                      >
+                                        {{ country.countryName | titlecase }}
+                                      </mat-option>
+                                    </mat-select>
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">City </span> <span class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">{{
+                                      immovableAssetArray.controls[
+                                        activeIndex
+                                      ].get("country").value === "91"
+                                        ? "PIN Code"
+                                        : "ZIP Code"
+                                    }}</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input type="text" trim matInput placeholder="City/Taluka/District"
-                                      name="city[activeIndex]" formControlName="city" class="input-field" maxlength="50"
-                                      required />
-                                    <mat-error
-                                      *ngIf="immovableAssetArray.controls[activeIndex].get('city').hasError('pattern')">
-                                      Enter valid city name.</mat-error>
+                                    <input
+                                type="text"
+                                  matInput
+                                [placeholder]="immovableAssetArray.controls[activeIndex].get('country').value === '91' ? 'PIN code' : 'ZIP code'"
+                                name="pinCode[activeIndex]"
+                               formControlName="pinCode"
+                               class="input-field"
+                               [maxlength]="immovableAssetArray.controls[activeIndex].get('country').value === '91' ? 6 : 8"
+                               (blur)="
+                               immovableAssetArray.controls[activeIndex].get('country').value === '91'
+                              ? updateDataByPincode(immovableAssetArray.controls[activeIndex])
+                              : updateCity(immovableAssetArray.controls[activeIndex])
+                               "
+                               required
+                                   />
+
+
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -168,15 +199,33 @@
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Select country </span> <span class="text-wrapper-2">*</span>
+                                  <div>
+                                    <span class="span">City </span>
+                                    <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select placeholder="Select country" name="country[activeIndex]"
-                                      formControlName="country" required>
-                                      <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
-                                        {{ country.countryName | titlecase }}
-                                      </mat-option>
-                                    </mat-select>
+                                    <input
+                                      type="text"
+                                      trim
+                                      matInput
+                                      placeholder="City/Taluka/District"
+                                      name="city[activeIndex]"
+                                      formControlName="city"
+                                      class="input-field"
+                                      maxlength="50"
+                                      required
+                                    />
+                                    <mat-error
+                                      *ngIf="
+                                        immovableAssetArray.controls[
+                                          activeIndex
+                                        ]
+                                          .get('city')
+                                          .hasError('pattern')
+                                      "
+                                    >
+                                      Enter valid city name.</mat-error
+                                    >
                                   </mat-form-field>
                                 </div>
                               </div>
@@ -230,8 +279,11 @@
                             </mat-form-field>
                           </div>
                           <div class="col-sm-6 mt-3">
-                            <span class="span"> 2. Archaeological collections, drawings, paintings,
-                              sculpture, any work of art </span> <span class="text-wrapper-2">*</span>
+                            <span class="span">
+                              2. Archaeological collections, drawings,
+                              paintings, sculpture, any work of art
+                            </span>
+                            <span class="text-wrapper-2">*</span>
                           </div>
                           <div class="col-sm-6 mt-3">
                             <mat-form-field appearance="outline" class="movable-assets">

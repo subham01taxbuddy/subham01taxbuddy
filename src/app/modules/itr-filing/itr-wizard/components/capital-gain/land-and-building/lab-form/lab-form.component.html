@@ -625,24 +625,39 @@
                           <div class="buyr-box">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Pincode</span> <span class="text-wrapper-2">*</span>
+<span class="span">Country</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput formControlName="pin" name="buyer[i]" class="input-field" maxlength="6"
-                                  (blur)="updateDataByPincode(i)" (change)="changeAddress($event, 'pin')" required />
-                                <mat-error *ngIf="buyer.get('pin').hasError('pattern')">
-                                  Enter valid PIN code.
-                                </mat-error>
+<mat-select name="improve[i]" formControlName="country"
+(selectionChange)="changecountry($event, 'country')" required>
+<mat-option [value]="country.countryCode" *ngFor="let country of countryDropdown">
+{{ country.countryName | titlecase }}
+</mat-option>
+</mat-select>
                               </mat-form-field>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">City</span>
+  <span class="span">
+  {{
+    (immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value === '91')
+      ? 'Pincode'
+      : 'Zipcode'
+  }}
+</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <input matInput formControlName="city" name="buyer[i]" class="input-field"
-                                  (change)="changeAddress($event, 'city')" required />
+  <input
+    matInput
+    formControlName="pin"
+    name="buyer[i]"
+    class="input-field"
+    [attr.maxlength]="(immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value === '91') ? 6 : 8"
+    (blur)="updateDataByPincode(i)"
+    (change)="changeAddress($event, 'pin')"
+    required
+  />
                               </mat-form-field>
                             </div>
 
@@ -651,14 +666,24 @@
                                 <span class="span">State</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <mat-select name="improve[i]" formControlName="state"
-                                  (selectionChange)="changeAddress($event, 'state')" required>
+                                <mat-select name="improve[i]" formControlName="state" required>
                                   <mat-option [value]="state.stateCode" *ngFor="let state of stateDropdown">
                                     {{ state.stateName }}
                                   </mat-option>
                                 </mat-select>
                               </mat-form-field>
                             </div>
+
+<div class="field">
+<div class="field-label">
+<span class="span">City</span>
+</div>
+<mat-form-field appearance="outline" class="small-inp no-height">
+<input matInput formControlName="city" name="buyer[i]" class="input-field"
+ required />
+</mat-form-field>
+</div>
+
 
                           </div>
                           <!-- row4 -->
@@ -668,8 +693,7 @@
                                 <span class="span">Address</span> <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline" class="small-inp no-height">
-                                <textarea matInput formControlName="address" name="buyer[i]"
-                                  (change)="changeAddress($event, 'address')" required trim></textarea>
+<textarea matInput formControlName="address" name="buyer[i]" required trim></textarea>
                               </mat-form-field>
                             </div>
 

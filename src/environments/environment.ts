@@ -1,24 +1,24 @@
 export const environment = {
-	production: true,
+	production: false,
 	url_dev: "https://dev-api.taxbuddy.com",
-	portal_url: 'https://gst-admin.taxbuddy.com/',
-	url: "https://api.taxbuddy.com",
+	portal_url: 'https://uat-admin.taxbuddy.com/',
+	url: "https://uat-api.taxbuddy.com",
 	eri_url: "https://api.taxbuddy.com",
 	gst_gov_url: "https://devapi.gst.gov.in",
 	ifsc_url: "https://ifsc.razorpay.com",
 	amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
 	reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
 	addClientThroughEportal: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/efiling/add-eri",
-	isValidItr: true,
-	environment: 'PROD',
-	admin_id: 1067,
-	allowReassignToPreviousLeader: [1067,1040256],
-	webportal_url: 'https://itr.taxbuddy.com',
+	isValidItr: false,
+	environment: 'UAT',
+	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",
+	admin_id: 3000,
+	allowReassignToPreviousLeader: [3000,14140],
+	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
-	lifecycleEnv: "prod",
-	payOutEnv: "PROD",
+	lifecycleEnv: "qa",
+	payOutEnv: "QA",
 	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
-	kmAppId: "3c45762181ce71ac72f5e8ffd90da16a8",
 	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
@@ -38,13 +38,34 @@ export const environment = {
 		// GOOGLE_DRIVE_API_KEY : 'AIzaSyDbc9tRF_zEqgITEen8BAIpbFeWF5i-w90',
 		GOOGLE_DRIVE_API_KEY: 'AIzaSyDbc9tRF_zEqgITEen8BAIpbFeWF5i-w90',
 		// GOOGLE_DRIVE_REFRESH_TOKEN : '1//04pkPTYbdma87CgYIARAAGAQSNwF-L9IrPQ3eZitgESUDwy99aGnxQxLEXLjZy0hJ2oVY0U6jyzt-G1-QwfmgQhP2-5B07tGiWGA'
-		FOLDER_ID: '15MjvRj7e18aqvkQUrFnEFAKSohUdVQBr'
+		FOLDER_ID: '1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt'
+	},
+
+	// firebaseConfig: {
+	// 	apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+	// 	authDomain: "taxbuddy-uat.firebaseapp.com",
+	// 	databaseURL: "https://taxbuddy-uat.firebaseio.com",
+	// 	projectId: "taxbuddy-uat",
+	// 	storageBucket: "taxbuddy-uat.appspot.com",
+	// 	messagingSenderId: "805239680508",
+	// 	appId: "1:805239680508:web:b9258ec04023b0fda05679",
+	// 	measurementId: "G-DMWVKK98X2"
+	// },
+	firebaseConfig: {
+		apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+		authDomain: "taxbuddy-uat.firebaseapp.com",
+		databaseURL: "https://taxbuddy-uat.firebaseio.com",
+		projectId: "taxbuddy-uat",
+		storageBucket: "taxbuddy-uat.appspot.com",
+		messagingSenderId: "805239680508",
+		appId: "1:805239680508:web:c5a224dafd6a97bea05679",
+		measurementId: "G-R5JYTLSE8B"
 	},
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",
 		// password: "testPwd8761$",
-		bucket: 'tb-gst-docs-dev',
+		bucket: 'tb-gst-docs-uat-dev',
 		region: 'ap-south-1'
 	},
 	/* aws_cred: {
@@ -55,41 +76,19 @@ export const environment = {
 	}, */
 	AMPLIFY_CONFIG: {
 		aws_project_region: 'ap-south-1',
-		aws_cognito_identity_pool_id: 'ap-south-1:441cb3f2-c1a9-4ca1-8964-ea56f5184aea',
+		aws_cognito_identity_pool_id: 'ap-south-1:f7280802-a172-4b2a-a3b2-adf642b67b38',
 		aws_cognito_region: 'ap-south-1',
-		aws_user_pools_id: 'ap-south-1_s42HgYzaY',
-		aws_user_pools_web_client_id: '289f0frh4oj9rp5rh6q9opo4qn',
+		aws_user_pools_id: 'ap-south-1_7GHESh9rb',
+		aws_user_pools_web_client_id: 'pdtpeogn8a2viimond1u0debi',
 		oauth: {},
 		federationTarget: 'COGNITO_IDENTITY_POOLS',
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 
-	externalScripts: {
-	},
-	// firebaseConfig: {
-	// 	apiKey: "AIzaSyCTINXADOkr4isp-GJXu5IjV8kPlqb7OZo",
-	// 	authDomain: "taxbuddy-29fe2.firebaseapp.com",
-	// 	databaseURL: "https://taxbuddy-29fe2.firebaseio.com",
-	// 	projectId: "taxbuddy-29fe2",
-	// 	storageBucket: "taxbuddy-29fe2.appspot.com",
-	// 	messagingSenderId: "294419985055",
-	// 	appId: "1:294419985055:web:ba4a7ae5511923269d28aa",
-	// 	measurementId: "G-ED3KSXPPS8"
-	// }
-	firebaseConfig: {
-		apiKey: "AIzaSyCTINXADOkr4isp-GJXu5IjV8kPlqb7OZo",
-		authDomain: "taxbuddy-29fe2.firebaseapp.com",
-		databaseURL: "https://taxbuddy-29fe2.firebaseio.com",
-		projectId: "taxbuddy-29fe2",
-		storageBucket: "taxbuddy-29fe2.appspot.com",
-		messagingSenderId: "294419985055",
-		appId: "1:294419985055:web:333066a5ba29aad79d28aa",
-		measurementId: "G-K3L7DS9C92"
-	},
-	WEBSOCKET_URL: 'wss://heavy-azure-whale.rmq3.cloudamqp.com/ws/mqtt',
-	CHAT_API_URL: 'https://tiledesk.taxbuddy.com/chatapi/api/tilechat',
-	TILEDESK_URL: 'https://tiledesk.taxbuddy.com',
-	USER_STATUS_WEBSOCKET_URL: 'wss://tiledesk.taxbuddy.com/ws',
-	PROJECT_NAME: 'Taxbuddy Prod',
-	TILEDESK_PROJECT_ID: "665ed8fb3f1c0d001377898f"
+	WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/mqws/ws',
+	CHAT_API_URL: 'https://dev-tiledesk.taxbuddy.com/chatapi/api/tilechat',
+	TILEDESK_URL: 'https://dev-tiledesk.taxbuddy.com',
+	USER_STATUS_WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/ws',
+	PROJECT_NAME: 'Taxbuddy Dev',
+	TILEDESK_PROJECT_ID: "65e56b0b7c8dbc0013851dcb"
 };
