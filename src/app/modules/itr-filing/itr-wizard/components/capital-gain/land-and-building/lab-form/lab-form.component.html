@@ -355,10 +355,10 @@
                     <div class="col-12">
                       <div class="row">
                         <div class="col-12">
-                          <mat-checkbox [formControl]="showNewAsset" (change)="onToggleNewAsset($event.checked ,i)">New Asset Purchase</mat-checkbox>
+                          <mat-checkbox formControlName="showNewAsset" (change)="onToggleNewAsset($event.checked ,i)">New Asset Purchase</mat-checkbox>
                         </div>
                       </div>
-                      <div  class="nBorder" *ngIf="showNewAsset.value">
+                      <div  class="nBorder" *ngIf="deduction.get('showNewAsset').value">
                         <div class="lndBldg-box">
                           <div class="lndBldg-L">
                             <div><span class="span">Date Of purchase</span> <span class="redAst">*</span>
@@ -391,16 +391,16 @@
                         </div>
                       </div>
 
-                      <div class="row mt-3">
+                      <div class="row mt-3" *ngIf="deduction.get('underSection').value === '54' || deduction.get('underSection').value === '54B' || deduction.get('underSection').value === '54F'">
                         <div class="col-12 ">
-                          <mat-checkbox [formControl]="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
+                          <mat-checkbox formControlName="showCGAS" (change)="onToggleCGAS($event.checked)">Deposited into CGAS A/C (Before due date)</mat-checkbox>
                         </div>
                       </div>
-                      <div class="nBorder" *ngIf="showCGAS.value">
+                      <div class="nBorder" *ngIf="deduction.get('showCGAS').value">
 
                         <div class="lndBldg-box" *ngIf="deduction.get('underSection').value !== '54EC' && deduction.get('underSection').value !== '54EE'">
                             <div class="lndBldg-L">
-                              <span class="span">CGAS Account</span> <span class="redAst">*</span>
+                              <span class="span">CGAS Amount Deposited Before Due Date</span> <span class="redAst">*</span>
                             </div>
                             <div class="lndBldg-R">
                             <mat-form-field appearance="outline" class="small-inp no-height">

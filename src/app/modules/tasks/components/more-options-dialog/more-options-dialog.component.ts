@@ -17,7 +17,8 @@ import { UpdateNoJsonFilingDialogComponent } from '../../../shared/components/up
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { HttpClient } from '@angular/common/http'; // Add this import
+import { HttpClient } from '@angular/common/http';
+import {ApiEndpoints} from "../../../shared/api-endpoint"; // Add this import
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -840,10 +841,10 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToTaxCalculation() {
     const userId = this.data.userId; // Get userId
-    const apiUrl = `https://uat-api.taxbuddy.com/itr/calculate/advance-tax/${userId}`;
+    const apiUrl = `${ApiEndpoints.itrMs.itrAdvanceTax}/${userId}`;
 
     // Call the API to get advance tax data
-    this.http.get(apiUrl, { observe: 'response' }).subscribe(
+    this.itrMsService.getMethod(apiUrl).subscribe(
       (response: any) => {
         if (response.status === 200) {
           const taxData = response.body.data; // Assuming data is inside `body`
