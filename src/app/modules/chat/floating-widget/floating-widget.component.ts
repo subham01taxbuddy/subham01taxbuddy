@@ -348,6 +348,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                             sender: conversation.sender,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
+                            attributes: conversation?.attributes
                         };
                     });
             }
@@ -366,6 +367,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                         sender: conversation.sender,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
+                        attributes: conversation?.attributes
 
                     };
                 });
@@ -375,6 +377,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
             this.conversationList = [];
             this.isConversationListEmpty = true;
         }
+        console.log('conversation list',this.conversationList);
     }
 
 

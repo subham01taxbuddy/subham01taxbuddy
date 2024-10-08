@@ -329,6 +329,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
                             sender: conversation.sender,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
+                            attributes: conversation?.attributes
                         };
                     });
             }
@@ -347,7 +348,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
                         sender: conversation.sender,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
-
+                        attributes: conversation?.attributes
                     };
                 });
             }
