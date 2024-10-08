@@ -17,7 +17,8 @@ import { UpdateNoJsonFilingDialogComponent } from '../../../shared/components/up
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { HttpClient } from '@angular/common/http'; // Add this import
+import { HttpClient } from '@angular/common/http';
+import {ApiEndpoints} from "../../../shared/api-endpoint"; // Add this import
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -840,10 +841,10 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   goToTaxCalculation() {
     const userId = this.data.userId; // Get userId
-    const apiUrl = `https://uat-api.taxbuddy.com/itr/calculate/advance-tax/${userId}`;
+    const apiUrl = `${ApiEndpoints.itrMs.itrAdvanceTax}/${userId}`;
 
     // Call the API to get advance tax data
-    this.http.get(apiUrl, { observe: 'response' }).subscribe(
+    this.itrMsService.getMethod(apiUrl).subscribe(
       (response: any) => {
         if (response.status === 200) {
           const taxData = response.body.data; // Assuming data is inside `body`
@@ -851,42 +852,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           // Navigate to the tax calculation page and pass the tax data as query params
           this.router.navigate(['/pages/user-management/tax-calculation'], {
             queryParams: {
-              userId: taxData.userId,
-              name: taxData.name,
-              pan: taxData.pan,
-              assessmentYear: taxData.assessmentYear,
-              dob: taxData.dob,
-              grossSalary: taxData.grossSalary,
-              oldRegimeSalaryExemption: taxData.oldRegimeSalaryExemption,
-              newRegimeSalaryExemption: taxData.newRegimeSalaryExemption,
-              businessIncome: taxData.businessIncome,
-              speculativeBusinessIncome: taxData.speculativeBusinessIncome,
-              rentalIncome: taxData.rentalIncome,
-              deduction: taxData.deduction,
-              homeLoanInterest: taxData.homeLoanInterest,
-              sopHomeLoanInterest: taxData.sopHomeLoanInterest,
-              otherSourceIncome: taxData.otherSourceIncome,
-              ltcg112A: taxData.ltcg112A,
-              ltcg112Other: taxData.ltcg112Other,
-              stcg111A: taxData.stcg111A,
-              stcgAppRate: taxData.stcgAppRate,
-              us80c: taxData.us80c,
-              us80dSelf: taxData.us80dSelf,
-              us80dParent: taxData.us80dParent,
-              us80ccd1b: taxData.us80ccd1b,
-              us80ccd2: taxData.us80ccd2,
-              us80ttattb: taxData.us80ttattb,
-              us80g80ggc80gga: taxData.us80g80ggc80gga,
-              anyOther: taxData.anyOther,
-              pylHp: taxData.pylHp,
-              pylNonSpeculativeIncome: taxData.pylNonSpeculativeIncome,
-              pylSpeculativeIncome: taxData.pylSpeculativeIncome,
-              pylLtcgl12A: taxData.pylLtcgl12A,
-              pylStcg111A: taxData.pylStcg111A,
-              pylLtcgOtherThan112A: taxData.pylLtcgOtherThan112A,
-              pylStcgOtherThan111A: taxData.pylStcgOtherThan111A,
-              tdsTcs: taxData.tdsTcs,
-              advanceTaxPaid: taxData.advanceTaxPaid,
+              userId: userId, // Passing only userId
             },
           });
 

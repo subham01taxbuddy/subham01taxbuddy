@@ -1,7 +1,4 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="page-wrapper">
   <main>
     <div class="mrgArd">
@@ -14,31 +11,17 @@
         </div>
         <form [formGroup]="propertiesForm">
           <div formArrayName="propertiesArray">
-            <mat-accordion
-              class="headers-align"
-              [formGroupName]="i"
-              *ngFor="
-                let prop of getPropertiesArrayForForm.controls;
-                let i = index
-              "
-              hideToggle
-            >
+            <mat-accordion class="headers-align" [formGroupName]="i"
+              *ngFor="let prop of getPropertiesArrayForForm.controls; let i = index" hideToggle>
               <mat-expansion-panel>
-                <mat-expansion-panel-header
-                  class="card__row"
-                  (click)="addCapitalGain('EDIT', properties[i])"
-                >
-                  <mat-checkbox
-                    name="prop[i]"
-                    formControlName="selected"
-                    (click)="$event.stopPropagation()"
-                  ></mat-checkbox>
+                <mat-expansion-panel-header class="card__row" (click)="addCapitalGain('EDIT', properties[i])">
+                  <mat-checkbox name="prop[i]" formControlName="selected" (click)="
+                  $event.stopPropagation()
+                "></mat-checkbox>
                   <div class="card__col-xs-12">
                     <div class="card__col-xs-12 card__col-sm-3">
                       <div class="title">Date of Sale</div>
-                      <div class="value">
-                        {{ properties[i].sellDate | date }}
-                      </div>
+                      <div class="value">{{ properties[i].sellDate | date }}</div>
                     </div>
                     <div class="card__col-xs-12 card__col-sm-2">
                       <div class="title">Type of Gain</div>
@@ -62,26 +45,17 @@
               </mat-expansion-panel>
             </mat-accordion>
           </div>
-          <mat-hint *ngIf="isExmptAvail"
-            >Note: (**) indicates you got an exemption upto 1,00,000 against the
-            asset class.</mat-hint
-          >
+          <mat-hint *ngIf="isExmptAvail">Note: (**) indicates you got an exemption upto 1,00,000 against the
+            asset class.</mat-hint>
           <div>
-            <button
-              class="delete-btn"
-              (click)="deleteCapitalGain()"
-              [disabled]="!isPropertySelected()"
-            >
+            <button class="delete-btn" (click)="deleteCapitalGain()" [disabled]="!isPropertySelected()">
               <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
             </button>
           </div>
         </form>
       </div>
       <div *ngIf="labView === 'FORM'">
-        <app-lab-form
-          (cancelForm)="cancelForm($event)"
-          (saveForm)="formSaved($event)"
-        ></app-lab-form>
+        <app-lab-form (cancelForm)="cancelForm($event)" (saveForm)="formSaved($event)"></app-lab-form>
       </div>
       <hr />
       <div class="flex justify-between p-[30px] back-foot">
@@ -90,20 +64,12 @@
           <span class="font-semibold">Back to Capital Gain Topics</span>
         </button>
 
-        <button
-          (click)="saveFormData()"
-          [disabled]="loading"
-          *ngIf="labView === 'FORM'"
-          class="saveBtnIn"
-        >
+        <button (click)="saveFormData()" [disabled]="loading" *ngIf="labView === 'FORM'" class="saveBtnIn">
           <span class="font-semibold">Save All</span>
         </button>
       </div>
     </div>
   </main>
   <app-side-summary-panel type="landAndBuilding"></app-side-summary-panel>
-  <app-previous-summary-panel
-    type="landAndBuilding"
-    *ngIf="PREV_ITR_JSON"
-  ></app-previous-summary-panel>
+  <app-previous-summary-panel type="landAndBuilding" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 </div>

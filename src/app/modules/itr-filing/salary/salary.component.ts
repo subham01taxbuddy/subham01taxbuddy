@@ -192,7 +192,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
-  countriesDropdown = AppConstants.countriesDropdown;
+  countryDropdown = AppConstants.countriesDropdown;
 
 
   // errors keys
@@ -229,7 +229,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         employerName: '',
         address: '',
         city: '',
-        country:'',
         pinCode: '',
         state: '',
         employerPAN: '',
@@ -255,9 +254,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     }
   }
-  pinLabel: string = 'Pincode';
-  pincodePattern = '^[0-9]{6}$'; 
-  zipcodePattern = '^[a-zA-Z0-9]{8}$'; 
+
   ngOnInit() {
     // this.getDocuments();
     console.log(
@@ -269,8 +266,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     this.deductionsFormGroup = this.createDeductionsFormGroup();
     this.allowanceFormGroup = this.createAllowanceFormGroup();
 
-    this.onCountryChange({ value: '91' });
-  
     //this.maxPT = 5000;
     this.maxEA = 5000;
     if (
@@ -360,7 +355,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         city: '',
         pinCode: '',
         state: '',
-        country:'',
         employerPAN: '',
         employerTAN: '',
         taxableIncome: null,
@@ -466,25 +460,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       sec89: [false],
       allowances: allowanceArray,
     });
-  }
-
-  onCountryChange(event: any): void {
-    const selectedCountryCode = event.value;
-
-    if (selectedCountryCode === '91') {
-      this.pinLabel = 'Pincode';
-      // Set validation for 6-digit Pincode (India)
-      this.employerDetailsFormGroup.get('pinCode')?.setValidators([Validators.required, Validators.pattern(this.pincodePattern)]);
-    } else {
-      this.pinLabel = 'Zipcode';
-      // Set validation for 8-character alphanumeric Zipcode (Other countries)
-      this.employerDetailsFormGroup.get('pinCode')?.setValidators([Validators.required, Validators.pattern(this.zipcodePattern)]);
-    }
-
-    // Update the validity of the form control after changing validators
-    this.employerDetailsFormGroup.get('pinCode').updateValueAndValidity();
-    this.employerDetailsFormGroup.updateValueAndValidity();
-    
   }
 
   validateExemptIncomes(event: any) {
@@ -611,8 +586,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ]),
         ],
         state: ['', Validators.compose([Validators.required])],
-        country: ['', Validators.compose([Validators.required])],
-
         pinCode: [
           '',
           Validators.compose([
@@ -636,8 +609,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
           ''
         ],
         state: [''],
-        country: [''],
-
         pinCode: [
           '',
           Validators.compose([
@@ -1083,8 +1054,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
-      this.localEmployer.country =
-      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =
@@ -1104,7 +1073,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let profitsInLieuAmount = 0;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     for (let i = 0; i < salaryDetails?.controls.length; i++) {
-      let salary = salaryDetails?.controls[i] as FormGroup;
+      let salary = salaryDetails?.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
         if (salary?.controls['salaryType']?.value === 'SEC17_1') {
           basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
@@ -1205,7 +1174,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let totalAllowExempt = 0;
     let othTotalAllowExempt = 0;
     for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
+      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
         if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
           allowance?.controls['allowValue']?.value !== 0 &&
@@ -1385,8 +1354,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         this.employerDetailsFormGroup?.controls['address']?.value;
       this.localEmployer.employerName =
         this.employerDetailsFormGroup?.controls['employerName']?.value;
-      this.localEmployer.country =
-        this.employerDetailsFormGroup?.controls['country']?.value;
+      this.localEmployer.state =
+        this.employerDetailsFormGroup?.controls['state']?.value;
       this.localEmployer.pinCode =
         this.employerDetailsFormGroup?.controls['pinCode']?.value;
       this.localEmployer.city =
@@ -2166,8 +2135,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       this.employerDetailsFormGroup?.controls['employerName']?.value;
     this.localEmployer.state =
       this.employerDetailsFormGroup?.controls['state']?.value;
-      this.localEmployer.country =
-      this.employerDetailsFormGroup?.controls['country']?.value;
     this.localEmployer.pinCode =
       this.employerDetailsFormGroup?.controls['pinCode']?.value;
     this.localEmployer.city =
@@ -2187,7 +2154,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let profitsInLieuAmount = 0;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     for (let i = 0; i < salaryDetails?.controls.length; i++) {
-      let salary = salaryDetails?.controls[i] as FormGroup;
+      let salary = salaryDetails?.controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)) {
         if (salary?.controls['salaryType']?.value === 'SEC17_1') {
           basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
@@ -2287,7 +2254,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     let totalAllowExempt = 0;
     let othTotalAllowExempt = 0;
     for (let i = 0; i < (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls.length; i++) {
-      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as FormGroup;
+      let allowance = (this.allowanceFormGroup.controls['allowances'] as FormArray).controls[i] as UntypedFormGroup;
       if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
         if (allowance?.controls['allowType']?.value === 'NON_MONETARY_PERQUISITES' &&
           allowance?.controls['allowValue']?.value !== 0 &&

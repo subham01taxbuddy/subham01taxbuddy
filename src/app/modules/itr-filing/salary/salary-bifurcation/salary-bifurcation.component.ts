@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ElementRef, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Employer, ITR_JSON, salarySevOne, salarySevThree, salarySevTwo, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -18,7 +18,7 @@ import { CalculatorModalComponent } from "../../../shared/components/calculator-
 export class SalaryBifurcationComponent implements OnInit, OnChanges {
   @ViewChild('breakUp') breakUp: ElementRef;
   ITR_JSON: ITR_JSON;
-  salaryFormGroup: FormGroup;
+  salaryFormGroup: UntypedFormGroup;
   @Input() localEmployer: Employer;
   total = {
     salary: 0,
@@ -235,7 +235,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
   changeConsentGiven: boolean;
   income: any;
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private overlay: Overlay,
     private elementRef: ElementRef,
     private utilsService: UtilsService,
@@ -439,7 +439,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     return <FormArray>this.salaryFormGroup.get('profitsInLieu');
   }
 
-  createSevOneForm(obj?: salarySevOne): FormGroup {
+  createSevOneForm(obj?: salarySevOne): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       salaryType: [obj?.salaryType || null, Validators.required],
@@ -449,7 +449,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     })
   }
 
-  createSevTwoForm(obj: salarySevTwo): FormGroup {
+  createSevTwoForm(obj: salarySevTwo): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       perquisiteType: [obj?.perquisiteType || null, Validators.required],
@@ -459,7 +459,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
     })
   }
 
-  createSevThreeForm(obj: salarySevThree): FormGroup {
+  createSevThreeForm(obj: salarySevThree): UntypedFormGroup {
     return this.fb.group({
       id: [obj?.id ? obj?.id : null],
       salaryType: [obj?.salaryType || null, Validators.required],
@@ -479,21 +479,21 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
 
   valid() {
     let type = 'salary';
-    let keys = Object.keys((this.salaryFormGroup.controls[type] as FormGroup).controls);
+    let keys = Object.keys((this.salaryFormGroup.controls[type] as UntypedFormGroup).controls);
     keys.every(key => {
       if (keys.filter(v => v === key).length > 1) {
         return false;
       }
     });
 
-    keys = Object.keys((this.salaryFormGroup.controls[type] as FormGroup).controls);
+    keys = Object.keys((this.salaryFormGroup.controls[type] as UntypedFormGroup).controls);
     keys.every(key => {
       if (keys.filter(v => v === key).length > 1) {
         return false;
       }
     });
 
-    keys = Object.keys((this.salaryFormGroup.controls[type] as FormGroup).controls);
+    keys = Object.keys((this.salaryFormGroup.controls[type] as UntypedFormGroup).controls);
     keys.every(key => {
       if (keys.filter(v => v === key).length > 1) {
         return false;
@@ -774,7 +774,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       const salary = this.salary;
       this.salaryNames.forEach((type) => {
         type['disabled'] = false;
-        salary.controls.forEach((element: FormGroup) => {
+        salary.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['salaryType'].value == type.key) {
             type['disabled'] = true;
           }
@@ -784,7 +784,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       const perquisites = this.perquisites;
       this.perquisiteNames.forEach((type) => {
         type['disabled'] = false;
-        perquisites.controls.forEach((element: FormGroup) => {
+        perquisites.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['perquisiteType'].value == type.key) {
             type['disabled'] = true;
           }
@@ -794,7 +794,7 @@ export class SalaryBifurcationComponent implements OnInit, OnChanges {
       const profitsInLieu = this.profitsInLieu;
       this.profitInLieuNames.forEach((type) => {
         type['disabled'] = false;
-        profitsInLieu.controls.forEach((element: FormGroup) => {
+        profitsInLieu.controls.forEach((element: UntypedFormGroup) => {
           if (element.controls['salaryType'].value == type.key) {
             type['disabled'] = true;
           }

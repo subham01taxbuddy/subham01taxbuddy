@@ -32,7 +32,7 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    if (request.headers.has(InterceptorSkipHeader)) {
+    if (request.headers?.has(InterceptorSkipHeader)) {
       const headers = request.headers.delete(InterceptorSkipHeader);
       return next.handle(request.clone({ headers }));
     }

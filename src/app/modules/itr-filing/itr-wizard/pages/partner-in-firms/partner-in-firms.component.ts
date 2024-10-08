@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
-  UntypedFormArray,
+  FormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
 } from '@angular/forms';
@@ -54,16 +54,16 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   get firmArray() {
-    return <UntypedFormArray>this.partnerInFirmForm?.get('firmArray');
+    return <FormArray>this.partnerInFirmForm?.get('firmArray');
   }
 
   editFirmForm(index) {
-    let formArray = this.partnerInFirmForm.controls['firmArray'] as UntypedFormArray;
+    let formArray = this.partnerInFirmForm.controls['firmArray'] as FormArray;
     formArray.controls[index].enable();
   }
 
   addMoreFirmData(item?) {
-    const firmArray = <UntypedFormArray>this.partnerInFirmForm?.get('firmArray');
+    const firmArray = <FormArray>this.partnerInFirmForm?.get('firmArray');
 
     firmArray.push(this.createFirmForm(firmArray.length, item));
 
@@ -89,7 +89,7 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   addFirmDetails(title, mode, i) {
-    const firmArray = <UntypedFormArray>this.partnerInFirmForm.get('firmArray');
+    const firmArray = <FormArray>this.partnerInFirmForm.get('firmArray');
     if (firmArray.valid || firmArray === null) {
       this.addMoreFirmData();
     } else {
@@ -103,7 +103,7 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   firmSelected() {
-    const improve = <UntypedFormArray>this.partnerInFirmForm.controls['firmArray'];
+    const improve = <FormArray>this.partnerInFirmForm.controls['firmArray'];
     return (
       improve.controls.filter(
         (item: UntypedFormGroup) => item.controls['hasEdit'].value === true
@@ -120,7 +120,7 @@ export class PartnerInFirmsComponent implements OnInit {
   }
 
   deleteFirms() {
-    let formArray = this.partnerInFirmForm.controls['firmArray'] as UntypedFormArray;
+    let formArray = this.partnerInFirmForm.controls['firmArray'] as FormArray;
     let index = 0;
     formArray.controls.forEach((form: UntypedFormGroup) => {
       if (form.controls['hasEdit'].value) {
@@ -136,7 +136,7 @@ export class PartnerInFirmsComponent implements OnInit {
 
     if (this.partnerInFirmForm.valid) {
       console.log('Save form here', this.partnerInFirmForm.getRawValue());
-      const firmsArray = <UntypedFormArray>this.partnerInFirmForm.get('firmArray');
+      const firmsArray = <FormArray>this.partnerInFirmForm.get('firmArray');
       this.Copy_ITR_JSON.partnerFirms = firmsArray.getRawValue();
 
       this.loading = true;

@@ -127,7 +127,7 @@
         </tr>
         <tr>
           <td class="table-data">6</td>
-          <td class="table-data">Total Income from All Sources</td>
+          <td class="table-data">Gross Total Income</td>
           <td class="table-data">
             {{ totalIncome || 0 }}
           </td>
@@ -137,6 +137,16 @@
         </tr>
         <tr>
           <td class="table-data">7</td>
+          <td class="table-data">CYLA</td>
+          <td class="table-data">
+            {{ oldRegime.cyla || 0 }}
+          </td>
+          <td class="table-data">
+            {{ newRegime.cyla || 0 }}
+          </td>
+        </tr>
+        <tr>
+          <td class="table-data">8</td>
           <td class="table-data">Deduction under VI-A</td>
           <td class="table-data">
             {{ oldRegime.deductionUnderVIA || 0 }}
@@ -146,8 +156,8 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">8</td>
-          <td class="table-data">Taxable Income</td>
+          <td class="table-data">9</td>
+          <td class="table-data">Total Income (After deducting B/F losses)</td>
           <td class="table-data">
             {{ oldRegime.taxableIncome || 0 }}
           </td>
@@ -156,7 +166,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">9</td>
+          <td class="table-data">10</td>
           <td class="table-data">Tax on (Taxable Income)</td>
           <td class="table-data">
             {{ oldRegime.tax || 0 }}
@@ -166,7 +176,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">10</td>
+          <td class="table-data">11</td>
           <td class="table-data">Rebate u/s 87A</td>
           <td class="table-data">
             {{ oldRegime.rebateUs87A || 0 }}
@@ -176,7 +186,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">11</td>
+          <td class="table-data">12</td>
           <td class="table-data">Tax After Rebate</td>
           <td class="table-data">
             {{ oldRegime.taxAfterRebate || 0 }}
@@ -186,7 +196,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">12</td>
+          <td class="table-data">13</td>
           <td class="table-data">Surcharge</td>
           <td class="table-data">
             {{ oldRegime.surcharge || 0 }}
@@ -196,7 +206,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">13</td>
+          <td class="table-data">14</td>
           <td class="table-data">HEC</td>
           <td class="table-data">
             {{ oldRegime.hec || 0 }}
@@ -206,7 +216,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">14</td>
+          <td class="table-data">15</td>
           <td class="table-data">Total Tax</td>
           <td class="table-data">
             {{ oldRegime.totalTax || 0 }}
@@ -216,7 +226,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">15</td>
+          <td class="table-data">16</td>
           <td class="table-data">Taxes Paid</td>
           <td class="table-data">
             {{ oldRegime.taxesPaid || 0 }}
@@ -226,7 +236,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">16</td>
+          <td class="table-data">17</td>
           <td class="table-data">Tax Liability</td>
           <td class="table-data">
             {{ oldRegime.taxLiability || 0 }}
@@ -236,7 +246,7 @@
           </td>
         </tr>
         <tr>
-          <td class="table-data">17</td>
+          <td class="table-data">18</td>
           <td class="table-data">Beneficial Regime</td>
           <td class="table-data" colspan="2">
             {{ beneficialRegime }}
@@ -329,12 +339,12 @@
       </thead>
       <tbody>
         <tr>
-          <td class="table-data">{{ advanceTaxQuarter4.rate }}%</td>
+          <td class="table-data">{{ advanceTaxQuarter3.rate }}%</td>
           <td class="table-data">
-            {{ advanceTaxQuarter4.cumulativeTaxLiability }}
+            {{ advanceTaxQuarter3.cumulativeTaxLiability }}
           </td>
-          <td class="table-data">{{ advanceTaxQuarter4.installment }}</td>
-          <td class="table-data">{{ advanceTaxQuarter4.installmentAmount }}</td>
+          <td class="table-data">{{ advanceTaxQuarter3.installment }}</td>
+          <td class="table-data">{{ advanceTaxQuarter3.installmentAmount }}</td>
         </tr>
       </tbody>
     </table>

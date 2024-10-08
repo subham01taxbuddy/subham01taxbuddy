@@ -18,6 +18,7 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import * as moment from 'moment';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 
 @Component({
   selector: 'app-refund-request',
@@ -82,6 +83,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
+  chatBuddyDetails: any;
   invoiceFormGroup: UntypedFormGroup = this.fb.group({
     requestType: new UntypedFormControl(''),
     mobile: new UntypedFormControl(''),
@@ -126,6 +128,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reviewService: ReviewService,
     private reportService:ReportService,
+    private chatService:ChatService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     let roles = this.utilsService.getUserRoles();
@@ -788,6 +791,11 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if(result?.request_id){
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+     }
     });
 
   }
@@ -939,6 +947,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat(){
+    this.chatBuddyDetails = null;
   }
 
 }

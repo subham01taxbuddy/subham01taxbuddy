@@ -114,3 +114,6 @@
   </div>
 
 </div>
+
+<app-user-chat *ngIf="chatBuddyDetails" [username]="chatBuddyDetails.userFullName" [requestId]="chatBuddyDetails.request_id" [serviceType]="chatBuddyDetails.departmentName"
+  [image]="chatBuddyDetails.image" [showCloseIcon]="true"  (closeChatClicked)="closeChat()" [isAssignedToBotVisible]="true"></app-user-chat>

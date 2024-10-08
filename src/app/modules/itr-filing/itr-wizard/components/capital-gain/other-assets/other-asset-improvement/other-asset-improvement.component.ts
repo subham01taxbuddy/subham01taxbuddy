@@ -482,9 +482,9 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       }
     }
 
-    if(cgObject.indexCostOfAcquisition != 0){
-      cgObject.isIndexationBenefitAvailable = true;
-    }
+    // if(cgObject.indexCostOfAcquisition != 0){
+    //   cgObject.isIndexationBenefitAvailable = true;
+    // }
 
     let request = {
       assessmentYear: '2023-2024',

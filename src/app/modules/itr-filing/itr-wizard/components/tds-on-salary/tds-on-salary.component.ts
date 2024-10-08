@@ -101,9 +101,9 @@ export class TdsOnSalaryComponent implements OnInit {
 
   // editDonationForm(i) {
   //   (
-  //     (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
+  //     (this.salaryForm.controls['salaryArray'] as UntypedFormGroup).controls[
   //       i
-  //     ] as FormGroup
+  //     ] as UntypedFormGroup
   //   ).enable();
   // }
 

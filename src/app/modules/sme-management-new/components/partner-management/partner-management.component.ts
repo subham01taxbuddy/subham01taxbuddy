@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -17,15 +17,15 @@ export class PartnerManagementComponent implements OnInit {
   loading = false;
   userId: number;
   partnerInfo: any;
-  partnerForm: FormGroup;
+  partnerForm: UntypedFormGroup;
   isBankDetailsFormChange: boolean;
   accountTypeDropdown: any;
   isBankValid: boolean;
   validateBankDetails: any;
   langList = ['English', 'Hindi', 'Marathi', 'Tamil', 'Telugu', 'Oriya', 'Gujarati', 'Kannada', 'Malayalam', 'Bangla', 'Assamese',]
-  languageForm: FormGroup;
+  languageForm: UntypedFormGroup;
   irtTypeCapability = [];
-  itrTypeForm: FormGroup;
+  itrTypeForm: UntypedFormGroup;
   itrPlanList: any;
   lang=[];
   skillSetPlanIdList:any={}
@@ -36,7 +36,7 @@ export class PartnerManagementComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
     private router: Router,
@@ -205,7 +205,7 @@ export class PartnerManagementComponent implements OnInit {
   initLanguageForm() {
     const formControls = {};
     this.langList.forEach(lang => {
-      formControls[lang] = new FormControl(false);
+      formControls[lang] = new UntypedFormControl(false);
     });
     this.languageForm = this.fb.group(formControls);
   }
@@ -213,7 +213,7 @@ export class PartnerManagementComponent implements OnInit {
   initItrTypeForm() {
     const formControls = {};
     this.irtTypeCapability.forEach(itrType => {
-      formControls[itrType] = new FormControl(false);
+      formControls[itrType] = new UntypedFormControl(false);
     });
     this.itrTypeForm = this.fb.group(formControls);
   }
@@ -243,30 +243,30 @@ export class PartnerManagementComponent implements OnInit {
   }
 
   get filerIndividual() {
-    return this.partnerForm.controls['filerIndividual'] as FormControl;
+    return this.partnerForm.controls['filerIndividual'] as UntypedFormControl;
   }
 
   get filerPrinciple() {
-    return this.partnerForm.controls['filerPrinciple'] as FormControl;
+    return this.partnerForm.controls['filerPrinciple'] as UntypedFormControl;
   }
 
   get internal() {
-    return this.partnerForm.controls['internal'] as FormControl;
+    return this.partnerForm.controls['internal'] as UntypedFormControl;
   }
 
   get external() {
-    return this.partnerForm.controls['external'] as FormControl;
+    return this.partnerForm.controls['external'] as UntypedFormControl;
   }
 
   get additionalIdsRequired() {
-    return this.partnerForm.controls['additionalIdsRequired'] as FormControl;
+    return this.partnerForm.controls['additionalIdsRequired'] as UntypedFormControl;
   }
 
   get additionalIdsCount() {
-    return this.partnerForm.controls['additionalIdsCount'] as FormControl;
+    return this.partnerForm.controls['additionalIdsCount'] as UntypedFormControl;
   }
 
-  bankDetailsFormGroup: FormGroup = this.fb.group({
+  bankDetailsFormGroup: UntypedFormGroup = this.fb.group({
     accountType: ['', [Validators.required]],
     ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
     accountNumber: ['', [Validators.required]],
