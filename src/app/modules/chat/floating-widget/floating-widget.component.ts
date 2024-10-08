@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { ElementRef } from '@angular/core';
 import { ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface Department {
     name: string,
@@ -35,7 +36,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     instanceId: string;
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone
+        private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone, private sanitizer: DomSanitizer
     ) {
         this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
@@ -66,6 +67,22 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     isConversationListLoaded: boolean = false;
     public isConversationListEmpty: boolean = false;
 
+
+    sanitizeText(text: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(text);
+    }
+
+    truncateTextByChars(text: string, charLimit: number): string {
+        if (!text) return '';
+
+        const plainText = text.replace(/<\/?[^>]+(>|$)/g, "");
+
+        if (plainText.length <= charLimit) {
+            return plainText;
+        }
+
+        return plainText.slice(0, charLimit) + '...';
+    }
 
     showFullScreen() {
         const chatUrl = this.selectedUser ? `chat/chat-full-screen?conversationId=${this.selectedUser.request_id}`

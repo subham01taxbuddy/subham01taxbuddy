@@ -12,6 +12,7 @@ import { NavbarService } from 'src/app/services/navbar.service';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Location } from '@angular/common';
+import { DomSanitizer,SafeHtml } from '@angular/platform-browser';
 
 interface Department {
     name: string,
@@ -44,7 +45,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
     constructor(private chatManager: ChatManager, private router: Router, private http: HttpClient,
         private localStorage: LocalStorageService, private chatService: ChatService, cd:
             ChangeDetectorRef, private ngZone: NgZone,
-        private activatedRoute: ActivatedRoute, private location: Location) {
+        private activatedRoute: ActivatedRoute, private location: Location,private sanitizer: DomSanitizer) {
         this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
         this.chatService.registerConversationUpdates(this.instanceId, this.handleConversationList());
@@ -73,6 +74,22 @@ export class ChatUIComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     conversationDeletedSubscription: Subscription;
     public isConversationListEmpty: boolean = false;
+
+    sanitizeText(text: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(text);
+    }
+
+    truncateTextByChars(text: string, charLimit: number): string {
+        if (!text) return '';
+
+        const plainText = text.replace(/<\/?[^>]+(>|$)/g, "");
+
+        if (plainText.length <= charLimit) {
+            return plainText;
+        }
+
+        return plainText.slice(0, charLimit) + '...';
+    }
 
 
     openUserChat(conversationId: any) {
@@ -203,6 +220,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
         });
 
         this.activatedRoute.queryParams.subscribe((params) => {
+            console.log('params',params);
             if (params['conversationId']) {
                 this.openUserChat(params['conversationId']);
             } else {
