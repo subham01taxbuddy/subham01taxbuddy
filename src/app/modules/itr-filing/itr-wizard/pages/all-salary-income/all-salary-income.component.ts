@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from '../../../../shared/constants';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from '../../../../../services/utils.service';
 import { ItrMsService } from '../../../../../services/itr-ms.service';
@@ -96,13 +96,13 @@ export class AllSalaryIncomeComponent
   }
 
   get getEmployerArray() {
-    return <UntypedFormArray>this.salaryIncomeFormGroup.get('employersArray');
+    return <FormArray>this.salaryIncomeFormGroup.get('employersArray');
   }
 
   deleteEmployers() {
     let employersArray = this.salaryIncomeFormGroup.controls[
       'employersArray'
-    ] as UntypedFormArray;
+    ] as FormArray;
     let nonSelected = employersArray.controls.filter(
       (item: any) => item.controls['selected'].value === false
     );
@@ -174,7 +174,7 @@ export class AllSalaryIncomeComponent
   isEmployerSelected() {
     let employers = this.salaryIncomeFormGroup.controls[
       'employersArray'
-    ] as UntypedFormArray;
+    ] as FormArray;
     let selected = employers.controls.filter(
       (item: any) => item.controls['selected'].value === true
     );

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, FormArray, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -415,11 +415,11 @@ export class ScheduleTrComponent implements OnInit {
   }
 
   get getTrArray() {
-    return <UntypedFormArray>this.scheduleTrForm.get('trArray');
+    return <FormArray>this.scheduleTrForm.get('trArray');
   }
 
   add(item?) {
-    const trArray = <UntypedFormArray>this.scheduleTrForm.get('trArray');
+    const trArray = <FormArray>this.scheduleTrForm.get('trArray');
     trArray.push(this.createTrForm(item));
   }
 

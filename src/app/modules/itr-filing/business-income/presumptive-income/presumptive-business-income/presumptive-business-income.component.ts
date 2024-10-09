@@ -6,7 +6,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   businessArray = [];
   businessData: any;
   busIncomeForm: UntypedFormGroup;
-  busIncomeFormArray: UntypedFormArray;
+  busIncomeFormArray: FormArray;
   submitted: boolean = false;
   amountSix: number = 0;
   maxSixAmt: number = 0;
@@ -95,7 +95,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       (acIncome) => acIncome.businessType === 'BUSINESS'
     );
 
-    this.busIncomeFormArray = new UntypedFormArray([]);
+    this.busIncomeFormArray = new FormArray([]);
     let srn = this.busIncomeFormArray.controls.length > 0 ? this.busIncomeFormArray.controls.length : 0;
     this.selectedFormGroup = this.createBusIncomeForm(srn);
     this.activeIndex = -1;
@@ -115,7 +115,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   get getBusIncomeArray() {
-    return <UntypedFormArray>this.busIncomeForm.get('busIncomeFormArray');
+    return <FormArray>this.busIncomeForm.get('busIncomeFormArray');
   }
 
   createBusIncomeForm(index, income?) {
@@ -125,7 +125,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
     console.log(cash, bank);
     let form = this.fb.group({
-      id: null, index: [index],
+      id: null,
+      index: [index],
       hasEdit: [false],
       natureOfBusiness: [income?.natureOfBusiness || null, [Validators.required],],
       tradeName: [income?.tradeName || null, [Validators.required]],
@@ -144,12 +145,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   busSelected() {
-    const busIncomeFormArray = <UntypedFormArray>(this.busIncomeForm?.get('busIncomeFormArray'));
+    const busIncomeFormArray = <FormArray>(this.busIncomeForm?.get('busIncomeFormArray'));
     return (busIncomeFormArray.controls.filter((element) => (element as UntypedFormGroup).controls['hasEdit'].value === true).length > 0);
   }
 
   deleteArray() {
-    let array = <UntypedFormArray>this.busIncomeForm.get('busIncomeFormArray');
+    let array = <FormArray>this.busIncomeForm.get('busIncomeFormArray');
     array.controls = array.controls.filter((element) => !(element as UntypedFormGroup).controls['hasEdit'].value);
     this.selectedFormGroup.reset();
     this.gridOptions?.api?.setRowData(this.busIncomeFormArray.controls);
@@ -265,7 +266,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   selection = new SelectionModel<NewPresumptiveIncomes>(true, []);
 
   onContinue() {
-    let BusinessFormIncome = (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormArray).getRawValue();
+    let BusinessFormIncome = (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).getRawValue();
 
     let bankReceiptsTotal = BusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.bankReceipts), 0);
     let cashReceiptsTotal = BusinessFormIncome.reduce((acc, value) => acc + parseFloat(value?.cashReceipts), 0);
@@ -295,48 +296,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.submitted = false;
       let presBusinessIncome = [];
       BusinessFormIncome?.forEach((element) => {
-        let isAdded = false;
-        presBusinessIncome.forEach((data) => {
-          if (data.natureOfBusiness === element.natureOfBusiness) {
-            isAdded = true;
-            data.incomes.push({
-              id: null,
-              incomeType: 'BANK',
-              receipts: element.bankReceipts,
-              presumptiveIncome: element.bankPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.bankMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-
-            data.incomes.push({
-              id: null,
-              incomeType: 'CASH',
-              receipts: element.cashReceipts,
-              presumptiveIncome: element.cashPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.cashMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-            data.incomes.push({
-              id: null,
-              incomeType: 'ANY_OTHER',
-              receipts: element.anyOtherMode,
-              presumptiveIncome: element.anyOtherPreIncomePreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.anyOtherMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-          }
-        });
-
-        if (!isAdded) {
           presBusinessIncome.push({
             id: null,
             businessType: 'BUSINESS',
@@ -383,7 +342,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
               },
             ],
           });
-        }
       });
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
@@ -501,10 +459,11 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     let result = this.selectedFormGroup.getRawValue();
 
     if (this.activeIndex === -1) {
-      let srn = (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormArray).length;
+      let srn = (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).length;
       let form = this.createBusIncomeForm(srn);
-      form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormArray).push(form);
+      form.patchValue(result);
+      form.patchValue({ index: srn });
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).push(form);
     } else {
       (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);
     }

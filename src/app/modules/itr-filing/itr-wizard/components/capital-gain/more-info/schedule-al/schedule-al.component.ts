@@ -9,12 +9,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  Validators,
-  UntypedFormArray,
-} from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import {
@@ -27,11 +22,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
-import {
-  GridApi,
-  GridOptions,
-  RowGroupingDisplayType,
-} from 'ag-grid-community';
+import { GridApi, GridOptions, RowGroupingDisplayType } from 'ag-grid-community';
 import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -65,10 +56,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduleALComponent
-  extends WizardNavigation
-  implements OnInit, OnChanges
-{
+export class ScheduleALComponent extends WizardNavigation implements OnInit, OnChanges {
   step = 1;
   // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onSave = new EventEmitter();
@@ -103,9 +91,7 @@ export class ScheduleALComponent
     private cdRef: ChangeDetectorRef
   ) {
     super();
-    this.PREV_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.PREV_ITR_JSON)
-    );
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -118,6 +104,7 @@ export class ScheduleALComponent
     } else {
       this.immovableAssets = [];
     }
+
 
     this.immovableAssetGridOptions = <GridOptions>{
       rowData: this.immovableAssets,
@@ -145,6 +132,7 @@ export class ScheduleALComponent
       pagination: true,
       paginationPageSize: 20,
       filter: true,
+
     };
 
     this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
@@ -182,6 +170,7 @@ export class ScheduleALComponent
     } else {
       this.createMovableAssetsForm();
     }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -205,7 +194,7 @@ export class ScheduleALComponent
       road: [item ? item.road : ''],
       area: [item ? item.area : '', Validators.required],
       state: [item ? item.state : '', Validators.required],
-      country: [item ? item.country : '91', Validators.required],
+      country: [item && item.country , Validators.required],
       city: [item ? item.city : '', Validators.required],
       pinCode: [item?item.pinCode:'',Validators.required],
     });
@@ -226,24 +215,24 @@ export class ScheduleALComponent
     });
   }
 
- 
+
 
   // async updateDataByPincodeCode(immovableAssets) {
   //   console.log(immovableAssets);
   //   let pincode = immovableAssets.controls['pinCode'].value;
-       
+
   //   // Call the pincode service to get city, state, and country
   //   await this.utilsService.getPincodeData(pincode).then((result) => {
   //     immovableAssets.controls['city'].setValue(result.city);
   //     immovableAssets.controls['country'].setValue(result.countryCode);
-  
+
   //     // If the country is India (91), set the actual state, otherwise set Foreign (99)
   //     if (result.countryCode === '91') {
   //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
   //     } else {
-        
+
   //       this.immovableAssetForm.controls['state'].setValue('Foreign');
-        
+
   //       // immovableAssets.controls['state'].stateCode.setValue('99'); // Set state to 'Foreign' (99) for other countries
   //     }
   //   }).catch((error) => {
@@ -261,19 +250,27 @@ export class ScheduleALComponent
 
       if (result.countryCode === '91') {
         immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
-      } else {
-        immovableAssets.controls['state'].setValue('99');
-        // this.immovableAssets.controls['state'].setValue('Foreign');
-        
-          // immovableAssets.controls['state'].stateCode.setValue('99');
       }
 
       immovableAssets.controls['pincode'].updateValueAndValidity();
       immovableAssets.controls['state'].updateValueAndValidity();
       immovableAssets.updateValueAndValidity();
-      
+
     });
-    
+  }
+
+  updateCity(immovableAssets) {
+    if (immovableAssets !== '91') {
+      // Set the state to '99' for foreign countries
+      immovableAssets.controls['state'].setValue('99');
+
+      // Optionally, if you want to display a placeholder or text like 'Foreign'
+      // immovableAssets.controls['city'].setValue('Foreign');
+
+
+      // Update the form controls to reflect the changes
+      this.immovableAssets.updateValueAndValidity();
+    }
   }
 
 
@@ -281,12 +278,12 @@ export class ScheduleALComponent
   // async updateDataByPincode(immovableAssets) {
   //   let pincodeControl = immovableAssets.controls['pinCode'];
   //   let countryControl = immovableAssets.controls['country'];
-  
+
   //   // Call pincode service to get city, state, and country
   //   await this.utilsService.getPincodeData(pincodeControl.value).then((result) => {
   //     immovableAssets.controls['city'].setValue(result.city);
   //     immovableAssets.controls['country'].setValue(result.countryCode);
-  
+
   //     // Check if the country is India (91) or set state to 'Foreign' (99)
   //     if (result.countryCode === '91') {
   //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
@@ -294,48 +291,11 @@ export class ScheduleALComponent
   //       immovableAssets.controls['state'].setValue('99'); // Set state to 'Foreign' for other countries
   //     }
   //   });
-  
-  //   // Update pinCode or zipCode label and validation based on selected country
-  //   countryControl.valueChanges.subscribe((countryCode) => {
-  //     if (countryCode === '91') {
-  //       // India: Update label and validators for Indian PIN code
-  //       this.updatePinCodeLabelAndValidators(
-  //         immovableAssets,
-  //         'PIN Code',
-  //         '^[1-9][0-9]{5}$',
-  //         6,
-  //         6
-  //       );
-  //     } else {
-  //       // Other countries: Update label and validators for alphanumeric ZIP code
-  //       immovableAssets.controls['state'].setValue('99'); // Set state to 'Foreign (99)'
-  //       this.updatePinCodeLabelAndValidators(
-  //         immovableAssets,
-  //         'ZIP Code',
-  //         '^[a-zA-Z0-9]{4,8}$',
-  //         4,
-  //         8
-  //       );
-  //     }
-  //     // Ensure the validation is updated in real-time
-  //     immovableAssets.controls['pinCode'].updateValueAndValidity();
-  //   });
-  // }
-  
 
-  updatePinCodeLabelAndValidators(
-    immovableAssets,
-    label: string,
-    pattern: string,
-    minLength: number,
-    maxLength: number
-  ) {
-    immovableAssets.controls['pinCode'].setValidators([
-      Validators.required,
-    ]);
-    // Assuming you have a way to update the label in the UI
-    immovableAssets.controls['pinCode'].updateValueAndValidity();
-  }
+
+
+
+
 
   mode = 'VIEW';
 
@@ -344,11 +304,7 @@ export class ScheduleALComponent
     const immovableAssetArray = <UntypedFormArray>(
       this.immovableAssetForm.get('immovableAssetArray')
     );
-    if (
-      immovableAssetArray.valid ||
-      immovableAssetArray === null ||
-      immovableAssetArray?.length == 0
-    ) {
+    if (immovableAssetArray.valid || immovableAssetArray === null || immovableAssetArray?.length == 0) {
       this.addMoreAssetsData();
     } else {
       immovableAssetArray.controls.forEach((element) => {
@@ -361,21 +317,19 @@ export class ScheduleALComponent
         }
       });
     }
+
   }
+
 
   activeIndex = 0;
   markActive(index) {
     this.activeIndex = index;
     setTimeout(() => {
-      let assetsArray = this.immovableAssetForm.get(
-        'immovableAssetArray'
-      ) as UntypedFormArray;
+      let assetsArray = this.immovableAssetForm.get('immovableAssetArray') as UntypedFormArray;
       let value = assetsArray.controls[index].value;
       assetsArray.controls[index].reset();
       assetsArray.controls[index].setValue(value);
-      (assetsArray.controls[index] as UntypedFormGroup).controls[
-        'amount'
-      ].setValue(value.amount);
+      (assetsArray.controls[index] as UntypedFormGroup).controls['amount'].setValue(value.amount);
       assetsArray.controls[index].markAsDirty();
       assetsArray.controls[index].updateValueAndValidity();
       this.immovableAssetForm.markAsTouched();
@@ -383,31 +337,25 @@ export class ScheduleALComponent
       this.cdRef.detectChanges();
     }, 100);
     this.editConfig.currentPage = this.activeIndex;
+
   }
 
   @ViewChild('paginator') paginator: MatPaginator;
   getTotalCount() {
-    return (<UntypedFormArray>(
-      this.immovableAssetForm.get('immovableAssetArray')
-    )).controls.length;
+    return (<UntypedFormArray>this.immovableAssetForm.get('immovableAssetArray')).controls.length;
   }
 
   editAssetForm(i, type) {
     if (type === 'immovable') {
       (
-        (
-          this.immovableAssetForm?.controls[
-            'immovableAssetArray'
-          ] as UntypedFormGroup
-        ).controls[i] as UntypedFormGroup
+        (this.immovableAssetForm?.controls['immovableAssetArray'] as UntypedFormGroup)
+          .controls[i] as UntypedFormGroup
       ).enable();
     }
   }
 
   get immovableAssetArray() {
-    return <UntypedFormArray>(
-      this.immovableAssetForm?.get('immovableAssetArray')
-    );
+    return <UntypedFormArray>this.immovableAssetForm?.get('immovableAssetArray');
   }
 
   addMoreAssetsData(item?) {
@@ -421,6 +369,7 @@ export class ScheduleALComponent
     this.activeIndex = immovableAssetArray.length - 1;
     this.immovableAssetForm.markAsTouched();
     this.immovableAssetForm.updateValueAndValidity();
+
   }
 
   pageChanged(event) {
@@ -566,22 +515,8 @@ export class ScheduleALComponent
           debounceMs: 0,
         },
         valueGetter: function nameFromCode(params) {
-          return (
-            params.data.flatNo +
-            ',' +
-            params.data.premisesName +
-            ',' +
-            params.data.road +
-            ',' +
-            params.data.area +
-            ',' +
-            params.data.city +
-            ',' +
-            params.data.state +
-            '(' +
-            params.data.pinCode +
-            ')'
-          );
+          return params.data.flatNo + ',' + params.data.premisesName + ',' + params.data.road + ',' + params.data.area
+            + ',' + params.data.city + ',' + params.data.state + '(' + params.data.pinCode + ')';
         },
       },
       {
@@ -705,9 +640,7 @@ export class ScheduleALComponent
   toggleAddress(formGroup) {
     if (this.usePersonalAddress) {
       formGroup.controls['flatNo'].setValue(this.ITR_JSON.address.flatNo);
-      formGroup.controls['premisesName'].setValue(
-        this.ITR_JSON.address.premisesName
-      );
+      formGroup.controls['premisesName'].setValue(this.ITR_JSON.address.premisesName);
       formGroup.controls['area'].setValue(this.ITR_JSON.address.area);
       formGroup.controls['road'].setValue(this.ITR_JSON.address.road);
       formGroup.controls['city'].setValue(this.ITR_JSON.address.city);

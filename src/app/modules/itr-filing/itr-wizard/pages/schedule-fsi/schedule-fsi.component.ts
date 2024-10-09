@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -323,11 +323,11 @@ export class ScheduleFsiComponent implements OnInit {
   }
 
   get getFsiArray() {
-    return <UntypedFormArray>this.scheduleFsiForm.get('fsiArray');
+    return <FormArray>this.scheduleFsiForm.get('fsiArray');
   }
 
   add(item?) {
-    const fsiArray = <UntypedFormArray>this.scheduleFsiForm.get('fsiArray');
+    const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
     if (this.scheduleFsiForm.valid) {
       fsiArray.push(this.createFsiForm(item));
     }
@@ -343,13 +343,13 @@ export class ScheduleFsiComponent implements OnInit {
 
     if (item && item.headOfIncomes) {
       item.headOfIncomes.forEach((element) => {
-        (formGroup.get('headOfIncomes') as UntypedFormArray).push(
+        (formGroup.get('headOfIncomes') as FormArray).push(
           this.createHeadOfIncomes(element, item)
         );
       });
     } else {
       this.headOfIncomess.forEach((element) => {
-        (formGroup.get('headOfIncomes') as UntypedFormArray).push(
+        (formGroup.get('headOfIncomes') as FormArray).push(
           this.createHeadOfIncome(element, item)
         );
       });
@@ -389,14 +389,14 @@ export class ScheduleFsiComponent implements OnInit {
   get headOfIncomesArray() {
     return (this.getFsiArray.controls[0] as UntypedFormGroup).controls[
       'headOfIncomes'
-    ] as UntypedFormArray;
+    ] as FormArray;
   }
 
   getLowerOfCds() {
     const fsiArray = this?.getFsiArray;
 
     fsiArray?.controls.forEach((fsiArrayEl) => {
-      const headOfIncomes = fsiArrayEl?.get('headOfIncomes') as UntypedFormArray;
+      const headOfIncomes = fsiArrayEl?.get('headOfIncomes') as FormArray;
 
       // extracting the lower value for each headOfIncome under fsiArray
       headOfIncomes?.controls?.forEach((head) => {
@@ -426,7 +426,7 @@ export class ScheduleFsiComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    const fsiArray = <UntypedFormArray>this.scheduleFsiForm?.get('fsiArray');
+    const fsiArray = <FormArray>this.scheduleFsiForm?.get('fsiArray');
     console.log(fsiArray);
 
     if (this.scheduleFsiForm.valid) {
@@ -462,7 +462,7 @@ export class ScheduleFsiComponent implements OnInit {
       if (fsiArray.length > 0) {
         fsiArray?.controls?.forEach((fsiArrayElement, index) => {
           const headOfIncomesArray = (
-            fsiArrayElement?.get('headOfIncomes') as UntypedFormArray
+            fsiArrayElement?.get('headOfIncomes') as FormArray
           ).controls;
 
           // setting the taxPaidOutsideIndiaFlag if it exists
@@ -574,7 +574,7 @@ export class ScheduleFsiComponent implements OnInit {
   }
 
   deleteFsiArray() {
-    const fsiArray = <UntypedFormArray>this.scheduleFsiForm.get('fsiArray');
+    const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
     fsiArray.controls.forEach((element, index) => {
       if ((element as UntypedFormGroup).controls['hasEdit'].value) {
         fsiArray.removeAt(index);

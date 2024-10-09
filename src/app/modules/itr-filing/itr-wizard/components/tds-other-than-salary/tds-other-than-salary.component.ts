@@ -108,7 +108,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     // }, 1000);
     // } else {
     //   salaryArray.controls.forEach(element => {
-    //     if ((element as FormGroup).invalid) {
+    //     if ((element as UntypedFormGroup).invalid) {
     //       element.markAsDirty();
     //       element.markAllAsTouched();
     //     }

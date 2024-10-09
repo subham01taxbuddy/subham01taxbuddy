@@ -1,16 +1,9 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, ElementRef, OnInit,Output, EventEmitter } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
-  UntypedFormArray,
-  AbstractControl,
+  UntypedFormArray, AbstractControl,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -90,12 +83,9 @@ export class HousePropertyComponent implements OnInit {
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
     public matDialog: MatDialog,
-    private userMsService: UserMsService,
-    private elementRef: ElementRef
+    private userMsService: UserMsService, private elementRef: ElementRef
   ) {
-    this.PREV_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.PREV_ITR_JSON)
-    );
+    this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -154,40 +144,37 @@ export class HousePropertyComponent implements OnInit {
     this.enableOnOverAllValue();
     this.calculateInterestOrDeduction();
     this.editHouseProperty(0);
+
   }
 
   usePersonalAddress = false;
   toggleAddress() {
     if (this.usePersonalAddress) {
-      let address =
-        this.ITR_JSON.address.flatNo +
-        ' ' +
-        this.ITR_JSON.address.premisesName +
-        ' ' +
+      let address = this.ITR_JSON.address.flatNo + ' ' + this.ITR_JSON.address.premisesName + ' ' +
         this.ITR_JSON.address.area;
       this.housePropertyForm.controls['address'].setValue(address);
-      this.housePropertyForm.controls['city'].setValue(
-        this.ITR_JSON.address.city
-      );
+      this.housePropertyForm.controls['city'].setValue(this.ITR_JSON.address.city);
 
-      this.housePropertyForm.controls['state'].setValue(
-        this.ITR_JSON.address.state
-      );
-      this.housePropertyForm.controls['country'].setValue(
-        this.ITR_JSON.address.country
-      );
+      this.housePropertyForm.controls['state'].setValue(this.ITR_JSON.address.state);
+      this.housePropertyForm.controls['country'].setValue(this.ITR_JSON.address.country);
+      this.housePropertyForm.controls['pinCode'].setValue(this.ITR_JSON.address.pinCode);
 
-      this.housePropertyForm.controls['pinCode'].setValue(
-        this.ITR_JSON.address.pinCode
-      );
+      // Check for the country code and set the label accordingly
+      const selectedCountryCode = this.ITR_JSON.address.country; // Assuming countryCode is available in ITR_JSON
+
+      if (selectedCountryCode === '91') {
+        this.zipCodeLabel = 'PIN Code'; // For India
+        this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+      } else {
+        this.zipCodeLabel = 'ZIP Code'; // For other countries
+        this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
   }
+  }
+
 
   markActive(index) {
-    if (
-      this.currentIndex >= 0 &&
-      this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length
-    ) {
+    if (this.currentIndex >= 0 && this.currentIndex <= this.Copy_ITR_JSON.houseProperties.length) {
       if (this.housePropertyForm.valid) {
         this.saveHpDetails(false);
       } else {
@@ -286,7 +273,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  
+
   changeCountry(selectedCountryCode: string): void {
     console.log(selectedCountryCode);
     // Check if the selected country is India (countryCode '91')
@@ -304,14 +291,14 @@ export class HousePropertyComponent implements OnInit {
       // Validators for Indian PIN codes (numeric and exactly 6 digits)
       pinCodeControl?.setValidators([
         Validators.required,
-        Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+        // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
       ]);
     } else {
       this.housePropertyForm?.controls['state'].setValue('99');
       // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
       pinCodeControl?.setValidators([
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+        // Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
       ]);
     }
     pinCodeControl?.updateValueAndValidity();
@@ -335,18 +322,18 @@ export class HousePropertyComponent implements OnInit {
       // Validators for Indian PIN codes (numeric and exactly 6 digits)
       pinCodeControl?.setValidators([
         Validators.required,
-        Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
+        // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
       ]);
     } else {
       this.housePropertyForm?.controls['state'].setValue('99');
       // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
       pinCodeControl?.setValidators([
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
+        // Validators.pattern('^[a-zA-Z0-9]{4,8}$'), // Alphanumeric, min 4, max 8 characters
       ]);
-    }
+  }
     pinCodeControl?.updateValueAndValidity();
-    this.housePropertyForm.get('pinCode').setValue(''); 
+    this.housePropertyForm.get('pinCode').setValue('');
     this.housePropertyForm.controls['city'].setValue('');
   }
 
@@ -437,8 +424,6 @@ export class HousePropertyComponent implements OnInit {
 
           Validators.compose([
             Validators.required,
-            Validators.maxLength(6),
-            Validators.pattern(AppConstants.PINCode),
           ]),
         ],
 
@@ -519,58 +504,29 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  patternValidator(
-    control: AbstractControl
-  ): { [key: string]: boolean } | null {
+  patternValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const pattern1 = AppConstants.panNumberRegex;
     const pattern2 = AppConstants.tanNumberRegex;
 
-    if (
-      (control.value &&
-        (pattern1.test(control.value) || pattern2.test(control.value))) ||
-      !control.value
-    ) {
+    if ((control.value && (pattern1.test(control.value) || pattern2.test(control.value))) || !control.value) {
       return null;
     }
     return { patternInvalid: true };
   }
 
-  createTenantForm(
-    obj: {
-      name?: string;
-      panNumber?: string;
-      tdsClaimed?: boolean;
-      tanNumber?: string;
-    } = {}
-  ): UntypedFormGroup {
+  createTenantForm(obj: { name?: string; panNumber?: string, tdsClaimed?: boolean, tanNumber?: string } = {}): UntypedFormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
     if (type === 2 || type === 3) {
       return this.fb.group({
-        name: [
-          obj.name || '',
-          obj?.tdsClaimed
-            ? [
-                Validators.required,
-                Validators.pattern(AppConstants.charSpecialRegex),
-              ]
-            : [
-                Validators.required,
-                Validators.maxLength(50),
-                Validators.pattern(AppConstants.charRegex),
-              ],
-        ],
+        name: [obj.name || '', obj?.tdsClaimed ? [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)]
+          : [Validators.required, Validators.maxLength(50), Validators.pattern(AppConstants.charRegex)]],
         panNumber: [
           obj.panNumber || '',
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [
-          obj.tanNumber,
-          obj?.tdsClaimed
-            ? [Validators.required, this.patternValidator]
-            : this.patternValidator,
-        ],
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator]
       });
     } else {
       return this.fb.group({
@@ -580,12 +536,7 @@ export class HousePropertyComponent implements OnInit {
           [Validators.pattern(AppConstants.panNumberRegex)],
         ],
         tdsClaimed: [obj.tdsClaimed],
-        tanNumber: [
-          obj.tanNumber,
-          obj?.tdsClaimed
-            ? [Validators.required, this.patternValidator]
-            : this.patternValidator,
-        ],
+        tanNumber: [obj.tanNumber, obj?.tdsClaimed ? [Validators.required, this.patternValidator] : this.patternValidator,]
       });
     }
   }
@@ -603,10 +554,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getTotalTaxableIncome() {
-    return this.ITR_JSON.houseProperties?.reduce(
-      (total, element) => total + element.taxableIncome,
-      0
-    );
+    return this.ITR_JSON.houseProperties?.reduce((total, element) => total + element.taxableIncome, 0);
   }
 
   getOwnershipCategory(propertyType: string) {
@@ -623,22 +571,23 @@ export class HousePropertyComponent implements OnInit {
       percentage?: number;
     } = {}
   ): UntypedFormGroup {
-    let formGroup = this.fb.group({
-      name: [obj.name || '', [Validators.required]],
-      panNumber: [
-        obj.panNumber || '',
-        [Validators.required, Validators.pattern(AppConstants.panNumberRegex)],
-      ],
-      percentage: [
-        obj.percentage || 0,
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.numericRegex),
-          Validators.max(99),
-          Validators.min(0),
-        ]),
-      ],
-    });
+    let formGroup =
+      this.fb.group({
+        name: [obj.name || '', [Validators.required]],
+        panNumber: [
+          obj.panNumber || '',
+          [Validators.required, Validators.pattern(AppConstants.panNumberRegex)],
+        ],
+        percentage: [
+          obj.percentage || 0,
+          Validators.compose([
+            Validators.required,
+            Validators.pattern(AppConstants.numericRegex),
+            Validators.max(99),
+            Validators.min(0),
+          ]),
+        ],
+      });
     return formGroup;
   }
 
@@ -651,11 +600,8 @@ export class HousePropertyComponent implements OnInit {
     if (coOwner.valid) {
       coOwner.push(this.createCoOwnerForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(
-        coOwner.controls[coOwner.controls.length - 1] as UntypedFormGroup,
-        'accordBtn3',
-        this.elementRef
-      );
+      this.utilsService.highlightInvalidFormFields(coOwner.controls[coOwner.controls.length - 1] as UntypedFormGroup,
+        'accordBtn3', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -668,6 +614,7 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['isCoOwners'].setValue(false);
     this.calAnnualValue();
   }
+
 
   calPercentage() {
     const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
@@ -698,9 +645,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isduplicatePAN(i, formArrayName) {
-    const formArray = <UntypedFormArray>(
-      this.housePropertyForm.get(formArrayName)
-    );
+    const formArray = <UntypedFormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
       (item) =>
         item['controls'].panNumber.value ===
@@ -727,9 +672,7 @@ export class HousePropertyComponent implements OnInit {
     this.chekIsSOPAdded();
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
-    this.Copy_ITR_JSON.houseProperties.push(
-      this.housePropertyForm.getRawValue()
-    );
+    this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
     this.currentIndex = this.Copy_ITR_JSON.houseProperties.length - 1;
     this.housePropertyForm.controls['isCoOwners'].setValue(false);
   }
@@ -738,26 +681,20 @@ export class HousePropertyComponent implements OnInit {
     let housePropertyForm = this.housePropertyForm.controls;
     if (itrJsonHp?.eligible80EEAAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount
-      );
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
       housePropertyForm['isEligibleFor80EE']?.setValue('80EEA');
-      housePropertyForm['eligible80EEAAmount']?.setValue(
-        itrJsonHp?.eligible80EEAAmount
-      );
+      housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
     } else if (itrJsonHp?.eligible80EEAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount
-      );
+        itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
       housePropertyForm['isEligibleFor80EE']?.setValue('80EE');
-      housePropertyForm['eligible80EEAmount']?.setValue(
-        itrJsonHp?.eligible80EEAmount
-      );
+      housePropertyForm['eligible80EEAmount']?.setValue(itrJsonHp?.eligible80EEAmount);
     } else {
       if (itrJsonHp?.loans) {
         housePropertyForm['interestAmount'].setValue(
@@ -779,7 +716,6 @@ export class HousePropertyComponent implements OnInit {
     this.hpView = 'FORM';
     this.mode = 'UPDATE';
     this.housePropertyForm = this.createHousePropertyForm();
-
     let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
 
@@ -795,9 +731,14 @@ export class HousePropertyComponent implements OnInit {
       );
     }
 
-    if (typeof itrJsonHp?.isEligibleFor80EE === 'boolean') {
+
+    if (
+      typeof itrJsonHp?.isEligibleFor80EE === 'boolean'
+    ) {
       this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EE');
-    } else if (typeof itrJsonHp?.isEligibleFor80EEA === 'boolean') {
+    } else if (
+      typeof itrJsonHp?.isEligibleFor80EEA === 'boolean'
+    ) {
       this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EEA');
     } else {
       this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('');
@@ -807,14 +748,16 @@ export class HousePropertyComponent implements OnInit {
     if (itrJsonHp?.coOwners?.length > 0) {
       const coOwner = <UntypedFormArray>this.housePropertyForm.get('coOwners');
       this.housePropertyForm.controls['isCoOwners'].setValue(true);
-      itrJsonHp?.coOwners?.forEach((element) => {
+      itrJsonHp?.coOwners?.forEach(element => {
         let obj = {
           name: element.name,
           panNumber: element?.panNumber,
           percentage: element?.percentage,
-          isSelf: element?.isSelf,
+          isSelf: element?.isSelf
         };
-        coOwner?.push(this.createCoOwnerForm(obj));
+        coOwner?.push(
+          this.createCoOwnerForm(obj)
+        )
       });
     } else {
       this.housePropertyForm.controls['isCoOwners'].setValue(false);
@@ -834,21 +777,15 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls[
         'annualRentReceived'
       ].updateValueAndValidity();
-      this.firstSOPIndex =
-        (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) ||
-        this.firstSOPIndex === -1
-          ? this.currentIndex
-          : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else {
       const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
         itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
       this.housePropertyForm.controls['standardDeduction'].setValue(
-        Math.round(
-          ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
-            100
-        )
+        Math.round(((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) / 100)
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
         itrJsonHp?.grossAnnualRentReceivedTotal
@@ -861,14 +798,14 @@ export class HousePropertyComponent implements OnInit {
 
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
-        tenant.push(
-          this.createTenantForm({
+        tenant.push(this.createTenantForm(
+          {
             name: element.name,
             panNumber: element?.panNumber,
             tanNumber: element?.tanNumber,
-            tdsClaimed: element?.tdsClaimed,
-          })
-        );
+            tdsClaimed: element?.tdsClaimed
+          }
+        ));
       });
 
       this.changePropType(
@@ -912,11 +849,8 @@ export class HousePropertyComponent implements OnInit {
     if (tenant.valid) {
       tenant.push(this.createTenantForm());
     } else {
-      this.utilsService.highlightInvalidFormFields(
-        tenant.controls[tenant.controls.length - 1] as UntypedFormGroup,
-        'accordBtn4',
-        this.elementRef
-      );
+      this.utilsService.highlightInvalidFormFields(tenant.controls[tenant.controls.length - 1] as UntypedFormGroup,
+        'accordBtn4', this.elementRef);
       console.log('add above details first');
     }
   }
@@ -1019,8 +953,8 @@ export class HousePropertyComponent implements OnInit {
       if (this.isSelfOccupied >= this.maxSopAllowed) {
         this.utilsService.showSnackBar(
           'You cannot add more than ' +
-            this.maxSopAllowed +
-            ' self occupied properties'
+          this.maxSopAllowed +
+          ' self occupied properties'
         );
 
         this.isDisable = true;
@@ -1063,11 +997,8 @@ export class HousePropertyComponent implements OnInit {
         'interestAmount'
       ].updateValueAndValidity();
 
-      this.firstSOPIndex =
-        (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) ||
-        this.firstSOPIndex === -1
-          ? this.currentIndex
-          : this.firstSOPIndex;
+      this.firstSOPIndex = (this.firstSOPIndex > 0 && this.firstSOPIndex > this.currentIndex) || this.firstSOPIndex === -1
+        ? this.currentIndex : this.firstSOPIndex;
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
@@ -1075,9 +1006,7 @@ export class HousePropertyComponent implements OnInit {
         this.annualValue = null;
         this.thirtyPctOfAnnualValue = null;
       } else {
-        const nilTenant = <UntypedFormArray>(
-          this.housePropertyForm.get('tenant')
-        );
+        const nilTenant = <UntypedFormArray>this.housePropertyForm.get('tenant');
         // Condition is added because at least one tenant details is mandatory
         if (nilTenant.length === 0) {
           nilTenant.push(this.createTenantForm());
@@ -1115,7 +1044,6 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHpDetails(apiCall: boolean) {
-    console.log(this.housePropertyForm);
     if ((this.housePropertyForm.valid && apiCall) || !apiCall) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
       if (
@@ -1138,26 +1066,14 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
-        let eligible80EEAmount = this.utilsService.isNonEmpty(
-          this.housePropertyForm?.controls['eligible80EEAmount'].value
-        )
-          ? parseInt(
-              this.housePropertyForm?.controls['eligible80EEAmount'].value
-            )
-          : 0;
-        let eligible80EEAAmount = this.utilsService.isNonEmpty(
-          this.housePropertyForm?.controls['eligible80EEAAmount'].value
-        )
-          ? parseInt(
-              this.housePropertyForm?.controls['eligible80EEAAmount'].value
-            )
-          : 0;
-        let interestAmount =
-          parseInt(this.housePropertyForm.controls['interestAmount']?.value) -
-          eligible80EEAmount -
-          eligible80EEAAmount;
+        let eligible80EEAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAmount'].value)
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAmount'].value) : 0;
+        let eligible80EEAAmount = this.utilsService.isNonEmpty(this.housePropertyForm?.controls['eligible80EEAAmount'].value)
+          ? parseInt(this.housePropertyForm?.controls['eligible80EEAAmount'].value) : 0;
+        let interestAmount = parseInt(this.housePropertyForm.controls['interestAmount']?.value) - eligible80EEAmount - eligible80EEAAmount;
         hp.loans.push({
-          interestAmount: interestAmount,
+          interestAmount:
+            interestAmount,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
@@ -1179,26 +1095,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn1',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn2',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn3',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn4',
-        this.elementRef
-      );
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 
@@ -1303,26 +1203,10 @@ export class HousePropertyComponent implements OnInit {
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn1',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn2',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn3',
-        this.elementRef
-      );
-      this.utilsService.highlightInvalidFormFields(
-        this.housePropertyForm,
-        'accordBtn4',
-        this.elementRef
-      );
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3', this.elementRef);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4', this.elementRef);
     }
   }
 
@@ -1567,27 +1451,24 @@ export class HousePropertyComponent implements OnInit {
 
   enableOnOverAllValue() {
     // FINDING OUT THE FILTERED INDEX EXCEPT THE CURRENT ONE OF 80EE
-    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter(
-      (element, index) => index !== this.currentIndex
-    );
+    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter((element, index) => index !== this.currentIndex);
 
     // current value of interest amount
     const currentInterestValue = parseFloat(
       this.housePropertyForm.controls['interestAmount']?.value
     );
 
-    const itrJsonInterestValue = filteredJsonArray?.reduce((acc, property) => {
-      if (property?.loans?.length > 0) {
-        const totalInterest = property?.loans?.reduce(
-          (loanAcc, loan) => loanAcc + (loan?.interestAmount || 0),
-          0
-        );
-        acc += totalInterest;
-      }
-      return acc;
-    }, 0);
+    const itrJsonInterestValue = filteredJsonArray
+      ?.reduce((acc, property) => {
+        if (property?.loans?.length > 0) {
+          const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
+          acc += totalInterest;
+        }
+        return acc;
+      }, 0);
 
-    if ((itrJsonInterestValue || 0) + (currentInterestValue || 0) > 200000) {
+    if ((itrJsonInterestValue || 0) + (currentInterestValue
+      || 0) > 200000) {
       return true;
     } else {
       return false;
@@ -1662,7 +1543,7 @@ export class HousePropertyComponent implements OnInit {
         .value -
       this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
         .value *
-        0.3;
+      0.3;
     console.log(arrearsUnrealizedRentReceived);
     this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
       Math.round(arrearsUnrealizedRentReceived)
@@ -1672,6 +1553,7 @@ export class HousePropertyComponent implements OnInit {
   jsonAmt80ee: any;
   jsonAmt80eea: any;
   calculateInterestOrDeduction() {
+
     let interest = this.housePropertyForm?.controls['interestAmount'];
     let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
     let eligible80EEAmount =
@@ -1681,28 +1563,20 @@ export class HousePropertyComponent implements OnInit {
     let propertyType = this.housePropertyForm?.controls['propertyType'];
 
     // FINDING OUT THE FILTERED INDEX EXCEPT THE CURRENT ONE OF 80EE
-    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter(
-      (element, index) => index !== this.currentIndex
-    );
+    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter((element, index) => index !== this.currentIndex);
 
     // GETTING TOTAL OF 80EE AMOUNT
-    const totalEligible80EEAmount = filteredJsonArray?.reduce(
-      (acc, element) => {
-        const eligibleAmount = element?.eligible80EEAmount || 0;
-        return acc + eligibleAmount;
-      },
-      0
-    );
+    const totalEligible80EEAmount = filteredJsonArray?.reduce((acc, element) => {
+      const eligibleAmount = element?.eligible80EEAmount || 0;
+      return acc + eligibleAmount;
+    }, 0);
     this.jsonAmt80ee = totalEligible80EEAmount;
 
     // GETTING TOTAL OF 80EEA AMOUNT
-    const totalEligible80EEAAmount = filteredJsonArray?.reduce(
-      (acc, element) => {
-        const eligibleAmount = element?.eligible80EEAAmount || 0;
-        return acc + eligibleAmount;
-      },
-      0
-    );
+    const totalEligible80EEAAmount = filteredJsonArray?.reduce((acc, element) => {
+      const eligibleAmount = element?.eligible80EEAAmount || 0;
+      return acc + eligibleAmount;
+    }, 0);
     this.jsonAmt80eea = totalEligible80EEAAmount;
     this.enableOnOverAllValue();
 
@@ -1711,24 +1585,17 @@ export class HousePropertyComponent implements OnInit {
     // TOTAL OF ALL ITR OBJ INTEREST AMOUNT
     const itrJsonInterestValue = filteredJsonArray?.reduce((acc, property) => {
       if (property?.loans?.length > 0) {
-        const totalInterest = property?.loans?.reduce(
-          (loanAcc, loan) => loanAcc + (loan?.interestAmount || 0),
-          0
-        );
+        const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
         acc += totalInterest;
       }
       return acc;
     }, 0);
 
     // TOTAL OF ALL ITR OBJ INTEREST AMOUNT ONLY OF SOP
-    const itrJsonSopInterestValue = filteredJsonArray
-      ?.filter((item, index) => item?.propertyType === 'SOP')
+    const itrJsonSopInterestValue = filteredJsonArray?.filter((item, index) => item?.propertyType === 'SOP')
       ?.reduce((acc, property) => {
         if (property?.loans?.length > 0) {
-          const totalInterest = property?.loans?.reduce(
-            (loanAcc, loan) => loanAcc + (loan?.interestAmount || 0),
-            0
-          );
+          const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
           acc += totalInterest;
         }
         return acc;
@@ -1753,18 +1620,14 @@ export class HousePropertyComponent implements OnInit {
         if (parseFloat(interest?.value) > 250000) {
           // SETTING 80EE FIRST
           let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
-          eligible80EEAmount?.setValue(
-            this.jsonAmt80ee < 50000 ? eligible80EEValue : 0
-          );
+          eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0);
           eligible80EEAmount?.updateValueAndValidity();
 
           // SETTING 24B VALUE
           let eligible24b;
           if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
             eligible24b = 200000 - itrJsonSopInterestValue;
-            interest24b?.setValue(
-              Math.min(eligible24b, interest?.value - eligible80EEAmount?.value)
-            );
+            interest24b?.setValue(Math.min(eligible24b, (interest?.value - eligible80EEAmount?.value)));
           } else {
             eligible24b = interest?.value - eligible80EEAmount?.value;
             interest24b?.setValue(Math.min(eligible24b, 200000));
@@ -1790,12 +1653,7 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
           let difference = interest?.value - interest24b?.value;
           // if total json 80ee is less than 50k then only setting 80ee else setting it to 0
-          eligible80EEAmount?.setValue(
-            Math.min(
-              this.jsonAmt80ee < 50000 ? eligible80EEValue : 0,
-              difference
-            )
-          );
+          eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
           eligible80EEAmount?.updateValueAndValidity();
 
           // SETTING 80EEA VALUE TO 0 AS BOTH CANNOT BE CLAIMED
@@ -1817,12 +1675,7 @@ export class HousePropertyComponent implements OnInit {
           if ((itrJsonSopInterestValue || 0) + interest24b?.value <= 200000) {
             let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
             let difference = interest?.value - interest24b?.value;
-            eligible80EEAmount?.setValue(
-              Math.min(
-                this.jsonAmt80ee < 50000 ? eligible80EEValue : 0,
-                difference
-              )
-            );
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
             eligible80EEAmount?.updateValueAndValidity();
 
             // SETTING 80EEA VALUE TO 0 AS BOTH CANNOT BE CLAIMED
@@ -1833,16 +1686,12 @@ export class HousePropertyComponent implements OnInit {
       } else {
         if (parseFloat(interest?.value) > 250000) {
           let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
-          eligible80EEAmount?.setValue(
-            this.jsonAmt80ee < 50000 ? eligible80EEValue : 0
-          );
+          eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0);
           eligible80EEAmount?.updateValueAndValidity();
           let eligible24b;
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             eligible24b = 200000 - itrJsonInterestValue;
-            interest24b?.setValue(
-              Math.max(eligible24b, interest?.value - eligible80EEAmount?.value)
-            );
+            interest24b?.setValue(Math.max(eligible24b, (interest?.value - eligible80EEAmount?.value)));
           } else {
             eligible24b = interest?.value - eligible80EEAmount?.value;
             interest24b?.setValue(Math.max(eligible24b, 200000));
@@ -1855,23 +1704,14 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             interest24b?.setValue(Math.min(interest?.value, 200000));
-            eligible80EEAmount?.setValue(
-              Math.min(
-                this.jsonAmt80ee < 50000
-                  ? interest?.value - interest24b?.value
-                  : 0,
-                eligible80EEValue
-              )
-            );
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? interest?.value - interest24b?.value : 0, eligible80EEValue));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
             if (eligible80EEAmount?.value === 0) {
               interest24b?.setValue(interest?.value);
             } else {
-              interest24b?.setValue(
-                interest?.value - eligible80EEAmount?.value
-              );
+              interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
             }
           } else {
             eligible24b = interest?.value;
@@ -1879,12 +1719,7 @@ export class HousePropertyComponent implements OnInit {
           }
           interest24b?.updateValueAndValidity();
           let difference = interest?.value - interest24b?.value;
-          eligible80EEAmount?.setValue(
-            Math.min(
-              this.jsonAmt80ee < 50000 ? eligible80EEValue : 0,
-              difference
-            )
-          );
+          eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
           eligible80EEAmount?.updateValueAndValidity();
           eligible80EEAAmount?.setValue(0);
           eligible80EEAAmount?.updateValueAndValidity();
@@ -1893,11 +1728,7 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             interest24b?.setValue(Math.min(interest?.value, 200000));
-            eligible80EEAmount?.setValue(
-              this.jsonAmt80ee < 50000
-                ? interest?.value - interest24b?.value
-                : 0
-            );
+            eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? interest?.value - interest24b?.value : 0);
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
@@ -1905,12 +1736,7 @@ export class HousePropertyComponent implements OnInit {
             eligible24b = interest?.value;
             interest24b?.setValue(Math.min(eligible24b, 200000));
             let difference = interest?.value - interest24b?.value;
-            eligible80EEAmount?.setValue(
-              Math.min(
-                this.jsonAmt80ee < 50000 ? eligible80EEValue : 0,
-                difference
-              )
-            );
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
@@ -1924,21 +1750,14 @@ export class HousePropertyComponent implements OnInit {
         if (parseFloat(interest?.value) > 350000) {
           // SETTING 80EEA FIRST
           let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
-          eligible80EEAAmount?.setValue(
-            this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0
-          );
+          eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0);
           eligible80EEAAmount?.updateValueAndValidity();
 
           // SETTING 24B VALUE
           let eligible24b;
           if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
             eligible24b = 200000 - itrJsonSopInterestValue;
-            interest24b?.setValue(
-              Math.min(
-                eligible24b,
-                interest?.value - eligible80EEAAmount?.value
-              )
-            );
+            interest24b?.setValue(Math.min(eligible24b, (interest?.value - eligible80EEAAmount?.value)));
           } else {
             eligible24b = interest?.value - eligible80EEAAmount?.value;
             interest24b?.setValue(Math.min(eligible24b, 200000));
@@ -1964,12 +1783,7 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
           let difference = interest?.value - interest24b?.value;
           // if total json 80eea is less than 50k then only setting 80eea else setting it to 0
-          eligible80EEAAmount?.setValue(
-            Math.min(
-              this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0,
-              difference
-            )
-          );
+          eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
           eligible80EEAAmount?.updateValueAndValidity();
 
           // SETTING 80EE VALUE TO 0 AS BOTH CANNOT BE CLAIMED
@@ -1992,12 +1806,7 @@ export class HousePropertyComponent implements OnInit {
             let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
             let difference = interest?.value - interest24b?.value;
             // if total json 80eea is less than 50k then only setting 80eea else setting it to 0
-            eligible80EEAAmount?.setValue(
-              Math.min(
-                this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0,
-                difference
-              )
-            );
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
             eligible80EEAAmount?.updateValueAndValidity();
 
             // SETTING 80EE VALUE TO 0 AS BOTH CANNOT BE CLAIMED
@@ -2008,19 +1817,12 @@ export class HousePropertyComponent implements OnInit {
       } else {
         if (parseFloat(interest?.value) > 350000) {
           let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
-          eligible80EEAAmount?.setValue(
-            this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0
-          );
+          eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0);
           eligible80EEAAmount?.updateValueAndValidity();
           let eligible24b;
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             eligible24b = 200000 - itrJsonInterestValue;
-            interest24b?.setValue(
-              Math.max(
-                eligible24b,
-                interest?.value - eligible80EEAAmount?.value
-              )
-            );
+            interest24b?.setValue(Math.max(eligible24b, (interest?.value - eligible80EEAAmount?.value)));
           } else {
             eligible24b = interest?.value - eligible80EEAAmount?.value;
             interest24b?.setValue(Math.max(eligible24b, 200000));
@@ -2036,14 +1838,7 @@ export class HousePropertyComponent implements OnInit {
 
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             interest24b?.setValue(Math.min(interest?.value, 200000));
-            eligible80EEAAmount?.setValue(
-              Math.min(
-                this.jsonAmt80eea < 150000
-                  ? interest?.value - interest24b?.value
-                  : 0,
-                eligible80EEAValue
-              )
-            );
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? interest?.value - interest24b?.value : 0, eligible80EEAValue));
             eligible80EEAAmount?.updateValueAndValidity();
 
             // SETTING 80EE AS 0 because both cannot be claimed
@@ -2053,9 +1848,7 @@ export class HousePropertyComponent implements OnInit {
             if (eligible80EEAAmount?.value === 0) {
               interest24b?.setValue(interest?.value);
             } else {
-              interest24b?.setValue(
-                interest?.value - eligible80EEAAmount?.value
-              );
+              interest24b?.setValue(interest?.value - eligible80EEAAmount?.value);
             }
           } else {
             eligible24b = interest?.value;
@@ -2063,12 +1856,7 @@ export class HousePropertyComponent implements OnInit {
           }
           interest24b?.updateValueAndValidity();
           let difference = interest?.value - interest24b?.value;
-          eligible80EEAAmount?.setValue(
-            Math.min(
-              this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0,
-              difference
-            )
-          );
+          eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
           eligible80EEAAmount?.updateValueAndValidity();
 
           // SETTING 80EE AS 0 because both cannot be claimed
@@ -2079,11 +1867,7 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
             interest24b?.setValue(Math.min(interest?.value, 200000));
-            eligible80EEAAmount?.setValue(
-              this.jsonAmt80eea < 150000
-                ? interest?.value - interest24b?.value
-                : 0
-            );
+            eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? interest?.value - interest24b?.value : 0);
             eligible80EEAAmount?.updateValueAndValidity();
 
             // SETTING 80EE AS 0 because both cannot be claimed
@@ -2096,12 +1880,7 @@ export class HousePropertyComponent implements OnInit {
             let difference = interest?.value - interest24b?.value;
 
             // SETTING 80EEA AMOUNT
-            eligible80EEAAmount?.setValue(
-              Math.min(
-                this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0,
-                difference
-              )
-            );
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
             eligible80EEAAmount?.updateValueAndValidity();
 
             // SETTING 80EE AMOUNT AS 0 BECAUSE BOTH CANNOT BE CLAIMED

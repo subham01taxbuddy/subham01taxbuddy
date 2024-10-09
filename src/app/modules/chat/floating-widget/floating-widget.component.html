@@ -1,0 +1,76 @@
+<div class="floating-widget" *ngIf="showWidget">
+    <div *ngIf="isLoadingInitialData" class="loading-indicator">
+        <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+        </svg>
+        <p>Loading please wait...</p>
+    </div>
+    <div *ngIf="!isLoadingInitialData">
+        <div class="header">
+            <button (click)="showFullScreen()">
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+            </button>
+            <span class="widget-title">Chat</span>
+            <button (click)="closeWidget()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="options">
+            <div class="option-box" *ngFor="let deptName of departmentNames"
+                [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
+                (click)="fetchList(deptName.id)">{{deptName.name }}</div>
+        </div>
+        <div class="user-list main-panel-chat" *ngIf="!isUserChatVisible" #scrollContainer>
+            <div class="search-results" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="2"
+                [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
+                (scrolled)="onScrollDown()">
+                <ng-container *ngIf="!isConversationListEmpty; else noConversations">
+                <div class="user-box" *ngFor="let conversation of conversationList"
+                    (click)="openUserChat(conversation)">
+                    <div class="row" style="width: 100%;">
+                        <div class="col-2">
+                            <div class="avatar">
+                                <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="user-name">{{ conversation.userFullName }}</div>
+                            <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
+                                conversation.text }}</div>
+                            <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
+                                        view
+                                        the
+                                        details...</strong></em></div>
+
+                        </div>
+                        <div class="col-2">
+                            <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+                </ng-container>
+                <ng-template #noConversations>
+                    <div class="no-conversations-message">
+                        Currently no chats assigned to you
+                    </div>
+                  </ng-template>
+                <div class="loader" *ngIf="isLoading">
+                    <span><i class="fa fa-spinner fa-spin"></i> Loading more conversations...</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+<app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.image"
+    [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id"
+    [serviceType]="selectedUser.departmentName" [showChevronIcon]="true"
+    [isAssignedToBotVisible]="true"></app-user-chat>
+
+<app-chat-ui *ngIf="fullChatScreen" (back)="closeFullScreen()"></app-chat-ui>

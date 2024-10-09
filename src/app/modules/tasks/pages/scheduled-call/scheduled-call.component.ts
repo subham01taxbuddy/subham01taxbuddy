@@ -24,6 +24,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
 import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
+import { ChatService } from 'src/app/modules/chat/chat.service';
 import { lastValueFrom } from 'rxjs';
 export const MY_FORMATS = {
   parse: {
@@ -50,7 +51,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduledCallComponent implements OnInit, OnDestroy { 
+export class ScheduledCallComponent implements OnInit, OnDestroy {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
@@ -64,6 +65,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   scheduleCallGridOptions: GridOptions;
   scheduleCallsData: any = [];
   config: any;
+  coOwnerToggle = new UntypedFormControl('');
   coOwnerCheck = false;
   roles: any;
   loggedUserId: any;
@@ -99,6 +101,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   minEndDate = new Date().toISOString().slice(0, 10);
   show: boolean;
   scheduleCallRemoteConfig: any;
+  chatBuddyDetails: any;
+
 
   constructor(
     private reviewService: ReviewService,
@@ -114,7 +118,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     public datePipe: DatePipe,
-    private remoteConfigService: RemoteConfigService
+    private remoteConfigService: RemoteConfigService,
+    private chatService: ChatService,
   ) {
     this.getRemoteConfigData();
     this.startDate.setValue(new Date());
@@ -842,10 +847,17 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         userId: client.userId,
         clientName: client.userName,
         serviceType: client.serviceType,
+        requestId: client.requestId
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+    disposable.afterClosed().subscribe((result) => {
+      if (result?.request_id) {
+        this.chatBuddyDetails = result;
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.initRxjsWebsocket(this.chatBuddyDetails.request_id);
+      }
+    });
   }
   showUserInformation(user) {
     if (this.utilsService.isNonEmpty(user.userMobile)) {
@@ -1137,5 +1149,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.cacheManager.clearCache();
+  }
+
+  closeChat() {
+    this.chatBuddyDetails = null;
   }
 }

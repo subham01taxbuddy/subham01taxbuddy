@@ -1,150 +1,105 @@
+
 export class AppConstants {
-  public static emailRegex =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  public static panNumberRegex =
-    /^[A-Z]{3}[P,H,C,F,A,B,L,J,G]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
-  public static dipptNumberRegex = /^DIPP\d{3,5}$/;
-  public static panDoneeRegex =
-    /^[A-Z]{3}[P,H,C,F,A,B,L,J,G,T]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
-  public static panIndividualRegex = /^[A-Z]{3}[P]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
-  public static panIndHUFRegex = /^[A-Z]{3}[P,H]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
-  public static tanNumberRegex = /^[A-Z]{4}\d{5}[A-Z]{1}$/;
-  public static mobileNumberRegex = /^[1-9]{1}[0-9]{9}$/; // regex given by dinesh  //"[0-9]{10}"
-  public static charRegex = '^[a-zA-Z ]+$';
-  public static charSpecialRegex = '^[a-zA-Z0-9 ()&,.-]+$';
-  // public static charAllSpecialRegex = '^[a-zA-Z@~`!@#$%^&*()_=+;:?>.<,-\s\']+$';
-  public static charAllSpecialRegex = /^[a-zA-Z\s@~`!@#$%^&*()_=+;:?>.<,']+$/;
-  public static charAndNoRegex = '^[a-zA-Z0-9 _]*[a-zA-Z0-9][a-zA-Z0-9 _]*$'; //'[a-zA-Z0-9]*$';
-  public static IFSCRegex = /^[A-Za-z]{4}[0][A-Za-z0-9]{6}$/;
-  public static gstrReg = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]{3}';
-  public static GSTNRegex =
-    /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
+    public static emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    public static panNumberRegex = /^[A-Z]{3}[P,H,C,F,A,B,L,J,G]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
+    public static dipptNumberRegex = /^DIPP\d{3,5}$/;
+    public static panDoneeRegex = /^[A-Z]{3}[P,H,C,F,A,B,L,J,G,T]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
+    public static panIndividualRegex = /^[A-Z]{3}[P]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
+    public static panIndHUFRegex = /^[A-Z]{3}[P,H]{1}[A-Z]{1}\d{4}[A-Z]{1}$/;
+    public static tanNumberRegex = /^[A-Z]{4}\d{5}[A-Z]{1}$/;
+    public static mobileNumberRegex = /^[1-9]{1}[0-9]{9}$/;  // regex given by dinesh  //"[0-9]{10}"
+    public static charRegex = '^[a-zA-Z ]+$';
+    public static charSpecialRegex = '^[a-zA-Z0-9 ()&,.-]+$';
+    // public static charAllSpecialRegex = '^[a-zA-Z@~`!@#$%^&*()_=+;:?>.<,-\s\']+$';
+    public static charAllSpecialRegex = /^[a-zA-Z\s@~`!@#$%^&*()_=+;:?>.<,']+$/;
+    public static charAndNoRegex = '^[a-zA-Z0-9 _]*[a-zA-Z0-9][a-zA-Z0-9 _]*$';   //'[a-zA-Z0-9]*$';
+    public static IFSCRegex = /^[A-Za-z]{4}[0][A-Za-z0-9]{6}$/;
+    public static gstrReg = '[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]{3}';
+    public static GSTNRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/;
 
-  public static numericRegex = '[0-9]*';
-  public static amountWithoutDecimal = /^[0-9]*$/;
-  public static amountWithDecimal = /^\s*-?\d+(\.\d{1,2})?\s*$/;
-  public static indianCurrencySymbol = '₹ ';
-  public static PINCode = '[1-9]{1}[0-9]{5}';
-  // public static ZIPCode: RegExp = /^[a-zA-Z0-9]{4,8}$/;
+    public static numericRegex = '[0-9]*';
+    public static amountWithoutDecimal = /^[0-9]*$/;
+    public static amountWithDecimal = /^\s*-?\d+(\.\d{1,2})?\s*$/;
+    public static indianCurrencySymbol = '₹ ';
+    public static PINCode = '[1-9]{1}[0-9]{5}';
+    // public static ayYear = '2020-2021';
+    // public static fyYear = '2019-2020';
 
-  // public static ayYear = '2020-2021';
-  // public static fyYear = '2019-2020';
+    public static USER_OBJ = 'USER_OBJ';
+    public static TOKEN = 'TOKEN';
+    public static IS_USER_LOGGED_IN = 'IS_USER_LOGGED_IN';
+    public static ITR_JSON = 'ITR_JSON';
+    public static PREV_ITR_JSON = 'PREV_ITR_JSON';
+    public static TAX_SUM = 'TAX_SUM';
+    public static NAME = 'name';
+    public static ITR_DOCS = 'ITR_DOCS';
+    public static SME_LIST = 'SME_LIST';
+    public static ALL_RESIGNED_ACTIVE_SME_LIST = 'ALL_RESIGNED_ACTIVE_SME_LIST';
+    public static MASTER_STATUS = 'MASTER_STATUS';
+    public static FY_LIST = 'FY_LIST';
+    public static AGENT_LIST = 'AGENT_LIST';
+    public static MY_AGENT_LIST = 'MY_AGENT_LIST';
+    public static SELECTED_AGENT = 'SELECTED_AGENT';
+    public static LOGGED_IN_SME_INFO = 'LOGGED_IN_SME_INFO';
+    public static ALL_FILERS_LIST = 'ALL_FILERS_LIST';
+    public static BANK_LIST = 'BANK_LIST';
+    public static ADMIN_GLOBAL_CONFIG = 'ADMIN_GLOBAL_CONFIG';
+    public static SCHEDULE_CALL_REMOTE_CONFIG = 'SCHEDULE_CALL_REMOTE_CONFIG';
+    public static gstFyList = [
+        { financialYear: '2023-24' },
+        { financialYear: '2022-23' },
+        { financialYear: '2021-22' },
+        { financialYear: '2020-21' },
+        { financialYear: '2019-20' },
+        { financialYear: '2018-19' },
+    ];
+    public static subscriptionFyList = [
+        { financialYear: '2023-2024' },
+        { financialYear: '2022-2023' },
+        { financialYear: '2021-2022' },
+        { financialYear: '2020-2021' },
+        { financialYear: '2019-2020' },
+        { financialYear: '2018-2019' },
+    ];
 
-  public static USER_OBJ = 'USER_OBJ';
-  public static TOKEN = 'TOKEN';
-  public static IS_USER_LOGGED_IN = 'IS_USER_LOGGED_IN';
-  public static ITR_JSON = 'ITR_JSON';
-  public static PREV_ITR_JSON = 'PREV_ITR_JSON';
-  public static TAX_SUM = 'TAX_SUM';
-  public static NAME = 'name';
-  public static ITR_DOCS = 'ITR_DOCS';
-  public static SME_LIST = 'SME_LIST';
-  public static ALL_RESIGNED_ACTIVE_SME_LIST = 'ALL_RESIGNED_ACTIVE_SME_LIST';
-  public static MASTER_STATUS = 'MASTER_STATUS';
-  public static FY_LIST = 'FY_LIST';
-  public static AGENT_LIST = 'AGENT_LIST';
-  public static MY_AGENT_LIST = 'MY_AGENT_LIST';
-  public static SELECTED_AGENT = 'SELECTED_AGENT';
-  public static LOGGED_IN_SME_INFO = 'LOGGED_IN_SME_INFO';
-  public static ALL_FILERS_LIST = 'ALL_FILERS_LIST';
-  public static BANK_LIST = 'BANK_LIST';
-  public static ADMIN_GLOBAL_CONFIG = 'ADMIN_GLOBAL_CONFIG';
-  public static SCHEDULE_CALL_REMOTE_CONFIG = 'SCHEDULE_CALL_REMOTE_CONFIG';
-  public static gstFyList = [
-    { financialYear: '2023-24' },
-    { financialYear: '2022-23' },
-    { financialYear: '2021-22' },
-    { financialYear: '2020-21' },
-    { financialYear: '2019-20' },
-    { financialYear: '2018-19' },
-  ];
-  public static subscriptionFyList = [
-    { financialYear: '2023-2024' },
-    { financialYear: '2022-2023' },
-    { financialYear: '2021-2022' },
-    { financialYear: '2020-2021' },
-    { financialYear: '2019-2020' },
-    { financialYear: '2018-2019' },
-  ];
-
-  public static gstMonthList = [
-    { value: 'Jan', displayName: 'Jan' },
-    { value: 'Feb', displayName: 'Feb' },
-    { value: 'Mar', displayName: 'Mar' },
-    { value: 'Apr', displayName: 'Apr' },
-    { value: 'May', displayName: 'May' },
-    { value: 'Jun', displayName: 'Jun' },
-    { value: 'Jul', displayName: 'Jul' },
-    { value: 'Aug', displayName: 'Aug' },
-    { value: 'Sep', displayName: 'Sep' },
-    { value: 'Oct', displayName: 'Oct' },
-    { value: 'Nov', displayName: 'Nov' },
-    { value: 'Dec', displayName: 'Dec' },
-  ];
-  public static gstTypesMaster = [
-    { label: 'Regular', value: 'REGULAR' },
+    public static gstMonthList = [
+        { value: 'Jan', displayName: 'Jan' },
+        { value: 'Feb', displayName: 'Feb' },
+        { value: 'Mar', displayName: 'Mar' },
+        { value: 'Apr', displayName: 'Apr' },
+        { value: 'May', displayName: 'May' },
+        { value: 'Jun', displayName: 'Jun' },
+        { value: 'Jul', displayName: 'Jul' },
+        { value: 'Aug', displayName: 'Aug' },
+        { value: 'Sep', displayName: 'Sep' },
+        { value: 'Oct', displayName: 'Oct' },
+        { value: 'Nov', displayName: 'Nov' },
+        { value: 'Dec', displayName: 'Dec' },
+    ];
+    public static gstTypesMaster = [{ label: 'Regular', value: 'REGULAR' },
     { label: 'Composite', value: 'COMPOSITE' },
-    {
-      label: 'Input Service Distributor (ISD)',
-      value: 'Input Service Distributor (ISD)',
-    },
-  ];
-  public static frequencyTypesMaster = [
-    { label: 'Monthly', value: 'MONTHLY' },
+    { label: 'Input Service Distributor (ISD)', value: 'Input Service Distributor (ISD)' }];
+    public static frequencyTypesMaster = [{ label: 'Monthly', value: 'MONTHLY' },
     { label: 'Quarterly', value: 'QUARTERLY' },
-    { label: 'Yearly', value: 'YEARLY' },
-  ];
-  public static returnTypeMaster = [
-    { label: 'CMP08', value: 'CMP08' },
-    { label: 'GSTR-3B', value: 'GSTR-3B' },
-    { label: 'GSTR1', value: 'GSTR1' },
-    { label: 'Original', value: 'ORIGINAL' },
-    { label: 'Revised', value: 'REVISED' },
-  ];
+    { label: 'Yearly', value: 'YEARLY' }];
+    public static returnTypeMaster = [{ label: 'CMP08', value: 'CMP08' }, { label: 'GSTR-3B', value: 'GSTR-3B' }, { label: 'GSTR1', value: 'GSTR1' }, { label: 'Original', value: 'ORIGINAL' }, { label: 'Revised', value: 'REVISED' }];
 
-  public static sourceList: any = [
-    { label: 'Play store', value: 'PLAY_STORE' },
-    { label: 'Apple store', value: 'APPLE_STORE' },
-    { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' },
-  ];
-  public static reviewStatusList: any = [
-    { label: 'Yes', value: true },
-    { label: 'No', value: false },
-  ];
-  public static ratingList: any = [
-    { label: '1', value: '1' },
-    { label: '2', value: '2' },
-    { label: '3', value: '3' },
-    { label: '4', value: '4' },
-    { label: '5', value: '5' },
-  ];
-  public static sentimentList: any = [
-    { label: 'Positive', value: 'Positive' },
-    { label: 'Negative', value: 'Negative' },
-  ];
-  public static statusList: any = [
-    { label: 'All', value: 'All' },
-    { label: 'open', value: 'OPEN' },
-    { label: 'Resolved', value: 'RESOLVED' },
-    { label: 'Unresolved', value: 'UNRESOLVED' },
-  ];
-  public static platformList: any = [
-    { label: 'All', value: 'All' },
-    { label: 'Play Store', value: 'Play Store' },
-    { label: 'Kommunicate', value: 'Kommunicate' },
-    { label: 'Google My Business', value: 'Google My Business' },
-    { label: 'Apple Store', value: 'Apple Store' },
-  ];
-  public static defaultCountry = '91';
+    public static sourceList: any = [{ label: 'Play store', value: 'PLAY_STORE' }, { label: 'Apple store', value: 'APPLE_STORE' }, { label: 'Google workspace', value: 'GOOGLE_WORKSPACE' }];
+    public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
+    public static ratingList: any = [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }];
+    public static sentimentList: any = [{ label: 'Positive', value: 'Positive' }, { label: 'Negative', value: 'Negative' }];
+    public static statusList: any = [{ label: 'All', value: 'All' }, { label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
+    public static platformList: any = [{ label: 'All', value: 'All' }, { label: 'Play Store', value: 'Play Store' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, { label: 'Apple Store', value: 'Apple Store' }];
+    public static defaultCountry = '91';
 
-  public static DISABLITY_TIME_MINS = 0;
+    public static DISABLITY_TIME_MINS = 0;
 
   public static stateDropdown: any = [
     {
       id: '5b4599c9c15a76370a342cas',
       stateId: '1',
       countryCode: '99',
-      stateName: 'foreign',
+      stateName: 'Foreign',
       stateCode: '99',
       status: true,
     },

@@ -35,7 +35,7 @@
 
               <div class="accordion noBorder" id="myAccordion">
                 <form [formGroup]="employerDetailsFormGroup">
-                  
+
                     <h2 class="accordion-header accoHdclr" id="headingOne">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne">Employer Details</button>
@@ -95,34 +95,35 @@
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">{{ pinLabel }} </span> <span class="text-wrapper-2">*</span>
+                              <span class="span">Country </span> <span class="text-wrapper-2">*</span>
                               </div>
 
                               <mat-form-field appearance="outline">
-                                <input type="text" trim  matInput placeholder="{{ pinLabel }}" name="pinCode"
-                                  class="form-control inpplac" formControlName="pinCode" maxlength="8"
-                                  (blur)="updateDataByPincode()" />
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
-                                  Enter pincode
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('pattern')">
-                                  Enter valid pin
-                                </mat-error>
+                                <mat-select placeholder="Select country" name="country" formControlName="country" (selectionChange)="onCountryChange($event)">
+                                  <mat-option *ngFor="let country of countriesDropdown" [value]="country.countryCode">
+                                    {{ country.countryName | titlecase }}
+                                  </mat-option>
+                                </mat-select>
                               </mat-form-field>
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">{{ employerDetailsFormGroup.controls['country'].value === '91' ? "pincode" : "zipcode" }}</span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="text" trim matInput placeholder="Town/City" name="TAN"
-                                  class="form-control inpplac" formControlName="city" maxlength="50" />
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
-                                  Enter the town/city
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
-                                  Enter character only.
-                                </mat-error>
+                                                            <input
+                              type="text"
+                              trim
+                              matInput
+                              [placeholder]="employerDetailsFormGroup.controls['country'].value === '91' ? 'pincode' : 'zipcode'"
+                              name="pinCode"
+                              class="form-control inpplac"
+                              formControlName="pinCode"
+                              [maxlength]="employerDetailsFormGroup.controls['country'].value === '91' ? 6 : 8"
+                              required
+                              (blur)="employerDetailsFormGroup.controls['country'].value === '91' ? updateDataByPincode() : null"
+                            />
                               </mat-form-field>
                             </div>
                           </div>
@@ -141,24 +142,28 @@
                                     Select the state
                                   </mat-error>
                                 </mat-form-field>
-                            </div>
+                              </div>
                             <div class="field">
-                                <div class="field-label">
-                                <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                              <div class="field-label">
+                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
                               </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-select placeholder="Select country" name="country" formControlName="country" (selectionChange)="onCountryChange($event)">
-                                    <mat-option *ngFor="let country of countriesDropdown" [value]="country.countryCode">
-                                      {{ country.countryName | titlecase }}
-                                    </mat-option>
-                                  </mat-select>
+                                <input type="text" trim matInput placeholder="Town/City" name="TAN"
+                                  class="form-control inpplac" formControlName="city" maxlength="50" />
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
+                                  Enter the town/city
+                                </mat-error>
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
+                                  Enter character only.
+                                </mat-error>
                                 </mat-form-field>
+                              </div>
+
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  
+
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -451,8 +456,6 @@
               </div>
             </div>
 
-
-
             <div class="out-box">
               <div class="box-left">
                 <div class="lft-btn" (click)="goBack()">Back</div>
@@ -472,7 +475,6 @@
   <app-side-summary-panel type="salary"></app-side-summary-panel>
   <app-previous-summary-panel type="salary" *ngIf="PREV_ITR_JSON"></app-previous-summary-panel>
 
-
-
 </div>
+
 <!-- main area ends -->
