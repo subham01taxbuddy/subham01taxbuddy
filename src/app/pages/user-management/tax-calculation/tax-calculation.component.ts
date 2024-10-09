@@ -9,6 +9,7 @@ import { debounceTime } from 'rxjs/operators';
 import { ChangeDetectionStrategy } from '@angular/core';
 import {ApiEndpoints} from "../../../modules/shared/api-endpoint";
 import {ItrMsService} from "../../../services/itr-ms.service";
+import {UserMsService} from "../../../services/user-ms.service";
 
 @Component({
   selector: 'app-tax-calculation',
@@ -41,7 +42,8 @@ export class TaxCalculationComponent implements OnInit {
     private taxDataService: TaxDataService,
     private userTaxDataService: UserTaxDataService,
     private snackBar: MatSnackBar,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private userMsService: UserMsService
   ) {
     // Initialize the form group
     this.taxCalculationForm = this.fb.group({
@@ -219,10 +221,10 @@ export class TaxCalculationComponent implements OnInit {
   }
 
   private fetchUserProfile(userId: number): void {
-    const userProfileUrl = `https://uat-api.taxbuddy.com/user/profile/${userId}`;
+    const userProfileUrl = `/profile/${userId}`;
     this.isLoading = true; // Start loading
 
-    this.http.get(userProfileUrl).subscribe(
+    this.userMsService.getMethod(userProfileUrl).subscribe(
       (response: any) => {
         const profileData = response;
         // Patch values correctly from profileData
