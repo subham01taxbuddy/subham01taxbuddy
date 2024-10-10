@@ -846,8 +846,8 @@ export class MoreOptionsDialogComponent implements OnInit {
     // Call the API to get advance tax data
     this.itrMsService.getMethod(apiUrl).subscribe(
       (response: any) => {
-        if (response.status === 200) {
-          const taxData = response.body.data; // Assuming data is inside `body`
+        if (response.success) {
+          const taxData = response.data; // Assuming data is inside `body`
 
           // Navigate to the tax calculation page and pass the tax data as query params
           this.router.navigate(['/pages/user-management/tax-calculation'], {
