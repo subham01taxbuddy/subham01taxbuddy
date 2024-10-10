@@ -478,8 +478,8 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       purchaseValuePerUnit: [obj?.purchaseValuePerUnit],
       isUploaded: [obj?.isUploaded ? obj?.isUploaded : false],
       isIndexationBenefitAvailable: [
-        obj?.isIndexationBenefitAvailable
-          ? obj?.isIndexationBenefitAvailable
+        obj?.indexCostOfAcquisition
+          ? obj?.indexCostOfAcquisition > 0
           : false,
       ],
       description: [obj ? obj?.description : des, Validators.required], // TODO commented,
@@ -1137,7 +1137,8 @@ async updateDataByPincode(index: number) {
           'cgProperty';
         this.cgArrayElement.assetDetails[
           this.currentCgIndex
-        ].isIndexationBenefitAvailable = false;
+        ].isIndexationBenefitAvailable = this.cgArrayElement.assetDetails[this.currentCgIndex]
+            .indexCostOfAcquisition > 0;
 
         let filtered = this.cgArrayElement.improvement?.filter(
           (imp) => imp.srn != this.currentCgIndex

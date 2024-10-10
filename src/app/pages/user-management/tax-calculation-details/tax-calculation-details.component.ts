@@ -5,6 +5,7 @@ import { UserTaxDataService } from '../../../services/user-tax-data.service';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { Location } from '@angular/common';
+import {ItrMsService} from "../../../services/itr-ms.service";
 
 interface TaxData {
   name: string;
@@ -46,7 +47,8 @@ export class TaxCalculationDetailsComponent implements OnInit {
     private taxDataService: TaxDataService,
     private userTaxDataService: UserTaxDataService,
     private http: HttpClient,
-    private location: Location
+    private location: Location,
+    private itrMsService: ItrMsService
   ) {}
 
   // Function to go back to the previous page
@@ -94,54 +96,10 @@ export class TaxCalculationDetailsComponent implements OnInit {
     const userData = this.userTaxDataService.getUserTaxData();
     const taxData = this.taxDataService.getTaxData();
 
-    const payload = {
-      name: userData.name,
-      pan: userData.pan,
-      assessmentYear: userData.assessmentYear,
-      dob: userData.dob,
-      advanceTaxQuarter1: {
-        rate: taxData.advanceTaxQuarter1.rate,
-        installmentAmount: taxData.advanceTaxQuarter1.installmentAmount,
-        installment: taxData.advanceTaxQuarter1.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter1.cumulativeTaxLiability,
-      },
-      oldRegime: taxData.oldRegime,
-      totalTaxLiabilty: taxData.totalTaxLiabilty,
-      beneficialRegime: taxData.beneficialRegime,
-      newRegime: taxData.newRegime,
-      advanceTaxQuarter2: {
-        rate: taxData.advanceTaxQuarter2.rate,
-        installmentAmount: taxData.advanceTaxQuarter2.installmentAmount,
-        installment: taxData.advanceTaxQuarter2.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter2.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter3: {
-        rate: taxData.advanceTaxQuarter3.rate,
-        installmentAmount: taxData.advanceTaxQuarter3.installmentAmount,
-        installment: taxData.advanceTaxQuarter3.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter3.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter4: {
-        rate: taxData.advanceTaxQuarter4.rate,
-        installmentAmount: taxData.advanceTaxQuarter4.installmentAmount,
-        installment: taxData.advanceTaxQuarter4.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter4.cumulativeTaxLiability,
-      },
-    };
-
-    this.http
-      .post(
-        'https://uat-api.taxbuddy.com/itr/api/download/old-vs-new/pdf',
-        payload,
-        {
-          responseType: 'blob',
-        }
-      )
-      .subscribe(
+    const payload = {...userData, ...taxData};
+    
+    const param = '/api/download/old-vs-new/pdf';
+    this.itrMsService.downloadFileAsPost(param, 'application/pdf', payload).subscribe(
         (response) => {
           const blob = new Blob([response], { type: 'application/pdf' });
           const fileName = 'tax_report.pdf';
