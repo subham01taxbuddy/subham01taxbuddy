@@ -96,44 +96,8 @@ export class TaxCalculationDetailsComponent implements OnInit {
     const userData = this.userTaxDataService.getUserTaxData();
     const taxData = this.taxDataService.getTaxData();
 
-    const payload = {
-      name: userData.name,
-      pan: userData.pan,
-      assessmentYear: userData.assessmentYear,
-      dob: userData.dob,
-      advanceTaxQuarter1: {
-        rate: taxData.advanceTaxQuarter1.rate,
-        installmentAmount: taxData.advanceTaxQuarter1.installmentAmount,
-        installment: taxData.advanceTaxQuarter1.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter1.cumulativeTaxLiability,
-      },
-      oldRegime: taxData.oldRegime,
-      totalTaxLiabilty: taxData.totalTaxLiabilty,
-      beneficialRegime: taxData.beneficialRegime,
-      newRegime: taxData.newRegime,
-      advanceTaxQuarter2: {
-        rate: taxData.advanceTaxQuarter2.rate,
-        installmentAmount: taxData.advanceTaxQuarter2.installmentAmount,
-        installment: taxData.advanceTaxQuarter2.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter2.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter3: {
-        rate: taxData.advanceTaxQuarter3.rate,
-        installmentAmount: taxData.advanceTaxQuarter3.installmentAmount,
-        installment: taxData.advanceTaxQuarter3.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter3.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter4: {
-        rate: taxData.advanceTaxQuarter4.rate,
-        installmentAmount: taxData.advanceTaxQuarter4.installmentAmount,
-        installment: taxData.advanceTaxQuarter4.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter4.cumulativeTaxLiability,
-      },
-    };
+    const payload = {...userData, ...taxData};
+    
     const param = '/api/download/old-vs-new/pdf';
     this.itrMsService.downloadFileAsPost(param, 'application/pdf', payload).subscribe(
         (response) => {
