@@ -297,6 +297,8 @@
                                       Enter positive number without decimal.</mat-error>
                                   </mat-form-field>
                                 </div>
+                              </div>
+                              <div class="div-6">
                                 <div class="form-field">
                                   <div><span class="span">Cash in hand </span><span class="text-wrapper-2">*</span>
                                   </div>
@@ -309,6 +311,20 @@
                                       Enter positive number without decimal.</mat-error>
                                   </mat-form-field>
                                 </div>
+
+                                <div class="form-field">
+                                  <div><span class="span">Other Current Asset </span><span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input digitsOnly [formControl]="$any(assetLiabilitiesForm.controls['otherAssets'])"
+                                      matInput placeholder="₹ Enter Amount" name="otherAssets" class="input-field"
+                                      maxlength="14" (blur)="calculateTotal2()" (change)="calCurrentAssets()"
+                                      required />
+                                      <mat-error *ngIf="assetLiabilitiesForm.controls['otherAssets'].hasError('pattern')">
+                                        Enter positive number without decimal.</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-field"></div>
                               </div>
                             </div>
                             <div class="div-6">
