@@ -100,7 +100,7 @@ export class TaxCalculationComponent implements OnInit {
   ngOnInit(): void {
     this.listenToFormChanges();
 
-      this.addAnother(); 
+      // this.addAnother(); 
     
     const panNumber = this.taxCalculationForm.get('panNumber')?.value || 0;
     const assesseeName =
@@ -225,7 +225,7 @@ export class TaxCalculationComponent implements OnInit {
           });
           // const taxPaymentsArray = this.taxCalculationForm.get('taxPayments') as UntypedFormArray;
 
-          if(this.taxPayments.length > 0){
+          if(taxData.taxPayments && taxData.taxPayments.length > 0){
           taxData.taxPayments.forEach(element => {
              this.taxPayments.push(this.fb.group({
               tax:[element.tax],

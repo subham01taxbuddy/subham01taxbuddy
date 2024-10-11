@@ -767,6 +767,13 @@
           
           <div class="col-sm-5" formArrayName="taxPayments">
             <p>Advance Tax if any</p>
+            <button 
+            *ngIf="taxPayments.length === 0" 
+            (click)="addAnother()" 
+            mat-raised-button 
+            style="flex: 1; background-color: #00afcb; color: #ffffff; border-radius: 5px; padding: 10px 15px; margin-right: 3px;">
+            Add
+           </button>
             <!-- Display dynamically added taxPayments -->
             <div *ngFor="let payment of taxPayments.controls; let i = index" [formGroupName]="i">
               <div style="display: flex; padding: 1px 1px; padding-right: 4px; padding-bottom: 0; align-items: center;">
@@ -801,7 +808,6 @@
                     type="button" 
                     mat-button 
                     color="warn" 
-                    [disabled]="taxPayments.length <= 1"
                     style="flex: 1; background-color: #cb1400; color: #ffffff; border-radius: 5px; padding: 10px 15px;">
                     Delete
                   </button>
