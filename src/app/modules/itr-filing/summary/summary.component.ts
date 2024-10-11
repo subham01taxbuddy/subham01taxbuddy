@@ -7447,7 +7447,7 @@ export class SummaryComponent implements OnInit {
           let headerObj = {
             panNumber: this.ITR_JSON.panNumber,
             assessmentYear: this.ITR_JSON.assessmentYear,
-            userId: this.ITR_JSON.userId.toString(),
+            userId: environment.environment === 'UAT' ? '1067' : this.ITR_JSON.userId.toString(),
           };
           sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
 
