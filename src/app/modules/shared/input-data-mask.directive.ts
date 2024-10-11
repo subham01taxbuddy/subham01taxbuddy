@@ -86,9 +86,9 @@ export class TwoDigitDecimaNumberDirective {
 
     let pastedData = event.clipboardData?.getData('text/plain') || '';
     const cleanedValue = this.cleanInput(pastedData);
-
+    this.el.nativeElement.value = '';
     if (cleanedValue) {
-      this.insertTextAtCursor(cleanedValue);
+      this.el.nativeElement.value = cleanedValue;
     }
   }
 
