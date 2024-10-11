@@ -150,7 +150,7 @@ export interface ITR_JSON {
   scheduleESOP: ScheduleESOP;
 
   manualUpdateReason: string;
-
+  deductionUs57One:number;
 }
 
 export interface ScheduleESOP {

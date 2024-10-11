@@ -256,7 +256,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter3: [null],
         quarter4: [null],
         quarter5: [null],
-        quarter6:[null],
+        deductionUs57One:[null],
       }, { validators: this.deductionValidator }),
       familyPension: new UntypedFormControl(null),
       famPenDeduction: [],
@@ -514,13 +514,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         date: '2023-03-20T18:30:00.000Z',
         quarter: 5,
       },
-      {
-        income: dividendIncomes.controls['quarter6'].value,
-        date: '2023-03-20T18:30:00.000Z',
-        quarter: 6,
-      },
     ];
-
+    this.Copy_ITR_JSON.deductionUs57One = dividendIncomes.controls['deductionUs57One'].value
     console.log('Copy ITR JSON', this.Copy_ITR_JSON);
 
     this.loading = true;
@@ -876,14 +871,17 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
             );
             break;
           }
-          case 6: {
-            dividendIncomes.controls['quarter6'].setValue(
-              this.ITR_JSON.dividendIncomes[i].income
-            );
-            break;
-          }
         }
       }
+    }
+    if(this.ITR_JSON.deductionUs57One != null){
+      let dividendIncomes = this.otherIncomeFormGroup.controls[
+        'dividendIncomes'
+      ] as UntypedFormGroup;
+
+      dividendIncomes.controls['deductionUs57One'].setValue(
+        this.ITR_JSON.deductionUs57One
+      );
     }
   }
 
@@ -1063,11 +1061,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     const q5 = Number(formGroup.controls['quarter5'].value || 0);
     const totalDividendIncome = q1 + q2 + q3 + q4 + q5;
 
-    const quarter6 = Number(formGroup.controls['quarter6'].value || 0);
+    const deductionUs57One = Number(formGroup.controls['deductionUs57One'].value || 0);
 
     const maxDeductionAllowed = totalDividendIncome * 0.2;
 
-    if (quarter6 > maxDeductionAllowed) {
+    if (deductionUs57One > maxDeductionAllowed) {
       return { deductionExceedsLimit: true };
     }
     return null;

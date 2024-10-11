@@ -118,7 +118,7 @@
                         </div>
                         <div class="form-field">
                           <mat-form-field appearance="outline">
-                            <input digitsOnly trim matInput name="quarter6" formControlName="quarter6" maxlength="50" digitsOnly />
+                            <input digitsOnly trim matInput name="deductionUs57One" formControlName="deductionUs57One" maxlength="50" digitsOnly />
                           </mat-form-field>
                           <div *ngIf="otherIncomeFormGroup.get('dividendIncomes')?.errors?.['deductionExceedsLimit']">
                             <span class="error-text" style="color: red;">
@@ -442,7 +442,7 @@
                                 formControlName="incomeValue" type="number" maxlength="125" />
                             </mat-form-field>
                           </div>
-                          
+
                         </div>
                         <div class="div-6" *ngIf="income.value.incomeType ==='ANY_OTHER'">
                           <!-- <div class="form-field"></div> -->

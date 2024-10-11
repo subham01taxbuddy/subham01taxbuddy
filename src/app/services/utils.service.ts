@@ -395,7 +395,8 @@ export class UtilsService {
       winningsUS115BB: null,
       winningsUS115BBJ: null,
       scheduleESOP: null,
-      manualUpdateReason: null
+      manualUpdateReason: null,
+      deductionUs57One:null
     };
 
     return ITR_JSON;
