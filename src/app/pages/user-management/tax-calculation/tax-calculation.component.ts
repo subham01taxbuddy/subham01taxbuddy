@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaxDataService } from '../../../../app/tax-data.service';
@@ -93,16 +93,18 @@ export class TaxCalculationComponent implements OnInit {
       // parents: ['', Validators.required],
       parents: [''],
       hasParentAboveSixty: [false],
+      taxPayments: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
     this.listenToFormChanges();
 
+      this.addAnother(); 
+    
     const panNumber = this.taxCalculationForm.get('panNumber')?.value || 0;
     const assesseeName =
       this.taxCalculationForm.get('assesseeName')?.value || 0;
-
     console.log({ assesseeName, panNumber });
 
     console.log({
@@ -122,7 +124,7 @@ export class TaxCalculationComponent implements OnInit {
       }
     });
   }
-
+ 
   private listenToFormChanges(): void {
     this.taxCalculationForm
       .get('incomeFromOtherSources')
@@ -154,6 +156,20 @@ export class TaxCalculationComponent implements OnInit {
         ?.setValue('', { emitEvent: false });
     }
   }
+  addAnother() {
+    const formGroup = this.fb.group({
+      tax: [''],  // Add validation if needed
+      date: ['']   // Add validation if needed
+    });
+
+    // Add the form group to the taxPayments FormArray
+    this.taxPayments.push(formGroup);
+  }
+
+  removeTaxPayment(index: number) {
+    this.taxPayments.removeAt(index); // Remove the specified index from the FormArray
+  }
+  
 
   private fetchTaxData(userId: number): void {
     const apiUrl = `${ApiEndpoints.itrMs.itrAdvanceTax}/${userId}`;
@@ -205,8 +221,20 @@ export class TaxCalculationComponent implements OnInit {
             speculative: taxData.speculativeBusinessIncome,
             businessNonSpeculative: taxData.pylNonSpeculativeIncome,
             businessSpeculative: taxData.pylSpeculativeIncome,
+            // taxPayments:taxData.taxPayments
           });
+          // const taxPaymentsArray = this.taxCalculationForm.get('taxPayments') as UntypedFormArray;
+
+          if(this.taxPayments.length > 0){
+          taxData.taxPayments.forEach(element => {
+             this.taxPayments.push(this.fb.group({
+              tax:[element.tax],
+              date:[element.date]
+             }))
+          });
+        }
           this.isLoading = false; // Loading complete
+          
         } else {
           // If the response is not successful, make the fallback API call
           this.fetchUserProfile(userId);
@@ -218,6 +246,9 @@ export class TaxCalculationComponent implements OnInit {
         this.fetchUserProfile(userId);
       }
     );
+  }
+  get taxPayments(): UntypedFormArray {
+    return this.taxCalculationForm.get('taxPayments') as UntypedFormArray;
   }
 
   private fetchUserProfile(userId: number): void {
@@ -411,6 +442,7 @@ export class TaxCalculationComponent implements OnInit {
       us80dParent: this.taxCalculationForm.get('parents')?.value || 0,
       hasParentAboveSixty: this.taxCalculationForm.get('hasParentAboveSixty')
         ?.value,
+        taxPayments:this.taxCalculationForm.get('taxPayments')?.value||[],
 
       // businessIncome:
       // this.taxCalculationForm.get('businessNonSpeculative')?.value || 0,

@@ -20,6 +20,13 @@ interface TaxData {
   advanceTaxQuarter3?: any;
   advanceTaxQuarter4?: any;
   totalTaxLiabilty?: number;
+  advanceTaxPaidQ1?:number;
+  advanceTaxPaidQ2?:number;
+  advanceTaxPaidQ3?:number;
+  advanceTaxPaidQ4?:number;
+  advanceTaxPaidQ5?:number;
+  tdsTcs?:number;
+  advanceTaxPaid?:number;
 }
 
 @Component({
@@ -41,6 +48,13 @@ export class TaxCalculationDetailsComponent implements OnInit {
   advanceTaxQuarter3: any = {};
   advanceTaxQuarter4: any = {};
   totalTaxLiabilty: string | undefined;
+  advanceTaxPaidQ1: string | undefined;
+  advanceTaxPaidQ2: string | undefined;
+  advanceTaxPaidQ3: string | undefined;
+  advanceTaxPaidQ4: string | undefined;
+  advanceTaxPaidQ5: string | undefined;
+       tdsTcs:       string|undefined;
+  advanceTaxPaid:   string | undefined; 
 
   constructor(
     private router: Router,
@@ -73,6 +87,13 @@ export class TaxCalculationDetailsComponent implements OnInit {
       this.newRegime = data.newRegime;
       this.beneficialRegime = data.beneficialRegime;
       this.totalTaxLiabilty = data.totalTaxLiabilty;
+      this.tdsTcs = data.tdsTcs;
+      this.advanceTaxPaid = data.advanceTaxPaid;
+      this.advanceTaxPaidQ1 = data.advanceTaxPaidQ1;
+      this.advanceTaxPaidQ2 = data.advanceTaxPaidQ2;
+      this.advanceTaxPaidQ3 = data.advanceTaxPaidQ3;
+      this.advanceTaxPaidQ4 = data.advanceTaxPaidQ4;
+      this.advanceTaxPaidQ5 = data.advanceTaxPaidQ5;
 
       this.advanceTaxQuarter1 = data.advanceTaxQuarter1;
       this.advanceTaxQuarter2 = data.advanceTaxQuarter2;
