@@ -5,6 +5,7 @@ import { UserTaxDataService } from '../../../services/user-tax-data.service';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { Location } from '@angular/common';
+import {ItrMsService} from "../../../services/itr-ms.service";
 
 interface TaxData {
   name: string;
@@ -19,6 +20,13 @@ interface TaxData {
   advanceTaxQuarter3?: any;
   advanceTaxQuarter4?: any;
   totalTaxLiabilty?: number;
+  advanceTaxPaidQ1?:number;
+  advanceTaxPaidQ2?:number;
+  advanceTaxPaidQ3?:number;
+  advanceTaxPaidQ4?:number;
+  advanceTaxPaidQ5?:number;
+  tdsTcs?:number;
+  advanceTaxPaid?:number;
 }
 
 @Component({
@@ -39,14 +47,27 @@ export class TaxCalculationDetailsComponent implements OnInit {
   advanceTaxQuarter2: any = {};
   advanceTaxQuarter3: any = {};
   advanceTaxQuarter4: any = {};
-  totalTaxLiabilty: string | undefined;
+  totalTaxLiabilty: number = 0;
+  advanceTaxPaidQ1: number = 0;
+  advanceTaxPaidQ2: number = 0;
+  advanceTaxPaidQ3: number = 0;
+  advanceTaxPaidQ4: number = 0;
+  advanceTaxPaidQ5: number = 0;
+  tdsTcs: number = 0;
+  advanceTaxPaid: number = 0;
+  taxLiability: number = 0;
+  taxPayable: number = 0;
+  totalAdvanceTaxPaid: number = 0;
+  interestUs234C: number = 0;
+  taxPayableOrRefund: any = '0';
 
   constructor(
     private router: Router,
     private taxDataService: TaxDataService,
     private userTaxDataService: UserTaxDataService,
     private http: HttpClient,
-    private location: Location
+    private location: Location,
+    private itrMsService: ItrMsService
   ) {}
 
   // Function to go back to the previous page
@@ -71,11 +92,33 @@ export class TaxCalculationDetailsComponent implements OnInit {
       this.newRegime = data.newRegime;
       this.beneficialRegime = data.beneficialRegime;
       this.totalTaxLiabilty = data.totalTaxLiabilty;
+      this.advanceTaxPaid = data.advanceTaxPaid;
+      this.advanceTaxPaidQ1 = data.advanceTaxPaidQ1;
+      this.advanceTaxPaidQ2 = data.advanceTaxPaidQ2;
+      this.advanceTaxPaidQ3 = data.advanceTaxPaidQ3;
+      this.advanceTaxPaidQ4 = data.advanceTaxPaidQ4;
+      this.advanceTaxPaidQ5 = data.advanceTaxPaidQ5;
 
       this.advanceTaxQuarter1 = data.advanceTaxQuarter1;
       this.advanceTaxQuarter2 = data.advanceTaxQuarter2;
       this.advanceTaxQuarter3 = data.advanceTaxQuarter3;
       this.advanceTaxQuarter4 = data.advanceTaxQuarter4;
+
+      let beneficialRegimeData;
+      if("New Regime" === data.beneficialRegime)
+        beneficialRegimeData = data.newRegime;
+      else
+        beneficialRegimeData = data.oldRegime;
+
+      this.tdsTcs = beneficialRegimeData.taxesPaid;
+      this.taxLiability = beneficialRegimeData.totalTax;
+      this.totalAdvanceTaxPaid = this.advanceTaxPaidQ1 + this.advanceTaxPaidQ2 + this.advanceTaxPaidQ3 + this.advanceTaxPaidQ4 + this.advanceTaxPaidQ5;
+      this.interestUs234C = this.advanceTaxQuarter1.interestUs234C +
+      this.advanceTaxQuarter2.interestUs234C +
+      this.advanceTaxQuarter3.interestUs234C +
+      this.advanceTaxQuarter4.interestUs234C;
+      const taxpayable = this.taxLiability - this.tdsTcs - this.totalAdvanceTaxPaid + this.interestUs234C;
+      this.taxPayableOrRefund = taxpayable < 0 ? '('+Math.abs(taxpayable)+')' : taxpayable;
 
       this.calculateTotalIncome();
     }
@@ -94,54 +137,10 @@ export class TaxCalculationDetailsComponent implements OnInit {
     const userData = this.userTaxDataService.getUserTaxData();
     const taxData = this.taxDataService.getTaxData();
 
-    const payload = {
-      name: userData.name,
-      pan: userData.pan,
-      assessmentYear: userData.assessmentYear,
-      dob: userData.dob,
-      advanceTaxQuarter1: {
-        rate: taxData.advanceTaxQuarter1.rate,
-        installmentAmount: taxData.advanceTaxQuarter1.installmentAmount,
-        installment: taxData.advanceTaxQuarter1.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter1.cumulativeTaxLiability,
-      },
-      oldRegime: taxData.oldRegime,
-      totalTaxLiabilty: taxData.totalTaxLiabilty,
-      beneficialRegime: taxData.beneficialRegime,
-      newRegime: taxData.newRegime,
-      advanceTaxQuarter2: {
-        rate: taxData.advanceTaxQuarter2.rate,
-        installmentAmount: taxData.advanceTaxQuarter2.installmentAmount,
-        installment: taxData.advanceTaxQuarter2.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter2.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter3: {
-        rate: taxData.advanceTaxQuarter3.rate,
-        installmentAmount: taxData.advanceTaxQuarter3.installmentAmount,
-        installment: taxData.advanceTaxQuarter3.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter3.cumulativeTaxLiability,
-      },
-      advanceTaxQuarter4: {
-        rate: taxData.advanceTaxQuarter4.rate,
-        installmentAmount: taxData.advanceTaxQuarter4.installmentAmount,
-        installment: taxData.advanceTaxQuarter4.installment,
-        cumulativeTaxLiability:
-          taxData.advanceTaxQuarter4.cumulativeTaxLiability,
-      },
-    };
+    const payload = {...userData, ...taxData};
 
-    this.http
-      .post(
-        'https://uat-api.taxbuddy.com/itr/api/download/old-vs-new/pdf',
-        payload,
-        {
-          responseType: 'blob',
-        }
-      )
-      .subscribe(
+    const param = '/api/download/old-vs-new/pdf';
+    this.itrMsService.downloadFileAsPost(param, 'application/pdf', payload).subscribe(
         (response) => {
           const blob = new Blob([response], { type: 'application/pdf' });
           const fileName = 'tax_report.pdf';

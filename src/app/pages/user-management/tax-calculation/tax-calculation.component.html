@@ -726,7 +726,7 @@
           <div
             style="
               display: flex;
-              justify-content: space-between;
+              justify-content: space-evenly;
               padding: 0px 30px;
             "
           >
@@ -749,11 +749,11 @@
             style="
               display: flex;
               justify-content: space-between;
-              padding: 30px 30px;
+            padding: 10px 10px;
               padding-bottom: 0;
             "
           >
-            <div class="col-sm-5">
+          <div class="col-sm-3">
               <mat-label>TDS/TCS</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -764,17 +764,62 @@
                 />
               </mat-form-field>
             </div>
-            <div class="col-sm-5">
-              <mat-label>Advance Tax if any</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  placeholder="Advance Tax if any"
-                  formControlName="AdvanceTaxIfAny"
-                  matInput
-                  type="number"
-                />
+
+          <div class="col-sm-5" formArrayName="taxPayments">
+            <p>Advance Tax if any</p>
+            <button
+            *ngIf="taxPayments.length === 0"
+            (click)="addAnother()"
+            mat-raised-button
+            style="flex: 1; background-color: #00afcb; color: #ffffff; border-radius: 5px; padding: 10px 15px; margin-right: 3px;">
+            Add
+           </button>
+            <!-- Display dynamically added taxPayments -->
+            <div *ngFor="let payment of taxPayments.controls; let i = index" [formGroupName]="i">
+              <div style="display: flex; padding: 1px 1px; padding-right: 4px; padding-bottom: 0; align-items: center;">
+
+                <!-- Advance Tax Input -->
+                <mat-form-field appearance="outline" style="margin-right: 3px; flex: 1;">
+                  <input placeholder="Amount" formControlName="tax" matInput type="number" />
+                </mat-form-field>
+
+                <!-- Date Input -->
+                <mat-form-field appearance="outline" style="margin-right: 3px; flex: 1;">
+                  <input matInput formControlName="date" placeholder="Date" [matDatepicker]="pickers" autocomplete="off" />
+                  <mat-datepicker-toggle matSuffix [for]="pickers"></mat-datepicker-toggle>
+                  <mat-datepicker #pickers></mat-datepicker>
               </mat-form-field>
+
+                <!-- Add & Delete Buttons -->
+                <div style="display: flex;">
+                  <!-- Add Button (Only visible for the last form in the array and enabled only if valid) -->
+                  <button
+                    *ngIf="i === taxPayments.length - 1"
+                    (click)="addAnother()"
+                    mat-raised-button
+                    [disabled]="!payment.valid"
+                    style="flex: 1; background-color: #00afcb; color: #ffffff; border-radius: 5px; padding: 10px 15px; margin-right: 3px;">
+                    Add
+                  </button>
+
+                  <!-- Delete Button (Disabled if there are no or only one tax payment forms) -->
+                  <button
+                    (click)="removeTaxPayment(i)"
+                    type="button"
+                    mat-button
+                    color="warn"
+                    style="flex: 1; background-color: #cb1400; color: #ffffff; border-radius: 5px; padding: 10px 15px;">
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
+            </div>
+
+
+
+              <!-- Add Another Button -->
+
           </div>
           <!-- <div style="text-align: center; padding: 20px">
             <button type="submit" mat-raised-button color="primary">
@@ -801,4 +846,3 @@
       </div>
     </div>
   </div>
-</div>
