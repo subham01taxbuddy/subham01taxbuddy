@@ -8,6 +8,7 @@ import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
 import { Router } from "@angular/router";
 import { webSocket } from 'rxjs/webSocket';
+import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
@@ -800,7 +801,12 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        this.startPingInterval();
+        if(this.isTokenExpired(chat21Token)) {
+          this.startPingInterval();
+        } else {
+          this.chatClient.end();
+          this.initTokens(true);
+        }
       }
     );
     this.chatClient.on("close",
@@ -837,6 +843,27 @@ export class ChatService {
       }
     );
   }
+
+  isTokenExpired(token: string): boolean {
+    const decodedToken: any = this.decodeToken(token);
+    if (!decodedToken || !decodedToken.exp) {
+      return true;
+    }
+    const expirationDate = new Date(0);
+    expirationDate.setUTCSeconds(decodedToken.exp);
+    return expirationDate < new Date();
+  }
+
+  decodeToken(token: string): any {
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken;
+    } catch (Error) {
+      console.error('Invalid token:', Error);
+      return null;
+    }
+  }
+
 
   initRxjsWebsocket(conversWith) {
     // const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
