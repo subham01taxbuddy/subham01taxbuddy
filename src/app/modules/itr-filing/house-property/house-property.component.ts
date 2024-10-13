@@ -294,7 +294,6 @@ export class HousePropertyComponent implements OnInit {
         // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
       ]);
     } else {
-      this.housePropertyForm?.controls['state'].setValue('99');
       // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
       pinCodeControl?.setValidators([
         Validators.required,
@@ -325,7 +324,7 @@ export class HousePropertyComponent implements OnInit {
         // Validators.pattern('^[1-9][0-9]{5}$'), // Only 6-digit PIN code for India
       ]);
     } else {
-      this.housePropertyForm?.controls['state'].setValue('99');
+      // this.housePropertyForm?.controls['state'].setValue('99');
       // Validators for foreign ZIP codes (alphanumeric with min length 4 and max length 8)
       pinCodeControl?.setValidators([
         Validators.required,

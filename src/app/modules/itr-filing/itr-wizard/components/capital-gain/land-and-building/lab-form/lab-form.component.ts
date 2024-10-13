@@ -1511,7 +1511,6 @@ changecountry(event, inputField) {
     // Check if the selected country is not '91'
     if ( value !== '91') {
       // Set state code to '99' for foreign countries
-      formGroup.controls['state'].setValue('99');
       formGroup.controls['pin'].setValue('');
       formGroup.updateValueAndValidity();
     } else if (inputField === 'country' && value === '91') {

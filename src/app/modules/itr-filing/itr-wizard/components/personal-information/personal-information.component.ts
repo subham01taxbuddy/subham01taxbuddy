@@ -1827,7 +1827,7 @@ export class PersonalInformationComponent implements OnInit {
     },
   ];
   stateDropdown = [];
-  stateDropdownMaster = [
+  foreignDropdown=[
     {
       id: '5b4599c9c15a76370a342cas',
       stateId: '1',
@@ -1835,7 +1835,9 @@ export class PersonalInformationComponent implements OnInit {
       stateName: 'foreign',
       stateCode: '99',
       status: true,
-    },
+    }
+  ];
+  stateDropdownMaster = [
     {
       id: '5b4599c9c15a76370a3424c2',
       stateId: '1',
@@ -2515,108 +2517,106 @@ export class PersonalInformationComponent implements OnInit {
       // ];
       // addressGroup.controls['state'].setValue('99');
 
-      changeCountry(country: string) {
-        console.log('Selected country:', country);
+    changeCountry(country: string) {
+  console.log('Selected country:', country);
 
-        const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
-        const zipCodeControl = addressFormGroup.controls['pinCode'];
+  const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
+  const zipCodeControl = addressFormGroup.controls['pinCode'];
 
-        if (!zipCodeControl) {
-          console.error('ZIP code control not found!');
-          return;
-          }
-
-        // Clear existing validators before applying new ones
-        zipCodeControl.clearValidators();
-
-        if (country === '91') {
-          // Set Indian ZIP code validation (6-digit number)
-          zipCodeControl.setValidators([
-            Validators.required,
-            Validators.pattern('^[1-9][0-9]{5}$') // Validates 6-digit numeric code
-          ]);
-
-          // Ensure the state remains selectable for India
-          addressFormGroup.controls['state'].setValue(this.ITR_JSON.address.state || '');
-
-        } else {
-          // Set foreign ZIP code validation (3-10 alphanumeric characters)
-          zipCodeControl.setValidators([
-            Validators.required,
-            Validators.pattern('^[a-zA-Z0-9]{3,10}$') // Alphanumeric validation for foreign ZIP codes
-          ]);
-
-        }
-
-        // Apply and validate the changes to the ZIP code field
-        const currentZipCodeValue = zipCodeControl.value;
-        zipCodeControl.updateValueAndValidity();
-        zipCodeControl.setValue(currentZipCodeValue); // Retain current value after validation
-
-        // Fetch city data for India based on ZIP code
-        if (country === '91' && zipCodeControl.valid) {
-          this.getCityData();
-        }
-      }
-
-
-
-      changeCountryClear(country: string) {
-        console.log('Selected country:', country);
-
-        const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
-        const zipCodeControl = addressFormGroup.controls['pinCode'];
-
-        if (!zipCodeControl) {
-          console.error('ZIP code control not found!');
-          return;
-        }
-
-        // Clear existing validators before applying new ones
-        zipCodeControl.clearValidators();
-
-        if (country === '91') {
-          // Set Indian ZIP code validation (6-digit number)
-          zipCodeControl.setValidators([
-            Validators.required,
-            Validators.pattern('^[1-9][0-9]{5}$') // Validates 6-digit numeric code
-          ]);
-
-          // Ensure the state remains selectable for India
-          addressFormGroup.controls['state'].setValue(this.ITR_JSON.address.state || '');
-
-        } else {
-      this.stateDropdown = [
-        {
-          id: '5b4599c9c15a76370a3424e9',
-          stateId: '1',
-          countryCode: '355',
-          stateName: 'Foreign',
-          stateCode: '99',
-          status: true,
-        },
-      ];
-          addressFormGroup.controls['state'].setValue('99');
-          // Set foreign ZIP code validation (3-10 alphanumeric characters)
-          zipCodeControl.setValidators([
-            Validators.required,
-            Validators.pattern('^[a-zA-Z0-9]{3,10}$') // Alphanumeric validation for foreign ZIP codes
-          ])
-    this.addressForm.controls['city'].setValue('');
-
-        }
-
-        // Apply and validate the changes to the ZIP code field
-        const currentZipCodeValue = zipCodeControl.value;
-        zipCodeControl.updateValueAndValidity();
-        zipCodeControl.setValue(''); // Retain current value after validation
-
-
-        // Fetch city data for India based on ZIP code
-        if (country === '91' && zipCodeControl.valid) {
-          this.getCityData();
-    }
+  if (!zipCodeControl) {
+    console.error('ZIP code control not found!');
+    return;
   }
+
+  // Clear existing validators before applying new ones
+  zipCodeControl.clearValidators();
+
+  if (country === '91') {
+    // Set Indian ZIP code validation (6-digit number)
+    zipCodeControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[1-9][0-9]{5}$') // Validates 6-digit numeric code
+    ]);
+
+    // Show state dropdown for India
+    this.getCityData(); // Fetch city data based on ZIP code for India
+    addressFormGroup.controls['state'].setValue(this.ITR_JSON.address.state || '');
+
+  } else {
+    // Set foreign ZIP code validation (3-10 alphanumeric characters)
+    zipCodeControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[a-zA-Z0-9]{3,10}$') // Alphanumeric validation for foreign ZIP codes
+    ]);
+
+    // Set state as "Foreign" for non-Indian countries
+    addressFormGroup.controls['state'].setValue('Foreign');
+    // addressFormGroup.controls['state'].disable(); // Disable the dropdown to make it non-editable
+
+    // Clear city for foreign country
+    // this.addressForm.controls['city'].setValue('');
+  }
+
+  // Apply and validate the changes to the ZIP code field
+  zipCodeControl.updateValueAndValidity();
+  zipCodeControl.setValue(zipCodeControl.value); // Retain the current value after validation
+
+  // Fetch city data for India based on ZIP code
+  if (country === '91' && zipCodeControl.valid) {
+    this.getCityData();
+  }
+}
+
+changeCountryClear(country: string) {
+  console.log('Selected country:', country);
+
+  const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;
+  const zipCodeControl = addressFormGroup.controls['pinCode'];
+
+  if (!zipCodeControl) {
+    console.error('ZIP code control not found!');
+    return;
+  }
+
+  // Clear existing validators before applying new ones
+  zipCodeControl.clearValidators();
+
+  if (country === '91') {
+    // Set Indian ZIP code validation (6-digit number)
+    zipCodeControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[1-9][0-9]{5}$') // Validates 6-digit numeric code
+    ]);
+
+    // Re-enable state dropdown for India
+    addressFormGroup.controls['state'].enable();
+    addressFormGroup.controls['state'].setValue(this.ITR_JSON.address.state || '');
+
+  } else {
+    // Set foreign ZIP code validation (3-10 alphanumeric characters)
+    zipCodeControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[a-zA-Z0-9]{3,10}$') // Alphanumeric validation for foreign ZIP codes
+    ]);
+
+    // Set state as "Foreign" and disable the dropdown for non-Indian countries
+    addressFormGroup.controls['state'].setValue('Foreign');
+    // addressFormGroup.controls['state'].disable(); // Disable dropdown
+
+    // Clear city for foreign country
+    this.addressForm.controls['city'].setValue('');
+  }
+
+  // Apply and validate the changes to the ZIP code field
+  zipCodeControl.updateValueAndValidity();
+  zipCodeControl.setValue(''); // Clear the ZIP code field for non-India countries
+
+  // Fetch city data for India based on ZIP code
+  if (country === '91' && zipCodeControl.valid) {
+    this.getCityData();
+  }
+}
+
 
   getCityData() {
     const addressFormGroup = this.customerProfileForm.controls['address'] as UntypedFormGroup;

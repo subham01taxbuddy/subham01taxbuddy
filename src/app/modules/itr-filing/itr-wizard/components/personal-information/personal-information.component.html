@@ -64,25 +64,39 @@
           </div>
 
           <div class="form-field">
-            <div><span class="span">Select State </span></div>
+            <div><span class="span">Select State</span></div>
             <div class="form-control-wrapper">
-              <mat-form-field appearance="outline">
+          
+              <!-- Show dropdown when country code is 91 -->
+              <mat-form-field appearance="outline" *ngIf="addressForm.controls['country'].value === '91'">
                 <mat-select
                   placeholder="Select state"
                   name="state"
                   formControlName="state"
                   required
                 >
-                  <mat-option
-                    *ngFor="let state of stateDropdown"
-                    [value]="state.stateCode"
-                  >
+                  <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                     {{ state.stateName | titlecase }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+          
+              <!-- Show static "Foreign" text when country code is not 91 -->
+              <mat-form-field appearance="outline" *ngIf="addressForm.controls['country'].value !== '91'">
+                <input
+                  matInput
+                  type="text"
+                  [value]="'Foreign'"
+                  class="foreign-static-text"
+                  [ngStyle]="{'color': '#00A4BF', 'border': '1px solid #9b9b9b'}"
+                  disabled
+                />
+              </mat-form-field>
+          
             </div>
           </div>
+          
+          
           <div class="form-field">
             <div><span class="span">City</span></div>
             <mat-form-field appearance="outline">

@@ -356,7 +356,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         city: '',
         pinCode: '',
         state: '',
-        country:'',
+        country:'91',
         employerPAN: '',
         employerTAN: '',
         taxableIncome: null,
@@ -489,7 +489,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
       ]);
       pinCodeControl?.setValue('');
       // Set state code to '99' for foreign countries
-      stateCodeControl?.setValue('99');
     }
 
     // Update the validity of the form control after changing validators

@@ -96,14 +96,6 @@ export class AppConstants {
 
   public static stateDropdown: any = [
     {
-      id: '5b4599c9c15a76370a342cas',
-      stateId: '1',
-      countryCode: '99',
-      stateName: 'Foreign',
-      stateCode: '99',
-      status: true,
-    },
-    {
       id: '5b4599c9c15a76370a3424c2',
       stateId: '1',
       countryCode: '91',

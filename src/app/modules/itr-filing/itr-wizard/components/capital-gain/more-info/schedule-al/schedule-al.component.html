@@ -189,7 +189,7 @@
                                 <div class="form-field">
                                   <div><span class="span">Select state </span> <span class="text-wrapper-2">*</span>
                                   </div>
-                                  <mat-form-field appearance="outline">
+                                  <mat-form-field appearance="outline" *ngIf="immovableAssetArray.controls[activeIndex].get('country').value === '91'">
                                     <mat-select placeholder="Select state" name="state[activeIndex]"
                                       formControlName="state" required>
                                       <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
@@ -197,6 +197,19 @@
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
+
+                                <mat-form-field appearance="outline" *ngIf="immovableAssetArray.controls[activeIndex].get('country').value !== '91'">
+                                <input
+                                  matInput
+                                  type="text"
+                                  [value]="'Foreign'"
+                                  class="foreign-static-text"
+                                  [ngStyle]="{'color': '#00A4BF', 'border': '1px solid #9b9b9b'}"
+                                  disabled
+                                />
+                              </mat-form-field>
+
+                                  
                                 </div>
                                 <div class="form-field">
                                   <div>

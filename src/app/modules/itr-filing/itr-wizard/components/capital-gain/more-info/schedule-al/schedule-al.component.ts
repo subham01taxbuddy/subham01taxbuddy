@@ -194,7 +194,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       road: [item ? item.road : ''],
       area: [item ? item.area : '', Validators.required],
       state: [item ? item.state : '', Validators.required],
-      country: [item && item.country , Validators.required],
+      country: [item ? item.country:'91' , Validators.required],
       city: [item ? item.city : '', Validators.required],
       pinCode: [item?item.pinCode:'',Validators.required],
     });
@@ -262,7 +262,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   updateCity(immovableAssets) {
     if (immovableAssets !== '91') {
       // Set the state to '99' for foreign countries
-      immovableAssets.controls['state'].setValue('99');
+      // immovableAssets.controls['state'].setValue('99');
 
       // Optionally, if you want to display a placeholder or text like 'Foreign'
       // immovableAssets.controls['city'].setValue('Foreign');
