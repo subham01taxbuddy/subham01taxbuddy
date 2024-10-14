@@ -237,26 +237,6 @@
         </tr>
         <tr>
           <td class="table-data">17</td>
-          <td class="table-data">Taxes Paid</td>
-          <td class="table-data">
-            {{ oldRegime.taxesPaid || 0 }}
-          </td>
-          <td class="table-data">
-            {{ newRegime.taxesPaid || 0 }}
-          </td>
-        </tr>
-        <tr>
-          <td class="table-data">18</td>
-          <td class="table-data">Tax Liability</td>
-          <td class="table-data">
-            {{ oldRegime.taxLiability || 0 }}
-          </td>
-          <td class="table-data">
-            {{ newRegime.taxLiability || 0 }}
-          </td>
-        </tr>
-        <tr>
-          <td class="table-data">19</td>
           <td class="table-data">Beneficial Regime</td>
           <td class="table-data" colspan="2">
             {{ beneficialRegime }}
@@ -295,12 +275,12 @@
       <tr>
         <td class="table-data">1</td>
         <td class="table-data">Total Tax Liability</td>
-        <td class="table-data">{{ totalTaxLiabilty}}</td>
+        <td class="table-data">{{ taxLiability}}</td>
       </tr>
       <tr>
         <td class="table-data">2</td>
         <td class="table-data">TDS/TCS</td>
-        <td class="table-data">{{oldRegime.taxesPaid}}</td>
+        <td class="table-data">{{tdsTcs}}</td>
       </tr>
       <tr>
         <td class="table-data">3</td>
@@ -336,12 +316,12 @@
       <tr>
         <td class="table-data">4</td>
         <td class="table-data">Interest u/s 234C</td>
-        <td class="table-data">{{ advanceTaxQuarter1.cumulativeTaxLiability }}</td>
+        <td class="table-data">{{ interestUs234C }}</td>
       </tr>
       <tr>
         <td class="table-data">5</td>
         <td class="table-data"><strong>Tax Payable/ (Refundable)</strong></td>
-        <td class="table-data">{{ advanceTaxQuarter1.cumulativeTaxLiability }}</td>
+        <td class="table-data">{{ taxPayableOrRefund }}</td>
       </tr>
     </tbody>
   </table>
