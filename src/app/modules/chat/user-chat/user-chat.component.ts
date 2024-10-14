@@ -462,7 +462,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     });
     this.closeTemplateModal();
   }
-
+ 
 
   whatsAppTemplateMessage(messages: any[]): void {
     const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
