@@ -823,6 +823,7 @@ export class ChatService {
           this.startPingInterval();
         } else {
           this.chatClient.end();
+          this.localStorageService.removeItem('TILEDESK_TOKEN');
           this.initTokens(true);
         }
       }
