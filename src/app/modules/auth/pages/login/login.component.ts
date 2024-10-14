@@ -18,6 +18,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ChatManager } from "../../../chat/chat-manager";
 import { IdleService } from 'src/app/services/idle-service';
 import { environment } from 'src/environments/environment';
+import { LocalStorageService } from 'src/app/services/storage.service';
 
 declare let $: any;
 
@@ -53,6 +54,7 @@ export class LoginComponent implements OnInit {
     private itrMsService: ItrMsService,
     private chatManager: ChatManager,
     private idleService: IdleService,
+    private localStorage: LocalStorageService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -86,6 +88,9 @@ export class LoginComponent implements OnInit {
     if (res.success) {
       sessionStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data));
       localStorage.setItem(AppConstants.LOGGED_IN_SME_INFO, JSON.stringify(res.data));
+
+      const redirectUrl = this.localStorage.getItem('redirectUrl');
+
       let loginSmeDetails = sessionStorage.getItem('LOGGED_IN_SME_INFO') ? JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO')) : [];
       this.idleService.idleAfterSeconds = (loginSmeDetails.length > 0 && loginSmeDetails[0].inactivityTimeInMinutes > 0) ? loginSmeDetails[0].inactivityTimeInMinutes * 60 : environment.idleTimeMins * 60;
 
@@ -99,24 +104,30 @@ export class LoginComponent implements OnInit {
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
       this.getPlanDetails();
-      if (roles.indexOf("ROLE_ADMIN") !== -1) {
-        this.router.navigate(['/tasks/assigned-users-new']);
-        this.utilsService.logAction(userId, 'login');
-        // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
-        //   this.router.navigate(['/pages/dashboard/calling/calling2']);
-        //   this.utilsService.logAction(jhi.userId, 'login')
-        // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
-        //   this.router.navigate(['pages/tpa-interested']);
-        //   this.utilsService.logAction(jhi.userId, 'login')
-        // } else if (roles.indexOf("ROLE_FILER") !== -1) {
-        //   this.router.navigate(['/tasks/itr-assigned-users']);
-        //   this.utilsService.logAction(userId, 'login');
-
-      } else if (allowedRoles.some(item => roles.includes(item))) {
-        this.router.navigate(['/tasks/assigned-users-new']);
+      if (redirectUrl) {
+        this.router.navigateByUrl(redirectUrl).then(() => {
+          this.localStorage.removeItem('redirectUrl');
+        });
       } else {
-        if (roles.length > 0)
-          this._toastMessageService.alert("error", "Access Denied.");
+        if (roles.indexOf("ROLE_ADMIN") !== -1) {
+          this.router.navigate(['/tasks/assigned-users-new']);
+          this.utilsService.logAction(userId, 'login');
+          // } else if (jhi.role.indexOf("ROLE_FILING_TEAM") !== -1) {
+          //   this.router.navigate(['/pages/dashboard/calling/calling2']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+          // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
+          //   this.router.navigate(['pages/tpa-interested']);
+          //   this.utilsService.logAction(jhi.userId, 'login')
+          // } else if (roles.indexOf("ROLE_FILER") !== -1) {
+          //   this.router.navigate(['/tasks/itr-assigned-users']);
+          //   this.utilsService.logAction(userId, 'login');
+
+        } else if (allowedRoles.some(item => roles.includes(item))) {
+          this.router.navigate(['/tasks/assigned-users-new']);
+        } else {
+          if (roles.length > 0)
+            this._toastMessageService.alert("error", "Access Denied.");
+        }
       }
 
       //Ashwini: check for specific users and allow the CG module for them
@@ -148,6 +159,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    const currentUrl = this.router.url;
+    console.log('current url', currentUrl);
     this.form = this.fb.group({
       user: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
       passphrase: ['']

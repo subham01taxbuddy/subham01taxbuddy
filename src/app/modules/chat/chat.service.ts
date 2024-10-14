@@ -235,8 +235,8 @@ export class ChatService {
     const authToken = this.utilsService.getIdToken();  // Retrieve the id_token
 
     if (!authToken) {
-        this.router.navigate(['/login']);
-        return;
+      this.router.navigate(['/login']);
+      return;
     }
     let httpOptions: any = {};
     if (type == "auth") {
@@ -305,9 +305,20 @@ export class ChatService {
     });
   }
 
-
-
-
+  sendTemplate(templateName: any, whatsAppNumber: any, attributes: any, file?: File,isMediaTemplate?: any) {
+    const url = `${environment.url}/gateway/send-template`;
+    const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
+    let TOKEN = UMDtoken.id_token
+    const formData = new FormData();
+    formData.append('whatsAppNumber', whatsAppNumber);
+    formData.append('templateName', templateName);
+    formData.append('attributes', attributes);
+    if (file) {
+      formData.append('file', file);
+      formData.append('isMediaTemplate',isMediaTemplate);
+    }
+    return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } });
+  }
 
   uploadFile(file: File, requestId: string) {
     const url = 'https://6d4ugfehdlpibmogor7ou6ncli0vxoee.lambda-url.ap-south-1.on.aws/tiledesk-file-uplod';
@@ -469,7 +480,8 @@ export class ChatService {
       message_id: message.message_id,
       action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
       subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-      showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+      showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
+      attributes: message?.attributes
     }));
 
     if (timeStamp) {
@@ -507,7 +519,8 @@ export class ChatService {
       recipient_fullname: message.recipient_fullname,
       metadata: message.metadata || "",
       channel_type: message.channel_type,
-      app_id: message.app_id
+      app_id: message.app_id,
+      attributes: message?.attributes
     };
 
     const existingMessageIndex = messages.findIndex(msg => msg.message_id === m.message_id);
@@ -550,6 +563,11 @@ export class ChatService {
   isMobileNumber(sender?) {
     const mobilePattern = /^\+?\d{10,15}$/;
     return mobilePattern.test(sender);
+  }
+
+  whatsAppTemplate() {
+    const url = `${environment.url}/gateway/whatsapp/templates`;
+    return this.httpClient.get(url, this.setHeaders("auth"));
   }
 
   websocketConnection(chat21Token, requestId) {
@@ -984,10 +1002,10 @@ export class ChatService {
       let chats = this.localStorageService.getItem('conversationList', true);
       let selectedChat = chats.filter(chat => chat.request_id === recipient)[0];
       if (selectedChat) {
-        const deptDetails = this.localStorageService.getItem('DEPT_LIST',true);
+        const deptDetails = this.localStorageService.getItem('DEPT_LIST', true);
         const matchingDeptName = deptDetails.find(dept => dept?._id === selectedChat.departmentId);
         messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
-            matchingDeptName?.name, selectedChat.userFullName);
+          matchingDeptName?.name, selectedChat.userFullName);
       } else {
         await this.getUserDetails(recipient).subscribe((response) => {
           console.log('response is', response);
@@ -995,7 +1013,7 @@ export class ChatService {
           const departmentId = (response as any)?.result[0]?.attributes?.departmentId;
           const departmentName = this.getDeptDetails().filter(dept => dept.departmentId === departmentId)[0].departmentName;
           messageAttributes = this.getChatMessageAttributes(payloads, departmentId,
-              departmentName, userFullName);
+            departmentName, userFullName);
         });
       }
     } else {

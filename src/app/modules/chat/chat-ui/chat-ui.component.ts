@@ -129,6 +129,7 @@ export class ChatUIComponent implements OnInit, OnDestroy {
             this.userChatComp.messageSent = '';
             this.userChatComp.cannedMessageList = [];
             this.userChatComp.isInputDisabled = false;
+            this.userChatComp.whatsAppDisabled = false;
         }
 
 
