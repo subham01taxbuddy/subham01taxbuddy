@@ -2445,6 +2445,25 @@
                           }}
                         </td>
                       </tr>
+
+                      <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.Us194I
+                            ">
+                        <td>
+                         Rental income from machinery, plants, buildings, etc., Gross section (us/194I)
+                        </td>
+                        <td>
+                          Rs
+                          {{
+                          utilsService.currencyFormatter(
+                          finalCalculations?.otherIncome?.otherIncomes
+                          ?.Us194I
+                          )
+                          }}
+                        </td>
+                      </tr>
+
                       <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherInterest
