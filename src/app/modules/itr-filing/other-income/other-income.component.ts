@@ -1,4 +1,4 @@
-import { FormGroup, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
+import { FormArray, FormGroup, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -211,12 +211,16 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   agriIncFormArray: UntypedFormArray;
   selectedIndexes: number[] = [];
   PREV_ITR_JSON: any;
+  incomeForm: UntypedFormGroup;
 
   constructor(
     public utilsService: UtilsService,
     public fb: UntypedFormBuilder,
   ) {
     super();
+    this.incomeForm = this.fb.group({
+      incomeArray: this.fb.array([]),
+    });
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
@@ -226,6 +230,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
 
+    const hasAnyOtherIncomes = this.Copy_ITR_JSON.incomes &&
+    this.Copy_ITR_JSON.incomes.some(income => income.incomeType === "ANY_OTHER");
+    if (!hasAnyOtherIncomes) {
+        this.addIncome();
+    }
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
     this.createOrSetWinningsUS115BBForm(this.ITR_JSON.winningsUS115BB);
@@ -282,6 +291,34 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
     this.setNetAgriIncome();
+  }
+
+  get incomeArray(): FormArray {
+    return this.incomeForm.get('incomeArray') as FormArray;
+  }
+
+  addIncome(): void {
+    const incomeGroup = this.fb.group({
+      hasIncome: [false],
+      incomeValue: [null, Validators.min(0)],
+      incomeDesc: [null, Validators.maxLength(50)],
+    });
+    this.incomeArray.push(incomeGroup);
+  }
+
+  removeIncome(): void {
+    const incomes = this.incomeArray;
+
+    const filteredIncomes = incomes.controls.filter((element: any) => {
+      return !(element as FormGroup).controls['hasIncome'].value;
+    });
+
+    while (incomes.length) {
+      incomes.removeAt(0);
+    }
+    filteredIncomes.forEach(income => incomes.push(income));
+
+    this.getTotalAnyOtherIncome()
   }
 
   clearProvidentFund() {
@@ -421,6 +458,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     const agri = <UntypedFormArray>this.agriIncFormGroup.get('agriInc');
     return agri;
   }
+
+  get getNestedIncomes(){
+    const incomes = <UntypedFormArray>this.getAnyIncomeArray.get('incomeValues');
+    return incomes;
+   }
 
   goBack() {
     this.saveAndNext.emit(true);
@@ -565,6 +607,28 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         });
       }
     }
+
+    let newOtherIncome = this.incomeForm.controls['incomeArray'] as UntypedFormArray;
+
+    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter(
+        (income) => income.incomeType !== 'ANY_OTHER'
+    );
+
+    newOtherIncome.controls.forEach((control) => {
+      let anyOtherIncome = control as UntypedFormGroup;
+      const incomeValue = anyOtherIncome.controls['incomeValue'].value;
+      const incomeDesc = anyOtherIncome.controls['incomeDesc'].value;
+      if (this.utilsService.isNonEmpty(incomeValue)) {
+          this.Copy_ITR_JSON.incomes.push({
+              expenses: 0,
+              amount: incomeValue,
+              incomeType: 'ANY_OTHER',
+              details: incomeDesc,
+          });
+      }
+    });
+
+    console.log("final incomes object",this.Copy_ITR_JSON.incomes);
 
     //save winningsUS115BB
     this.Copy_ITR_JSON.winningsUS115BB = null;
@@ -765,6 +829,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         control.controls['incomeValue'].setValue(anyOtherIncomes[i].amount);
         control.controls['incomeDesc'].setValue(anyOtherIncomes[i].details);
       }
+
+      let newIncomeArray = this.ITR_JSON.incomes.filter(
+        (item) =>
+        item.incomeType === 'ANY_OTHER'
+      );
+
+      const incomeArray = this.incomeForm.get('incomeArray') as UntypedFormArray;
+      newIncomeArray.forEach(income => {
+        const control = this.fb.group({
+          hasIncome: [false],
+          incomeValue: [income.amount, Validators.min(0)],
+          incomeDesc: [income.details, Validators.maxLength(50)],
+        });
+        incomeArray.push(control);
+      });
 
       let providentValues = this.ITR_JSON.incomes.filter(
         (item) =>
@@ -1128,16 +1207,40 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
+  // getTotalAnyOtherIncome() {
+  //   let total = 0;
+  //   for (let i = 0; i < this.anyOtherIncomesFormArray.controls.length; i++) {
+  //     if (this.utilsService.isNonZero(this.anyOtherIncomesFormArray.controls[i].value.incomeValue)) {
+  //       total = total + Number(this.anyOtherIncomesFormArray.controls[i].value.incomeValue);
+  //     }
+  //   }
+  //   total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
+  //   return total;
+  // }
+
   getTotalAnyOtherIncome() {
     let total = 0;
     for (let i = 0; i < this.anyOtherIncomesFormArray.controls.length; i++) {
-      if (this.utilsService.isNonZero(this.anyOtherIncomesFormArray.controls[i].value.incomeValue)) {
-        total = total + Number(this.anyOtherIncomesFormArray.controls[i].value.incomeValue);
+      const incomeForm = this.anyOtherIncomesFormArray.controls[i] as UntypedFormGroup;
+      const incomeValue = incomeForm.value.incomeValue;
+      const incomeType = incomeForm.value.incomeType
+      if (this.utilsService.isNonZero(incomeValue) && incomeType !== 'ANY_OTHER') {
+          total += Number(incomeValue);
       }
     }
+
+    for (let j = 0; j < this.incomeArray.controls.length; j++) {
+        const additionalIncomeValue = this.incomeArray.controls[j].value.incomeValue;
+        if (this.utilsService.isNonZero(additionalIncomeValue)) {
+            total += Number(additionalIncomeValue);
+        }
+    }
+
     total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
+
     return total;
-  }
+}
+
 
   getTotalGiftIncome() {
     let giftTax = this.otherIncomeFormGroup.get('giftTax') as UntypedFormGroup;
