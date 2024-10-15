@@ -172,8 +172,12 @@ export class ChatService {
     this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
     this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
   }
+
+  connecting = false;
+
   async initTokens(initializeSocket: boolean, service?: string) {
 
+    this.connecting = true;
     let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
       tokenRequired: tokenPresent
@@ -611,6 +615,8 @@ export class ChatService {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
 
+          this.connecting = false;
+          this.connected = true;
 
           this.chatClient.publish(
             this.presenceTopic,
@@ -819,17 +825,27 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        if(this.isTokenExpired(chat21Token)) {
+        if(!this.isTokenExpired(chat21Token)) {
           this.startPingInterval();
-        } else {
-          this.chatClient.end();
-          this.localStorageService.removeItem('TILEDESK_TOKEN');
-          this.initTokens(true);
+        } else if(!this.connecting  && !this.connected){
+          this.stopPingInterval();
+          if (this.connectionCheckInterval) {
+            clearInterval(this.connectionCheckInterval);
+          }
+          this.chatClient.end(true, () => {
+            this.shouldReconnect = false;
+            this.connected = false;
+            this.reconnectionPeriod = 0;
+            this.localStorageService.removeItem('TILEDESK_TOKEN');
+            this.initTokens(true);
+          })
+
         }
       }
     );
     this.chatClient.on("close",
       () => {
+      this.connecting = false;
         this.connected = false;
         if (this.log) {
           console.log("Chat client close event");
@@ -859,6 +875,7 @@ export class ChatService {
     this.chatClient.on("error",
       (error) => {
         console.error("Chat client error event", error);
+        this.connecting = false;
       }
     );
   }
