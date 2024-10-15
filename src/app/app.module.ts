@@ -35,7 +35,7 @@ import {SummaryConversionService} from "./services/summary-conversion.service";
 import { MatButtonModule } from '@angular/material/button';
 import { NgxIndexedDBModule, DBConfig } from "ngx-indexed-db";
 import { AppConstants } from './modules/shared/constants';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+// import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 const dbConfig: DBConfig  = {
@@ -73,8 +73,7 @@ const dbConfig: DBConfig  = {
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     SpeedTestModule,
-    NgxIndexedDBModule.forRoot(dbConfig),
-    FontAwesomeModule
+    NgxIndexedDBModule.forRoot(dbConfig)
   ],
   providers: [
     NavbarService,
