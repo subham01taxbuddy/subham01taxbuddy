@@ -1237,7 +1237,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
 
     total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
-
     return total;
 }
 
