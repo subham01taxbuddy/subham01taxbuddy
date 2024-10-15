@@ -411,7 +411,7 @@
                                     </mat-error>
                                   </mat-form-field>
                                    
-                                  <mat-form-field appearance="outline" *ngIf="housePropertyForm.controls['country'].value !== '91'">
+                                  <mat-form-field formControlName="state" appearance="outline" *ngIf="housePropertyForm.controls['country'].value !== '91'">
                                         <input
                                           matInput
                                           type="text"
