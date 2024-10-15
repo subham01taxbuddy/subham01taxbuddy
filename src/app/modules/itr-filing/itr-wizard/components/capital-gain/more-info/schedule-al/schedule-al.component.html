@@ -137,11 +137,7 @@
                                       placeholder="Select country"
                                       name="country[activeIndex]"
                                       formControlName="country"
-                                      (selectionChange)="
-                               immovableAssetArray.controls[activeIndex].get('country').value === '91'
-                              ? updateDataByPincode(immovableAssetArray.controls[activeIndex])
-                              : updateCity(immovableAssetArray.controls[activeIndex])
-                               "
+                                      (selectionChange)="onCountryChange(immovableAssetArray.controls[activeIndex])" 
                                       required
                                     >
                                       <mat-option
@@ -173,11 +169,8 @@
                                formControlName="pinCode"
                                class="input-field"
                                [maxlength]="immovableAssetArray.controls[activeIndex].get('country').value === '91' ? 6 : 8"
-                               (blur)="
-                               immovableAssetArray.controls[activeIndex].get('country').value === '91'
-                              ? updateDataByPincode(immovableAssetArray.controls[activeIndex])
-                              : updateCity(immovableAssetArray.controls[activeIndex])
-                               "
+                               (blur)="immovableAssetArray.controls[activeIndex].get('country').value === '91'? updateDataByPincode(immovableAssetArray.controls[activeIndex]):null
+                          "
                                required
                                    />
 

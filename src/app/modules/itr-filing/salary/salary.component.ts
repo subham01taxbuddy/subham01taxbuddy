@@ -488,6 +488,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
         // Validation for alphanumeric ZIP (4-8 chars)
       ]);
       pinCodeControl?.setValue('');
+      stateCodeControl.setValue('Foreign');
       // Set state code to '99' for foreign countries
     }
 

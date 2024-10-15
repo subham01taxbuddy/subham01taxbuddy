@@ -217,28 +217,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
 
 
 
-  // async updateDataByPincodeCode(immovableAssets) {
-  //   console.log(immovableAssets);
-  //   let pincode = immovableAssets.controls['pinCode'].value;
-
-  //   // Call the pincode service to get city, state, and country
-  //   await this.utilsService.getPincodeData(pincode).then((result) => {
-  //     immovableAssets.controls['city'].setValue(result.city);
-  //     immovableAssets.controls['country'].setValue(result.countryCode);
-
-  //     // If the country is India (91), set the actual state, otherwise set Foreign (99)
-  //     if (result.countryCode === '91') {
-  //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
-  //     } else {
-
-  //       this.immovableAssetForm.controls['state'].setValue('Foreign');
-
-  //       // immovableAssets.controls['state'].stateCode.setValue('99'); // Set state to 'Foreign' (99) for other countries
-  //     }
-  //   }).catch((error) => {
-  //     console.error('Error fetching pincode data', error);
-  //   });
-  // }
 
    updateDataByPincode(immovableAssets) {
     console.log("country code :",immovableAssets);
@@ -259,38 +237,42 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     });
   }
 
-  updateCity(immovableAssets) {
-    if (immovableAssets !== '91') {
-      // Set the state to '99' for foreign countries
-      // immovableAssets.controls['state'].setValue('99');
-
-      // Optionally, if you want to display a placeholder or text like 'Foreign'
-      // immovableAssets.controls['city'].setValue('Foreign');
 
 
-      // Update the form controls to reflect the changes
-      this.immovableAssets.updateValueAndValidity();
+  onCountryChange(immovableAssets){
+    const selectedCountryCode = immovableAssets.value;
+    const pinCodeControl = immovableAssets.get('pinCode');
+    const stateCodeControl = immovableAssets.get('state'); // Assuming you have a stateCode control
+
+    if (selectedCountryCode === '91') {
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]{6}$/) 
+      ]);
+
+      // Reset state code if country is India
+      stateCodeControl.setValue('');
+      pinCodeControl.setValue('');
+
+    } else {
+      // Set validation for 4-8 character alphanumeric Zipcode (Other countries)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9]{4,8}$/)
+        // Validation for alphanumeric ZIP (4-8 chars)
+      ]);
+  
+      stateCodeControl.setValue('Foreign');
+      pinCodeControl.setValue('');
+      // Set state code to '99' for foreign countries
     }
+
+    // Update the validity of the form control after changing validators
+    pinCodeControl?.updateValueAndValidity();
+    this.immovableAssets.controls['country'].setValue(selectedCountryCode);
+    this.immovableAssets.updateValueAndValidity();
   }
 
-
-
-  // async updateDataByPincode(immovableAssets) {
-  //   let pincodeControl = immovableAssets.controls['pinCode'];
-  //   let countryControl = immovableAssets.controls['country'];
-
-  //   // Call pincode service to get city, state, and country
-  //   await this.utilsService.getPincodeData(pincodeControl.value).then((result) => {
-  //     immovableAssets.controls['city'].setValue(result.city);
-  //     immovableAssets.controls['country'].setValue(result.countryCode);
-
-  //     // Check if the country is India (91) or set state to 'Foreign' (99)
-  //     if (result.countryCode === '91') {
-  //       immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
-  //     } else {
-  //       immovableAssets.controls['state'].setValue('99'); // Set state to 'Foreign' for other countries
-  //     }
-  //   });
 
 
 

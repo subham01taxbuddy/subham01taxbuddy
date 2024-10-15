@@ -1512,6 +1512,7 @@ changecountry(event, inputField) {
     if ( value !== '91') {
       // Set state code to '99' for foreign countries
       formGroup.controls['pin'].setValue('');
+      formGroup.controls['state'].setValue('Foreign');
       formGroup.updateValueAndValidity();
     } else if (inputField === 'country' && value === '91') {
       // Optionally, you can clear the state if the country is set back to India

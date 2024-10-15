@@ -662,28 +662,39 @@
                             </div>
 
                             <div class="field">
-                              <div class="field-label">
-                                <span class="span">State</span>
-                              </div>
-                              <mat-form-field appearance="outline" class="small-inp no-height" *ngIf="immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value === '91'">
-                                <mat-select name="improve[i]" formControlName="state" required>
-                                  <mat-option [value]="state.stateCode" *ngFor="let state of stateDropdown">
-                                    {{ state.stateName }}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
+                            <div class="field-label">
+                              <span class="span">State</span>
+                            </div>
 
-                             <mat-form-field appearance="outline" class="small-inp no-height" *ngIf="immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value !== '91'">
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                              *ngIf="immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value === '91'"
+                            >
+                              <mat-select name="improve[i]" formControlName="state" required>
+                                <mat-option [value]="state.stateCode" *ngFor="let state of stateDropdown">
+                                  {{ state.stateName }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field
+                              appearance="outline"
+                              class="small-inp no-height"
+                              *ngIf="immovableForm?.get('buyersDetails')?.get([i])?.get('country')?.value !== '91'"
+                              formControlName="state"
+                            >
                               <input
                                 matInput
                                 type="text"
                                 [value]="'Foreign'"
                                 class="foreign-static-text"
-                                [ngStyle]="{'color': '#00A4BF', 'border': '1px solid #9b9b9b'}"
+                                [ngStyle]="{ 'color': '#00A4BF', 'border': '1px solid #9b9b9b' }"
                                 disabled
                               />
                             </mat-form-field>
-                            </div>
+                          </div>
+
 
                             <div class="field">
                             <div class="field-label">
