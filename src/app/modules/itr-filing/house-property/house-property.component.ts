@@ -164,10 +164,10 @@ export class HousePropertyComponent implements OnInit {
 
       if (selectedCountryCode === '91') {
         this.zipCodeLabel = 'PIN Code'; // For India
-        this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+        this.housePropertyForm.get('state')?.setValue(''); // Clear stateName for India
       } else {
         this.zipCodeLabel = 'ZIP Code'; // For other countries
-        this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+        this.housePropertyForm.get('state')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
   }
   }
@@ -279,14 +279,16 @@ export class HousePropertyComponent implements OnInit {
     // Check if the selected country is India (countryCode '91')
     if (selectedCountryCode === '91') {
       this.zipCodeLabel = 'PIN Code'; // For India
-      this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+      this.housePropertyForm.get('state')?.setValue(''); // Clear stateName for India
     } else {
       this.zipCodeLabel = 'ZIP Code'; // For other countries
-      this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+      this.housePropertyForm.get('state')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
 
     // Update validators for the pinCode based on country
     const pinCodeControl = this.housePropertyForm.get('pinCode');
+    const zipcode = this.housePropertyForm.get('state');
+
     if (selectedCountryCode === '91') {
       // Validators for Indian PIN codes (numeric and exactly 6 digits)
       pinCodeControl?.setValidators([
@@ -301,6 +303,7 @@ export class HousePropertyComponent implements OnInit {
       ]);
     }
     pinCodeControl?.updateValueAndValidity();
+    zipcode?.updateValueAndValidity();
   }
 
 
@@ -309,10 +312,10 @@ export class HousePropertyComponent implements OnInit {
     // Check if the selected country is India (countryCode '91')
     if (selectedCountryCode === '91') {
       this.zipCodeLabel = 'PIN Code'; // For India
-      this.housePropertyForm.get('stateName')?.setValue(''); // Clear stateName for India
+      this.housePropertyForm.get('state')?.setValue(''); // Clear stateName for India
     } else {
       this.zipCodeLabel = 'ZIP Code'; // For other countries
-      this.housePropertyForm.get('stateName')?.setValue('Foreign'); // Set stateName to 'Foreign'
+      this.housePropertyForm.get('state')?.setValue('Foreign'); // Set stateName to 'Foreign'
     }
 
     // Update validators for the pinCode based on country

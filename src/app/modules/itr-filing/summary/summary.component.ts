@@ -3002,6 +3002,7 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
 
+
                 Qqb80: null,
                 Rrb80: null,
 
@@ -3126,7 +3127,7 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
                    Us194I:
                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                   ?.IncOthThanOwnRaceHorse?.Us194I,
+                   ?.IncOthThanOwnRaceHorse?.RentFromMachPlantBldgs,
 
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
