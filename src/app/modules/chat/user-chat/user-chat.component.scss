@@ -847,6 +847,7 @@
   background: #62a7d5;
   margin: 0 12px;
   border-radius: 50%;
+  position: relative; /* To position the loader */
 
   .initial {
     justify-content: center;
@@ -854,6 +855,30 @@
     font-size: 19px;
     font-weight: 600;
     align-items: center;
+  }
+
+  /* Loader when profile is loading */
+  &.loading::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #536DFE; /* Light border */
+    border-top-color: #ffffff; /* Bright top border */
+    border-radius: 50%;
+    animation: spin 1s linear infinite; /* Spinning animation */
+  }
+}
+
+/* Keyframe animation for spinning loader */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 

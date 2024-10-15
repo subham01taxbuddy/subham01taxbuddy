@@ -130,6 +130,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   whatsAppNumber: any;
   templateFile: File | null = null;
   selectedTemplate: any;
+  isConnecting = false;
 
 
   constructor(
@@ -143,6 +144,12 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.cd = cd;
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
+    this.chatService.onConnectionStatusUpdatedCallbacks.set('user-chat', (event: string, status?: boolean) => {
+      if (event === ChatEvents.CONN_STATUS_UPDATED) {
+        //show loading
+        this.isConnecting = status;
+      }
+    });
 
   }
 
@@ -244,6 +251,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   sendMessage(payload?: any) {
+    if(this.isConnecting){
+      this.messageSent = this.messageSent.trim();
+      return;
+    }
     this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
       let recipient = this.requestId ? this.requestId : '';

@@ -110,6 +110,7 @@ export class ChatService {
     this.onArchivedConversationAddedCallbacks.set(instanceId, messageReceivedCallback);
     this.onArchivedConversationDeletedCallbacks.set(instanceId, messageReceivedCallback);
     this.onGroupUpdatedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onConnectionStatusUpdatedCallbacks.set(instanceId, messageReceivedCallback);
   }
 
   unregisterConversationUpdates(instanceId) {
@@ -118,14 +119,17 @@ export class ChatService {
     this.onArchivedConversationAddedCallbacks.delete(instanceId);
     this.onArchivedConversationDeletedCallbacks.delete(instanceId);
     this.onGroupUpdatedCallbacks.delete(instanceId);
+    this.onConnectionStatusUpdatedCallbacks.delete(instanceId);
   }
   registerMessageReceived(requestId: string, messageReceivedCallback) {
     if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).push(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
+      // this.onConnectionStatusUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
     } else {
       this.onMessageAddedCallbacks.set(requestId, [messageReceivedCallback]);
       this.onMessageUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
+      // this.onConnectionStatusUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
     }
   }
 
@@ -133,9 +137,11 @@ export class ChatService {
     if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).pop(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
+      this.onConnectionStatusUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
     }
     this.onMessageAddedCallbacks.delete(requestId);
     this.onMessageUpdatedCallbacks.delete(requestId);
+    this.onConnectionStatusUpdatedCallbacks.delete(requestId);
   }
 
   initDeptDetails(serviceType?: string) {
@@ -176,9 +182,18 @@ export class ChatService {
 
   connecting = false;
 
+  setConnecting(value:boolean){
+    this.connecting = value;
+    this.onConnectionStatusUpdatedCallbacks.forEach((callback, handler, map) => {
+      if (typeof callback === 'function') {
+        callback(ChatEvents.CONN_STATUS_UPDATED, value);
+      }
+    });
+  }
   async initTokens(initializeSocket: boolean, service?: string) {
 
-    this.connecting = true;
+    this.setConnecting(true);
+
     let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
       tokenRequired: tokenPresent
@@ -561,6 +576,7 @@ export class ChatService {
   onMessageAddedCallbacks = new Map();
   onMessageUpdatedCallbacks = new Map();
   onGroupUpdatedCallbacks = new Map();
+  onConnectionStatusUpdatedCallbacks = new Map();
   callbackHandlers = new Map();
 
   chatSubscription = null;
@@ -616,7 +632,7 @@ export class ChatService {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
 
-          this.connecting = false;
+          this.setConnecting(false);
           this.connected = true;
 
           this.chatClient.publish(
@@ -846,7 +862,7 @@ export class ChatService {
     );
     this.chatClient.on("close",
       () => {
-      this.connecting = false;
+        this.setConnecting(false);
         this.connected = false;
         if (this.log) {
           console.log("Chat client close event");
@@ -876,7 +892,7 @@ export class ChatService {
     this.chatClient.on("error",
       (error) => {
         console.error("Chat client error event", error);
-        this.connecting = false;
+        this.setConnecting(false);
       }
     );
   }

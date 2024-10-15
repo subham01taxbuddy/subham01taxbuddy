@@ -206,6 +206,12 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.isDepartmentListLoaded = false;
         this.isConversationListLoaded = false;
         this.handleDeptList(this.chatManager.getDepartmentList());
+        this.chatService.onConnectionStatusUpdatedCallbacks.set('floating-widget', (event: string, status?: boolean) => {
+            if (event === ChatEvents.CONN_STATUS_UPDATED) {
+                //show loading
+                console.log('conn status', status);
+            }
+        });
         this.chatService.onConversationUpdatedCallbacks.set('floating-widget', (event: string, data?: any) => {
             if (event === ChatEvents.DEPT_RECEIVED) {
                 this.isDepartmentListLoaded = true;
