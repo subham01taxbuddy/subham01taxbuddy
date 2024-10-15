@@ -151,6 +151,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       }
     });
 
+
   }
 
 
