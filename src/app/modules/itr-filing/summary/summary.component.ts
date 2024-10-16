@@ -878,6 +878,7 @@ export class SummaryComponent implements OnInit {
   countryCodeList: any;
   dialogRef: any;
   loggedInUserRoles: any;
+  filteredAnyOtherIncomes: any[] = [];
 
   constructor(
     private itrMsService: ItrMsService,
@@ -4992,6 +4993,7 @@ export class SummaryComponent implements OnInit {
             this.loading = false;
 
             this.getBusinessDetails();
+            this.filterAnyOtherIncomes();
 
             this.finalCalculations = {
               personalInfo: {
@@ -7625,6 +7627,12 @@ export class SummaryComponent implements OnInit {
     this.business44adDetails = business44AD;
 
     this.setBusiness44ADA();
+  }
+
+  filterAnyOtherIncomes() {
+    this.filteredAnyOtherIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.filter(
+      (income) => income.incomeType === 'ANY_OTHER'
+    ) || [];
   }
 
   getCountry(code) {

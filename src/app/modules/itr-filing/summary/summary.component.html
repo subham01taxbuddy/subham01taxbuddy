@@ -2464,7 +2464,7 @@
                         </td>
                       </tr>
 
-                      <tr *ngIf="
+                <!-- <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherInterest
                             ">
@@ -2477,7 +2477,20 @@
                           ?.anyOtherInterest)
                           }}
                         </td>
+                      </tr> -->
+                      <tr *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherInterest
+                            ">
+                          <td colspan="2"><b>Any Other Income</b></td>
                       </tr>
+
+                      <ng-container *ngIf="finalCalculations?.otherIncome?.otherIncomes?.anyOtherInterest">
+                        <tr *ngFor="let income of filteredAnyOtherIncomes">
+                          <td>{{ income.details || 'No details available' }}</td>
+                          <td>Rs {{ utilsService.currencyFormatter(income.amount) }}</td>
+                        </tr>
+                      </ng-container>
 
                       <tr *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
