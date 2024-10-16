@@ -9,6 +9,7 @@ import { AppConstants } from "../shared/constants";
 import { Router } from "@angular/router";
 import { webSocket } from 'rxjs/webSocket';
 import { jwtDecode } from 'jwt-decode';
+import Auth from '@aws-amplify/auth'
 
 @Injectable({
   providedIn: 'root'
@@ -842,7 +843,8 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        if(!this.isTokenExpired(chat21Token)) {
+        let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
+        if(!this.isTokenExpired(TOKEN)) {
           this.startPingInterval();
         } else if(!this.connecting  && !this.connected){
           this.stopPingInterval();
@@ -854,7 +856,11 @@ export class ChatService {
             this.connected = false;
             this.reconnectionPeriod = 0;
             this.localStorageService.removeItem('TILEDESK_TOKEN');
-            this.initTokens(true);
+            Auth.currentSession().then(session => {
+              if(session.isValid()){
+                this.initTokens(true);
+              }
+            });
           })
 
         }
