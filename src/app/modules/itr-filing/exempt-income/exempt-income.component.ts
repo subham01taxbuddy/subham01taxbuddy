@@ -615,7 +615,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       })
     } else {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = false;
-      type = 'delete';
+      // type = 'delete';
     }
 
     // setting agri land details
@@ -656,7 +656,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
           );
         } else {
           this.utilsService.showSnackBar(
-            'Other sources of Income updated successfully.'
+            'Exempt Income Details Saved Successfully.'
           );
         }
         this.saveAndNext.emit(false);
