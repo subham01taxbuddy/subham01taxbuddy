@@ -125,11 +125,12 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   showTemplateModal: boolean = false;
   messagePreview: string = '';
   originalTemplateText = '';
-  dynamicFields: { placeholder: string; value: string }[] = [];
+  dynamicFields: { placeholder: string; value: string; error: string; dirty: boolean }[] = [];
   selectedTemplateName: any = '';
   whatsAppNumber: any;
   templateFile: File | null = null;
   selectedTemplate: any;
+  errorMessage: string = '';
 
 
   constructor(
@@ -235,7 +236,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   showFullScreen() {
     const chatUrl = `/chat-full-screen?conversationId=${this.requestId}`;
     window.open(chatUrl, '_blank');
-    console.log('chaturl',chatUrl);
+    console.log('chaturl', chatUrl);
     this.page = 0;
     this.fullChatScreen = false;
     this.chatManager.getDepartmentList();
@@ -391,21 +392,26 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onTemplateFileSelected(event: Event){
+  onTemplateFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.templateFile = input.files[0];
     }
   }
 
-  extractPlaceholders(text: string): { placeholder: string; value: string }[] {
+  extractPlaceholders(text: string): { placeholder: string; value: string; error: string;dirty: boolean }[] {
     const regex = /{{(\d+)}}/g;
     const matches = Array.from(new Set(text.match(regex) || []));
 
-    return matches.map(match => ({
-      placeholder: match,
-      value: ''
-    }));
+    return matches.map(match => {
+      const placeholderNumber = match.replace(/[{}]/g, '');  
+      return {
+        placeholder: placeholderNumber,  
+        value: '',
+        error: '',
+        dirty: false
+      };
+    });
   }
 
   getAttributes(): string {
@@ -415,16 +421,31 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       .join(',');
   }
 
+  onInputChanges(field: any): void {
+    if (!field.dirty) {
+      field.dirty = true;  
+    }
+    this.updatePreview();  
+  }
+  
+
   updatePreview(): void {
     let updatedPreview = this.originalTemplateText;
 
     for (const field of this.dynamicFields) {
       if (field.value.trim()) {
         updatedPreview = updatedPreview.split(field.placeholder).join(field.value);
+        field.error = '';
+      }else if (field.dirty) {
+        field.error = '*This field is required';
+      }
+      else {
+        field.error = '';
       }
     }
 
     this.messagePreview = updatedPreview;
+    this.cd.detectChanges();
   }
 
 
@@ -455,16 +476,27 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.originalTemplateText = '';
     this.dynamicFields = [];
     this.templateFile = null;
+    this.selectedTemplate = null;
+    this.errorMessage = '';
   }
 
   sendMessageWhatsApp() {
+    const emptyFields = this.dynamicFields.filter(field => field.value.trim() === '');
+
+    if (emptyFields.length > 0) {
+      emptyFields.forEach(field => {
+        field.error = '*This field is required';
+      });
+      this.cd.detectChanges();
+      return;
+    }
     const attributes = this.getAttributes()
-    this.chatService.sendTemplate(this.selectedTemplateName, this.whatsAppNumber, attributes,this.selectedTemplate.isMediaTemplate ? this.templateFile : undefined,this.selectedTemplate.isMediaTemplate).subscribe((response) => {
+    this.chatService.sendTemplate(this.selectedTemplateName, this.whatsAppNumber, attributes, this.selectedTemplate.isMediaTemplate ? this.templateFile : undefined, this.selectedTemplate.isMediaTemplate).subscribe((response) => {
       console.log('response of send template', response);
     });
     this.closeTemplateModal();
   }
- 
+
 
   whatsAppTemplateMessage(messages: any[]): void {
     const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
@@ -479,6 +511,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       lastUserMessage.timestamp < twentyFourHoursAgo
     ) {
       this.whatsAppNumber = lastUserMessage.attributes.whatsAppNumber;
+      console.log('whatsappnumber',this.whatsAppNumber);
       this.whatsAppDisabled = true;
       this.showSendMessageTemplateButton = true;
       this.sendMessageTemplateText = "The last message received from this contact was 24 hours ago. Only approved template messages are allowed outside standard messaging window.";
@@ -634,7 +667,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     let minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12;  
+    hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
 
     return `${month} ${day}, ${hours}:${minutesStr} ${ampm}`;
