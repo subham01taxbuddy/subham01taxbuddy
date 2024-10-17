@@ -344,7 +344,11 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
                 this.smeLogout();
                 this.loading = false;
                 sessionStorage.clear();
-                localStorage.clear();
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                      localStorage.removeItem(key);
+                    }
+                  }
                 this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
                     console.log('success? ', successDeleted);
                 });

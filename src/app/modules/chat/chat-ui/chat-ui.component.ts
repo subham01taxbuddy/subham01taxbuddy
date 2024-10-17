@@ -275,6 +275,11 @@ export class ChatUIComponent implements OnInit, OnDestroy {
                 this.chatService.unsubscribeRxjsWebsocket();
                 this.chatManager.closeChat();
                 sessionStorage.clear();
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                      localStorage.removeItem(key);
+                    }
+                  }
                 NavbarService.getInstance().clearAllSessionData();
                 this.router.navigate(['/login']);
 

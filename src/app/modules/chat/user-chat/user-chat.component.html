@@ -389,7 +389,8 @@
     <div class="dynamic-inputs">
       <div *ngFor="let field of dynamicFields; let i = index" class="dynamic-input">
         <span>{{ field.placeholder }}</span>
-        <input type="text" id="inputField{{ i }}" [(ngModel)]="field.value" (input)="updatePreview()" />
+        <input type="text" id="inputField{{ i }}" [(ngModel)]="field.value" (input)="onInputChanges(field)"/>
+        <div *ngIf="field.error" class="error-message">{{ field.error }}</div>
       </div>
     </div>
 
