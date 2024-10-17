@@ -5,7 +5,7 @@ import { ChatUIComponent } from './chat-ui/chat-ui.component';
 
 
 const routes: Routes = [
-  { path: 'chat-full-screen', component: ChatUIComponent },
+  { path: '', component: ChatUIComponent },
 
 ];
 

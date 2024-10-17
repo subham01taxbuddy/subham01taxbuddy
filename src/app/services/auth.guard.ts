@@ -17,6 +17,9 @@ export class AuthGuard {
     canActivate(route) {
         let x_aut_token = this.utilsService.getIdToken();
         let loggedInSmeInfo = this.localStorage.getItem('LOGGED_IN_SME_INFO');
+        const url = route['_routerState'].url;
+
+        this.localStorage.setItem('redirectUrl', url);
 
 
         let startWithUrlFound = 0;
@@ -25,14 +28,6 @@ export class AuthGuard {
                 startWithUrlFound = 1;
                 break;
             }
-        }
-
-        if (!loggedInSmeInfo) {
-            const url =  route['_routerState'].url;
-            console.log('url',url);
-            this.localStorage.setItem('redirectUrl', url);
-            this.router.navigate(['/login']);
-            return false;
         }
 
 

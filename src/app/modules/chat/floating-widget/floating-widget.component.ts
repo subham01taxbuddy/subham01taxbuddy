@@ -85,9 +85,10 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     }
 
     showFullScreen() {
-        const chatUrl = this.selectedUser ? `chat/chat-full-screen?conversationId=${this.selectedUser.request_id}`
-            : `chat/chat-full-screen`;
+        const chatUrl = this.selectedUser ? `/chat-full-screen?conversationId=${this.selectedUser.request_id}`
+            : `/chat-full-screen`;
         window.open(chatUrl, '_blank');
+        console.log('chaturl',chatUrl);
         this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;

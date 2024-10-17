@@ -241,8 +241,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    const chatUrl = `chat/chat-full-screen?conversationId=${this.requestId}`;
+    const chatUrl = `/chat-full-screen?conversationId=${this.requestId}`;
     window.open(chatUrl, '_blank');
+    console.log('chaturl',chatUrl);
     this.page = 0;
     this.fullChatScreen = false;
     this.chatManager.getDepartmentList();
@@ -465,6 +466,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.messagePreview = '';
     this.originalTemplateText = '';
     this.dynamicFields = [];
+    this.templateFile = null;
   }
 
   sendMessageWhatsApp() {
