@@ -188,7 +188,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   calCurrentAssets() {
     let totalCurrentAssets = 0;
     totalCurrentAssets = Number(this.assetLiabilitiesForm.controls['inventories'].value) + Number(this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].value)
-      + Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) + Number(this.assetLiabilitiesForm.controls['cashInHand'].value);
+      + Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) + Number(this.assetLiabilitiesForm.controls['cashInHand'].value) + Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.assetLiabilitiesForm.controls['totalCurrentAssets'].setValue(totalCurrentAssets);
     this.calTotalCurrentAssetsLoansAdv();
   }

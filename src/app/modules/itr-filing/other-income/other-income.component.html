@@ -112,6 +112,22 @@
                           </mat-form-field>
                         </div>
                       </div>
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div><span class="span">Deduction u/s 57(i)</span></div>
+                        </div>
+                        <div class="form-field">
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput name="deductionUs57One" formControlName="deductionUs57One" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                          <div *ngIf="otherIncomeFormGroup.get('dividendIncomes')?.errors?.['deductionExceedsLimit']">
+                            <span class="error-text" style="color: red;">
+                              Deduction cannot exceed 20% of the total Dividend Income.
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-field"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -400,79 +416,107 @@
                   </div>
                 </div>
                 <!-- end 115BBJ -->
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseThree">Any Other Income
-                    <input type="number" class="form-control inpClr2" disabled value="{{getTotalAnyOtherIncome()}}">
-                  </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse show">
-                  <div class="accordion__item-body">
-                    <div class="" formArrayName="anyOtherIncomes">
-                      <div *ngFor="let income of getAnyIncomeArray.controls; let i = index" [formGroupName]="i">
-                        <div class="div-6">
-                          <div class="form-field">
-                            <div><span class="span" *ngIf="income.value.incomeType!='ANY_OTHER'">{{ income.value.label
-                                }} </span>
-                              <span class="span" style="font-weight: 700;"
-                                *ngIf="income.value.incomeType==='ANY_OTHER'">{{ income.value.label }} </span>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree">Any Other Income
+                      <input type="number" class="form-control inpClr2" disabled value="{{getTotalAnyOtherIncome()}}">
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse show">
+                    <div class="accordion__item-body">
+                      <div class="" formArrayName="anyOtherIncomes">
+                        <div *ngFor="let income of getAnyIncomeArray.controls; let i = index" [formGroupName]="i">
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="span" *ngIf="income.value.incomeType !== 'ANY_OTHER'">{{ income.value.label
+                                  }} </span>
+                                <span class="span" style="font-weight: 700;"
+                                  *ngIf="income.value.incomeType==='ANY_OTHER'">{{ income.value.label }} </span>
+                              </div>
                             </div>
+                            <div class="form-field" *ngIf="income.value.incomeType !== 'ANY_OTHER'">
+                              <mat-form-field appearance="outline">
+                                <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
+                                  formControlName="incomeValue" type="number" maxlength="125" />
+                              </mat-form-field>
+                            </div>
+
                           </div>
-                          <div class="form-field" *ngIf="income.value.incomeType!='ANY_OTHER'">
-                            <mat-form-field appearance="outline">
-                              <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
-                                formControlName="incomeValue" type="number" maxlength="125" />
-                            </mat-form-field>
+                          <div  *ngIf="income.value.incomeType ==='ANY_OTHER'">
+                            <form [formGroup]="incomeForm">
+                              <div class="mv-buttons">
+                                <div class="buttons ">
+                                  <div class="flex">
+                                    <div class="ml-20">
+                                      <button type="submit" (click)="removeIncome()">
+                                        <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                      </button>
+                                      <button class="ml-3 btn btn__add btn__default"
+                                        (click)="addIncome()">
+                                        Add
+                                        Another</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div  formArrayName="incomeArray">
+                                <div *ngFor="let income of incomeArray.controls; let j = index" [formGroupName]="j" class="income-entry">
+                                  <div class="mv-center">
+                                    <div class="col-sm-1">
+                                      <mat-checkbox name="hasIncome[j]" formControlName="hasIncome" class="chkSpc">
+                                      </mat-checkbox>
+                                    </div>
+                                    <div class="form-field">
+                                      <div class="span">Description</div>
+                                      <mat-form-field appearance="outline">
+                                        <input type="text" trim matInput placeholder="Other" name="incomeDesc[j]"
+                                          formControlName="incomeDesc" type="text" maxlength="125" />
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="form-field">
+                                      <div class="span">Income Value</div>
+                                      <mat-form-field appearance="outline">
+                                        <input type="text" digitsOnly trim matInput placeholder="value" name="incomeValue[j]"
+                                          formControlName="incomeValue" type="number" maxlength="125" />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
                           </div>
                         </div>
-                        <div class="div-6" *ngIf="income.value.incomeType ==='ANY_OTHER'">
-                          <!-- <div class="form-field"></div> -->
+                      </div>
+                      <div class="txHdg">Family Pension</div>
+                      <div class="div-6 gray_box">
+                        <div class="form-field">
+                          <div><span class="span">Family Pension amount </span></div>
+
                           <div class="form-field">
-                            <div class="span">Description</div>
-                            <mat-form-field appearance="outline">
-                              <input type="text" trim matInput placeholder="Other" name="incomeDesc[i]"
-                                formControlName="incomeDesc" type="text" maxlength="125" />
-                            </mat-form-field>
-                          </div>
-
-                          <div class="form-field mt-4">
-                            <mat-form-field appearance="outline">
-                              <input type="text" digitsOnly trim matInput placeholder="" name="incomeValue[i]"
-                                formControlName="incomeValue" type="number" maxlength="125" />
+                            <mat-form-field appearance="outline" class="small-inp no-height">
+                              <input digitsOnly matInput placeholder="Family pension" name="quarter1"
+                                formControlName="familyPension" maxlength="50" (blur)="calFamPension()" />
                             </mat-form-field>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="txHdg">Family Pension</div>
-                    <div class="div-6 gray_box">
-                      <div class="form-field">
-                        <div><span class="span">Family Pension amount </span></div>
-
                         <div class="form-field">
-                          <mat-form-field appearance="outline" class="small-inp no-height">
-                            <input digitsOnly matInput placeholder="Family pension" name="quarter1"
-                              formControlName="familyPension" maxlength="50" (blur)="calFamPension()" />
-                          </mat-form-field>
+                          <div><span class="span">Deduction u/s 57(2)a </span></div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline" class="small-inp no-height">
+                              <input digitsOnly matInput name="quarter2" formControlName="famPenDeduction" readonly />
+                            </mat-form-field>
+                          </div>
                         </div>
-                      </div>
-                      <div class="form-field">
-                        <div><span class="span">Deduction u/s 57(2)a </span></div>
                         <div class="form-field">
-                          <mat-form-field appearance="outline" class="small-inp no-height">
-                            <input digitsOnly matInput name="quarter2" formControlName="famPenDeduction" readonly />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="form-field">
-                        <div><span class="span">Net family pension</span></div>
-                        <div class="form-field">
-                          <mat-form-field appearance="outline" class="small-inp no-height">
-                            <input digitsOnly matInput name="quarter3" formControlName="totalFamPenDeduction"
-                              readonly />
-                          </mat-form-field>
+                          <div><span class="span">Net family pension</span></div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline" class="small-inp no-height">
+                              <input digitsOnly matInput name="quarter3" formControlName="totalFamPenDeduction"
+                                readonly />
+                            </mat-form-field>
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -125,7 +125,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
     console.log(cash, bank);
     let form = this.fb.group({
-      id: null, index: [index],
+      id: null,
+      index: [index],
       hasEdit: [false],
       natureOfBusiness: [income?.natureOfBusiness || null, [Validators.required],],
       tradeName: [income?.tradeName || null, [Validators.required]],
@@ -295,48 +296,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.submitted = false;
       let presBusinessIncome = [];
       BusinessFormIncome?.forEach((element) => {
-        let isAdded = false;
-        presBusinessIncome.forEach((data) => {
-          if (data.natureOfBusiness === element.natureOfBusiness) {
-            isAdded = true;
-            data.incomes.push({
-              id: null,
-              incomeType: 'BANK',
-              receipts: element.bankReceipts,
-              presumptiveIncome: element.bankPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.bankMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-
-            data.incomes.push({
-              id: null,
-              incomeType: 'CASH',
-              receipts: element.cashReceipts,
-              presumptiveIncome: element.cashPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.cashMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-            data.incomes.push({
-              id: null,
-              incomeType: 'ANY_OTHER',
-              receipts: element.anyOtherMode,
-              presumptiveIncome: element.anyOtherPreIncomePreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.anyOtherMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-          }
-        });
-
-        if (!isAdded) {
           presBusinessIncome.push({
             id: null,
             businessType: 'BUSINESS',
@@ -383,7 +342,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
               },
             ],
           });
-        }
       });
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
@@ -503,7 +461,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (this.activeIndex === -1) {
       let srn = (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).length;
       let form = this.createBusIncomeForm(srn);
-      form.patchValue(this.selectedFormGroup.getRawValue());
+      form.patchValue(result);
+      form.patchValue({ index: srn });
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).push(form);
     } else {
       (this.busIncomeForm.controls['busIncomeFormArray'] as UntypedFormGroup).controls[this.activeIndex].patchValue(result);

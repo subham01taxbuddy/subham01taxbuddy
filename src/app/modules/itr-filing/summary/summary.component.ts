@@ -280,6 +280,7 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XIISecondProviso?: any;
         SumRecdPrYrBusTRU562xii?: any;
         SumRecdPrYrBusTRU562xiii?: any;
+        Us194I?:any;
       };
       otherIncomeTotal: number;
     };
@@ -877,6 +878,7 @@ export class SummaryComponent implements OnInit {
   countryCodeList: any;
   dialogRef: any;
   loggedInUserRoles: any;
+  filteredAnyOtherIncomes: any[] = [];
 
   constructor(
     private itrMsService: ItrMsService,
@@ -3001,6 +3003,7 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
 
+
                 Qqb80: null,
                 Rrb80: null,
 
@@ -3123,6 +3126,9 @@ export class SummaryComponent implements OnInit {
                 SumRecdPrYrBusTRU562xiii:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.SumRecdPrYrBusTRU562xii,
+                   Us194I:
+                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                   ?.IncOthThanOwnRaceHorse?.RentFromMachPlantBldgs,
 
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -4987,6 +4993,7 @@ export class SummaryComponent implements OnInit {
             this.loading = false;
 
             this.getBusinessDetails();
+            this.filterAnyOtherIncomes();
 
             this.finalCalculations = {
               personalInfo: {
@@ -5173,6 +5180,10 @@ export class SummaryComponent implements OnInit {
                   SumRecdPrYrBusTRU562xiii:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'INCOME_US_56_2_XIII'
+                    )?.amount,
+                    Us194I:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INCOME_US_194I'
                     )?.amount,
 
                   aggregateValueWithoutConsideration:
@@ -7447,7 +7458,7 @@ export class SummaryComponent implements OnInit {
           let headerObj = {
             panNumber: this.ITR_JSON.panNumber,
             assessmentYear: this.ITR_JSON.assessmentYear,
-            userId: this.ITR_JSON.userId.toString(),
+            userId: environment.environment === 'UAT' ? '1067' : this.ITR_JSON.userId.toString(),
           };
           sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
 
@@ -7534,10 +7545,22 @@ export class SummaryComponent implements OnInit {
     return total;
   }
 
+  // getExemptDescription(exempt) {
+  //   return this.exemptIncomesDropdown.filter(
+  //     (item) => item.value === exempt.natureDesc
+  //   )[0].label;
+  // }
+
   getExemptDescription(exempt) {
-    return this.exemptIncomesDropdown.filter(
+    const matchedItem = this.exemptIncomesDropdown.find(
       (item) => item.value === exempt.natureDesc
-    )[0].label;
+    );
+    if (matchedItem) {
+      return exempt.natureDesc === 'OTH' && exempt.othNatOfInc
+        ? `${matchedItem.label} - ${exempt.othNatOfInc}`
+        : matchedItem.label;
+    }
+    return '';
   }
 
   // updateManually() {
@@ -7616,6 +7639,12 @@ export class SummaryComponent implements OnInit {
     this.business44adDetails = business44AD;
 
     this.setBusiness44ADA();
+  }
+
+  filterAnyOtherIncomes() {
+    this.filteredAnyOtherIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.filter(
+      (income) => income.incomeType === 'ANY_OTHER'
+    ) || [];
   }
 
   getCountry(code) {
@@ -7820,7 +7849,8 @@ export class SummaryComponent implements OnInit {
         this.finalCalculations?.otherIncome?.otherIncomes?.winningFromGaming > 0) ||
       this.finalCalculations?.otherIncome?.otherIncomes?.incFromOwnAndMaintHorses ||
       this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xii ||
-      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii
+      this.finalCalculations?.otherIncome?.otherIncomes?.SumRecdPrYrBusTRU562xiii||
+      this.finalCalculations?.otherIncome?.otherIncomes?.Us194I
   }
 }
 

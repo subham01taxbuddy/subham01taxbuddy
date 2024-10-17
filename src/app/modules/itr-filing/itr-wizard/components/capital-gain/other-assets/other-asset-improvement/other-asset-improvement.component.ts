@@ -119,7 +119,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       if (value) {
         this.isImprovement?.patchValue(true, { emitEvent: false });
         if (improvementsArray.controls.length === 0) {
-          let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
+          let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails[this.assetIndex] : null;
           improvementsArray.push(this.createImprovementsArray(obj?.srn));
         }
       } else {
@@ -185,7 +185,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       this.addMoreOtherAssetsForm(this.assetIndex);
 
       let obj: any = this.assetIndex >= 0 ?
-        this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
+        this.goldCg?.assetDetails[this.assetIndex] : null;
       // setting improvement flag
       this.goldCg?.improvement?.forEach((element) => {
         if (
@@ -216,7 +216,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   objSrn = 0;
 
   createOtherAssetsForm(srn, index?) {
-    let obj: any = index >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[index] : null;
+    let obj: any = index >= 0 ? this.goldCg?.assetDetails[index] : null;
     let impObj: any = index >= 0 ? this.goldCg?.improvement : null;
 
     let maxSrn = 0
@@ -482,9 +482,9 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       }
     }
 
-    // if(cgObject.indexCostOfAcquisition != 0){
-    //   cgObject.isIndexationBenefitAvailable = true;
-    // }
+    if(cgObject.indexCostOfAcquisition != 0){
+      cgObject.isIndexationBenefitAvailable = true;
+    }
 
     let request = {
       assessmentYear: '2023-2024',
@@ -613,7 +613,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
           filteredCapitalGain[0].assetDetails?.splice(
             index,
             1,
-            this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex]
+            this.goldCg?.assetDetails[this.assetIndex]
           );
         } else {
           filteredCapitalGain[0]?.assetDetails?.push(

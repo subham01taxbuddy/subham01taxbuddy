@@ -95,34 +95,35 @@
                           <div class="div-6">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                              <span class="span">Country </span> <span class="text-wrapper-2">*</span>
                               </div>
 
                               <mat-form-field appearance="outline">
-                                <input type="text" trim digitsOnly matInput placeholder="Pin Code" name="pinCode"
-                                  class="form-control inpplac" formControlName="pinCode" maxlength="6"
-                                  (blur)="updateDataByPincode()" />
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
-                                  Enter pincode
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('pattern')">
-                                  Enter valid pin
-                                </mat-error>
+                                <mat-select placeholder="Select country" name="country" formControlName="country" (selectionChange)="onCountryChange($event)">
+                                  <mat-option *ngFor="let country of countriesDropdown" [value]="country.countryCode">
+                                    {{ country.countryName | titlecase }}
+                                  </mat-option>
+                                </mat-select>
                               </mat-form-field>
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">{{ employerDetailsFormGroup.controls['country'].value === '91' ? "pincode" : "zipcode" }}</span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input type="text" trim matInput placeholder="Town/City" name="TAN"
-                                  class="form-control inpplac" formControlName="city" maxlength="50" />
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
-                                  Enter the town/city
-                                </mat-error>
-                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
-                                  Enter character only.
-                                </mat-error>
+                                                            <input
+                              type="text"
+                              trim
+                              matInput
+                              [placeholder]="employerDetailsFormGroup.controls['country'].value === '91' ? 'pincode' : 'zipcode'"
+                              name="pinCode"
+                              class="form-control inpplac"
+                              formControlName="pinCode"
+                              [maxlength]="employerDetailsFormGroup.controls['country'].value === '91' ? 6 : 8"
+                              required
+                              (blur)="employerDetailsFormGroup.controls['country'].value === '91' ? updateDataByPincode() : null"
+                            />
                               </mat-form-field>
                             </div>
                           </div>
@@ -130,7 +131,8 @@
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">State </span> <span class="text-wrapper-2">*</span>
-                                <mat-form-field appearance="outline">
+                              </div>
+                                <mat-form-field appearance="outline" *ngIf="employerDetailsFormGroup.controls['country'].value === '91'">
                                   <mat-select placeholder="Select state" name="state" formControlName="state">
                                     <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
                                       {{ state.stateName | titlecase }}
@@ -140,15 +142,31 @@
                                     Select the state
                                   </mat-error>
                                 </mat-form-field>
+
+                                <mat-form-field appearance="outline" *ngIf="employerDetailsFormGroup.controls['country'].value !== '91'">
+                                  <input
+                                    matInput
+                                    type="text"
+                                    [value]="'Foreign'"
+                                    class="foreign-static-text"
+                                    [ngStyle]="{'color': '#00A4BF', 'border': '1px solid #9b9b9b'}"
+                                    disabled
+                                  />
+                                </mat-form-field>
                               </div>
-                            </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                              </div>
                                 <mat-form-field appearance="outline">
-                                  <mat-select value="India">
-                                    <mat-option value="India">India</mat-option>
-                                  </mat-select>
+                                <input type="text" trim matInput placeholder="Town/City" name="TAN"
+                                  class="form-control inpplac" formControlName="city" maxlength="50" />
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
+                                  Enter the town/city
+                                </mat-error>
+                                <mat-error *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
+                                  Enter character only.
+                                </mat-error>
                                 </mat-form-field>
                               </div>
 
@@ -156,7 +174,7 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"

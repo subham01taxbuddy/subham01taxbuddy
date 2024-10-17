@@ -1,4 +1,4 @@
-import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
+import { FormArray, FormGroup, UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -32,6 +32,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     {
       value: 'INCOME_US_56_2_XIII',
       label: 'Any sum received, including the amount allocated by way of bonus, at any time during a previous year, under a life insurance policy referred to in section 56(2)(xiii)',
+    },{
+      value: 'INCOME_US_194I',
+      label: 'Rental income from machinery, plants, buildings, etc., Gross section (us/194I)',
     },
     {
       value: 'ANY_OTHER',
@@ -208,12 +211,16 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   agriIncFormArray: UntypedFormArray;
   selectedIndexes: number[] = [];
   PREV_ITR_JSON: any;
+  incomeForm: UntypedFormGroup;
 
   constructor(
     public utilsService: UtilsService,
     public fb: UntypedFormBuilder,
   ) {
     super();
+    this.incomeForm = this.fb.group({
+      incomeArray: this.fb.array([]),
+    });
     this.PREV_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.PREV_ITR_JSON));
   }
 
@@ -223,6 +230,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
 
+    const hasAnyOtherIncomes = this.Copy_ITR_JSON.incomes &&
+    this.Copy_ITR_JSON.incomes.some(income => income.incomeType === "ANY_OTHER");
+    if (!hasAnyOtherIncomes) {
+        this.addIncome();
+    }
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
     this.createOrSetWinningsUS115BBForm(this.ITR_JSON.winningsUS115BB);
@@ -253,7 +265,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter3: [null],
         quarter4: [null],
         quarter5: [null],
-      }),
+        deductionUs57One:[null],
+      }, { validators: this.deductionValidator }),
       familyPension: new UntypedFormControl(null),
       famPenDeduction: [],
       totalFamPenDeduction: [],
@@ -278,6 +291,34 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
     this.setNetAgriIncome();
+  }
+
+  get incomeArray(): FormArray {
+    return this.incomeForm.get('incomeArray') as FormArray;
+  }
+
+  addIncome(): void {
+    const incomeGroup = this.fb.group({
+      hasIncome: [false],
+      incomeValue: [null, Validators.min(0)],
+      incomeDesc: [null, Validators.maxLength(50)],
+    });
+    this.incomeArray.push(incomeGroup);
+  }
+
+  removeIncome(): void {
+    const incomes = this.incomeArray;
+
+    const filteredIncomes = incomes.controls.filter((element: any) => {
+      return !(element as FormGroup).controls['hasIncome'].value;
+    });
+
+    while (incomes.length) {
+      incomes.removeAt(0);
+    }
+    filteredIncomes.forEach(income => incomes.push(income));
+
+    this.getTotalAnyOtherIncome()
   }
 
   clearProvidentFund() {
@@ -418,6 +459,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return agri;
   }
 
+  get getNestedIncomes(){
+    const incomes = <UntypedFormArray>this.getAnyIncomeArray.get('incomeValues');
+    return incomes;
+   }
+
   goBack() {
     this.saveAndNext.emit(true);
   }
@@ -511,7 +557,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter: 5,
       },
     ];
-
+    this.Copy_ITR_JSON.deductionUs57One = dividendIncomes.controls['deductionUs57One'].value
     console.log('Copy ITR JSON', this.Copy_ITR_JSON);
 
     this.loading = true;
@@ -561,6 +607,28 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         });
       }
     }
+
+    let newOtherIncome = this.incomeForm.controls['incomeArray'] as UntypedFormArray;
+
+    this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes.filter(
+        (income) => income.incomeType !== 'ANY_OTHER'
+    );
+
+    newOtherIncome.controls.forEach((control) => {
+      let anyOtherIncome = control as UntypedFormGroup;
+      const incomeValue = anyOtherIncome.controls['incomeValue'].value;
+      const incomeDesc = anyOtherIncome.controls['incomeDesc'].value;
+      if (this.utilsService.isNonEmpty(incomeValue)) {
+          this.Copy_ITR_JSON.incomes.push({
+              expenses: 0,
+              amount: incomeValue,
+              incomeType: 'ANY_OTHER',
+              details: incomeDesc,
+          });
+      }
+    });
+
+    console.log("final incomes object",this.Copy_ITR_JSON.incomes);
 
     //save winningsUS115BB
     this.Copy_ITR_JSON.winningsUS115BB = null;
@@ -748,6 +816,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           // item.incomeType === 'ROYALTY_US_80QQB' ||
           item.incomeType === 'INCOME_US_56_2_XII' ||
           item.incomeType === 'INCOME_US_56_2_XIII' ||
+          item.incomeType === 'INCOME_US_194I' ||
           item.incomeType === 'ANY_OTHER'
       );
       let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as UntypedFormArray;
@@ -760,6 +829,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         control.controls['incomeValue'].setValue(anyOtherIncomes[i].amount);
         control.controls['incomeDesc'].setValue(anyOtherIncomes[i].details);
       }
+
+      let newIncomeArray = this.ITR_JSON.incomes.filter(
+        (item) =>
+        item.incomeType === 'ANY_OTHER'
+      );
+
+      const incomeArray = this.incomeForm.get('incomeArray') as UntypedFormArray;
+      newIncomeArray.forEach(income => {
+        const control = this.fb.group({
+          hasIncome: [false],
+          incomeValue: [income.amount, Validators.min(0)],
+          incomeDesc: [income.details, Validators.maxLength(50)],
+        });
+        incomeArray.push(control);
+      });
 
       let providentValues = this.ITR_JSON.incomes.filter(
         (item) =>
@@ -868,6 +952,15 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           }
         }
       }
+    }
+    if(this.ITR_JSON.deductionUs57One != null){
+      let dividendIncomes = this.otherIncomeFormGroup.controls[
+        'dividendIncomes'
+      ] as UntypedFormGroup;
+
+      dividendIncomes.controls['deductionUs57One'].setValue(
+        this.ITR_JSON.deductionUs57One
+      );
     }
   }
 
@@ -1039,6 +1132,24 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return q1 + q2 + q3 + q4 + q5;
   }
 
+  deductionValidator(formGroup: FormGroup) {
+    const q1 = Number(formGroup.controls['quarter1'].value || 0);
+    const q2 = Number(formGroup.controls['quarter2'].value || 0);
+    const q3 = Number(formGroup.controls['quarter3'].value || 0);
+    const q4 = Number(formGroup.controls['quarter4'].value || 0);
+    const q5 = Number(formGroup.controls['quarter5'].value || 0);
+    const totalDividendIncome = q1 + q2 + q3 + q4 + q5;
+
+    const deductionUs57One = Number(formGroup.controls['deductionUs57One'].value || 0);
+
+    const maxDeductionAllowed = totalDividendIncome * 0.2;
+
+    if (deductionUs57One > maxDeductionAllowed) {
+      return { deductionExceedsLimit: true };
+    }
+    return null;
+  }
+
   calFamPension() {
     let famPenDeduction = 0;
     let familyPension = this.otherIncomeFormGroup.controls['familyPension'];
@@ -1096,16 +1207,39 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
+  // getTotalAnyOtherIncome() {
+  //   let total = 0;
+  //   for (let i = 0; i < this.anyOtherIncomesFormArray.controls.length; i++) {
+  //     if (this.utilsService.isNonZero(this.anyOtherIncomesFormArray.controls[i].value.incomeValue)) {
+  //       total = total + Number(this.anyOtherIncomesFormArray.controls[i].value.incomeValue);
+  //     }
+  //   }
+  //   total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
+  //   return total;
+  // }
+
   getTotalAnyOtherIncome() {
     let total = 0;
     for (let i = 0; i < this.anyOtherIncomesFormArray.controls.length; i++) {
-      if (this.utilsService.isNonZero(this.anyOtherIncomesFormArray.controls[i].value.incomeValue)) {
-        total = total + Number(this.anyOtherIncomesFormArray.controls[i].value.incomeValue);
+      const incomeForm = this.anyOtherIncomesFormArray.controls[i] as UntypedFormGroup;
+      const incomeValue = incomeForm.value.incomeValue;
+      const incomeType = incomeForm.value.incomeType
+      if (this.utilsService.isNonZero(incomeValue) && incomeType !== 'ANY_OTHER') {
+          total += Number(incomeValue);
       }
     }
+
+    for (let j = 0; j < this.incomeArray.controls.length; j++) {
+        const additionalIncomeValue = this.incomeArray.controls[j].value.incomeValue;
+        if (this.utilsService.isNonZero(additionalIncomeValue)) {
+            total += Number(additionalIncomeValue);
+        }
+    }
+
     total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
     return total;
-  }
+}
+
 
   getTotalGiftIncome() {
     let giftTax = this.otherIncomeFormGroup.get('giftTax') as UntypedFormGroup;

@@ -7,7 +7,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -25,7 +25,7 @@ import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { GridApi, GridOptions, RowGroupingDisplayType } from 'ag-grid-community';
 import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import { MatPaginator } from "@angular/material/paginator";
+import { MatPaginator } from '@angular/material/paginator';
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -98,9 +98,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     );
 
     let asset = this.Copy_ITR_JSON.immovableAsset;
-    console.log('assets', asset)
+    console.log('assets', asset);
     if (asset) {
-      this.immovableAssets = asset
+      this.immovableAssets = asset;
     } else {
       this.immovableAssets = [];
     }
@@ -174,7 +174,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changed')
+    console.log('changed');
   }
 
   initForm() {
@@ -194,17 +194,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       road: [item ? item.road : ''],
       area: [item ? item.area : '', Validators.required],
       state: [item ? item.state : '', Validators.required],
-      country: [item ? item.country : '91', Validators.required],
+      country: [item ? item.country:'91' , Validators.required],
       city: [item ? item.city : '', Validators.required],
-      pinCode: [
-        item ? item.pinCode : '',
-        Validators.compose([
-          Validators.minLength(6),
-          Validators.maxLength(6),
-          Validators.required,
-          Validators.pattern(AppConstants.PINCode),
-        ]),
-      ],
+      pinCode: [item?item.pinCode:'',Validators.required],
     });
   }
 
@@ -223,14 +215,69 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     });
   }
 
-  async updateDataByPincode(immovableAssets) {
+
+
+
+   updateDataByPincode(immovableAssets) {
+    console.log("country code :",immovableAssets);
     let pincode = immovableAssets.controls['pinCode'];
-    await this.utilsService.getPincodeData(pincode).then((result) => {
+     this.utilsService.getPincodeData(pincode).then((result) => {
       immovableAssets.controls['city'].setValue(result.city);
       immovableAssets.controls['country'].setValue(result.countryCode);
-      immovableAssets.controls['state'].setValue(result.stateCode);
+    console.log("country code 1:",immovableAssets);
+
+      if (result.countryCode === '91') {
+        immovableAssets.controls['state'].setValue(result.stateCode); // Set actual state for India
+      }
+
+      immovableAssets.controls['pincode'].updateValueAndValidity();
+      immovableAssets.controls['state'].updateValueAndValidity();
+      immovableAssets.updateValueAndValidity();
+
     });
   }
+
+
+
+  onCountryChange(immovableAssets){
+    const selectedCountryCode = immovableAssets.value;
+    const pinCodeControl = immovableAssets.get('pinCode');
+    const stateCodeControl = immovableAssets.get('state'); // Assuming you have a stateCode control
+
+    if (selectedCountryCode === '91') {
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]{6}$/) 
+      ]);
+
+      // Reset state code if country is India
+      stateCodeControl.setValue('');
+      pinCodeControl.setValue('');
+
+    } else {
+      // Set validation for 4-8 character alphanumeric Zipcode (Other countries)
+      pinCodeControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9]{4,8}$/)
+        // Validation for alphanumeric ZIP (4-8 chars)
+      ]);
+  
+      stateCodeControl.setValue('Foreign');
+      pinCodeControl.setValue('');
+      // Set state code to '99' for foreign countries
+    }
+
+    // Update the validity of the form control after changing validators
+    pinCodeControl?.updateValueAndValidity();
+    this.immovableAssets.controls['country'].setValue(selectedCountryCode);
+    this.immovableAssets.updateValueAndValidity();
+  }
+
+
+
+
+
+
 
   mode = 'VIEW';
 
@@ -412,14 +459,14 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: function (params) {
           return params.node.rowIndex + 1;
-        }
+        },
       },
       {
         headerName: 'Description',
@@ -428,10 +475,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         width: 240,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: function nameFromCode(params) {
           return params.data.description;
@@ -444,10 +491,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         width: 440,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: function nameFromCode(params) {
           return params.data.flatNo + ',' + params.data.premisesName + ',' + params.data.road + ',' + params.data.area
@@ -461,10 +508,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: (params) => params.data.amount,
         valueFormatter: (params) => this.formatAmount(params.value),
@@ -507,7 +554,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
              </button>`;
         },
       },
-    ]
+    ];
   }
 
   formatAmount(amount: number): string {

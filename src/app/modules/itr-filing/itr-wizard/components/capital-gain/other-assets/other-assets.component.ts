@@ -99,7 +99,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     let ltcg = 0;
     let stcg = 0;
     this.goldCg.assetDetails.forEach((asset) => {
-      if (asset.isIndexationBenefitAvailable !== true) {
         let copy: any = {};
         Object.assign(copy, asset);
         copy.hasEdit = false;
@@ -107,7 +106,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         ltcg += asset?.gainType === 'LONG' ? asset?.capitalGain : 0;
         stcg += asset?.gainType === 'SHORT' ? asset?.capitalGain : 0;
       }
-    });
+    );
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
     if (this.totalCg.ltcg <= 0) {
@@ -230,10 +229,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     let saleValue = 0;
     let expenses = 0;
     this.goldCg.assetDetails.forEach((asset) => {
-      if (
-        asset.isIndexationBenefitAvailable !== true &&
-        asset.gainType === 'LONG'
-      ) {
+      if (asset.gainType === 'LONG') {
         capitalGain += asset.capitalGain;
         saleValue += asset.sellValue;
         expenses += asset.sellExpense;
