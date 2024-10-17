@@ -49,7 +49,7 @@ export const appRoutes: Routes = [
   },
 
   {
-    path: 'chat', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/chat/chat.module').then(m => m.ChatModule)
+    path: 'chat-full-screen', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/chat/chat.module').then(m => m.ChatModule)
   },
   { path: '**', redirectTo: 'login' },
 ];

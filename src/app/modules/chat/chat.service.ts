@@ -175,12 +175,14 @@ export class ChatService {
 
     let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
-      tokenRequired: tokenPresent
+      tokenRequired: tokenPresent,
+      source: "BO"
     };
     if (service) {
       request = {
         serviceType: service,
-        tokenRequired: tokenPresent
+        tokenRequired: tokenPresent,
+        source: "BO"
       };
     }
     await this.httpClient.post(this.TILE_DESK_TOKEN_URL,
