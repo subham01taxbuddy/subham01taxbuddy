@@ -97,6 +97,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   formData2: any = {};
   formData3: any = {};
   formData4: any = {};
+  errorMessage: string = '';
 
   formValue: any;
   payload: any;
@@ -130,7 +131,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   whatsAppNumber: any;
   templateFile: File | null = null;
   selectedTemplate: any;
-  errorMessage: string = '';
+
 
 
   constructor(
