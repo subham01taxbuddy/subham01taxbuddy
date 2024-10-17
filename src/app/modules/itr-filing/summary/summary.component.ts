@@ -7545,10 +7545,22 @@ export class SummaryComponent implements OnInit {
     return total;
   }
 
+  // getExemptDescription(exempt) {
+  //   return this.exemptIncomesDropdown.filter(
+  //     (item) => item.value === exempt.natureDesc
+  //   )[0].label;
+  // }
+
   getExemptDescription(exempt) {
-    return this.exemptIncomesDropdown.filter(
+    const matchedItem = this.exemptIncomesDropdown.find(
       (item) => item.value === exempt.natureDesc
-    )[0].label;
+    );
+    if (matchedItem) {
+      return exempt.natureDesc === 'OTH' && exempt.othNatOfInc
+        ? `${matchedItem.label} - ${exempt.othNatOfInc}`
+        : matchedItem.label;
+    }
+    return '';
   }
 
   // updateManually() {

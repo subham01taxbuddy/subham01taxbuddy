@@ -380,7 +380,7 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
         ] as UntypedFormArray;
     let selectedValues = exemptIncomes.controls.filter(
       (fg: UntypedFormGroup) => fg.controls['incomeType'].value === event.value);
-    if (selectedValues?.length > 1) {
+    if (event.value !== 'OTH' && selectedValues?.length > 1) {
       this.utilsService.showSnackBar("You cannot select same exempt income more than once");
       selectedValues.forEach((fg: UntypedFormGroup) => {
         fg.controls['incomeType'].setErrors({ invalid: true })
