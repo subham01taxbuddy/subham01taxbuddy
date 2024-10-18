@@ -71,7 +71,7 @@ export class ChatService {
   closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
 
   startPingInterval() {
-    this.pingInterval = setInterval(() => {
+    this.pingInterval = setTimeout(() => {
       if (this.chatClient && this.chatClient.connected) {
         this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
       }
