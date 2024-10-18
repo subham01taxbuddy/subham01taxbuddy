@@ -89,16 +89,37 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   createForm(index, obj?: FixedAssetsDetails): UntypedFormGroup {
-    return this.fb.group({
+    const formGroup = this.fb.group({
       hasEdit: [],
       id: [obj?.id ? obj?.id : index],
       assetType: [obj?.assetType || null, Validators.required],
-      description: [obj?.description || null, Validators.required],
+      description: [obj?.description || null],
       bookValue: [obj?.bookValue || null, Validators.required],
       depreciationRate: [obj?.depreciationRate || null, Validators.required],
       depreciationAmount: [obj?.depreciationAmount || null],
       fixedAssetClosingAmount: [obj?.fixedAssetClosingAmount || null],
-    })
+    });
+
+    if (obj?.assetType) {
+      formGroup.get('description').setValidators(Validators.required);
+      formGroup.get('description').updateValueAndValidity();
+    }
+
+    return formGroup;
+  }
+
+  onAssetTypeChange(index: number): void {
+    const depreciationArray = this.depreciationForm.get('depreciationArray') as FormArray;
+    const depreciation = depreciationArray.at(index) as UntypedFormGroup;
+    const descriptionControl = depreciation.get('description');
+
+    if (depreciation.get('assetType').value) {
+      descriptionControl.setValidators(Validators.required);
+    } else {
+      descriptionControl.clearValidators();
+    }
+
+    descriptionControl.updateValueAndValidity();
   }
 
   saveDepreciationDetails(formGroup: any) {

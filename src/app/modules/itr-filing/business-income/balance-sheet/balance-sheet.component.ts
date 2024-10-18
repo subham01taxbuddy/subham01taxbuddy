@@ -110,7 +110,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       investment: [obj?.investment, Validators.pattern(AppConstants.numericRegex),],
       shortTermInvestment: [obj?.shortTermInvestment, Validators.pattern(AppConstants.numericRegex),],
       longTermInvestment: [obj?.longTermInvestment, Validators.pattern(AppConstants.numericRegex),],
-      otherAssets: [obj?.otherAssets, Validators.pattern(AppConstants.numericRegex)],
+      otherAssets: [obj?.otherAssets ? obj?.otherAssets:0, Validators.pattern(AppConstants.numericRegex)],
       totalAssets: [obj?.totalAssets],
       GSTRNumber: [obj?.GSTRNumber, Validators.pattern(AppConstants.gstrReg)],
       grossTurnOverAmount: [obj?.grossTurnOverAmount],
