@@ -315,7 +315,7 @@
               </button>-->
 
         <app-custom-button class="btn grBut"
-          [disabled]="!isValidateJson || (( ITR_JSON.itrSummaryJson == null || ITR_JSON.itrSummaryJson == undefined) && finalCalculations?.totalIncome > 20000000)"
+          [disabled]="isPdfDownloadDisabled()"
           [actions]="[downloadPDF]">
           Download PDF
         </app-custom-button>

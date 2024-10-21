@@ -942,6 +942,16 @@ export class SummaryComponent implements OnInit {
     }
   }
 
+  isPdfDownloadDisabled(){
+    if(this.ITR_JSON.isITRU){
+      return false;
+    } else {
+      return !this.isValidateJson ||
+          ((this.ITR_JSON.itrSummaryJson == null ||
+              this.ITR_JSON.itrSummaryJson == undefined) && this.finalCalculations?.totalIncome > 20000000)
+    }
+  }
+
   getMastersData() {
     this.loading = true;
     const param = '/itrmaster';
