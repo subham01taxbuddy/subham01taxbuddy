@@ -214,50 +214,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       let presBusinessIncome = [];
       // IF PROF INCOME FORM IS VALID
       profBusinessFormIncome?.forEach((element) => {
-        let isAdded = false;
-        presBusinessIncome.forEach((data) => {
-          if (data.natureOfBusiness === element.natureOfBusiness) {
-            isAdded = true;
-            data.incomes.push({
-              id: null,
-              incomeType: 'BANK',
-              receipts: element.bankReceipts,
-              presumptiveIncome: element.bankPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.bankMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-
-            data.incomes.push({
-              id: null,
-              incomeType: 'CASH',
-              receipts: element.cashReceipts,
-              presumptiveIncome: element.cashPreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.cashMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-            data.incomes.push({
-              id: null,
-              incomeType: 'ANY_OTHER',
-              receipts: element.anyOtherMode,
-              presumptiveIncome: element.anyOtherPreIncomePreIncome,
-              periodOfHolding: null,
-              minimumPresumptiveIncome: element.anyOtherMinIncome,
-              registrationNo: null,
-              ownership: null,
-              tonnageCapacity: null,
-            });
-          }
-        });
-
-        if (!isAdded) {
-          presBusinessIncome.push({
-            id: null,
+        presBusinessIncome.push({
+          id: null,
             businessType: 'PROFESSIONAL',
             natureOfBusiness: element.natureOfBusiness,
             label: null,
@@ -301,8 +259,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
                 tonnageCapacity: null,
               },
             ],
-          });
-        }
+        })
       });
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
