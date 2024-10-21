@@ -2285,7 +2285,7 @@ export class PersonalInformationComponent implements OnInit {
             Validators.pattern(AppConstants.charSpecialRegex),
           ]),
         ],
-        state: ['91', Validators.required],
+        state: ['', Validators.required],
         country: ['91', Validators.required],
         city: [
           '',
@@ -2661,18 +2661,18 @@ changeCountryClear(country: string) {
   // }
 
   setCustomerProfileValues() {
-    if (this.ITR_JSON.address === null || this.ITR_JSON.address === undefined) {
+    if (this.ITR_JSON.address !== null) {
       this.ITR_JSON.address = {
-        area: '',
-        city: '',
-        country: '',
-        flatNo: '',
-        pinCode: '',
-        premisesName: '',
-        road: '',
-        state: '',
+      area: '',
+      city: '',
+      country: '91',
+      flatNo: '',
+      pinCode: '',
+      premisesName: '',
+      road: '',
+      state: '',
       };
-    }
+      }
     if (
       this.ITR_JSON.bankDetails === null ||
       this.ITR_JSON.bankDetails === undefined
