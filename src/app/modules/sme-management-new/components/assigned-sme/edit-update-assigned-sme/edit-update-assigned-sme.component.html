@@ -677,20 +677,20 @@
       </div>
       <div class="user-data-container">
         <div class="row">
-          <div class="col-sm-3" *ngIf="!hideSectionForAdmin">
+          <div class="col-sm-4" *ngIf="!hideSectionForAdmin">
             <mat-label>Parent Name </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Name" [formControl]="parentName" class="input-field" readonly />
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             <mat-label> Official Email ID</mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Official Email ID" [formControl]="smeOfficialEmail"
                 class="input-field" readonly />
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3" *ngIf="false">
             <mat-label> Kommunicate ID </mat-label>
             <mat-form-field appearance="outline">
               <input type="text" matInput placeholder="Kommunicate ID" [formControl]="email" class="input-field"
