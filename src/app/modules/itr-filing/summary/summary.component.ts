@@ -906,7 +906,18 @@ export class SummaryComponent implements OnInit {
       this.selfObj = self[0];
     }
     this.isValidItr = environment.isValidItr;
-    this.isValidateJson = environment.environment === 'UAT';
+    if(environment.environment === 'UAT'){
+      this.isValidateJson = true;
+    } else {
+      const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+      const loginSMEInfo = data[0];
+      if (loginSMEInfo.admin) {
+        this.isValidateJson = true;
+      } else {
+        this.isValidateJson = false
+      }
+    }
+
   }
 
   ngOnInit() {
