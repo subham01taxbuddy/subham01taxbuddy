@@ -14,7 +14,6 @@ import {UserMsService} from "../../../../services/user-ms.service";
 import {AddAffiliateIdComponent} from '../add-affiliate-id/add-affiliate-id.component';
 import {SidebarService} from 'src/app/services/sidebar.service';
 import {ChatManager} from "../../../chat/chat-manager";
-import {PushNotificationComponent} from 'src/app/modules/chat/push-notification/push-notification.component';
 import {ChatService} from 'src/app/modules/chat/chat.service';
 
 import {Subscription} from "rxjs";
@@ -76,8 +75,6 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
     roles: any;
     userDetails: any;
     private chatSubscription: Subscription;
-
-    private dialogRef: any = null;
 
 
     toggleWidget() {
@@ -148,9 +145,6 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
         });
 
         this.subscribeToAlerts();
-        this.chatSubscription = this.chatService.messageObservable.subscribe(data => {
-            this.handleNewNotification(data);
-        });
 
         this.chatService.closeFloatingWidgetObservable.subscribe(() => {
             this.floatingWidgetShow = false;
@@ -167,27 +161,7 @@ export class NavbarComponent implements DoCheck, OnInit, OnDestroy {
 
     }
 
-    handleNewNotification(data: any) {
-        if (this.dialogRef) {
-            this.dialogRef.componentInstance.addNotification(data);
-        } else {
-            this.dialogRef = this.dialog.open(PushNotificationComponent, {
-                panelClass: 'notification',
-                data: data,
-            });
-            this.dialogRef.afterClosed().subscribe((result) => {
-                this.dialogRef = null;
-                if (result?.request_id) {
-                    this.userDetails = result
-                    this.chatService.unsubscribeRxjsWebsocket();
-                    this.chatService.fetchMessages(this.userDetails.request_id);
-                    this.chatService.initRxjsWebsocket(this.userDetails.request_id);
-                    this.floatingWidgetShow = false;
-                }
-            });
-        }
-    }
-
+     
     ngDoCheck() {
         this.component_link = NavbarService.getInstance().component_link;
         this.component_link_2 = NavbarService.getInstance().component_link_2;
