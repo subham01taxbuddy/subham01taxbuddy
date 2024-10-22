@@ -11,7 +11,6 @@ import { webSocket } from 'rxjs/webSocket';
 import { jwtDecode } from 'jwt-decode';
 import Auth from '@aws-amplify/auth'
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -71,7 +70,7 @@ export class ChatService {
   closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
 
   startPingInterval() {
-    this.pingInterval = setInterval(() => {
+    this.pingInterval = setTimeout(() => {
       if (this.chatClient && this.chatClient.connected) {
         this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
       }
@@ -861,6 +860,9 @@ export class ChatService {
             this.localStorageService.removeItem('TILEDESK_TOKEN');
             Auth.currentSession().then(session => {
               if(session.isValid()){
+                let userData = JSON.parse(localStorage.getItem('UMD'));
+                userData.id_token = session.getAccessToken().getJwtToken();
+                localStorage.setItem('UMD', JSON.stringify(userData));
                 this.initTokens(true);
               }
             });
