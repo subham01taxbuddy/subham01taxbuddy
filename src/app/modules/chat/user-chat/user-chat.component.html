@@ -15,8 +15,8 @@
 
   <div>
     <div class="user-info" [ngClass]="{'active': userInfo,'inactive': !userInfo}" style="position: relative;">
-      <div class="avatar">
-        <div class="initial">{{image ? image:''}}</div>
+      <div class="avatar" [ngClass]="{ 'loading': isConnecting }">
+        <div class="initial">{{ image ? image : '' }}</div>
       </div>
       <div class="agent-details">
         <span class="username">{{ username }}</span>
@@ -87,7 +87,8 @@
                 <div *ngIf="message.type === 'html' && parsedContent(message.content)" class="html"
                   (loadeddata)="addMessageEvents()">
                   <div *ngIf="parsedContent(message.content).metadata.templateId !='7'"
-                    [innerHTML]="getSanitizedHtml(parsedContent(message.content).message) | highlight: searchInput" class="html-type"></div>
+                    [innerHTML]="getSanitizedHtml(parsedContent(message.content).message) | highlight: searchInput"
+                    class="html-type"></div>
 
 
                   <ng-container *ngIf="parsedContent(message.content).metadata">
@@ -121,7 +122,8 @@
 
                     <ng-container *ngIf="parsedContent(message.content).metadata.templateId === '3'">
                       <div *ngFor="let item of parsedContent(message.content).metadata.payload">
-                        <ng-container *ngIf="message.action !== null && !isBotSender(message.sender); else disabledButton">
+                        <ng-container
+                          *ngIf="message.action !== null && !isBotSender(message.sender); else disabledButton">
                           <button>
                             <a *ngIf="item.type === 'link'" [href]="item.url"
                               [target]="item.openLinkInNewTab? '_blank': '_self'">{{item.name}}</a>
@@ -182,12 +184,12 @@
                             <ng-container *ngIf="item.type === 'text'">
                               <div class="form-group">
                                 <label>{{ item.data.label }}</label>
-                                <input type="text" class="form-control"
-                                  [attr.disabled]="isBotSender(message.sender)"
+                                <input type="text" class="form-control" [attr.disabled]="isBotSender(message.sender)"
                                   name="{{ item.data.label }}"
                                   [placeholder]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : item.data.placeholder"
                                   [pattern]="item.data?.validation?.regex"
-                                  [value]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : (formData3[item.data.label] ?? '')" [ngClass]="{
+                                  [value]="(message?.action != null) ? (message?.action[item.data.label] ?? '') : (formData3[item.data.label] ?? '')"
+                                  [ngClass]="{
                                 'is-invalid':
                                   formData3[item.data.label] &&
                                   !isInputValid(formData3[item.data.label], item?.data?.validation?.regex)
@@ -211,8 +213,8 @@
                               <div class="form-group">
                                 <label>{{ item.data.label }}</label>
                                 <input type="password" class="form-control"
-                                  [attr.disabled]="isBotSender(message.sender)"
-                                  name="{{ item.data.label }}" [placeholder]="(message?.action !== null) ? (message?.action[item.data.label]) : item.data.placeholder"
+                                  [attr.disabled]="isBotSender(message.sender)" name="{{ item.data.label }}"
+                                  [placeholder]="(message?.action !== null) ? (message?.action[item.data.label]) : item.data.placeholder"
                                   [value]="(message?.action !== null) ? (message?.action[item.data.label]) : (formData3[item.data.label] ?? '')"
                                   (input)="onInputChange($event, item.data.label,message.message_id)" required>
                               </div>
@@ -246,7 +248,8 @@
                               <div>{{ item.data.title }}</div>
                               <div *ngFor="let option of item.data.options">
                                 <button mat-raised-button [disabled]="isBotSender(message.sender)" class="lgtBtn"
-                                  (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"> <mat-icon *ngIf="isCheckBoxSelected(item.data.name, option.value, message)">
+                                  (click)="onCheckBoxChange(item.data.name, option.value,message.message_id)"> <mat-icon
+                                    *ngIf="isCheckBoxSelected(item.data.name, option.value, message)">
                                     check_circle
                                   </mat-icon>
                                   {{ option.label }}</button>
@@ -284,13 +287,14 @@
 
 
                 </div>
-                <span *ngIf="message.sender === 'system' && message.content.startsWith('Assigned to')" class="timestamp">
+                <span *ngIf="message.sender === 'system' && message.content.startsWith('Assigned to')"
+                  class="timestamp">
                   {{ formatTimestampForSystem(message.timestamp) }}
                 </span>
               </div>
               <span *ngIf="message.sender !== 'system'  && message.sender!='metadata'" class="timestamp">{{
                 formatTimestamp(message.timestamp) }}</span>
-               
+
             </div>
 
           </div>
@@ -330,15 +334,75 @@
       <hr>
     </div>
   </div>
-  <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
-    <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
-    <div #fileInputContainer style="display: none;"></div>
-    <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
-      (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize  [disabled]="isInputDisabled"></textarea>
 
-    <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
-      <i class="fa fa-paper-plane" aria-hidden="true"></i>
-    </button>
+  <div class="user-input" [ngClass]="{'active': userInputField, 'inactive': !userInputField}">
+    <!-- Only show template-container if whatsAppDisabled is true -->
+    <div class="template-container" *ngIf="showSendMessageTemplateButton && whatsAppDisabled">
+      <span>{{ sendMessageTemplateText }}</span>
+      <button (click)="sendWhatsAppMessage()">Send Message Template</button>
+    </div>
+
+    <!-- Only show this part if WhatsApp is not disabled -->
+    <div *ngIf="!whatsAppDisabled">
+      <label for="fileInput" class="fa fa-paperclip" (click)="selectFile()"></label>
+      <div #fileInputContainer style="display: none;"></div>
+      <textarea type="text" (input)="filterCannedMessages()" placeholder="Type your message" class="message-input"
+        (keyup.enter)="sendMessage()" [(ngModel)]="messageSent" autoResize [disabled]="isInputDisabled"></textarea>
+      <button type="button" (click)="sendMessage()" [disabled]="!messageSent.trim()">
+        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
+
 </div>
 <app-chat-ui *ngIf="fullChatScreen" (back)="closeFullScreen()"></app-chat-ui>
+
+<!-- Send Message Template Modal -->
+<div class="template-modal" *ngIf="showTemplateModal">
+  <div class="template-modal-header">
+    <i class="fa fa-whatsapp"></i>
+    <span>Send message template</span>
+    <i class="fa fa-times close-icon" (click)="closeTemplateModal()"></i>
+  </div>
+
+  <div class="template-modal-content">
+
+    <div class="info-section">
+      <i class="fa fa-info-circle"></i>
+      <span>The last message received from this contact was 24 hours ago. Only approved template messages are allowed
+        outside standard messaging window.</span>
+    </div>
+
+    <div class="dropdown-section">
+      <label for="messageTemplate">Select a message template</label>
+      <select id="messageTemplate" (change)="onTemplateSelect($event)">
+        <option value="" disabled selected>Select a template</option>
+        <option *ngFor="let template of messageTemplates" [value]="template.name">{{ template.name }}</option>
+      </select>
+    </div>
+
+    <div class="preview-section">
+      <label for="messagePreview">Message Preview</label>
+      <textarea id="messagePreview" [value]="messagePreview" readonly rows="3"></textarea>
+    </div>
+
+    <div class="dynamic-inputs">
+      <div *ngFor="let field of dynamicFields; let i = index" class="dynamic-input">
+        <span>{{ field.placeholder }}</span>
+        <input type="text" id="inputField{{ i }}" [(ngModel)]="field.value" (input)="onInputChanges(field)"/>
+        <div *ngIf="field.error" class="error-message">{{ field.error }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedTemplate?.isMediaTemplate" class="file-upload-section">
+      <label for="fileUpload">Upload Media File</label>
+      <input type="file" id="fileUpload" (change)="onTemplateFileSelected($event)">
+      <span *ngIf="templateFile">Selected file: {{ templateFile.name }}</span>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn" (click)="closeTemplateModal()">Cancel</button>
+    <button class="btn" (click)="sendMessageWhatsApp()">Send</button>
+  </div>
+</div>

@@ -1,33 +1,81 @@
 import { Component, Inject, ChangeDetectorRef, Output, EventEmitter, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ChatManager } from '../chat-manager';
 import { ChatService } from '../chat.service';
-
+import { NotificationService } from './notification.service';
+import { trigger,transition,style,animate } from '@angular/animations';
+import { ChatManager } from '../chat-manager';
 @Component({
   selector: 'app-push-notification',
   templateUrl: './push-notification.component.html',
-  styleUrls: ['./push-notification.component.scss']
+  styleUrls: ['./push-notification.component.scss'],
+  animations: [
+    trigger('slideIn', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class PushNotificationComponent {
-  @Output() notificationClicked = new EventEmitter<any>();
+  @Output() chatOpened = new EventEmitter<any>();
   @ViewChildren('messageInput') messageInputs!: QueryList<ElementRef>;
-  messageSent: string = '';
-  notifications: any[] = [];
-  maxNotifications = 5;
-
-
+  
+  currentNotification: any = null;
+  private autoCloseTimeout: any;
 
   constructor(
-    private chatManager: ChatManager,
-    private changeDetectorRef: ChangeDetectorRef,
-    public dialogRef: MatDialogRef<PushNotificationComponent>,
     private chatService: ChatService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+    private notificationService: NotificationService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private chatManager: ChatManager
+  ) {}
 
   ngOnInit() {
-    console.log('data is ', this.data)
-    this.addNotification(this.data)
+    if (this.notificationService.isNotificationSupported() && 
+        Notification.permission === 'default') {
+      this.requestNotificationPermission();
+    }
+
+    this.chatService.messageObservable.subscribe(data => {
+      this.handleNewNotification(data);
+    });
+  }
+
+  async requestNotificationPermission() {
+    await this.notificationService.requestPermission();
+  }
+
+  async handleNewNotification(data: any) {
+    await this.notificationService.showNotification(data);
+    this.showNotification(data);
+  }
+
+  showNotification(notification: any) {
+    // Clear any existing timeout
+    if (this.autoCloseTimeout) {
+      clearTimeout(this.autoCloseTimeout);
+    }
+
+    // Replace current notification with new one
+    this.currentNotification = { ...notification, messageSent: '' };
+    this.changeDetectorRef.detectChanges();
+
+    // Set new timeout to clear notification
+    this.autoCloseTimeout = setTimeout(() => {
+      this.removeNotification(notification);
+    }, 60000); // 60 seconds
+  }
+
+  removeNotification(notification: any) {
+    if (this.currentNotification && 
+        this.currentNotification.sender === notification.sender && 
+        this.currentNotification.text === notification.text) {
+      this.currentNotification = null;
+      this.changeDetectorRef.detectChanges();
+    }
   }
 
   openChat(notification: any, event: Event) {
@@ -35,6 +83,7 @@ export class PushNotificationComponent {
     if (event.target instanceof HTMLInputElement || event.target instanceof HTMLButtonElement) {
       return;
     }
+    
     const user = {
       request_id: notification.recipient,
       departmentId: notification.attributes.departmentId,
@@ -42,50 +91,10 @@ export class PushNotificationComponent {
       image: notification.attributes.userFullname[0],
       departmentName: notification.attributes.departmentName
     };
+
+    this.chatOpened.emit(user);
     this.chatService.closeFloatingWidget();
-    this.dialogRef.close(user);
-  }
-
-
-  addNotification(notification: any) {
-    const existingIndex = this.notifications.findIndex(n => n.sender === notification.sender);
-    if (existingIndex != -1) {
-      this.notifications.splice(existingIndex, 1);
-    }
-    this.notifications.unshift({ ...notification, messageSent: '' });
-
-    if (this.notifications.length > this.maxNotifications) {
-      this.notifications.pop();
-    }
-
-    this.changeDetectorRef.detectChanges();
-
-    setTimeout(() => {
-      this.removeNotification(notification);
-      console.log('remove card')
-    }, 60000)
-  }
-
-  removeNotification(notification: any) {
-    const index = this.notifications.findIndex(n => n.sender === notification.sender && n.text === notification.text);
-    if (index !== -1) {
-      this.notifications.splice(index, 1);
-      this.changeDetectorRef.detectChanges();
-      if (this.notifications.length === 0) {
-        this.dialogRef.close();
-      }
-    }
-  }
-  sendMessage(notification: any, event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const message = notification.messageSent.trim();
-    if (message) {
-      this.chatManager.sendMessage(message, notification.recipient, '', notification, true);
-      this.removeNotification(notification);
-      notification.messageSent = ''; // Clear the input field after sending
-    }
+    this.removeNotification(notification);
   }
 
   closeNotification(notification: any, event: Event) {
@@ -102,17 +111,4 @@ export class PushNotificationComponent {
       return false;
     }
   }
-
-  activateInput(notification: any, index: number, event: MouseEvent) {
-    event.stopPropagation();
-    if (!notification.inputActive) {
-      notification.inputActive = true;
-      this.changeDetectorRef.detectChanges();
-      setTimeout(() => {
-        const inputElement = this.messageInputs.toArray()[index].nativeElement;
-        inputElement.focus();
-      });
-    }
-  }
-
 }

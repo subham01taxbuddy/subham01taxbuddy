@@ -4,7 +4,7 @@ import { ChatEvents } from "../chat-events";
 import { ChatManager } from "../chat-manager";
 import { DomSanitizer } from "@angular/platform-browser";
 import { LocalStorageService } from 'src/app/services/storage.service';
-import { memoize } from 'lodash';
+import { memoize, sortedIndex } from 'lodash';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 import { fromEvent } from 'rxjs';
@@ -97,6 +97,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   formData2: any = {};
   formData3: any = {};
   formData4: any = {};
+  errorMessage: string = '';
 
   formValue: any;
   payload: any;
@@ -117,7 +118,21 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   page = 0;
   conversationDeletedSubscription: Subscription;
   @Input() isInputDisabled: boolean = false;
+  @Input() whatsAppDisabled: boolean = false;
   isLoadingMoreMessages: boolean = false;
+  showSendMessageTemplateButton: boolean = false;
+  sendMessageTemplateText: string = '';
+  messageTemplates: any[] = [];
+  showTemplateModal: boolean = false;
+  messagePreview: string = '';
+  originalTemplateText = '';
+  dynamicFields: { placeholder: string; value: string; error: string; dirty: boolean }[] = [];
+  selectedTemplateName: any = '';
+  whatsAppNumber: any;
+  templateFile: File | null = null;
+  selectedTemplate: any;
+  isConnecting = false;
+
 
 
   constructor(
@@ -131,6 +146,13 @@ export class UserChatComponent implements OnInit, AfterViewInit {
     this.chatManager.subscribe(ChatEvents.TOKEN_GENERATED, this.handleTokenEvent);
     this.cd = cd;
     this.chatManager.subscribe(ChatEvents.MESSAGE_RECEIVED, this.handleReceivedMessages);
+    this.chatService.onConnectionStatusUpdatedCallbacks.set('user-chat', (event: string, status?: boolean) => {
+      if (event === ChatEvents.CONN_STATUS_UPDATED) {
+        //show loading
+        this.isConnecting = status;
+      }
+    });
+
 
   }
 
@@ -221,8 +243,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   showFullScreen() {
-    const chatUrl = `chat/chat-full-screen?conversationId=${this.requestId}`;
+    const chatUrl = `/chat-full-screen?conversationId=${this.requestId}`;
     window.open(chatUrl, '_blank');
+    console.log('chaturl', chatUrl);
     this.page = 0;
     this.fullChatScreen = false;
     this.chatManager.getDepartmentList();
@@ -232,6 +255,10 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   }
 
   sendMessage(payload?: any) {
+    if(this.isConnecting){
+      this.messageSent = this.messageSent.trim();
+      return;
+    }
     this.messageSent = this.messageSent.trim();
     if (this.messageSent) {
       let recipient = this.requestId ? this.requestId : '';
@@ -335,7 +362,9 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.requestId) {
       this.chatManager.openConversation(this.requestId);
+
     }
+    console.log('fetchMessages ngoninit', this.fetchedMessages);
     this.chat21UserId = this.localStorage.getItem('CHAT21_USER_ID');
     this.originalCannedMessageList = this.chatService.filterCannedMessages();
     this.subscription = this.chatService.userOnlineOfflineEvent.subscribe((state) => {
@@ -359,6 +388,156 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       }
     });
     this.updateBotIconVisibility();
+  }
+
+  onTemplateSelect(event: Event): void {
+    const selectedTemplateName = (event.target as HTMLSelectElement).value;
+    const selectedTemplate = this.messageTemplates.find(template => template.name === selectedTemplateName);
+    this.selectedTemplate = selectedTemplate;
+
+    if (selectedTemplate) {
+      this.selectedTemplateName = selectedTemplateName
+      this.originalTemplateText = selectedTemplate.text;
+      this.messagePreview = selectedTemplate.text;
+      this.dynamicFields = this.extractPlaceholders(selectedTemplate.text);
+      this.templateFile = null;
+      this.updatePreview();
+    }
+  }
+
+  onTemplateFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.templateFile = input.files[0];
+    }
+  }
+
+  extractPlaceholders(text: string): { placeholder: string; value: string; error: string;dirty: boolean }[] {
+    const regex = /{{(\d+)}}/g;
+    const matches = Array.from(new Set(text.match(regex) || []));
+
+    return matches.map(match => {
+      const placeholderNumber = match.replace(/[{}]/g, '');  
+      return {
+        placeholder: placeholderNumber,  
+        value: '',
+        error: '',
+        dirty: false
+      };
+    });
+  }
+
+  getAttributes(): string {
+    return this.dynamicFields
+      .map(field => field.value.trim())
+      .filter(value => value !== '')
+      .join(',');
+  }
+
+  onInputChanges(field: any): void {
+    if (!field.dirty) {
+      field.dirty = true;  
+    }
+    this.updatePreview();  
+  }
+  
+
+  updatePreview(): void {
+    let updatedPreview = this.originalTemplateText;
+
+    for (const field of this.dynamicFields) {
+      if (field.value.trim()) {
+        updatedPreview = updatedPreview.split(field.placeholder).join(field.value);
+        field.error = '';
+      }else if (field.dirty) {
+        field.error = '*This field is required';
+      }
+      else {
+        field.error = '';
+      }
+    }
+
+    this.messagePreview = updatedPreview;
+    this.cd.detectChanges();
+  }
+
+
+  sendWhatsAppMessage() {
+    const storedTemplates = JSON.parse(sessionStorage.getItem('whatsappTemplates'));
+    if (storedTemplates) {
+      this.messageTemplates = storedTemplates;
+      this.showTemplateModal = true;
+    } else {
+      this.chatService.whatsAppTemplate().subscribe((response: any) => {
+        console.log('response', response);
+        this.messageTemplates = response?.data;
+        const templatesToStore = this.messageTemplates.map((template: { name: string; text: string; isMediaTemplate: any }) => ({
+          name: template.name,
+          text: template.text,
+          isMediaTemplate: template.isMediaTemplate
+        }));
+        sessionStorage.setItem('whatsappTemplates', JSON.stringify(templatesToStore));
+        this.showTemplateModal = true;
+        this.cd.detectChanges();
+      });
+    }
+  }
+
+  closeTemplateModal(): void {
+    this.showTemplateModal = false;
+    this.messagePreview = '';
+    this.originalTemplateText = '';
+    this.dynamicFields = [];
+    this.templateFile = null;
+    this.selectedTemplate = null;
+    this.errorMessage = '';
+  }
+
+  sendMessageWhatsApp() {
+    const emptyFields = this.dynamicFields.filter(field => field.value.trim() === '');
+
+    if (emptyFields.length > 0) {
+      emptyFields.forEach(field => {
+        field.error = '*This field is required';
+      });
+      this.cd.detectChanges();
+      return;
+    }
+    const attributes = this.getAttributes()
+    this.chatService.sendTemplate(this.selectedTemplateName, this.whatsAppNumber, attributes, this.selectedTemplate.isMediaTemplate ? this.templateFile : undefined, this.selectedTemplate.isMediaTemplate).subscribe((response) => {
+      console.log('response of send template', response);
+    });
+    this.closeTemplateModal();
+  }
+
+
+  whatsAppTemplateMessage(messages: any[]): void {
+    const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
+
+    const deptList = JSON.parse(localStorage.getItem('DEPT_LIST'));
+    const whatsappDept = deptList?.find((dept: any) => dept.name.toUpperCase() === 'WHATSAPP');
+
+    const lastUserMessage = [...messages].reverse().find(message => this.isTenDigitMobileNumber(message.sender));
+    if (
+      lastUserMessage &&
+      lastUserMessage.attributes.departmentId === whatsappDept._id &&
+      lastUserMessage.timestamp < twentyFourHoursAgo
+    ) {
+      this.whatsAppNumber = lastUserMessage.attributes.whatsAppNumber;
+      console.log('whatsappnumber',this.whatsAppNumber);
+      this.whatsAppDisabled = true;
+      this.showSendMessageTemplateButton = true;
+      this.sendMessageTemplateText = "The last message received from this contact was 24 hours ago. Only approved template messages are allowed outside standard messaging window.";
+
+    } else {
+      this.whatsAppDisabled = false;
+      this.showSendMessageTemplateButton = false;
+    }
+  }
+
+  isTenDigitMobileNumber(number: string): boolean {
+    const mobileRegex = /^\d{10}$/; // Regex to check if it's a 10-digit number
+    return mobileRegex.test(number);
   }
 
   handleDeletedConversation() {
@@ -386,7 +565,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   };
 
   handleReceivedMessages = (data?: any) => {
-    if(data.data) {
+    if (data.data) {
       let receivedMessage = JSON.parse(data.data);
       if (receivedMessage.recipient === this.requestId) {
         //the message shall be displayed
@@ -398,7 +577,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
           this.fetchedMessages = JSON.parse(messagesString);
           console.log('fetchMessages', this.fetchedMessages);
           this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
-          const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
+          this.whatsAppTemplateMessage(this.fetchedMessages);
         }
         this.isAtBottom = isAtBottom;
         this.messageCountTo0();
@@ -419,7 +598,7 @@ export class UserChatComponent implements OnInit, AfterViewInit {
         this.fetchedMessages = JSON.parse(messagesString);
         console.log('fetchMessages', this.fetchedMessages);
         this.fetchedMessages.sort((a, b) => a.timestamp - b.timestamp);
-        const filteredMessage = this.fetchedMessages.filter(message => message.sender !== 'system' && message.sender !== this.requestId);
+        this.whatsAppTemplateMessage(this.fetchedMessages);
       }
       this.isAtBottom = isAtBottom;
       this.messageCountTo0();
@@ -492,18 +671,20 @@ export class UserChatComponent implements OnInit, AfterViewInit {
   formatTimestampForSystem(timestamp: number): string {
     const date = new Date(timestamp);
 
-    // Get hours, minutes, and AM/PM
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+
+    const day = date.getDate();
+
     let hours = date.getHours();
     let minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
 
-    // Return time in format "11:02 AM"
-    return `${hours}:${minutesStr} ${ampm}`;
+    return `${month} ${day}, ${hours}:${minutesStr} ${ampm}`;
   }
-
 
   getSanitizedHtml(message) {
     return message;
@@ -585,12 +766,16 @@ export class UserChatComponent implements OnInit, AfterViewInit {
 
   filterCannedMessages() {
     if (this.messageSent.startsWith('/')) {
-      this.cannedMessageList = this.originalCannedMessageList.filter(element => element.titleWithSlash.toLowerCase().startsWith(this.messageSent.toLowerCase())
-      )
+      const searchTerm = this.messageSent.slice(1).trim().toLowerCase();
+
+      this.cannedMessageList = this.originalCannedMessageList.filter(element =>
+        element.titleWithSlash.toLowerCase().includes(searchTerm)
+      );
     } else {
       this.cannedMessageList = [];
     }
   }
+
 
   onSelectCannedMessage(cannedMessage) {
     this.chatService.getUserDetails(this.requestId).subscribe((response) => {
@@ -603,8 +788,8 @@ export class UserChatComponent implements OnInit, AfterViewInit {
       this.messageSent = inputMessage;
       this.cannedMessageList = [];
       this.cd.detectChanges();
-     
-  })
+
+    })
     //TODO: remove SELECTED_CHAT dependency
   }
 

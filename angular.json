@@ -52,7 +52,8 @@
                 "glob": "firebase-messaging-sw.js",
                 "input": "src",
                 "output": "/"
-              }
+              },
+              "src/assets/notification-service-worker.js"
             ],
             "styles": [
               "src/styles.css",

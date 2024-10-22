@@ -161,6 +161,11 @@ export class TokenInterceptor implements HttpInterceptor {
     Auth.signOut()
       .then(data => {
         sessionStorage.clear();
+        for (let key in localStorage) {
+          if (localStorage.hasOwnProperty(key)) {
+            localStorage.removeItem(key);
+          }
+        }
         this.dbService.clear('taxbuddy').subscribe((successDeleted) => {
           console.log('success? ', successDeleted);
         });

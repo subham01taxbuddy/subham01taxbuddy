@@ -6,7 +6,11 @@ import { Subject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { UtilsService } from "src/app/services/utils.service";
 import { AppConstants } from "../shared/constants";
+import { Router } from "@angular/router";
 import { webSocket } from 'rxjs/webSocket';
+import { jwtDecode } from 'jwt-decode';
+import Auth from '@aws-amplify/auth'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +70,7 @@ export class ChatService {
   closeFloatingWidgetObservable: Observable<void> = this.closeFloatingWidgetSubject.asObservable();
 
   startPingInterval() {
-    this.pingInterval = setInterval(() => {
+    this.pingInterval = setTimeout(() => {
       if (this.chatClient && this.chatClient.connected) {
         this.chatClient.publish(this.presenceTopic, JSON.stringify({ ping: true }));
       }
@@ -94,7 +98,8 @@ export class ChatService {
     public httpClient: HttpClient,
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private router: Router
   ) {
     this.loggedInUserInfo = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) || null);
     this.roles = this.loggedInUserInfo ? this.loggedInUserInfo[0]?.roles : null;
@@ -106,6 +111,7 @@ export class ChatService {
     this.onArchivedConversationAddedCallbacks.set(instanceId, messageReceivedCallback);
     this.onArchivedConversationDeletedCallbacks.set(instanceId, messageReceivedCallback);
     this.onGroupUpdatedCallbacks.set(instanceId, messageReceivedCallback);
+    this.onConnectionStatusUpdatedCallbacks.set(instanceId, messageReceivedCallback);
   }
 
   unregisterConversationUpdates(instanceId) {
@@ -114,14 +120,17 @@ export class ChatService {
     this.onArchivedConversationAddedCallbacks.delete(instanceId);
     this.onArchivedConversationDeletedCallbacks.delete(instanceId);
     this.onGroupUpdatedCallbacks.delete(instanceId);
+    this.onConnectionStatusUpdatedCallbacks.delete(instanceId);
   }
   registerMessageReceived(requestId: string, messageReceivedCallback) {
     if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).push(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
+      // this.onConnectionStatusUpdatedCallbacks.get(requestId).push(messageReceivedCallback);
     } else {
       this.onMessageAddedCallbacks.set(requestId, [messageReceivedCallback]);
       this.onMessageUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
+      // this.onConnectionStatusUpdatedCallbacks.set(requestId, [messageReceivedCallback]);
     }
   }
 
@@ -129,9 +138,11 @@ export class ChatService {
     if (this.onMessageAddedCallbacks.has(requestId)) {
       this.onMessageAddedCallbacks.get(requestId).pop(messageReceivedCallback);
       this.onMessageUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
+      this.onConnectionStatusUpdatedCallbacks.get(requestId).pop(messageReceivedCallback);
     }
     this.onMessageAddedCallbacks.delete(requestId);
     this.onMessageUpdatedCallbacks.delete(requestId);
+    this.onConnectionStatusUpdatedCallbacks.delete(requestId);
   }
 
   initDeptDetails(serviceType?: string) {
@@ -169,16 +180,31 @@ export class ChatService {
     this.topicInbox = 'apps/tilechat/users/' + this.chat21UserID + '/#';
     this.userFullName = this.localStorageService.getItem('CHAT21_USER_NAME');
   }
+
+  connecting = false;
+
+  setConnecting(value:boolean){
+    this.connecting = value;
+    this.onConnectionStatusUpdatedCallbacks.forEach((callback, handler, map) => {
+      if (typeof callback === 'function') {
+        callback(ChatEvents.CONN_STATUS_UPDATED, value);
+      }
+    });
+  }
   async initTokens(initializeSocket: boolean, service?: string) {
+
+    this.setConnecting(true);
 
     let tokenPresent: boolean = this.localStorageService.getItem('TILEDESK_TOKEN') ? false : true;
     let request: any = {
-      tokenRequired: tokenPresent
+      tokenRequired: tokenPresent,
+      source: "BO"
     };
     if (service) {
       request = {
         serviceType: service,
-        tokenRequired: tokenPresent
+        tokenRequired: tokenPresent,
+        source: "BO"
       };
     }
     await this.httpClient.post(this.TILE_DESK_TOKEN_URL,
@@ -229,6 +255,12 @@ export class ChatService {
 
 
   setHeaders(type: any = "auth") {
+    const authToken = this.utilsService.getIdToken();  // Retrieve the id_token
+
+    if (!authToken) {
+      this.router.navigate(['/login']);
+      return;
+    }
     let httpOptions: any = {};
     if (type == "auth") {
       const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
@@ -296,9 +328,20 @@ export class ChatService {
     });
   }
 
-
-
-
+  sendTemplate(templateName: any, whatsAppNumber: any, attributes: any, file?: File,isMediaTemplate?: any) {
+    const url = `${environment.url}/gateway/send-template`;
+    const UMDtoken = JSON.parse(this.localStorageService.getItem('UMD'));
+    let TOKEN = UMDtoken.id_token
+    const formData = new FormData();
+    formData.append('whatsAppNumber', whatsAppNumber);
+    formData.append('templateName', templateName);
+    formData.append('attributes', attributes);
+    if (file) {
+      formData.append('file', file);
+      formData.append('isMediaTemplate',isMediaTemplate);
+    }
+    return this.httpClient.post<any>(url, formData, { headers: { Authorization: `Bearer ${TOKEN}`, environment: environment.lifecycleEnv } });
+  }
 
   uploadFile(file: File, requestId: string) {
     const url = 'https://6d4ugfehdlpibmogor7ou6ncli0vxoee.lambda-url.ap-south-1.on.aws/tiledesk-file-uplod';
@@ -382,7 +425,8 @@ export class ChatService {
         type: message.type,
         recipientFullName: message.recipient_fullname,
         sender: message.sender,
-        conversWith: message.conversWith
+        conversWith: message.conversWith,
+        attributes: message?.attributes
       })
     );
     if (page != 0) {
@@ -459,7 +503,8 @@ export class ChatService {
       message_id: message.message_id,
       action: (message?.attributes?.action) ? (message?.attributes?.action) : null,
       subtype: (message?.attributes?.subtype) ? message?.attributes?.subtype : null,
-      showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null
+      showOnUI: (message?.attributes?.showOnUI) ? message?.attributes?.showOnUI : null,
+      attributes: message?.attributes
     }));
 
     if (timeStamp) {
@@ -497,7 +542,8 @@ export class ChatService {
       recipient_fullname: message.recipient_fullname,
       metadata: message.metadata || "",
       channel_type: message.channel_type,
-      app_id: message.app_id
+      app_id: message.app_id,
+      attributes: message?.attributes
     };
 
     const existingMessageIndex = messages.findIndex(msg => msg.message_id === m.message_id);
@@ -533,6 +579,7 @@ export class ChatService {
   onMessageAddedCallbacks = new Map();
   onMessageUpdatedCallbacks = new Map();
   onGroupUpdatedCallbacks = new Map();
+  onConnectionStatusUpdatedCallbacks = new Map();
   callbackHandlers = new Map();
 
   chatSubscription = null;
@@ -540,6 +587,11 @@ export class ChatService {
   isMobileNumber(sender?) {
     const mobilePattern = /^\+?\d{10,15}$/;
     return mobilePattern.test(sender);
+  }
+
+  whatsAppTemplate() {
+    const url = `${environment.url}/gateway/whatsapp/templates`;
+    return this.httpClient.get(url, this.setHeaders("auth"));
   }
 
   websocketConnection(chat21Token, requestId) {
@@ -583,6 +635,8 @@ export class ChatService {
             console.log("Chat client first connection for:" + this.chat21UserID);
           }
 
+          this.setConnecting(false);
+          this.connected = true;
 
           this.chatClient.publish(
             this.presenceTopic,
@@ -791,11 +845,35 @@ export class ChatService {
         if (this.log) {
           console.log("Chat client reconnect event");
         }
-        this.startPingInterval();
+        let TOKEN = this.localStorageService.getItem("CHAT21_TOKEN");
+        if(!this.isTokenExpired(TOKEN)) {
+          this.startPingInterval();
+        } else if(!this.connecting  && !this.connected){
+          this.stopPingInterval();
+          if (this.connectionCheckInterval) {
+            clearInterval(this.connectionCheckInterval);
+          }
+          this.chatClient.end(true, () => {
+            this.shouldReconnect = false;
+            this.connected = false;
+            this.reconnectionPeriod = 0;
+            this.localStorageService.removeItem('TILEDESK_TOKEN');
+            Auth.currentSession().then(session => {
+              if(session.isValid()){
+                let userData = JSON.parse(localStorage.getItem('UMD'));
+                userData.id_token = session.getAccessToken().getJwtToken();
+                localStorage.setItem('UMD', JSON.stringify(userData));
+                this.initTokens(true);
+              }
+            });
+          })
+
+        }
       }
     );
     this.chatClient.on("close",
       () => {
+        this.setConnecting(false);
         this.connected = false;
         if (this.log) {
           console.log("Chat client close event");
@@ -825,9 +903,31 @@ export class ChatService {
     this.chatClient.on("error",
       (error) => {
         console.error("Chat client error event", error);
+        this.setConnecting(false);
       }
     );
   }
+
+  isTokenExpired(token: string): boolean {
+    const decodedToken: any = this.decodeToken(token);
+    if (!decodedToken || !decodedToken.exp) {
+      return true;
+    }
+    const expirationDate = new Date(0);
+    expirationDate.setUTCSeconds(decodedToken.exp);
+    return expirationDate < new Date();
+  }
+
+  decodeToken(token: string): any {
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken;
+    } catch (Error) {
+      console.error('Invalid token:', Error);
+      return null;
+    }
+  }
+
 
   initRxjsWebsocket(conversWith) {
     // const tiledeskToken = this.localStorageService.getItem('TILEDESK_TOKEN');
@@ -948,10 +1048,10 @@ export class ChatService {
       let chats = this.localStorageService.getItem('conversationList', true);
       let selectedChat = chats.filter(chat => chat.request_id === recipient)[0];
       if (selectedChat) {
-        const deptDetails = this.localStorageService.getItem('DEPT_LIST',true);
+        const deptDetails = this.localStorageService.getItem('DEPT_LIST', true);
         const matchingDeptName = deptDetails.find(dept => dept?._id === selectedChat.departmentId);
         messageAttributes = this.getChatMessageAttributes(payloads, selectedChat.departmentId,
-            matchingDeptName?.name, selectedChat.userFullName);
+          matchingDeptName?.name, selectedChat.userFullName);
       } else {
         await this.getUserDetails(recipient).subscribe((response) => {
           console.log('response is', response);
@@ -959,7 +1059,7 @@ export class ChatService {
           const departmentId = (response as any)?.result[0]?.attributes?.departmentId;
           const departmentName = this.getDeptDetails().filter(dept => dept.departmentId === departmentId)[0].departmentName;
           messageAttributes = this.getChatMessageAttributes(payloads, departmentId,
-              departmentName, userFullName);
+            departmentName, userFullName);
         });
       }
     } else {

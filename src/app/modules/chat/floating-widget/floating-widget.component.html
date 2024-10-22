@@ -26,37 +26,40 @@
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
                 <ng-container *ngIf="!isConversationListEmpty; else noConversations">
-                <div class="user-box" *ngFor="let conversation of conversationList"
-                    (click)="openUserChat(conversation)">
-                    <div class="row" style="width: 100%;">
-                        <div class="col-2">
-                            <div class="avatar">
-                                <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                    <div class="user-box" *ngFor="let conversation of conversationList"
+                        (click)="openUserChat(conversation)">
+                        <div class="row" style="width: 100%;">
+                            <div class="col-2">
+                                <div class="avatar">
+                                    <div class="initial">{{conversation.image ? conversation.image:''}}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-8">
-                            <div class="user-name">{{ conversation.userFullName }}</div>
-                            <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
-                                conversation.text }}</div>
-                            <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
-                                        view
-                                        the
-                                        details...</strong></em></div>
+                            <div class="col-8">
+                                <div class="user-name">{{ conversation.userFullName }}</div>
+                                <div class="chat-snippet conversation-text" *ngIf="conversation.sender === 'system' && !displaySystemMessage(conversation)">
+                                    <em>System message</em>
+                                </div>
+                                <div class="chat-snippet conversation-text" *ngIf="displaySystemMessage(conversation) && conversation.type !== 'html'"
+                                    [innerHTML]="sanitizeText(truncateTextByChars(conversation.text, 30))"></div>
+                                <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
+                                            view
+                                            the
+                                            details...</strong></em></div>
 
-                        </div>
-                        <div class="col-2">
-                            <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                            </div>
+                            <div class="col-2">
+                                <div>{{ getCurrentTime(conversation.timestamp) }}</div>
+                            </div>
+
                         </div>
 
                     </div>
-
-                </div>
                 </ng-container>
                 <ng-template #noConversations>
                     <div class="no-conversations-message">
                         Currently no chats assigned to you
                     </div>
-                  </ng-template>
+                </ng-template>
                 <div class="loader" *ngIf="isLoading">
                     <span><i class="fa fa-spinner fa-spin"></i> Loading more conversations...</span>
                 </div>

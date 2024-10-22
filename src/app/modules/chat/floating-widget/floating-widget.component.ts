@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ChatService } from '../chat.service';
 import { ElementRef } from '@angular/core';
 import { ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface Department {
     name: string,
@@ -35,7 +36,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     instanceId: string;
 
     constructor(private chatManager: ChatManager,
-        private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone
+        private localStorage: LocalStorageService, private chatService: ChatService, cd: ChangeDetectorRef, private ngZone: NgZone, private sanitizer: DomSanitizer
     ) {
         this.instanceId = this.chatManager.generateUUID();
         this.centralizedChatDetails = this.localStorage.getItem('CENTRALIZED_CHAT_CONFIG_DETAILS', true);
@@ -67,10 +68,27 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
     public isConversationListEmpty: boolean = false;
 
 
+    sanitizeText(text: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(text);
+    }
+
+    truncateTextByChars(text: string, charLimit: number): string {
+        if (!text) return '';
+
+        const plainText = text.replace(/<\/?[^>]+(>|$)/g, "");
+
+        if (plainText.length <= charLimit) {
+            return plainText;
+        }
+
+        return plainText.slice(0, charLimit) + '...';
+    }
+
     showFullScreen() {
-        const chatUrl = this.selectedUser ? `chat/chat-full-screen?conversationId=${this.selectedUser.request_id}`
-            : `chat/chat-full-screen`;
+        const chatUrl = this.selectedUser ? `/chat-full-screen?conversationId=${this.selectedUser.request_id}`
+            : `/chat-full-screen`;
         window.open(chatUrl, '_blank');
+        console.log('chaturl',chatUrl);
         this.fullChatScreen = false;
         this.page = 0;
         this.selectedDepartmentId = null;
@@ -189,6 +207,12 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
         this.isDepartmentListLoaded = false;
         this.isConversationListLoaded = false;
         this.handleDeptList(this.chatManager.getDepartmentList());
+        this.chatService.onConnectionStatusUpdatedCallbacks.set('floating-widget', (event: string, status?: boolean) => {
+            if (event === ChatEvents.CONN_STATUS_UPDATED) {
+                //show loading
+                console.log('conn status', status);
+            }
+        });
         this.chatService.onConversationUpdatedCallbacks.set('floating-widget', (event: string, data?: any) => {
             if (event === ChatEvents.DEPT_RECEIVED) {
                 this.isDepartmentListLoaded = true;
@@ -331,6 +355,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                             sender: conversation.sender,
                             departmentName: conversation.departmentName,
                             conversWith: conversation.conversWith,
+                            attributes: conversation?.attributes
                         };
                     });
             }
@@ -349,6 +374,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
                         sender: conversation.sender,
                         departmentName: conversation.departmentName,
                         conversWith: conversation.conversWith,
+                        attributes: conversation?.attributes
 
                     };
                 });
@@ -358,6 +384,7 @@ export class FloatingWidgetComponent implements OnInit, AfterViewInit {
             this.conversationList = [];
             this.isConversationListEmpty = true;
         }
+        console.log('conversation list',this.conversationList);
     }
 
 

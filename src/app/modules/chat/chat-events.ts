@@ -3,5 +3,6 @@ export enum ChatEvents {
     MESSAGE_SENT = 'messageSent',
     MESSAGE_RECEIVED = 'messageReceived',
     DEPT_RECEIVED = 'deptReceived',
-    CONVERSATION_UPDATED = 'conversationUpdated'
+    CONVERSATION_UPDATED = 'conversationUpdated',
+    CONN_STATUS_UPDATED = 'connStatusUpdated'
    }

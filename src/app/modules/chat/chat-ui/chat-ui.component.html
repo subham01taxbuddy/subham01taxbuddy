@@ -10,20 +10,22 @@
             <span class="widget-title">Chat</span>
         </div>
 
-        <div class="options">
-            <div class="option-box" *ngFor="let deptName of departmentNames"
+        <div class="options" *ngIf="departments$ | async as departments">
+            <div class="option-box" *ngFor="let deptName of departments"
                 [ngClass]="{'font-size-class': true,'selected-dept': selectedDepartmentId === deptName.id}"
-                (click)="fetchList(deptName.id)">{{
-                deptName.name }}</div>
+                (click)="fetchList(deptName.id)">
+                {{ deptName.name }}
+            </div>
         </div>
 
         <div class="user-list main-panel-chats" #scrollContainer>
             <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [fromRoot]="true"
                 [infiniteScrollUpDistance]="1" [infiniteScrollThrottle]="10" [infiniteScrollContainer]="selector"
                 (scrolled)="onScrollDown()">
+                <ng-container *ngIf="conversations$ | async as conversations">
                 <ng-container *ngIf="!isConversationListEmpty; else noConversations">
 
-                    <div class="user-box" *ngFor="let conversation of conversationList"
+                    <div class="user-box" *ngFor="let conversation of conversations"
                         (click)="openUserChat(conversation.request_id)"
                         [ngClass]="{'selected-chat': selectedConversation === conversation.request_id}">
                         <div class="row">
@@ -34,8 +36,13 @@
                             </div>
                             <div class="col-8">
                                 <div class="user-name">{{ conversation.userFullName }}</div>
-                                <div class="chat-snippet conversation-text" *ngIf="conversation.type !== 'html'">{{
-                                    conversation.text }}</div>
+                                <div class="chat-snippet conversation-text"
+                                    *ngIf="conversation.sender === 'system' && !displaySystemMessage(conversation)">
+                                    <em>System message</em>
+                                </div>
+                                <div class="chat-snippet conversation-text"
+                                    *ngIf="displaySystemMessage(conversation) && conversation.type !== 'html'"
+                                    [innerHTML]="sanitizeText(truncateTextByChars(conversation.text, 30))"></div>
                                 <div class="chat-snippet" *ngIf="conversation.type === 'html'"><em><strong>Click here to
                                             view the details...</strong></em></div>
 
@@ -47,6 +54,7 @@
                         </div>
 
                     </div>
+                </ng-container>
                 </ng-container>
                 <ng-template #noConversations>
                     <div class="no-conversations-message">
@@ -62,8 +70,8 @@
 
 
     </div>
-    <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser.userFullName[0]"
-        [username]="selectedUser.userFullName" [requestId]="selectedUser.request_id" [isAssignedToBotVisible]="true"
+    <app-user-chat *ngIf="isUserChatVisible" (back)="closeUserChat()" [image]="selectedUser?.userFullName[0]"
+        [username]="selectedUser?.userFullName" [requestId]="selectedUser?.request_id" [isAssignedToBotVisible]="true"
         class="floating expanded"></app-user-chat>
 
 </div>
