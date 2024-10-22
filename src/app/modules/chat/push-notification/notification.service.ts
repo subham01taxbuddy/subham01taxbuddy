@@ -58,14 +58,19 @@ export class NotificationService {
 
     try {
       await this.playNotificationSound();
+      const notificationOptions = {
+        body: this.formatNotificationBody(data),
+        icon: 'assets/img/profile.webp',
+        tag: `chat-${data.sender}`,
+        requireInteraction: true,
+        data: data,
+        badge: 'assets/img/profile.webp',
+        timestamp: Date.now()
+      };
+
+      const notificationTitle = `Message from ${data.sender_fullname}`;
       if (document.hasFocus()) {
-        const notification = new Notification('New Chat Message', {
-          body: this.formatNotificationBody(data),
-          icon: 'assets/img/profile.webp',
-          tag: `chat-${data.sender}`,
-          requireInteraction: true,
-          data: data
-        });
+        const notification = new Notification(notificationTitle,notificationOptions);
 
         this.playNotificationSound();
 
@@ -78,15 +83,9 @@ export class NotificationService {
 
         setTimeout(() => notification.close(), this.notificationTimeout);
       }
-      // If window is not focused, use service worker to show system notification
+       
       else if (this.swRegistration) {
-        await this.swRegistration.showNotification('New Chat Message', {
-          body: this.formatNotificationBody(data),
-          icon: 'assets/img/profile.webp',
-          tag: `chat-${data.sender}`,
-          requireInteraction: true,
-          data: data
-        });
+        await this.swRegistration.showNotification(notificationTitle,notificationOptions);
       }
     } catch (error) {
       console.error('Error showing notification:', error);
