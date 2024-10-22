@@ -4958,6 +4958,7 @@ export class SummaryComponent implements OnInit {
           console.log(this.keys, 'this.keys ITR2&3');
           this.calculateTotalNetIncomeLoss();
           this.calculatePassThroughInc();
+          this.filterAnyOtherIncomes();
           this.loading = false;
         }
       } else {
@@ -7663,9 +7664,23 @@ export class SummaryComponent implements OnInit {
   }
 
   filterAnyOtherIncomes() {
-    this.filteredAnyOtherIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.filter(
-      (income) => income.incomeType === 'ANY_OTHER'
-    ) || [];
+    if(this.finalSummary){
+      this.filteredAnyOtherIncomes = this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.filter(
+        (income) => income.incomeType === 'ANY_OTHER'
+      ) || [];
+    }else{
+      const details = this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                      ?.IncOthThanOwnRaceHorse?.OthersInc?.OthersIncDtls || [];
+      if (details && details.length > 0) {
+        this.filteredAnyOtherIncomes = details.map((detail: any) => ({
+          details: detail.OthNatOfInc,
+          amount: detail.OthAmount,
+        }));
+      }else{
+        this.filteredAnyOtherIncomes = [];
+      }
+    }
+
   }
 
   getCountry(code) {

@@ -506,7 +506,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     ] as UntypedFormArray;
     let selectedValues = exemptIncomes.controls.filter(
       (fg: UntypedFormGroup) => fg.controls['allowType'].value === event.value);
-    if (selectedValues?.length > 1) {
+    if (event.value !== 'ANY_OTHER' && selectedValues?.length > 1) {
       this.utilsService.showSnackBar("You cannot select same exempt income more than once");
       selectedValues.forEach((fg: UntypedFormGroup) => {
         fg.controls['allowType'].setErrors({ invalid: true })

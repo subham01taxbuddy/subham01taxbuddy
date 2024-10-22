@@ -8849,14 +8849,10 @@
                         <th><b>Amount</b></th>
                       </tr>
                       <tr *ngFor="let exempt of keys?.ExemptIncomeDetails">
-                        <td>{{ exempt?.NatureDesc }}</td>
+                        <td>{{ exempt?.NatureDesc }}&nbsp; &nbsp;({{exempt.OthNatOfInc}})</td>
                         <td class="">
                           <i class="material-icons" style="font-size: 15px">₹</i>&nbsp;{{
-                          utilsService.currencyFormatter(
-                          exempt?.OthAmount -
-                          finalCalculations?.giftExemptIncome
-                          ? finalCalculations?.giftExemptIncome
-                          : 0
+                          utilsService.currencyFormatter(exempt?.OthAmount
                           )
                           }}
                         </td>
