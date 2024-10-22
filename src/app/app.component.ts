@@ -1,5 +1,5 @@
 
-import { Component, HostListener, OnInit, Optional } from '@angular/core';
+import { Component, HostListener, OnInit, Optional, ComponentRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { MatDialog, MatDialogState } from "@angular/material/dialog";
@@ -19,6 +19,11 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 
 import { ChatManager } from './modules/chat/chat-manager';
 import { ChatService } from './modules/chat/chat.service';
+import { NotificationService } from './modules/chat/push-notification/notification.service';
+import { Overlay,OverlayRef } from '@angular/cdk/overlay';
+import { PushNotificationComponent } from './modules/chat/push-notification/push-notification.component';
+import { ComponentPortal } from '@angular/cdk/portal';
+
 
 @Component({
   selector: 'app-root',
@@ -47,6 +52,8 @@ export class AppComponent implements OnInit {
     private chatManager: ChatManager,
     private chatService: ChatService,
     private dbService: NgxIndexedDBService,
+    private notificationService: NotificationService,
+    private overlay: Overlay,
     @Optional() messaging: Messaging
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -138,13 +145,68 @@ export class AppComponent implements OnInit {
     }
   }
 
+  private overlayRef: OverlayRef | null = null;
+  private notificationComponentRef: ComponentRef<PushNotificationComponent> | null = null;
+
   ngOnInit(): void {
     console.log('app comp initialize')
     const chat21TokenAvailable = localStorage.getItem('CHAT21_TOKEN');
     if(this.loginSmeDetails && chat21TokenAvailable){
     this.chatManager.initChat(true);
     }
+
+    this.initializeNotificationOverlay();
+
+    this.chatService.messageObservable.subscribe(data => {
+        this.handleNewMessage(data);
+    });
+
+    this.checkNotificationPermission();
   }
+
+  private async checkNotificationPermission() {
+    if (this.notificationService.isNotificationSupported() &&
+        Notification.permission === 'default') {
+        await this.notificationService.requestPermission();
+    }
+}
+
+private initializeNotificationOverlay() {
+    const positionStrategy = this.overlay.position()
+        .global()
+        .top('20px')
+        .right('20px');
+
+    this.overlayRef = this.overlay.create({
+        positionStrategy,
+        hasBackdrop: false,
+        scrollStrategy: this.overlay.scrollStrategies.noop()
+    });
+
+    const notificationPortal = new ComponentPortal(PushNotificationComponent);
+    this.notificationComponentRef = this.overlayRef.attach(notificationPortal);
+
+    this.notificationComponentRef.instance.chatOpened.subscribe((user: any) => {
+        this.handleChatOpen(user);
+    });
+}
+
+private async handleNewMessage(data: any) {
+    if (this.notificationComponentRef) {
+        this.notificationComponentRef.instance.handleNewNotification(data);
+    }
+
+    await this.notificationService.showNotification(data);
+}
+
+private handleChatOpen(user: any) {
+    if (user?.request_id) {
+        this.chatService.unsubscribeRxjsWebsocket();
+        this.chatService.fetchMessages(user.request_id);
+        this.chatService.initRxjsWebsocket(user.request_id);
+        this.chatService.closeFloatingWidget();
+    }
+}
 
   ngOnDestroy() {
     if (this.subscription) {

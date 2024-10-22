@@ -55,6 +55,10 @@ const dbConfig: DBConfig  = {
     ToastMessageComponent,
    ],
   imports: [
+    ServiceWorkerModule.register('assets/notification-service-worker.js', {
+      enabled: true,
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebaseConfig,
       ),
