@@ -861,6 +861,9 @@ export class ChatService {
             this.localStorageService.removeItem('TILEDESK_TOKEN');
             Auth.currentSession().then(session => {
               if(session.isValid()){
+                let userData = JSON.parse(localStorage.getItem('UMD'));
+                userData.id_token = session.getAccessToken().getJwtToken();
+                localStorage.setItem('UMD', JSON.stringify(userData));
                 this.initTokens(true);
               }
             });
