@@ -85,10 +85,10 @@ export const environment = {
 		authenticationFlowType: 'USER_PASSWORD_AUTH'
 	},
 
-	WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/mqws/ws',
-	CHAT_API_URL: 'https://dev-tiledesk.taxbuddy.com/chatapi/api/tilechat',
-	TILEDESK_URL: 'https://dev-tiledesk.taxbuddy.com',
-	USER_STATUS_WEBSOCKET_URL: 'wss://dev-tiledesk.taxbuddy.com/ws',
-	PROJECT_NAME: 'Taxbuddy Dev',
-	TILEDESK_PROJECT_ID: "65e56b0b7c8dbc0013851dcb"
+	WEBSOCKET_URL: 'wss://uat-tiledesk.taxbuddy.com/mqws/ws',
+	CHAT_API_URL: 'https://uat-tiledesk.taxbuddy.com/chatapi/api/tilechat',
+	TILEDESK_URL: 'https://uat-tiledesk.taxbuddy.com',
+	USER_STATUS_WEBSOCKET_URL: 'wss://uat-tiledesk.taxbuddy.com/ws',
+	PROJECT_NAME: 'Taxbuddy UAT',
+	TILEDESK_PROJECT_ID: "6717588e19e2ea0012a84b47"
 };
