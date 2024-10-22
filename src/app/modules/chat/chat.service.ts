@@ -11,7 +11,6 @@ import { webSocket } from 'rxjs/webSocket';
 import { jwtDecode } from 'jwt-decode';
 import Auth from '@aws-amplify/auth'
 
-
 @Injectable({
   providedIn: 'root'
 })
