@@ -5,9 +5,17 @@ import {
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Form, Validators, FormArray } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  UntypedFormArray,
+  Form,
+  Validators,
+  FormArray,
+} from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-schedule-fa',
@@ -16,6 +24,58 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class ScheduleFaComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  form: FormGroup;
+  selectedAsset: any; // To store the selected asset
+  showDetails: boolean = false;
+
+  // This function is called when the "Add Details" button is clicked
+  onAddDetailsClick() {
+    this.showDetails = !this.showDetails;
+  }
+
+  // Define the list of assets
+  natureOfFinancialAsset: { label: string; code: string }[] = [
+    {
+      label: 'A1. Details of Foreign Depository Accounts held...',
+      code: 'A1',
+    },
+    {
+      label: 'A2. Details of Foreign Custodial Accounts held...',
+      code: 'A2',
+    },
+    {
+      label: 'A3. Details of Foreign Equity and Debt Interest held...',
+      code: 'A3',
+    },
+    {
+      label: 'A4. Details of Foreign Cash Value insurance Contract...',
+      code: 'A4',
+    },
+    {
+      label: 'B. Details of Financial Interest in any Entity held...',
+      code: 'B',
+    },
+    {
+      label: 'C. Details of Immovable Property held...',
+      code: 'C',
+    },
+    {
+      label: 'D. Details of any other Capital Asset held...',
+      code: 'D',
+    },
+    {
+      label: 'E. Details of account(s) in which you have signing authority...',
+      code: 'E',
+    },
+    {
+      label: 'F. Details of trusts, created under the laws of a country...',
+      code: 'F',
+    },
+    {
+      label: 'G. Details of any other income derived from any source...',
+      code: 'G',
+    },
+  ];
   loading = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -72,11 +132,7 @@ export class ScheduleFaComponent implements OnInit {
     },
   ];
 
-  natureOfInterest = [
-    'Direct',
-    'Beneficial Owner',
-    'Beneficiary'
-  ]
+  natureOfInterest = ['Direct', 'Beneficial Owner', 'Beneficiary'];
   scheduleWhereOffered = [
     'Salary',
     'House Property',
@@ -107,258 +163,272 @@ export class ScheduleFaComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private utilsService: UtilsService,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {
+    this.form = this.fb.group({
+      natureOfAsset: [''],
+    });
+  }
+
+  // Method to capture the selected asset
+  onAssetChange(code: string) {
+    this.selectedAsset = this.natureOfFinancialAsset.find(
+      (asset) => asset.code === code
+    );
+  }
 
   ngOnInit(): void {
     this.countryCodeList = [
-      { "code": 93, "name": "AFGHANISTAN" },
-      { "code": 1001, "name": "ÅLAND ISLANDS" },
-      { "code": 355, "name": "ALBANIA" },
-      { "code": 213, "name": "ALGERIA" },
-      { "code": 684, "name": "AMERICAN SAMOA" },
-      { "code": 376, "name": "ANDORRA" },
-      { "code": 244, "name": "ANGOLA" },
-      { "code": 1264, "name": "ANGUILLA" },
-      { "code": 1010, "name": "ANTARCTICA" },
-      { "code": 1268, "name": "ANTIGUA AND BARBUDA" },
-      { "code": 54, "name": "ARGENTINA" },
-      { "code": 374, "name": "ARMENIA" },
-      { "code": 297, "name": "ARUBA" },
-      { "code": 61, "name": "AUSTRALIA" },
-      { "code": 43, "name": "AUSTRIA" },
-      { "code": 994, "name": "AZERBAIJAN" },
-      { "code": 1242, "name": "BAHAMAS" },
-      { "code": 973, "name": "BAHRAIN" },
-      { "code": 880, "name": "BANGLADESH" },
-      { "code": 1246, "name": "BARBADOS" },
-      { "code": 375, "name": "BELARUS" },
-      { "code": 32, "name": "BELGIUM" },
-      { "code": 501, "name": "BELIZE" },
-      { "code": 229, "name": "BENIN" },
-      { "code": 1441, "name": "BERMUDA" },
-      { "code": 975, "name": "BHUTAN" },
-      { "code": 591, "name": "BOLIVIA (PLURINATIONAL STATE OF)" },
-      { "code": 1002, "name": "BONAIRE, SINT EUSTATIUS AND SABA" },
-      { "code": 387, "name": "BOSNIA AND HERZEGOVINA" },
-      { "code": 267, "name": "BOTSWANA" },
-      { "code": 1003, "name": "BOUVET ISLAND" },
-      { "code": 55, "name": "BRAZIL" },
-      { "code": 1014, "name": "BRITISH INDIAN OCEAN TERRITORY" },
-      { "code": 673, "name": "BRUNEI DARUSSALAM" },
-      { "code": 359, "name": "BULGARIA" },
-      { "code": 226, "name": "BURKINA FASO" },
-      { "code": 257, "name": "BURUNDI" },
-      { "code": 238, "name": "CABO VERDE" },
-      { "code": 855, "name": "CAMBODIA" },
-      { "code": 237, "name": "CAMEROON" },
-      { "code": 1, "name": "CANADA" },
-      { "code": 1345, "name": "CAYMAN ISLANDS" },
-      { "code": 236, "name": "CENTRAL AFRICAN REPUBLIC" },
-      { "code": 235, "name": "CHAD" },
-      { "code": 56, "name": "CHILE" },
-      { "code": 86, "name": "CHINA" },
-      { "code": 9, "name": "CHRISTMAS ISLAND" },
-      { "code": 672, "name": "COCOS (KEELING) ISLANDS" },
-      { "code": 57, "name": "COLOMBIA" },
-      { "code": 270, "name": "COMOROS" },
-      { "code": 242, "name": "CONGO" },
-      { "code": 243, "name": "CONGO (DEMOCRATIC REPUBLIC OF THE)" },
-      { "code": 682, "name": "COOK ISLANDS" },
-      { "code": 506, "name": "COSTA RICA" },
-      { "code": 225, "name": "CÔTE D'IVOIRE" },
-      { "code": 385, "name": "CROATIA" },
-      { "code": 53, "name": "CUBA" },
-      { "code": 1015, "name": "CURAÇAO" },
-      { "code": 357, "name": "CYPRUS" },
-      { "code": 420, "name": "CZECHIA" },
-      { "code": 45, "name": "DENMARK" },
-      { "code": 253, "name": "DJIBOUTI" },
-      { "code": 1767, "name": "DOMINICA" },
-      { "code": 1809, "name": "DOMINICAN REPUBLIC" },
-      { "code": 593, "name": "ECUADOR" },
-      { "code": 20, "name": "EGYPT" },
-      { "code": 503, "name": "EL SALVADOR" },
-      { "code": 240, "name": "EQUATORIAL GUINEA" },
-      { "code": 291, "name": "ERITREA" },
-      { "code": 372, "name": "ESTONIA" },
-      { "code": 251, "name": "ETHIOPIA" },
-      { "code": 500, "name": "FALKLAND ISLANDS (MALVINAS)" },
-      { "code": 298, "name": "FAROE ISLANDS" },
-      { "code": 679, "name": "FIJI" },
-      { "code": 358, "name": "FINLAND" },
-      { "code": 33, "name": "FRANCE" },
-      { "code": 594, "name": "FRENCH GUIANA" },
-      { "code": 689, "name": "FRENCH POLYNESIA" },
-      { "code": 1004, "name": "FRENCH SOUTHERN TERRITORIES" },
-      { "code": 241, "name": "GABON" },
-      { "code": 220, "name": "GAMBIA" },
-      { "code": 995, "name": "GEORGIA" },
-      { "code": 49, "name": "GERMANY" },
-      { "code": 233, "name": "GHANA" },
-      { "code": 350, "name": "GIBRALTAR" },
-      { "code": 30, "name": "GREECE" },
-      { "code": 299, "name": "GREENLAND" },
-      { "code": 1473, "name": "GRENADA" },
-      { "code": 590, "name": "GUADELOUPE" },
-      { "code": 1671, "name": "GUAM" },
-      { "code": 502, "name": "GUATEMALA" },
-      { "code": 1481, "name": "GUERNSEY" },
-      { "code": 224, "name": "GUINEA" },
-      { "code": 245, "name": "GUINEA-BISSAU" },
-      { "code": 592, "name": "GUYANA" },
-      { "code": 509, "name": "HAITI" },
-      { "code": 1005, "name": "HEARD ISLAND AND MCDONALD ISLANDS" },
-      { "code": 6, "name": "HOLY SEE" },
-      { "code": 504, "name": "HONDURAS" },
-      { "code": 852, "name": "HONG KONG" },
-      { "code": 36, "name": "HUNGARY" },
-      { "code": 354, "name": "ICELAND" },
-      { "code": 62, "name": "INDONESIA" },
-      { "code": 98, "name": "IRAN (ISLAMIC REPUBLIC OF)" },
-      { "code": 964, "name": "IRAQ" },
-      { "code": 353, "name": "IRELAND" },
-      { "code": 1624, "name": "ISLE OF MAN" },
-      { "code": 972, "name": "ISRAEL" },
-      { "code": 5, "name": "ITALY" },
-      { "code": 1876, "name": "JAMAICA" },
-      { "code": 81, "name": "JAPAN" },
-      { "code": 1534, "name": "JERSEY" },
-      { "code": 962, "name": "JORDAN" },
-      { "code": 7, "name": "KAZAKHSTAN" },
-      { "code": 254, "name": "KENYA" },
-      { "code": 686, "name": "KIRIBATI" },
-      { "code": 850, "name": "KOREA (DEMOCRATIC PEOPLE'S REPUBLIC OF)" },
-      { "code": 82, "name": "KOREA (REPUBLIC OF)" },
-      { "code": 965, "name": "KUWAIT" },
-      { "code": 996, "name": "KYRGYZSTAN" },
-      { "code": 856, "name": "LAO PEOPLE'S DEMOCRATIC REPUBLIC" },
-      { "code": 371, "name": "LATVIA" },
-      { "code": 961, "name": "LEBANON" },
-      { "code": 266, "name": "LESOTHO" },
-      { "code": 231, "name": "LIBERIA" },
-      { "code": 218, "name": "LIBYA" },
-      { "code": 423, "name": "LIECHTENSTEIN" },
-      { "code": 370, "name": "LITHUANIA" },
-      { "code": 352, "name": "LUXEMBOURG" },
-      { "code": 853, "name": "MACAO" },
-      { "code": 389, "name": "MACEDONIA (THE FORMER YUGOSLAV REPUBLIC OF)" },
-      { "code": 261, "name": "MADAGASCAR" },
-      { "code": 256, "name": "MALAWI" },
-      { "code": 60, "name": "MALAYSIA" },
-      { "code": 960, "name": "MALDIVES" },
-      { "code": 223, "name": "MALI" },
-      { "code": 356, "name": "MALTA" },
-      { "code": 692, "name": "MARSHALL ISLANDS" },
-      { "code": 596, "name": "MARTINIQUE" },
-      { "code": 222, "name": "MAURITANIA" },
-      { "code": 230, "name": "MAURITIUS" },
-      { "code": 269, "name": "MAYOTTE" },
-      { "code": 52, "name": "MEXICO" },
-      { "code": 691, "name": "MICRONESIA (FEDERATED STATES OF)" },
-      { "code": 373, "name": "MOLDOVA (REPUBLIC OF)" },
-      { "code": 377, "name": "MONACO" },
-      { "code": 976, "name": "MONGOLIA" },
-      { "code": 382, "name": "MONTENEGRO" },
-      { "code": 1664, "name": "MONTSERRAT" },
-      { "code": 212, "name": "MOROCCO" },
-      { "code": 258, "name": "MOZAMBIQUE" },
-      { "code": 95, "name": "MYANMAR" },
-      { "code": 264, "name": "NAMIBIA" },
-      { "code": 674, "name": "NAURU" },
-      { "code": 977, "name": "NEPAL" },
-      { "code": 31, "name": "NETHERLANDS" },
-      { "code": 687, "name": "NEW CALEDONIA" },
-      { "code": 64, "name": "NEW ZEALAND" },
-      { "code": 505, "name": "NICARAGUA" },
-      { "code": 227, "name": "NIGER" },
-      { "code": 234, "name": "NIGERIA" },
-      { "code": 683, "name": "NIUE" },
-      { "code": 15, "name": "NORFOLK ISLAND" },
-      { "code": 1670, "name": "NORTHERN MARIANA ISLANDS" },
-      { "code": 47, "name": "NORWAY" },
-      { "code": 968, "name": "OMAN" },
-      { "code": 92, "name": "PAKISTAN" },
-      { "code": 680, "name": "PALAU" },
-      { "code": 970, "name": "PALESTINE, STATE OF" },
-      { "code": 507, "name": "PANAMA" },
-      { "code": 675, "name": "PAPUA NEW GUINEA" },
-      { "code": 595, "name": "PARAGUAY" },
-      { "code": 51, "name": "PERU" },
-      { "code": 63, "name": "PHILIPPINES" },
-      { "code": 1011, "name": "PITCAIRN" },
-      { "code": 48, "name": "POLAND" },
-      { "code": 14, "name": "PORTUGAL" },
-      { "code": 1787, "name": "PUERTO RICO" },
-      { "code": 974, "name": "QATAR" },
-      { "code": 262, "name": "RÉUNION" },
-      { "code": 40, "name": "ROMANIA" },
-      { "code": 8, "name": "RUSSIAN FEDERATION" },
-      { "code": 250, "name": "RWANDA" },
-      { "code": 1006, "name": "SAINT BARTHÉLEMY" },
-      { "code": 290, "name": "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA" },
-      { "code": 1869, "name": "SAINT KITTS AND NEVIS" },
-      { "code": 1758, "name": "SAINT LUCIA" },
-      { "code": 1007, "name": "SAINT MARTIN (FRENCH PART)" },
-      { "code": 508, "name": "SAINT PIERRE AND MIQUELON" },
-      { "code": 1784, "name": "SAINT VINCENT AND THE GRENADINES" },
-      { "code": 685, "name": "SAMOA" },
-      { "code": 378, "name": "SAN MARINO" },
-      { "code": 239, "name": "SAO TOME AND PRINCIPE" },
-      { "code": 966, "name": "SAUDI ARABIA" },
-      { "code": 221, "name": "SENEGAL" },
-      { "code": 381, "name": "SERBIA" },
-      { "code": 248, "name": "SEYCHELLES" },
-      { "code": 232, "name": "SIERRA LEONE" },
-      { "code": 65, "name": "SINGAPORE" },
-      { "code": 1721, "name": "SINT MAARTEN (DUTCH PART)" },
-      { "code": 421, "name": "SLOVAKIA" },
-      { "code": 386, "name": "SLOVENIA" },
-      { "code": 677, "name": "SOLOMON ISLANDS" },
-      { "code": 252, "name": "SOMALIA" },
-      { "code": 28, "name": "SOUTH AFRICA" },
-      { "code": 1008, "name": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS" },
-      { "code": 211, "name": "SOUTH SUDAN" },
-      { "code": 35, "name": "SPAIN" },
-      { "code": 94, "name": "SRI LANKA" },
-      { "code": 249, "name": "SUDAN" },
-      { "code": 597, "name": "SURINAME" },
-      { "code": 1012, "name": "SVALBARD AND JAN MAYEN" },
-      { "code": 268, "name": "SWAZILAND" },
-      { "code": 46, "name": "SWEDEN" },
-      { "code": 41, "name": "SWITZERLAND" },
-      { "code": 963, "name": "SYRIAN ARAB REPUBLIC" },
-      { "code": 886, "name": "TAIWAN, PROVINCE OF CHINA[A]" },
-      { "code": 992, "name": "TAJIKISTAN" },
-      { "code": 255, "name": "TANZANIA, UNITED REPUBLIC OF" },
-      { "code": 66, "name": "THAILAND" },
-      { "code": 670, "name": "TIMOR-LESTE (EAST TIMOR)" },
-      { "code": 228, "name": "TOGO" },
-      { "code": 690, "name": "TOKELAU" },
-      { "code": 676, "name": "TONGA" },
-      { "code": 1868, "name": "TRINIDAD AND TOBAGO" },
-      { "code": 216, "name": "TUNISIA" },
-      { "code": 90, "name": "TURKEY" },
-      { "code": 993, "name": "TURKMENISTAN" },
-      { "code": 1649, "name": "TURKS AND CAICOS ISLANDS" },
-      { "code": 688, "name": "TUVALU" },
-      { "code": 256, "name": "UGANDA" },
-      { "code": 380, "name": "UKRAINE" },
-      { "code": 971, "name": "UNITED ARAB EMIRATES" },
-      { "code": 44, "name": "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND" },
-      { "code": 2, "name": "UNITED STATES OF AMERICA" },
-      { "code": 1009, "name": "UNITED STATES MINOR OUTLYING ISLANDS" },
-      { "code": 598, "name": "URUGUAY" },
-      { "code": 998, "name": "UZBEKISTAN" },
-      { "code": 678, "name": "VANUATU" },
-      { "code": 58, "name": "VENEZUELA (BOLIVARIAN REPUBLIC OF)" },
-      { "code": 84, "name": "VIET NAM" },
-      { "code": 1284, "name": "VIRGIN ISLANDS (BRITISH)" },
-      { "code": 1340, "name": "VIRGIN ISLANDS (U.S.)" },
-      { "code": 681, "name": "WALLIS AND FUTUNA" },
-      { "code": 2122, "name": "WESTERN SAHARA" },
-      { "code": 967, "name": "YEMEN" },
-      { "code": 260, "name": "ZAMBIA" },
-      { "code": 263, "name": "ZIMBABWE" }
+      { code: 93, name: 'AFGHANISTAN' },
+      { code: 1001, name: 'ÅLAND ISLANDS' },
+      { code: 355, name: 'ALBANIA' },
+      { code: 213, name: 'ALGERIA' },
+      { code: 684, name: 'AMERICAN SAMOA' },
+      { code: 376, name: 'ANDORRA' },
+      { code: 244, name: 'ANGOLA' },
+      { code: 1264, name: 'ANGUILLA' },
+      { code: 1010, name: 'ANTARCTICA' },
+      { code: 1268, name: 'ANTIGUA AND BARBUDA' },
+      { code: 54, name: 'ARGENTINA' },
+      { code: 374, name: 'ARMENIA' },
+      { code: 297, name: 'ARUBA' },
+      { code: 61, name: 'AUSTRALIA' },
+      { code: 43, name: 'AUSTRIA' },
+      { code: 994, name: 'AZERBAIJAN' },
+      { code: 1242, name: 'BAHAMAS' },
+      { code: 973, name: 'BAHRAIN' },
+      { code: 880, name: 'BANGLADESH' },
+      { code: 1246, name: 'BARBADOS' },
+      { code: 375, name: 'BELARUS' },
+      { code: 32, name: 'BELGIUM' },
+      { code: 501, name: 'BELIZE' },
+      { code: 229, name: 'BENIN' },
+      { code: 1441, name: 'BERMUDA' },
+      { code: 975, name: 'BHUTAN' },
+      { code: 591, name: 'BOLIVIA (PLURINATIONAL STATE OF)' },
+      { code: 1002, name: 'BONAIRE, SINT EUSTATIUS AND SABA' },
+      { code: 387, name: 'BOSNIA AND HERZEGOVINA' },
+      { code: 267, name: 'BOTSWANA' },
+      { code: 1003, name: 'BOUVET ISLAND' },
+      { code: 55, name: 'BRAZIL' },
+      { code: 1014, name: 'BRITISH INDIAN OCEAN TERRITORY' },
+      { code: 673, name: 'BRUNEI DARUSSALAM' },
+      { code: 359, name: 'BULGARIA' },
+      { code: 226, name: 'BURKINA FASO' },
+      { code: 257, name: 'BURUNDI' },
+      { code: 238, name: 'CABO VERDE' },
+      { code: 855, name: 'CAMBODIA' },
+      { code: 237, name: 'CAMEROON' },
+      { code: 1, name: 'CANADA' },
+      { code: 1345, name: 'CAYMAN ISLANDS' },
+      { code: 236, name: 'CENTRAL AFRICAN REPUBLIC' },
+      { code: 235, name: 'CHAD' },
+      { code: 56, name: 'CHILE' },
+      { code: 86, name: 'CHINA' },
+      { code: 9, name: 'CHRISTMAS ISLAND' },
+      { code: 672, name: 'COCOS (KEELING) ISLANDS' },
+      { code: 57, name: 'COLOMBIA' },
+      { code: 270, name: 'COMOROS' },
+      { code: 242, name: 'CONGO' },
+      { code: 243, name: 'CONGO (DEMOCRATIC REPUBLIC OF THE)' },
+      { code: 682, name: 'COOK ISLANDS' },
+      { code: 506, name: 'COSTA RICA' },
+      { code: 225, name: "CÔTE D'IVOIRE" },
+      { code: 385, name: 'CROATIA' },
+      { code: 53, name: 'CUBA' },
+      { code: 1015, name: 'CURAÇAO' },
+      { code: 357, name: 'CYPRUS' },
+      { code: 420, name: 'CZECHIA' },
+      { code: 45, name: 'DENMARK' },
+      { code: 253, name: 'DJIBOUTI' },
+      { code: 1767, name: 'DOMINICA' },
+      { code: 1809, name: 'DOMINICAN REPUBLIC' },
+      { code: 593, name: 'ECUADOR' },
+      { code: 20, name: 'EGYPT' },
+      { code: 503, name: 'EL SALVADOR' },
+      { code: 240, name: 'EQUATORIAL GUINEA' },
+      { code: 291, name: 'ERITREA' },
+      { code: 372, name: 'ESTONIA' },
+      { code: 251, name: 'ETHIOPIA' },
+      { code: 500, name: 'FALKLAND ISLANDS (MALVINAS)' },
+      { code: 298, name: 'FAROE ISLANDS' },
+      { code: 679, name: 'FIJI' },
+      { code: 358, name: 'FINLAND' },
+      { code: 33, name: 'FRANCE' },
+      { code: 594, name: 'FRENCH GUIANA' },
+      { code: 689, name: 'FRENCH POLYNESIA' },
+      { code: 1004, name: 'FRENCH SOUTHERN TERRITORIES' },
+      { code: 241, name: 'GABON' },
+      { code: 220, name: 'GAMBIA' },
+      { code: 995, name: 'GEORGIA' },
+      { code: 49, name: 'GERMANY' },
+      { code: 233, name: 'GHANA' },
+      { code: 350, name: 'GIBRALTAR' },
+      { code: 30, name: 'GREECE' },
+      { code: 299, name: 'GREENLAND' },
+      { code: 1473, name: 'GRENADA' },
+      { code: 590, name: 'GUADELOUPE' },
+      { code: 1671, name: 'GUAM' },
+      { code: 502, name: 'GUATEMALA' },
+      { code: 1481, name: 'GUERNSEY' },
+      { code: 224, name: 'GUINEA' },
+      { code: 245, name: 'GUINEA-BISSAU' },
+      { code: 592, name: 'GUYANA' },
+      { code: 509, name: 'HAITI' },
+      { code: 1005, name: 'HEARD ISLAND AND MCDONALD ISLANDS' },
+      { code: 6, name: 'HOLY SEE' },
+      { code: 504, name: 'HONDURAS' },
+      { code: 852, name: 'HONG KONG' },
+      { code: 36, name: 'HUNGARY' },
+      { code: 354, name: 'ICELAND' },
+      { code: 62, name: 'INDONESIA' },
+      { code: 98, name: 'IRAN (ISLAMIC REPUBLIC OF)' },
+      { code: 964, name: 'IRAQ' },
+      { code: 353, name: 'IRELAND' },
+      { code: 1624, name: 'ISLE OF MAN' },
+      { code: 972, name: 'ISRAEL' },
+      { code: 5, name: 'ITALY' },
+      { code: 1876, name: 'JAMAICA' },
+      { code: 81, name: 'JAPAN' },
+      { code: 1534, name: 'JERSEY' },
+      { code: 962, name: 'JORDAN' },
+      { code: 7, name: 'KAZAKHSTAN' },
+      { code: 254, name: 'KENYA' },
+      { code: 686, name: 'KIRIBATI' },
+      { code: 850, name: "KOREA (DEMOCRATIC PEOPLE'S REPUBLIC OF)" },
+      { code: 82, name: 'KOREA (REPUBLIC OF)' },
+      { code: 965, name: 'KUWAIT' },
+      { code: 996, name: 'KYRGYZSTAN' },
+      { code: 856, name: "LAO PEOPLE'S DEMOCRATIC REPUBLIC" },
+      { code: 371, name: 'LATVIA' },
+      { code: 961, name: 'LEBANON' },
+      { code: 266, name: 'LESOTHO' },
+      { code: 231, name: 'LIBERIA' },
+      { code: 218, name: 'LIBYA' },
+      { code: 423, name: 'LIECHTENSTEIN' },
+      { code: 370, name: 'LITHUANIA' },
+      { code: 352, name: 'LUXEMBOURG' },
+      { code: 853, name: 'MACAO' },
+      { code: 389, name: 'MACEDONIA (THE FORMER YUGOSLAV REPUBLIC OF)' },
+      { code: 261, name: 'MADAGASCAR' },
+      { code: 256, name: 'MALAWI' },
+      { code: 60, name: 'MALAYSIA' },
+      { code: 960, name: 'MALDIVES' },
+      { code: 223, name: 'MALI' },
+      { code: 356, name: 'MALTA' },
+      { code: 692, name: 'MARSHALL ISLANDS' },
+      { code: 596, name: 'MARTINIQUE' },
+      { code: 222, name: 'MAURITANIA' },
+      { code: 230, name: 'MAURITIUS' },
+      { code: 269, name: 'MAYOTTE' },
+      { code: 52, name: 'MEXICO' },
+      { code: 691, name: 'MICRONESIA (FEDERATED STATES OF)' },
+      { code: 373, name: 'MOLDOVA (REPUBLIC OF)' },
+      { code: 377, name: 'MONACO' },
+      { code: 976, name: 'MONGOLIA' },
+      { code: 382, name: 'MONTENEGRO' },
+      { code: 1664, name: 'MONTSERRAT' },
+      { code: 212, name: 'MOROCCO' },
+      { code: 258, name: 'MOZAMBIQUE' },
+      { code: 95, name: 'MYANMAR' },
+      { code: 264, name: 'NAMIBIA' },
+      { code: 674, name: 'NAURU' },
+      { code: 977, name: 'NEPAL' },
+      { code: 31, name: 'NETHERLANDS' },
+      { code: 687, name: 'NEW CALEDONIA' },
+      { code: 64, name: 'NEW ZEALAND' },
+      { code: 505, name: 'NICARAGUA' },
+      { code: 227, name: 'NIGER' },
+      { code: 234, name: 'NIGERIA' },
+      { code: 683, name: 'NIUE' },
+      { code: 15, name: 'NORFOLK ISLAND' },
+      { code: 1670, name: 'NORTHERN MARIANA ISLANDS' },
+      { code: 47, name: 'NORWAY' },
+      { code: 968, name: 'OMAN' },
+      { code: 92, name: 'PAKISTAN' },
+      { code: 680, name: 'PALAU' },
+      { code: 970, name: 'PALESTINE, STATE OF' },
+      { code: 507, name: 'PANAMA' },
+      { code: 675, name: 'PAPUA NEW GUINEA' },
+      { code: 595, name: 'PARAGUAY' },
+      { code: 51, name: 'PERU' },
+      { code: 63, name: 'PHILIPPINES' },
+      { code: 1011, name: 'PITCAIRN' },
+      { code: 48, name: 'POLAND' },
+      { code: 14, name: 'PORTUGAL' },
+      { code: 1787, name: 'PUERTO RICO' },
+      { code: 974, name: 'QATAR' },
+      { code: 262, name: 'RÉUNION' },
+      { code: 40, name: 'ROMANIA' },
+      { code: 8, name: 'RUSSIAN FEDERATION' },
+      { code: 250, name: 'RWANDA' },
+      { code: 1006, name: 'SAINT BARTHÉLEMY' },
+      { code: 290, name: 'SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA' },
+      { code: 1869, name: 'SAINT KITTS AND NEVIS' },
+      { code: 1758, name: 'SAINT LUCIA' },
+      { code: 1007, name: 'SAINT MARTIN (FRENCH PART)' },
+      { code: 508, name: 'SAINT PIERRE AND MIQUELON' },
+      { code: 1784, name: 'SAINT VINCENT AND THE GRENADINES' },
+      { code: 685, name: 'SAMOA' },
+      { code: 378, name: 'SAN MARINO' },
+      { code: 239, name: 'SAO TOME AND PRINCIPE' },
+      { code: 966, name: 'SAUDI ARABIA' },
+      { code: 221, name: 'SENEGAL' },
+      { code: 381, name: 'SERBIA' },
+      { code: 248, name: 'SEYCHELLES' },
+      { code: 232, name: 'SIERRA LEONE' },
+      { code: 65, name: 'SINGAPORE' },
+      { code: 1721, name: 'SINT MAARTEN (DUTCH PART)' },
+      { code: 421, name: 'SLOVAKIA' },
+      { code: 386, name: 'SLOVENIA' },
+      { code: 677, name: 'SOLOMON ISLANDS' },
+      { code: 252, name: 'SOMALIA' },
+      { code: 28, name: 'SOUTH AFRICA' },
+      { code: 1008, name: 'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS' },
+      { code: 211, name: 'SOUTH SUDAN' },
+      { code: 35, name: 'SPAIN' },
+      { code: 94, name: 'SRI LANKA' },
+      { code: 249, name: 'SUDAN' },
+      { code: 597, name: 'SURINAME' },
+      { code: 1012, name: 'SVALBARD AND JAN MAYEN' },
+      { code: 268, name: 'SWAZILAND' },
+      { code: 46, name: 'SWEDEN' },
+      { code: 41, name: 'SWITZERLAND' },
+      { code: 963, name: 'SYRIAN ARAB REPUBLIC' },
+      { code: 886, name: 'TAIWAN, PROVINCE OF CHINA[A]' },
+      { code: 992, name: 'TAJIKISTAN' },
+      { code: 255, name: 'TANZANIA, UNITED REPUBLIC OF' },
+      { code: 66, name: 'THAILAND' },
+      { code: 670, name: 'TIMOR-LESTE (EAST TIMOR)' },
+      { code: 228, name: 'TOGO' },
+      { code: 690, name: 'TOKELAU' },
+      { code: 676, name: 'TONGA' },
+      { code: 1868, name: 'TRINIDAD AND TOBAGO' },
+      { code: 216, name: 'TUNISIA' },
+      { code: 90, name: 'TURKEY' },
+      { code: 993, name: 'TURKMENISTAN' },
+      { code: 1649, name: 'TURKS AND CAICOS ISLANDS' },
+      { code: 688, name: 'TUVALU' },
+      { code: 256, name: 'UGANDA' },
+      { code: 380, name: 'UKRAINE' },
+      { code: 971, name: 'UNITED ARAB EMIRATES' },
+      {
+        code: 44,
+        name: 'UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND',
+      },
+      { code: 2, name: 'UNITED STATES OF AMERICA' },
+      { code: 1009, name: 'UNITED STATES MINOR OUTLYING ISLANDS' },
+      { code: 598, name: 'URUGUAY' },
+      { code: 998, name: 'UZBEKISTAN' },
+      { code: 678, name: 'VANUATU' },
+      { code: 58, name: 'VENEZUELA (BOLIVARIAN REPUBLIC OF)' },
+      { code: 84, name: 'VIET NAM' },
+      { code: 1284, name: 'VIRGIN ISLANDS (BRITISH)' },
+      { code: 1340, name: 'VIRGIN ISLANDS (U.S.)' },
+      { code: 681, name: 'WALLIS AND FUTUNA' },
+      { code: 2122, name: 'WESTERN SAHARA' },
+      { code: 967, name: 'YEMEN' },
+      { code: 260, name: 'ZAMBIA' },
+      { code: 263, name: 'ZIMBABWE' },
     ];
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -824,6 +894,26 @@ export class ScheduleFaComponent implements OnInit {
     }
   }
 
+  // Function to remove form group from the form array
+  remove(section: string, i: number) {
+    let accountControls: FormArray;
+
+    if (section === 'depositoryAccounts') {
+      accountControls = this.getAccountControls(i);
+    } else if (section === 'signingAuthorityDetails') {
+      accountControls = this.getSigningAuthAccountControls(i);
+    } else if (section === 'custodialAccounts') {
+      accountControls = this.getCustodialAccountControls(i);
+    }
+
+    // Check if there are items to remove
+    if (accountControls.length > 0) {
+      accountControls.removeAt(accountControls.length - 1); // Remove the last form group
+    } else {
+      this.utilsService.showSnackBar('No item to remove.');
+    }
+  }
+
   // adding nested form array
   add(section, i) {
     let accountControls: any;
@@ -948,7 +1038,9 @@ export class ScheduleFaComponent implements OnInit {
           // have to implement later if required
           // console.log(formValueToSave);
           formValueToSave.forEach((element) => {
-            element.countryName = this.getCountryNameFromCode(element.countryCode);
+            element.countryName = this.getCountryNameFromCode(
+              element.countryCode
+            );
           });
 
           formValueToSave.forEach((element) => {
@@ -1003,7 +1095,9 @@ export class ScheduleFaComponent implements OnInit {
               console.log(account);
               if (section === 'depositoryAccounts') {
                 const formGroup = {
-                  countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                  countryName: this.getCountryNameFromCode(
+                    sectionForm.countryCode
+                  ),
                   countryCode: sectionForm.countryCode,
                   nameOfInstitution: sectionForm.nameOfInstitution,
                   addressOfInstitution: sectionForm.addressOfInstitution,
@@ -1025,7 +1119,9 @@ export class ScheduleFaComponent implements OnInit {
                 );
               } else if (section === 'signingAuthorityDetails') {
                 const formGroup = {
-                  countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                  countryName: this.getCountryNameFromCode(
+                    sectionForm.countryCode
+                  ),
                   countryCode: sectionForm.countryCode,
                   institutionName: sectionForm.institutionName,
                   address: sectionForm.address,
@@ -1049,7 +1145,9 @@ export class ScheduleFaComponent implements OnInit {
                 );
               } else if (section === 'custodialAccounts') {
                 const formGroup = {
-                  countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                  countryName: this.getCountryNameFromCode(
+                    sectionForm.countryCode
+                  ),
                   countryCode: sectionForm.countryCode,
                   nameOfInstitution: sectionForm.nameOfInstitution,
                   addressOfInstitution: sectionForm.addressOfInstitution,
@@ -1074,7 +1172,9 @@ export class ScheduleFaComponent implements OnInit {
           } else {
             if (section === 'depositoryAccounts') {
               const formGroup = {
-                countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                countryName: this.getCountryNameFromCode(
+                  sectionForm.countryCode
+                ),
                 countryCode: sectionForm.countryCode,
                 nameOfInstitution: sectionForm.nameOfInstitution,
                 addressOfInstitution: sectionForm.addressOfInstitution,
@@ -1096,7 +1196,9 @@ export class ScheduleFaComponent implements OnInit {
               );
             } else if (section === 'signingAuthorityDetails') {
               const formGroup = {
-                countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                countryName: this.getCountryNameFromCode(
+                  sectionForm.countryCode
+                ),
                 countryCode: sectionForm.countryCode,
                 institutionName: sectionForm.institutionName,
                 address: sectionForm.address,
@@ -1120,7 +1222,9 @@ export class ScheduleFaComponent implements OnInit {
               );
             } else if (section === 'custodialAccounts') {
               const formGroup = {
-                countryName: this.getCountryNameFromCode(sectionForm.countryCode),
+                countryName: this.getCountryNameFromCode(
+                  sectionForm.countryCode
+                ),
                 countryCode: sectionForm.countryCode,
                 nameOfInstitution: sectionForm.nameOfInstitution,
                 addressOfInstitution: sectionForm.addressOfInstitution,
@@ -1189,7 +1293,7 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   getCountryNameFromCode(code) {
-    return this.countryCodeList.find(value => value.code == code)?.name;
+    return this.countryCodeList.find((value) => value.code == code)?.name;
   }
   // GET FUNCTIONS SECTION
   get getDepositoryAccounts() {
@@ -1267,7 +1371,9 @@ export class ScheduleFaComponent implements OnInit {
     ) as FormArray;
 
     if (custodialAccounts.at(i) instanceof UntypedFormGroup) {
-      return (custodialAccounts.at(i) as UntypedFormGroup).get('account') as FormArray;
+      return (custodialAccounts.at(i) as UntypedFormGroup).get(
+        'account'
+      ) as FormArray;
     } else {
       return this.fb.array([]); // or return an empty FormArray if needed
     }
@@ -1284,7 +1390,7 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // Have to implement this, if yes then have to show questions else not
-  handleSelectionChange(event) { }
+  handleSelectionChange(event) {}
 
   // Generate a unique identifier for each checkbox based on form array index and checkbox index
   getCheckboxId(formArrayIndex?: any, checkboxIndex?: any): any {
@@ -1292,7 +1398,11 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // Generate a unique identifier for each checkbox based on form array index and checkbox index for accounts array
-  getCheckboxIdAccount(formIndex?: any, formArrayIndex?: any, checkboxAccountIndex?: any): any {
+  getCheckboxIdAccount(
+    formIndex?: any,
+    formArrayIndex?: any,
+    checkboxAccountIndex?: any
+  ): any {
     return `${formIndex}_${formArrayIndex}_${checkboxAccountIndex}`;
   }
 
@@ -1309,7 +1419,11 @@ export class ScheduleFaComponent implements OnInit {
 
   // Function to toggle selected index
   toggleSelectedAccountIndex(formIndex, formArrayIndex, checkboxAccountIndex) {
-    const checkboxIdAccount = this.getCheckboxIdAccount(formIndex, formArrayIndex, checkboxAccountIndex);
+    const checkboxIdAccount = this.getCheckboxIdAccount(
+      formIndex,
+      formArrayIndex,
+      checkboxAccountIndex
+    );
     const idx = this.selectedAccountIndexes.indexOf(checkboxIdAccount);
     if (idx > -1) {
       this.selectedAccountIndexes.splice(idx, 1);
@@ -1336,13 +1450,16 @@ export class ScheduleFaComponent implements OnInit {
       const checkboxId = this.getCheckboxId(formIndex, i);
       if (formArrayName === 'depositoryAccounts') {
         index = 0;
-      } else if (formArrayName === 'custodialAccounts'
-      ) {
+      } else if (formArrayName === 'custodialAccounts') {
         index = 1;
       } else if (formArrayName === 'signingAuthorityDetails') {
         index = 7;
       }
-      const checkboxIdAccount = this.getCheckboxIdAccount(index, formArrayIndex, i);
+      const checkboxIdAccount = this.getCheckboxIdAccount(
+        index,
+        formArrayIndex,
+        i
+      );
 
       if (
         (type === 'account'
@@ -1377,7 +1494,10 @@ export class ScheduleFaComponent implements OnInit {
     if (event.target.value) {
       const filterValue = event.target.value.toLowerCase();
       this.countryNameCodeList = this.countryCodeList.filter(
-        item => item.name.toLowerCase().includes(filterValue) || item.code.toString().includes(filterValue));
+        (item) =>
+          item.name.toLowerCase().includes(filterValue) ||
+          item.code.toString().includes(filterValue)
+      );
     } else {
       this.countryNameCodeList = this.countryCodeList;
     }
@@ -1385,10 +1505,12 @@ export class ScheduleFaComponent implements OnInit {
 
   displayFn = (country: any): string => {
     if (country) {
-      let b = this.countryCodeList?.filter(o => o.code.toString() === country.toString())[0];
+      let b = this.countryCodeList?.filter(
+        (o) => o.code.toString() === country.toString()
+      )[0];
       return b ? `${b?.code}:${b?.name}` : '';
     } else {
       return '';
     }
-  }
+  };
 }
